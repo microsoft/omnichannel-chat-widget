@@ -1,0 +1,53 @@
+name: chat-components-release
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out for ${{ github.ref }}
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.X
+      - name: Update package version
+        working-directory: chat-components
+        run: npx version-from-git --no-git-tag-version
+        if: ${{ startsWith(github.ref, 'refs/heads/') }}
+      - name: Read package.json
+        id: read-package-json
+        working-directory: chat-components
+        run: |
+          echo "::set-output name=name::$(cat package.json | jq -r '.name')"
+          echo "::set-output name=version::$(cat package.json | jq -r '.version')"
+      - name: Install packages
+        working-directory: chat-components
+        run: yarn install
+      - name: Unit Tests
+        working-directory: chat-components
+        run: yarn test:unit
+      - name: Build Storybook
+        working-directory: chat-components
+        run: yarn build-storybook
+      - name: VRT Tests
+        working-directory: chat-components
+        run: yarn test:visual
+      - name: Build package
+        working-directory: chat-components
+        run: yarn build
+      - name: Npm packaging
+        working-directory: chat-components
+        run: npm pack
+      - name: Move package tarball to root
+        working-directory: chat-components
+        run: |
+          mv *.tgz ../
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: npm-tarball
+          path: '*.tgz'
