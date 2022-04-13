@@ -36,6 +36,12 @@ jobs:
       - name: VRT Tests
         working-directory: chat-components
         run: yarn test:visual
+      - name: Upload VRT Tests failures screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: VRT Failure Screenshots
+          path: 'chat-components/**/__diff_output__/*.png'
       - name: Build package
         working-directory: chat-components
         run: yarn build
