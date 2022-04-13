@@ -1,0 +1,135 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-loading-pane--loading-pane-default": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "9lG4jgNEUZgR",
+          "index": 0,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Default"
+        },
+        {
+          "browserType": "firefox",
+          "id": "NWLvKIsM6Z1V",
+          "index": 1,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Default"
+        },
+        {
+          "browserType": "webkit",
+          "id": "c_g2jR8He6ag",
+          "index": 2,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Default"
+        }
+      ]
+    },
+    "stateless-components-loading-pane--loading-pane-preset-1": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "aqucTMk6o3ZN",
+          "index": 0,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane RTL"
+        },
+        {
+          "browserType": "firefox",
+          "id": "7qlxLKf050Gh",
+          "index": 1,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane RTL"
+        },
+        {
+          "browserType": "webkit",
+          "id": "FB5vDn74KegR",
+          "index": 2,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane RTL"
+        }
+      ]
+    },
+    "stateless-components-loading-pane--loading-pane-preset-2": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "azaTMYxTdZgm",
+          "index": 0,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 2"
+        },
+        {
+          "browserType": "firefox",
+          "id": "bza-ZZTcPKul",
+          "index": 1,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 2"
+        },
+        {
+          "browserType": "webkit",
+          "id": "lS1d-5o1R14O",
+          "index": 2,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 2"
+        }
+      ]
+    },
+    "stateless-components-loading-pane--loading-pane-preset-3": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "Np3eH1lJIokv",
+          "index": 0,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 3"
+        },
+        {
+          "browserType": "firefox",
+          "id": "3zh7l8SQpl9r",
+          "index": 1,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 3"
+        },
+        {
+          "browserType": "webkit",
+          "id": "RMmaJYbsqpIz",
+          "index": 2,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 3"
+        }
+      ]
+    },
+    "stateless-components-loading-pane--loading-pane-preset-4": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "wvtiF9a5em9u",
+          "index": 0,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 4"
+        },
+        {
+          "browserType": "firefox",
+          "id": "DCX-6UMofUFD",
+          "index": 1,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 4"
+        },
+        {
+          "browserType": "webkit",
+          "id": "sBQ-RW1pBwPh",
+          "index": 2,
+          "screenshotOptionsId": "9iMY-dZrsYoW",
+          "title": "Loading Pane Preset 4"
+        }
+      ]
+    }
+  },
+  "screenshotOptions": {
+    "9iMY-dZrsYoW": {
+      "fullPage": true
+    }
+  }
+}

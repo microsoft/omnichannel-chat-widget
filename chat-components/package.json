@@ -1,0 +1,102 @@
+{
+  "name": "@microsoft/omnichannel-chat-components",
+  "version": "0.1.0-0",
+  "description": "Microsoft Omnichannel Chat Components",
+  "main": "lib/cjs/index.js",
+  "types": "lib/types/index.d.ts",
+  "repository": "https://github.com/microsoft/omnichannel-chat-widget",
+  "author": "Microsoft",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js",
+      "types": "./lib/types/index.d.ts"
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.15.0",
+    "@storybook/addon-a11y": "^6.4.8",
+    "@storybook/addon-actions": "^6.4.8",
+    "@storybook/addon-essentials": "^6.4.8",
+    "@storybook/addon-knobs": "^6.4.0",
+    "@storybook/addon-links": "^6.4.8",
+    "@storybook/addon-storyshots": "^6.4.8",
+    "@storybook/react": "^6.4.8",
+    "@storybook/testing-react": "^1.2.1",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
+    "@types/core-js": "^2.5.5",
+    "@types/jest": "^27.0.2",
+    "@types/jest-image-snapshot": "^4.3.1",
+    "@types/react": "^17.0.30",
+    "@types/react-dom": "^17.0.10",
+    "@types/styled-components": "^5.1.15",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "babel-jest": "^27.3.1",
+    "babel-loader": "^8.2.2",
+    "botframework-directlinejs": "^0.15.0",
+    "copyfiles": "^2.4.1",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.1",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-storybook": "^0.5.3",
+    "jest": "^27.3.1",
+    "jest-dom": "^4.0.0",
+    "jest-image-snapshot": "^4.5.1",
+    "json": "^11.0.0",
+    "playwright": "^1.16.3",
+    "postcss": "^8.3.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2",
+    "storybook-addon-playwright": "^4.9.2",
+    "typescript": "^4.4.4"
+  },
+  "peerDependencies": {
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  },
+  "dependencies": {
+    "@fluentui/react": "^8.46.0",
+    "adaptivecards": "^2.10.0",
+    "botframework-webchat": "^4.14.1",
+    "broadcast-channel": "^4.5.0",
+    "jest-transform-stub": "^2.0.0",
+    "rxjs": "^5.0.3",
+    "styled-components": "^5.3.1"
+  },
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
+    "build": "yarn eslint . && yarn build:esm && yarn copy:esm && yarn build:cjs && yarn copy:cjs && tsc",
+    "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
+    "test:visual": "jest -c jest.config.visual.cjs",
+    "test:all": "yarn test:unit && yarn test:visual",
+    "build:cjs": "babel ./src --config-file ./babel.config.json --out-dir lib/cjs --extensions .ts,.js,.tsx --ignore ./**/*.test.ts,./**/*.stories.ts,./**/*.stories.tsx,./**/*.test.tsx",
+    "build:esm": "babel ./src --config-file ./babel.esm.config.json --out-dir lib/esm --extensions .ts,.js,.tsx --ignore ./**/*.test.ts,./**/*.stories.ts,./**/*.stories.tsx,./**/*.test.tsx",
+    "copy:cjs": "copyfiles -u 2 src/assets/imgs/* lib/cjs/assets",
+    "copy:esm": "copyfiles -u 2 src/assets/imgs/* lib/esm/assets",
+    "verify": "yarn install && yarn build-storybook && yarn test:all && yarn build && yarn storybook"
+  },
+  "resolutions": {
+    "**/glob-parent": "5.1.2",
+    "**/ssri": "8.0.1",
+    "**/ansi-regex": "5.0.1",
+    "**/nanoid": "3.1.31",
+    "**/url-parse": "1.5.9",
+    "**/markdown-it": "12.3.2",
+    "**/minimist": "1.2.6"
+  }
+}

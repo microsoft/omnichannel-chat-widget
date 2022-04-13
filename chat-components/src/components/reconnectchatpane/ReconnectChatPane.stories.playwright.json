@@ -1,0 +1,159 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-reconnect-chat-pane--default": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "qjfdWBq6xoPn",
+          "index": 0,
+          "title": "Default"
+        },
+        {
+          "browserType": "firefox",
+          "id": "sc9X9z0ItGaI",
+          "index": 1,
+          "title": "Default"
+        },
+        {
+          "browserType": "webkit",
+          "id": "Y9ll5gVysv7i",
+          "index": 2,
+          "title": "Default"
+        }
+      ]
+    },
+    "stateless-components-reconnect-chat-pane--default-rtl": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "OR0rCuFO-0Nv",
+          "index": 0,
+          "title": "DefaultRtl"
+        },
+        {
+          "browserType": "firefox",
+          "id": "nWhG5ocSM_Yu",
+          "index": 1,
+          "title": "DefaultRtl"
+        },
+        {
+          "browserType": "webkit",
+          "id": "S7elotgfRbYS",
+          "index": 2,
+          "title": "DefaultRtl"
+        }
+      ]
+    },
+    "stateless-components-reconnect-chat-pane--preset-1": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "DE2saADcGhSD",
+          "index": 0,
+          "title": "PresetOne"
+        },
+        {
+          "browserType": "firefox",
+          "id": "JyLuurT340Ze",
+          "index": 1,
+          "title": "PresetOne"
+        },
+        {
+          "browserType": "webkit",
+          "id": "N4PmAOoQzOc9",
+          "index": 2,
+          "title": "PresetOne"
+        }
+      ]
+    },
+    "stateless-components-reconnect-chat-pane--preset-2": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "oCIeI06Kvj_r",
+          "index": 0,
+          "title": "PresetTwo"
+        },
+        {
+          "browserType": "firefox",
+          "id": "Dlf3VKvsmeqE",
+          "index": 1,
+          "title": "PresetTwo"
+        },
+        {
+          "browserType": "webkit",
+          "id": "inr4g_VoJnBo",
+          "index": 2,
+          "title": "PresetTwo"
+        }
+      ]
+    },
+    "stateless-components-reconnect-chat-pane--preset-3": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "81MQxivZKVsn",
+          "index": 0,
+          "title": "PresetThree"
+        },
+        {
+          "browserType": "firefox",
+          "id": "WjGcl6_D9VoL",
+          "index": 1,
+          "title": "PresetThree"
+        },
+        {
+          "browserType": "webkit",
+          "id": "wcue7dOqhbYf",
+          "index": 2,
+          "title": "PresetThree"
+        }
+      ]
+    },
+    "stateless-components-reconnect-chat-pane--preset-4": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "gGEAmvSmW9Mh",
+          "index": 0,
+          "title": "PresetFour"
+        },
+        {
+          "browserType": "firefox",
+          "id": "gHCqWm89Bxgx",
+          "index": 1,
+          "title": "PresetFour"
+        },
+        {
+          "browserType": "webkit",
+          "id": "lujCBWm2JKBs",
+          "index": 2,
+          "title": "PresetFour"
+        }
+      ]
+    },
+    "stateless-components-reconnect-chat-pane--preset-5": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "WdWBvOM6TmRe",
+          "index": 0,
+          "title": "PresetFive"
+        },
+        {
+          "browserType": "firefox",
+          "id": "7oodpcOjGVte",
+          "index": 1,
+          "title": "PresetFive"
+        },
+        {
+          "browserType": "webkit",
+          "id": "fPNXqcqBjzbQ",
+          "index": 2,
+          "title": "PresetFive"
+        }
+      ]
+    }
+  }
+}
