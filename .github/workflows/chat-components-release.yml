@@ -6,7 +6,7 @@ on:
 
 jobs: 
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checking out for ${{ github.ref }}
         uses: actions/checkout@v3
@@ -33,9 +33,9 @@ jobs:
       - name: Build Storybook
         working-directory: chat-components
         run: yarn build-storybook
-#       - name: VRT Tests
-#         working-directory: chat-components
-#         run: yarn test:visual
+      - name: VRT Tests
+        working-directory: chat-components
+        run: yarn test:visual
       - name: Build package
         working-directory: chat-components
         run: yarn build
