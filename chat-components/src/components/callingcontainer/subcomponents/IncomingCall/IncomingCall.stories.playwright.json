@@ -1,0 +1,71 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-calling-container-incoming-call--default": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "0dH0F7gnO8hK",
+          "index": 0,
+          "title": "default"
+        },
+        {
+          "browserType": "firefox",
+          "id": "l0Cdk6jnsMuA",
+          "index": 1,
+          "title": "default"
+        },
+        {
+          "browserType": "webkit",
+          "id": "y-OcjsqvBsjP",
+          "index": 2,
+          "title": "default"
+        }
+      ]
+    },
+    "stateless-components-calling-container-incoming-call--rtl": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "i2vr2LAl67Tl",
+          "index": 0,
+          "title": "rtl"
+        },
+        {
+          "browserType": "firefox",
+          "id": "_-W8arNElKgA",
+          "index": 1,
+          "title": "rtl"
+        },
+        {
+          "browserType": "webkit",
+          "id": "yfGbtghTEkIe",
+          "index": 2,
+          "title": "rtl"
+        }
+      ]
+    },
+    "stateless-components-calling-container-incoming-call--component-overrides": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "cbIy_BjUVI8e",
+          "index": 0,
+          "title": "co"
+        },
+        {
+          "browserType": "firefox",
+          "id": "ZuQ0vqa_5lSO",
+          "index": 1,
+          "title": "co"
+        },
+        {
+          "browserType": "webkit",
+          "id": "EL7tfpLldH37",
+          "index": 2,
+          "title": "co"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-proactive-chat-pane--default": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "81yzw8kNhLsp",
+          "index": 0,
+          "title": "TheDefault"
+        },
+        {
+          "browserType": "firefox",
+          "id": "au3vWyUMtroQ",
+          "index": 1,
+          "title": "TheDefault"
+        },
+        {
+          "browserType": "webkit",
+          "id": "ooAYMNaxsZ2Z",
+          "index": 2,
+          "title": "TheDefault"
+        }
+      ]
+    },
+    "stateless-components-proactive-chat-pane--default-rtl": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "bl4-E5qZMFb7",
+          "index": 0,
+          "title": "TheDefaultRtl"
+        },
+        {
+          "browserType": "firefox",
+          "id": "mqqkEx5t-uE2",
+          "index": 1,
+          "title": "TheDefaultRtl"
+        },
+        {
+          "browserType": "webkit",
+          "id": "kvffhmtofhfe",
+          "index": 2,
+          "title": "TheDefaultRtl"
+        }
+      ]
+    },
+    "stateless-components-proactive-chat-pane--preset-1": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "14KRBoZGCjuI",
+          "index": 0,
+          "title": "PresetOne"
+        },
+        {
+          "browserType": "firefox",
+          "id": "950Kr3biPy_W",
+          "index": 1,
+          "title": "PresetOne"
+        },
+        {
+          "browserType": "webkit",
+          "id": "vpKUByxLkZMJ",
+          "index": 2,
+          "title": "PresetOne"
+        }
+      ]
+    },
+    "stateless-components-proactive-chat-pane--preset-2": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "XMMh9FFQoZTV",
+          "index": 0,
+          "title": "PresetTwo"
+        },
+        {
+          "browserType": "firefox",
+          "id": "FfuL0rAczOgW",
+          "index": 1,
+          "title": "PresetTwo"
+        },
+        {
+          "browserType": "webkit",
+          "id": "0XzHlfRorBqH",
+          "index": 2,
+          "title": "PresetTwo"
+        }
+      ]
+    },
+    "stateless-components-proactive-chat-pane--preset-3": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "vBaWvLTCFzaO",
+          "index": 0,
+          "title": "PresetThree"
+        },
+        {
+          "browserType": "firefox",
+          "id": "83fA_vw60f74",
+          "index": 1,
+          "title": "PresetThree"
+        },
+        {
+          "browserType": "webkit",
+          "id": "bOxPRYH1dr6u",
+          "index": 2,
+          "title": "PresetThree"
+        }
+      ]
+    }
+  }
+}

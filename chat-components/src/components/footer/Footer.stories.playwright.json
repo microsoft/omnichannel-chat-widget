@@ -1,0 +1,93 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-footer--default": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "ui7RXqGXtyVG",
+          "index": 0,
+          "title": "default"
+        },
+        {
+          "browserType": "firefox",
+          "id": "WUSknUqeYeJh",
+          "index": 1,
+          "title": "default"
+        },
+        {
+          "browserType": "webkit",
+          "id": "lvR9JzkHkKda",
+          "index": 2,
+          "title": "default"
+        }
+      ]
+    },
+    "stateless-components-footer--rtl": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "tNCjGRw9pN7L",
+          "index": 0,
+          "title": "rtl"
+        },
+        {
+          "browserType": "firefox",
+          "id": "O8rhD1ObYK4i",
+          "index": 1,
+          "title": "rtl"
+        },
+        {
+          "browserType": "webkit",
+          "id": "S3h9o_KjQgmJ",
+          "index": 2,
+          "title": "rtl"
+        }
+      ]
+    },
+    "stateless-components-footer--with-component-overrides": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "IE7TiBbuHYN6",
+          "index": 0,
+          "title": "component-override"
+        },
+        {
+          "browserType": "firefox",
+          "id": "Ksx1EQecgaMk",
+          "index": 1,
+          "title": "component-override"
+        },
+        {
+          "browserType": "webkit",
+          "id": "MSuFba1e9iH3",
+          "index": 2,
+          "title": "component-override"
+        }
+      ]
+    },
+    "stateless-components-footer--customized": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "whXUqhTFdS12",
+          "index": 0,
+          "title": "customized"
+        },
+        {
+          "browserType": "firefox",
+          "id": "o1ct7TDYyrYI",
+          "index": 1,
+          "title": "customized"
+        },
+        {
+          "browserType": "webkit",
+          "id": "452vy6MiEABl",
+          "index": 2,
+          "title": "customized"
+        }
+      ]
+    }
+  }
+}

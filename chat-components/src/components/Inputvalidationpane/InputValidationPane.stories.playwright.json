@@ -1,0 +1,361 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-input-validation-pane--default-email-transcript": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "Jdq5smijdVJW",
+          "index": 0,
+          "title": "Default"
+        },
+        {
+          "browserType": "firefox",
+          "id": "EqYLFDpARAxu",
+          "index": 1,
+          "title": "Default"
+        },
+        {
+          "browserType": "webkit",
+          "id": "QfMYT8L4xrw-",
+          "index": 2,
+          "title": "Default"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input"
+                  }
+                },
+                {
+                  "name": "type",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input",
+                    "text": "a"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>button:nth-child(1)"
+                  }
+                }
+              ],
+              "title": "DefaultInvalidInput"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "JuSZ6yH4xbR3",
+          "index": 3,
+          "title": "DefaultInvalidInput"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input"
+                  }
+                },
+                {
+                  "name": "type",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input",
+                    "text": "a"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>button:nth-child(1)"
+                  }
+                }
+              ],
+              "title": "DefaultInvalidInput"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "NKMFJXSjY2bP",
+          "index": 4,
+          "title": "DefaultInvalidInput"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input"
+                  }
+                },
+                {
+                  "name": "type",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input",
+                    "text": "a"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>button:nth-child(1)"
+                  }
+                }
+              ],
+              "title": "DefaultInvalidInput"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "n8guEUVkuUnC",
+          "index": 5,
+          "title": "DefaultInvalidInput"
+        }
+      ],
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input"
+              }
+            },
+            {
+              "name": "type",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input",
+                "text": "a"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>button:nth-child(1)"
+              }
+            }
+          ],
+          "id": "5AL-R-KObFos",
+          "title": "DefaultInvalidInput"
+        }
+      ]
+    },
+    "stateless-components-input-validation-pane--default-rtl-email-transcript": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "VCowcpRp0pzx",
+          "index": 0,
+          "title": "DefaultRtl"
+        },
+        {
+          "browserType": "firefox",
+          "id": "vJzf39MRXBBs",
+          "index": 1,
+          "title": "DefaultRtl"
+        },
+        {
+          "browserType": "webkit",
+          "id": "xa4pHlhTZGvK",
+          "index": 2,
+          "title": "DefaultRtl"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input"
+                  }
+                },
+                {
+                  "name": "type",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input",
+                    "text": "a"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>button:nth-child(1)"
+                  }
+                }
+              ],
+              "title": "DefaultRtlInvalidInput"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "vTnbkb__GuZy",
+          "index": 3,
+          "title": "DefaultRtlInvalidInput"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input"
+                  }
+                },
+                {
+                  "name": "type",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input",
+                    "text": "a"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>button:nth-child(1)"
+                  }
+                }
+              ],
+              "title": "DefaultRtlInvalidInput"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "2S53NF9xdAb0",
+          "index": 4,
+          "title": "DefaultRtlInvalidInput"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input"
+                  }
+                },
+                {
+                  "name": "type",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input",
+                    "text": "a"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>button:nth-child(1)"
+                  }
+                }
+              ],
+              "title": "DefaultRtlInvalidInput"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "H6ZdKSlW0RV2",
+          "index": 5,
+          "title": "DefaultRtlInvalidInput"
+        }
+      ],
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input"
+              }
+            },
+            {
+              "name": "type",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div>div>div>input",
+                "text": "a"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>button:nth-child(1)"
+              }
+            }
+          ],
+          "id": "3Hypyy4PJ9aN",
+          "title": "DefaultRtlInvalidInput"
+        }
+      ]
+    },
+    "stateless-components-input-validation-pane--preset-1": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "t1ImwGuR424d",
+          "index": 0,
+          "title": "FirstPreset"
+        },
+        {
+          "browserType": "firefox",
+          "id": "m2Xbj6mMcf1H",
+          "index": 1,
+          "title": "FirstPreset"
+        },
+        {
+          "browserType": "webkit",
+          "id": "5662zoqRmRF9",
+          "index": 2,
+          "title": "FirstPreset"
+        }
+      ]
+    },
+    "stateless-components-input-validation-pane--preset-2": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "JkFmEoOf3MIN",
+          "index": 0,
+          "title": "SecondPreset"
+        },
+        {
+          "browserType": "firefox",
+          "id": "rFqqLbrL_nLY",
+          "index": 1,
+          "title": "SecondPreset"
+        },
+        {
+          "browserType": "webkit",
+          "id": "ir-ry71uSKFT",
+          "index": 2,
+          "title": "SecondPreset"
+        }
+      ]
+    },
+    "stateless-components-input-validation-pane--preset-3": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "yaZuPwdJ-BOK",
+          "index": 0,
+          "title": "ThirdPreset"
+        },
+        {
+          "browserType": "firefox",
+          "id": "wYVzi_IRL5RU",
+          "index": 1,
+          "title": "ThirdPreset"
+        },
+        {
+          "browserType": "webkit",
+          "id": "p01xw3X3uuwJ",
+          "index": 2,
+          "title": "ThirdPreset"
+        }
+      ]
+    }
+  }
+}

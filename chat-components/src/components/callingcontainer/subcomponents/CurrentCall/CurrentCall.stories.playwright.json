@@ -1,0 +1,115 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-calling-container-current-call--default-video-call": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "8Gk2ZmH3lnua",
+          "index": 0,
+          "title": "default-video-call"
+        },
+        {
+          "browserType": "firefox",
+          "id": "Kp2-erqLHAbd",
+          "index": 1,
+          "title": "default-video-call"
+        },
+        {
+          "browserType": "webkit",
+          "id": "ktRmi14sIsNx",
+          "index": 2,
+          "title": "default-video-call"
+        }
+      ]
+    },
+    "stateless-components-calling-container-current-call--default-audio-call": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "Wa41Mx0vVY3Y",
+          "index": 0,
+          "title": "default-audio-call"
+        },
+        {
+          "browserType": "firefox",
+          "id": "H0-W8IiVzWqd",
+          "index": 1,
+          "title": "default-audio-call"
+        },
+        {
+          "browserType": "webkit",
+          "id": "hfR6c5RjftXL",
+          "index": 2,
+          "title": "default-audio-call"
+        }
+      ]
+    },
+    "stateless-components-calling-container-current-call--rtl": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "9dMutB1Jflfx",
+          "index": 0,
+          "title": "rtl"
+        },
+        {
+          "browserType": "firefox",
+          "id": "8YwtGy-WJhnb",
+          "index": 1,
+          "title": "rtl"
+        },
+        {
+          "browserType": "webkit",
+          "id": "QdQvPTrfRrWj",
+          "index": 2,
+          "title": "rtl"
+        }
+      ]
+    },
+    "stateless-components-calling-container-current-call--component-overrides": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "f_44wIBGcSzf",
+          "index": 0,
+          "title": "co"
+        },
+        {
+          "browserType": "firefox",
+          "id": "8QhOP70JYBjQ",
+          "index": 1,
+          "title": "co"
+        },
+        {
+          "browserType": "webkit",
+          "id": "7m31HUthnTdC",
+          "index": 2,
+          "title": "co"
+        }
+      ]
+    },
+    "stateless-components-calling-container-current-call--customized-current-call": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "TkI0qo-893Jd",
+          "index": 0,
+          "title": "customized"
+        },
+        {
+          "browserType": "firefox",
+          "id": "zxb5ZzvDEaBj",
+          "index": 1,
+          "title": "customized"
+        },
+        {
+          "browserType": "webkit",
+          "id": "QF4O70VHhaoz",
+          "index": 2,
+          "title": "customized"
+        }
+      ]
+    }
+  }
+}
