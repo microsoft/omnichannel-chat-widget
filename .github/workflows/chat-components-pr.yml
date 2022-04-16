@@ -3,7 +3,7 @@ name: chat-components-pr
 on:
   pull_request:
     branches:
-      - '*'
+      - '**'
 
 jobs: 
   build:
