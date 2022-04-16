@@ -4,6 +4,8 @@ on:
   pull_request:
     branches:
       - '**'
+    actions: [created, edited]
+
 
 jobs: 
   build:
