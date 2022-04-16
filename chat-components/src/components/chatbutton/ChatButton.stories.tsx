@@ -47,7 +47,12 @@ const chatButtonPreset1Props: IChatButtonProps = {
         generalStyleProps: Object.assign({}, defaultChatButtonGeneralStyles, {
             borderRadius: "0px 0px 0px 0px",
             width: "360px",
-            backgroundColor: "#b9f73a"
+            backgroundColor: "#b9f73a",
+            selectors: {
+                ":hover" : {
+                    backgroundColor: "black"
+                }
+            } 
         }), 
         iconStyleProps:Object.assign({}, defaultChatButtonIconContainerStyles,{
             backgroundImage: `url(${chatBubbleImage})`,
@@ -64,10 +69,7 @@ const chatButtonPreset1Props: IChatButtonProps = {
             color: "#ff0000",
             height: "32px",
             lineHeight: "14px"
-        }),
-        chatButtonHoveredStyleProps: {
-            backgroundColor: "lightgrey"
-        }
+        })
     }
 };
 

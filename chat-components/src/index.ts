@@ -6,7 +6,7 @@ export { default as ConfirmationPane } from "./components/confirmationpane/Confi
 
 export { default as ChatButton } from "./components/chatbutton/ChatButton";
 
-export { default as InputValidationPane } from "./components/Inputvalidationpane/InputValidationPane";
+export { default as InputValidationPane } from "./components/inputvalidationpane/InputValidationPane";
 
 export { default as ProactiveChatPane } from "./components/proactivechatpane/ProactiveChatPane";
 

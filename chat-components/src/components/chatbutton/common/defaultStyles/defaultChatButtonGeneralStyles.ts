@@ -18,6 +18,9 @@ export const defaultChatButtonGeneralStyles: IStyle = {
     selectors: {
         ":hover" : {
             backgroundColor: "lightgrey"
+        },
+        ":focus" : {
+            outline: "dotted 2px #000"
         }
     },
     width: "180px"
