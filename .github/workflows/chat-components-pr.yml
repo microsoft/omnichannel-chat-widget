@@ -4,7 +4,6 @@ on:
   pull_request:
     types: [created, edited, assigned, opened, synchronize, reopened]
 
-
 jobs: 
   build:
     runs-on: windows-2019
