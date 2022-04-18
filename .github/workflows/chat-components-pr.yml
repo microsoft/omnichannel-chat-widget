@@ -2,6 +2,8 @@ name: chat-components-pr
 
 on:
   pull_request:
+    branches:
+      - '*'
     types: [created, edited, assigned, opened, synchronize, reopened]
     paths:
       - 'chat-components'
