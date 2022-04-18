@@ -6,6 +6,8 @@ on:
       - dev
     tags:
       - 'v*'
+    paths:
+      - 'chat-components'
 
 jobs: 
   build:
