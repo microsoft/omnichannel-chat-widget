@@ -2,9 +2,7 @@ name: chat-components-pr
 
 on:
   pull_request:
-    branches:
-      - '**'
-    actions: [created, edited]
+    types: [created, edited, assigned, opened, synchronize, reopened]
 
 
 jobs: 
