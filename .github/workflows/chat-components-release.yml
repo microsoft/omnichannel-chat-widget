@@ -7,7 +7,7 @@ on:
     tags:
       - 'c-v*'
     paths:
-      - 'chat-components'
+      - 'chat-components/**'
 
 jobs: 
   build:
