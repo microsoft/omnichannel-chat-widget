@@ -6,7 +6,7 @@ on:
       - '*'
     types: [created, edited, assigned, opened, synchronize, reopened]
     paths:
-      - 'chat-components'
+      - 'chat-components/**'
       
 jobs: 
   build:
