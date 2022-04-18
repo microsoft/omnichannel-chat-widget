@@ -1,0 +1,408 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-confirmation-pane--confirmation-pane-default": {
+      "actionSets": [
+        {
+          "actions": [],
+          "id": "c39cIfY0-T6d",
+          "title": "init"
+        }
+      ],
+      "screenshots": [
+        {
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "chromium",
+          "id": "idRp9Fw-Abv1",
+          "index": 0,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "firefox",
+          "id": "yFvNLBh9lIV-",
+          "index": 1,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "webkit",
+          "id": "8twdzEerNQ_0",
+          "index": 2,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        }
+      ]
+    },
+    "stateless-components-confirmation-pane--confirmation-pane-preset-1": {
+      "actionSets": [
+        {
+          "actions": [],
+          "id": "oyqqGI3eNWkq",
+          "title": "init"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "chromium",
+          "id": "ZAT7X6ZlfdnV",
+          "index": 0,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "firefox",
+          "id": "HcMh8PE5dwnJ",
+          "index": 1,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "webkit",
+          "id": "rwQUmMhztTGs",
+          "index": 2,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        }
+      ]
+    },
+    "stateless-components-confirmation-pane--confirmation-pane-preset-2": {
+      "actionSets": [
+        {
+          "actions": [],
+          "id": "VrXbf9bJfJis",
+          "title": "init"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "chromium",
+          "id": "j9k-Ntjfao1K",
+          "index": 0,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "firefox",
+          "id": "ihJ7CFGhs70d",
+          "index": 1,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "webkit",
+          "id": "Zu2OE4nVlDWe",
+          "index": 2,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        }
+      ]
+    },
+    "stateless-components-confirmation-pane--confirmation-pane-preset-3": {
+      "actionSets": [
+        {
+          "actions": [],
+          "id": "cotWS8GA1_9v",
+          "title": "init"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>#root>div>div>button:nth-child(1)>span>span>span"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            }
+          ],
+          "id": "WNCBYiyokmAn",
+          "title": "row layout"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "chromium",
+          "id": "qiJ-PcpReBEm",
+          "index": 0,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "firefox",
+          "id": "IEVS3ifA4Wea",
+          "index": 1,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "webkit",
+          "id": "7GjhzgZfCviM",
+          "index": 2,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>#root>div>div>button:nth-child(1)>span>span>span"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "row layout"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "chromium",
+          "id": "--oq8_imErch",
+          "index": 3,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "row layout"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>#root>div>div>button:nth-child(1)>span>span>span"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "row layout"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "firefox",
+          "id": "bHVaam2uVBFr",
+          "index": 4,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "row layout"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>#root>div>div>button:nth-child(1)>span>span>span"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "row layout"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "webkit",
+          "id": "87cOg8hri0y4",
+          "index": 5,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "row layout"
+        }
+      ]
+    },
+    "stateless-components-confirmation-pane--confirmation-pane-preset-4": {
+      "actionSets": [
+        {
+          "actions": [],
+          "id": "NnqvHjCvquEw",
+          "title": "init"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "chromium",
+          "id": "ZDN84PSJPTtK",
+          "index": 0,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "firefox",
+          "id": "VKfJjcCO8ZNo",
+          "index": 1,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserOptionsId": "fSem9j0PW5Y4",
+          "browserType": "webkit",
+          "id": "Yh2WpBOQj9k0",
+          "index": 2,
+          "screenshotOptionsId": "6yyzMhcWfgLE",
+          "title": "init"
+        }
+      ]
+    },
+    "stateless-components-confirmation-pane--confirmation-pane-preset-5": {
+      "actionSets": [
+        {
+          "actions": [],
+          "id": "56yT09ZHLmC2",
+          "title": "init"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "rlLGVjocMCIP",
+          "index": 0,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "kF8sVvQpcm8X",
+          "index": 1,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "0-QL__OKEivy",
+          "index": 2,
+          "title": "init"
+        }
+      ]
+    }
+  },
+  "browserOptions": {
+    "fSem9j0PW5Y4": {
+      "colorScheme": "no-preference"
+    }
+  },
+  "screenshotOptions": {
+    "6yyzMhcWfgLE": {
+      "fullPage": false
+    }
+  }
+}

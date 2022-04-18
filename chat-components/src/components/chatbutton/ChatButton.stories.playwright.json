@@ -1,0 +1,115 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-chatbutton--chat-button-default": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "q5UUOEg_Uibb",
+          "index": 0,
+          "title": "TheDefault"
+        },
+        {
+          "browserType": "firefox",
+          "id": "gxJR8ZMkbqWr",
+          "index": 1,
+          "title": "TheDefault"
+        },
+        {
+          "browserType": "webkit",
+          "id": "fNHHtFe8P8Kb",
+          "index": 2,
+          "title": "TheDefault"
+        }
+      ]
+    },
+    "stateless-components-chatbutton--chat-button-preset-1": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "RlolYKZDVTrf",
+          "index": 0,
+          "title": "PresetOne"
+        },
+        {
+          "browserType": "firefox",
+          "id": "4Nq43HwrUFzy",
+          "index": 1,
+          "title": "PresetOne"
+        },
+        {
+          "browserType": "webkit",
+          "id": "GGik-ya1NVwX",
+          "index": 2,
+          "title": "PresetOne"
+        }
+      ]
+    },
+    "stateless-components-chatbutton--chat-button-preset-2": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "BfMrHdxKlGlf",
+          "index": 0,
+          "title": "PresetTwo"
+        },
+        {
+          "browserType": "firefox",
+          "id": "fOZ2hgh2CyI4",
+          "index": 1,
+          "title": "PresetTwo"
+        },
+        {
+          "browserType": "webkit",
+          "id": "6G-VdxN3AO4b",
+          "index": 2,
+          "title": "PresetTwo"
+        }
+      ]
+    },
+    "stateless-components-chatbutton--chat-button-preset-3": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "LHydos-uiE4J",
+          "index": 0,
+          "title": "PresetThree"
+        },
+        {
+          "browserType": "firefox",
+          "id": "nstcEE1-kNws",
+          "index": 1,
+          "title": "PresetThree"
+        },
+        {
+          "browserType": "webkit",
+          "id": "tIeLM7m7en4W",
+          "index": 2,
+          "title": "PresetThree"
+        }
+      ]
+    },
+    "stateless-components-chatbutton--chat-button-preset-4": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "1WrME2dnL_Bt",
+          "index": 0,
+          "title": "TheRtl"
+        },
+        {
+          "browserType": "firefox",
+          "id": "yPDOdLu8AzeM",
+          "index": 1,
+          "title": "TheRtl"
+        },
+        {
+          "browserType": "webkit",
+          "id": "aIDrF8l3tn_w",
+          "index": 2,
+          "title": "TheRtl"
+        }
+      ]
+    }
+  }
+}
