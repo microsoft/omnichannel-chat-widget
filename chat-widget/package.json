@@ -1,10 +1,10 @@
 {
   "name": "@microsoft/omnichannel-chat-widget",
-  "version": "0.1.0",
+  "version": "0.1.0-0",
   "description": "Microsoft Omnichannel Chat Widget",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",
-  "repository": "https://dynamicscrm.visualstudio.com/OneCRM/_git/CRM.Omnichannel.LiveChatWidget.Components",
+  "repository": "https://github.com/microsoft/omnichannel-chat-widget",
   "author": "Microsoft",
   "license": "MIT",
   "type": "module",
