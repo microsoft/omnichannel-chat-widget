@@ -1,4 +1,4 @@
-# Telemetry and BroadcastService
+# Telemetry
 
 All events emitted from componenent library (@microsoft/omnichannel-chat-components) are of type `ICustomEvent` with below properties:
 

@@ -1,49 +1,48 @@
-# Omnichannel Chat Widget
+# Omnichannel Live Chat Widget UI Components
 
 [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg) ![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-components-release/badge.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-components)
 
-[@microsoft/omnichannel-chat-widget](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk) is a React package which allows you to build your own customer service experience using [@microsoft/omnichannel-chat-sdk](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk).
+[@microsoft/omnichannel-chat-widget](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget) is a React-based UI component library which allows you to build your own live chat widget experience using [@microsoft/omnichannel-chat-sdk](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk).
 
 ## Table of Contents
 
 1. [Introduction](#introduction)
 1. [Installation](#installation)
 1. [Example Usage](#example-usage)
-1. [APIs](#APIs)
-1. [Custom Components](#Custom-Components)
-1. [Telemetry](#Telemetry)
-1. [Features](#Features)
+1. [Customizations](#customizations)
+1. [Telemetry](#telemetry)
+1. [Features](#features)
 
 ## Introduction
 
-Omnichannel Live Chat Widget (LCW) offers customers a re-usable and component based framework to help create a custom chat widget that can be connected with their Dynamics Customer Service experience.
+Omnichannel Live Chat Widget UI Components offers a re-usable component-based library to help create a custom chat widget that can be connected to the Dynamics 365 Customer Service experience.
 
-If you want more information about general chat/LCW, please visit the public documentation [here](https://docs.microsoft.com/en-us/dynamics365/customer-service/set-up-chat-widget).
+For more information about Live Chat Widget, see [here](https://docs.microsoft.com/en-us/dynamics365/customer-service/set-up-chat-widget).
 
 ## Installation
 
 ```powershell
 npm i @microsoft/omnichannel-chat-sdk
-npm i @micorsoft/omnichannel-chat-widget
+npm i @microsoft/omnichannel-chat-widget
 ```
 
 or
 
 ```powershell
 yarn add @microsoft/omnichannel-chat-sdk
-yarn add @micorsoft/omnichannel-chat-widget
+yarn add @microsoft/omnichannel-chat-widget
 ```
 
-The package ```@micorsoft/omnichannel-chat-widget``` internally imports the pure UI components defined in package ```@micorsoft/omnichannel-chat-components``` and stitches them together with Omnichannel logic. Details on these stateless components are listed in sections below. To use the stateless UI component package, do
+The repo also contains the ```@microsoft/omnichannel-chat-components``` package, which is a collection of UI components. The ```@microsoft/omnichannel-chat-widget``` package is an integration of the Chat SDK and the UI components. To install the UI components separately, do
 
 ```powershell
-npm i @micorsoft/omnichannel-chat-components
+npm i @microsoft/omnichannel-chat-components
 ```
 
 or
 
 ```powershell
-yarn add @micorsoft/omnichannel-chat-components
+yarn add @microsoft/omnichannel-chat-components
 ```
 
 ## Example Usage
@@ -92,13 +91,13 @@ const render = async () => {
 render();
 ```
 
-## Customizations
+## Components
 
 ### Stateless UI Components
 
-These are components that are included in the ```@micorsoft/omnichannel-chat-components``` package.
+These are components that are included in the ```@microsoft/omnichannel-chat-components``` package.
 
-| Component | Default Usage | Interface |
+| Component |  Usage | Interface |
 | ----- | -------- | ----- |
 | CallingContainerPane | The container for voice and video feature in the chat widget | [ICallingContainerProps](chat-components\src\components\callingcontainer\interfaces\ICallingContainerProps.ts) |
 | ChatButton | The button that appears on the user's portal that is designed to be the entry point for the user to initate chat | [IChatButtonProps](chat-components\src\components\chatbutton\interfaces\IChatButtonProps.ts) |
@@ -122,9 +121,7 @@ These are components that are included in the ```@micorsoft/omnichannel-chat-com
 | ----- | -------- | ----- |
 | LiveChatWidget | The default widget that stitches the UI components with Chat SDK | [ILiveChatWidgetProps](chat-widget\src\components\livechatwidget\interfaces\ILiveChatWidgetProps.ts) |
 
-Some of the interfaces listed in the Stateless table have Stateful counterparts defined in the ```@micorsoft/omnichannel-chat-widget``` package. For example, [IConfirmationPaneStatefulProps](chat-widget\src\components\confirmationpanestateful\interfaces\IConfirmationPaneStatefulProps.ts) extends [IConfirmationPaneProps](chat-components\src\components\confirmationpane\interfaces\IConfirmationPaneProps.ts) with additional attributes that only makes sense in the stateful context.
-
-https://docs.microsoft.com/en-us/javascript/api/merge-styles/irawstylebase?view=office-ui-fabric-react-latest
+Some of the interfaces listed in the Stateless table have Stateful counterparts defined in the ```@microsoft/omnichannel-chat-widget``` package. For example, [IConfirmationPaneStatefulProps](chat-widget\src\components\confirmationpanestateful\interfaces\IConfirmationPaneStatefulProps.ts) extends [IConfirmationPaneProps](chat-components\src\components\confirmationpane\interfaces\IConfirmationPaneProps.ts) with additional attributes that only makes sense in the stateful context.
 
 ### Default Props
 
@@ -132,9 +129,11 @@ For a list of all default props used in the default stateful widget, please see 
 
 ### Custom Components
 
+There are two ways to custom the components provided in the library - 1) Replacing components using ComponentOverrides, and 2) Adding custom components in header and footer.
+
 #### ComponentOverrides
 
-Most sub-components provided can be overriden. Components have "componentOverrides" as part of props interface, which consists of ReactNodes or strings for each part of the whole component. For example, the "ProactiveChatPane" component has a close button. The close button can be overriden by creating a custom react node and setting it to "closeButton" attribute of "componentOverrides" interface that is part of props.
+Most sub-components and the default panes provided can be overriden. Components have "componentOverrides" as part of props interface, which consists of ReactNodes or strings for each part of the component. For example, the "ProactiveChatPane" component has a close button, and the close button can be overriden by creating a custom react node and setting it to the "closeButton" attribute of "componentOverrides" interface that is part of the props.
 
 ```js
 const customButton = (
@@ -212,10 +211,7 @@ const customizedFooterProp: IFooterProps = {
 
 > :pushpin: Note that [WebChat hooks](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/HOOKS.md) can also be used in any custom components.
 
-## Telemetry
+## See Also
 
-Please see [Telemetry](./docs/Telemetry.md) for how to use ```BroadcastService``` to satisfy telemetry needs.
-
-## Supported Omnichannel Features
-
-Please see [Features](./docs/Features.md) for all the Omnichannel features this widget supports.
+[Telemetry](./docs/Telemetry.md)
+[Omnichannel Features](./docs/Features.md)

@@ -109,7 +109,8 @@ const genPreviewCardWithAttachment = (card: any, iconData: any, next: any) => {
     );
 };
 
-const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) => {    
+const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) => { 
+    // eslint-disable-next-line react/display-name   
     const attachmentMiddleware = () => (next: any) => (...args: any) => {
         const [card] = args;
         if (!card?.activity) {

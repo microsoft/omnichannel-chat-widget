@@ -76,7 +76,6 @@
     "react-dom": "^16.14.0"
   },
   "dependencies": {
-    "@aria/webjs-sdk": "^1.8.9",
     "@fluentui/react": "^8.49.1",
     "@microsoft/omnichannel-chat-components": "0.1.0-main.f0b0a93",
     "@microsoft/omnichannel-chat-sdk": "1.0.1-main.077d17c",
