@@ -9,7 +9,7 @@
 1. [Introduction](#introduction)
 1. [Installation](#installation)
 1. [Example Usage](#example-usage)
-1. [Customizations](#customizations)
+1. [Components](#components)
 1. [Telemetry](#telemetry)
 1. [Features](#features)
 
