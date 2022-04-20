@@ -77,11 +77,13 @@
   },
   "dependencies": {
     "@fluentui/react": "^8.49.1",
-    "@microsoft/omnichannel-chat-components": "0.1.0-main.f0b0a93",
+    "@microsoft/omnichannel-chat-components": "0.1.0-main.ea06308",
     "@microsoft/omnichannel-chat-sdk": "1.0.1-main.077d17c",
+    "abort-controller-es5": "^2.0.1",
     "dompurify": "^2.3.4",
     "markdown-it": "^12.3.2",
     "markdown-it-for-inline": "^0.1.1",
+    "p-defer-es5": "^2.0.1",
     "slack-markdown-it": "^1.0.5"
   },
   "scripts": {
@@ -104,7 +106,7 @@
   "resolutions": {
     "**/url-parse": "1.5.9",
     "**/p-defer-es5": "^2.0.1",
-    "**/abort-controller-es5": "^2.0.0",
+    "**/abort-controller-es5": "^2.0.1",
     "**/minimist": "1.2.6"
   }
 }
