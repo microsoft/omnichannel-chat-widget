@@ -143,22 +143,6 @@
   dependencies:
     tslib "^2.2.0"
 
-"@babel/cli@7.14.5":
-  version "7.14.5"
-  resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.14.5.tgz#9551b194f02360729de6060785bbdcce52c69f0a"
-  integrity sha512-poegjhRvXHWO0EAsnYajwYZuqcz7gyfxwfaecUESxDujrqOivf3zrjFbub8IJkrqEaz3fvJWh001EzxBub54fg==
-  dependencies:
-    commander "^4.0.1"
-    convert-source-map "^1.1.0"
-    fs-readdir-recursive "^1.1.0"
-    glob "^7.0.0"
-    make-dir "^2.1.0"
-    slash "^2.0.0"
-    source-map "^0.5.0"
-  optionalDependencies:
-    "@nicolo-ribaudo/chokidar-2" "2.1.8-no-fsevents.2"
-    chokidar "^3.4.0"
-
 "@babel/cli@^7.17.6":
   version "7.17.6"
   resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.17.6.tgz#169e5935f1795f0b62ded5a2accafeedfe5c5363"
@@ -318,20 +302,6 @@
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@babel/helper-define-polyfill-provider/-/helper-define-polyfill-provider-0.1.5.tgz#3c2f91b7971b9fc11fe779c945c014065dea340e"
   integrity sha512-nXuzCSwlJ/WKr8qxzW816gwyT6VZgiJG17zR40fou70yfAcqjoNyTLl/DQ+FExw5Hx5KNqshmN8Ldl/r2N7cTg==
-  dependencies:
-    "@babel/helper-compilation-targets" "^7.13.0"
-    "@babel/helper-module-imports" "^7.12.13"
-    "@babel/helper-plugin-utils" "^7.13.0"
-    "@babel/traverse" "^7.13.0"
-    debug "^4.1.1"
-    lodash.debounce "^4.0.8"
-    resolve "^1.14.2"
-    semver "^6.1.2"
-
-"@babel/helper-define-polyfill-provider@^0.2.2", "@babel/helper-define-polyfill-provider@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@babel/helper-define-polyfill-provider/-/helper-define-polyfill-provider-0.2.4.tgz#8867aed79d3ea6cade40f801efb7ac5c66916b10"
-  integrity sha512-OrpPZ97s+aPi6h2n1OXzdhVis1SGSsMU2aMHgLcOKfsp4/v1NWpx3CWT3lBj5eeBq9cDkPkh+YCfdF7O12uNDQ==
   dependencies:
     "@babel/helper-compilation-targets" "^7.13.0"
     "@babel/helper-module-imports" "^7.12.13"
@@ -1321,7 +1291,7 @@
     "@babel/helper-validator-option" "^7.16.7"
     "@babel/plugin-transform-flow-strip-types" "^7.16.7"
 
-"@babel/preset-modules@^0.1.4", "@babel/preset-modules@^0.1.5":
+"@babel/preset-modules@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@babel/preset-modules/-/preset-modules-0.1.5.tgz#ef939d6e7f268827e1841638dc6ff95515e115d9"
   integrity sha512-A57th6YRG7oR3cq/yt/Y84MvGgE0eJG2F1JLhKuyG+jFxEgrd/HAMJatiFtmOiZurz+0DkrvbheCLaV5f2JfjA==
@@ -2229,23 +2199,6 @@
   dependencies:
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
-
-"@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2":
-  version "2.1.8-no-fsevents.2"
-  resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.2.tgz#e324c0a247a5567192dd7180647709d7e2faf94b"
-  integrity sha512-Fb8WxUFOBQVl+CX4MWet5o7eCc6Pj04rXIwVKZ6h1NnqTo45eOQW6aWyhG25NIODvWFwTDMwBsYxrQ3imxpetg==
-  dependencies:
-    anymatch "^2.0.0"
-    async-each "^1.0.1"
-    braces "^2.3.2"
-    glob-parent "^5.1.2"
-    inherits "^2.0.3"
-    is-binary-path "^1.0.0"
-    is-glob "^4.0.0"
-    normalize-path "^3.0.0"
-    path-is-absolute "^1.0.0"
-    readdirp "^2.2.1"
-    upath "^1.1.1"
 
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.3":
   version "2.1.8-no-fsevents.3"
@@ -4122,7 +4075,7 @@ adaptivecards@2.9.0:
   resolved "https://registry.yarnpkg.com/adaptivecards/-/adaptivecards-2.9.0.tgz#1006fe56703a5aab94bfeb944637b684e7ea850c"
   integrity sha512-TXbtzc6LwisTdlfEAooropj9ZwgcQz8bSirWOnph3bzJJr9QF8YQCfSIpcAXKTJ7b6YrOfH+9xw/a8RaKgeOZg==
 
-adaptivecards@^2.10.0:
+adaptivecards@2.10.0, adaptivecards@^2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/adaptivecards/-/adaptivecards-2.10.0.tgz#1c94e84491afe5a4f2d4060f6e0fc57b895205e3"
   integrity sha512-QcgXGFlX3rgIfZkxvQY896zEVBh30mE37z3XKhcQW2OqSUrVH6dNT78MkM//W4wRdrZizSHqXKLaKyVVxAgVFg==
@@ -4912,7 +4865,7 @@ botframework-directlinejs@0.15.0:
     botframework-streaming "4.14.1"
     buffer "6.0.3"
     core-js "3.15.2"
-    cross-fetch "3.1.4"
+    cross-fetch "^3.1.5"
     jwt-decode "3.1.2"
     rxjs "5.5.12"
     url-search-params-polyfill "8.1.1"
@@ -4936,17 +4889,17 @@ botframework-directlinespeech-sdk@4.14.1:
   resolved "https://registry.yarnpkg.com/botframework-directlinespeech-sdk/-/botframework-directlinespeech-sdk-4.14.1.tgz#4d814a76640ef5db8d3354a23795448b3a188783"
   integrity sha512-vzo8vBJ5OHP2cshyuSnwKnrbSdEEpKLB+JZUDAzToxNea4K7h+pwxSAWd96BX4Huc5Mq1SkG6AeW2kUMQbkamQ==
   dependencies:
-    "@babel/runtime" "7.14.6"
+    "@babel/runtime" "7.15.4"
     abort-controller "3.0.0"
-    abort-controller-es5 "2.0.0"
+    abort-controller-es5 "2.0.1"
     base64-arraybuffer "0.2.0"
-    core-js "3.15.2"
+    core-js "3.18.3"
     event-as-promise "1.0.5"
     event-target-shim "6.0.2"
     math-random "2.0.1"
     microsoft-cognitiveservices-speech-sdk "1.17.0"
     p-defer "4.0.0"
-    p-defer-es5 "2.0.0"
+    p-defer-es5 "2.0.1"
     web-speech-cognitive-services "7.1.1"
 
 botframework-streaming@4.14.1:
@@ -4959,12 +4912,12 @@ botframework-streaming@4.14.1:
     uuid "^8.3.2"
     ws "^7.1.2"
 
-botframework-webchat-api@4.14.1:
-  version "4.14.1"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-api/-/botframework-webchat-api-4.14.1.tgz#74b8ea4fb0f632559dd3cbf442116069eeaff876"
-  integrity sha512-evIByreW9mw/WJ6VP+uY/TFeZBrMyMOaIA6xq/3bXKw0Tp1gSrsFa8ff680T2oHK4vC1+U+svw+qZioMK9WD0w==
+botframework-webchat-api@4.15.1:
+  version "4.15.1"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-api/-/botframework-webchat-api-4.15.1.tgz#67affbb909991a6339fc55d2c421656ac1fc33b7"
+  integrity sha512-+bXkGVYjTOeS9af8TUhvz+bM6eX8iIJQisXaIEes91D1Kse6Jay6uxQjU0vN7LCeZS2XDWvCxG4BcnVITcWxPQ==
   dependencies:
-    botframework-webchat-core "4.14.1"
+    botframework-webchat-core "4.15.1"
     globalize "1.6.0"
     math-random "2.0.1"
     prop-types "15.7.2"
@@ -4972,40 +4925,41 @@ botframework-webchat-api@4.14.1:
     redux "4.0.5"
     simple-update-in "2.2.0"
 
-botframework-webchat-component@4.14.1:
-  version "4.14.1"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-component/-/botframework-webchat-component-4.14.1.tgz#af6c096170593cdda3679f4c17f686ee66d96bb2"
-  integrity sha512-ywhDbFsIz+CS2hes6OzV2gRBGWxPP0l+mzoH63ltvTFwOnY8xU9ekECmh4dQmwGEGzWKcRG/MyLGfPxd1PAjpw==
+botframework-webchat-component@4.15.1:
+  version "4.15.1"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-component/-/botframework-webchat-component-4.15.1.tgz#ec69ae2114bc9cd19042396becae9278afba9251"
+  integrity sha512-NRPQV+SMZNTDvyamxu2AfceuGra7zPMIRX56sEYBU8S656soDsN4dCIWLSZjfbz53vXPASm0UFFfRqc3qwDy7Q==
   dependencies:
     "@emotion/css" "11.1.3"
     base64-js "1.5.1"
-    botframework-webchat-api "4.14.1"
-    botframework-webchat-core "4.14.1"
+    botframework-webchat-api "4.15.1"
+    botframework-webchat-core "4.15.1"
     classnames "2.3.1"
+    compute-scroll-into-view "1.0.17"
     event-target-shim "6.0.2"
-    markdown-it "12.1.0"
+    markdown-it "12.3.2"
     math-random "2.0.1"
     memoize-one "5.2.1"
     prop-types "15.7.2"
     react-dictate-button "2.0.1"
-    react-film "3.0.1"
+    react-film "3.1.0"
     react-redux "7.2.4"
-    react-say "2.0.2-master.ee7cd76"
-    react-scroll-to-bottom "4.1.1"
+    react-say "2.1.0"
+    react-scroll-to-bottom "4.2.0"
     redux "4.0.5"
     simple-update-in "2.2.0"
 
-botframework-webchat-core@4.14.1:
-  version "4.14.1"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-core/-/botframework-webchat-core-4.14.1.tgz#f15542fbef2cb668fb98ac2dcbf4d64e2577137e"
-  integrity sha512-ZkiR6Hit8PmLvhMvJZFScoNPSJfJqVvchWZ4rFkyzF+XtJnhrykQjD6w1TO9VqKXGd5CgyKUYYCi41CmfbOkjg==
+botframework-webchat-core@4.15.1:
+  version "4.15.1"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-core/-/botframework-webchat-core-4.15.1.tgz#bafef0d788b30a7fbc48df6271020f1dae324700"
+  integrity sha512-fZp2uqEuUZFDMKX3nVYLKHgrXdzfvsRFuuws5sRDnpeT29u68mZzARlE4exH2JolQh5oto65LTiySi7MAUGnww==
   dependencies:
-    "@babel/runtime" "7.14.6"
+    "@babel/runtime" "7.15.4"
     jwt-decode "3.1.2"
     math-random "2.0.1"
     mime "2.5.2"
     p-defer "4.0.0"
-    p-defer-es5 "2.0.0"
+    p-defer-es5 "2.0.1"
     redux "4.0.5"
     redux-devtools-extension "2.13.9"
     redux-saga "1.1.3"
@@ -5024,10 +4978,10 @@ botframework-webchat@4.14.1:
     botframework-webchat-component "4.14.1"
     botframework-webchat-core "4.14.1"
     classnames "2.3.1"
-    core-js "3.15.2"
-    markdown-it "12.1.0"
+    core-js "3.18.3"
+    markdown-it "12.3.2"
     markdown-it-attrs "4.0.0"
-    markdown-it-attrs-es5 "2.0.0"
+    markdown-it-attrs-es5 "2.0.2"
     markdown-it-for-inline "0.1.1"
     math-random "2.0.1"
     memoize-one "5.2.1"
@@ -5537,12 +5491,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@2.2.6:
-  version "2.2.6"
-  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
-  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
-
-classnames@2.3.1, classnames@^2.2.6:
+classnames@2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
@@ -5761,7 +5710,7 @@ compression@^1.7.4:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-compute-scroll-into-view@^1.0.17:
+compute-scroll-into-view@1.0.17, compute-scroll-into-view@^1.0.17:
   version "1.0.17"
   resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.17.tgz#6a88f18acd9d42e9cf4baa6bec7e0522607ab7ab"
   integrity sha512-j4dx+Fb0URmzbwwMUrhqWM2BEWHdFGx+qZ9qqASHRPqvTYdqvWnHg0H1hIbcyLnvgnoNAVMlwkepyqM3DaIFUg==
@@ -5893,6 +5842,11 @@ core-js@3.15.2:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.15.2.tgz#740660d2ff55ef34ce664d7e2455119c5bdd3d61"
   integrity sha512-tKs41J7NJVuaya8DxIOCnl8QuPHx5/ZVbFo1oKgVl1qHFBBrDctzQGtuLjPpRdNTWmKPH6oEvgN/MUID+l485Q==
 
+core-js@3.18.3:
+  version "3.18.3"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.18.3.tgz#86a0bba2d8ec3df860fefcc07a8d119779f01509"
+  integrity sha512-tReEhtMReZaPFVw7dajMx0vlsz3oOb8ajgPoHVYGxr8ErnZ6PcYEvvmjGmXlfpnxpkYSdOQttjB+MvVbCGfvLw==
+
 core-js@^3.0.4, core-js@^3.12.1, core-js@^3.6.5, core-js@^3.8.2:
   version "3.22.0"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.22.0.tgz#b52007870c5e091517352e833b77f0b2d2b259f3"
@@ -5957,16 +5911,6 @@ create-ecdh@^4.0.0:
   dependencies:
     bn.js "^4.1.0"
     elliptic "^6.5.3"
-
-create-emotion@10.0.27:
-  version "10.0.27"
-  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-10.0.27.tgz#cb4fa2db750f6ca6f9a001a33fbf1f6c46789503"
-  integrity sha512-fIK73w82HPPn/RsAij7+Zt8eCE8SptcJ3WoRMfxMtjteYxud8GDTKKld7MYwAX2TVhrw29uR1N/bVGxeStHILg==
-  dependencies:
-    "@emotion/cache" "^10.0.27"
-    "@emotion/serialize" "^0.11.15"
-    "@emotion/sheet" "0.9.4"
-    "@emotion/utils" "0.11.3"
 
 create-hash@^1.1.0, create-hash@^1.1.2, create-hash@^1.2.0:
   version "1.2.0"
@@ -7135,7 +7079,7 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-event-as-promise@1.0.5, event-as-promise@^1.0.5:
+event-as-promise@1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/event-as-promise/-/event-as-promise-1.0.5.tgz#3e8f68b0f6ceacc8e607ca6578a1fdb08bc01b39"
   integrity sha512-z/WIlyou7oTvXBjm5YYjfklr2d8gUWtx8b5GAcrIs1n1D35f7NIK0CrcYSXbY3VYikG9bUan+wScPyGXL/NH4A==
@@ -10107,20 +10051,20 @@ markdown-escapes@^1.0.0:
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
 
-markdown-it-attrs-es5@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/markdown-it-attrs-es5/-/markdown-it-attrs-es5-2.0.0.tgz#75061a3c7cde8389468c9858c34785c4da873b51"
-  integrity sha512-HQ3Vy7lDV9LdsZvUjGlJNYM8hUiJ7FKdkTuNFfHG1z9YGAbIOqNBkfkQ2frbc27OyKlB+0lZu0PQnmCyeWYqbw==
+markdown-it-attrs-es5@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/markdown-it-attrs-es5/-/markdown-it-attrs-es5-2.0.2.tgz#4897bcee110f68a5393cce1552ad156b3f195d5f"
+  integrity sha512-VJczS1pwXA/OEyWD/30ehzBwyFwNT7V53tvwng6+S1uTLedPUGwp3nI2/HwOlKrMfRTe2L6zNb3HzmSNWUEhDA==
   dependencies:
-    "@babel/cli" "7.14.5"
-    "@babel/core" "7.14.6"
-    "@babel/plugin-transform-runtime" "^7.14.5"
-    "@babel/preset-env" "7.14.7"
-    "@babel/runtime-corejs3" "^7.14.7"
-    esbuild "0.12.15"
+    "@babel/cli" "^7.17.6"
+    "@babel/core" "^7.17.5"
+    "@babel/plugin-transform-runtime" "^7.17.0"
+    "@babel/preset-env" "^7.16.11"
+    "@babel/runtime-corejs3" "^7.17.2"
+    esbuild "^0.14.23"
     mkdirp "^1.0.4"
-    read-pkg-up "^8.0.0"
-    terser "5.7.1"
+    read-pkg-up "^9.1.0"
+    terser "^5.11.0"
 
 markdown-it-attrs@4.0.0:
   version "4.0.0"
@@ -10228,7 +10172,7 @@ memfs@^3.1.2:
   dependencies:
     fs-monkey "1.0.3"
 
-memoize-one@5.2.1, memoize-one@^5.0.0, memoize-one@^5.1.1:
+memoize-one@5.2.1, memoize-one@^5.0.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.2.1.tgz#8337aa3c4335581839ec01c3d594090cebe8f00e"
   integrity sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==
@@ -11005,7 +10949,7 @@ p-all@^2.1.0:
   dependencies:
     p-map "^2.0.0"
 
-p-defer-es5@2.0.0, p-defer-es5@^2.0.1:
+p-defer-es5@2.0.0, p-defer-es5@2.0.1, p-defer-es5@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/p-defer-es5/-/p-defer-es5-2.0.1.tgz#2d6205776f2308c52f6c1dc2c0c252ce4faac253"
   integrity sha512-6T4aY4IRUS30wcFwZBrNNLKqiVX9O0Fa3LWpr0I8ZnaRvlrXXZ0J3lhhcNSFWce2FjMtY543TG6Rlv//yJaVAw==
@@ -11995,10 +11939,10 @@ react-fast-compare@^3.0.1, react-fast-compare@^3.2.0:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
 
-react-film@3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/react-film/-/react-film-3.0.1.tgz#e6fed128e7b4983ab9752e5595ad6eb533b61adf"
-  integrity sha512-T/rXCeiM5WJOzQ/VRNCN69IScsvVzqo1D2ALfoQRYbVwxg1bN7MK0MsIMnpYfqCKByiKxM9TJXPBvdhDUjFQaw==
+react-film@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-film/-/react-film-3.1.0.tgz#c87275c3c546c96eee0baeaae837a6e753662066"
+  integrity sha512-4hIJroKXleVYy2Hk3oStz7Fn4KVweEgWZE8u0YW1+FAd7UDjUWIFR9wl9XPVknBowLiD1ZJumjIF6Imx6Uhsbw==
   dependencies:
     "@emotion/css" "11.1.3"
     classnames "2.3.1"
@@ -12118,23 +12062,25 @@ react-router@6.3.0, react-router@^6.0.0:
   dependencies:
     history "^5.2.0"
 
-react-say@2.0.2-master.ee7cd76:
-  version "2.0.2-master.ee7cd76"
-  resolved "https://registry.yarnpkg.com/react-say/-/react-say-2.0.2-master.ee7cd76.tgz#0c0e7e79d9d95b46469bf12ee08a303c555723f9"
-  integrity sha512-wTJleRlP5ojCuYGElAtBCrbeGgm2FB6De4/YilBWfDBNhPUHiiHgZSQpn8x+E9aEvx2vZINI7gH+1SrAcoazDA==
+react-say@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-say/-/react-say-2.1.0.tgz#c53ea714eb1e529e1aa480bac7d114ab83a3f59d"
+  integrity sha512-TSGEA1GQuxa3nc9PEO5fvS3XjM1GGXPUTmcAXV2zlxA1w/vLE+gy0eGJPDYg1ovWmkbe+JZamr7BncwqkicKYg==
   dependencies:
-    "@babel/runtime" "^7.7.2"
-    classnames "^2.2.6"
-    event-as-promise "^1.0.5"
-    memoize-one "^5.1.1"
+    "@babel/runtime" "7.15.4"
+    classnames "2.3.1"
+    event-as-promise "1.0.5"
+    memoize-one "5.2.1"
 
-react-scroll-to-bottom@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/react-scroll-to-bottom/-/react-scroll-to-bottom-4.1.1.tgz#0f1c26d3516fada4065e083117f2417ba60b44ea"
-  integrity sha512-9EftIcQ9ebMLIVUofwmNTyAw2CLvCZ209qwrO7jEGeelhCpGyyzBDZ2r2f7qFszpOTd9iuqFzaz8rzyhGrNNRw==
+react-scroll-to-bottom@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/react-scroll-to-bottom/-/react-scroll-to-bottom-4.2.0.tgz#208183547f85e2b640f467c185fdbc93de2fcc64"
+  integrity sha512-1WweuumQc5JLzeAR81ykRdK/cEv9NlCPEm4vSwOGN1qS2qlpGVTyMgdI8Y7ZmaqRmzYBGV5/xPuJQtekYzQFGg==
   dependencies:
-    classnames "2.2.6"
-    create-emotion "10.0.27"
+    "@babel/runtime-corejs3" "^7.15.4"
+    "@emotion/css" "11.1.3"
+    classnames "2.3.1"
+    core-js "3.18.3"
     math-random "2.0.1"
     prop-types "15.7.2"
     simple-update-in "2.2.0"
@@ -12278,15 +12224,6 @@ read-pkg-up@^7.0.1:
     read-pkg "^5.2.0"
     type-fest "^0.8.1"
 
-read-pkg-up@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-8.0.0.tgz#72f595b65e66110f43b052dd9af4de6b10534670"
-  integrity sha512-snVCqPczksT0HS2EC+SxUndvSzn6LRCwpfSvLrIfR5BKDQQZMaI6jPRC9dYvYFDRAuFEAnkwww8kBBNE/3VvzQ==
-  dependencies:
-    find-up "^5.0.0"
-    read-pkg "^6.0.0"
-    type-fest "^1.0.1"
-
 read-pkg-up@^9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-9.1.0.tgz#38ca48e0bc6c6b260464b14aad9bcd4e5b1fbdc3"
@@ -12305,16 +12242,6 @@ read-pkg@^5.2.0:
     normalize-package-data "^2.5.0"
     parse-json "^5.0.0"
     type-fest "^0.6.0"
-
-read-pkg@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/read-pkg/-/read-pkg-6.0.0.tgz#a67a7d6a1c2b0c3cd6aa2ea521f40c458a4a504c"
-  integrity sha512-X1Fu3dPuk/8ZLsMhEj5f4wFAF0DWoK7qhGJvgaijocXxBmSToKfbFtqbxMO7bVjNA1dmE5huAzjXj/ey86iw9Q==
-  dependencies:
-    "@types/normalize-package-data" "^2.4.0"
-    normalize-package-data "^3.0.2"
-    parse-json "^5.2.0"
-    type-fest "^1.0.1"
 
 read-pkg@^7.1.0:
   version "7.1.0"
@@ -13805,15 +13732,6 @@ terser-webpack-plugin@^4.2.3:
     terser "^5.3.4"
     webpack-sources "^1.4.3"
 
-terser@5.7.1:
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.7.1.tgz#2dc7a61009b66bb638305cb2a824763b116bf784"
-  integrity sha512-b3e+d5JbHAe/JSjwsC3Zn55wsBIM7AsHLjKxT31kGCldgbpFePaFo+PiddtO6uwRZWRw7sPXmAN8dTW61xmnSg==
-  dependencies:
-    commander "^2.20.0"
-    source-map "~0.7.2"
-    source-map-support "~0.5.19"
-
 terser@^4.1.2, terser@^4.6.3:
   version "4.8.0"
   resolved "https://registry.yarnpkg.com/terser/-/terser-4.8.0.tgz#63056343d7c70bb29f3af665865a46fe03a0df17"
@@ -14100,11 +14018,6 @@ type-fest@^0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
-
-type-fest@^1.0.1:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-1.4.0.tgz#e9fb813fe3bf1744ec359d55d1affefa76f14be1"
-  integrity sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==
 
 type-fest@^2.0.0, type-fest@^2.5.0:
   version "2.12.2"
