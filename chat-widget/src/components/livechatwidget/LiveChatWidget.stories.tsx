@@ -63,7 +63,7 @@ const sampleAvatarMiddleware = () => (_next: any) => (args: any) => {
     return output;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, react/display-name
 const sampleActivityStatusMiddleware = () => (_next: any) => (args: any) => {
     const {
         activity: {
@@ -84,7 +84,7 @@ const sampleActivityStatusMiddleware = () => (_next: any) => (args: any) => {
     return output;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name
 const sampleAttachmentMiddleware = () => (next: any) => (card: any) => {
     const output = (
         <div>
@@ -96,7 +96,7 @@ const sampleAttachmentMiddleware = () => (next: any) => (card: any) => {
     return output;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, react/display-name
 const sampleTypingIndicatorMiddleware = () => (_next: any) => (args: any) => {
     const foundKey = Object.keys(args.activeTyping).find((key) => (args.activeTyping[key].role === "bot"));
     const output = (

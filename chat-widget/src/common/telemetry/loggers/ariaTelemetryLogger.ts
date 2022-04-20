@@ -1,9 +1,14 @@
-import { Constants } from "../../Constants";
 import { LogLevel, TelemetryInput } from "../TelemetryConstants";
 import { isNullOrEmptyString, isNullOrUndefined } from "../../utils";
+
+import AWTEventProperties from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/AWTEventProperties";
+import { AWTLogConfiguration } from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/DataModels";
+import AWTLogManager from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/AWTLogManager";
+import AWTLogger from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/AWTLogger";
+import { AWTPiiKind } from "@microsoft/omnichannel-chat-sdk/lib/external/aria/common/Enums";
+import { Constants } from "../../Constants";
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
 import { TelemetryHelper } from "../TelemetryHelper";
-import { AWTEventProperties, AWTLogConfiguration, AWTLogger, AWTLogManager, AWTPiiKind } from "@aria/webjs-sdk";
 
 export const ariaTelemetryLogger = (ariaTelemetryKey: string,
     disabledCookieUsage: boolean,
