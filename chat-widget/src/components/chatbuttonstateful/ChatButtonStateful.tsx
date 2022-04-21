@@ -67,9 +67,13 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             Event: TelemetryEvent.LCWChatButtonShow,
             ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed
         });
-
-        setFocusOnElement(document.getElementById(controlProps?.id ?? "oc-lcw-chat-button") as HTMLElement);
     }, []);
+
+    useEffect(() => {
+        if(state.appStates.isMinimized) {
+            setFocusOnElement(document.getElementById(controlProps?.id ?? "oc-lcw-chat-button") as HTMLElement);
+        }        
+    }, [state.appStates.isMinimized]);
 
     return (
         <ChatButton

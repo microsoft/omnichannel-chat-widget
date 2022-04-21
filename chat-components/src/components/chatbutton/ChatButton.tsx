@@ -134,6 +134,7 @@ function ChatButton(props: IChatButtonProps) {
                 tabIndex={0}
                 role={defaultRole}
                 onClick={handleInitiateChatClick}
+                onKeyDown={handleInitiateChatClick}
                 aria-label={defaultAriaLabel}>
                 {!hideChatIcon && IconContainer(props, elementId)}
                 {!hideChatTextContainer && TextContainer(props, elementId)}
