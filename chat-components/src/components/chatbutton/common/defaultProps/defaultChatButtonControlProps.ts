@@ -3,7 +3,7 @@ import { IChatButtonControlProps } from "../../interfaces/IChatButtonControlProp
 export const defaultChatButtonControlProps: IChatButtonControlProps = {
     id: "lcw-components-chat-button",
     dir: "ltr",
-    role: "navigation",
+    role: "button",
     ariaLabel: "live chat button",
     unreadMessageCount: "0",
     titleText: "Let's Chat!",

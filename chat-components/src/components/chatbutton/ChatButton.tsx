@@ -24,7 +24,6 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
         <Label
             styles={notificationBubbleStyles}
             className={props.styleProps?.classNames?.notificationBubbleClassName}
-            tabIndex={-1} 
             id={parentId + "-notification-bubble"}>
             {unreadMessageCount}
         </Label>
@@ -40,7 +39,6 @@ function IconContainer(props: IChatButtonProps, parentId: string) {
         <Icon
             className={props.styleProps?.classNames?.iconContainerClassName}
             styles={iconContainerStyles}
-            tabIndex={-1} 
             id={parentId + "-icon-container"} >
         </Icon>
     );
@@ -71,12 +69,11 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
             styles={textContainerStyles}
             className={props.styleProps?.classNames?.textContainerClassName}
             id={parentId + "-text-container"}
-            tabIndex={-1}>
+        >
                 
             {!hideChatTitle && (decodeComponentString(props.componentOverrides?.title) || 
                 <Label
                     styles={titleStyles}
-                    tabIndex={-1} 
                     dir={titleDir}
                     className={props.styleProps?.classNames?.titleClassName}
                     id={parentId + "-title"}
@@ -87,7 +84,6 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
             {!hideChatSubtitle && (decodeComponentString(props.componentOverrides?.subtitle) || 
                 <Label 
                     styles={subtitleStyles}
-                    tabIndex={-1}
                     dir={subtitleDir}
                     className={props.styleProps?.classNames?.subtitleClassName}
                     id={parentId + "-subtitle"}
