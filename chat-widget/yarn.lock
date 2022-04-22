@@ -1334,7 +1334,7 @@
     pirates "^4.0.5"
     source-map-support "^0.5.16"
 
-"@babel/runtime-corejs3@^7.14.0", "@babel/runtime-corejs3@^7.14.7", "@babel/runtime-corejs3@^7.17.2":
+"@babel/runtime-corejs3@^7.14.0", "@babel/runtime-corejs3@^7.17.2":
   version "7.17.9"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.17.9.tgz#3d02d0161f0fbf3ada8e88159375af97690f4055"
   integrity sha512-WxYHHUWF2uZ7Hp1K+D1xQgbgkGUfA+5UPOegEXGt2Y5SMog/rYCVaifLZDbw8UkNXozEqqrZTy6bglL7xTaCOw==
@@ -4008,7 +4008,7 @@ abab@^2.0.3, abab@^2.0.5:
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.6.tgz#41b80f2c871d19686216b82309231cfd3cb3d291"
   integrity sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==
 
-abort-controller-es5@2.0.0, abort-controller-es5@^2.0.1:
+abort-controller-es5@2.0.1, abort-controller-es5@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/abort-controller-es5/-/abort-controller-es5-2.0.1.tgz#6810f8aeee0c250d11e30d5070a7d6ddc06b28a1"
   integrity sha512-wsJHPzphkEmwKZ0MAxEizI8tq4oX9CEy+Wc7Bfj0GiwbXb/u1oT7x3j3Fmj2n1fH9RmmPxN8fzXBGplM0XUVtg==
@@ -4075,7 +4075,7 @@ adaptivecards@2.9.0:
   resolved "https://registry.yarnpkg.com/adaptivecards/-/adaptivecards-2.9.0.tgz#1006fe56703a5aab94bfeb944637b684e7ea850c"
   integrity sha512-TXbtzc6LwisTdlfEAooropj9ZwgcQz8bSirWOnph3bzJJr9QF8YQCfSIpcAXKTJ7b6YrOfH+9xw/a8RaKgeOZg==
 
-adaptivecards@2.10.0, adaptivecards@^2.10.0:
+adaptivecards@^2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/adaptivecards/-/adaptivecards-2.10.0.tgz#1c94e84491afe5a4f2d4060f6e0fc57b895205e3"
   integrity sha512-QcgXGFlX3rgIfZkxvQY896zEVBh30mE37z3XKhcQW2OqSUrVH6dNT78MkM//W4wRdrZizSHqXKLaKyVVxAgVFg==
@@ -4912,12 +4912,12 @@ botframework-streaming@4.14.1:
     uuid "^8.3.2"
     ws "^7.1.2"
 
-botframework-webchat-api@4.15.1:
-  version "4.15.1"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-api/-/botframework-webchat-api-4.15.1.tgz#67affbb909991a6339fc55d2c421656ac1fc33b7"
-  integrity sha512-+bXkGVYjTOeS9af8TUhvz+bM6eX8iIJQisXaIEes91D1Kse6Jay6uxQjU0vN7LCeZS2XDWvCxG4BcnVITcWxPQ==
+botframework-webchat-api@4.14.1:
+  version "4.14.1"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-api/-/botframework-webchat-api-4.14.1.tgz#74b8ea4fb0f632559dd3cbf442116069eeaff876"
+  integrity sha512-evIByreW9mw/WJ6VP+uY/TFeZBrMyMOaIA6xq/3bXKw0Tp1gSrsFa8ff680T2oHK4vC1+U+svw+qZioMK9WD0w==
   dependencies:
-    botframework-webchat-core "4.15.1"
+    botframework-webchat-core "4.14.1"
     globalize "1.6.0"
     math-random "2.0.1"
     prop-types "15.7.2"
@@ -4925,41 +4925,40 @@ botframework-webchat-api@4.15.1:
     redux "4.0.5"
     simple-update-in "2.2.0"
 
-botframework-webchat-component@4.15.1:
-  version "4.15.1"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-component/-/botframework-webchat-component-4.15.1.tgz#ec69ae2114bc9cd19042396becae9278afba9251"
-  integrity sha512-NRPQV+SMZNTDvyamxu2AfceuGra7zPMIRX56sEYBU8S656soDsN4dCIWLSZjfbz53vXPASm0UFFfRqc3qwDy7Q==
+botframework-webchat-component@4.14.1:
+  version "4.14.1"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-component/-/botframework-webchat-component-4.14.1.tgz#af6c096170593cdda3679f4c17f686ee66d96bb2"
+  integrity sha512-ywhDbFsIz+CS2hes6OzV2gRBGWxPP0l+mzoH63ltvTFwOnY8xU9ekECmh4dQmwGEGzWKcRG/MyLGfPxd1PAjpw==
   dependencies:
     "@emotion/css" "11.1.3"
     base64-js "1.5.1"
-    botframework-webchat-api "4.15.1"
-    botframework-webchat-core "4.15.1"
+    botframework-webchat-api "4.14.1"
+    botframework-webchat-core "4.14.1"
     classnames "2.3.1"
-    compute-scroll-into-view "1.0.17"
     event-target-shim "6.0.2"
-    markdown-it "12.3.2"
+    markdown-it "12.1.0"
     math-random "2.0.1"
     memoize-one "5.2.1"
     prop-types "15.7.2"
     react-dictate-button "2.0.1"
-    react-film "3.1.0"
+    react-film "3.0.1"
     react-redux "7.2.4"
-    react-say "2.1.0"
-    react-scroll-to-bottom "4.2.0"
+    react-say "2.0.2-master.ee7cd76"
+    react-scroll-to-bottom "4.1.1"
     redux "4.0.5"
     simple-update-in "2.2.0"
 
-botframework-webchat-core@4.15.1:
-  version "4.15.1"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-core/-/botframework-webchat-core-4.15.1.tgz#bafef0d788b30a7fbc48df6271020f1dae324700"
-  integrity sha512-fZp2uqEuUZFDMKX3nVYLKHgrXdzfvsRFuuws5sRDnpeT29u68mZzARlE4exH2JolQh5oto65LTiySi7MAUGnww==
+botframework-webchat-core@4.14.1:
+  version "4.14.1"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-core/-/botframework-webchat-core-4.14.1.tgz#f15542fbef2cb668fb98ac2dcbf4d64e2577137e"
+  integrity sha512-ZkiR6Hit8PmLvhMvJZFScoNPSJfJqVvchWZ4rFkyzF+XtJnhrykQjD6w1TO9VqKXGd5CgyKUYYCi41CmfbOkjg==
   dependencies:
-    "@babel/runtime" "7.15.4"
+    "@babel/runtime" "7.14.6"
     jwt-decode "3.1.2"
     math-random "2.0.1"
     mime "2.5.2"
     p-defer "4.0.0"
-    p-defer-es5 "2.0.1"
+    p-defer-es5 "2.0.0"
     redux "4.0.5"
     redux-devtools-extension "2.13.9"
     redux-saga "1.1.3"
@@ -5491,7 +5490,12 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@2.3.1:
+classnames@2.2.6:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+  integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
+
+classnames@2.3.1, classnames@^2.2.6:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
@@ -5710,7 +5714,7 @@ compression@^1.7.4:
     safe-buffer "5.1.2"
     vary "~1.1.2"
 
-compute-scroll-into-view@1.0.17, compute-scroll-into-view@^1.0.17:
+compute-scroll-into-view@^1.0.17:
   version "1.0.17"
   resolved "https://registry.yarnpkg.com/compute-scroll-into-view/-/compute-scroll-into-view-1.0.17.tgz#6a88f18acd9d42e9cf4baa6bec7e0522607ab7ab"
   integrity sha512-j4dx+Fb0URmzbwwMUrhqWM2BEWHdFGx+qZ9qqASHRPqvTYdqvWnHg0H1hIbcyLnvgnoNAVMlwkepyqM3DaIFUg==
@@ -5911,6 +5915,16 @@ create-ecdh@^4.0.0:
   dependencies:
     bn.js "^4.1.0"
     elliptic "^6.5.3"
+
+create-emotion@10.0.27:
+  version "10.0.27"
+  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-10.0.27.tgz#cb4fa2db750f6ca6f9a001a33fbf1f6c46789503"
+  integrity sha512-fIK73w82HPPn/RsAij7+Zt8eCE8SptcJ3WoRMfxMtjteYxud8GDTKKld7MYwAX2TVhrw29uR1N/bVGxeStHILg==
+  dependencies:
+    "@emotion/cache" "^10.0.27"
+    "@emotion/serialize" "^0.11.15"
+    "@emotion/sheet" "0.9.4"
+    "@emotion/utils" "0.11.3"
 
 create-hash@^1.1.0, create-hash@^1.1.2, create-hash@^1.2.0:
   version "1.2.0"
@@ -7079,7 +7093,7 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-event-as-promise@1.0.5:
+event-as-promise@1.0.5, event-as-promise@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/event-as-promise/-/event-as-promise-1.0.5.tgz#3e8f68b0f6ceacc8e607ca6578a1fdb08bc01b39"
   integrity sha512-z/WIlyou7oTvXBjm5YYjfklr2d8gUWtx8b5GAcrIs1n1D35f7NIK0CrcYSXbY3VYikG9bUan+wScPyGXL/NH4A==
@@ -10087,7 +10101,7 @@ markdown-it@12.1.0:
     mdurl "^1.0.1"
     uc.micro "^1.0.5"
 
-markdown-it@^12.3.2:
+markdown-it@12.3.2, markdown-it@^12.3.2:
   version "12.3.2"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-12.3.2.tgz#bf92ac92283fe983fe4de8ff8abfb5ad72cd0c90"
   integrity sha512-TchMembfxfNVpHkbtriWltGWc+m3xszaRD0CZup7GFFhzIgQqxIfn3eGj1yZpfuflzPvfkt611B2Q/Bsk1YnGg==
@@ -10172,7 +10186,7 @@ memfs@^3.1.2:
   dependencies:
     fs-monkey "1.0.3"
 
-memoize-one@5.2.1, memoize-one@^5.0.0:
+memoize-one@5.2.1, memoize-one@^5.0.0, memoize-one@^5.1.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.2.1.tgz#8337aa3c4335581839ec01c3d594090cebe8f00e"
   integrity sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==
@@ -11939,10 +11953,10 @@ react-fast-compare@^3.0.1, react-fast-compare@^3.2.0:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
 
-react-film@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-film/-/react-film-3.1.0.tgz#c87275c3c546c96eee0baeaae837a6e753662066"
-  integrity sha512-4hIJroKXleVYy2Hk3oStz7Fn4KVweEgWZE8u0YW1+FAd7UDjUWIFR9wl9XPVknBowLiD1ZJumjIF6Imx6Uhsbw==
+react-film@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-film/-/react-film-3.0.1.tgz#e6fed128e7b4983ab9752e5595ad6eb533b61adf"
+  integrity sha512-T/rXCeiM5WJOzQ/VRNCN69IScsvVzqo1D2ALfoQRYbVwxg1bN7MK0MsIMnpYfqCKByiKxM9TJXPBvdhDUjFQaw==
   dependencies:
     "@emotion/css" "11.1.3"
     classnames "2.3.1"
@@ -12062,25 +12076,23 @@ react-router@6.3.0, react-router@^6.0.0:
   dependencies:
     history "^5.2.0"
 
-react-say@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-say/-/react-say-2.1.0.tgz#c53ea714eb1e529e1aa480bac7d114ab83a3f59d"
-  integrity sha512-TSGEA1GQuxa3nc9PEO5fvS3XjM1GGXPUTmcAXV2zlxA1w/vLE+gy0eGJPDYg1ovWmkbe+JZamr7BncwqkicKYg==
+react-say@2.0.2-master.ee7cd76:
+  version "2.0.2-master.ee7cd76"
+  resolved "https://registry.yarnpkg.com/react-say/-/react-say-2.0.2-master.ee7cd76.tgz#0c0e7e79d9d95b46469bf12ee08a303c555723f9"
+  integrity sha512-wTJleRlP5ojCuYGElAtBCrbeGgm2FB6De4/YilBWfDBNhPUHiiHgZSQpn8x+E9aEvx2vZINI7gH+1SrAcoazDA==
   dependencies:
-    "@babel/runtime" "7.15.4"
-    classnames "2.3.1"
-    event-as-promise "1.0.5"
-    memoize-one "5.2.1"
+    "@babel/runtime" "^7.7.2"
+    classnames "^2.2.6"
+    event-as-promise "^1.0.5"
+    memoize-one "^5.1.1"
 
-react-scroll-to-bottom@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/react-scroll-to-bottom/-/react-scroll-to-bottom-4.2.0.tgz#208183547f85e2b640f467c185fdbc93de2fcc64"
-  integrity sha512-1WweuumQc5JLzeAR81ykRdK/cEv9NlCPEm4vSwOGN1qS2qlpGVTyMgdI8Y7ZmaqRmzYBGV5/xPuJQtekYzQFGg==
+react-scroll-to-bottom@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-scroll-to-bottom/-/react-scroll-to-bottom-4.1.1.tgz#0f1c26d3516fada4065e083117f2417ba60b44ea"
+  integrity sha512-9EftIcQ9ebMLIVUofwmNTyAw2CLvCZ209qwrO7jEGeelhCpGyyzBDZ2r2f7qFszpOTd9iuqFzaz8rzyhGrNNRw==
   dependencies:
-    "@babel/runtime-corejs3" "^7.15.4"
-    "@emotion/css" "11.1.3"
-    classnames "2.3.1"
-    core-js "3.18.3"
+    classnames "2.2.6"
+    create-emotion "10.0.27"
     math-random "2.0.1"
     prop-types "15.7.2"
     simple-update-in "2.2.0"

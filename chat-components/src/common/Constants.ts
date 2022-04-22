@@ -7,6 +7,7 @@ export const BROADCAST_CHANNEL_NAME = "omnichannel_broadcast_channel";
 export const KeyCodes = class {
     public static readonly ENTER = "Enter";
     public static readonly ESCAPE = "Escape";
+    public static readonly SPACE = "Space";
 };
 
 export const Regex = class {
