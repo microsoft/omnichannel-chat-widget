@@ -2,7 +2,7 @@ import { IIconStyles, ILabelStyles, IStackStyles, Icon, Label, Stack } from "@fl
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType } from "../../common/Constants";
+import { ElementType, KeyCodes } from "../../common/Constants";
 import type { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";
@@ -24,7 +24,6 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
         <Label
             styles={notificationBubbleStyles}
             className={props.styleProps?.classNames?.notificationBubbleClassName}
-            tabIndex={-1} 
             id={parentId + "-notification-bubble"}>
             {unreadMessageCount}
         </Label>
@@ -40,7 +39,6 @@ function IconContainer(props: IChatButtonProps, parentId: string) {
         <Icon
             className={props.styleProps?.classNames?.iconContainerClassName}
             styles={iconContainerStyles}
-            tabIndex={-1} 
             id={parentId + "-icon-container"} >
         </Icon>
     );
@@ -71,12 +69,11 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
             styles={textContainerStyles}
             className={props.styleProps?.classNames?.textContainerClassName}
             id={parentId + "-text-container"}
-            tabIndex={-1}>
+        >
                 
             {!hideChatTitle && (decodeComponentString(props.componentOverrides?.title) || 
                 <Label
                     styles={titleStyles}
-                    tabIndex={-1} 
                     dir={titleDir}
                     className={props.styleProps?.classNames?.titleClassName}
                     id={parentId + "-title"}
@@ -87,7 +84,6 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
             {!hideChatSubtitle && (decodeComponentString(props.componentOverrides?.subtitle) || 
                 <Label 
                     styles={subtitleStyles}
-                    tabIndex={-1}
                     dir={subtitleDir}
                     className={props.styleProps?.classNames?.subtitleClassName}
                     id={parentId + "-subtitle"}
@@ -124,6 +120,13 @@ function ChatButton(props: IChatButtonProps) {
         }        
     }, []);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleInputKeyDown = (e: any) => {
+        if (e.code === KeyCodes.ENTER || e.code === KeyCodes.SPACE) {
+            handleInitiateChatClick();
+        }
+    };
+
     return (
         <>
             {!hideChatButton && 
@@ -134,6 +137,7 @@ function ChatButton(props: IChatButtonProps) {
                 tabIndex={0}
                 role={defaultRole}
                 onClick={handleInitiateChatClick}
+                onKeyDown={handleInputKeyDown}
                 aria-label={defaultAriaLabel}>
                 {!hideChatIcon && IconContainer(props, elementId)}
                 {!hideChatTextContainer && TextContainer(props, elementId)}
