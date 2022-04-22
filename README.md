@@ -1,6 +1,7 @@
 # Omnichannel Live Chat Widget UI Components
 
-[![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg) ![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-components-release/badge.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-components)
+![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-components-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-components)
+![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-widget-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-widget)
 
 [@microsoft/omnichannel-chat-widget](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget) is a React-based UI component library which allows you to build your own live chat widget experience using [@microsoft/omnichannel-chat-sdk](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk).
 
@@ -214,4 +215,7 @@ const customizedFooterProp: IFooterProps = {
 ## See Also
 
 [Telemetry](./docs/Telemetry.md)
+
 [Omnichannel Features](./docs/Features.md)
+
+[How to Add Visual Regression Tests](./docs/VisualRegressionTestingGuide.md)

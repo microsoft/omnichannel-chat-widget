@@ -1,7 +1,7 @@
-# Visual Regression Testing Guide
+# How to Add Visual Regression Tests
 
 ## Introduction
-Simply put, visual regression tests compare UI of a certain component or website with baseline snapshots that are taken prior to testing. In this project, we want to test on each React Component instead of a whole page, so useing Playwright directly is not ideal because Playwright only works on webpages. Instead, we will use a storybook addon called `storybook-addon-playwright` ([official addon page](https://storybook.js.org/addons/storybook-addon-playwright)).
+Visual regression tests compare UI of a certain component or website with baseline snapshots that are taken prior to testing. In this project, we want to test on each React Component instead of a whole page, so useing Playwright directly is not ideal because Playwright only works on webpages. Instead, we will use a storybook addon called `storybook-addon-playwright` ([official addon page](https://storybook.js.org/addons/storybook-addon-playwright)).
 
 ## Steps
 The whole process for adding visual regression tests is code free, as all the necessary code is already in place and you only need to add screenshots and steps to reproduce in a json file (which is also done automatically).
