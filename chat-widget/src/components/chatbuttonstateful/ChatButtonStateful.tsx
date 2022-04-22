@@ -70,7 +70,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     }, []);
 
     useEffect(() => {
-        if(state.appStates.isMinimized) {
+        if (state.appStates.isMinimized) {
             setFocusOnElement(document.getElementById(controlProps?.id ?? "oc-lcw-chat-button") as HTMLElement);
         }        
     }, [state.appStates.isMinimized]);
