@@ -2067,7 +2067,7 @@
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.0.tgz#277466f41169d233d52dd2db7899708a0d50ce0e"
   integrity sha512-9NOf+mAGeQCYuynYfhrZGYeq8wQSWs8jrnZG5W98vQZZXCoD/l4hcSf3fXHH2p7Ve82ZT8UG0dKCcwA5SEyzpg==
 
-"@microsoft/omnichannel-chat-components@0.1.0-main.ea06308":
+"@microsoft/omnichannel-chat-components@0.1.0-main.3e712be":
   version "0.1.0-main.ea06308"
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-0.1.0-main.ea06308.tgz#d30d15b2ceb12ba588f5214c57a187369e37d2c3"
   integrity sha512-IJGf+AgAzj9TH57FSJAMEGIgXKQbDnpBYVwj9htBLQ7l4oJIVccslkYXrlmzgS7GDDiZDKIDN0CqAVCtdpscKA==
