@@ -1,14 +1,10 @@
 # Telemetry
 
-<<<<<<< HEAD
 Omnichannel's Live Chat Widget collects telemetry data to improve reliability and performance over time by helping Microsoft to understand the usage patterns and troubleshoot.
 
 ## Setup
 
 The widget supports logging telemetry data to `aria` and `console` as default loggers. However, both of these default telemetry loggers can be controlled by passing [`ITelemetryConfig`](#itelemetryconfig) telemetry configuration property to `LiveChatWidget`:
-=======
-All events emitted from components library (@microsoft/omnichannel-chat-components) are of type `ICustomEvent` with below properties:
->>>>>>> update docs
 
 ```ts
 const liveChatWidgetProps = {
@@ -235,7 +231,7 @@ Refer to the below table to understand different critical telemetry events raise
 
 ## Bring Your Own Logger
 
-Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as showb below.
+Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as shown below.
 
 ```ts
 // customConsoleLogger.ts - Implementing IChatSDKLogger
