@@ -138,6 +138,15 @@ export const createReducer = () => {
                         isIncomingCall: action.payload as boolean
                     }
                 };
+            
+            case LiveChatWidgetActionType.SET_FOCUS_CHAT_BUTTON:
+                return {
+                    ...state,
+                    uiStates: {
+                        ...state.uiStates,
+                        focusChatButton: action.payload as boolean
+                    }
+                };
 
             case LiveChatWidgetActionType.DISABLE_VIDEO_CALL:
                 return {
