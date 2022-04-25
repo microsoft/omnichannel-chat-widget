@@ -112,7 +112,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                     id: "oc-lcw-CurrentCall-timer",
                     showHours: false,
                     timerStyles: {
-                        color: "white",
+                        color: "#FFFFFF",
                         textAlign: "center",
                         backgroundColor: "#3d3c3c",
                         height: "45px",
@@ -143,8 +143,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 audioCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "white",
-                    backgroundColor: "green",
+                    color: "#FFFFFF",
+                    backgroundColor: "#008000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
@@ -155,8 +155,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 videoCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "white",
-                    backgroundColor: "green",
+                    color: "#FFFFFF",
+                    backgroundColor: "#008000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
@@ -171,8 +171,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 declineCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "white",
-                    backgroundColor: "red",
+                    color: "#FFFFFF",
+                    backgroundColor: "#DC0000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
@@ -181,12 +181,12 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 incomingCallTitleStyleProps: {
                     margin: "0 5px",
-                    color: "white",
+                    color: "#FFFFFF",
                     fontSize: 12,
                     fontFamily: "Segoe UI, Arial, sans-serif"
                 },
                 itemFocusStyleProps: {
-                    outline: "2px solid white",
+                    outline: "2px solid #FFFFFF",
                 }
             },
             currentCallStyleProps: {
@@ -198,7 +198,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 micButtonStyleProps: {
                     borderRadius: "2px",
-                    color: "white",
+                    color: "#FFFFFF",
                     backgroundColor: "#3d3c3c",
                     height: "45px",
                     width: "50px",
@@ -209,7 +209,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 videoOffButtonStyleProps: {
                     borderRadius: "2px",
-                    color: "white",
+                    color: "#FFFFFF",
                     backgroundColor: "#3d3c3c",
                     height: "45px",
                     width: "50px",
@@ -223,8 +223,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 endCallButtonStyleProps: {
                     borderRadius: "2px",
-                    color: "white",
-                    backgroundColor: "red",
+                    color: "#FFFFFF",
+                    backgroundColor: "#DC0000",
                     lineHeight: "50px",
                     height: "45px",
                     width: "50px",
@@ -233,7 +233,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 currentCallTimerStyleProps: {
                     borderRadius: "2px",
                     margin: "1px",
-                    color: "white",
+                    color: "#FFFFFF",
                     paddingTop: "18px",
                     fontSize: 12,
                     fontFamily: "Segoe UI, Arial, sans-serif",
@@ -451,7 +451,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         styleProps: {
             generalStyleProps: {
-                backgroundColor: "white",
+                backgroundColor: "#FFFFFF",
                 borderRadius: "2px",
                 color: "black",
                 fontFamily: "Segoe UI, Arial, sans-serif",
@@ -493,7 +493,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             },
             confirmButtonStyleProps: {
                 backgroundColor: "rgba(9,72,159,1)",
-                color: "white",
+                color: "#FFFFFF",
                 fontFamily: "Segoe UI, Arial, sans-serif",
                 fontSize: "14px",
                 fontWeight: "500",
@@ -507,7 +507,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 border: "2px dotted #000"
             },
             cancelButtonStyleProps: {
-                backgroundColor: "white",
+                backgroundColor: "#FFFFFF",
                 fontFamily: "Segoe UI, Arial, sans-serif",
                 fontSize: "14px",
                 fontWeight: "500",
@@ -874,16 +874,16 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 fontSize: 16,
                 fontFamily: "Segoe UI, Arial, sans-serif",
                 fontWeight: "450",
-                color: "white",
+                color: "#FFFFFF",
                 padding: "3px 0"
             },
             minimizeButtonStyleProps: {
-                color: "white",
+                color: "#FFFFFF",
                 margin: "5px 0",
                 fontSize: "12px"
             },
             closeButtonStyleProps: {
-                color: "white",
+                color: "#FFFFFF",
                 margin: "5px 0",
                 fontSize: "12px"
             },
@@ -1041,7 +1041,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             titleStyleProps: {
                 // ...[Existing chat button title style props]
                 margin: "0 0 0 10px",
-                color: "White"
+                color: "#FFFFFF"
             }
         }
     },
@@ -1401,7 +1401,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             bubbleBackground: "#315FA2",
             bubbleBorderRadius: 4,
             bubbleBorderWidth: 0,
-            bubbleFromUserBackground: "White",
+            bubbleFromUserBackground: "#FFFFFF",
             bubbleFromUserBorderRadius: 4,
             bubbleFromUserBorderWidth: 1,
             bubbleFromUserTextColor: "Black",
@@ -1409,7 +1409,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             bubbleMaxWidth: 250,
             bubbleMinHeight: 34,
             bubbleMinWidth: 20,
-            bubbleTextColor: "White",
+            bubbleTextColor: "#FFFFFF",
             hideSendBox: false,
             hideUploadButton: true,
             primaryFont: "Segoe UI, Arial, sans-serif",
@@ -1418,7 +1418,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             sendBoxTextWrap: true,
             sendBoxHeight: 60,
             sendBoxMaxHeight: 96,
-            sendBoxBackground: "White",
+            sendBoxBackground: "#FFFFFF",
             showAvatarInGroup: true,
             suggestedActionsStackedHeight: 125,
             suggestedActionsStackedOverflow: "scroll" as any, // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -1529,7 +1529,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 fontWeight: 600,
                 fontSize: "13px",
                 lineHeight: "18px",
-                color: "white",
+                color: "#FFFFFF",
                 paddingTop: "7px",
                 WebkitUserSelect: "none",
                 MozUserSelect: "none",
