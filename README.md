@@ -100,19 +100,19 @@ These are components that are included in the ```@microsoft/omnichannel-chat-com
 
 | Component |  Usage | Interface |
 | ----- | -------- | ----- |
-| CallingContainerPane | The container for voice and video feature in the chat widget | [ICallingContainerProps](chat-components\src\components\callingcontainer\interfaces\ICallingContainerProps.ts) |
-| ChatButton | The button that appears on the user's portal that is designed to be the entry point for the user to initate chat | [IChatButtonProps](chat-components\src\components\chatbutton\interfaces\IChatButtonProps.ts) |
-| CommandButton | A customizable button component that can be injected to the header and/or footer | [ICommandButtonProps](chat-components\src\components\common\interfaces\ICommandButtonProps.ts)|
-| ConfirmationPane | The default pane used when the Header close button is launched | [IConfirmationPaneProps](chat-components\src\components\confirmationpane\interfaces\IConfirmationPaneProps.ts) |
-| Footer | The bottom container of the chat containing the download transcript, notification sound and email transcript buttons by default. | [IFooterProps](chat-components\src\components\footer\interfaces\IFooterProps.ts) |
-| Header | The top container of the chat containing the default minimize, close and title of the chat widget | [IHeaderProps](chat-components\src\components\header\interfaces\IHeaderProps.ts) |
-| InputValidationPane | A pop-up input pane with validation. In the default widget this is used as part of [EmailTranscriptPane](chat-widget\src\components\emailtranscriptpanestateful\interfaces\IEmailTranscriptPaneProps.ts) | [IInputValidationPaneProps](chat-components\src\components\inputvalidationpane\interfaces\IInputValidationPaneProps.ts) |
-| LoadingPane | The default pane used after the chat button is clicked and before the chat loads completely | [ILoadingPaneProps](chat-components\src\components\loadingpane\interfaces\ILoadingPaneProps.ts) |
-| OutOfOfficeHoursPane | The pane that is displayed when the chat is outside of operating hours set on admin side | [IOOOHPaneProps](chat-components\src\components\outofofficehourspane\interfaces\IOOOHPaneProps.ts) |
-| PostChatSurveyPane | The pane that holds the [Customer Voice](https://dynamics.microsoft.com/en-us/customer-voice/overview/) survey which would be used by the customer to input their chat experience, provide user ratings etc. It uses an IFrame to render the survey URL fetched from `getPostChatSurveyContext` call from [OmniChannel ChatSDK](https://github.com/microsoft/omnichannel-chat-sdk#get-postchat-survey). | [IPostChatSurveyPaneProps](chat-components\src\components\postchatsurveypane\interfaces\IPostChatSurveyPaneProps.ts) |
-| PreChatSurveyPane | The pane that holds the form which would be used by the customer to input helpful information for using the Support Chat before starting up the Chat Process. Makes use of [AdaptiveCards](https://adaptivecards.io/) | [IPreChatSurveyPaneProps](chat-components\src\components\prechatsurveypane\interfaces\IPreChatSurveyPaneProps.ts) |
-| ProactiveChatSurveyPane | A pane that holds more information than a normal chat button and can be configured to proactively pop up | [IProactiveChatPaneProps](chat-components\src\components\proactivechatpane\interfaces\IProactiveChatPaneProps.ts) |
-| ReconnectChatPane | The pane that shows up when the customer is re-connecting to the chat to add additional conversation | [IReconnectChatPaneProps](chat-components\src\components\reconnectchatpane\interfaces\IReconnectChatPaneProps.ts) |
+| CallingContainerPane | The container for voice and video feature in the chat widget | [ICallingContainerProps](chat-components/src/components/callingcontainer/interfaces/ICallingContainerProps.ts) |
+| ChatButton | The button that appears on the user's portal that is designed to be the entry point for the user to initate chat | [IChatButtonProps](chat-components/src/components/chatbutton/interfaces/IChatButtonProps.ts) |
+| CommandButton | A customizable button component that can be injected to the header and/or footer | [ICommandButtonProps](chat-components/src/components/common/interfaces/ICommandButtonProps.ts)|
+| ConfirmationPane | The default pane used when the Header close button is launched | [IConfirmationPaneProps](chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneProps.ts) |
+| Footer | The bottom container of the chat containing the download transcript, notification sound and email transcript buttons by default. | [IFooterProps](chat-components/src/components/footer/interfaces/IFooterProps.ts) |
+| Header | The top container of the chat containing the default minimize, close and title of the chat widget | [IHeaderProps](chat-components/src/components/header/interfaces/IHeaderProps.ts) |
+| InputValidationPane | A pop-up input pane with validation. In the default widget this is used as part of [EmailTranscriptPane](chat-widget/src/components/emailtranscriptpanestateful/interfaces/IEmailTranscriptPaneProps.ts) | [IInputValidationPaneProps](chat-components/src/components/inputvalidationpane/interfaces/IInputValidationPaneProps.ts) |
+| LoadingPane | The default pane used after the chat button is clicked and before the chat loads completely | [ILoadingPaneProps](chat-components/src/components/loadingpane/interfaces/ILoadingPaneProps.ts) |
+| OutOfOfficeHoursPane | The pane that is displayed when the chat is outside of operating hours set on admin side | [IOOOHPaneProps](chat-components/src/components/outofofficehourspane/interfaces/IOOOHPaneProps.ts) |
+| PostChatSurveyPane | The pane that holds the [Customer Voice](https://dynamics.microsoft.com/en-us/customer-voice/overview/) survey which would be used by the customer to input their chat experience, provide user ratings etc. It uses an IFrame to render the survey URL fetched from `getPostChatSurveyContext` call from [OmniChannel ChatSDK](https://github.com/microsoft/omnichannel-chat-sdk#get-postchat-survey). | [IPostChatSurveyPaneProps](chat-components/src/components/postchatsurveypane/interfaces/IPostChatSurveyPaneProps.ts) |
+| PreChatSurveyPane | The pane that holds the form which would be used by the customer to input helpful information for using the Support Chat before starting up the Chat Process. Makes use of [AdaptiveCards](https://adaptivecards.io/) | [IPreChatSurveyPaneProps](chat-components/src/components/prechatsurveypane/interfaces/IPreChatSurveyPaneProps.ts) |
+| ProactiveChatSurveyPane | A pane that holds more information than a normal chat button and can be configured to proactively pop up | [IProactiveChatPaneProps](chat-components/src/components/proactivechatpane/interfaces/IProactiveChatPaneProps.ts) |
+| ReconnectChatPane | The pane that shows up when the customer is re-connecting to the chat to add additional conversation | [IReconnectChatPaneProps](chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneProps.ts) |
 
 > :warning: Because the components extend Microsoft's [Fluent UI](https://developer.microsoft.com/en-us/fluentui#/) components, the base interface for all the ```styleProps``` in the above table is [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts), which extends the [IRawStyleBase](https://docs.microsoft.com/en-us/javascript/api/merge-styles/irawstylebase?view=office-ui-fabric-react-latest) interface, which is the most useful reference.
 
@@ -120,13 +120,13 @@ These are components that are included in the ```@microsoft/omnichannel-chat-com
 
 | Component | Default Usage | Interface |
 | ----- | -------- | ----- |
-| LiveChatWidget | The default widget that stitches the UI components with Chat SDK | [ILiveChatWidgetProps](chat-widget\src\components\livechatwidget\interfaces\ILiveChatWidgetProps.ts) |
+| LiveChatWidget | The default widget that stitches the UI components with Chat SDK | [ILiveChatWidgetProps](chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetProps.ts) |
 
-Some of the interfaces listed in the Stateless table have Stateful counterparts defined in the ```@microsoft/omnichannel-chat-widget``` package. For example, [IConfirmationPaneStatefulProps](chat-widget\src\components\confirmationpanestateful\interfaces\IConfirmationPaneStatefulProps.ts) extends [IConfirmationPaneProps](chat-components\src\components\confirmationpane\interfaces\IConfirmationPaneProps.ts) with additional attributes that only makes sense in the stateful context.
+Some of the interfaces listed in the Stateless table have Stateful counterparts defined in the ```@microsoft/omnichannel-chat-widget``` package. For example, [IConfirmationPaneStatefulProps](chat-widget/src/components/confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps.ts) extends [IConfirmationPaneProps](chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneProps.ts) with additional attributes that only makes sense in the stateful context.
 
 ### Default Props
 
-For a list of all default props used in the default stateful widget, please see [here](chat-widget\src\components\livechatwidget\common\defaultProps\dummyDefaultProps.ts). If you want to change a default prop, you need to explicitly set it and parse the object as the argument to ```<LiveChatWidget/>```
+For a list of all default props used in the default stateful widget, please see [here](chat-widget/src/components/livechatwidget/common/defaultProps/dummyDefaultProps.ts). If you want to change a default prop, you need to explicitly set it and parse the object as the argument to ```<LiveChatWidget/>```
 
 ### Custom Components
 
