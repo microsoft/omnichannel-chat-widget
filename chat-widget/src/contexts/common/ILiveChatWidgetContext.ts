@@ -45,5 +45,6 @@ export interface ILiveChatWidgetContext {
         disableRemoteVideo: boolean; // true when remote video is off
         disableSelfVideo: boolean; // true when self video is off
         isIncomingCall: boolean; //incoming/currentcall
+        focusChatButton: boolean; // true after the first rendering for chat button
     };
 }

@@ -170,5 +170,11 @@ export enum LiveChatWidgetActionType {
         Parameters:
         number: Keeps track of unread message count on chat minimize
     */
-    SET_UNREAD_MESSAGE_COUNT
+    SET_UNREAD_MESSAGE_COUNT,
+
+    /*
+        Parameters:
+        number: Toggle focus on chat button
+    */
+    SET_FOCUS_CHAT_BUTTON
 }

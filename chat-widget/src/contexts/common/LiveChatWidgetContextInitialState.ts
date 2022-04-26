@@ -42,7 +42,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             isIncomingCall: true,
             disableVideoCall: true,
             disableRemoteVideo: true,
-            disableSelfVideo: true
+            disableSelfVideo: true,
+            focusChatButton: false
         }
     };
     
