@@ -9,7 +9,7 @@ export const defaultCurrentCallStyleProps: ICurrentCallStyleProps = {
     },
     micButtonStyleProps: {
         borderRadius: "2px",
-        color: "white",
+        color: "#FFFFFF",
         backgroundColor: "#3d3c3c",
         height: "45px",
         width: "50px",
@@ -20,7 +20,7 @@ export const defaultCurrentCallStyleProps: ICurrentCallStyleProps = {
     },
     videoOffButtonStyleProps: {
         borderRadius: "2px",
-        color: "white",
+        color: "#FFFFFF",
         backgroundColor: "#3d3c3c",
         height: "45px",
         width: "50px",
@@ -34,8 +34,8 @@ export const defaultCurrentCallStyleProps: ICurrentCallStyleProps = {
     },
     endCallButtonStyleProps: {
         borderRadius: "2px",
-        color: "white",
-        backgroundColor: "red",
+        color: "#FFFFFF",
+        backgroundColor: "#DC0000",
         lineHeight: "50px",
         height: "45px",
         width: "50px",
@@ -44,7 +44,7 @@ export const defaultCurrentCallStyleProps: ICurrentCallStyleProps = {
     currentCallTimerStyleProps: {
         borderRadius: "2px",
         margin: "1px",
-        color: "white",
+        color: "#FFFFFF",
         paddingTop: "18px",
         fontSize: 12,
         fontFamily: "Segoe UI, Arial, sans-serif",

@@ -8,8 +8,8 @@ export const defaultIncomingCallStyleProps: IIncomingCallStyleProps = {
     },
     audioCallButtonStyleProps: {
         borderRadius: "50%",
-        color: "white",
-        backgroundColor: "green",
+        color: "#FFFFFF",
+        backgroundColor: "#008000",
         lineHeight: "40px",
         height: "40px",
         width: "40px",
@@ -20,8 +20,8 @@ export const defaultIncomingCallStyleProps: IIncomingCallStyleProps = {
     },
     videoCallButtonStyleProps: {
         borderRadius: "50%",
-        color: "white",
-        backgroundColor: "green",
+        color: "#FFFFFF",
+        backgroundColor: "#008000",
         lineHeight: "40px",
         height: "40px",
         width: "40px",
@@ -36,8 +36,8 @@ export const defaultIncomingCallStyleProps: IIncomingCallStyleProps = {
     },
     declineCallButtonStyleProps: {
         borderRadius: "50%",
-        color: "white",
-        backgroundColor: "red",
+        color: "#FFFFFF",
+        backgroundColor: "#DC0000",
         lineHeight: "40px",
         height: "40px",
         width: "40px",
@@ -46,11 +46,11 @@ export const defaultIncomingCallStyleProps: IIncomingCallStyleProps = {
     },
     incomingCallTitleStyleProps: {
         margin: "0 5px",
-        color: "white",
+        color: "#FFFFFF",
         fontSize: 12,
         fontFamily: "Segoe UI, Arial, sans-serif"
     },
     itemFocusStyleProps: {
-        outline: "2px solid white",
+        outline: "2px solid #FFFFFF",
     }
 };
