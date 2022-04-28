@@ -217,4 +217,4 @@ const customizedFooterProp: IFooterProps = {
 [Telemetry](./docs/Telemetry.md)\
 [Omnichannel Features](./docs/Features.md)\
 [How to Add Visual Regression Tests](./docs/VisualRegressionTestingGuide.md)\
-[Security](./Security.md)
+[Security](./SECURITY.md)
