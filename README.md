@@ -67,7 +67,7 @@ const render = async () => {
     const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
     await chatSDK.initialize(); // mandatory
     const chatConfig = await chatSDK.getLiveChatConfig();
-    liveChatWidgetProps = {
+    const liveChatWidgetProps = {
         styleProps: {
             generalStyles: {
                 width: "700px",
