@@ -54,7 +54,7 @@ The basic example below takes in the ```<LiveChatWidget/>``` component along wit
 ```js
 import * as React from "react";
 
-import LiveChatWidget from "@microsoft/omnichannel-chat-widget";
+import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
 
