@@ -57,6 +57,10 @@ import * as React from "react";
 import LiveChatWidget from "@microsoft/omnichannel-chat-widget";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
+//Below version numbers will help us to troubleshoot issues with specific package
+import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
+import { version as chatWidgetVersion } from "../package.json";
+import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 
 const render = async () => {
     const omnichannelConfig = {
@@ -80,7 +84,15 @@ const render = async () => {
             }
         },
         chatSDK: chatSDK, // mandatory
-        chatConfig: chatConfig // mandatory
+        chatConfig: chatConfig, // mandatory
+        telemetryConfig: { //mandatory
+            orgId: omnichannelConfig.orgId,
+            orgUrl: omnichannelConfig.orgUrl,
+            appId: omnichannelConfig.widgetId,
+            OCChatSDKVersion: chatSdkVersion,
+            chatComponentVersion: chatComponentVersion,
+            chatWidgetVersion: chatWidgetVersion
+        }
     };
 
     ReactDOM.render(

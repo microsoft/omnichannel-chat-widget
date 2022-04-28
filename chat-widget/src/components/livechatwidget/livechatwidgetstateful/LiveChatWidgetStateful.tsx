@@ -57,6 +57,8 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -128,6 +130,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 startProactiveChat(dispatch, msg?.payload?.bodyTitle, msg?.payload?.showPrechat, msg?.payload?.inNewWindow);
             }
         });
+        window.addEventListener("beforeunload", (event) => {
+            disposeTelemetryLoggers();
+        });
     }, []);
 
     useEffect(() => {
@@ -192,7 +197,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     
     // publish chat widget state
     const chatWidgetStateChangeEvent: ICustomEvent = {
-        eventName: "ChatWidgetStateChanged",
+        eventName: TelemetryEvent.ChatWidgetStateChanged,
         payload: {
             ...state
         }

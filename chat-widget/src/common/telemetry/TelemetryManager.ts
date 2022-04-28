@@ -19,16 +19,20 @@ export class TelemetryTimers {
 export class TelemetryManager {
     public static InternalTelemetryData: IInternalTelemetryData;
 }
+const loggers: IChatSDKLogger[] = [];
+export const DisposeLoggers = () => {
+    loggers.map((logger: IChatSDKLogger) => {
+        logger.dispose();
+    });
+};
 
 export const RegisterLoggers = () => {
-    const loggers: IChatSDKLogger[] = [];
-
     const registerLoggers = () => {
         if (!TelemetryManager.InternalTelemetryData?.telemetryConfig?.disableConsoleLog ||
             !TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryDisabled) {
             BroadcastService.getAnyMessage()
                 .subscribe((event: ICustomEvent) => {
-                    if ((event as ITelemetryEvent).payload) {
+                    if ((event as ITelemetryEvent).payload && (event as ITelemetryEvent).eventName !== TelemetryEvent.ChatWidgetStateChanged) {
                         logTelemetry(event);
                     }
                 });

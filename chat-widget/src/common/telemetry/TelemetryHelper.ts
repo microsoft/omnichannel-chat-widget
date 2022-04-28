@@ -122,6 +122,9 @@ export class TelemetryHelper {
                 event.ChatType = payload.ChatType;
                 event.ElapsedTimeInMilliseconds = payload.ElapsedTimeInMilliseconds;
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
+                event.OCChatSDKVersion = TelemetryManager.InternalTelemetryData?.OCChatSDKVersion ?? "";
+                event.OCChatWidgetVersion = TelemetryManager.InternalTelemetryData?.chatWidgetVersion ?? "";
+                event.OCChatComponentsVersion = TelemetryManager.InternalTelemetryData?.chatComponentVersion ?? "";
             });
     }
 
