@@ -88,6 +88,7 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
+    "compose-storybook": "yarn build-storybook -c stories/.storybook -o storybook-build && yarn start-storybook -c stories/.storybook -p 9009",
     "build-storybook": "build-storybook",
     "build": "yarn eslint . && yarn build:esm && yarn copy:esm && yarn build:cjs && yarn copy:cjs && tsc",
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",

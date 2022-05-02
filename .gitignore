@@ -350,4 +350,5 @@ storybook-static
 # Output
 lib/
 dist/
+storybook-build/
 *.tgz
