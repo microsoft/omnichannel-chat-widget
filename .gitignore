@@ -343,6 +343,7 @@ reports/
 
 # storybook output
 storybook-static
+storybook-build
 
 # VRT diff
 **/__diff_output__
@@ -350,5 +351,4 @@ storybook-static
 # Output
 lib/
 dist/
-storybook-build/
 *.tgz

@@ -1,9 +1,10 @@
-name: storybook-pr
+name: storybook-release
 on: 
   push:
-    branches:
-      - '**'
-    types: [created, edited, assigned, opened, synchronize, reopened]
+    branches: 
+      - main
+    tags:
+      - 'w-v*'
 jobs:
   build-and-deploy:
     runs-on: windows-2019
@@ -16,7 +17,7 @@ jobs:
       - name: Install Chat Widget packages
         working-directory: chat-widget
         run: yarn install
-      - name: Start Storybook
+      - name: Start Components Storybook
         working-directory: chat-components
         run: yarn storybook
       - name: Start Composed Storybook
