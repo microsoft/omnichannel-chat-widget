@@ -28,7 +28,7 @@ const liveChatWidgetFixedSizeProps: ILiveChatWidgetProps = {
             width: "360px",
             height: "560px",
             top: "20px",
-            left: "20px"
+            left: "12px"
         }
     }
 };
