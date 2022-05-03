@@ -17,17 +17,14 @@ jobs:
       - name: Install Chat Widget packages
         working-directory: chat-widget
         run: yarn install
-      - name: Start Components Storybook
+      - name: Build Components Storybook
         working-directory: chat-components
-        run: yarn storybook
-      - name: Start Composed Storybook
-        working-directory: chat-widget
-        run: yarn compose-storybook
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@3.6.2
+        run: yarn build-storybook
+      - name: Deploy Components Storybook
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: main
-          FOLDER: storybook-build
+          FOLDER: chat-components/storybook-static
           CLEAN: true
-          TARGET_FOLDER: docs
+          TARGET_FOLDER: gh-pages
