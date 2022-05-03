@@ -27,4 +27,4 @@ jobs:
           BRANCH: main
           FOLDER: chat-components/storybook-static
           CLEAN: true
-          TARGET_FOLDER: gh-pages
+          TARGET_FOLDER: docs
