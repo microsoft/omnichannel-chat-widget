@@ -7,6 +7,9 @@ import ReactDOM from "react-dom";
 import { getCustomizationJson } from "./getCustomizationJson";
 import { registerCacheWidgetStateEvent, restoreWidgetStateIfExistInCache } from "./cacheWidgetState.js";
 import { getUnreadMessageCount } from "./getUnreadMessageCount";
+import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
+import { version as chatWidgetVersion } from "../package.json";
+import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
@@ -37,7 +40,15 @@ const main = async () => {
             ...liveChatWidgetProps,
             chatSDK: chatSDK,
             chatConfig: chatConfig,
-            liveChatContextFromCache: widgetStateFromCache
+            liveChatContextFromCache: widgetStateFromCache,
+            telemetryConfig: {
+                orgId: omnichannelConfig.orgId,
+                orgUrl: omnichannelConfig.orgUrl,
+                appId: omnichannelConfig.widgetId,
+                OCChatSDKVersion: chatSdkVersion,
+                chatComponentVersion: chatComponentVersion,
+                chatWidgetVersion: chatWidgetVersion
+            }
         };
         
         ReactDOM.render(
@@ -45,7 +56,6 @@ const main = async () => {
             document.getElementById("oc-lcw-container")
         );
     };
-
     const startProactiveChat = (notificationUIConfig, showPrechat, inNewWindow) => {
         const startProactiveChatEvent = {
             eventName: "StartProactiveChat",

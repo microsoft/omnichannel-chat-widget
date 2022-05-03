@@ -25,7 +25,14 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
             if (!isNullOrEmptyString(collectiorUriForTelemetry)) {
                 configuration.collectorUri = collectiorUriForTelemetry;
             }
-            _logger = AWTLogManager.initialize(ariaTelemetryKey, configuration);
+            try {
+                _logger = AWTLogManager.initialize(ariaTelemetryKey, configuration);
+                if (_logger === undefined) {
+                    _logger = AWTLogManager.getLogger(ariaTelemetryKey);
+                }
+            } catch (error) {
+                console.log(error);
+            }
         }
         return _logger;
     };
@@ -44,6 +51,9 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
                 Constants.LiveChatWidget,
                 AWTPiiKind.GenericData);
             logger() ? logger().logEvent(eventProperties) : console.log("Unable to initialize aria logger");
+        },
+        dispose: () => {
+            AWTLogManager.flush(function () { console.log("Aria logger disposed"); });
         }
     };
     return ariaLogger;

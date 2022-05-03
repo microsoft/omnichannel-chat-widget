@@ -13,7 +13,7 @@ const liveChatWidgetProps = {
     telemetryConfig: {
         ...
         telemetryDisabled : true,
-        disableConsoleLog: true
+        disableConsoleLog: true,
         ...
     }
 };
@@ -32,6 +32,9 @@ const liveChatWidgetProps = {
 |`disableConsoleLog`|`boolean` (optional)|`true` for disabling the console telemetry logs|
 |`ariaConfigurations`|`IAriaConfigurations` (optional)|Complex type for accepting aria related configurations|
 |`telemetryLoggers`|`IChatSDKLogger` (optional)|Logger type for bringing your own logger|
+|`chatWidgetVersion`| `string` (optional) | Omnichannel Chat Widget package version number|
+|`chatComponentVersion`| `string` (optional) | Omnichannel Chat Components package version number|
+|`OCChatSDKVersion`| `string` (optional) | Omnichannel Chat SDK version number|
 
 ### *IAriaConfigurations*
 
@@ -65,8 +68,8 @@ Refer to the below table to understand different critical telemetry events raise
 | `EmailTranscriptLoaded` |On Email transcript pane load complete |
 | `OutOfOfficePaneLoaded` |On Out of office pane load complete |
 | `ConfirmationPaneLoaded`|On `ConfirmationPane` load complete |
-|`ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
-|StartChatSDKCall| On initiating start chat SDK call|
+| `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
+| `StartChatSDKCall`| On initiating start chat SDK call|
 
 #### Action Events
 
@@ -186,7 +189,7 @@ const liveChatWidgetProps = {
     ...
     telemetryConfig: {
         ...
-        telemetryLoggers: [customConsoleLogger()]
+        telemetryLoggers: [customConsoleLogger()],
         ...
     }
 };
@@ -199,4 +202,5 @@ const liveChatWidgetProps = {
 
 | Properties |Type| Description |
 | -------- |---------| -------- |
-`log: (logLevel: LogLevel, telemetryInput: TelemetryInput)` | return type `void` | implement the `log` method in custom logger |
+| `log: (logLevel: LogLevel, telemetryInput: TelemetryInput)` | return type `void` | implement the `log` method in custom logger |
+| `dispose` | return type `void` | dispose the logger when browser closed |
