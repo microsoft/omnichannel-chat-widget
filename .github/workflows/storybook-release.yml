@@ -23,8 +23,7 @@ jobs:
       - name: Deploy Components Storybook
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: main
-          FOLDER: ./chat-components/storybook-static
-          CLEAN: true
-          TARGET_FOLDER: docs
+          branch: main
+          folder: ./chat-components/storybook-static
+          clean: true
+          target_folder: docs
