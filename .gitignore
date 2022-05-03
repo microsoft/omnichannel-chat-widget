@@ -343,7 +343,6 @@ reports/
 
 # storybook output
 storybook-static
-chat-components-build
 
 # VRT diff
 **/__diff_output__

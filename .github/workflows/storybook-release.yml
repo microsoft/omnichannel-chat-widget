@@ -19,12 +19,12 @@ jobs:
         run: yarn install
       - name: Build Components Storybook
         working-directory: chat-components
-        run: yarn build-storybook:publish
+        run: yarn build-storybook
       - name: Deploy Components Storybook
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: main
-          FOLDER: chat-components-build
+          FOLDER: ./chat-components/storybook-static
           CLEAN: true
           TARGET_FOLDER: docs
