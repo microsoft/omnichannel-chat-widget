@@ -20,7 +20,8 @@ export class TelemetryManager {
     public static InternalTelemetryData: IInternalTelemetryData;
 }
 const loggers: IChatSDKLogger[] = [];
-export const DisposeLoggers = () => {
+
+export const disposeLoggers = () => {
     loggers.map((logger: IChatSDKLogger) => {
         logger.dispose();
     });

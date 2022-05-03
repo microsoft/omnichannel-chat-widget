@@ -203,4 +203,4 @@ const liveChatWidgetProps = {
 | Properties |Type| Description |
 | -------- |---------| -------- |
 | `log: (logLevel: LogLevel, telemetryInput: TelemetryInput)` | return type `void` | implement the `log` method in custom logger |
-| `dispose` | return type `void` | provide log dispose when browser closed |
+| `dispose` | return type `void` | dispose the logger when browser closed |

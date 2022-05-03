@@ -1,5 +1,5 @@
-import { DisposeLoggers} from "../../../common/telemetry/TelemetryManager";
+import { disposeLoggers} from "../../../common/telemetry/TelemetryManager";
 
 export const disposeTelemetryLoggers = () => {
-    DisposeLoggers();
+    disposeLoggers();
 };
