@@ -80,6 +80,7 @@
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
+    "build-storybook:publish": "build-storybook -o chat-components-build",
     "build": "yarn eslint . && yarn build:esm && yarn copy:esm && yarn build:cjs && yarn copy:cjs && tsc",
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
     "test:visual": "jest -c jest.config.visual.cjs",
