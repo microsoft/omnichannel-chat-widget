@@ -2,7 +2,7 @@ name: storybook-release
 on: 
   push:
     branches: 
-      - main
+      - dev
     tags:
       - 'w-v*'
 jobs:
@@ -18,12 +18,12 @@ jobs:
         working-directory: chat-widget
         run: yarn install
       - name: Build Components Storybook
-        working-directory: chat-components
-        run: yarn build-storybook
+        working-directory: chat-widget
+        run: yarn build-composite-storybook
       - name: Deploy Components Storybook
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          branch: main
-          folder: ./chat-components/storybook-static
+          branch: gh-pages
+          folder: ./chat-widget/storybook-build
           clean: true
           target_folder: docs
