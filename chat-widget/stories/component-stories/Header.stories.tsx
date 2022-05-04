@@ -88,7 +88,8 @@ const defaultHeaderProps:IHeaderProps = {
             border: "2px dotted #000"
         }       
     }
-}
+};
+
 const customHeaderProps: IHeaderProps = {
     controlProps: {
         id: "oc-lcw-header",

@@ -30,7 +30,7 @@ const defaultCallingContainerProps:ICallingContainerProps = {
 
 /* Calling container - Incoming Call Mode */
 export const currentCallMode = Template.bind({});
-currentCallMode.args = defaultCallingContainerProps
+currentCallMode.args = defaultCallingContainerProps;
 
 /* Calling container - Incoming Call Mode */
 const incomingCallProps = {

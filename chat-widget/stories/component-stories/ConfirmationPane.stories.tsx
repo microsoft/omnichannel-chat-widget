@@ -94,7 +94,7 @@ const defaultConfirmationPaneProps:IConfirmationPaneProps = {
             width: "80px"
         }
     }
-} 
+};
 /*
     Default Confirmation Pane
 */

@@ -112,7 +112,8 @@ const defaultIncomingCallProps:IIncomingCallProps = {
             outline: "2px solid #FFFFFF",
         }
     }
-}
+};
+
 /* Incoming Call - Default */
 export const Default = Template.bind({});
 Default.args = defaultIncomingCallProps;

@@ -263,7 +263,7 @@ const customizedCurrentCallStyleProps: ICurrentCallStyleProps = {
     itemFocusStyleProps: {
         border: "2px dotted blue"
     }
-}
+};
 
 /* Current Call - Default Video Call */
 export const DefaultVideoCall = Template.bind({});

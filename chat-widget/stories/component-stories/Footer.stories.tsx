@@ -114,7 +114,7 @@ const defaultFooterOverridesProps:IFooterProps = {
         DownloadTranscriptButton: <PrimaryButton text="Download" onClick={_downloadClicked} allowDisabledFocus styles={iconButtonStyles} />,
         EmailTranscriptButton: <DefaultButton text="Email" onClick={_emailClicked} allowDisabledFocus styles={iconButtonStyles} />        
     }
-}
+};
 
 /* Default Footer */
 export const Default = Template.bind({});

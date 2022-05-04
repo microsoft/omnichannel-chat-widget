@@ -32,30 +32,31 @@ const defaultChatButtonProps:IChatButtonProps = {
         hideNotificationBubble: true       
     },
     styleProps: {
-        generalStyleProps: {    backgroundColor: "#fff",
-        borderColor: "#fff",
-        borderRadius: "100px 100px 100px 99px",
-        borderStyle: "solid",
-        borderWidth: "1px",
-        bottom: "0px",
-        boxShadow: "0 0 4px rgb(102 102 102 / 50%)",
-        cursor: "pointer",
-        display: "flex",
-        height: "60px",
-        margin: "3px 3px 3px 3px",
-        padding: "0px",
-        position: "absolute",
-        right: "0px",
-        selectors: {
-            ":hover" : {
-                backgroundColor: "lightgrey"
+        generalStyleProps: {    
+            backgroundColor: "#fff",
+            borderColor: "#fff",
+            borderRadius: "100px 100px 100px 99px",
+            borderStyle: "solid",
+            borderWidth: "1px",
+            bottom: "0px",
+            boxShadow: "0 0 4px rgb(102 102 102 / 50%)",
+            cursor: "pointer",
+            display: "flex",
+            height: "60px",
+            margin: "3px 3px 3px 3px",
+            padding: "0px",
+            position: "absolute",
+            right: "0px",
+            selectors: {
+                ":hover" : {
+                    backgroundColor: "lightgrey"
+                },
+                ":focus" : {
+                    outline: "dotted 2px #000"
+                }
             },
-            ":focus" : {
-                outline: "dotted 2px #000"
-            }
+            width: "180px"
         },
-        width: "180px"
-    },
         iconStyleProps: {
             align: "center",
             backgroundColor:"#315FA2",
@@ -122,7 +123,7 @@ const defaultChatButtonProps:IChatButtonProps = {
             width: "max-content"
         }
     }
-}
+};
 
 /*
     Default ChatButton
