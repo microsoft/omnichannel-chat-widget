@@ -24,6 +24,7 @@ export const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
         setWebChatStyles({...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles});
         WebChatStoreLoader.store = null;
         dispatch({type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed});
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: false });
         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
         dispatch({type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null});
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });

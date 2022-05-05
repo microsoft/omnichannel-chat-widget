@@ -176,5 +176,11 @@ export enum LiveChatWidgetActionType {
         Parameters:
         number: Toggle focus on chat button
     */
-    SET_FOCUS_CHAT_BUTTON
+    SET_FOCUS_CHAT_BUTTON,
+
+    /*
+        Parameters:
+        number: Set to true, when the agent ends the conversation
+    */
+    SET_CONVERSATION_ENDED_BY_AGENT
 }
