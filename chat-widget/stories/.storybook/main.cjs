@@ -1,5 +1,8 @@
 module.exports = {
-  "stories": ["../*.stories.tsx"],
+  "stories": [
+    "../*.stories.tsx",
+    "../**/*.stories.tsx"
+  ],
   "addons": [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
@@ -23,11 +26,5 @@ module.exports = {
 
     // Return the altered config
     return config;
-  },
-  refs: {
-    "Components": {
-      title: "Components",
-      url: "http://localhost:6006",
-    }    
   }
 }

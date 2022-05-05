@@ -5,25 +5,28 @@ on:
       - main
     tags:
       - 'w-v*'
+    paths:
+      - 'chat-widget/**'
+
+permissions:
+  deployments: write
+  packages: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out for ${{ github.ref }}
         uses: actions/checkout@v3
-      - name: Install Chat Components packages
-        working-directory: chat-components
-        run: yarn install
       - name: Install Chat Widget packages
         working-directory: chat-widget
         run: yarn install
-      - name: Build Components Storybook
-        working-directory: chat-components
-        run: yarn build-storybook
-      - name: Deploy Components Storybook
+      - name: Build Composite Storybook
+        working-directory: chat-widget
+        run: yarn build-composite-storybook
+      - name: Deploy Storybook
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          branch: main
-          folder: ./chat-components/storybook-static
-          clean: true
-          target_folder: docs
+          branch: gh-pages
+          folder: ./chat-widget/storybook-build
+          target-folder: omnichannel-chat-widget/storybook-build
