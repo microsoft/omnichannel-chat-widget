@@ -20,6 +20,6 @@ jobs:
       - name: Deploy Storybook
         uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          branch: gh-pages
-          folder: ./chat-widget/storybook-build
-          target_folder: ./omnichannel-chat-widget/storybook
+          BRANCH: gh-pages
+          FOLDER: ./chat-widget/storybook-build
+          TARGET_FOLDER: omnichannel-chat-widget/storybook
