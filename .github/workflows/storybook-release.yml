@@ -22,5 +22,4 @@ jobs:
         with:
           branch: gh-pages
           folder: ./chat-widget/storybook-build
-          clean: true
           target_folder: omnichannel-chat-widget/storybook
