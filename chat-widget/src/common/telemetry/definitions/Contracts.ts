@@ -26,6 +26,9 @@ export interface LoadContract extends BaseContract {
     WidgetState?: string;
     ChatState?: string;
     ChatType?: string;
+    OCChatSDKVersion: string;
+    OCChatWidgetVersion: string;
+    OCChatComponentsVersion: string;
 }
 
 export interface ActionsContract extends BaseContract {

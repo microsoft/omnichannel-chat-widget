@@ -9,7 +9,6 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { defaultAriaConfig } from "../../../common/telemetry/defaultConfigs/defaultAriaConfig";
 import { defaultInternalTelemetryData } from "../../../common/telemetry/defaultConfigs/defaultTelemetryInternalData";
 import { defaultTelemetryConfiguration } from "../../../common/telemetry/defaultConfigs/defaultTelemetryConfiguration";
-import packageInfo from "@microsoft/omnichannel-chat-sdk/package.json";
 
 export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     const telemetryConfig: ITelemetryConfig = { ...defaultTelemetryConfiguration, ...props.telemetryConfig };
@@ -26,7 +25,9 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
             telemetryData = TelemetryHelper.addChatConfigDataToTelemetry(props?.chatConfig, telemetryData);
         }
         telemetryData = TelemetryHelper.addWidgetDataToTelemetry(telemetryConfig, telemetryData);
-        telemetryData.OCChatSDKVersion = packageInfo.version;
+        telemetryData.OCChatSDKVersion = telemetryConfig?.OCChatSDKVersion;
+        telemetryData.chatComponentVersion = telemetryConfig?.chatComponentVersion;
+        telemetryData.chatWidgetVersion = telemetryConfig?.chatWidgetVersion;
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
     }
     RegisterLoggers();

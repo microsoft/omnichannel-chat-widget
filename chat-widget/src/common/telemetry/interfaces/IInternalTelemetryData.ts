@@ -17,4 +17,6 @@ export interface IInternalTelemetryData {
     orgUrl?: string;
     lcwRuntimeId?: string;
     channelId?: string;
+    chatWidgetVersion?: string;
+    chatComponentVersion?: string;
 }
