@@ -172,7 +172,6 @@ const defaultCurrentCallProps: ICurrentCallProps = {
         }      
     }
 };
-
 const customizedCurrentCallStyleProps: ICurrentCallStyleProps = {
     generalStyleProps: {
         background: "lightgrey",

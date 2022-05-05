@@ -15,7 +15,6 @@ export default {
 } as Meta;
 
 const Template: Story<IFooterProps> = (args) => <Footer {...args}></Footer>;
-
 const defaultFooterProps: IFooterProps = {
     controlProps: {
         id: "lcw-components-footer",
@@ -95,19 +94,15 @@ const defaultFooterProps: IFooterProps = {
         }
     }
 };
-
 const iconButtonStyles: IButtonStyles = {
     root: { margin: 0 }
 };
-
 function _downloadClicked(): void {
     alert("download clicked");
 }
-
 function _emailClicked(): void {
     alert("email clicked");
 }
-
 const defaultFooterOverridesProps: IFooterProps = {
     ...defaultFooterProps,
     componentOverrides: {

@@ -10,7 +10,6 @@ export default {
 } as Meta;
 
 const PreChatSurveyPaneTemplate: Story<IPreChatSurveyPaneProps> = (args) => <PreChatSurveyPane {...args}></PreChatSurveyPane>;
-
 const defaultPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
     controlProps: {
         id: "oc-lcw-prechatsurveypane-default",
@@ -45,7 +44,6 @@ const defaultPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
         }
     }
 };
-
 const presetOnePreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
     controlProps: {
         ...defaultPreChatSurveyPaneProps.controlProps,
@@ -55,7 +53,6 @@ const presetOnePreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
         ...defaultPreChatSurveyPaneProps.styleProps
     }
 };
-
 const presetTwoPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
     controlProps: {
         id: "oc-lcw-prechatsurveypane-preset2",
@@ -72,7 +69,6 @@ const presetTwoPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
         ...defaultPreChatSurveyPaneProps.styleProps
     }
 };
-
 const presetThreePreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
     controlProps: {
         id: "oc-lcw-prechatsurveypane-preset3",
