@@ -2,7 +2,7 @@ name: storybook-release
 on: 
   push:
     branches: 
-      - dev
+      - main
     tags:
       - 'w-v*'
     paths:
