@@ -40,15 +40,15 @@ const defaultReconnectChatPaneProps: IReconnectChatPaneProps = {
         startNewChatButtonAriaLabel: "Start new conversation",
     
         onContinueChat: function () {
-            console.log("on continue conversation");
+            alert("on continue conversation");
         },
     
         onStartNewChat: function () {
-            console.log("on start new conversation");
+            alert("on start new conversation");
         },
     
         onMinimize: function () {
-            console.log("on minimize");
+            alert("on minimize");
         }
     },
     styleProps: {
@@ -155,11 +155,11 @@ const presetThreeReconnectChatPaneProps: IReconnectChatPaneProps = {
         startNewChatButtonAriaLabel: "Start new conversation",
     
         onContinueChat: function () {
-            console.log("on continue conversation");
+            alert("on continue conversation");
         },
     
         onStartNewChat: function () {
-            console.log("on start new conversation");
+            alert("on start new conversation");
         }        
     },
     styleProps: {

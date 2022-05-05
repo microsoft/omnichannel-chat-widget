@@ -28,10 +28,10 @@ const defaultConfirmationPaneProps: IConfirmationPaneProps = {
         cancelButtonText: "Cancel",
         cancelButtonAriaLabel: "Cancel. Return to Chat",
         onConfirm: function () {
-            console.log("on confirm");
+            alert("on confirm");
         },
         onCancel: function () {
-            console.log("on cancel");
+            alert("on cancel");
         }
     },
     styleProps: {

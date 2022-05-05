@@ -46,11 +46,11 @@ const defaultInputValidationPaneProps: IInputValidationPaneProps = {
     
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onSend: function (input: string) {
-            console.log("on send");
+            alert("on send");
         },
     
         onCancel: function () {
-            console.log("on cancel");
+            alert("on cancel");
         },
     
         checkInput: function (input: string) {

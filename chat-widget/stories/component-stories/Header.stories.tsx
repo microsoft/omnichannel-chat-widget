@@ -22,8 +22,8 @@ const defaultHeaderProps: IHeaderProps = {
         hideTitle: false,
         hideCloseButton: false,
         hideMinimizeButton: false,
-        onMinimizeClick: function () { console.log("minimize clicked"); },
-        onCloseClick: function () { console.log("close clicked"); },
+        onMinimizeClick: function () { alert("minimize clicked"); },
+        onCloseClick: function () { alert("close clicked"); },
         middleGroup: { children: [] },
         leftGroup: { children: [] },
         rightGroup: { children: [] },
@@ -97,8 +97,8 @@ const customHeaderProps: IHeaderProps = {
         hideTitle: false,
         hideCloseButton: false,
         hideMinimizeButton: false,
-        onMinimizeClick: function () { console.log("minimize clicked"); },
-        onCloseClick: function () { console.log("close clicked"); },
+        onMinimizeClick: function () { alert("minimize clicked"); },
+        onCloseClick: function () { alert("close clicked"); },
         middleGroup: { children: [] },
         leftGroup: { children: [] },
         rightGroup: { children: [] },
@@ -169,7 +169,7 @@ const maximizeHeaderButtonProps: ICommandButtonProps = {
     iconName: "FullScreen",
     ariaLabel: "Maximize",
     styles: { color: "White" },
-    onClick: function () { console.log("maximize clicked"); }
+    onClick: function () { alert("maximize clicked"); }
 };
 
 const maximizeButton = <CommandButton {...maximizeHeaderButtonProps} key="maximizeButton" />;
