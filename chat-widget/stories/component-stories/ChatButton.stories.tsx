@@ -22,7 +22,7 @@ const defaultChatButtonProps: IChatButtonProps = {
         titleText: "Let's Chat!",
         subtitleText: "We're online.",
         onClick: function () {
-            console.log("initiate chat"); 
+            alert("initiate chat"); 
         },
         hideChatButton: false,
         hideChatIcon:false, 

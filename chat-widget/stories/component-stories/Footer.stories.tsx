@@ -22,9 +22,9 @@ const defaultFooterProps: IFooterProps = {
         hideDownloadTranscriptButton: false,
         hideEmailTranscriptButton: false,
         hideAudioNotificationButton: false,
-        onDownloadTranscriptClick: function () { console.log("download transcript clicked"); },
-        onEmailTranscriptClick: function () { console.log("email transcript clicked"); },
-        onAudioNotificationClick: function () { console.log("audio notification clicked"); },
+        onDownloadTranscriptClick: function () { alert("download transcript clicked"); },
+        onEmailTranscriptClick: function () { alert("email transcript clicked"); },
+        onAudioNotificationClick: function () { alert("audio notification clicked"); },
         middleGroup: { children: [] },
         leftGroup: { children: [] },
         rightGroup: { children: [] },
@@ -101,11 +101,11 @@ const iconButtonStyles: IButtonStyles = {
 };
 
 function _downloadClicked(): void {
-    console.log("download clicked");
+    alert("download clicked");
 }
 
 function _emailClicked(): void {
-    console.log("email clicked");
+    alert("email clicked");
 }
 
 const defaultFooterOverridesProps: IFooterProps = {
@@ -177,9 +177,9 @@ const customizedFooterProp: IFooterProps = {
         hideDownloadTranscriptButton: false,
         hideEmailTranscriptButton: false,
         hideAudioNotificationButton: false,
-        onDownloadTranscriptClick: function () { console.log("download transcript clicked"); },
-        onEmailTranscriptClick: function () { console.log("email transcript clicked"); },
-        onAudioNotificationClick: function () { console.log("audio notification clicked"); },
+        onDownloadTranscriptClick: function () { alert("download transcript clicked"); },
+        onEmailTranscriptClick: function () { alert("email transcript clicked"); },
+        onAudioNotificationClick: function () { alert("audio notification clicked"); },
         leftGroup: { children: [uploadIconButton] },
         middleGroup: { children: [calendarIconButton] },
         rightGroup: { children: [emojiIconButton] },

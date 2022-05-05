@@ -39,11 +39,11 @@ const defaultProactiveChatPaneProps: IProactiveChatPaneProps = {
         startButtonAriaLabel: "Chat Now",
     
         onClose: function () {
-            console.log("on close");
+            alert("on close");
         },
     
         onStart: function () {
-            console.log("on start");
+            alert("on start");
         }
     },
     styleProps: {
@@ -206,7 +206,7 @@ const presetTwoProactiveChatPaneProps: IProactiveChatPaneProps = {
         startButtonAriaLabel: "Chat Now",
     
         onStart: function () {
-            console.log("on start");
+            alert("on start");
         }        
     },
     componentOverrides: {
