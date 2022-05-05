@@ -150,7 +150,7 @@ const customReactNode = (
     </button>
 );
 
-const presetTwoInputValidationPaneProps:IInputValidationPaneProps = {
+const presetTwoInputValidationPaneProps: IInputValidationPaneProps = {
     controlProps: {
         ...defaultInputValidationPaneProps.controlProps
     },

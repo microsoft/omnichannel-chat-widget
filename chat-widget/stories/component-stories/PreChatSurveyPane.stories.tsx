@@ -11,7 +11,7 @@ export default {
 
 const PreChatSurveyPaneTemplate: Story<IPreChatSurveyPaneProps> = (args) => <PreChatSurveyPane {...args}></PreChatSurveyPane>;
 
-const defaultPreChatSurveyPaneProps:IPreChatSurveyPaneProps = {
+const defaultPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
     controlProps: {
         id: "oc-lcw-prechatsurveypane-default",
         dir: "auto",

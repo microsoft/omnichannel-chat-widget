@@ -5,6 +5,15 @@ on:
       - dev
     tags:
       - 'w-v*'
+    paths:
+      - 'chat-widget/**'
+
+permissions:
+  actions: write
+  contents: write
+  deployments: write
+  packages: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

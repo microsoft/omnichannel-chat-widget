@@ -12,7 +12,7 @@ export default {
 } as Meta;
 
 const ConfirmationPaneTemplate: Story<IConfirmationPaneProps> = (args) => <ConfirmationPane {...args}></ConfirmationPane>;
-const defaultConfirmationPaneProps:IConfirmationPaneProps = {
+const defaultConfirmationPaneProps: IConfirmationPaneProps = {
     controlProps: {
         id: "lcw-components-confirmation-pane",
         dir: "ltr",

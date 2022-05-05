@@ -15,7 +15,7 @@ export default {
     component: Header
 } as Meta;
 
-const defaultHeaderProps:IHeaderProps = {
+const defaultHeaderProps: IHeaderProps = {
     controlProps: {
         id: "oc-lcw-header",
         hideIcon: false,

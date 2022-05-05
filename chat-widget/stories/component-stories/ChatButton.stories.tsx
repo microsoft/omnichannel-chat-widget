@@ -12,7 +12,7 @@ export default {
 
 const Template: Story<IChatButtonProps> = (args) => <ChatButton {...args}></ChatButton>;
 
-const defaultChatButtonProps:IChatButtonProps = {
+const defaultChatButtonProps: IChatButtonProps = {
     controlProps: {
         id: "lcw-components-chat-button",
         dir: "ltr",

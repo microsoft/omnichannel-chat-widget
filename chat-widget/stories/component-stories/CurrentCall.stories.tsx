@@ -18,7 +18,7 @@ export default {
 } as Meta;
 
 const Template: Story<ICurrentCallProps> = (args) => <CurrentCall {...args}></CurrentCall>;
-const defaultCurrentCallProps:ICurrentCallProps = {
+const defaultCurrentCallProps: ICurrentCallProps = {
     controlProps: {
         id: "currentCall-container",
         nonActionIds: {

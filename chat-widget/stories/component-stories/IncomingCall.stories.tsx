@@ -17,7 +17,7 @@ export default {
 
 const Template: Story<IIncomingCallProps> = (args) => <IncomingCall {...args}></IncomingCall>;
 
-const defaultIncomingCallProps:IIncomingCallProps = {
+const defaultIncomingCallProps: IIncomingCallProps = {
     controlProps: {
         id: "oc-lcw-incomingcall",
         dir: "ltr",

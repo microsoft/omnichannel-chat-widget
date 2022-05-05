@@ -108,7 +108,7 @@ function _emailClicked(): void {
     console.log("email clicked");
 }
 
-const defaultFooterOverridesProps:IFooterProps = {
+const defaultFooterOverridesProps: IFooterProps = {
     ...defaultFooterProps,
     componentOverrides: {
         DownloadTranscriptButton: <PrimaryButton text="Download" onClick={_downloadClicked} allowDisabledFocus styles={iconButtonStyles} />,

@@ -12,7 +12,7 @@ export default {
 
 const OOOHPaneTemplate: Story<IOOOHPaneProps> = (args) => <OutOfOfficeHoursPane {...args}></OutOfOfficeHoursPane>;
 
-const defaultOOOHPaneProps:IOOOHPaneProps = {
+const defaultOOOHPaneProps: IOOOHPaneProps = {
     controlProps: {
         id: "oc-lcw-outofofficehours-pane",
         dir: "auto",
@@ -46,7 +46,7 @@ const defaultOOOHPaneProps:IOOOHPaneProps = {
         }
     }
 };
-const presetOneOOOHPaneProps:IOOOHPaneProps = {
+const presetOneOOOHPaneProps: IOOOHPaneProps = {
     controlProps: {
         ...defaultOOOHPaneProps.controlProps,
         id: "oc-lcw-outofofficehourspane-preset1",
@@ -56,7 +56,7 @@ const presetOneOOOHPaneProps:IOOOHPaneProps = {
         ...defaultOOOHPaneProps.styleProps
     }
 };
-const presetTwoOOOHPaneProps:IOOOHPaneProps = {
+const presetTwoOOOHPaneProps: IOOOHPaneProps = {
     controlProps: {
         ...defaultOOOHPaneProps.controlProps,
         id: "oc-lcw-outofofficehourspane-preset2",

@@ -13,7 +13,7 @@ export default {
 
 const ProactiveChatPaneTemplate: Story<IProactiveChatPaneProps> = (args) => <ProactiveChatPane {...args}></ProactiveChatPane>;
 
-const defaultProactiveChatPaneProps:IProactiveChatPaneProps = {
+const defaultProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps: {
         id: "oc-lcw-proactivechat",
         dir: "ltr",
@@ -182,7 +182,7 @@ const customReactNode2 = (
     </button>
 );
 
-const presetTwoProactiveChatPaneProps:IProactiveChatPaneProps = {
+const presetTwoProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps:{
         id: "oclcw-incomingproactivechat",
         dir: "ltr",
@@ -246,7 +246,7 @@ const presetTwoProactiveChatPaneProps:IProactiveChatPaneProps = {
     }
 };
 
-const presetThreeProactiveChatPaneProps:IProactiveChatPaneProps = {
+const presetThreeProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps: {
         ...defaultProactiveChatPaneProps.controlProps
     },

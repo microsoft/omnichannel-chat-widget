@@ -11,7 +11,7 @@ export default {
 
 const Template: Story<ICallingContainerProps> = (args) => <CallingContainer {...args}></CallingContainer>;
 
-const defaultCallingContainerProps:ICallingContainerProps = {
+const defaultCallingContainerProps: ICallingContainerProps = {
     controlProps: {
         id: "oc-lcw-callingcontainer",
         dir: "ltr",
