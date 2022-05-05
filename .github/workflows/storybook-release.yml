@@ -9,6 +9,7 @@ on:
       - 'chat-widget/**'
 
 permissions:
+  actions: write
   deployments: write
   packages: write
 
