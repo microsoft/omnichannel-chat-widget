@@ -12,7 +12,6 @@ export default {
 } as Meta;
 
 const ProactiveChatPaneTemplate: Story<IProactiveChatPaneProps> = (args) => <ProactiveChatPane {...args}></ProactiveChatPane>;
-
 const defaultProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps: {
         id: "oc-lcw-proactivechat",
@@ -124,7 +123,6 @@ const defaultProactiveChatPaneProps: IProactiveChatPaneProps = {
         }       
     }
 };
-
 const presetOneProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps: {
         ...defaultProactiveChatPaneProps.controlProps
@@ -245,7 +243,6 @@ const presetTwoProactiveChatPaneProps: IProactiveChatPaneProps = {
         }        
     }
 };
-
 const presetThreeProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps: {
         ...defaultProactiveChatPaneProps.controlProps

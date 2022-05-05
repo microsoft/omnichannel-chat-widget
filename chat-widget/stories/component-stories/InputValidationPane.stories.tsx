@@ -11,7 +11,6 @@ export default {
 } as Meta;
 
 const InputValidationPaneTemplate: Story<IInputValidationPaneProps> = (args) => <InputValidationPane {...args}></InputValidationPane>;
-
 const defaultInputValidationPaneProps: IInputValidationPaneProps = {
     controlProps: {
         id: "oclcw-emailTranscriptDialogContainer",
@@ -149,7 +148,6 @@ const customReactNode = (
             This is a custom button
     </button>
 );
-
 const presetTwoInputValidationPaneProps: IInputValidationPaneProps = {
     controlProps: {
         ...defaultInputValidationPaneProps.controlProps

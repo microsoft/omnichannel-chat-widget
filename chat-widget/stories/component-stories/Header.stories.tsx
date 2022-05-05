@@ -89,7 +89,6 @@ const defaultHeaderProps: IHeaderProps = {
         }       
     }
 };
-
 const customHeaderProps: IHeaderProps = {
     controlProps: {
         id: "oc-lcw-header",
@@ -146,7 +145,6 @@ const customIconClass = mergeStyles({
     margin: "0 0px",
     color: "yellow",
 });
-
 const stackStyles: IStackStyles = {
     root: mergeStyles({
         background: "blue",
@@ -159,7 +157,6 @@ const stackStyles: IStackStyles = {
         width: "60px"
     })
 };
-
 const customIcon = <Stack styles={stackStyles} key="customIcon">
     <FontIcon aria-label="ChatBot" iconName="ChatBot" className={customIconClass} id="oc-lcw-header-icon" /></Stack>;
 
