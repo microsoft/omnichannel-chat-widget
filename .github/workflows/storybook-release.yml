@@ -18,8 +18,8 @@ jobs:
         working-directory: chat-widget
         run: yarn build-composite-storybook
       - name: Deploy Storybook
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
         with:
-          BRANCH: gh-pages
-          FOLDER: ./chat-widget/storybook-build
-          TARGET_FOLDER: omnichannel-chat-widget/storybook-build
+          branch: gh-pages
+          folder: ./chat-widget/storybook-build
+          target-folder: omnichannel-chat-widget/storybook-build
