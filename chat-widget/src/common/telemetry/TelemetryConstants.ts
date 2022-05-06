@@ -113,6 +113,7 @@ export enum TelemetryEvent {
     ReconnectChatContinueConversation = "ReconnectChatContinueConversation",
     ReconnectChatStartNewConversation = "ReconnectChatStartNewConversation",
     ReconnectChatMinimize = "ReconnectChatMinimize",
+    ChatWidgetStateChanged = "ChatWidgetStateChanged"
 }
 
 export interface TelemetryInput {

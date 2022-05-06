@@ -30,4 +30,16 @@ export interface ITelemetryConfig {
     * custom loggers list
     */
     telemetryLoggers?: IChatSDKLogger[];
+    /**
+    * Omnichannel chat widget version
+    */
+    chatWidgetVersion?: string;
+    /**
+    * Omnichannel chat components version
+    */
+    chatComponentVersion?: string;
+    /**
+    * Omnichannel Chat SDK Version
+    */
+    OCChatSDKVersion?: string;
 }
