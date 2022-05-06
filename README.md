@@ -54,7 +54,7 @@ The basic example below takes in the ```<LiveChatWidget/>``` component along wit
 ```js
 import * as React from "react";
 
-import LiveChatWidget from "@microsoft/omnichannel-chat-widget";
+import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
 //Below version numbers will help us to troubleshoot issues with specific package
@@ -71,7 +71,7 @@ const render = async () => {
     const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
     await chatSDK.initialize(); // mandatory
     const chatConfig = await chatSDK.getLiveChatConfig();
-    liveChatWidgetProps = {
+    const liveChatWidgetProps = {
         styleProps: {
             generalStyles: {
                 width: "700px",
@@ -229,4 +229,4 @@ const customizedFooterProp: IFooterProps = {
 [Telemetry](./docs/Telemetry.md)\
 [Omnichannel Features](./docs/Features.md)\
 [How to Add Visual Regression Tests](./docs/VisualRegressionTestingGuide.md)\
-[Security](./Security.md)
+[Security](./SECURITY.md)
