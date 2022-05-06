@@ -12,7 +12,6 @@ export default {
 } as Meta;
 
 const ReconnectChatPaneTemplate: Story<IReconnectChatPaneProps> = (args) => <ReconnectChatPane {...args}></ReconnectChatPane>;
-
 const defaultReconnectChatPaneProps: IReconnectChatPaneProps = {
     controlProps: {
         id: "oc-lcw-reconnectchat-pane",
@@ -127,7 +126,6 @@ const defaultReconnectChatPaneProps: IReconnectChatPaneProps = {
         }
     }
 };
-
 const presetThreeReconnectChatPaneProps: IReconnectChatPaneProps = {
     controlProps: {
         id: "lcw-components-reconnect-chat-pane",

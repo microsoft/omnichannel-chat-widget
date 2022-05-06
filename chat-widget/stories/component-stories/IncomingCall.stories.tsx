@@ -16,7 +16,6 @@ export default {
 } as Meta;
 
 const Template: Story<IIncomingCallProps> = (args) => <IncomingCall {...args}></IncomingCall>;
-
 const defaultIncomingCallProps: IIncomingCallProps = {
     controlProps: {
         id: "oc-lcw-incomingcall",

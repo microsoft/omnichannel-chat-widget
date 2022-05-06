@@ -15,7 +15,6 @@ export default {
 } as Meta;
 
 const LoadingPaneTemplate: Story<ILoadingPaneProps> = (args) => <LoadingPane {...args}></LoadingPane>;
-
 const defaultLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         id: "oc-lcw-loadingpane",
@@ -103,7 +102,6 @@ const defaultLoadingPaneProps: ILoadingPaneProps = {
         }
     }
 };
-
 const presetOneLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
@@ -114,7 +112,6 @@ const presetOneLoadingPaneProps: ILoadingPaneProps = {
         ...defaultLoadingPaneProps.styleProps
     }
 };
-
 const presetTwoLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
@@ -159,7 +156,6 @@ const presetTwoLoadingPaneProps: ILoadingPaneProps = {
         }
     }
 };
-
 const presetThreeLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
