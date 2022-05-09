@@ -180,7 +180,8 @@ export const createReducer = () => {
                     ...state,
                     domainStates: {
                         ...state.domainStates,
-                        chatToken: action.payload as string
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        chatToken: action.payload as any
                     }
                 };
             case LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE:
@@ -253,7 +254,7 @@ export const createReducer = () => {
                         reconnectId: action.payload as (string | undefined)
                     }
                 };
-            
+
             case LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT:
                 return {
                     ...state,
@@ -263,10 +264,21 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        liveChatContext: action.payload as any
+                    }
+                };
+
             case LiveChatWidgetActionType.SET_WIDGET_STATE:
                 return {
                     ...action.payload as ILiveChatWidgetContext
                 };
+
             default:
                 return state;
         }

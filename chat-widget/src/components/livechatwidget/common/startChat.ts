@@ -71,6 +71,11 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 const chatToken: any = await chatSDK?.getChatToken();
                 dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
             }
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
+
             await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
 
             await updateSessionDataForTelemetry(chatSDK, dispatch);
@@ -108,8 +113,8 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
     const widgetStateFromCache = DataStoreManager.browserDataStore?.getData(TelemetryEvent.ChatWidgetStateChanged, "localStorage");
     const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
 
-    if (persistedState?.domainStates?.chatToken) {
-        const optionalParams = { liveChatContext: { chatToken: persistedState?.domainStates?.chatToken } };
+    if (persistedState?.domainStates?.liveChatContext) {
+        const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
         console.log(JSON.stringify(optionalParams));
         await initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);
         return true;

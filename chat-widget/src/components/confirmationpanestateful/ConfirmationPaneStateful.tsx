@@ -16,12 +16,16 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
+import useChatSDKStore from "../../hooks/useChatSDKStore";
+import { Constants } from "../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
 
     const initialTabIndexMap: Map<string, number> = new Map();
     let elements: HTMLElement[] | null = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const chatSDK: any = useChatSDKStore();
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { endChat } = props;
@@ -42,7 +46,11 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             try {
-                if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed) {
+                // check agent has joined conversation
+                const conversationDetails = await chatSDK.getConversationDetails();
+                
+                if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed
+                    && conversationDetails.canRenderPostChat === Constants.truePascal) {
                     const loadPostChatEvent: ICustomEvent = {
                         eventName: "LoadPostChatSurvey",
                     };

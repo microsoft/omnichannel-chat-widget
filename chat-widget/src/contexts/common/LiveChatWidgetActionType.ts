@@ -183,4 +183,10 @@ export enum LiveChatWidgetActionType {
         any: Set widget state from cache
     */
     SET_WIDGET_STATE,
+
+    /*
+        Parameters:
+        any: Set live chat context
+    */
+    SET_LIVE_CHAT_CONTEXT,
 }
