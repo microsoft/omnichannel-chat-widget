@@ -16,9 +16,9 @@ function PostChatSurveyPane(props: IPostChatSurveyPaneProps) {
     };
 
     const iframeStyles: React.CSSProperties = {
-        height: "100vh",
-        width: "100vw",
-        maxWidth: "100%"
+        height: "100%",
+        width: "100%",
+        display: "block"
     };
 
     return (

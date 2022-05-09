@@ -17,7 +17,7 @@ export enum LiveChatWidgetActionType {
         - props: The localized middlware texts 
     */
     SET_MIDDLEWARE_LOCALIZED_TEXTS,
-    
+
     /*
         Parameters:
         - dir: The global direction prop that will apply to each component if noit specified
@@ -49,11 +49,11 @@ export enum LiveChatWidgetActionType {
         - false: When the chat ends or crashes unexpectedly
     */
     SET_OUTSIDE_OPERATING_HOURS,
-    
+
     /*
         Parameters:
         string: The PreChat Survey JSON payload in string format
-    */    
+    */
     SET_PRE_CHAT_SURVEY_RESPONSE,
 
     /*
@@ -62,20 +62,20 @@ export enum LiveChatWidgetActionType {
         - false: when clicked on Confirm button on confirmation pane
     */
     SET_SHOW_CONFIRMATION,
-    
+
     /*
         Parameters:
         - true: When Email Transcript button is clicked
         - false: when Done button clicked on Email Transcript pane
     */
     SET_SHOW_EMAIL_TRANSCRIPT_PANE,
-    
+
     /*
         Parameters:
         string: Email id from prechat survey pane(if available)
     */
     SET_PRECHAT_RESPONSE_EMAIL,
-    
+
     /*
         Parameters:
         true: When audio notification on
@@ -83,7 +83,7 @@ export enum LiveChatWidgetActionType {
         false: When audio notification off
     */
     SET_AUDIO_NOTIFICATION,
-    
+
     /*
         Parameters:
         true: If voice and video calling is enabled 
@@ -109,63 +109,63 @@ export enum LiveChatWidgetActionType {
         false: To hide the calling container
     */
     SHOW_CALLING_CONTAINER,
-    
+
     /*
         Parameters:
         true: To show the incoming call container
         false: When call is accepted or rejected
     */
     SET_INCOMING_CALL,
-    
+
     /*
         Parameters:
         true: When both local and remote video are disabled to hide video calling container
         false: If any of remote or local video is enabled to Show video calling container
     */
     DISABLE_VIDEO_CALL,
-    
+
     /*
         Parameters:
         true/false: Local video toggle
     */
     DISABLE_LOCAL_VIDEO,
-    
+
     /*
         Parameters:
         true/false: remote video toggle
     */
     DISABLE_REMOTE_VIDEO,
-    
+
     /*
         Parameters:
         any: Contains the chat token data
     */
     SET_CHAT_TOKEN,
-    
+
     /*
         Parameters:
         true/false: Decides whether to skip the chat button rendering
     */
     SET_SKIP_CHAT_BUTTON_RENDERING,
-    
+
     /*
         Parameters:
         any: Proactive chat parameter when proactive chat starts
     */
     SET_PROACTIVE_CHAT_PARAMS,
-    
+
     /*
         Parameters:
         IInternalTelemetryData: Sets internal telemetry data for telemetry logging
     */
     SET_TELEMETRY_DATA,
-    
+
     /*
         Parameters:
         string: Reconnect Id for chat reconnect
     */
     SET_RECONNECT_ID,
-    
+
     /*
         Parameters:
         number: Keeps track of unread message count on chat minimize
@@ -176,5 +176,11 @@ export enum LiveChatWidgetActionType {
         Parameters:
         number: Toggle focus on chat button
     */
-    SET_FOCUS_CHAT_BUTTON
+    SET_FOCUS_CHAT_BUTTON,
+
+    /*
+        Parameters:
+        any: Set widget state from cache
+    */
+    SET_WIDGET_STATE,
 }

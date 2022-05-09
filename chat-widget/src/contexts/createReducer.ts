@@ -138,7 +138,7 @@ export const createReducer = () => {
                         isIncomingCall: action.payload as boolean
                     }
                 };
-            
+
             case LiveChatWidgetActionType.SET_FOCUS_CHAT_BUTTON:
                 return {
                     ...state,
@@ -263,6 +263,10 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_WIDGET_STATE:
+                return {
+                    ...action.payload as ILiveChatWidgetContext
+                };
             default:
                 return state;
         }

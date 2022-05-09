@@ -20,6 +20,7 @@ import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetr
 import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
+import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -50,7 +51,8 @@ export interface ILiveChatWidgetProps {
     proactiveChatPaneProps?: IProactiveChatPaneStatefulProps;
     reconnectChatPaneProps?: IReconnectChatPaneStatefulProps;
     styleProps?: ILiveChatWidgetStyleProps;
-    telemetryConfig: ITelemetryConfig;
+    telemetryConfig?: ITelemetryConfig;
     webChatContainerProps?: IWebChatContainerStatefulProps;
     liveChatContextFromCache?: ILiveChatWidgetContext;
+    contextDataStore?: IContextDataStore;
 }
