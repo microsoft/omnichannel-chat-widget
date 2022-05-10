@@ -128,14 +128,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 startProactiveChat(dispatch, msg?.payload?.bodyTitle, msg?.payload?.showPrechat, msg?.payload?.inNewWindow);
             }
         });
+
+        if(state.appStates.conversationEndedByAgent){
+            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
+        }
     }, []);
 
     useEffect(() => {
-        if (state.appStates.conversationState !== ConversationState.Closed) {
-            canStartProactiveChat.current = false;
-        } else {
-            canStartProactiveChat.current = true;
-        }
+        canStartProactiveChat.current = state.appStates.conversationState === ConversationState.Closed;
 
         if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {
@@ -182,12 +182,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             ...props.webChatContainerProps?.webChatStyles
         });
     }, [props.webChatContainerProps?.webChatStyles]);
-
-    useEffect(() => {
-        if(state.appStates.conversationEndedByAgent) {
-            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
-        }
-    }, []);
     
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);

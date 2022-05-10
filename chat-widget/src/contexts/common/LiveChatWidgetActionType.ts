@@ -180,7 +180,7 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        number: Set to true, when the agent ends the conversation
+        boolean: Set to true, when the agent ends the conversation
     */
     SET_CONVERSATION_ENDED_BY_AGENT
 }
