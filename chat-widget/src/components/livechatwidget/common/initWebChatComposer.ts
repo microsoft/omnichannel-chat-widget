@@ -57,6 +57,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
                 await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+            } else {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
             }
             dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
         };
