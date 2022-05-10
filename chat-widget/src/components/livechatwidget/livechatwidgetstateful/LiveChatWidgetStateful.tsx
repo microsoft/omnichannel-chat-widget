@@ -126,14 +126,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {
-            if(canStartProactiveChat.current){
+            if (canStartProactiveChat.current) {
                 startProactiveChat(dispatch, msg?.payload?.bodyTitle, msg?.payload?.showPrechat, msg?.payload?.inNewWindow);
             }
         });
         window.addEventListener("beforeunload", (event) => {
             disposeTelemetryLoggers();
         });
-        if(state.appStates.conversationEndedByAgent){
+        if (state.appStates.conversationEndedByAgent) {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
         }
     }, []);
