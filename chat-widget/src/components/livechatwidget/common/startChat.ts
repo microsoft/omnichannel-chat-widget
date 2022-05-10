@@ -48,11 +48,11 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
     try {
         try {
+            TelemetryTimers.WidgetLoadTimer = createTimer();
             TelemetryHelper.logConfigDataEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatSDKCall
             });
             await chatSDK.startChat(params);
-            TelemetryTimers.WidgetLoadTimer = createTimer();
         } catch (error) {
             TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.StartChatMethodException,
