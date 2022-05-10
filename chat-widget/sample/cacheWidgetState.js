@@ -1,13 +1,13 @@
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { contextDataStore } from "./Common/ContextDataStore";
+import { clientDataStoreProvider } from "./Common/clientDataStoreProvider";
 import { Constants } from "./Common/Constants";
 
 export const registerCacheWidgetStateEvent = async () => {
-    BroadcastService.getMessageByEventName("ChatWidgetStateChanged").subscribe((msg) => {
-        contextDataStore().setData("ChatWidgetStateChanged", JSON.stringify(msg.payload), Constants.LocalStorage);
+    BroadcastService.getMessageByEventName(Constants.WidgetStateChangedEventName).subscribe((msg) => {
+        clientDataStoreProvider().setData(Constants.WidgetStateDataKey, JSON.stringify(msg.payload), Constants.LocalStorage);
     });
 };
 
 export const restoreWidgetStateIfExistInCache = async () => {
-    return contextDataStore().getData("ChatWidgetStateChanged", Constants.LocalStorage);
+    return clientDataStoreProvider().getData(Constants.WidgetStateDataKey, Constants.LocalStorage);
 };

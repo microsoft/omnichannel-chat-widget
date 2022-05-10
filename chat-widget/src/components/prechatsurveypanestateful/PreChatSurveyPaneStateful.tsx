@@ -11,7 +11,7 @@ import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-compon
 import { IStyle } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
-import { HtmlAttributeNames, Regex } from "../../common/Constants";
+import { Constants, HtmlAttributeNames, Regex } from "../../common/Constants";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps";
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
@@ -63,7 +63,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             try {
-                const widgetStateFromCache = DataStoreManager.browserDataStore?.getData(TelemetryEvent.ChatWidgetStateChanged, "localStorage");
+                const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(Constants.widgetStateDataKey, "localStorage");
                 const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
                 let optionalParams = {};
                 if (persistedState?.domainStates?.chatToken) {

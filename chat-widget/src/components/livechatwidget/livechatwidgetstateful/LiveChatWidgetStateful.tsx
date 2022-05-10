@@ -85,7 +85,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
-        DataStoreManager.browserDataStore = props.contextDataStore;
+        DataStoreManager.clientDataStore = props.contextDataStore;
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         initCallingSdk(chatSDK, setVoiceVideoCallingSDK)

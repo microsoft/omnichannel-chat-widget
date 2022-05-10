@@ -1,6 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
-import { ChatSDKError } from "../../../common/Constants";
+import { ChatSDKError, Constants } from "../../../common/Constants";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -109,11 +109,13 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
-    const widgetStateFromCache = DataStoreManager.browserDataStore?.getData(TelemetryEvent.ChatWidgetStateChanged, "localStorage");
+    const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(Constants.widgetStateDataKey, "localStorage");
     const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
 
     if (persistedState?.domainStates?.liveChatContext) {
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
         console.log(JSON.stringify(optionalParams));
         await initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);

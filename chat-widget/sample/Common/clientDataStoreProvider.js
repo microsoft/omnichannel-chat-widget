@@ -1,6 +1,9 @@
 import { Constants } from "./Constants";
+import { memoryDataStore } from "./MemoryDataStore";
 
-export const browserDataStoreProvider = () => {
+export const clientDataStoreProvider = () => {
+    const _memoryDataStore = memoryDataStore();
+
     const isCookieAllowed = () => {
         try {
             localStorage;
@@ -24,14 +27,27 @@ export const browserDataStoreProvider = () => {
                 } catch (error) {
                     console.error("logging third-party failed!");
                 }
+            } else {
+                const dataToCache = {
+                    key: key,
+                    data: data,
+                    type: type
+                };
+                parent.postMessage(dataToCache, "*");
             }
         },
         getData: (key, type) => {
-            if (type === Constants.LocalStorage) {
-                return localStorage.getItem(key);
+            if (isCookieAllowed()) {
+                if (type === Constants.LocalStorage) {
+                    return localStorage.getItem(key);
+                } else {
+                    return sessionStorage.getItem(key);
+                }
             } else {
-                return sessionStorage.getItem(key);
+                // get data from in memory db when cookie is disabled
+                _memoryDataStore.getData(key);
             }
+
         }
     };
     return dataStoreProvider;
