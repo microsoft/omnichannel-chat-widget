@@ -279,6 +279,15 @@ export const createReducer = () => {
                     ...action.payload as ILiveChatWidgetContext
                 };
 
+            case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        conversationEndedByAgent: action.payload as boolean
+                    }
+                };
+                
             default:
                 return state;
         }

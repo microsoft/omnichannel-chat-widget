@@ -134,12 +134,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         window.addEventListener("beforeunload", (event) => {
             disposeTelemetryLoggers();
         });
+        if (state.appStates.conversationEndedByAgent) {
+            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
+        }
     }, []);
 
     useEffect(() => {
-        if (state.appStates.conversationState !== ConversationState.Closed) {
-            canStartProactiveChat.current = false;
-        }
+        canStartProactiveChat.current = state.appStates.conversationState === ConversationState.Closed;
 
         if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {
@@ -186,8 +187,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             ...props.webChatContainerProps?.webChatStyles
         });
     }, [props.webChatContainerProps?.webChatStyles]);
-
-
+    
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     const endChatRelay = () => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);

@@ -38,6 +38,7 @@ export interface ILiveChatWidgetContext {
         };
         e2vvEnabled: boolean; // true if voice/video calling is enabled and callingSDK instance created
         unreadMessageCount: number; // keep count of unread messages
+        conversationEndedByAgent: boolean; // true when agent ends the conversation
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

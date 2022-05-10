@@ -180,6 +180,12 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
+        any: Set conversation ended by agent state
+    */
+    SET_CONVERSATION_ENDED_BY_AGENT,
+
+    /*
+        Parameters:
         any: Set widget state from cache
     */
     SET_WIDGET_STATE,
