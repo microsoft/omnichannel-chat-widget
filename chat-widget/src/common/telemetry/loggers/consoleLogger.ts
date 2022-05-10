@@ -28,6 +28,9 @@ export const consoleLogger = (): IChatSDKLogger => {
             catch (ex) {
                 console.error("An unexpected error occurred in the Telemetry client: " + ex);
             }
+        },
+        dispose: (): void => {
+            console.log("disposing loggers");
         }
     };
     return consoleLogger;

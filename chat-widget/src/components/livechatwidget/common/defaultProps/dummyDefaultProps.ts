@@ -11,6 +11,7 @@ import { createAvatarMiddleware } from "../../../webchatcontainerstateful/webcha
 import { createMarkdown } from "../createMarkdown";
 import { groupActivitiesMiddleware } from "../../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/groupActivitiesMiddleware";
 import { typingIndicatorMiddleware } from "../../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/typingIndicatorMiddleware";
+import { ITelemetryConfig } from "../../../../common/telemetry/interfaces/ITelemetryConfig";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const dummyDefaultProps: ILiveChatWidgetProps = {
@@ -1633,5 +1634,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE: "{0} field is required",
             MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external."
         }
-    }
+    },
+    telemetryConfig: undefined as unknown as ITelemetryConfig,
 };

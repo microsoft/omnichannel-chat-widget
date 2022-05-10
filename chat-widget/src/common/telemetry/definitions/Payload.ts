@@ -17,6 +17,9 @@ export interface LoadTelemetryData {
     ChatState?: string;
     ChatType?: string;
     ExceptionDetails?: object;
+    OCChatSDKVersion?: string;
+    OCChatWidgetVersion?: string;
+    OCChatComponentsVersion?: string;
 }
 
 export interface MessageProcessingErrorData {

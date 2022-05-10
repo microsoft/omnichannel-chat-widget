@@ -54,9 +54,13 @@ The basic example below takes in the ```<LiveChatWidget/>``` component along wit
 ```js
 import * as React from "react";
 
-import LiveChatWidget from "@microsoft/omnichannel-chat-widget";
+import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
+//Below version numbers will help us to troubleshoot issues with specific package
+import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
+import { version as chatWidgetVersion } from "../package.json";
+import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 
 const render = async () => {
     const omnichannelConfig = {
@@ -67,7 +71,7 @@ const render = async () => {
     const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
     await chatSDK.initialize(); // mandatory
     const chatConfig = await chatSDK.getLiveChatConfig();
-    liveChatWidgetProps = {
+    const liveChatWidgetProps = {
         styleProps: {
             generalStyles: {
                 width: "700px",
@@ -80,7 +84,15 @@ const render = async () => {
             }
         },
         chatSDK: chatSDK, // mandatory
-        chatConfig: chatConfig // mandatory
+        chatConfig: chatConfig, // mandatory
+        telemetryConfig: { //mandatory
+            orgId: omnichannelConfig.orgId,
+            orgUrl: omnichannelConfig.orgUrl,
+            appId: omnichannelConfig.widgetId,
+            OCChatSDKVersion: chatSdkVersion,
+            chatComponentVersion: chatComponentVersion,
+            chatWidgetVersion: chatWidgetVersion
+        }
     };
 
     ReactDOM.render(
@@ -217,4 +229,4 @@ const customizedFooterProp: IFooterProps = {
 [Telemetry](./docs/Telemetry.md)\
 [Omnichannel Features](./docs/Features.md)\
 [How to Add Visual Regression Tests](./docs/VisualRegressionTestingGuide.md)\
-[Security](./Security.md)
+[Security](./SECURITY.md)
