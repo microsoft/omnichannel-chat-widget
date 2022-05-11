@@ -262,7 +262,14 @@ export const createReducer = () => {
                         unreadMessageCount: action.payload as number
                     }
                 };
-
+            case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        conversationEndedByAgent: action.payload as boolean
+                    }
+                };
             default:
                 return state;
         }
