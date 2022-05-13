@@ -45,9 +45,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             try {
-                //ToDo: End Chat before PostChat Context and conversation Details is set once the getPostChatContext request ID fetch issue is fixed
                 const conversationDetails = await chatSDK.getConversationDetails();
-                // ToDo: Replace with CanRenderPostChat once available in conversationDetails API response 
                 if (isPostChatEnabled === "true" && conversationDetails.canRenderPostChat === Constants.truePascal) {
                     if (postChatSurveyMode === PostChatSurveyMode.Embed) {
                         dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT, payload: true });
@@ -62,7 +60,6 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
                         const skipCloseChat = true;
                         await endChat(adapter, skipEndChatSDK, skipCloseChat);
                         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-                        console.log("Confirmation Pane"+state.appStates.conversationState);
                     }
                 } else {
                     setTabIndices(elements, initialTabIndexMap, true);

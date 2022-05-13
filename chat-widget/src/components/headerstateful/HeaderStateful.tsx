@@ -33,7 +33,6 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
         onCloseClick: async () => {
-            console.log("Header "+conversationState.current);
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
             if (conversationState.current === ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
