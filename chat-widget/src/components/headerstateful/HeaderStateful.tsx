@@ -33,12 +33,17 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
         onCloseClick: async () => {
+            console.log("Header"+state.appStates.conversationState);
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
             if (state.appStates.conversationState === ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
             } else if (state.appStates.conversationState === ConversationState.Postchat) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT, payload: false });
                 await endChat(adapter);
+            } else if (state.appStates.conversationState === ConversationState.InActive) {
+                const skipEndChatSDK = true;
+                const skipCloseChat = false;
+                await endChat(adapter, skipEndChatSDK, skipCloseChat);
             }
             dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT, payload: document.getElementById(`${controlProps.id}-closebutton`) });
         },

@@ -52,11 +52,15 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed) {
-                dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT, payload: true });
-                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-
-                await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+            if (isPostChatEnabled === "true") {
+                if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT, payload: true });
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+    
+                    await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+                } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+                }
             } else {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
             }
