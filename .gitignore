@@ -343,6 +343,7 @@ reports/
 
 # storybook output
 storybook-static
+storybook-build
 
 # VRT diff
 **/__diff_output__
