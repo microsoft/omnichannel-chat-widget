@@ -1,5 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { Header } from "@microsoft/omnichannel-chat-components";
@@ -24,7 +24,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
-
+    const conversationState = useRef(state.appStates.conversationState);
     const controlProps: IHeaderControlProps = {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
@@ -33,14 +33,14 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
         onCloseClick: async () => {
-            console.log("Header"+state.appStates.conversationState);
+            console.log("Header "+conversationState.current);
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
-            if (state.appStates.conversationState === ConversationState.Active) {
+            if (conversationState.current === ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
-            } else if (state.appStates.conversationState === ConversationState.Postchat) {
+            } else if (conversationState.current === ConversationState.Postchat) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT, payload: false });
                 await endChat(adapter);
-            } else if (state.appStates.conversationState === ConversationState.InActive) {
+            } else if (conversationState.current === ConversationState.InActive) {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 await endChat(adapter, skipEndChatSDK, skipCloseChat);
@@ -70,7 +70,11 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         if (state.appStates.outsideOperatingHours) {
             setOutOfOperatingHours(true);
         }
-    }, []);
+        if (state.appStates.conversationState) {
+            conversationState.current = state.appStates.conversationState;
+        }
+    }, [state.appStates]);
+
 
     return (
         <Header
