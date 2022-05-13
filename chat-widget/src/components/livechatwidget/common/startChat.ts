@@ -84,7 +84,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
-            console.log(persistedState?.domainStates?.postChatContext);
             await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
         }
 
@@ -117,7 +116,6 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
     if (persistedState?.domainStates?.liveChatContext) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
-        console.log(JSON.stringify(optionalParams));
         await initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);
         return true;
     } else {

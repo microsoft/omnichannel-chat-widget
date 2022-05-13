@@ -66,8 +66,8 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(Constants.widgetStateDataKey, "localStorage");
                 const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
                 let optionalParams = {};
-                if (persistedState?.domainStates?.chatToken) {
-                    optionalParams = { liveChatContext: { chatToken: persistedState?.domainStates?.chatToken } };
+                if (persistedState?.domainStates?.liveChatContext) {
+                    optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
                     await initStartChat(optionalParams, persistedState);
                 } else {
                     const prechatResponseValues = extractPreChatSurveyResponseValues(state.domainStates.preChatSurveyResponse, values);

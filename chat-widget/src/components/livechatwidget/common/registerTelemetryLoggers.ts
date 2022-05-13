@@ -12,7 +12,6 @@ import { defaultTelemetryConfiguration } from "../../../common/telemetry/default
 
 import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
-// import { version as chatWidgetVersion } from "../../../../package.json";
 
 export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     let widgetPackageInfo;
@@ -38,9 +37,9 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
         telemetryData.OCChatSDKVersion = chatSdkVersion;
         telemetryData.chatComponentVersion = chatComponentVersion;
         telemetryData.chatWidgetVersion = widgetPackageInfo;
-        telemetryData.orgId = props.chatSDK.omnichannelConfig.orgId;
-        telemetryData.widgetId = props.chatSDK.omnichannelConfig.widgetId;
-        telemetryData.orgUrl = props.chatSDK.omnichannelConfig.orgUrl;
+        telemetryData.orgId = props.chatSDK?.omnichannelConfig?.orgId;
+        telemetryData.widgetId = props.chatSDK?.omnichannelConfig?.widgetId;
+        telemetryData.orgUrl = props.chatSDK?.omnichannelConfig?.orgUrl;
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
     }
     RegisterLoggers();
