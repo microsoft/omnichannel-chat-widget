@@ -116,12 +116,12 @@ export const ConfirmationPaneRTL = ConfirmationPaneTemplate.bind({});
 ConfirmationPaneRTL.args = confirmationPaneRTLProps;
 
 /*
-    Confirmation Pane Preset 1
+    Confirmation Pane Sample 1
 */
 
-const confirmationPanePreset1Props: IConfirmationPaneProps = {
+const confirmationPaneSample1Props: IConfirmationPaneProps = {
     controlProps: {
-        id: "oc-lcw-confirmationpane-preset1",
+        id: "oc-lcw-confirmationpane-sample1",
         titleText: "Big Circle",
         subtitleText: "This is a big, big circle.",
         confirmButtonText: "Green",
@@ -189,16 +189,16 @@ const confirmationPanePreset1Props: IConfirmationPaneProps = {
     }
 };
 
-export const ConfirmationPanePreset1 = ConfirmationPaneTemplate.bind({});
-ConfirmationPanePreset1.args = confirmationPanePreset1Props;
+export const ConfirmationPaneSample1 = ConfirmationPaneTemplate.bind({});
+ConfirmationPaneSample1.args = confirmationPaneSample1Props;
 
 /*
-    Confirmation Pane Preset 2
+    Confirmation Pane Sample 2
 */
 
-const confirmationPanePreset2Props: IConfirmationPaneProps = {
+const confirmationPaneSample2Props: IConfirmationPaneProps = {
     controlProps: {
-        id: "oc-lcw-confirmationpane-preset2",
+        id: "oc-lcw-confirmationpane-sample2",
         titleText: "Only One Option",
         hideSubtitle: true,
         hideCancelButton: true,
@@ -253,16 +253,16 @@ const confirmationPanePreset2Props: IConfirmationPaneProps = {
     }
 };
 
-export const ConfirmationPanePreset2 = ConfirmationPaneTemplate.bind({});
-ConfirmationPanePreset2.args = confirmationPanePreset2Props;
+export const ConfirmationPaneSample2 = ConfirmationPaneTemplate.bind({});
+ConfirmationPaneSample2.args = confirmationPaneSample2Props;
 
 /*
-    Confirmation Pane Preset 3
+    Confirmation Pane Sample 3
 */
 
-const confirmationPanePreset3Props: IConfirmationPaneProps = {
+const confirmationPaneSample3Props: IConfirmationPaneProps = {
     controlProps: {
-        id: "oc-lcw-confirmationpane-preset3",
+        id: "oc-lcw-confirmationpane-sample3",
         titleText: "COLUMN LAYOUT",
         subtitleText: "Try the buttons below",
         confirmButtonText: "Row layout",
@@ -330,33 +330,33 @@ const confirmationPanePreset3Props: IConfirmationPaneProps = {
     }
 };
 
-export const ConfirmationPanePreset3: Story<IConfirmationPaneProps> = (args) => {
+export const ConfirmationPaneSample3: Story<IConfirmationPaneProps> = (args) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, updateArgs] = useArgs();
 
     const switchToColumnLayout = () => {
-        updateArgs(confirmationPanePreset3Props);
+        updateArgs(confirmationPaneSample3Props);
     };
     
     const switchToRowLayout = () => {
         updateArgs({
-            ...ConfirmationPanePreset3.args,
+            ...ConfirmationPaneSample3.args,
             controlProps: {
-                ...ConfirmationPanePreset3.args.controlProps,
+                ...ConfirmationPaneSample3.args.controlProps,
                 titleText: "Row Layout"
             },
             styleProps: {
-                ...ConfirmationPanePreset3.args.styleProps,
-                generalStyleProps: Object.assign({}, ConfirmationPanePreset3.args.styleProps.generalStyleProps, {
+                ...ConfirmationPaneSample3.args.styleProps,
+                generalStyleProps: Object.assign({}, ConfirmationPaneSample3.args.styleProps.generalStyleProps, {
                     flexFlow: "row",
                     buttonFlexDirection: "row",
                     height: "100px",
                     width: "500px"
                 }),
-                titleStyleProps: Object.assign({}, ConfirmationPanePreset3.args.styleProps.titleStyleProps, {
+                titleStyleProps: Object.assign({}, ConfirmationPaneSample3.args.styleProps.titleStyleProps, {
                     width: "80px"
                 }),
-                subtitleStyleProps: Object.assign({}, ConfirmationPanePreset3.args.styleProps.subtitleStyleProps, {
+                subtitleStyleProps: Object.assign({}, ConfirmationPaneSample3.args.styleProps.subtitleStyleProps, {
                     width: "80px"
                 }),
                 buttonGroupStyleProps: {
@@ -371,10 +371,10 @@ export const ConfirmationPanePreset3: Story<IConfirmationPaneProps> = (args) => 
     return <ConfirmationPane {...args} ></ConfirmationPane>;
 };
 
-ConfirmationPanePreset3.args = confirmationPanePreset3Props;
+ConfirmationPaneSample3.args = confirmationPaneSample3Props;
 
 /*
-    Confirmation Pane Preset 4
+    Confirmation Pane Sample 4
 */
 
 const customTitle = (
@@ -400,7 +400,7 @@ const customCancelButton = (
     </button>
 );
 
-const confirmationPanePreset4Props: IConfirmationPaneProps = {
+const confirmationPaneSample4Props: IConfirmationPaneProps = {
     componentOverrides: {
         title: customTitle,
         subtitle: customSubtitle,
@@ -409,5 +409,5 @@ const confirmationPanePreset4Props: IConfirmationPaneProps = {
     }
 };
 
-export const ConfirmationPanePreset4 = ConfirmationPaneTemplate.bind({});
-ConfirmationPanePreset4.args = confirmationPanePreset4Props;
+export const ConfirmationPaneSample4 = ConfirmationPaneTemplate.bind({});
+ConfirmationPaneSample4.args = confirmationPaneSample4Props;

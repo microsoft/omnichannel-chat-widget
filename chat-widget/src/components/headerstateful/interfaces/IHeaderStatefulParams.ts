@@ -17,5 +17,5 @@ export interface IHeaderStatefulParams {
      * endChat: Internal Prop injected for triggering end of a chat using chatSDK
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    endChat: (adapter: any) => Promise<void>;
+    endChat: (adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean) => Promise<void>;
 }

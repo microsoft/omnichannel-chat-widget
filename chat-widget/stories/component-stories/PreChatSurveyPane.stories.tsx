@@ -43,7 +43,7 @@ const defaultPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
         }
     }
 };
-const presetOnePreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
+const sampleOnePreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
     controlProps: {
         ...defaultPreChatSurveyPaneProps.controlProps,
         dir: "rtl",        
@@ -52,9 +52,9 @@ const presetOnePreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
         ...defaultPreChatSurveyPaneProps.styleProps
     }
 };
-const presetTwoPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
+const sampleTwoPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
     controlProps: {
-        id: "oc-lcw-prechatsurveypane-preset2",
+        id: "oc-lcw-prechatsurveypane-sample2",
         dir: "auto",
         hidePreChatSurveyPane: false,
         adaptiveCardHostConfig: "{\"fontFamily\":\"Segoe UI, Helvetica Neue, sans-serif\",\"containerStyles\":{\"default\":{\"foregroundColors\":{\"default\":{\"default\":\"#000000\"}},\"backgroundColor\":\"#FFFFFF\"}},\"actions\":{\"actionsOrientation\":\"Vertical\",\"actionAlignment\":\"stretch\"}}",
@@ -67,9 +67,9 @@ const presetTwoPreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
         ...defaultPreChatSurveyPaneProps.styleProps
     }
 };
-const presetThreePreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
+const sampleThreePreChatSurveyPaneProps: IPreChatSurveyPaneProps = {
     controlProps: {
-        id: "oc-lcw-prechatsurveypane-preset3",
+        id: "oc-lcw-prechatsurveypane-sample3",
         dir: "auto",
         hidePreChatSurveyPane: false,
         adaptiveCardHostConfig: "{\"fontFamily\":\"Segoe UI, Helvetica Neue, sans-serif\",\"containerStyles\":{\"default\":{\"foregroundColors\":{\"default\":{\"default\":\"#C3F60F\"}},\"backgroundColor\":\"#6A1E7A\"}},\"actions\":{\"actionsOrientation\":\"Vertical\",\"actionAlignment\":\"stretch\"}}",
@@ -109,19 +109,19 @@ export const PreChatSurveyPaneDefault = PreChatSurveyPaneTemplate.bind({});
 PreChatSurveyPaneDefault.args = defaultPreChatSurveyPaneProps;
 
 /*
-    Preset One PreChatSurvey Pane (RTL)
+    Sample One PreChatSurvey Pane (RTL)
 */
-export const PreChatSurveyPanePreset1 = PreChatSurveyPaneTemplate.bind({});
-PreChatSurveyPanePreset1.args = presetOnePreChatSurveyPaneProps;
+export const PreChatSurveyPaneSample1 = PreChatSurveyPaneTemplate.bind({});
+PreChatSurveyPaneSample1.args = sampleOnePreChatSurveyPaneProps;
 
 /*
-    Preset Two PreChatSurvey Pane (UX Friendly Adaptive Card)
+    Sample Two PreChatSurvey Pane (UX Friendly Adaptive Card)
 */
-export const PreChatSurveyPanePreset2 = PreChatSurveyPaneTemplate.bind({});
-PreChatSurveyPanePreset2.args = presetTwoPreChatSurveyPaneProps;
+export const PreChatSurveyPaneSample2 = PreChatSurveyPaneTemplate.bind({});
+PreChatSurveyPaneSample2.args = sampleTwoPreChatSurveyPaneProps;
 
 /*
-    Preset Three PreChatSurvey Pane
+    Sample Three PreChatSurvey Pane
 */
-export const PreChatSurveyPanePreset3 = PreChatSurveyPaneTemplate.bind({});
-PreChatSurveyPanePreset3.args = presetThreePreChatSurveyPaneProps;
+export const PreChatSurveyPaneSample3 = PreChatSurveyPaneTemplate.bind({});
+PreChatSurveyPaneSample3.args = sampleThreePreChatSurveyPaneProps;

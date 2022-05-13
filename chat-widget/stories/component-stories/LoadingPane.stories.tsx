@@ -102,20 +102,20 @@ const defaultLoadingPaneProps: ILoadingPaneProps = {
         }
     }
 };
-const presetOneLoadingPaneProps: ILoadingPaneProps = {
+const sampleOneLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
-        id: "oc-lcw-loadingpane-preset1",
+        id: "oc-lcw-loadingpane-sample1",
         dir: "rtl"
     },
     styleProps: {
         ...defaultLoadingPaneProps.styleProps
     }
 };
-const presetTwoLoadingPaneProps: ILoadingPaneProps = {
+const sampleTwoLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
-        id: "oc-lcw-loadingpane-preset2",
+        id: "oc-lcw-loadingpane-sample2",
         hideIcon: true,
         hideTitle: true,
         hideSubtitle: true,
@@ -156,10 +156,10 @@ const presetTwoLoadingPaneProps: ILoadingPaneProps = {
         }
     }
 };
-const presetThreeLoadingPaneProps: ILoadingPaneProps = {
+const sampleThreeLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
-        id: "oc-lcw-loadingpane-preset3",
+        id: "oc-lcw-loadingpane-sample3",
         hideIcon: true,
         titleText: "Please Wait ...",
         subtitleText: "Loading Content",
@@ -239,28 +239,28 @@ export const LoadingPaneDefault = LoadingPaneTemplate.bind({});
 LoadingPaneDefault.args = defaultLoadingPaneProps;
 
 /*
-    Loading Pane Preset 1
+    Loading Pane Sample 1
 */
 
 export const LoadingPaneRTL = LoadingPaneTemplate.bind({});
-LoadingPaneRTL.args = presetOneLoadingPaneProps;
+LoadingPaneRTL.args = sampleOneLoadingPaneProps;
 
 /*
-    Loading Pane Preset 2
+    Loading Pane Sample 2
 */
 
-export const LoadingPanePreset2 = LoadingPaneTemplate.bind({});
-LoadingPanePreset2.args = presetTwoLoadingPaneProps;
+export const LoadingPaneSample2 = LoadingPaneTemplate.bind({});
+LoadingPaneSample2.args = sampleTwoLoadingPaneProps;
 
 /*
-    Loading Pane Preset 3
+    Loading Pane Sample 3
 */
 
-export const LoadingPanePreset3 = LoadingPaneTemplate.bind({});
-LoadingPanePreset3.args = presetThreeLoadingPaneProps;
+export const LoadingPaneSample3 = LoadingPaneTemplate.bind({});
+LoadingPaneSample3.args = sampleThreeLoadingPaneProps;
 
 /*
-    Loading Pane Preset 4
+    Loading Pane Sample 4
 */
 const customIcon = (
     <img src={chatIcon} />
@@ -288,7 +288,7 @@ const customSpinnerText = (
     </p>
 );
 
-const loadingPanePreset4Props: ILoadingPaneProps = {
+const loadingPaneSample4Props: ILoadingPaneProps = {
     componentOverrides: {
         icon: customIcon,
         title: customTitle,
@@ -298,5 +298,5 @@ const loadingPanePreset4Props: ILoadingPaneProps = {
     }
 };
 
-export const LoadingPanePreset4 = LoadingPaneTemplate.bind({});
-LoadingPanePreset4.args = loadingPanePreset4Props;
+export const LoadingPaneSample4 = LoadingPaneTemplate.bind({});
+LoadingPaneSample4.args = loadingPaneSample4Props;

@@ -158,10 +158,10 @@ export const ChatButtonRTL = Template.bind({});
 ChatButtonRTL.args = chatButtonRTLProps;
 
 /*
-    ChatButton Preset 1
+    ChatButton Sample 1
 */
 
-const chatButtonPreset1Props: IChatButtonProps = {
+const chatButtonSample1Props: IChatButtonProps = {
     controlProps:{
         ...defaultChatButtonProps.controlProps,
         dir: "rtl",
@@ -202,14 +202,14 @@ const chatButtonPreset1Props: IChatButtonProps = {
     }
 };
 
-export const ChatButtonPreset1 = Template.bind({});
-ChatButtonPreset1.args = chatButtonPreset1Props;
+export const ChatButtonSample1 = Template.bind({});
+ChatButtonSample1.args = chatButtonSample1Props;
 
 /*
-    ChatButton Preset 2
+    ChatButton Sample 2
 */
 
-const chatButtonPreset2Props: IChatButtonProps = {
+const chatButtonSample2Props: IChatButtonProps = {
     controlProps:{
         ...defaultChatButtonProps.controlProps,
         hideChatTextContainer: true,
@@ -242,11 +242,11 @@ const chatButtonPreset2Props: IChatButtonProps = {
     }
 };
 
-export const ChatButtonPreset2 = Template.bind({});
-ChatButtonPreset2.args = chatButtonPreset2Props;
+export const ChatButtonSample2 = Template.bind({});
+ChatButtonSample2.args = chatButtonSample2Props;
 
 /*
-    ChatButton Preset 3 
+    ChatButton Sample 3 
 */
 
 const customTitle = (
@@ -272,7 +272,7 @@ const customIcon = (
     <></>
 );
 
-const chatButtonPreset3Props: IChatButtonProps = {
+const chatButtonSample3Props: IChatButtonProps = {
     componentOverrides: {
         title: customTitle,
         subtitle: customSubTitle,
@@ -289,5 +289,5 @@ const chatButtonPreset3Props: IChatButtonProps = {
     }    
 };
 
-export const ChatButtonPreset3 = Template.bind({});
-ChatButtonPreset3.args = chatButtonPreset3Props;
+export const ChatButtonSample3 = Template.bind({});
+ChatButtonSample3.args = chatButtonSample3Props;
