@@ -20,7 +20,7 @@ const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatW
 
 export const Default = LiveChatWidgetTemplate.bind({});
 
-const liveChatWidgetdefaultProps: ILiveChatWidgetProps = {
+const liveChatWidgetDefaultProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     styleProps: {
@@ -34,7 +34,7 @@ const liveChatWidgetdefaultProps: ILiveChatWidgetProps = {
     telemetryConfig: undefined
 };
 
-Default.args = liveChatWidgetdefaultProps;
+Default.args = liveChatWidgetDefaultProps;
 
 /*
     Live Chat Widget Pre + Post Chat

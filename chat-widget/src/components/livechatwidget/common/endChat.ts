@@ -27,7 +27,6 @@ export const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
                     exception: ex
                 }
             });
-            NotificationHandler.notifyError(NotificationScenarios.Connection, "End Chat Call Failed: " + ex);
         }
     }
     if (!skipCloseChat) {
