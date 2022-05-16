@@ -105,6 +105,8 @@ export enum TelemetryEvent {
     SendTypingIndicatorFailed = "SendTypingIndicatorFailed",
 
     PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
+    ChatAlreadyTriggered = "ChatAlreadyTriggered",
+    StartProactiveChatEventReceived = "StartProactiveChatEventReceived",
     StartProactiveChatMethodFailed = "StartProactiveChatMethodFailed",
     ProactiveChatAccepted = "ProactiveChatAccepted",
     ProactiveChatRejected = "ProactiveChatRejected",
