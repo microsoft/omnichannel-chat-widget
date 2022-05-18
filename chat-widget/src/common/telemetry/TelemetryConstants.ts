@@ -83,7 +83,7 @@ export enum TelemetryEvent {
     OutOfOfficePaneLoaded = "OutOfOfficePaneLoaded",
     PostChatSurveyLoaded = "PostChatSurveyLoaded",
     ConfirmationPaneLoaded = "ConfirmationPaneLoaded",
-    LCWProactiveChatPaneLoaded = "LCWProactiveChatPaneLoaded",
+    ProactiveChatPaneLoaded = "ProactiveChatPaneLoaded",
     ReconnectChatPaneLoaded = "ReconnectChatPaneLoaded",
     HeaderCloseButtonClicked = "HeaderCloseButtonClicked",
     HeaderMinimizeButtonClicked = "HeaderMinimizeButtonClicked",
@@ -112,8 +112,8 @@ export enum TelemetryEvent {
     ProactiveChatRejected = "ProactiveChatRejected",
     IncomingProactiveChatScreenLoaded = "IncomingProactiveChatScreenLoaded",
     ProactiveChatClosed = "ProactiveChatClosed",
-    LCWProactiveChatStartChat = "LCWProactiveChatStartChat",
-    LCWProactiveChatStartPopoutChat = "LCWProactiveChatStartPopoutChat",
+    ProactiveChatStartChat = "ProactiveChatStartChat",
+    ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
     ReconnectChatContinueConversation = "ReconnectChatContinueConversation",
     ReconnectChatStartNewConversation = "ReconnectChatStartNewConversation",
     ReconnectChatMinimize = "ReconnectChatMinimize",
@@ -143,7 +143,7 @@ export class TelemetryConstants {
         case TelemetryEvent.EmailTranscriptLoaded:
         case TelemetryEvent.OutOfOfficePaneLoaded:
         case TelemetryEvent.ConfirmationPaneLoaded:
-        case TelemetryEvent.LCWProactiveChatPaneLoaded:
+        case TelemetryEvent.ProactiveChatPaneLoaded:
             return ScenarioType.LOAD;
 
         case TelemetryEvent.PrechatSubmitted:

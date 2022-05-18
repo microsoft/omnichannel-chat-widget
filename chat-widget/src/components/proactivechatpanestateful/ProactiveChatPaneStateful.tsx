@@ -46,7 +46,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
             if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
                 // TODO: BroadcastService: replace with the sdk broadcast service, when in place
                 const startPopoutChatEvent: ICustomEvent = {
-                    eventName: TelemetryEvent.LCWProactiveChatStartPopoutChat,
+                    eventName: TelemetryEvent.ProactiveChatStartPopoutChat,
                 };
                 BroadcastService.postMessage(startPopoutChatEvent);
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
@@ -55,7 +55,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             } else {
                 const proactiveChatStarted: ICustomEvent = {
-                    eventName: TelemetryEvent.LCWProactiveChatStartChat,
+                    eventName: TelemetryEvent.ProactiveChatStartChat,
                 };
                 BroadcastService.postMessage(proactiveChatStarted);
                 await startChat();
@@ -79,7 +79,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
         const timeoutEvent = setTimeout(() => {
             handleProactiveChatInviteTimeout();
         }, proactiveChatProps?.ProactiveChatInviteTimeoutInMs ?? Constants.ProactiveChatInviteTimeoutInMs);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.LCWProactiveChatPaneLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ProactiveChatPaneLoaded });
         return () => {
             clearTimeout(timeoutEvent);
         };

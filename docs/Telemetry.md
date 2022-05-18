@@ -68,7 +68,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `EmailTranscriptLoaded` |On Email transcript pane load complete |
 | `OutOfOfficePaneLoaded` |On Out of office pane load complete |
 | `ConfirmationPaneLoaded`|On `ConfirmationPane` load complete |
-| `LCWProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
+| `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
 | `StartChatSDKCall`| On initiating start chat SDK call|
 
 #### Action Events
