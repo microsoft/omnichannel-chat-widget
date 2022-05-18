@@ -3,5 +3,5 @@ import { IPreChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components/
 export interface IPreChatSurveyPaneStatefulParams {
     surveyProps?: IPreChatSurveyPaneProps;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    initStartChat: (params?: any) => Promise<void>;
+    initStartChat: (params?: any, persistedState?: any) => Promise<void>;
 }

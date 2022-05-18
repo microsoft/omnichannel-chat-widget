@@ -11,11 +11,12 @@ import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-compon
 import { IStyle } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
-import { HtmlAttributeNames, Regex } from "../../common/Constants";
+import { Constants, HtmlAttributeNames, Regex } from "../../common/Constants";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps";
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { DataStoreManager } from "../../common/contextDataStore/DataStoreManager";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParams) => {
@@ -60,15 +61,24 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         onSubmit: async (values: { index: number, label: any, id: any, value: string }[]) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSubmitted });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+
             try {
-                const prechatResponseValues = extractPreChatSurveyResponseValues(state.domainStates.preChatSurveyResponse, values);
-                const optionalParams = {
-                    initContext: {
-                        preChatResponse: prechatResponseValues
-                    }
-                };
-                setPreChatResponseEmail(values);
-                await initStartChat(optionalParams);
+                const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(Constants.widgetStateDataKey, "localStorage");
+                const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+                let optionalParams = {};
+                if (persistedState?.domainStates?.liveChatContext) {
+                    optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
+                    await initStartChat(optionalParams, persistedState);
+                } else {
+                    const prechatResponseValues = extractPreChatSurveyResponseValues(state.domainStates.preChatSurveyResponse, values);
+                    optionalParams = {
+                        initContext: {
+                            preChatResponse: prechatResponseValues
+                        }
+                    };
+                    setPreChatResponseEmail(values);
+                    await initStartChat(optionalParams);
+                }
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.PreChatSurveyStartChatMethodFailed,
@@ -93,7 +103,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         if (adaptiveCardElements && adaptiveCardElements.length > 0) {
             const children = adaptiveCardElements[0].children;
             let value = "";
-            for (let index=0; index < children.length; index++) {
+            for (let index = 0; index < children.length; index++) {
                 const current = children[index];
                 if (current && current.className == HtmlAttributeNames.adaptiveCardTextBlockClassName) {
                     value = current.innerHTML;
