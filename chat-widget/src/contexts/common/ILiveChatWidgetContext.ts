@@ -17,6 +17,8 @@ export interface ILiveChatWidgetContext {
         middlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts | undefined;
         telemetryInternalData: IInternalTelemetryData;
         globalDir: "rtl" | "ltr";
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        liveChatContext: any;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in

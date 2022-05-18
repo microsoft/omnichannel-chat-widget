@@ -30,29 +30,34 @@
       }
     }
 
-    function setData(key, data, type) {
-      try {
-        if (type === "localStorage") {
-          localStorage.setItem(key, value);
-        } else {
-          sessionStorage.setItem(key, value);
-        }
-      } catch (error) {
-        console.error("logging to first party failed!")
-      }
-    }
+    // browser compatibility
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
 
-    function getData(key, type) {
-      if (type == "localStorage") {
-        localStorage.getItem(key);
-      } else {
-        sessionStorage.getItem(key);
+    eventer(messageEvent, function (e) {
+      try {
+        localStorage.setItem(e.data.key, e.data.data);
       }
+      catch (ex) {
+        console.log(ex);
+      }
+    });
+
+    // Raise event after data found in localStorage
+    if (localStorage.getitem("LcwChatWidgetState")) {
+      var evt = new CustomEvent("lcw:onWidgetStateUpdated", {
+        detail: {
+          key: "LcwChatWidgetState",
+          data: widgetData
+        }
+      });
+      window.dispatchEvent(evt);
     }
   </script>
   <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
   <script id="oc-lcw-script" src="../dist/out.js" data-customization-callback="lcw" data-org-id="" data-app-id=""
-    data-org-url="" set-data-callback="SetData" get-data-callback="GetData"></script>
+    data-org-url=""></script>
 </body>
 
 </html>

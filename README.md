@@ -228,8 +228,8 @@ const customizedFooterProp: IFooterProps = {
 
 ## See Also
 
-[Telemetry](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Telemetry.md)\
-[Using LiveChatWidget in React + TypeScript + Webpack 5](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md)\
-[Omnichannel Features](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Features.md)\
-[How to Add Visual Regression Tests](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/VisualRegressionTestingGuide.md)\
-[Security](https://github.com/microsoft/omnichannel-chat-widget/blob/main/SECURITY.md)
+[Telemetry](./docs/Telemetry.md)\
+[Create LCW widget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md)\
+[Omnichannel Features](./docs/Features.md)\
+[How to Add Visual Regression Tests](./docs/VisualRegressionTestingGuide.md)\
+[Security](./SECURITY.md)
