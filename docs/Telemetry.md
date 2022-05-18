@@ -135,7 +135,8 @@ Refer to the below table to understand different critical telemetry events raise
 | `OutOfOfficePaneLoaded` |On Out of office pane load complete |
 | `ConfirmationPaneLoaded`|On `ConfirmationPane` load complete |
 | `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
-| `ChatAlreadyTriggered`|On starting proactive chat pane with chat already triggered|
+| `StartProactiveChatEventReceived`|On receiving start proactive chat event|
+| `ChatAlreadyTriggered`|On attempting to start proactive chat pane with chat already triggered|
 | `ReconnectChatPaneLoaded` | On `ReconnectChatPane` load complete|
 
 #### Action Events
