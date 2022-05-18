@@ -40,7 +40,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
         id: "oc-lcw-confirmation-pane",
         dir: state.domainStates.globalDir,
         onConfirm: async () => {
-            TelemetryHelper.logConfigDataEvent(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConfirmationConfirmButtonClicked,
                 Description: "Confirmation pane Confirm button clicked"
             });
@@ -79,7 +79,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             }
         },
         onCancel: () => {
-            TelemetryHelper.logConfigDataEvent(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConfirmationCancelButtonClicked,
                 Description: "Confirmation pane Cancel button clicked."
             });

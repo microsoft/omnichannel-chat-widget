@@ -35,7 +35,7 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
         if (firstElement && firstElement[0]) {
             firstElement[0].focus();
         }
-        TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.LoadingPaneLoaded, Description: "Loading pane loaded." });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.LoadingPaneLoaded, Description: "Loading pane loaded." });
     }, []);
     
     return (

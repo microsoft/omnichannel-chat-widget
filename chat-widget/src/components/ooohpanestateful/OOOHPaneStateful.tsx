@@ -1,3 +1,4 @@
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -7,6 +8,7 @@ import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types
 import { IOOOHPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneStyleProps";
 import { IStyle } from "@fluentui/react";
 import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
+import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
@@ -33,6 +35,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
         if (firstElement && firstElement[0]) {
             firstElement[0].focus();
         }
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.OutOfOfficePaneLoaded });
     }, []);
     
     return (

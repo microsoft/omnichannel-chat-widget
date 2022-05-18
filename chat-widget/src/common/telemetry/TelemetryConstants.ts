@@ -128,7 +128,6 @@ export interface TelemetryInput {
 export class TelemetryConstants {
     private static map(eventTypeOrScenarioType: TelemetryEvent): ScenarioType {
         switch (eventTypeOrScenarioType) {
-        case TelemetryEvent.StartChatSDKCall:
         case TelemetryEvent.ParseAdaptiveCardFailed:
             return ScenarioType.CONFIG_VALIDATION;
 
@@ -167,6 +166,7 @@ export class TelemetryConstants {
         case TelemetryEvent.HeaderMinimizeButtonClicked:
             return ScenarioType.ACTIONS;
 
+        case TelemetryEvent.StartChatSDKCall:
         case TelemetryEvent.StartChatMethodException:
         case TelemetryEvent.CloseChatMethodException:
         case TelemetryEvent.StartProactiveChatMethodFailed:
