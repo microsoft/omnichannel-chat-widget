@@ -18,6 +18,7 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
 import { Constants } from "../../common/Constants";
+import { ConversationState } from "../../contexts/common/ConversationState";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
