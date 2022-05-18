@@ -59,6 +59,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
+import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
@@ -85,7 +86,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
-
+        DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
@@ -158,7 +159,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         // Track the message count
-        if (state.appStates.conversationState == ConversationState.Active) {
+        if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {
                 currentMessageCountRef.current++;
                 dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: currentMessageCountRef.current + 1 });
@@ -198,21 +199,23 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [props.webChatContainerProps?.webChatStyles]);
     
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
-    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     const endChatRelay = () => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initStartChatRelay = (optionalParams?: any) => initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
+    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
-    
+
     // publish chat widget state
-    const chatWidgetStateChangeEvent: ICustomEvent = {
-        eventName: TelemetryEvent.ChatWidgetStateChanged,
-        payload: {
-            ...state
-        }
-    };
-    BroadcastService.postMessage(chatWidgetStateChangeEvent);
+    useEffect(() => {
+        const chatWidgetStateChangeEvent: ICustomEvent = {
+            eventName: TelemetryEvent.ChatWidgetStateChanged,
+            payload: {
+                ...state
+            }
+        };
+        BroadcastService.postMessage(chatWidgetStateChangeEvent);
+    }, [state]);
 
     return (
         <Composer
