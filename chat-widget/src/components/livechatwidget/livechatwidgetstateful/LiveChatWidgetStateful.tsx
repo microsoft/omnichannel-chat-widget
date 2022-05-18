@@ -132,7 +132,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Description: "Start proactive chat event received."
             });
             if (canStartProactiveChat.current) {
-                startProactiveChat(dispatch, msg?.payload?.bodyTitle, msg?.payload?.showPrechat, msg?.payload?.inNewWindow);
+                startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
             } else {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatAlreadyTriggered,

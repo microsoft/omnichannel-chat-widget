@@ -46,7 +46,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
             if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
                 // TODO: BroadcastService: replace with the sdk broadcast service, when in place
                 const startPopoutChatEvent: ICustomEvent = {
-                    eventName: "StartPopoutChat",
+                    eventName: "LCWProactiveChatStartPopoutChat",
                 };
                 BroadcastService.postMessage(startPopoutChatEvent);
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
@@ -54,6 +54,10 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             } else {
+                const proactiveChatStarted: ICustomEvent = {
+                    eventName: "LCWProactiveChatStartChat",
+                };
+                BroadcastService.postMessage(proactiveChatStarted);
                 await startChat();
             }
         },
@@ -70,6 +74,10 @@ export const ProactiveChatPaneStateful = (props: any) => {
     };
 
     useEffect(() => {
+        const proactiveChatPaneLoaded: ICustomEvent = {
+            eventName: "LCWProactiveChatPaneLoaded",
+        };
+        BroadcastService.postMessage(proactiveChatPaneLoaded);
         setFocusOnElement(document.getElementById(controlProps.id + "-startbutton" as string) as HTMLElement);
         TelemetryTimers.ProactiveChatScreenTimer = createTimer();
         const timeoutEvent = setTimeout(() => {
