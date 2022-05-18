@@ -46,7 +46,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
             if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
                 // TODO: BroadcastService: replace with the sdk broadcast service, when in place
                 const startPopoutChatEvent: ICustomEvent = {
-                    eventName: "LCWProactiveChatStartPopoutChat",
+                    eventName: TelemetryEvent.LCWProactiveChatStartPopoutChat,
                 };
                 BroadcastService.postMessage(startPopoutChatEvent);
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
@@ -55,7 +55,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             } else {
                 const proactiveChatStarted: ICustomEvent = {
-                    eventName: "LCWProactiveChatStartChat",
+                    eventName: TelemetryEvent.LCWProactiveChatStartChat,
                 };
                 BroadcastService.postMessage(proactiveChatStarted);
                 await startChat();
@@ -74,16 +74,12 @@ export const ProactiveChatPaneStateful = (props: any) => {
     };
 
     useEffect(() => {
-        const proactiveChatPaneLoaded: ICustomEvent = {
-            eventName: "LCWProactiveChatPaneLoaded",
-        };
-        BroadcastService.postMessage(proactiveChatPaneLoaded);
         setFocusOnElement(document.getElementById(controlProps.id + "-startbutton" as string) as HTMLElement);
         TelemetryTimers.ProactiveChatScreenTimer = createTimer();
         const timeoutEvent = setTimeout(() => {
             handleProactiveChatInviteTimeout();
         }, proactiveChatProps?.ProactiveChatInviteTimeoutInMs ?? Constants.ProactiveChatInviteTimeoutInMs);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ProactiveChatPaneLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.LCWProactiveChatPaneLoaded });
         return () => {
             clearTimeout(timeoutEvent);
         };
