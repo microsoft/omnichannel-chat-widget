@@ -10,6 +10,9 @@ export const initCallingSdk = async (chatSDK: any, setVoiceVideoCallingSDK: any)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const callingSDK = await (chatSDK as any).getVoiceVideoCalling();
             setVoiceVideoCallingSDK(callingSDK);
+            TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.CallingSDKLoadSuccess
+            });
             return true;
         }
         return false;

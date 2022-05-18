@@ -64,7 +64,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
             }
         },
         onCancel: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptButtonClicked, Description: "Email Transcript button clicked." });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptCancelButtonClicked, Description: "Email Transcript cancel button clicked." });
             closeEmailTranscriptPane();
         },
         checkInput: function (input: string) {
