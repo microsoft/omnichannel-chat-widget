@@ -229,4 +229,5 @@ const customizedFooterProp: IFooterProps = {
 [Telemetry](./docs/Telemetry.md)\
 [Omnichannel Features](./docs/Features.md)\
 [How to Add Visual Regression Tests](./docs/VisualRegressionTestingGuide.md)\
-[Security](./SECURITY.md)
+[Security](./SECURITY.md)\
+[Create LCW widget with Webpack5 and TypeScript](./docs/CreateWidgetGuide_wp5_typescript.md)
