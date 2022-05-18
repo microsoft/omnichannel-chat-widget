@@ -2,9 +2,7 @@ import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConsta
 import React, { Dispatch, useEffect } from "react";
 import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
 
-import { ConfirmationPane } from "@microsoft/omnichannel-chat-components";
-import { Constants } from "../../common/Constants";
-import { ConversationState } from "../../contexts/common/ConversationState";
+import { BroadcastService, ConfirmationPane } from "@microsoft/omnichannel-chat-components";
 import { DimLayer } from "../dimlayer/DimLayer";
 import { IConfirmationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/confirmationpane/interfaces/IConfirmationPaneControlProps";
 import { IConfirmationPaneStatefulParams } from "./interfaces/IConfirmationPaneStatefulParams";
@@ -17,18 +15,21 @@ import { PostChatSurveyMode } from "../postchatsurveypanestateful/enums/PostChat
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
+import { Constants } from "../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
 
     const initialTabIndexMap: Map<string, number> = new Map();
     let elements: HTMLElement[] | null = [];
-
-    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const { setPostChatContext, endChat } = props;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const chatSDK: any = useChatSDKStore();
+
+    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const { endChat } = props;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
 
@@ -45,16 +46,14 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             try {
+                // check agent has joined conversation
                 const conversationDetails = await chatSDK.getConversationDetails();
                 if (isPostChatEnabled === "true" && conversationDetails.canRenderPostChat === Constants.truePascal) {
                     if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-                        dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT, payload: true });
-                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-    
-                        await setPostChatContext();
-                        if (state.domainStates.postChatContext) {
-                            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
-                        }
+                        const loadPostChatEvent: ICustomEvent = {
+                            eventName: "LoadPostChatSurvey",
+                        };
+                        BroadcastService.postMessage(loadPostChatEvent);
                     } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
                         const skipEndChatSDK = false;
                         const skipCloseChat = true;
