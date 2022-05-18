@@ -1,8 +1,10 @@
+import { Constants, HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 import { extractPreChatSurveyResponseValues, findAllFocusableElement, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
+import { DataStoreManager } from "../../common/contextDataStore/DataStoreManager";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IPreChatSurveyPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneControlProps";
@@ -11,12 +13,10 @@ import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-compon
 import { IStyle } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
-import { Constants, HtmlAttributeNames, Regex } from "../../common/Constants";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps";
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { DataStoreManager } from "../../common/contextDataStore/DataStoreManager";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParams) => {
@@ -41,7 +41,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         try {
             return parseAdaptiveCardPayload(payload, requiredFieldMissingMessage);
         } catch (ex) {
-            TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+            TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.ParseAdaptiveCardFailed,
                 Description: "Adaptive Card JSON Parse Failed.",
                 ExceptionDetails: {
