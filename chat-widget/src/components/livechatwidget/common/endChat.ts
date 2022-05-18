@@ -1,5 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -10,12 +11,11 @@ import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcon
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any) => {
     try {
-        TelemetryHelper.logConfigDataEvent(LogLevel.INFO, {
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
             Event: TelemetryEvent.EndChatSDKCall
         });
         await chatSDK?.endChat();

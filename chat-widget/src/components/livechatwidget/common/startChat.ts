@@ -14,8 +14,8 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createTimer } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat } from "./reconnectChatHelper";
-import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
+import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
@@ -43,13 +43,13 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any) => {
     try {
         try {
-            TelemetryHelper.logConfigDataEvent(LogLevel.INFO, {
+            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatSDKCall
             });
             await chatSDK.startChat(params);
             TelemetryTimers.WidgetLoadTimer = createTimer();
         } catch (error) {
-            TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+            TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.StartChatMethodException,
                 ExceptionDetails: {
                     exception: `Failed to setup startChat: ${error}`
@@ -79,9 +79,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         });
     } catch (ex) {
         TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-            Event: TelemetryEvent.StartChatFailed,
+            Event: TelemetryEvent.WidgetLoadFailed,
             ExceptionDetails: {
-                Exception: `Start Chat Failed: ${ex}`
+                Exception: `Widget load Failed: ${ex}`
             }
         });
         NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);

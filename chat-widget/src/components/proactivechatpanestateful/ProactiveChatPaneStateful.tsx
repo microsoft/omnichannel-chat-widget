@@ -26,7 +26,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
         if (!timeoutRemoved) {
             setTimeoutRemoved(true);
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ProactiveChatRejected,
                 ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
                 Description: "Proactive chat invitation timed out."

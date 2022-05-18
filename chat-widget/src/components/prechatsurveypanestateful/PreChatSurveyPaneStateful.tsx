@@ -1,3 +1,4 @@
+import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 import { extractPreChatSurveyResponseValues, findAllFocusableElement, parseAdaptiveCardPayload } from "../../common/utils";
@@ -11,7 +12,6 @@ import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-compon
 import { IStyle } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
-import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps";
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
@@ -40,7 +40,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         try {
             return parseAdaptiveCardPayload(payload, requiredFieldMissingMessage);
         } catch (ex) {
-            TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+            TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.ParseAdaptiveCardFailed,
                 Description: "Adaptive Card JSON Parse Failed.",
                 ExceptionDetails: {
