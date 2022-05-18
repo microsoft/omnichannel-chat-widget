@@ -106,6 +106,15 @@ _Subscribing Event_:
     }, []);
 ```
 
+### Broadcast Events
+
+Refer to the below table to understand different broadcast events raised during the lifetime of the chat widget.
+
+| Event Name | Scenario |
+| -------- | -------- |
+| `ProactiveChatStartChat`     |On `ProactiveChatPane` start chat |
+| `ProactiveChatStartPopoutChat`     |On `ProactiveChatPane` start chat in a new window |
+
 ### Telemetry Events
 
 Refer to the below table to understand different critical telemetry events raised during the lifetime of the chat widget. These events have been further categorized as `Load`, `Configuration`, `Actions`, `SDK`, and `Calling` events.
@@ -126,6 +135,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `OutOfOfficePaneLoaded` |On Out of office pane load complete |
 | `ConfirmationPaneLoaded`|On `ConfirmationPane` load complete |
 | `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
+| `ChatAlreadyTriggered`|On starting proactive chat pane with chat already triggered|
 | `ReconnectChatPaneLoaded` | On `ReconnectChatPane` load complete|
 
 #### Action Events
