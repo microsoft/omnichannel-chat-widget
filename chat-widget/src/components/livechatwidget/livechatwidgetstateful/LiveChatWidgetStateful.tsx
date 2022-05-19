@@ -128,14 +128,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
                 Description: "Start proactive chat event received."
             });
             if (canStartProactiveChat.current) {
                 startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
             } else {
-                TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatAlreadyTriggered,
                     Description: "Start proactive chat method called, when chat was already triggered."
                 });
