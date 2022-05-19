@@ -1,0 +1,12 @@
+{
+  "OrgUrl": "",
+  "OrgId": "",
+  "AppId": "",
+  "browsers": ["chromium"],
+  "devices": [],
+  "launchBrowserSettings": {
+    "headless": false,
+    "slowMo": 10,
+    "args": ["--disable-web-security"]
+  }
+}
