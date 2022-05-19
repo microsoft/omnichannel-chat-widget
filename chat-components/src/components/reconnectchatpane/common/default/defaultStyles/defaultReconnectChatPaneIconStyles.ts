@@ -1,8 +1,8 @@
+import { ChatReconnectIconBase64 } from "../../../../../assets/Icons";
 import { IStyle } from "@fluentui/react";
-import chatReconnectPopupIcon from "../../../../../assets/imgs/ChatReconnectPopupIcon.png";
 
 export const defaultReconnectChatPaneIconStyles: IStyle = {
-    backgroundImage: "url(" + chatReconnectPopupIcon + ")",
+    backgroundImage: `url(${ChatReconnectIconBase64})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "200px",

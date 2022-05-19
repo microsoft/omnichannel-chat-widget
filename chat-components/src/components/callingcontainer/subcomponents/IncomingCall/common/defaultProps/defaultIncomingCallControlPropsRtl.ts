@@ -1,7 +1,6 @@
+import { CallAcceptButtonBase64, CallRejectButtonBase64, VideoCallAcceptButtonIconBase64 } from "../../../../../../assets/Icons";
+
 import { IIncomingCallControlProps } from "../../interfaces/IIncomingCallControlProps";
-import callrejectbutton from "../../../../../../assets/imgs/callrejectbutton.svg";
-import callacceptbutton from "../../../../../../assets/imgs/callacceptbutton.svg";
-import videocallacceptbutton from "../../../../../../assets/imgs/videocallacceptbutton.svg";
 
 export const defaultIncomingCallControlPropsRtl: IIncomingCallControlProps = {
     id: "incomingCallPopup",
@@ -22,7 +21,7 @@ export const defaultIncomingCallControlPropsRtl: IIncomingCallControlProps = {
         type: "icon",
         ariaLabel: "Decline Call",
         imageIconProps: {
-            src: callrejectbutton,
+            src: CallRejectButtonBase64,
             styles: { image: { height: "18px", width: "18px" } }
         },
         iconSize: 20
@@ -32,7 +31,7 @@ export const defaultIncomingCallControlPropsRtl: IIncomingCallControlProps = {
         type: "icon",
         ariaLabel: "Audio Call",
         imageIconProps: {
-            src: callacceptbutton,
+            src: CallAcceptButtonBase64,
             styles: { image: { height: "18px", width: "18px" } }
         },
         iconSize: 20
@@ -42,7 +41,7 @@ export const defaultIncomingCallControlPropsRtl: IIncomingCallControlProps = {
         type: "icon",
         ariaLabel: "Video Call",
         imageIconProps: {
-            src: videocallacceptbutton,
+            src: VideoCallAcceptButtonIconBase64,
             styles: { image: { height: "18px", width: "18px" } }
         },
         iconSize: 20
