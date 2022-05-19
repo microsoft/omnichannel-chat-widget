@@ -6,13 +6,14 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
+import { IProactiveChatNotificationConfig } from "../../proactivechatpanestateful/interfaces/IProactiveChatNotificationConfig";
 
 // Defines startProactiveChat callback
-export const startProactiveChat = (dispatch: Dispatch<ILiveChatWidgetAction>, bodyTitle?: string, showPrechat?: boolean, inNewWindow?: boolean) => {
+export const startProactiveChat = (dispatch: Dispatch<ILiveChatWidgetAction>, notificationConfig?: IProactiveChatNotificationConfig, enablePreChat?: boolean, inNewWindow?: boolean) => {
     dispatch({
         type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
-            proactiveChatBodyTitle: bodyTitle ?? "",
-            proactiveChatEnablePrechat: showPrechat ?? false,
+            proactiveChatBodyTitle: (notificationConfig && notificationConfig.message) ? notificationConfig.message : "",
+            proactiveChatEnablePrechat: enablePreChat ?? false,
             proactiveChatInNewWindow: inNewWindow ?? false
         }
     });
