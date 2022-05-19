@@ -1,16 +1,12 @@
+import { CallRejectButtonBase64, VideoOffIconBase64, VideoOnIconBase64, VoiceOffIconBase64, VoiceOnIconBase64 } from "@microsoft/omnichannel-chat-components";
 import React, { ReactNode } from "react";
-import { Meta } from "@storybook/react/types-6-0";
-import { Story } from "@storybook/react";
+
+import CommandButton from "./common/commandbutton/CommandButton";
 import { CurrentCall } from "@microsoft/omnichannel-chat-components";
 import { ICurrentCallProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/subcomponents/CurrentCall/interfaces/ICurrentCallProps";
-import callrejectbutton from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/callrejectbutton.svg";
-import videoon from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/videoon.svg";
-import videooff from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/videooff.svg";
-import voiceoff from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/voiceoff.svg";
-import voiceon from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/voiceon.svg";
 import { ICurrentCallStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/subcomponents/CurrentCall/interfaces/ICurrentCallStyleProps";
-import CommandButton from "./common/commandbutton/CommandButton";
-
+import { Meta } from "@storybook/react/types-6-0";
+import { Story } from "@storybook/react";
 
 export default {
     title: "Stateless Components/Calling Container/Current Call",
@@ -310,7 +306,7 @@ const defaultRtl: ICurrentCallProps = {
             type: "icon",
             ariaLabel: "End Call",
             imageIconProps: {
-                src: callrejectbutton,
+                src: CallRejectButtonBase64,
                 styles: { image: { height: "18px", width: "18px" } }
             }
         },
@@ -320,11 +316,11 @@ const defaultRtl: ICurrentCallProps = {
             ariaLabel: "Mute",
             toggleAriaLabel: "Unmute",
             imageIconProps: {
-                src: voiceon,
+                src: VoiceOnIconBase64,
                 styles: { image: { height: "16px", width: "16px" } }
             },
             imageToggleIconProps: {
-                src: voiceoff,
+                src: VoiceOffIconBase64,
                 styles: { image: { height: "16px", width: "16px" } }
             },
             iconSize: 18
@@ -335,11 +331,11 @@ const defaultRtl: ICurrentCallProps = {
             ariaLabel: "Turn camera on",
             toggleAriaLabel: "Turn camera off",
             imageIconProps: {
-                src: videoon,
+                src: VideoOnIconBase64,
                 styles: { image: { height: "16px", width: "16px" } }
             },
             imageToggleIconProps: {
-                src: videooff,
+                src: VideoOffIconBase64,
                 styles: { image: { height: "16px", width: "16px" } }
             },
             iconSize: 18

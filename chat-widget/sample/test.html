@@ -26,6 +26,11 @@
               position: "absolute"
             }
           }
+        },
+        webChatContainerProps: {
+          webChatStyles: {
+            hideUploadButton: false
+          }
         }
       }
     }
@@ -45,7 +50,7 @@
     });
 
     // Raise event after data found in localStorage
-    if (localStorage.getitem("LcwChatWidgetState")) {
+    if (localStorage.getItem("LcwChatWidgetState")) {
       var evt = new CustomEvent("lcw:onWidgetStateUpdated", {
         detail: {
           key: "LcwChatWidgetState",

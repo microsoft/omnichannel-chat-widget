@@ -1,14 +1,13 @@
-import React from "react";
-import { Meta } from "@storybook/react/types-6-0";
-import { Story } from "@storybook/react";
-import { FontIcon, IStackStyles, mergeStyles, Stack } from "@fluentui/react";
-import { Header } from "@microsoft/omnichannel-chat-components";
-import { IHeaderProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderProps";
-import { ICommandButtonProps } from "./common/interfaces/ICommandButtonProps";
-import chatIcon from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/chat.svg";
-import closeChatButton from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/closeChatButton.svg";
-import minimizeChatButton from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/minimizeChatButton.svg";
+import { CloseChatButtonIconBase64, MinimizeChatButtonIconBase64, ModernChatIconBase64 } from "@microsoft/omnichannel-chat-components";
+import { FontIcon, IStackStyles, Stack, mergeStyles } from "@fluentui/react";
+
 import CommandButton from "./common/commandbutton/CommandButton";
+import { Header } from "@microsoft/omnichannel-chat-components";
+import { ICommandButtonProps } from "./common/interfaces/ICommandButtonProps";
+import { IHeaderProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderProps";
+import { Meta } from "@storybook/react/types-6-0";
+import React from "react";
+import { Story } from "@storybook/react";
 
 export default {
     title: "Stateless Components/Header",
@@ -39,7 +38,7 @@ const defaultHeaderProps: IHeaderProps = {
         },
         headerIconProps: {
             id: "oc-lcw-header-icon",
-            src: chatIcon,
+            src: ModernChatIconBase64,
             alt: "Chat Icon"
         },
         headerTitleProps: {
@@ -105,7 +104,7 @@ const customHeaderProps: IHeaderProps = {
             id: "oc-lcw-header-minimizebutton",
             type: "icon",
             imageIconProps: {
-                src: minimizeChatButton,
+                src: MinimizeChatButtonIconBase64,
                 styles: { image: { height: "16px", width: "16px" } }
             }
     
@@ -114,13 +113,13 @@ const customHeaderProps: IHeaderProps = {
             id: "oc-lcw-header-closebutton",
             type: "icon",
             imageIconProps: {
-                src: closeChatButton,
+                src: CloseChatButtonIconBase64,
                 styles: { image: { height: "16px", width: "16px" } }
             }
         },
         headerIconProps: {
             id: "oc-lcw-header-icon",
-            src: chatIcon,
+            src: ModernChatIconBase64,
             alt: "Chat Icon"
         },
         headerTitleProps: {

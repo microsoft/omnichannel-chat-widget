@@ -1,9 +1,10 @@
+import { OutOfOfficeHoursPane, encodeComponentString } from "@microsoft/omnichannel-chat-components";
+
+import { ErrorIconBase64 } from "@microsoft/omnichannel-chat-components";
+import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneProps";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 import { Story } from "@storybook/react";
-import { encodeComponentString, OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
-import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneProps";
-import errorImg from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/error.svg";
 
 export default {
     title: "Stateless Components/OutOfOfficeHours Pane",
@@ -69,7 +70,7 @@ const presetTwoOOOHPaneProps: IOOOHPaneProps = {
             borderWidth: "5px",
             backgroundColor: "#FFFFFF",
             backgroundSize: "200px",
-            backgroundImage: `url(${errorImg})`,
+            backgroundImage: `url(${ErrorIconBase64})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             borderColor: "#F2FFF1",
