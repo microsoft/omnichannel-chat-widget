@@ -214,7 +214,7 @@ Refer to the below table to understand different critical telemetry events raise
 
 ## Bring Your Own Logger
 
-Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as showb below.
+Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as shown below.
 
 ```ts
 // customConsoleLogger.ts - Implementing IChatSDKLogger

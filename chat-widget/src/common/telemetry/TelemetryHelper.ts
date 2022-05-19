@@ -274,4 +274,16 @@ export class TelemetryHelper {
         };
         BroadcastService.postMessage(telemetryEvent);
     }
+
+    public static logWebChatEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
+        const telemetryEvent: ITelemetryEvent = {
+            eventName: payload?.Event ?? "",
+            logLevel: logLevel,
+            payload: {
+                ...payload,
+                scenarioType: ScenarioType.WEBCHAT
+            } as WebChatTelemetryData
+        };
+        BroadcastService.postMessage(telemetryEvent);
+    }
 }
