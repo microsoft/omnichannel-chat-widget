@@ -1,5 +1,5 @@
 import { IHeaderControlProps } from "../../interfaces/IHeaderControlProps";
-import chatIcon from "../../../../assets/imgs/chat.svg";
+import { ModernChatIconBase64 } from "../../../../assets/Icons";
 
 export const defaultHeaderControlProps: IHeaderControlProps = {
     id: "oc-lcw-header",
@@ -24,7 +24,7 @@ export const defaultHeaderControlProps: IHeaderControlProps = {
     },
     headerIconProps: {
         id: "oc-lcw-header-icon",
-        src: chatIcon,
+        src: ModernChatIconBase64,
         alt: "Chat Icon"
     },
     headerTitleProps: {

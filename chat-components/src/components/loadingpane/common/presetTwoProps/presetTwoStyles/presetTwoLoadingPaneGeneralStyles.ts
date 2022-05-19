@@ -1,5 +1,5 @@
 import { IStyle } from "@fluentui/react";
-import chatImg from "../../../../../assets/imgs/chat.svg";
+import { ModernChatIconBase64 } from "../../../../../assets/Icons";
 
 export const presetTwoLoadingPaneGeneralStyles: IStyle = {
     borderStyle: "dotted",
@@ -7,7 +7,7 @@ export const presetTwoLoadingPaneGeneralStyles: IStyle = {
     borderWidth: "5px",
     backgroundColor: "#767676",
     backgroundSize: "250px",
-    backgroundImage: `url(${chatImg})`,
+    backgroundImage: `url(${ModernChatIconBase64})`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     borderColor: "",

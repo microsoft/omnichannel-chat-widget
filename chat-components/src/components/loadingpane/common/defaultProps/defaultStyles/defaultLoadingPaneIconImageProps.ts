@@ -1,8 +1,9 @@
 import { IImageProps, ImageFit } from "@fluentui/react";
-import chatImg from "../../../../../assets/imgs/chat.svg";
+
+import { ModernChatIconBase64 } from "../../../../../assets/Icons";
 
 export const defaultLoadingPaneIconImageProps: IImageProps = {
-    src: chatImg,
+    src: ModernChatIconBase64,
     imageFit: ImageFit.center,
     width: "86px",
     height: "86px",

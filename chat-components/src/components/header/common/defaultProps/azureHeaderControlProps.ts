@@ -1,5 +1,5 @@
 import { IHeaderControlProps } from "../../interfaces/IHeaderControlProps";
-import chatIcon from "../../../../assets/imgs/chatIcon.svg";
+import { LegacyChatIconBase64 } from "../../../../assets/Icons";
 
 export const azureHeaderControlProps: IHeaderControlProps = {
     id: "oc-lcw-header",
@@ -23,7 +23,7 @@ export const azureHeaderControlProps: IHeaderControlProps = {
     },
     headerIconProps: {
         id: "oc-lcw-header-icon",
-        src: chatIcon,
+        src: LegacyChatIconBase64,
         alt: "Chat Icon"
     },
     headerTitleProps: {

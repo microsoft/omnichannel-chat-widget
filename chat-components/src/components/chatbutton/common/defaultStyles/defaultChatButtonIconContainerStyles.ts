@@ -1,10 +1,10 @@
 import { IStyle } from "@fluentui/react";
-import downloadChatButtonImage from "../../../../assets/imgs/chat.svg";
+import { ModernChatIconBase64 } from "../../../../assets/Icons";
 
 export const defaultChatButtonIconContainerStyles: IStyle = {
     align: "center",
     backgroundColor:"#315FA2",
-    backgroundImage: `url(${downloadChatButtonImage})`,
+    backgroundImage: `url(${ModernChatIconBase64})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
     backgroundSize: "65% 65%",

@@ -1,8 +1,9 @@
 import { IImageProps, ImageFit } from "@fluentui/react";
-import chatIcon from "../../../../../assets/imgs/chatIcon.svg";
+
+import { LegacyChatIconBase64 } from "../../../../../assets/Icons";
 
 export const presetThreeLoadingPaneIconImageProps: IImageProps = {
-    src: chatIcon,
+    src: LegacyChatIconBase64,
     imageFit: ImageFit.center,
     width: "57px",
     height: "57px",

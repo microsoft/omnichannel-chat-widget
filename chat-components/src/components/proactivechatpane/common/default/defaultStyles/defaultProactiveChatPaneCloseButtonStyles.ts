@@ -1,8 +1,8 @@
+import { CloseChatButtonIconBase64 } from "../../../../../assets/Icons";
 import { IStyle } from "@fluentui/react";
-import closeImage from "../../../../../assets/imgs/closeChatButton.svg";
 
 export const defaultProactiveChatPaneCloseButtonStyles: IStyle = {
-    backgroundImage: "url(" + closeImage + ")",
+    backgroundImage: `url(${CloseChatButtonIconBase64})`,
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat", 
     color: "#605e5c",

@@ -1,9 +1,6 @@
+import { CallRejectButtonBase64, VideoOffIconBase64, VideoOnIconBase64, VoiceOffIconBase64, VoiceOnIconBase64 } from "../../../../../../assets/Icons";
+
 import { ICurrentCallControlProps } from "../../interfaces/ICurrentCallControlProps";
-import callrejectbutton from "../../../../../../assets/imgs/callrejectbutton.svg";
-import videoon from "../../../../../../assets/imgs/videoon.svg";
-import videooff from "../../../../../../assets/imgs/videooff.svg";
-import voiceoff from "../../../../../../assets/imgs/voiceoff.svg";
-import voiceon from "../../../../../../assets/imgs/voiceon.svg";
 
 export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
     id: "currentCall-container",
@@ -32,7 +29,7 @@ export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
         type: "icon",
         ariaLabel: "End Call",
         imageIconProps: {
-            src: callrejectbutton,
+            src: CallRejectButtonBase64,
             styles: { image: { height: "18px", width: "18px" } }
         }
     },
@@ -42,11 +39,11 @@ export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
         ariaLabel: "Mute",
         toggleAriaLabel: "Unmute",
         imageIconProps: {
-            src: voiceon,
+            src: VoiceOnIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
         },
         imageToggleIconProps: {
-            src: voiceoff,
+            src: VoiceOffIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
         },
         iconSize: 18
@@ -57,11 +54,11 @@ export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
         ariaLabel: "Turn camera on",
         toggleAriaLabel: "Turn camera off",
         imageIconProps: {
-            src: videoon,
+            src: VideoOnIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
         },
         imageToggleIconProps: {
-            src: videooff,
+            src: VideoOffIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
         },
         iconSize: 18
