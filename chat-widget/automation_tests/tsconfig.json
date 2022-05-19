@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "CommonJS",
+    "target": "es6",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "paths": {
+      "configuration/*": ["configuration/*"],
+      "areas/*": ["e2e/areas/*"],
+      "helpers/*": ["e2e/helpers/*"],
+      "pages/*": ["e2e/pages/*"],
+      "Utility/*": ["e2e/utility/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
