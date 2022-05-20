@@ -28,13 +28,6 @@ module.exports = {
                         presets: ["@babel/preset-env"]
                     }
                 }
-            },
-            {
-                test: /\.(jpe?g|png|gif|svg|mp3)$/i, 
-                loader: "file-loader",
-                options: {
-                    name: "./public/assets/[name].[ext]"
-                }
             }
         ]
     }
