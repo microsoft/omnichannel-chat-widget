@@ -1,9 +1,9 @@
 import { IStyle } from "@fluentui/react";
-import proactiveBanner from "../../../../../assets/imgs/Proactive_banner.png";
+import { ProactiveChatBannerBase64 } from "../../../../../assets/Icons";
 
 export const defaultProactiveChatPaneHeaderContainerStyles: IStyle = {
     backgroundColor: "rgb(49, 95, 162)",
-    backgroundImage: "url(" + proactiveBanner + ")",
+    backgroundImage: `url(${ProactiveChatBannerBase64})`,
     backgroundPosition: "initial",
     backgroundRepeat: "no-repeat", 
     borderTopLeftRadius: "inherit",

@@ -1,13 +1,11 @@
+import { ImageFit, SpinnerSize } from "@fluentui/react";
+import { LegacyChatIconBase64, LoadingSpinnerBase64, ModernChatIconBase64 } from "@microsoft/omnichannel-chat-components";
+import { LoadingPane, encodeComponentString } from "@microsoft/omnichannel-chat-components";
+
+import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 import { Story } from "@storybook/react";
-import { ImageFit, SpinnerSize } from "@fluentui/react";
-import chatImg from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/chat.svg";
-import chatIcon from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/chatIcon.svg";
-import spinner from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/loading.gif";
-import { LoadingPane, encodeComponentString } from "@microsoft/omnichannel-chat-components";
-import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
-
 
 export default {
     title: "Stateless Components/Loading Pane",
@@ -75,7 +73,7 @@ const defaultLoadingPaneProps: ILoadingPaneProps = {
             alignSelf: "auto"
         },
         iconImageProps: {
-            src: chatImg,
+            src: ModernChatIconBase64,
             imageFit: ImageFit.center,
             width: "86px",
             height: "86px",
@@ -130,7 +128,7 @@ const sampleTwoLoadingPaneProps: ILoadingPaneProps = {
             borderWidth: "5px",
             backgroundColor: "#767676",
             backgroundSize: "250px",
-            backgroundImage: `url(${chatImg})`,
+            backgroundImage: `url(${ModernChatIconBase64})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             borderColor: "",
@@ -263,7 +261,7 @@ LoadingPaneSample3.args = sampleThreeLoadingPaneProps;
     Loading Pane Sample 4
 */
 const customIcon = (
-    <img src={chatIcon} />
+    <img src={LegacyChatIconBase64} />
 );
 
 const customTitle = (
@@ -279,7 +277,7 @@ const customSubtitle = encodeComponentString(
 );
 
 const customSpinner = (
-    <img src={spinner} />
+    <img src={LoadingSpinnerBase64} />
 );
 
 const customSpinnerText = (

@@ -35,3 +35,8 @@ export { default as CurrentCall } from "./components/callingcontainer/subcompone
 export { default as IncomingCall } from "./components/callingcontainer/subcomponents/IncomingCall/IncomingCall";
 
 export { default as Timer } from "./components/callingcontainer/subcomponents/Timer/Timer";
+
+export { ModernChatIconBase64, LegacyChatIconBase64, CustomChatIconBase64, LoadingSpinnerBase64, AgentIconBase64,
+    ChatReconnectIconBase64, CloseChatButtonIconBase64, MinimizeChatButtonIconBase64, ErrorIconBase64, AudioNotificationOffIconBase64,
+    AudioNotificationOnIconBase64, ProactiveChatBannerBase64, TranscriptDownloadIconBase64, TranscriptEmailIconBase64,
+    CallAcceptButtonBase64, CallRejectButtonBase64, VideoCallAcceptButtonIconBase64, VideoOffIconBase64, VideoOnIconBase64, VoiceOffIconBase64, VoiceOnIconBase64} from "./assets/Icons";

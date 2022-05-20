@@ -1,10 +1,10 @@
+import { CloseChatButtonIconBase64, ProactiveChatBannerBase64 } from "@microsoft/omnichannel-chat-components";
+import { ProactiveChatPane, encodeComponentString } from "@microsoft/omnichannel-chat-components";
+
+import { IProactiveChatPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/proactivechatpane/interfaces/IProactiveChatPaneProps";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 import { Story } from "@storybook/react";
-import { encodeComponentString, ProactiveChatPane } from "@microsoft/omnichannel-chat-components";
-import { IProactiveChatPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/proactivechatpane/interfaces/IProactiveChatPaneProps";
-import proactiveBanner from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/Proactive_banner.png";
-import closeImage from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/closeChatButton.svg";
 
 export default {
     title: "Stateless Components/Proactive Chat Pane",
@@ -61,7 +61,7 @@ const defaultProactiveChatPaneProps: IProactiveChatPaneProps = {
         },
         headerContainerStyleProps: {
             backgroundColor: "rgb(49, 95, 162)",
-            backgroundImage: "url(" + proactiveBanner + ")",
+            backgroundImage: `url(${ProactiveChatBannerBase64})`,
             backgroundPosition: "initial",
             backgroundRepeat: "no-repeat", 
             borderTopLeftRadius: "inherit",
@@ -89,7 +89,7 @@ const defaultProactiveChatPaneProps: IProactiveChatPaneProps = {
             fontWeight: "600"
         },
         closeButtonStyleProps: {
-            backgroundImage: "url(" + closeImage + ")",
+            backgroundImage: `url(${CloseChatButtonIconBase64})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat", 
             color: "#605e5c",

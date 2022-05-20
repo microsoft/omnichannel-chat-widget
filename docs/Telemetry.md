@@ -106,6 +106,21 @@ _Subscribing Event_:
     }, []);
 ```
 
+### Broadcast Events
+
+Refer to the below table to understand different broadcast events raised during the lifetime of the chat widget. These events can be subscribed to perform certain optional features of Live Chat Widget.
+
+| Event Name | Scenario |
+| -------- | -------- |
+| `ProactiveChatStartChat`          |On `ProactiveChatPane` start chat |
+| `ProactiveChatStartPopoutChat`    |On `ProactiveChatPane` start chat in a new window |
+| `LoadPostChatSurvey`              |On loading post chat survey |
+| `EndChat`                         |On ending chat |
+| `NewMessageNotification`          |On getting a new message |
+| `UnreadMessageCount`              |On toggling minimize state or changing unread message count |
+| `ChatWidgetStateChanged`          |On changing chat widget state |
+| `InvalidAdaptiveCardFormat`       |On invalid adaptive card format |
+
 ### Telemetry Events
 
 Refer to the below table to understand different critical telemetry events raised during the lifetime of the chat widget. These events have been further categorized as `Load`, `Configuration`, `Actions`, `SDK`, and `Calling` events.
@@ -135,6 +150,8 @@ Refer to the below table to understand different critical telemetry events raise
 | `PrechatSubmitted`     |On PreChat survey Submit button click |
 | `PreChatSurveyStartChatMethodFailed`|On Pre-Chat survey submit failed|
 | `LCWChatButtonClicked`  |On Start Chat button click |
+| `StartProactiveChatEventReceived`|On receiving start proactive chat event|
+| `ChatAlreadyTriggered`|On attempting to start proactive chat pane with chat already triggered|
 | `ProactiveChatAccepted` |On Proactive chat Start Chat button click |
 | `ProactiveChatRejected` |On Proactive chat invitation time out |
 | `ProactiveChatClosed`   |On Proactive chat closed |

@@ -1,10 +1,10 @@
+import { ReconnectChatPane, encodeComponentString } from "@microsoft/omnichannel-chat-components";
+
+import { ChatReconnectIconBase64 } from "@microsoft/omnichannel-chat-components";
+import { IReconnectChatPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/reconnectchatpane/interfaces/IReconnectChatPaneProps";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 import { Story } from "@storybook/react";
-import { ReconnectChatPane, encodeComponentString } from "@microsoft/omnichannel-chat-components";
-import { IReconnectChatPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/reconnectchatpane/interfaces/IReconnectChatPaneProps";
-import chatReconnectPopupIcon from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/ChatReconnectPopupIcon.png";
-
 
 export default {
     title: "Stateless Components/Reconnect Chat Pane",
@@ -86,7 +86,7 @@ const defaultReconnectChatPaneProps: IReconnectChatPaneProps = {
             lineHeight: "19px"
         },
         iconStyleProps: {
-            backgroundImage: "url(" + chatReconnectPopupIcon + ")",
+            backgroundImage: `url(${ChatReconnectIconBase64})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "200px",

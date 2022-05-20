@@ -1,16 +1,7 @@
-﻿import { BrowserVendor } from "../../webchatcontroller/enums/BrowserVendor";
+﻿import { ArchiveIcon, AudioIcon, BlankIcon, ExcelIcon, ImageIcon, OneNoteIcon, PDFIcon, PowerpointIcon, VideoIcon, VisioIcon, WordIcon } from "../../../../assets/Icons";
 import { getBrowserName, isChromiumEdge } from "./BrowserInfo";
-import ArchiveIcon from "../../../../assets/icons/archiveIcon.svg";
-import AudioIcon from "../../../../assets/icons/audioIcon.svg";
-import BlankIcon from "../../../../assets/icons/blankIcon.svg";
-import VideoIcon from "../../../../assets/icons/videoIcon.svg";
-import ImageIcon from "../../../../assets/icons/imageIcon.svg";
-import WordIcon from "../../../../assets/icons/wordIcon.svg";
-import OneNoteIcon from "../../../../assets/icons/oneNoteIcon.svg";
-import PowerpointIcon from "../../../../assets/icons/powerpointIcon.svg";
-import VisioIcon from "../../../../assets/icons/visioIcon.svg";
-import PDFIcon from "../../../../assets/icons/pdfIcon.svg";
-import ExcelIcon from "../../../../assets/icons/excelIcon.svg";
+
+import { BrowserVendor } from "../../webchatcontroller/enums/BrowserVendor";
 import { Constants } from "../../../../common/Constants";
 
 const FileAttachmentIconMap:{[unit: string]: unknown} = {
