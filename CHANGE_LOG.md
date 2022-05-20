@@ -10,3 +10,7 @@ All notable changes to this project will be documented in this file.## [Unreleas
 ## [0.1.1] - 2022-05-19
 ### Added 
 - Added more telemetry and broadcast events for proactive chat pane
+
+## [0.1.1] - 2022-05-20
+### Added
+- Added support for PostChat Link Mode
