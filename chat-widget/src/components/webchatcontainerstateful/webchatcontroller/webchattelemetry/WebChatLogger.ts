@@ -1,4 +1,4 @@
-import { LogLevel, ScenarioType } from "../../../../common/telemetry/TelemetryConstants";
+import { LogLevel } from "../../../../common/telemetry/TelemetryConstants";
 import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
 
 export function createWebChatTelemetry() {
