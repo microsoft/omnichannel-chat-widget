@@ -6,3 +6,7 @@ All notable changes to this project will be documented in this file.## [Unreleas
 ### Added 
 - Added the flag for toggling the focus on chatbutton component
 - Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.3e712be
+
+## [0.1.1] - 2022-05-19
+### Added 
+- Added more telemetry and broadcast events for proactive chat pane

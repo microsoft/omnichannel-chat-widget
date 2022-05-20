@@ -1,7 +1,6 @@
+import { CloseChatButtonIconBase64, LegacyChatIconBase64, MinimizeChatButtonIconBase64 } from "../../../../assets/Icons";
+
 import { IHeaderControlProps } from "../../interfaces/IHeaderControlProps";
-import chatIcon from "../../../../assets/imgs/chatIcon.svg";
-import closeChatButton from "../../../../assets/imgs/closeChatButton.svg";
-import minimizeChatButton from "../../../../assets/imgs/minimizeChatButton.svg";
 
 export const customHeaderControlProps: IHeaderControlProps = {
     id: "oc-lcw-header",
@@ -18,7 +17,7 @@ export const customHeaderControlProps: IHeaderControlProps = {
         id: "oc-lcw-header-minimizebutton",
         type: "icon",
         imageIconProps: {
-            src: minimizeChatButton,
+            src: MinimizeChatButtonIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
         }
 
@@ -27,13 +26,13 @@ export const customHeaderControlProps: IHeaderControlProps = {
         id: "oc-lcw-header-closebutton",
         type: "icon",
         imageIconProps: {
-            src: closeChatButton,
+            src: CloseChatButtonIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
         }
     },
     headerIconProps: {
         id: "oc-lcw-header-icon",
-        src: chatIcon,
+        src: LegacyChatIconBase64,
         alt: "Chat Icon"
     },
     headerTitleProps: {

@@ -1,14 +1,12 @@
-import React from "react";
-import { Meta } from "@storybook/react/types-6-0";
-import { Story } from "@storybook/react";
+import { AgentIconBase64, CallAcceptButtonBase64, CallRejectButtonBase64, VideoCallAcceptButtonIconBase64 } from "@microsoft/omnichannel-chat-components";
+import { IImageStyles, ILabelStyles, IStackStyles, Image, Label, Stack } from "@fluentui/react";
+
+import { IIncomingCallComponentOverrides } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/subcomponents/IncomingCall/interfaces/IIncomingCallComponentOverrides";
 import { IIncomingCallProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/subcomponents/IncomingCall/interfaces/IIncomingCallProps";
 import { IncomingCall } from "@microsoft/omnichannel-chat-components";
-import { IIncomingCallComponentOverrides } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/subcomponents/IncomingCall/interfaces/IIncomingCallComponentOverrides";
-import { IImageStyles, ILabelStyles, Image, IStackStyles, Label, Stack } from "@fluentui/react";
-import agentImage from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/agent.png";
-import callrejectbutton from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/callrejectbutton.svg";
-import callacceptbutton from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/callacceptbutton.svg";
-import videocallacceptbutton from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/videocallacceptbutton.svg";
+import { Meta } from "@storybook/react/types-6-0";
+import React from "react";
+import { Story } from "@storybook/react";
 
 export default {
     title: "Stateless Components/Calling Container/Incoming Call",
@@ -138,7 +136,7 @@ const defaultRtl: IIncomingCallProps = {
             type: "icon",
             ariaLabel: "Decline Call",
             imageIconProps: {
-                src: callrejectbutton,
+                src: CallRejectButtonBase64,
                 styles: { image: { height: "18px", width: "18px" } }
             },
             iconSize: 20
@@ -148,7 +146,7 @@ const defaultRtl: IIncomingCallProps = {
             type: "icon",
             ariaLabel: "Audio Call",
             imageIconProps: {
-                src: callacceptbutton,
+                src: CallAcceptButtonBase64,
                 styles: { image: { height: "18px", width: "18px" } }
             },
             iconSize: 20
@@ -158,7 +156,7 @@ const defaultRtl: IIncomingCallProps = {
             type: "icon",
             ariaLabel: "Video Call",
             imageIconProps: {
-                src: videocallacceptbutton,
+                src: VideoCallAcceptButtonIconBase64,
                 styles: { image: { height: "18px", width: "18px" } }
             },
             iconSize: 20
@@ -195,7 +193,7 @@ const stackStyles: Partial<IStackStyles> = {
 
 const componentOverrideProps: IIncomingCallComponentOverrides = {
     incomingCallTitle: <Stack horizontal>
-        <Image src={agentImage} styles={agentImageStyles} />
+        <Image src={AgentIconBase64} styles={agentImageStyles} />
         <Stack verticalAlign="center" horizontalAlign="baseline" styles={stackStyles}>
             <Label styles={label1Styles}>Omnichannel Agent 007</Label>
             <Label styles={label2Styles}>Incoming call</Label>

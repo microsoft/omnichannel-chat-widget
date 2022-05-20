@@ -1,15 +1,15 @@
+import { LegacyChatIconBase64, LoadingSpinnerBase64 } from "../../assets/Icons";
+
 import { ILoadingPaneProps } from "./interfaces/ILoadingPaneProps";
 import LoadingPane from "./LoadingPane";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 import { Story } from "@storybook/react";
-import chatIcon from "../../assets/imgs/chatIcon.svg";
 import { defaultLoadingPaneProps } from "./common/defaultProps/defaultLoadingPaneProps";
 import { encodeComponentString } from "../../common/encodeComponentString";
 import { presetOneLoadingPaneProps } from "./common/presetOneProps/presetOneLoadingPaneProps";
 import { presetThreeLoadingPaneProps } from "./common/presetThreeProps/presetThreeLoadingPaneProps";
 import { presetTwoLoadingPaneProps } from "./common/presetTwoProps/presetTwoLoadingPaneProps";
-import spinner from "../../assets/imgs/loading.gif";
 
 export default {
     title: "Stateless Components/Loading Pane",
@@ -49,7 +49,7 @@ LoadingPanePreset3.args = presetThreeLoadingPaneProps;
     Loading Pane Preset 4
 */
 const customIcon = (
-    <img src={chatIcon} />
+    <img src={LegacyChatIconBase64} />
 );
 
 const customTitle = (
@@ -65,7 +65,7 @@ const customSubtitle = encodeComponentString(
 );
 
 const customSpinner = (
-    <img src={spinner} />
+    <img src={LoadingSpinnerBase64} />
 );
 
 const customSpinnerText = (

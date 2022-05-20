@@ -1,18 +1,18 @@
 import ChatButton from "./ChatButton";
+import { CustomChatIconBase64 } from "../../assets/Icons";
 import type { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 import { Story } from "@storybook/react";
-import chatBubbleImage from "../../assets/imgs/ChatBubble.svg";
 import { defaultChatButtonControlProps } from "./common/defaultProps/defaultChatButtonControlProps";
 import { defaultChatButtonGeneralStyles } from "./common/defaultStyles/defaultChatButtonGeneralStyles";
 import { defaultChatButtonIconContainerStyles } from "./common/defaultStyles/defaultChatButtonIconContainerStyles";
 import { defaultChatButtonNotificationBubbleStyles } from "./common/defaultStyles/defaultChatButtonNotificationBubbleStyles";
 import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonProps";
+import { defaultChatButtonStyleProps } from "./common/defaultStyles/defaultChatButtonStyleProps";
 import { defaultChatButtonTextContainerStyles } from "./common/defaultStyles/defaultChatButtonTextContainerStyles";
 import { defaultChatButtonTitleStyles } from "./common/defaultStyles/defaultChatButtonTitleStyles";
 import { encodeComponentString } from "../../common/encodeComponentString";
-import { defaultChatButtonStyleProps } from "./common/defaultStyles/defaultChatButtonStyleProps";
 
 export default {
     title: "Stateless Components/ChatButton",
@@ -55,7 +55,7 @@ const chatButtonPreset1Props: IChatButtonProps = {
             } 
         }), 
         iconStyleProps:Object.assign({}, defaultChatButtonIconContainerStyles,{
-            backgroundImage: `url(${chatBubbleImage})`,
+            backgroundImage: `url(${CustomChatIconBase64})`,
             borderRadius: "unset",
             backgroundColor: "#b9f73a"
         }),        
@@ -97,7 +97,7 @@ const chatButtonPreset2Props: IChatButtonProps = {
             backgroundColor: ""
         }), 
         iconStyleProps:Object.assign({}, defaultChatButtonIconContainerStyles,{
-            backgroundImage: `url(${chatBubbleImage})`,
+            backgroundImage: `url(${CustomChatIconBase64})`,
             left: "",
             borderRadius: "unset",
             backgroundColor: "",
