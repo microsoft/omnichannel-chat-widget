@@ -12,6 +12,7 @@ import { createMarkdown } from "../createMarkdown";
 import { groupActivitiesMiddleware } from "../../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/groupActivitiesMiddleware";
 import { typingIndicatorMiddleware } from "../../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/typingIndicatorMiddleware";
 import { ITelemetryConfig } from "../../../../common/telemetry/interfaces/ITelemetryConfig";
+import { createWebChatTelemetry } from "../../../webchatcontainerstateful/webchatcontroller/webchattelemetry/WebChatLogger";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const dummyDefaultProps: ILiveChatWidgetProps = {
@@ -1442,7 +1443,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             internalErrorBoxClass: undefined,
             internalRenderErrorBox: undefined,
             locale: "en-US",
-            onTelemetry: undefined,
+            onTelemetry: createWebChatTelemetry(),
             overrideLocalizedStrings: undefined,
             renderMarkdown: createMarkdown(false, false),
             scrollToEndButtonMiddleware: undefined,
