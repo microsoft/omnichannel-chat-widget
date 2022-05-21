@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
@@ -30,7 +30,7 @@ export const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
         dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
         BroadcastService.postMessage({
-            eventName: "EndChat"
+            eventName: BroadcastEvent.EndChat
         });
     } catch (ex) {
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {

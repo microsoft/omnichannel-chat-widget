@@ -13,6 +13,7 @@ import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcon
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
+import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { createTimer } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
@@ -63,6 +64,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         }
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
+
+        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler());
 
         if (!persistedState) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
