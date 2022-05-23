@@ -201,7 +201,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
-    const endChatRelay = () => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any) => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);

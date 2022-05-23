@@ -2,6 +2,7 @@ import { StyleOptions, createStore } from "botframework-webchat";
 
 import { BroadcastEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { IDataMaskingInfo } from "../../webchatcontainerstateful/interfaces/IDataMaskingInfo";
@@ -53,11 +54,15 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed) {
-                const loadPostChatEvent: ICustomEvent = {
-                    eventName: BroadcastEvent.LoadPostChatSurvey,
-                };
-                BroadcastService.postMessage(loadPostChatEvent);
+            if (isPostChatEnabled === "true") {
+                if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+                    const loadPostChatEvent: ICustomEvent = {
+                        eventName: BroadcastEvent.LoadPostChatSurvey,
+                    };
+                    BroadcastService.postMessage(loadPostChatEvent);
+                } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+                }
             } else {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
             }

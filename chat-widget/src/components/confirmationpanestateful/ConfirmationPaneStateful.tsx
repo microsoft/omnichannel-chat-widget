@@ -4,6 +4,7 @@ import React, { Dispatch, useEffect } from "react";
 import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
 
 import { Constants } from "../../common/Constants";
+import { ConversationState } from "../../contexts/common/ConversationState";
 import { DimLayer } from "../dimlayer/DimLayer";
 import { IConfirmationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/confirmationpane/interfaces/IConfirmationPaneControlProps";
 import { IConfirmationPaneStatefulParams } from "./interfaces/IConfirmationPaneStatefulParams";
@@ -48,25 +49,21 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             try {
                 // check agent has joined conversation
                 const conversationDetails = await chatSDK.getConversationDetails();
-                
-                if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed
-                    && conversationDetails.canRenderPostChat === Constants.truePascal) {
-                    const loadPostChatEvent: ICustomEvent = {
-                        eventName: BroadcastEvent.LoadPostChatSurvey
-                    };
-                    BroadcastService.postMessage(loadPostChatEvent);
+                if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
+                    if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+                        const loadPostChatEvent: ICustomEvent = {
+                            eventName: BroadcastEvent.LoadPostChatSurvey,
+                        };
+                        BroadcastService.postMessage(loadPostChatEvent);
+                    } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
+                        const skipEndChatSDK = false;
+                        const skipCloseChat = true;
+                        await endChat(adapter, skipEndChatSDK, skipCloseChat);
+                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+                    }
                 } else {
                     setTabIndices(elements, initialTabIndexMap, true);
-                    try {
-                        await endChat(adapter);
-                    } catch (error) {
-                        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
-                            Event: TelemetryEvent.CloseChatMethodException,
-                            ExceptionDetails: {
-                                exception: `Failed to endChat: ${error}`
-                            }
-                        });
-                    }
+                    await endChat(adapter);
                 }
             } catch (ex) {
                 TelemetryHelper.logSDKEvent(LogLevel.ERROR, {

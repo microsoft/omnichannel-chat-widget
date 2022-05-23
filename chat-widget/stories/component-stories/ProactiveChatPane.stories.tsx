@@ -123,7 +123,7 @@ const defaultProactiveChatPaneProps: IProactiveChatPaneProps = {
         }       
     }
 };
-const presetOneProactiveChatPaneProps: IProactiveChatPaneProps = {
+const sampleOneProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps: {
         ...defaultProactiveChatPaneProps.controlProps
     },
@@ -180,7 +180,7 @@ const customReactNode2 = (
     </button>
 );
 
-const presetTwoProactiveChatPaneProps: IProactiveChatPaneProps = {
+const sampleTwoProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps:{
         id: "oclcw-incomingproactivechat",
         dir: "ltr",
@@ -243,7 +243,7 @@ const presetTwoProactiveChatPaneProps: IProactiveChatPaneProps = {
         }        
     }
 };
-const presetThreeProactiveChatPaneProps: IProactiveChatPaneProps = {
+const sampleThreeProactiveChatPaneProps: IProactiveChatPaneProps = {
     controlProps: {
         ...defaultProactiveChatPaneProps.controlProps
     },
@@ -311,22 +311,22 @@ export const DefaultRtl = ProactiveChatPaneTemplate.bind({});
 DefaultRtl.args = defaultRtlProps;
 
 /*
-    Proactive Chat Pane Pane Preset 1: Horizontal layout for the buttons
+    Proactive Chat Pane Pane Sample 1: Horizontal layout for the buttons
 */
 
-export const Preset1 = ProactiveChatPaneTemplate.bind({});
-Preset1.args = presetOneProactiveChatPaneProps;
+export const Sample1 = ProactiveChatPaneTemplate.bind({});
+Sample1.args = sampleOneProactiveChatPaneProps;
 
 /*
-    Proactive Chat Pane Pane Preset 2: custom element that overrides the icon
+    Proactive Chat Pane Pane Sample 2: custom element that overrides the icon
 */
 
-export const Preset2 = ProactiveChatPaneTemplate.bind({});
-Preset2.args = presetTwoProactiveChatPaneProps;
+export const Sample2 = ProactiveChatPaneTemplate.bind({});
+Sample2.args = sampleTwoProactiveChatPaneProps;
 
 /*
-    Proactive Chat Pane Pane Preset 3: round border
+    Proactive Chat Pane Pane Sample 3: round border
 */
 
-export const Preset3 = ProactiveChatPaneTemplate.bind({});
-Preset3.args = presetThreeProactiveChatPaneProps;
+export const Sample3 = ProactiveChatPaneTemplate.bind({});
+Sample3.args = sampleThreeProactiveChatPaneProps;

@@ -148,7 +148,7 @@ const customReactNode = (
             This is a custom button
     </button>
 );
-const presetTwoInputValidationPaneProps: IInputValidationPaneProps = {
+const sampleTwoInputValidationPaneProps: IInputValidationPaneProps = {
     controlProps: {
         ...defaultInputValidationPaneProps.controlProps
     },
@@ -215,10 +215,10 @@ export const DefaultRtlEmailTranscript = InputValidationPaneTemplate.bind({});
 DefaultRtlEmailTranscript.args = defaultRtlProps;
 
 /*
-    Input Validation Pane Pane Preset 1
+    Input Validation Pane Pane Sample 1
 */
 
-const preset1Props = {
+const sample1Props = {
     controlProps: {
         ...defaultInputValidationPaneProps.controlProps,
         isButtonGroupHorizontal: false,
@@ -229,18 +229,18 @@ const preset1Props = {
     }
 };
 
-export const Preset1 = InputValidationPaneTemplate.bind({});
-Preset1.args = preset1Props;
+export const Sample1 = InputValidationPaneTemplate.bind({});
+Sample1.args = sample1Props;
 
 /*
-    Input Validation Pane Pane Preset 2
+    Input Validation Pane Pane Sample 2
 */
 
-export const Preset2 = InputValidationPaneTemplate.bind({});
-Preset2.args = presetTwoInputValidationPaneProps;
+export const Sample2 = InputValidationPaneTemplate.bind({});
+Sample2.args = sampleTwoInputValidationPaneProps;
 
 /*
-    Input Validation Pane Pane Preset 3
+    Input Validation Pane Pane Sample 3
 */
 
 const customReactNode1 = encodeComponentString(
@@ -256,7 +256,7 @@ const customReactNode2 = (
     <div />  
 );
 
-const preset3Props = {
+const sample3Props = {
     controlProps: {
         ...defaultInputValidationPaneProps.controlProps,
         enableSendButton: true
@@ -271,5 +271,5 @@ const preset3Props = {
     }
 };
 
-export const Preset3 = InputValidationPaneTemplate.bind({});
-Preset3.args = preset3Props;
+export const Sample3 = InputValidationPaneTemplate.bind({});
+Sample3.args = sample3Props;
