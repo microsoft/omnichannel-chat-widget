@@ -3,9 +3,10 @@ const PlaywrightEnvironment =
   require("jest-playwright-preset/lib/PlaywrightEnvironment").default;
 /* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require("fs");
+const testDoneEventName = "test_done";
 class CustomEnvironment extends PlaywrightEnvironment {
     async handleTestEvent(event) {
-        if (event.name === "test_done" && event.test.errors.length > 0) {
+        if (event.name === testDoneEventName && event.test.errors.length > 0) {
             try {
                 const parentName = event.test.parent.name.replace(/\W/g, "_");
                 const specName = event.test.name.replace(/\W/g, "_");
