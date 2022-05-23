@@ -14,3 +14,8 @@ All notable changes to this project will be documented in this file.## [Unreleas
 ## [0.1.1] - 2022-05-20
 ### Added
 - Added support for PostChat Link Mode
+
+## [0.1.1] - 2022-05-23
+### Added
+- Refactored telemetry/broadcast events
+- Added lcw event support
