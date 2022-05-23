@@ -126,7 +126,7 @@ const defaultReconnectChatPaneProps: IReconnectChatPaneProps = {
         }
     }
 };
-const presetThreeReconnectChatPaneProps: IReconnectChatPaneProps = {
+const sampleThreeReconnectChatPaneProps: IReconnectChatPaneProps = {
     controlProps: {
         id: "lcw-components-reconnect-chat-pane",
         dir: "ltr",
@@ -212,10 +212,10 @@ export const DefaultRtl = ReconnectChatPaneTemplate.bind({});
 DefaultRtl.args = defaultRtlProps;
 
 /*
-    Reconnect Chat Pane Pane Preset 1: Horizontal layout for the buttons
+    Reconnect Chat Pane Pane Sample 1: Horizontal layout for the buttons
 */
 
-const preset1Props = {
+const sample1Props = {
     controlProps: {
         ...defaultReconnectChatPaneProps.controlProps,
         isButtonGroupHorizontal: true,
@@ -235,11 +235,11 @@ const preset1Props = {
     }
 };
 
-export const Preset1 = ReconnectChatPaneTemplate.bind({});
-Preset1.args = preset1Props;
+export const Sample1 = ReconnectChatPaneTemplate.bind({});
+Sample1.args = sample1Props;
 
 /*
-    Reconnect Chat Pane Pane Preset 2: custom element that overrides the icon
+    Reconnect Chat Pane Pane Sample 2: custom element that overrides the icon
 */
 
 const customReactNode = (
@@ -248,7 +248,7 @@ const customReactNode = (
     </h1>
 );
 
-const preset2Props = {
+const sample2Props = {
     controlProps: {
         ...defaultReconnectChatPaneProps.controlProps
     },
@@ -261,21 +261,21 @@ const preset2Props = {
     }
 };
 
-export const Preset2 = ReconnectChatPaneTemplate.bind({});
-Preset2.args = preset2Props;
+export const Sample2 = ReconnectChatPaneTemplate.bind({});
+Sample2.args = sample2Props;
 
 /*
-    Reconnect Chat Pane Pane Preset 3: round border
+    Reconnect Chat Pane Pane Sample 3: round border
 */
 
-export const Preset3 = ReconnectChatPaneTemplate.bind({});
-Preset3.args = presetThreeReconnectChatPaneProps;
+export const Sample3 = ReconnectChatPaneTemplate.bind({});
+Sample3.args = sampleThreeReconnectChatPaneProps;
 
 /*
-    Reconnect Chat Pane Pane Preset 4: smaller width for container
+    Reconnect Chat Pane Pane Sample 4: smaller width for container
 */
 
-const preset4Props = {
+const sample4Props = {
     controlProps: {
         ...defaultReconnectChatPaneProps.controlProps
     },
@@ -287,18 +287,18 @@ const preset4Props = {
     }
 };
 
-export const Preset4 = ReconnectChatPaneTemplate.bind({});
-Preset4.args = preset4Props;
+export const Sample4 = ReconnectChatPaneTemplate.bind({});
+Sample4.args = sample4Props;
 
 /*
-    Reconnect Chat Pane Pane Preset 5: custom element that overrides the continue button
+    Reconnect Chat Pane Pane Sample 5: custom element that overrides the continue button
 */
 
 const customReactNode1 = encodeComponentString(
     <input type="text" placeholder="Input text"/>
 );
 
-const preset5Props = {
+const sample5Props = {
     controlProps: {
         ...defaultReconnectChatPaneProps.controlProps,
         isIncomingCall: true
@@ -315,5 +315,5 @@ const preset5Props = {
     }
 };
 
-export const Preset5 = ReconnectChatPaneTemplate.bind({});
-Preset5.args = preset5Props;
+export const Sample5 = ReconnectChatPaneTemplate.bind({});
+Sample5.args = sample5Props;

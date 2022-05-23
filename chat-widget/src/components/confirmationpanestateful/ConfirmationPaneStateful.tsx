@@ -18,6 +18,7 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
 import { Constants } from "../../common/Constants";
+import { ConversationState } from "../../contexts/common/ConversationState";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
@@ -48,25 +49,21 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             try {
                 // check agent has joined conversation
                 const conversationDetails = await chatSDK.getConversationDetails();
-                
-                if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed
-                    && conversationDetails.canRenderPostChat === Constants.truePascal) {
-                    const loadPostChatEvent: ICustomEvent = {
-                        eventName: "LoadPostChatSurvey",
-                    };
-                    BroadcastService.postMessage(loadPostChatEvent);
+                if (isPostChatEnabled === "true" && conversationDetails.canRenderPostChat === Constants.truePascal) {
+                    if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+                        const loadPostChatEvent: ICustomEvent = {
+                            eventName: "LoadPostChatSurvey",
+                        };
+                        BroadcastService.postMessage(loadPostChatEvent);
+                    } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
+                        const skipEndChatSDK = false;
+                        const skipCloseChat = true;
+                        await endChat(adapter, skipEndChatSDK, skipCloseChat);
+                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+                    }
                 } else {
                     setTabIndices(elements, initialTabIndexMap, true);
-                    try {
-                        await endChat(adapter);
-                    } catch (error) {
-                        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
-                            Event: TelemetryEvent.CloseChatMethodException,
-                            ExceptionDetails: {
-                                exception: `Failed to endChat: ${error}`
-                            }
-                        });
-                    }
+                    await endChat(adapter);
                 }
             } catch (ex) {
                 TelemetryHelper.logSDKEvent(LogLevel.ERROR, {

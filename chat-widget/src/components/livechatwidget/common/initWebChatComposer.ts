@@ -31,6 +31,7 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
+import { ConversationState } from "../../../contexts/common/ConversationState";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles: any) => {
@@ -52,11 +53,15 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed) {
-                const loadPostChatEvent: ICustomEvent = {
-                    eventName: "LoadPostChatSurvey",
-                };
-                BroadcastService.postMessage(loadPostChatEvent);
+            if (isPostChatEnabled === "true") {
+                if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+                    const loadPostChatEvent: ICustomEvent = {
+                        eventName: "LoadPostChatSurvey",
+                    };
+                    BroadcastService.postMessage(loadPostChatEvent);
+                } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+                }
             } else {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
             }
