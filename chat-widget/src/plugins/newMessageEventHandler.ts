@@ -7,7 +7,7 @@ import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/i
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../common/telemetry/TelemetryManager";
 
-export const createOnNewAdapterActivityHandler = () => {
+export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
     const onNewAdapterActivityHandler = (activity: IActivity) => {
         const isActivityMessage: boolean = activity?.type === Constants.message;
         const isNotHistoryMessage: boolean = isActivityMessage && !activity?.channelData?.tags?.includes(Constants.historyMessageTag) && !activity?.channelData?.fromList;
@@ -25,8 +25,8 @@ export const createOnNewAdapterActivityHandler = () => {
                 id: activity?.id,
                 type: activity?.type,
                 timestamp: activity?.timestamp,
-                chatId: TelemetryManager.InternalTelemetryData?.chatId ?? "", // Need SDK changes(?)
-                // userId: Loader.currentConversation.userId, // Need SDK changes
+                chatId: chatId, 
+                userId: userId,
                 conversationId: TelemetryManager.InternalTelemetryData?.conversationId ?? "",
                 channelData: activity?.channelData,
                 messageType: "",

@@ -65,7 +65,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
 
-        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler());
+        const chatToken = await chatSDK.getChatToken();
+        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken.chatId, chatToken.visitorId));
 
         if (!persistedState) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
