@@ -20,6 +20,21 @@ export enum LogLevel {
     ERROR = "ERROR"
 }
 
+// Events used in certain functionalities that are not being logged
+export enum BroadcastEvent {
+    LoadPostChatSurvey = "LoadPostChatSurvey",
+    EndChat = "EndChat",
+    NewMessageNotification = "NewMessageNotification",
+    UnreadMessageCount = "UnreadMessageCount",
+    ChatWidgetStateChanged = "ChatWidgetStateChanged",
+    ProactiveChatStartChat = "ProactiveChatStartChat",
+    ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
+    InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",
+    NewMessageSent = "NewMessageSent",
+    NewMessageReceived = "NewMessageReceived"
+}
+
+// Events being logged
 export enum TelemetryEvent {
     CallAdded = "CallAdded",
     LocalVideoStreamAdded = "LocalVideoStreamAdded",
@@ -112,12 +127,12 @@ export enum TelemetryEvent {
     ProactiveChatRejected = "ProactiveChatRejected",
     IncomingProactiveChatScreenLoaded = "IncomingProactiveChatScreenLoaded",
     ProactiveChatClosed = "ProactiveChatClosed",
-    ProactiveChatStartChat = "ProactiveChatStartChat",
-    ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
     ReconnectChatContinueConversation = "ReconnectChatContinueConversation",
     ReconnectChatStartNewConversation = "ReconnectChatStartNewConversation",
     ReconnectChatMinimize = "ReconnectChatMinimize",
-    ChatWidgetStateChanged = "ChatWidgetStateChanged"
+    
+    MessageSent = "MessageSent",
+    MessageReceived = "MessageReceived"
 }
 
 export interface TelemetryInput {

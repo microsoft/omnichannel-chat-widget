@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useState } from "react";
 import { createTimer, setFocusOnElement } from "../../common/utils";
 
@@ -46,7 +46,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
             if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
                 // TODO: BroadcastService: replace with the sdk broadcast service, when in place
                 const startPopoutChatEvent: ICustomEvent = {
-                    eventName: TelemetryEvent.ProactiveChatStartPopoutChat,
+                    eventName: BroadcastEvent.ProactiveChatStartPopoutChat,
                 };
                 BroadcastService.postMessage(startPopoutChatEvent);
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
@@ -55,7 +55,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             } else {
                 const proactiveChatStarted: ICustomEvent = {
-                    eventName: TelemetryEvent.ProactiveChatStartChat,
+                    eventName: BroadcastEvent.ProactiveChatStartChat,
                 };
                 BroadcastService.postMessage(proactiveChatStarted);
                 await startChat();
