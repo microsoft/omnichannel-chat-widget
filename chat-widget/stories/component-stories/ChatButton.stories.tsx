@@ -1,9 +1,9 @@
+import { ChatButton, CustomChatIconBase64, encodeComponentString } from "@microsoft/omnichannel-chat-components";
+
+import { IChatButtonProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonProps";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 import { Story } from "@storybook/react";
-import chatBubbleImage from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/ChatBubble.svg";
-import { ChatButton, encodeComponentString } from "@microsoft/omnichannel-chat-components";
-import { IChatButtonProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonProps";
 
 export default {
     title: "Stateless Components/ChatButton",
@@ -158,10 +158,10 @@ export const ChatButtonRTL = Template.bind({});
 ChatButtonRTL.args = chatButtonRTLProps;
 
 /*
-    ChatButton Preset 1
+    ChatButton Sample 1
 */
 
-const chatButtonPreset1Props: IChatButtonProps = {
+const chatButtonSample1Props: IChatButtonProps = {
     controlProps:{
         ...defaultChatButtonProps.controlProps,
         dir: "rtl",
@@ -184,7 +184,7 @@ const chatButtonPreset1Props: IChatButtonProps = {
             } 
         }), 
         iconStyleProps:Object.assign({}, defaultChatButtonProps.styleProps.iconStyleProps,{
-            backgroundImage: `url(${chatBubbleImage})`,
+            backgroundImage: `url(${CustomChatIconBase64})`,
             borderRadius: "unset",
             backgroundColor: "#b9f73a"
         }),        
@@ -202,14 +202,14 @@ const chatButtonPreset1Props: IChatButtonProps = {
     }
 };
 
-export const ChatButtonPreset1 = Template.bind({});
-ChatButtonPreset1.args = chatButtonPreset1Props;
+export const ChatButtonSample1 = Template.bind({});
+ChatButtonSample1.args = chatButtonSample1Props;
 
 /*
-    ChatButton Preset 2
+    ChatButton Sample 2
 */
 
-const chatButtonPreset2Props: IChatButtonProps = {
+const chatButtonSample2Props: IChatButtonProps = {
     controlProps:{
         ...defaultChatButtonProps.controlProps,
         hideChatTextContainer: true,
@@ -226,7 +226,7 @@ const chatButtonPreset2Props: IChatButtonProps = {
             backgroundColor: ""
         }), 
         iconStyleProps:Object.assign({}, defaultChatButtonProps.styleProps.iconStyleProps,{
-            backgroundImage: `url(${chatBubbleImage})`,
+            backgroundImage: `url(${CustomChatIconBase64})`,
             left: "",
             borderRadius: "unset",
             backgroundColor: "",
@@ -242,11 +242,11 @@ const chatButtonPreset2Props: IChatButtonProps = {
     }
 };
 
-export const ChatButtonPreset2 = Template.bind({});
-ChatButtonPreset2.args = chatButtonPreset2Props;
+export const ChatButtonSample2 = Template.bind({});
+ChatButtonSample2.args = chatButtonSample2Props;
 
 /*
-    ChatButton Preset 3 
+    ChatButton Sample 3 
 */
 
 const customTitle = (
@@ -272,7 +272,7 @@ const customIcon = (
     <></>
 );
 
-const chatButtonPreset3Props: IChatButtonProps = {
+const chatButtonSample3Props: IChatButtonProps = {
     componentOverrides: {
         title: customTitle,
         subtitle: customSubTitle,
@@ -289,5 +289,5 @@ const chatButtonPreset3Props: IChatButtonProps = {
     }    
 };
 
-export const ChatButtonPreset3 = Template.bind({});
-ChatButtonPreset3.args = chatButtonPreset3Props;
+export const ChatButtonSample3 = Template.bind({});
+ChatButtonSample3.args = chatButtonSample3Props;

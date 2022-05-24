@@ -1,13 +1,11 @@
+import { ImageFit, SpinnerSize } from "@fluentui/react";
+import { LegacyChatIconBase64, LoadingSpinnerBase64, ModernChatIconBase64 } from "@microsoft/omnichannel-chat-components";
+import { LoadingPane, encodeComponentString } from "@microsoft/omnichannel-chat-components";
+
+import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
 import { Meta } from "@storybook/react/types-6-0";
 import React from "react";
 import { Story } from "@storybook/react";
-import { ImageFit, SpinnerSize } from "@fluentui/react";
-import chatImg from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/chat.svg";
-import chatIcon from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/chatIcon.svg";
-import spinner from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/loading.gif";
-import { LoadingPane, encodeComponentString } from "@microsoft/omnichannel-chat-components";
-import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
-
 
 export default {
     title: "Stateless Components/Loading Pane",
@@ -75,7 +73,7 @@ const defaultLoadingPaneProps: ILoadingPaneProps = {
             alignSelf: "auto"
         },
         iconImageProps: {
-            src: chatImg,
+            src: ModernChatIconBase64,
             imageFit: ImageFit.center,
             width: "86px",
             height: "86px",
@@ -102,20 +100,20 @@ const defaultLoadingPaneProps: ILoadingPaneProps = {
         }
     }
 };
-const presetOneLoadingPaneProps: ILoadingPaneProps = {
+const sampleOneLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
-        id: "oc-lcw-loadingpane-preset1",
+        id: "oc-lcw-loadingpane-sample1",
         dir: "rtl"
     },
     styleProps: {
         ...defaultLoadingPaneProps.styleProps
     }
 };
-const presetTwoLoadingPaneProps: ILoadingPaneProps = {
+const sampleTwoLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
-        id: "oc-lcw-loadingpane-preset2",
+        id: "oc-lcw-loadingpane-sample2",
         hideIcon: true,
         hideTitle: true,
         hideSubtitle: true,
@@ -130,7 +128,7 @@ const presetTwoLoadingPaneProps: ILoadingPaneProps = {
             borderWidth: "5px",
             backgroundColor: "#767676",
             backgroundSize: "250px",
-            backgroundImage: `url(${chatImg})`,
+            backgroundImage: `url(${ModernChatIconBase64})`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
             borderColor: "",
@@ -156,10 +154,10 @@ const presetTwoLoadingPaneProps: ILoadingPaneProps = {
         }
     }
 };
-const presetThreeLoadingPaneProps: ILoadingPaneProps = {
+const sampleThreeLoadingPaneProps: ILoadingPaneProps = {
     controlProps: {
         ...defaultLoadingPaneProps.controlProps,
-        id: "oc-lcw-loadingpane-preset3",
+        id: "oc-lcw-loadingpane-sample3",
         hideIcon: true,
         titleText: "Please Wait ...",
         subtitleText: "Loading Content",
@@ -239,31 +237,31 @@ export const LoadingPaneDefault = LoadingPaneTemplate.bind({});
 LoadingPaneDefault.args = defaultLoadingPaneProps;
 
 /*
-    Loading Pane Preset 1
+    Loading Pane Sample 1
 */
 
 export const LoadingPaneRTL = LoadingPaneTemplate.bind({});
-LoadingPaneRTL.args = presetOneLoadingPaneProps;
+LoadingPaneRTL.args = sampleOneLoadingPaneProps;
 
 /*
-    Loading Pane Preset 2
+    Loading Pane Sample 2
 */
 
-export const LoadingPanePreset2 = LoadingPaneTemplate.bind({});
-LoadingPanePreset2.args = presetTwoLoadingPaneProps;
+export const LoadingPaneSample2 = LoadingPaneTemplate.bind({});
+LoadingPaneSample2.args = sampleTwoLoadingPaneProps;
 
 /*
-    Loading Pane Preset 3
+    Loading Pane Sample 3
 */
 
-export const LoadingPanePreset3 = LoadingPaneTemplate.bind({});
-LoadingPanePreset3.args = presetThreeLoadingPaneProps;
+export const LoadingPaneSample3 = LoadingPaneTemplate.bind({});
+LoadingPaneSample3.args = sampleThreeLoadingPaneProps;
 
 /*
-    Loading Pane Preset 4
+    Loading Pane Sample 4
 */
 const customIcon = (
-    <img src={chatIcon} />
+    <img src={LegacyChatIconBase64} />
 );
 
 const customTitle = (
@@ -279,7 +277,7 @@ const customSubtitle = encodeComponentString(
 );
 
 const customSpinner = (
-    <img src={spinner} />
+    <img src={LoadingSpinnerBase64} />
 );
 
 const customSpinnerText = (
@@ -288,7 +286,7 @@ const customSpinnerText = (
     </p>
 );
 
-const loadingPanePreset4Props: ILoadingPaneProps = {
+const loadingPaneSample4Props: ILoadingPaneProps = {
     componentOverrides: {
         icon: customIcon,
         title: customTitle,
@@ -298,5 +296,5 @@ const loadingPanePreset4Props: ILoadingPaneProps = {
     }
 };
 
-export const LoadingPanePreset4 = LoadingPaneTemplate.bind({});
-LoadingPanePreset4.args = loadingPanePreset4Props;
+export const LoadingPaneSample4 = LoadingPaneTemplate.bind({});
+LoadingPaneSample4.args = loadingPaneSample4Props;

@@ -4,6 +4,10 @@ import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
+    if (props?.liveChatContextFromCache) {
+        return props?.liveChatContextFromCache;
+    }
+
     const LiveChatWidgetContextInitialState: ILiveChatWidgetContext = {
         domainStates: {
             liveChatConfig: props.chatConfig,
@@ -14,7 +18,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             chatToken: undefined,
             postChatContext: undefined,
             telemetryInternalData: {},
-            globalDir: "ltr"
+            globalDir: "ltr",
+            liveChatContext: undefined
         },
         appStates: {
             conversationState: ConversationState.Closed,
@@ -48,5 +53,5 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         }
     };
     
-    return props.liveChatContextFromCache ?? LiveChatWidgetContextInitialState;
+    return LiveChatWidgetContextInitialState;
 };

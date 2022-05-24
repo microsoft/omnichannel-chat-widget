@@ -138,7 +138,7 @@ export const createReducer = () => {
                         isIncomingCall: action.payload as boolean
                     }
                 };
-            
+
             case LiveChatWidgetActionType.SET_FOCUS_CHAT_BUTTON:
                 return {
                     ...state,
@@ -180,7 +180,8 @@ export const createReducer = () => {
                     ...state,
                     domainStates: {
                         ...state.domainStates,
-                        chatToken: action.payload as string
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        chatToken: action.payload as any
                     }
                 };
             case LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE:
@@ -253,7 +254,7 @@ export const createReducer = () => {
                         reconnectId: action.payload as (string | undefined)
                     }
                 };
-            
+
             case LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT:
                 return {
                     ...state,
@@ -262,6 +263,22 @@ export const createReducer = () => {
                         unreadMessageCount: action.payload as number
                     }
                 };
+
+            case LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        liveChatContext: action.payload as any
+                    }
+                };
+
+            case LiveChatWidgetActionType.SET_WIDGET_STATE:
+                return {
+                    ...action.payload as ILiveChatWidgetContext
+                };
+
             case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT:
                 return {
                     ...state,
@@ -270,6 +287,7 @@ export const createReducer = () => {
                         conversationEndedByAgent: action.payload as boolean
                     }
                 };
+                
             default:
                 return state;
         }

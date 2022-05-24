@@ -20,6 +20,21 @@ export enum LogLevel {
     ERROR = "ERROR"
 }
 
+// Events used in certain functionalities that are not being logged
+export enum BroadcastEvent {
+    LoadPostChatSurvey = "LoadPostChatSurvey",
+    EndChat = "EndChat",
+    NewMessageNotification = "NewMessageNotification",
+    UnreadMessageCount = "UnreadMessageCount",
+    ChatWidgetStateChanged = "ChatWidgetStateChanged",
+    ProactiveChatStartChat = "ProactiveChatStartChat",
+    ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
+    InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",
+    NewMessageSent = "NewMessageSent",
+    NewMessageReceived = "NewMessageReceived"
+}
+
+// Events being logged
 export enum TelemetryEvent {
     CallAdded = "CallAdded",
     LocalVideoStreamAdded = "LocalVideoStreamAdded",
@@ -105,6 +120,8 @@ export enum TelemetryEvent {
     SendTypingIndicatorFailed = "SendTypingIndicatorFailed",
 
     PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
+    ChatAlreadyTriggered = "ChatAlreadyTriggered",
+    StartProactiveChatEventReceived = "StartProactiveChatEventReceived",
     StartProactiveChatMethodFailed = "StartProactiveChatMethodFailed",
     ProactiveChatAccepted = "ProactiveChatAccepted",
     ProactiveChatRejected = "ProactiveChatRejected",
@@ -113,7 +130,9 @@ export enum TelemetryEvent {
     ReconnectChatContinueConversation = "ReconnectChatContinueConversation",
     ReconnectChatStartNewConversation = "ReconnectChatStartNewConversation",
     ReconnectChatMinimize = "ReconnectChatMinimize",
-    ChatWidgetStateChanged = "ChatWidgetStateChanged"
+    
+    MessageSent = "MessageSent",
+    MessageReceived = "MessageReceived"
 }
 
 export interface TelemetryInput {
@@ -124,7 +143,6 @@ export interface TelemetryInput {
 export class TelemetryConstants {
     private static map(eventTypeOrScenarioType: TelemetryEvent): ScenarioType {
         switch (eventTypeOrScenarioType) {
-        case TelemetryEvent.StartChatSDKCall:
         case TelemetryEvent.ParseAdaptiveCardFailed:
             return ScenarioType.CONFIG_VALIDATION;
 
@@ -163,6 +181,7 @@ export class TelemetryConstants {
         case TelemetryEvent.HeaderMinimizeButtonClicked:
             return ScenarioType.ACTIONS;
 
+        case TelemetryEvent.StartChatSDKCall:
         case TelemetryEvent.StartChatMethodException:
         case TelemetryEvent.CloseChatMethodException:
         case TelemetryEvent.StartProactiveChatMethodFailed:

@@ -1,3 +1,4 @@
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
@@ -25,6 +26,7 @@ import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
 import { Components } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
+import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
@@ -40,11 +42,13 @@ import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostCha
 import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
 import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
+import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
 import { endChat } from "../common/endChat";
 import { getGeneralStylesForButton } from "../common/getGeneralStylesForButton";
 import { initCallingSdk } from "../common/initCallingSdk";
@@ -52,13 +56,10 @@ import { initConfirmationPropsComposer } from "../common/initConfirmationPropsCo
 import { initWebChatComposer } from "../common/initWebChatComposer";
 import { registerTelemetryLoggers } from "../common/registerTelemetryLoggers";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
-
 import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -84,7 +85,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
-
+        DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
@@ -126,11 +127,20 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.StartProactiveChatEventReceived,
+                Description: "Start proactive chat event received."
+            });
             if (canStartProactiveChat.current) {
-                startProactiveChat(dispatch, msg?.payload?.bodyTitle, msg?.payload?.showPrechat, msg?.payload?.inNewWindow);
+                startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
+            } else {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ChatAlreadyTriggered,
+                    Description: "Start proactive chat method called, when chat was already triggered."
+                });
             }
         });
-        window.addEventListener("beforeunload", (event) => {
+        window.addEventListener("beforeunload", () => {
             disposeTelemetryLoggers();
         });
         if (state.appStates.conversationEndedByAgent) {
@@ -143,12 +153,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {
-                BroadcastService.postMessage({ eventName: "NewMessageNotification" });
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.NewMessageNotification
+                });
             });
         }
 
         // Track the message count
-        if (state.appStates.conversationState == ConversationState.Active) {
+        if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {
                 currentMessageCountRef.current++;
                 dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: currentMessageCountRef.current + 1 });
@@ -162,7 +174,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
         const customEvent: ICustomEvent = {
             elementType: ElementType.Custom,
-            eventName: "UnreadMessageCount",
+            eventName: BroadcastEvent.UnreadMessageCount,
             payload: 0
         };
         BroadcastService.postMessage(customEvent);
@@ -173,7 +185,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state.appStates.isMinimized && state.appStates.unreadMessageCount > 0) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.Custom,
-                eventName: "UnreadMessageCount",
+                eventName: BroadcastEvent.UnreadMessageCount,
                 payload: `${state.appStates.unreadMessageCount}`
             };
             BroadcastService.postMessage(customEvent);
@@ -188,21 +200,24 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [props.webChatContainerProps?.webChatStyles]);
     
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
-    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
-    const endChatRelay = () => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
+    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any) => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initStartChatRelay = (optionalParams?: any) => initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
+    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
-    
+
     // publish chat widget state
-    const chatWidgetStateChangeEvent: ICustomEvent = {
-        eventName: TelemetryEvent.ChatWidgetStateChanged,
-        payload: {
-            ...state
-        }
-    };
-    BroadcastService.postMessage(chatWidgetStateChangeEvent);
+    useEffect(() => {
+        const chatWidgetStateChangeEvent: ICustomEvent = {
+            eventName: BroadcastEvent.ChatWidgetStateChanged,
+            payload: {
+                ...state
+            }
+        };
+        BroadcastService.postMessage(chatWidgetStateChangeEvent);
+    }, [state]);
 
     return (
         <Composer

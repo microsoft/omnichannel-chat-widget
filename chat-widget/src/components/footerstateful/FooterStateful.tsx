@@ -8,13 +8,13 @@ import { IFooterControlProps } from "@microsoft/omnichannel-chat-components/lib/
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
+import { NewMessageNotificationSoundBase64 } from "../../assets/Audios";
 import { NotificationHandler } from "../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { downloadTranscript } from "./downloadtranscriptstateful/DownloadTranscriptStateful";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
-import newMessageNotification from "../../assets/audios/newMessageNotification.mp3";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FooterStateful = (props: any) => {
@@ -78,7 +78,7 @@ export const FooterStateful = (props: any) => {
                 styleProps={footerProps?.styleProps}
             />
             <AudioNotificationStateful
-                audioSrc={audioNotificationProps?.audioSrc ?? newMessageNotification}
+                audioSrc={audioNotificationProps?.audioSrc ?? NewMessageNotificationSoundBase64}
                 hideAudioNotificationButton={footerProps?.controlProps?.hideAudioNotificationButton ?? false}
                 isAudioMuted={state.appStates.isAudioMuted ?? false}
             />

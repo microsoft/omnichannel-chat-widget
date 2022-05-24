@@ -1,13 +1,11 @@
-import React from "react";
-import { Meta } from "@storybook/react/types-6-0";
-import { Story } from "@storybook/react";
-import { IButtonStyles, IconButton, IIconProps, DefaultButton, PrimaryButton } from "@fluentui/react";
+import { AudioNotificationOffIconBase64, AudioNotificationOnIconBase64, TranscriptDownloadIconBase64, TranscriptEmailIconBase64 } from "@microsoft/omnichannel-chat-components";
+import { DefaultButton, IButtonStyles, IIconProps, IconButton, PrimaryButton } from "@fluentui/react";
+
 import { Footer } from "@microsoft/omnichannel-chat-components";
 import { IFooterProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterProps";
-import lcwAudioOff from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/lcwAudioOff.svg";
-import lcwAudioOn from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/lcwAudioOn.svg";
-import transcriptDownloadIcon from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/transcriptDownloadIcon.svg";
-import transcriptEmailIcon from "@microsoft/omnichannel-chat-components/lib/cjs/assets/imgs/transcriptEmailIcon.svg";
+import { Meta } from "@storybook/react/types-6-0";
+import React from "react";
+import { Story } from "@storybook/react";
 
 export default {
     title: "Stateless Components/Footer",
@@ -181,21 +179,21 @@ const customizedFooterProp: IFooterProps = {
         downloadTranscriptButtonProps: {
             id: "oc-lcw-footer-downloadtranscript-button",
             type: "icon",
-            imageIconProps: { src: transcriptDownloadIcon },
+            imageIconProps: { src: TranscriptDownloadIconBase64 },
             ariaLabel: "Download chat transcript",
         },
         emailTranscriptButtonProps: {
             id: "oc-lcw-footer-emailtranscript-button",
             type: "icon",
-            imageIconProps: { src: transcriptEmailIcon },
+            imageIconProps: { src: TranscriptEmailIconBase64 },
             ariaLabel: "Email Transcript",
         },
         audioNotificationButtonProps: {
             id: "oc-lcw-footer-audionotification-button",
             ariaLabel: "Turn sound off",
             toggleAriaLabel: "Turn sound on",
-            imageIconProps: { src: lcwAudioOn },
-            imageToggleIconProps: { src: lcwAudioOff }
+            imageIconProps: { src: AudioNotificationOnIconBase64 },
+            imageToggleIconProps: { src: AudioNotificationOffIconBase64 }
         }
     },
     styleProps: {

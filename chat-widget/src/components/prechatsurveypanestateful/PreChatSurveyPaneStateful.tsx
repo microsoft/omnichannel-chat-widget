@@ -1,8 +1,10 @@
+import { Constants, HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 import { extractPreChatSurveyResponseValues, findAllFocusableElement, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
+import { DataStoreManager } from "../../common/contextDataStore/DataStoreManager";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IPreChatSurveyPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneControlProps";
@@ -11,7 +13,6 @@ import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-compon
 import { IStyle } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
-import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps";
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
@@ -40,7 +41,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         try {
             return parseAdaptiveCardPayload(payload, requiredFieldMissingMessage);
         } catch (ex) {
-            TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+            TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.ParseAdaptiveCardFailed,
                 Description: "Adaptive Card JSON Parse Failed.",
                 ExceptionDetails: {
@@ -60,15 +61,24 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         onSubmit: async (values: { index: number, label: any, id: any, value: string }[]) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSubmitted });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+
             try {
-                const prechatResponseValues = extractPreChatSurveyResponseValues(state.domainStates.preChatSurveyResponse, values);
-                const optionalParams = {
-                    initContext: {
-                        preChatResponse: prechatResponseValues
-                    }
-                };
-                setPreChatResponseEmail(values);
-                await initStartChat(optionalParams);
+                const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(Constants.widgetStateDataKey, "localStorage");
+                const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+                let optionalParams = {};
+                if (persistedState?.domainStates?.liveChatContext) {
+                    optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
+                    await initStartChat(optionalParams, persistedState);
+                } else {
+                    const prechatResponseValues = extractPreChatSurveyResponseValues(state.domainStates.preChatSurveyResponse, values);
+                    optionalParams = {
+                        initContext: {
+                            preChatResponse: prechatResponseValues
+                        }
+                    };
+                    setPreChatResponseEmail(values);
+                    await initStartChat(optionalParams);
+                }
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.PreChatSurveyStartChatMethodFailed,
@@ -93,7 +103,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         if (adaptiveCardElements && adaptiveCardElements.length > 0) {
             const children = adaptiveCardElements[0].children;
             let value = "";
-            for (let index=0; index < children.length; index++) {
+            for (let index = 0; index < children.length; index++) {
                 const current = children[index];
                 if (current && current.className == HtmlAttributeNames.adaptiveCardTextBlockClassName) {
                     value = current.innerHTML;

@@ -9,6 +9,7 @@ import { Constants, MimeTypes, WebChatMiddlewareConstants } from "../../../../..
 import React, { Dispatch } from "react";
 import { getFileAttachmentIconData, isInlineMediaSupported } from "../../../common/utils/FileAttachmentIconManager";
 
+import { BroadcastEvent } from "../../../../../common/telemetry/TelemetryConstants";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
@@ -136,7 +137,7 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
             } catch (e) {
                 const errorData = "Unable to parse the adaptive card format";
                 BroadcastService.postMessage({
-                    eventName: "InvalidAdaptiveCardFormat",
+                    eventName: BroadcastEvent.InvalidAdaptiveCardFormat,
                     payload: {
                         Message: errorData,
                         ExceptionDetails: e

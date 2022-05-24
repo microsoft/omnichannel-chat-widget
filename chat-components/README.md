@@ -1,0 +1,1 @@
+Please refer to documentation for @microsoft/omnichannel-chat-widget [here](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget).

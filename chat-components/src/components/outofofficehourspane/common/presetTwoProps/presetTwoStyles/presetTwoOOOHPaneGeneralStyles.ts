@@ -1,6 +1,5 @@
+import { ErrorIconBase64 } from "../../../../../assets/Icons";
 import { IStyle } from "@fluentui/react";
-
-import errorImg from "../../../../../assets/imgs/error.svg";
 
 export const presetTwoOOOHPaneGeneralStyles: IStyle = {
     borderStyle: "dotted solid double dashed",
@@ -8,7 +7,7 @@ export const presetTwoOOOHPaneGeneralStyles: IStyle = {
     borderWidth: "5px",
     backgroundColor: "#FFFFFF",
     backgroundSize: "200px",
-    backgroundImage: `url(${errorImg})`,
+    backgroundImage: `url(${ErrorIconBase64})`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     borderColor: "#F2FFF1",

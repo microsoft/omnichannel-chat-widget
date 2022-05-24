@@ -1,6 +1,7 @@
 export class Constants {
     public static readonly systemMessageTag = "system";
     public static readonly userMessageTag = "user";
+    public static readonly historyMessageTag = "history";
     public static readonly agentEndConversationMessageTag = "agentendconversation";
 
     public static readonly receivedMessageClassName = "ms_lcw_webchat_received_message";
@@ -15,6 +16,7 @@ export class Constants {
     public static readonly true = "true";
     public static readonly false = "false";
     public static readonly maximumUnreadMessageCount = 99;
+    public static readonly widgetStateDataKey = "LcwChatWidgetState";
 
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";
@@ -100,7 +102,7 @@ export class Constants {
     public static readonly Blank = "_blank";
     public static readonly TargetRelationship = "rel";
     public static readonly TargetRelationshipAttributes = "noopener noreferrer";
-    
+
     // Markdown icons
     public static readonly OpenLinkIconCssClass = "webchat__markdown__external-link-icon";
 

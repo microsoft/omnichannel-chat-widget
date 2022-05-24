@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useState } from "react";
 import { createTimer, setFocusOnElement } from "../../common/utils";
 
@@ -26,7 +26,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
         if (!timeoutRemoved) {
             setTimeoutRemoved(true);
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ProactiveChatRejected,
                 ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
                 Description: "Proactive chat invitation timed out."
@@ -46,14 +46,18 @@ export const ProactiveChatPaneStateful = (props: any) => {
             if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
                 // TODO: BroadcastService: replace with the sdk broadcast service, when in place
                 const startPopoutChatEvent: ICustomEvent = {
-                    eventName: "StartPopoutChat",
+                    eventName: BroadcastEvent.ProactiveChatStartPopoutChat,
                 };
                 BroadcastService.postMessage(startPopoutChatEvent);
-                dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: true });
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             } else if (state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True") {
                 dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             } else {
+                const proactiveChatStarted: ICustomEvent = {
+                    eventName: BroadcastEvent.ProactiveChatStartChat,
+                };
+                BroadcastService.postMessage(proactiveChatStarted);
                 await startChat();
             }
         },

@@ -1,7 +1,9 @@
 import * as React from "react";
+
+import { IImageStyles, ILabelStyles, IStackStyles, Image, Label, Stack } from "@fluentui/react";
+
+import { AgentIconBase64 } from "../../../../../../assets/Icons";
 import { IIncomingCallComponentOverrides } from "../../interfaces/IIncomingCallComponentOverrides";
-import { IImageStyles, ILabelStyles, Image, IStackStyles, Label, Stack } from "@fluentui/react";
-import agentImage from "../../../../../../assets/imgs/agent.png";
 
 const agentImageStyles: IImageStyles = {
     root: { height: "50px", width: "50px" },
@@ -22,7 +24,7 @@ const stackStyles: Partial<IStackStyles> = {
 
 export const componentOverrideProps: IIncomingCallComponentOverrides = {
     incomingCallTitle: <Stack horizontal>
-        <Image src={agentImage} styles={agentImageStyles} />
+        <Image src={AgentIconBase64} styles={agentImageStyles} />
         <Stack verticalAlign="center" horizontalAlign="baseline" styles={stackStyles}>
             <Label styles={label1Styles}>Omnichannel Agent 007</Label>
             <Label styles={label2Styles}>Incoming call</Label>

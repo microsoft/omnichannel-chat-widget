@@ -49,6 +49,80 @@ const liveChatWidgetProps = {
 
 Events in the widget are categorized as Telemetry events and pub-sub events. Telemetry events are used for logging telemetry data, whereas pub-sub events are used for message communications which are usually emitted from the widget for customers to provide additional functionality when such events occur.
 
+### BroadcastService
+
+`BroadcastService` is a component library service used for publishing and subscribing events from/to components. All actionable controls in library emits `onClick` and `onKeyDown` by default. The service has following methods:
+
+| Method | Description | Parameters |
+| ------- | ----------- | ---------- |
+| `postMessage` | to publish an event | Accepts [ICustomEvent](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/interfaces/ICustomEvent.ts) as parameter
+|`disposeChannel` | closes the channel | none
+|`getMessageByEventName` | to subscribe to an event by string | Accepts `eventName` as parameter
+|`getMessage` | to subscribe to an event by `ICustomEvent` | Accepts [ICustomEvent](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/interfaces/ICustomEvent.ts) as parameter
+|`getAnyMessage` | to subscribe to all events | none
+
+**_Pseudo Code_**
+
+_Publishing Event_:
+
+```js
+    import { BroadcastService } from "../../../services/BroadcastService";
+    import { ICustomEvent } from "../../../interfaces/ICustomEvent";
+
+    //generateEventName - (,<controlid>,<prefix>, <suffix>)
+    const onClickEventName = props.headerActionControlProps.existingEventName? 
+    props.headerActionControlProps.existingEventName: 
+    generateEventName(props.headerActionControlProps.id, "on"); 
+    
+    const onClickEvent: ICustomEvent = { eventName: onClickEventName }
+
+    BroadcastService.postMessage(onClickEvent);
+```
+
+_Subscribing Event_:
+
+```js
+    import { BroadcastService } from "../../services/BroadcastService";
+    import { ICustomEvent } from "../../interfaces/ICustomEvent";
+    import { ElementType } from "../../common/Constants";
+
+
+    //inside function component
+    React.useEffect(() => {
+        const message : ICustomEvent = {
+            elementType: ElementType.HeaderCloseButton,
+            eventName: "OnClick",
+            elementId: "webChatHeaderCloseButton"
+        };
+        const subscription = BroadcastService.getMessage(message)
+            .subscribe((msg: ICustomEvent) => {
+                console.log("message received!!" + JSON.stringify(msg));
+            });
+    
+        return () => {
+            console.log("unsubscribing event");
+            subscription.unsubscribe();
+        };
+    }, []);
+```
+
+### Broadcast Events
+
+Refer to the below table to understand different broadcast events raised during the lifetime of the chat widget. These events can be subscribed to perform certain optional features of Live Chat Widget. These are primarily used to perform certain functionalities within the widget, instead of for logging purposes.
+
+| Event Name | Scenario |
+| -------- | -------- |
+| `ProactiveChatStartChat`          |On `ProactiveChatPane` start chat |
+| `ProactiveChatStartPopoutChat`    |On `ProactiveChatPane` start chat in a new window |
+| `LoadPostChatSurvey`              |On loading post chat survey |
+| `EndChat`                         |On ending chat |
+| `NewMessageNotification`          |On getting a new message |
+| `UnreadMessageCount`              |On toggling minimize state or changing unread message count |
+| `ChatWidgetStateChanged`          |On changing chat widget state |
+| `InvalidAdaptiveCardFormat`       |On invalid adaptive card format |
+| `NewMessageReceived`              |On new message received |
+| `NewMessageSent`                  |On new user message sent |
+
 ### Telemetry Events
 
 Refer to the below table to understand different critical telemetry events raised during the lifetime of the chat widget. These events have been further categorized as `Load`, `Configuration`, `Actions`, `SDK`, and `Calling` events.
@@ -69,29 +143,43 @@ Refer to the below table to understand different critical telemetry events raise
 | `OutOfOfficePaneLoaded` |On Out of office pane load complete |
 | `ConfirmationPaneLoaded`|On `ConfirmationPane` load complete |
 | `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
-| `StartChatSDKCall`| On initiating start chat SDK call|
+| `ReconnectChatPaneLoaded` | On `ReconnectChatPane` load complete|
 
 #### Action Events
 
 | Event Name| Scenario |
 | -------- | -------- |
 | `PrechatSubmitted`     |On PreChat survey Submit button click |
+| `PreChatSurveyStartChatMethodFailed`|On Pre-Chat survey submit failed|
 | `LCWChatButtonClicked`  |On Start Chat button click |
+| `StartProactiveChatEventReceived`|On receiving start proactive chat event|
+| `ChatAlreadyTriggered`|On attempting to start proactive chat pane with chat already triggered|
 | `ProactiveChatAccepted` |On Proactive chat Start Chat button click |
 | `ProactiveChatRejected` |On Proactive chat invitation time out |
 | `ProactiveChatClosed`   |On Proactive chat closed |
-| `ProcessingHTMLTextMiddlewareFailed`     |On HTML Field sanitization failed |
-| `DataMaskingRuleApplied`     |On data masking regex rule applied failed error |
+| `ReconnectChatContinueConversation` |On clicking Continute Chat button On Reconnect Chat Pane |
+| `ReconnectChatStartNewConversation` |On clicking Start New button On Reconnect Chat Pane |
+| `ReconnectChatMinimize`   |On clicking Minimize button On Reconnect Chat Pane |
+| `ProcessingHTMLTextMiddlewareFailed`     |On HTML Field adding noopener noreferrer failed |
+| `ProcessingSanitizationMiddlewareFailed`     |On HTML Field sanitization failed |
+| `FormatTagsMiddlewareJSONStringifyFailed`     |On ACS Format Message Tags Middleware failed |
+|`IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
+|`AverageWaitTimeMessageRecieved`|On Average Wait Time system message Received|
+|`QueuePositionMessageRecieved`|On Queue Position system message Received|
+|`IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
 | `ConversationEndedThreadEventReceived`     |On Conversation ended by agent side or by timeout |
 | `InvalidConfiguration`     |On Invalid data masking regex rule collection |
-| `DownloadTranscriptResponseNullOrUndefined`     |On downloading transcript response exception |
+| `DataMaskingRuleApplied`     |On data masking regex rule applied |
 | `EmailTranscriptSent`     |On transcript sent to email successfully |
 |`EmailTranscriptFailed`|On transcript sent to email failure|
+|`EmailTranscriptButtonClicked`|On Email Transcript footer button clicked|
+|`EmailTranscriptCancelButtonClicked`|On Email Transcript Pane Cancel button clicked|
+|`DownloadTranscriptButtonClicked`|On download transcript button clicked|
 |`DownloadTranscriptFailed`|On download transcript failed|
-|`IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
+| `DownloadTranscriptResponseNullOrUndefined`     |On downloading transcript response exception |
+|`AudioToggleButtonClicked`| On Audio Notification button clicked|
 |`ConfirmationCancelButtonClicked`|On confirmation pane Cancel button clicked|
 |`ConfirmationConfirmButtonClicked`|On confirmation pane Confirm button clicked|
-|`PreChatSurveyStartChatMethodFailed`|On Pre-Chat survey submit failed|
 |`HeaderCloseButtonClicked`|On Header Close button clicked|
 |`HeaderMinimizeButtonClicked`|On Header Minimize button clicked|
 
@@ -106,7 +194,6 @@ Refer to the below table to understand different critical telemetry events raise
 | `RemoteVideoStreamAdded`     |      On remote video stream added |
 | `RemoteVideoStreamRemoved`     |      On remote video stream removed |
 | `CallDisconnected`     |      On call disconnected successfully  |
-| `CallDisconnectedException`     |      On call disconnected exception |
 | `IncomingCallEnded`           |On incoming call reject button clicked |
 | `VoiceVideoInitialize`     |      On video and voice calling SDK initialization |
 | `VoiceVideoInitializeException`           |On exception while video and voice calling SDK initialization |
@@ -128,9 +215,12 @@ Refer to the below table to understand different critical telemetry events raise
 
 | Event Name | Scenario |
 | -------- | -------- |
+| `StartChatSDKCall`| On initiating start chat SDK call|
 |`StartChatMethodException`|On failed to start chat|
 |`CloseChatMethodException`|On failed to end chat from `ConfirmationPane` Confirm button click|
+|`GetChatReconnectContextSDKCallFailed`| On get reconnect context SDK call failed|
 |`GetConversationDetailsCallFailed`|On `PropactiveChatPane` load complete|
+|`EndChatSDKCall`|On initiating ChatSDK end chat call|
 |`EndChatSDKCallFailed`|On ChatSDK end chat failure|
 |`PostChatContextCallFailed`|On `ChatSDK` post chat context failure|
 |`PostChatContextCallSucceed`|On `ChatSDK` post chat context load success|
@@ -143,7 +233,7 @@ Refer to the below table to understand different critical telemetry events raise
 
 ## Bring Your Own Logger
 
-Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as showb below.
+Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as shown below.
 
 ```ts
 // customConsoleLogger.ts - Implementing IChatSDKLogger
