@@ -1,6 +1,10 @@
 import { StyleOptions, createStore } from "botframework-webchat";
 
+import { BroadcastEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { IDataMaskingInfo } from "../../webchatcontainerstateful/interfaces/IDataMaskingInfo";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
@@ -29,9 +33,6 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
-import { ConversationState } from "../../../contexts/common/ConversationState";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles: any) => {
@@ -56,7 +57,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             if (isPostChatEnabled === "true") {
                 if (postChatSurveyMode === PostChatSurveyMode.Embed) {
                     const loadPostChatEvent: ICustomEvent = {
-                        eventName: "LoadPostChatSurvey",
+                        eventName: BroadcastEvent.LoadPostChatSurvey,
                     };
                     BroadcastService.postMessage(loadPostChatEvent);
                 } else if (postChatSurveyMode === PostChatSurveyMode.Link) {

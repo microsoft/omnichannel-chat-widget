@@ -1,11 +1,14 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { BroadcastService, ConfirmationPane } from "@microsoft/omnichannel-chat-components";
 import React, { Dispatch, useEffect } from "react";
 import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
 
-import { BroadcastService, ConfirmationPane } from "@microsoft/omnichannel-chat-components";
+import { Constants } from "../../common/Constants";
+import { ConversationState } from "../../contexts/common/ConversationState";
 import { DimLayer } from "../dimlayer/DimLayer";
 import { IConfirmationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/confirmationpane/interfaces/IConfirmationPaneControlProps";
 import { IConfirmationPaneStatefulParams } from "./interfaces/IConfirmationPaneStatefulParams";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
@@ -15,10 +18,7 @@ import { PostChatSurveyMode } from "../postchatsurveypanestateful/enums/PostChat
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
-import { Constants } from "../../common/Constants";
-import { ConversationState } from "../../contexts/common/ConversationState";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
@@ -49,10 +49,10 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             try {
                 // check agent has joined conversation
                 const conversationDetails = await chatSDK.getConversationDetails();
-                if (isPostChatEnabled === "true" && conversationDetails.canRenderPostChat === Constants.truePascal) {
+                if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
                     if (postChatSurveyMode === PostChatSurveyMode.Embed) {
                         const loadPostChatEvent: ICustomEvent = {
-                            eventName: "LoadPostChatSurvey",
+                            eventName: BroadcastEvent.LoadPostChatSurvey,
                         };
                         BroadcastService.postMessage(loadPostChatEvent);
                     } else if (postChatSurveyMode === PostChatSurveyMode.Link) {

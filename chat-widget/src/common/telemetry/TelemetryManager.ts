@@ -33,7 +33,7 @@ export const RegisterLoggers = () => {
             !TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryDisabled) {
             BroadcastService.getAnyMessage()
                 .subscribe((event: ICustomEvent) => {
-                    if ((event as ITelemetryEvent).payload && (event as ITelemetryEvent).eventName !== TelemetryEvent.ChatWidgetStateChanged) {
+                    if ((event as ITelemetryEvent).payload && ((event as ITelemetryEvent).eventName in TelemetryEvent)) {
                         logTelemetry(event);
                     }
                 });

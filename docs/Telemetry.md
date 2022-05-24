@@ -108,7 +108,7 @@ _Subscribing Event_:
 
 ### Broadcast Events
 
-Refer to the below table to understand different broadcast events raised during the lifetime of the chat widget. These events can be subscribed to perform certain optional features of Live Chat Widget.
+Refer to the below table to understand different broadcast events raised during the lifetime of the chat widget. These events can be subscribed to perform certain optional features of Live Chat Widget. These are primarily used to perform certain functionalities within the widget, instead of for logging purposes.
 
 | Event Name | Scenario |
 | -------- | -------- |
@@ -120,6 +120,8 @@ Refer to the below table to understand different broadcast events raised during 
 | `UnreadMessageCount`              |On toggling minimize state or changing unread message count |
 | `ChatWidgetStateChanged`          |On changing chat widget state |
 | `InvalidAdaptiveCardFormat`       |On invalid adaptive card format |
+| `NewMessageReceived`              |On new message received |
+| `NewMessageSent`                  |On new user message sent |
 
 ### Telemetry Events
 
@@ -231,7 +233,7 @@ Refer to the below table to understand different critical telemetry events raise
 
 ## Bring Your Own Logger
 
-Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as showb below.
+Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as shown below.
 
 ```ts
 // customConsoleLogger.ts - Implementing IChatSDKLogger
