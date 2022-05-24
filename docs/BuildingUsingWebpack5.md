@@ -147,14 +147,6 @@ import { Configuration } from "webpack";
 import * as webpack from 'webpack';
 import * as webpackDevServer from 'webpack-dev-server';
 
-const fileLoader = {
-    test: /\.(jpe?g|png|gif|svg|mp3)$/i,
-    loader: "file-loader",
-    options: {
-        name: "public/assets/[name].[ext]"
-    }
-};
-
 const disableFullyQualifiedNameResolutions = {
     test: /\.m?js/,
     resolve: {
@@ -183,7 +175,6 @@ const config: Configuration = {
     module: {
         rules: [
             babelLoaderConfiguration,
-            fileLoader,
             disableFullyQualifiedNameResolutions
         ],
     },
