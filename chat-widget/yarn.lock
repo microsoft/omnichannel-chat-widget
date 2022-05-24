@@ -2217,7 +2217,7 @@
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.0.tgz#277466f41169d233d52dd2db7899708a0d50ce0e"
   integrity sha512-9NOf+mAGeQCYuynYfhrZGYeq8wQSWs8jrnZG5W98vQZZXCoD/l4hcSf3fXHH2p7Ve82ZT8UG0dKCcwA5SEyzpg==
 
-"@microsoft/omnichannel-chat-components@^0.1.0-main.2eda736":
+"@microsoft/omnichannel-chat-components@0.1.0-main.2eda736":
   version "0.1.0-main.2eda736"
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-0.1.0-main.2eda736.tgz#2fc7b5be01a0ad2b7c6692b0db13061c71adca31"
   integrity sha512-2xfDI4NKis+HRtWjalx7j9Sq1uKFBq9MPesVjJ0+/n8pKlozBO6ViTueVSR3b1+E4iJOI41lo/KPrswAeS1mEw==
@@ -4149,11 +4149,6 @@ adaptivecards@2.9.0:
   resolved "https://registry.yarnpkg.com/adaptivecards/-/adaptivecards-2.9.0.tgz#1006fe56703a5aab94bfeb944637b684e7ea850c"
   integrity sha512-TXbtzc6LwisTdlfEAooropj9ZwgcQz8bSirWOnph3bzJJr9QF8YQCfSIpcAXKTJ7b6YrOfH+9xw/a8RaKgeOZg==
 
-adaptivecards@2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/adaptivecards/-/adaptivecards-2.9.0.tgz#1006fe56703a5aab94bfeb944637b684e7ea850c"
-  integrity sha512-TXbtzc6LwisTdlfEAooropj9ZwgcQz8bSirWOnph3bzJJr9QF8YQCfSIpcAXKTJ7b6YrOfH+9xw/a8RaKgeOZg==
-
 adaptivecards@^2.10.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/adaptivecards/-/adaptivecards-2.10.0.tgz#1c94e84491afe5a4f2d4060f6e0fc57b895205e3"
@@ -4928,7 +4923,7 @@ botframework-directlinejs@0.15.0:
     botframework-streaming "4.14.1"
     buffer "6.0.3"
     core-js "3.15.2"
-    cross-fetch "^3.1.5"
+    cross-fetch "3.1.4"
     jwt-decode "3.1.2"
     rxjs "5.5.12"
     url-search-params-polyfill "8.1.1"
@@ -5999,13 +5994,6 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-fetch@3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
-  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
-  dependencies:
-    node-fetch "2.6.1"
-
 cross-fetch@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
@@ -6319,11 +6307,6 @@ detab@2.0.4:
     repeat-string "^1.5.4"
 
 detect-libc@^2.0.0, detect-libc@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.0.1.tgz#e1897aa88fa6ad197862937fbc0441ef352ee0cd"
-  integrity sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==
-
-detect-libc@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.0.1.tgz#e1897aa88fa6ad197862937fbc0441ef352ee0cd"
   integrity sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==
@@ -6825,11 +6808,6 @@ esbuild-windows-arm64@0.14.38:
   version "0.14.38"
   resolved "https://registry.yarnpkg.com/esbuild-windows-arm64/-/esbuild-windows-arm64-0.14.38.tgz#d97e9ac0f95a4c236d9173fa9f86c983d6a53f54"
   integrity sha512-k3FGCNmHBkqdJXuJszdWciAH77PukEyDsdIryEHn9cKLQFxzhT39dSumeTuggaQcXY57UlmLGIkklWZo2qzHpw==
-
-esbuild@0.12.15:
-  version "0.12.15"
-  resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.12.15.tgz#9d99cf39aeb2188265c5983e983e236829f08af0"
-  integrity sha512-72V4JNd2+48eOVCXx49xoSWHgC3/cCy96e7mbXKY+WOWghN00cCmlGnwVLRhRHorvv0dgCyuMYBZlM2xDM5OQw==
 
 esbuild@0.12.15:
   version "0.12.15"
@@ -10605,11 +10583,6 @@ node-dir@^0.1.10:
   dependencies:
     minimatch "^3.0.2"
 
-node-fetch@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
-  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
-
 node-fetch@2.6.7, node-fetch@^2.6.1, node-fetch@^2.6.7:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
@@ -11802,11 +11775,6 @@ qs@6.10.3, qs@^6.10.0:
   integrity sha512-wr7M2E0OFRfIfJZjKGieI8lBKb7fRCH4Fv5KNPEs7gJ8jadvotdsS08PzOKR7opXhZ/Xkjtt3WF9g38drmyRqQ==
   dependencies:
     side-channel "^1.0.4"
-
-qs@6.9.7:
-  version "6.9.7"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.7.tgz#4610846871485e1e048f44ae3b94033f0e675afe"
-  integrity sha512-IhMFgUmuNpyRfxA90umL7ByLlgRXu6tIfKPpF5TmcfRLlLCckfP/g3IQmju6jjpu+Hh8rA+2p6A27ZSPOOHdKw==
 
 querystring-es3@^0.2.0:
   version "0.2.1"
