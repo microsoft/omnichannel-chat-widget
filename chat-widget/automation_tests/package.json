@@ -26,7 +26,7 @@
     "clear_jest": "jest --clearCache",
     "lint": "eslint .",
     "test": "jest --detectOpenHandles --runInBand --passWithNoTests",
-    "test:build": "npm run --prefix ../../chat-widget build-sample && npm run test"
+    "test:build": "yarn --cwd ../../chat-widget build-sample && yarn test"
   },
   "keywords": [],
   "author": "",
