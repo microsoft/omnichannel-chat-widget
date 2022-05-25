@@ -3,6 +3,7 @@ export class Constants {
     public static readonly userMessageTag = "user";
     public static readonly historyMessageTag = "history";
     public static readonly agentEndConversationMessageTag = "agentendconversation";
+    public static readonly supervisorForceCloseMessageTag = "supervisorforceclosedconversation";
 
     public static readonly receivedMessageClassName = "ms_lcw_webchat_received_message";
     public static readonly sentMessageClassName = "ms_lcw_webchat_sent_message";
