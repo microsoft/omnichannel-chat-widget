@@ -1,30 +1,65 @@
-# How to run playwright testcases against your environment
+# Omnichannel Live Chat Widget UI Components Test Cases Automation
+Omnichannel Live Chat Widget test cases automation using playwright and jest.
+omnichannel-chat-widget\chat-widget\automation_tests contains automated test cases for Live chat widget components
 
-Lets say you have an environment. You want to run a set of playwright testcases on that environment for debugging or verifying that they work. 
-Below is the list of steps needed to set up the pipeline to run tests against your environment.
+# Installation
+    
+```powershell
+npm install
+```
 
-## Parameters
+or
 
-### test categories: This enables us to run tests at various granularities:
-- run a single test by specifing its name. eg: get-chat-token.spec.ts
-- run tests in a specific folder. eg: live-chat2/queue-position
+```powershell
+yarn
+```
 
-### update testsuite for this run: check this if you want to update your testsuite's testcase outcomes based on the run
+# Build and Test
+To run the automation test cases, follow below steps
+1. Run all test cases with build the sample live chat widget script 
+    
+```powershell
+npm run test:build
+```
 
-### Run admin simulator: check this if you want to run admin simulator to populate data in the org
+or
 
-## KeyVault integration with pipeline
-- Make sure you have your secrets (necessary to run tests) in a keyvault. eg: oc-test-ocrpenv-nam-vt
-- You need to create a variable group where the required secrets are retrieved and automatically added as pipeline variables. 
-eg: https://dev.azure.com/dynamicscrm/OneCRM/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=1022&path=ocrpenv-vault
+```powershell
+yarn build:build
+```
 
-## Set Pipeline variables in YAML
-Set org specific config in the pipeline variables in YAML task.
-Here: https://dev.azure.com/dynamicscrm/OneCRM/_git/CRM.Omnichannel.ServiceIntegration?path=/src/.pipelines%2Fazure-pipelines.yml
+2. Run all test cases without build the sample live chat widget script 
+    
+```powershell
+npm run test
+```
 
-AgentEmails: is a list (in order) of all the agents that are needed. These will map to the agent indices in the JSON file you pass.
+or
 
+```powershell
+yarn test
+```
 
-## To populate the result of run 
-For reference: https://dev.azure.com/dynamicscrm/OneCRM/_testPlans/execute?planId=1102798&suiteId=2279054
-Add PAT token in variables.
+3. Run a single test by specifing its name. eg: chatButton.spec.ts
+
+```powershell
+npm run test chatButton.spec.ts
+```
+
+or
+
+```powershell
+yarn test chatButton.spec.ts
+```
+
+4. Run tests in a specific folder. eg: e2e/areas/general
+
+```powershell
+npm run test e2e/areas/general
+```
+
+or
+
+```powershell
+yarn test e2e/areas/general
+```
