@@ -1,11 +1,17 @@
 # Omnichannel Live Chat Widget UI Components
 
-[TOC]
-
 ![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-components-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-components)\
 ![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-widget-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-widget)
 
 [@microsoft/omnichannel-chat-widget](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget) is a React-based UI component library which allows you to build your own live chat widget experience using [@microsoft/omnichannel-chat-sdk](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk).
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+1. [Installation](#installation)
+1. [Example Usage](#example-usage)
+1. [Components](#components)
+1. [See Also](#see-also)
 
 ## Introduction
 
@@ -77,15 +83,7 @@ const render = async () => {
             }
         },
         chatSDK: chatSDK, // mandatory
-        chatConfig: chatConfig, // mandatory
-        telemetryConfig: { //mandatory
-            orgId: omnichannelConfig.orgId,
-            orgUrl: omnichannelConfig.orgUrl,
-            appId: omnichannelConfig.widgetId,
-            OCChatSDKVersion: chatSdkVersion,
-            chatComponentVersion: chatComponentVersion,
-            chatWidgetVersion: chatWidgetVersion
-        }
+        chatConfig: chatConfig // mandatory
     };
 
     ReactDOM.render(
