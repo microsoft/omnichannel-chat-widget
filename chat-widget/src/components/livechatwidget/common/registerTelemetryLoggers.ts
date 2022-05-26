@@ -1,17 +1,17 @@
+import { RegisterLoggers, TelemetryManager } from "../../../common/telemetry/TelemetryManager";
+
 import { Dispatch } from "react";
 import { IInternalTelemetryData } from "../../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetryConfig";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
-import { RegisterLoggers, TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
+import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
 import { defaultAriaConfig } from "../../../common/telemetry/defaultConfigs/defaultAriaConfig";
 import { defaultInternalTelemetryData } from "../../../common/telemetry/defaultConfigs/defaultTelemetryInternalData";
 import { defaultTelemetryConfiguration } from "../../../common/telemetry/defaultConfigs/defaultTelemetryConfiguration";
-
-import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
-import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
 
 export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     let widgetPackageInfo;
@@ -40,6 +40,8 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
         telemetryData.orgId = props.chatSDK?.omnichannelConfig?.orgId;
         telemetryData.widgetId = props.chatSDK?.omnichannelConfig?.widgetId;
         telemetryData.orgUrl = props.chatSDK?.omnichannelConfig?.orgUrl;
+        TelemetryManager.InternalTelemetryData = telemetryData;
+        
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
     }
     RegisterLoggers();

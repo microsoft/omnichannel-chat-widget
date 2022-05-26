@@ -1,6 +1,10 @@
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { StyleOptions, createStore } from "botframework-webchat";
 
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { IDataMaskingInfo } from "../../webchatcontainerstateful/interfaces/IDataMaskingInfo";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
@@ -8,6 +12,7 @@ import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { IWebChatProps } from "../../webchatcontainerstateful/interfaces/IWebChatProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import attachmentProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentProcessingMiddleware";
 import { changeLanguageCodeFormatForWebChat } from "../../../common/utils";
@@ -30,8 +35,6 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles: any) => {
@@ -50,14 +53,22 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
     let webChatStore = WebChatStoreLoader.store;
     if (!webChatStore) {
         const conversationEndCallback = async () => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.ConversationEndedThreadEventReceived,
+                Description: "Conversation is ended by agent side or by timeout."
+            });
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed) {
-                const loadPostChatEvent: ICustomEvent = {
-                    eventName: "LoadPostChatSurvey",
-                };
-                BroadcastService.postMessage(loadPostChatEvent);
+            if (isPostChatEnabled === "true") {
+                if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+                    const loadPostChatEvent: ICustomEvent = {
+                        eventName: BroadcastEvent.LoadPostChatSurvey,
+                    };
+                    BroadcastService.postMessage(loadPostChatEvent);
+                } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+                }
             } else {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
             }

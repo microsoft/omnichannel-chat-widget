@@ -5,57 +5,21 @@
  * 1. Renders system messages differently, according to Microsoft LiveChatWidget styles
  * 2. Changes the font size of user messages
  * 3. Decodes certain html characters that came through from chat services
- * 4. Triggers end conversation sequence when the chat thread is deleted
  ******/
 
-import React from "react";
+import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 
 import { Constants } from "../../../../../common/Constants";
 import { DirectLineActivityType } from "../../enums/DirectLineActivityType";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
 import { MessageTypes } from "../../enums/MessageType";
+import React from "react";
+import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
 import { escapeHtml } from "../../../../../common/utils";
-import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
-import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 
 const loggedSystemMessages = new Array<string>();
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleThreadUpdate = (channelData: any) => {
-    TelemetryHelper.logActionEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.IC3ThreadUpdateEventReceived,
-        Description: "IC3 ThreadUpdateEvent Received"
-    });
-
-    const postConversationEndedAction = () => {
-        TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.ConversationEndedThreadEventReceived,
-            Description: "Conversation is ended by agent side or by timeout."
-        });
-    };
-
-    // If the Thread is deleted, then display post conversation survey if enabled.
-    const isThreadDeleted: boolean = channelData?.properties?.isdeleted?.toLowerCase() === Constants.true;
-    if (isThreadDeleted) {
-        postConversationEndedAction();
-        return;
-    }
-
-    //check if customer is still in the thread
-    if (channelData.members && channelData.members.length > 0) {
-        for (let i = 0; i < channelData.members.length; i++) {
-            const id: string = channelData.members[i].id;
-            const tag: string = channelData.members[i].tag;
-            // In case of ACS customer is not removed from thread and has "left" tag
-            if (id.startsWith(Constants.visitorIdPrefix) && (tag !== Constants.left)) {
-                return;
-            }
-        }
-    }
-    postConversationEndedAction();
-};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSystemMessage = (next: any, args: any[], card: any, systemMessageStyleProps?: React.CSSProperties) => {
@@ -96,7 +60,10 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
     if (card.activity) {
         if (card.activity.from?.role === DirectLineSenderRole.Channel) {
             if (card.activity.channelData?.type === MessageTypes.Thread) {
-                handleThreadUpdate(card.activity.channelData);
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.IC3ThreadUpdateEventReceived,
+                    Description: "IC3 ThreadUpdateEvent Received"
+                });
             }
             return () => false;
         }

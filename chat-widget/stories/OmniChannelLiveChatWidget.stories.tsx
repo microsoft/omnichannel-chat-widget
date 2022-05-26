@@ -18,9 +18,9 @@ const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatW
     Live Chat Widget Default
 */
 
-export const LiveChatWidgetFixedSize = LiveChatWidgetTemplate.bind({});
+export const Default = LiveChatWidgetTemplate.bind({});
 
-const liveChatWidgetFixedSizeProps: ILiveChatWidgetProps = {
+const liveChatWidgetDefaultProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     styleProps: {
@@ -30,10 +30,11 @@ const liveChatWidgetFixedSizeProps: ILiveChatWidgetProps = {
             top: "20px",
             left: "20px"
         }
-    }
+    },
+    telemetryConfig: undefined
 };
 
-LiveChatWidgetFixedSize.args = liveChatWidgetFixedSizeProps;
+Default.args = liveChatWidgetDefaultProps;
 
 /*
     Live Chat Widget Pre + Post Chat
@@ -77,9 +78,9 @@ const MockChatConfig: ChatConfig = {
     maxUploadFileSize: ""
 };
 
-export const LiveChatWidgetFixedSizeSurveyEnabled = LiveChatWidgetTemplate.bind({});
+export const DefaultWithSurvey = LiveChatWidgetTemplate.bind({});
 
-const liveChatWidgetFixedSizeSurveyEnabledProps: ILiveChatWidgetProps = {
+const liveChatWidgetDefaultWithSurveyProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDKSurveyEnabled() as any,
     chatConfig: MockChatConfig,
@@ -106,9 +107,10 @@ const liveChatWidgetFixedSizeSurveyEnabledProps: ILiveChatWidgetProps = {
                 width: "360px",
                 borderRadius: "0 0 4px 4px",
                 overflow: "auto"
-            }            
+            }
         }
-    }
+    },
+    telemetryConfig: undefined
 };
 
-LiveChatWidgetFixedSizeSurveyEnabled.args = liveChatWidgetFixedSizeSurveyEnabledProps;
+DefaultWithSurvey.args = liveChatWidgetDefaultWithSurveyProps;

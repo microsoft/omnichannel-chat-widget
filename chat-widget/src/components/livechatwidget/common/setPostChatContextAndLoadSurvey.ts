@@ -1,12 +1,12 @@
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { ConversationState } from "../../../contexts/common/ConversationState";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
@@ -29,6 +29,7 @@ export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Di
         });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });

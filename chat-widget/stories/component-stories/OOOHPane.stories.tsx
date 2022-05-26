@@ -47,20 +47,20 @@ const defaultOOOHPaneProps: IOOOHPaneProps = {
         }
     }
 };
-const presetOneOOOHPaneProps: IOOOHPaneProps = {
+const sampleOneOOOHPaneProps: IOOOHPaneProps = {
     controlProps: {
         ...defaultOOOHPaneProps.controlProps,
-        id: "oc-lcw-outofofficehourspane-preset1",
+        id: "oc-lcw-outofofficehourspane-sample1",
         dir: "rtl"
     },
     styleProps: {
         ...defaultOOOHPaneProps.styleProps
     }
 };
-const presetTwoOOOHPaneProps: IOOOHPaneProps = {
+const sampleTwoOOOHPaneProps: IOOOHPaneProps = {
     controlProps: {
         ...defaultOOOHPaneProps.controlProps,
-        id: "oc-lcw-outofofficehourspane-preset2",
+        id: "oc-lcw-outofofficehourspane-sample2",
         titleText: "Sorry but we are not operating during these hours!!",
     },
     styleProps: {
@@ -105,21 +105,21 @@ export const OOOHPaneDefault = OOOHPaneTemplate.bind({});
 OOOHPaneDefault.args = defaultOOOHPaneProps;
 
 /*
-    OOOH Pane Preset 1
+    OOOH Pane Sample 1
 */
 
-export const OOOHPanePreset1 = OOOHPaneTemplate.bind({});
-OOOHPanePreset1.args = presetOneOOOHPaneProps;
+export const OOOHPaneSample1 = OOOHPaneTemplate.bind({});
+OOOHPaneSample1.args = sampleOneOOOHPaneProps;
 
 /*
-    OOOH Pane Preset 2
+    OOOH Pane Sample 2
 */
 
-export const OOOHPanePreset2 = OOOHPaneTemplate.bind({});
-OOOHPanePreset2.args = presetTwoOOOHPaneProps;
+export const OOOHPaneSample2 = OOOHPaneTemplate.bind({});
+OOOHPaneSample2.args = sampleTwoOOOHPaneProps;
 
 /*
-    OOOH Pane Preset 3
+    OOOH Pane Sample 3
 */
 
 const customTitle = encodeComponentString(
@@ -129,11 +129,11 @@ const customTitle = encodeComponentString(
 );
 
 
-const loadingPanePreset3Props: IOOOHPaneProps = {
+const loadingPaneSample3Props: IOOOHPaneProps = {
     componentOverrides: {
         title: customTitle
     }
 };
 
-export const OOOHPanePreset3 = OOOHPaneTemplate.bind({});
-OOOHPanePreset3.args = loadingPanePreset3Props;
+export const OOOHPaneSample3 = OOOHPaneTemplate.bind({});
+OOOHPaneSample3.args = loadingPaneSample3Props;

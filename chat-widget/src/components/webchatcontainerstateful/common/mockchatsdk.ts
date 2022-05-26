@@ -12,6 +12,10 @@ export class MockChatSDK {
         return null;
     }
 
+    public getChatToken() {
+        return null;
+    }
+
     public createChatAdapter() {
         return new MockAdapter();
     }

@@ -16,7 +16,9 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                 breaks: (!disableNewLineMarkdownSupport)
             }
         );
-        markdown.use(MarkdownSlack);
+        // ToDo: Commenting below usage of plugin until deferred bug is resolved: https://github.com/mayashavin/markdown-it-slack/issues/1
+        // markdown.use(MarkdownSlack);
+
         // Markdown override for open link in new tab
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, quotes
         markdown.use(MarkdownItForInline, "url_new_win", "link_open", function (tokens: any, idx: number, env: any) {
