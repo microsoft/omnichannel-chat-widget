@@ -21,7 +21,7 @@ const createConversationEndMiddleware = (conversationEndCallback: any) => ({ dis
             activity.channelId === "ACS_CHANNEL") { // ACS
             if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
                 && (activity.channelData?.tags?.includes(Constants.agentEndConversationMessageTag) 
-		    || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
+                || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
                 conversationEndCallback();
             }
         } else if (activity.from?.role === DirectLineSenderRole.Channel &&
