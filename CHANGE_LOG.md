@@ -11,3 +11,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Refactored telemetry/broadcast events
 - Added lcw event support
 - Fixed an issue where telemetry is not flowing correctly
+- Added support for conversation force closure
