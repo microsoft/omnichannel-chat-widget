@@ -10,3 +10,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added support for PostChat Link Mode
 - Refactored telemetry/broadcast events
 - Added lcw event support
+- Fixed an issue where telemetry is not flowing correctly
