@@ -115,7 +115,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `ProactiveChatStartChat`          |On `ProactiveChatPane` start chat |
 | `ProactiveChatStartPopoutChat`    |On `ProactiveChatPane` start chat in a new window |
 | `LoadPostChatSurvey`              |On loading post chat survey |
-| `EndChat`                         |On ending chat |
+| `ChatEnded`                       |On ending chat |
 | `NewMessageNotification`          |On getting a new message |
 | `UnreadMessageCount`              |On toggling minimize state or changing unread message count |
 | `ChatWidgetStateChanged`          |On changing chat widget state |
@@ -138,6 +138,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `LCWChatButtonShow`     |On Start button show complete |
 | `PrechatSurveyLoaded`   |On `PreChatSurvey` load complete |
 | `LoadingPaneLoaded`     |On `LoadingPane` load complete |
+| `PostChatSurveyLoadingPaneLoaded`  |On `PostChatSurveyLoadingPane` load complete |
 | `PostChatSurveyLoaded`  |On `PostChatSurvey` load complete |
 | `EmailTranscriptLoaded` |On Email transcript pane load complete |
 | `OutOfOfficePaneLoaded` |On Out of office pane load complete |
@@ -215,7 +216,8 @@ Refer to the below table to understand different critical telemetry events raise
 
 | Event Name | Scenario |
 | -------- | -------- |
-| `StartChatSDKCall`| On initiating start chat SDK call|
+|`StartChatSDKCall`| On initiating start chat SDK call|
+|`StartChatEventRecevied `| On start chat event received|
 |`StartChatMethodException`|On failed to start chat|
 |`CloseChatMethodException`|On failed to end chat from `ConfirmationPane` Confirm button click|
 |`GetChatReconnectContextSDKCallFailed`| On get reconnect context SDK call failed|
