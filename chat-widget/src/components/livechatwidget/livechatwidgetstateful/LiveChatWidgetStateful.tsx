@@ -143,7 +143,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // start chat from SDK Event
-        BroadcastService.getMessageByEventName("StartChat").subscribe((msg: ICustomEvent) => {
+        BroadcastService.getMessageByEventName("StartChat").subscribe(() => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
@@ -153,11 +153,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             } else {
                 prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
             }
-
         });
 
         // end chat from SDK Event
-        BroadcastService.getMessageByEventName("EndChat").subscribe(async (msg: ICustomEvent) => {
+        BroadcastService.getMessageByEventName("EndChat").subscribe(async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "End chat event received."

@@ -98,6 +98,7 @@ export enum TelemetryEvent {
     LoadingPaneLoaded = "LoadingPaneLoaded",
     EmailTranscriptLoaded = "EmailTranscriptLoaded",
     OutOfOfficePaneLoaded = "OutOfOfficePaneLoaded",
+    PostChatSurveyLoadingPaneLoaded = "PostChatSurveyLoadingPaneLoaded",
     PostChatSurveyLoaded = "PostChatSurveyLoaded",
     ConfirmationPaneLoaded = "ConfirmationPaneLoaded",
     ProactiveChatPaneLoaded = "ProactiveChatPaneLoaded",
