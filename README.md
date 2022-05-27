@@ -11,8 +11,7 @@
 1. [Installation](#installation)
 1. [Example Usage](#example-usage)
 1. [Components](#components)
-1. [Telemetry](#telemetry)
-1. [Features](#features)
+1. [See Also](#see-also)
 
 ## Introduction
 
@@ -84,15 +83,7 @@ const render = async () => {
             }
         },
         chatSDK: chatSDK, // mandatory
-        chatConfig: chatConfig, // mandatory
-        telemetryConfig: { //mandatory
-            orgId: omnichannelConfig.orgId,
-            orgUrl: omnichannelConfig.orgUrl,
-            appId: omnichannelConfig.widgetId,
-            OCChatSDKVersion: chatSdkVersion,
-            chatComponentVersion: chatComponentVersion,
-            chatWidgetVersion: chatWidgetVersion
-        }
+        chatConfig: chatConfig // mandatory
     };
 
     ReactDOM.render(
@@ -134,6 +125,7 @@ These are components that are included in the ```@microsoft/omnichannel-chat-com
 
 | Component | Default Usage | Interface |
 | ----- | -------- | ----- |
+| WebChatContainer | The default wrapper around BotFramework's [WebChat](https://github.com/microsoft/BotFramework-WebChat), which is the message container we are using | [IWebChatContainerStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps.ts) |
 | LiveChatWidget | The default widget that stitches the UI components with Chat SDK | [ILiveChatWidgetProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetProps.ts) |
 
 Some of the interfaces listed in the Stateless table have Stateful counterparts defined in the ```@microsoft/omnichannel-chat-widget``` package. For example, [IConfirmationPaneStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps.ts) extends [IConfirmationPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneProps.ts) with additional attributes that only makes sense in the stateful context.
