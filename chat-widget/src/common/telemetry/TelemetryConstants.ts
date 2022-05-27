@@ -156,6 +156,7 @@ export class TelemetryConstants {
         case TelemetryEvent.LCWChatButtonShow:
         case TelemetryEvent.PrechatSurveyLoaded:
         case TelemetryEvent.LoadingPaneLoaded:
+        case TelemetryEvent.PostChatSurveyLoadingPaneLoaded:
         case TelemetryEvent.PostChatSurveyLoaded:
         case TelemetryEvent.EmailTranscriptLoaded:
         case TelemetryEvent.OutOfOfficePaneLoaded:
@@ -185,12 +186,16 @@ export class TelemetryConstants {
             return ScenarioType.ACTIONS;
 
         case TelemetryEvent.StartChatSDKCall:
+        case TelemetryEvent.StartChatEventRecevied:
         case TelemetryEvent.StartChatMethodException:
         case TelemetryEvent.CloseChatMethodException:
+        case TelemetryEvent.StartProactiveChatEventReceived:
         case TelemetryEvent.StartProactiveChatMethodFailed:
         case TelemetryEvent.OnNewMessageFailed:
         case TelemetryEvent.OnNewMessageAudioNotificationFailed:
         case TelemetryEvent.GetConversationDetailsCallFailed:
+        case TelemetryEvent.EndChatSDKCall:
+        case TelemetryEvent.EndChatEventReceived:
         case TelemetryEvent.EndChatSDKCallFailed:
         case TelemetryEvent.PostChatContextCallFailed:
         case TelemetryEvent.PostChatContextCallSucceed:
