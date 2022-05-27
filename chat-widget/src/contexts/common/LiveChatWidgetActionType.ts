@@ -99,12 +99,6 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        boolean: Is set all conditions are met to show post chat
-    */
-    SET_SHOULD_SHOW_POST_CHAT,
-
-    /*
-        Parameters:
         true: When call is initiated from from an agent
         false: To hide the calling container
     */

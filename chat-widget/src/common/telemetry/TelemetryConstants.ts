@@ -23,7 +23,7 @@ export enum LogLevel {
 // Events used in certain functionalities that are not being logged
 export enum BroadcastEvent {
     LoadPostChatSurvey = "LoadPostChatSurvey",
-    EndChat = "EndChat",
+    EndChat = "ChatEnded",
     NewMessageNotification = "NewMessageNotification",
     UnreadMessageCount = "UnreadMessageCount",
     ChatWidgetStateChanged = "ChatWidgetStateChanged",
@@ -82,7 +82,9 @@ export enum TelemetryEvent {
     PrechatSurveyLoaded = "PrechatSurveyLoaded",
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
+    StartChatEventRecevied = "StartChatEventReceived",
     EndChatSDKCall = "EndChatCall",
+    EndChatEventReceived = "EndChatEventReceived",
     OnNewMessageFailed = "OnNewMessageFailed",
     OnNewMessageAudioNotificationFailed = "OnNewMessageAudioNotificationFailed",
     DownloadTranscriptResponseNullOrUndefined = "DownloadTranscriptResponseNullOrUndefined",

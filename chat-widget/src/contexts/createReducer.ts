@@ -112,15 +112,6 @@ export const createReducer = () => {
                     }
                 };
 
-            case LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT:
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        shouldShowPostChat: action.payload as boolean
-                    }
-                };
-
             case LiveChatWidgetActionType.SHOW_CALLING_CONTAINER:
                 return {
                     ...state,
