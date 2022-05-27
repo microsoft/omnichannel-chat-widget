@@ -223,6 +223,7 @@ Refer to the below table to understand different critical telemetry events raise
 |`GetChatReconnectContextSDKCallFailed`| On get reconnect context SDK call failed|
 |`GetConversationDetailsCallFailed`|On `PropactiveChatPane` load complete|
 |`EndChatSDKCall`|On initiating ChatSDK end chat call|
+|`EndChatEventRecevied `| On end chat event received|
 |`EndChatSDKCallFailed`|On ChatSDK end chat failure|
 |`PostChatContextCallFailed`|On `ChatSDK` post chat context failure|
 |`PostChatContextCallSucceed`|On `ChatSDK` post chat context load success|
