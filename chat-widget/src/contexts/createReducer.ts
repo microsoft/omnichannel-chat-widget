@@ -229,7 +229,6 @@ export const createReducer = () => {
                     }
                 };
             case LiveChatWidgetActionType.SET_TELEMETRY_DATA:
-                TelemetryManager.InternalTelemetryData = action.payload as IInternalTelemetryData;
                 return {
                     ...state,
                     domainStates: {

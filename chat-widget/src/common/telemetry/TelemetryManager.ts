@@ -9,6 +9,7 @@ import { ITimer } from "../interfaces/ITimer";
 import { TelemetryData } from "./definitions/Payload";
 import { ariaTelemetryLogger } from "./loggers/ariaTelemetryLogger";
 import { consoleLogger } from "./loggers/consoleLogger";
+import { defaultAriaConfig } from "./defaultConfigs/defaultAriaConfig";
 
 export class TelemetryTimers {
     public static LcwLoadToChatButtonTimer: ITimer;
@@ -29,8 +30,8 @@ export const disposeLoggers = () => {
 
 export const RegisterLoggers = () => {
     const registerLoggers = () => {
-        if (!TelemetryManager.InternalTelemetryData?.telemetryConfig?.disableConsoleLog ||
-            !TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryDisabled) {
+        if (TelemetryManager.InternalTelemetryData?.telemetryConfig?.disableConsoleLog === false ||
+            TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryDisabled === false) {
             BroadcastService.getAnyMessage()
                 .subscribe((event: ICustomEvent) => {
                     if ((event as ITelemetryEvent).payload && ((event as ITelemetryEvent).eventName in TelemetryEvent)) {
@@ -39,17 +40,17 @@ export const RegisterLoggers = () => {
                 });
         }
 
-        if (!TelemetryManager.InternalTelemetryData?.telemetryConfig?.disableConsoleLog) {
+        if (TelemetryManager.InternalTelemetryData?.telemetryConfig?.disableConsoleLog === false) {
             loggers.push(consoleLogger());
         }
 
-        if (!TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryDisabled) {
+        if (TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryDisabled === false) {
             if (TelemetryManager.InternalTelemetryData?.ariaConfig) {
                 loggers.push(ariaTelemetryLogger(
-                    TelemetryManager.InternalTelemetryData?.ariaConfig?.ariaTelemetryKey ?? "",
-                    TelemetryManager.InternalTelemetryData?.ariaConfig?.disableCookieUsage ?? false,
-                    TelemetryManager.InternalTelemetryData?.ariaConfig?.collectorUriForTelemetry ?? "",
-                    TelemetryManager.InternalTelemetryData?.ariaConfig?.ariaTelemetryApplicationName ?? "OmniChannelProd_Web"));
+                    TelemetryManager.InternalTelemetryData?.ariaConfig?.ariaTelemetryKey ?? (defaultAriaConfig.ariaTelemetryKey as string),
+                    TelemetryManager.InternalTelemetryData?.ariaConfig?.disableCookieUsage ?? (defaultAriaConfig.disableCookieUsage as boolean),
+                    TelemetryManager.InternalTelemetryData?.ariaConfig?.collectorUriForTelemetry ?? (defaultAriaConfig.collectorUriForTelemetry as string),
+                    TelemetryManager.InternalTelemetryData?.ariaConfig?.ariaTelemetryApplicationName ?? (defaultAriaConfig.ariaTelemetryApplicationName as string)));
             }
 
             const customLoggers = TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryLoggers;
