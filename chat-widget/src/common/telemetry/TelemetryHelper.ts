@@ -230,8 +230,6 @@ export class TelemetryHelper {
     }
 
     public static logLoadingEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-        console.log("payload within logLoadingEvent");
-        console.log(payload);
         const telemetryEvent: ITelemetryEvent = {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
@@ -239,7 +237,6 @@ export class TelemetryHelper {
                 ...payload
             } as LoadTelemetryData
         };
-        console.log(telemetryEvent);
         BroadcastService.postMessage(telemetryEvent);
     }
 
