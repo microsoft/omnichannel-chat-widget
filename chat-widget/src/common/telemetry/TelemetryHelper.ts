@@ -230,6 +230,8 @@ export class TelemetryHelper {
     }
 
     public static logLoadingEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
+        console.log("payload within logLoadingEvent");
+        console.log(payload);
         const telemetryEvent: ITelemetryEvent = {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
@@ -237,6 +239,7 @@ export class TelemetryHelper {
                 ...payload
             } as LoadTelemetryData
         };
+        console.log(telemetryEvent);
         BroadcastService.postMessage(telemetryEvent);
     }
 
@@ -277,10 +280,11 @@ export class TelemetryHelper {
 
     public static logWebChatEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
         const telemetryEvent: ITelemetryEvent = {
-            eventName: payload?.Event ?? "",
+            eventName: "event",
             logLevel: logLevel,
             payload: {
                 ...payload,
+                type: "event",
                 scenarioType: ScenarioType.WEBCHAT
             } as WebChatTelemetryData
         };

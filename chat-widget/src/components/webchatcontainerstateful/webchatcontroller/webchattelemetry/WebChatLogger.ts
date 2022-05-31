@@ -3,7 +3,7 @@ import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
 
 export function createWebChatTelemetry() {
     const handleTelemetry = (event: any) => {
-        const { data, dimensions, duration, error, fatal, level, Event, type } = event;
+        const { level } = event;
         const loglevel = level ? level.toUpperCase() : "";
 
         switch (loglevel) {
