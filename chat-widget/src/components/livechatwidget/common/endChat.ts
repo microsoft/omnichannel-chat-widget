@@ -9,9 +9,35 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
+import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
+import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
+import { Constants } from "../../../common/Constants";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean) => {
+const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
+    const isPostChatEnabled = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
+    const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
+    const conversationDetails = await chatSDK.getConversationDetails();
+    if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
+        const skipEndChatSDK = false;
+        const skipCloseChat = true;
+        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+        if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+            const loadPostChatEvent: ICustomEvent = {
+                eventName: BroadcastEvent.LoadPostChatSurvey,
+            };
+            BroadcastService.postMessage(loadPostChatEvent);
+        } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+        }
+    } else {
+        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean) => {
     if (!skipEndChatSDK) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
@@ -52,3 +78,5 @@ export const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
         }
     }
 };
+
+export { prepareEndChat, endChat };

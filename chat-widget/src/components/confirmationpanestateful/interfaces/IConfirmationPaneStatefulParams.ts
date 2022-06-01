@@ -1,3 +1,4 @@
+import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { IConfirmationPaneStatefulProps } from "./IConfirmationPaneStatefulProps";
 
 export interface IConfirmationPaneStatefulParams extends IConfirmationPaneStatefulProps {
@@ -7,11 +8,10 @@ export interface IConfirmationPaneStatefulParams extends IConfirmationPaneStatef
     setPostChatContext: () => Promise<void>;
 
     /**
-     * endChat: Internal Prop injected for triggering end of a chat using chatSDK
+     * prepareEndChat: Internal Prop injected for checking PostChat contexts and trigerring end of chat
      * @param adapter : The chat adapter for the live chat session
-     * @param skipEndChatSDK : If set to true endchat will skip chatSDK endChat call
-     * @param skipCloseChat : If set to true endchat will skip closing the live chat instance
+     * @param state : The chat state where the conversation is currently in
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    endChat: (adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean) => Promise<void>;
+    prepareEndChat: (adapter: any, state: ILiveChatWidgetContext) => Promise<void>;
 }

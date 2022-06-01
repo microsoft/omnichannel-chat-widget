@@ -10,6 +10,8 @@ import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { defaultGeneralPostChatLoadingPaneStyleProps } from "./common/defaultgeneralPostChatLoadingPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 
 export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -38,6 +40,7 @@ export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
         if (firstElement && firstElement[0]) {
             firstElement[0].focus();
         }
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PostChatSurveyLoadingPaneLoaded });
     }, []);
     
     return (
