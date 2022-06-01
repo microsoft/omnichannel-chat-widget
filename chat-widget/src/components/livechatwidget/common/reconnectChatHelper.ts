@@ -49,24 +49,35 @@ const getReconnectIdForAuthenticatedChat = async (props: ILiveChatWidgetProps, c
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleUnauthenticatedReconnectChat = async (dispatch: Dispatch<ILiveChatWidgetAction>, reconnectId: string, initStartChat: any) => {
-    const reconnectAvailabilityResponse: IReconnectChatContext = await getChatReconnectContext(reconnectId);
+const handleUnauthenticatedReconnectChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, reconnectId: string, initStartChat: any) => {
+    const reconnectAvailabilityResponse: IReconnectChatContext = await getChatReconnectContext(chatSDK, reconnectId);
     if (reconnectAvailabilityResponse && reconnectAvailabilityResponse.redirectURL) {
-        redirectPage(reconnectAvailabilityResponse.redirectURL);
+        window.location.href = reconnectAvailabilityResponse.redirectURL;
     } else {
         const optionalParams = { reconnectId: reconnectId };
         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-        await initStartChat(optionalParams);
+        await initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
     }
 };
 
-const redirectPage = (newUrl: string) => {
-    const data = {
-        messageName: Constants.redirectPageRequest,
-        newUrl: newUrl
-    };
-    window.parent.postMessage(data, "*");
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const startUnauthenticatedReconnectChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, reconnectId: string, initStartChat: any) => {
+    const reconnectAvailabilityResponse: IReconnectChatContext = await getChatReconnectContext(chatSDK, reconnectId);
+    if (!reconnectAvailabilityResponse || !reconnectAvailabilityResponse.redirectURL) {
+        const optionalParams = { reconnectId: reconnectId };
+        dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+        await initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
+    }
 };
 
-export { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const redirectUnauthenticatedReconnectChat = async (chatSDK: any, reconnectId: string) => {
+    const reconnectAvailabilityResponse: IReconnectChatContext = await getChatReconnectContext(chatSDK, reconnectId);
+    if (reconnectAvailabilityResponse && reconnectAvailabilityResponse.redirectURL) {
+        window.location.href = reconnectAvailabilityResponse.redirectURL;
+    }
+};
+
+export { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat, redirectUnauthenticatedReconnectChat };

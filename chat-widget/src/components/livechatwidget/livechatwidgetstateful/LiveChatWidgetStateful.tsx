@@ -3,7 +3,7 @@ import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getLocaleDirection } from "../../../common/utils";
-import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
+import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat } from "../common/startChat";
 import {
     shouldShowCallingContainer,
@@ -94,7 +94,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             });
 
         if (!props.controlProps?.skipChatButtonRendering && props.reconnectChatPaneProps?.reconnectId) {
-            handleUnauthenticatedReconnectChat(dispatch, props.reconnectChatPaneProps?.reconnectId, initStartChat);
+            startUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
         }
 
         // Initialize global dir
@@ -110,13 +110,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         if (state.appStates.skipChatButtonRendering) {
             if (props.reconnectChatPaneProps?.reconnectId && !state.appStates.reconnectId) {
-                handleUnauthenticatedReconnectChat(dispatch, props.reconnectChatPaneProps?.reconnectId, initStartChat);
+                handleUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
             } else {
                 getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
                     if (authReconnectId && !state.appStates.reconnectId) {
                         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: authReconnectId });
                         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
                     } else {
+                        const chatStartedSkippingChatButtonRendering: ICustomEvent = {
+                            eventName: "StartChatSkippingChatButtonRendering",
+                        };
+                        BroadcastService.postMessage(chatStartedSkippingChatButtonRendering);
                         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
                         initStartChat(chatSDK, dispatch, setAdapter);
                     }

@@ -15,7 +15,7 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { createTimer } from "../../../common/utils";
-import { getReconnectIdForAuthenticatedChat } from "./reconnectChatHelper";
+import { getReconnectIdForAuthenticatedChat, redirectUnauthenticatedReconnectChat } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 
@@ -24,7 +24,11 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
         return;
     }
-
+    //Redirecting if unauthenticated reconnect chat expired
+    if (props.reconnectChatPaneProps?.reconnectId) {
+        await redirectUnauthenticatedReconnectChat(chatSDK, props.reconnectChatPaneProps?.reconnectId);
+        return;
+    }
     // Getting PreChat Survey Context
     const parseToJson = false;
     const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
