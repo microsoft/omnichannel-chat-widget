@@ -25,8 +25,8 @@ jobs:
         working-directory: chat-widget
         run: yarn test:unit
       - name: E2E Tests
-        working-directory: chat-widget
-        run: yarn test:e2e
+        working-directory: chat-widget/automation_tests
+        run: yarn test
       - name: Build Storybook
         working-directory: chat-widget
         run: yarn build-storybook
