@@ -21,6 +21,9 @@ jobs:
       - name: Install packages
         working-directory: chat-widget
         run: yarn install
+      - name: Install playwright jest packages
+        working-directory: chat-widget/automation_tests
+        run: yarn install
       - name: Unit Tests
         working-directory: chat-widget
         run: yarn test:unit
