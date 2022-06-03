@@ -23,7 +23,7 @@ export enum LogLevel {
 // Events used in certain functionalities that are not being logged
 export enum BroadcastEvent {
     LoadPostChatSurvey = "LoadPostChatSurvey",
-    EndChat = "EndChat",
+    EndChat = "ChatEnded",
     NewMessageNotification = "NewMessageNotification",
     UnreadMessageCount = "UnreadMessageCount",
     ChatWidgetStateChanged = "ChatWidgetStateChanged",
@@ -82,7 +82,9 @@ export enum TelemetryEvent {
     PrechatSurveyLoaded = "PrechatSurveyLoaded",
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
+    StartChatEventRecevied = "StartChatEventReceived",
     EndChatSDKCall = "EndChatCall",
+    EndChatEventReceived = "EndChatEventReceived",
     OnNewMessageFailed = "OnNewMessageFailed",
     OnNewMessageAudioNotificationFailed = "OnNewMessageAudioNotificationFailed",
     DownloadTranscriptResponseNullOrUndefined = "DownloadTranscriptResponseNullOrUndefined",
@@ -96,6 +98,7 @@ export enum TelemetryEvent {
     LoadingPaneLoaded = "LoadingPaneLoaded",
     EmailTranscriptLoaded = "EmailTranscriptLoaded",
     OutOfOfficePaneLoaded = "OutOfOfficePaneLoaded",
+    PostChatSurveyLoadingPaneLoaded = "PostChatSurveyLoadingPaneLoaded",
     PostChatSurveyLoaded = "PostChatSurveyLoaded",
     ConfirmationPaneLoaded = "ConfirmationPaneLoaded",
     ProactiveChatPaneLoaded = "ProactiveChatPaneLoaded",
@@ -154,6 +157,7 @@ export class TelemetryConstants {
         case TelemetryEvent.LCWChatButtonShow:
         case TelemetryEvent.PrechatSurveyLoaded:
         case TelemetryEvent.LoadingPaneLoaded:
+        case TelemetryEvent.PostChatSurveyLoadingPaneLoaded:
         case TelemetryEvent.PostChatSurveyLoaded:
         case TelemetryEvent.EmailTranscriptLoaded:
         case TelemetryEvent.OutOfOfficePaneLoaded:
@@ -183,12 +187,16 @@ export class TelemetryConstants {
             return ScenarioType.ACTIONS;
 
         case TelemetryEvent.StartChatSDKCall:
+        case TelemetryEvent.StartChatEventRecevied:
         case TelemetryEvent.StartChatMethodException:
         case TelemetryEvent.CloseChatMethodException:
+        case TelemetryEvent.StartProactiveChatEventReceived:
         case TelemetryEvent.StartProactiveChatMethodFailed:
         case TelemetryEvent.OnNewMessageFailed:
         case TelemetryEvent.OnNewMessageAudioNotificationFailed:
         case TelemetryEvent.GetConversationDetailsCallFailed:
+        case TelemetryEvent.EndChatSDKCall:
+        case TelemetryEvent.EndChatEventReceived:
         case TelemetryEvent.EndChatSDKCallFailed:
         case TelemetryEvent.PostChatContextCallFailed:
         case TelemetryEvent.PostChatContextCallSucceed:

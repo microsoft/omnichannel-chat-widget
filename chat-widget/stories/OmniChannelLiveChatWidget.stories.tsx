@@ -114,3 +114,241 @@ const liveChatWidgetDefaultWithSurveyProps: ILiveChatWidgetProps = {
 };
 
 DefaultWithSurvey.args = liveChatWidgetDefaultWithSurveyProps;
+
+// Sample Customized Widget
+
+export const Custom = LiveChatWidgetTemplate.bind({});
+
+const liveChatWidgetCustom: ILiveChatWidgetProps = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    chatSDK: new MockChatSDKSurveyEnabled() as any,
+    chatConfig: MockChatConfig,
+    styleProps: {
+        generalStyles: {
+            width: "423px",
+            height: "600px",
+            bottom: "20px",
+            right: "20px",
+            borderRadius: "10px",
+        }
+    },
+    chatButtonProps: {
+        controlProps: {
+            hideNotificationBubble: true,
+            hideChatTextContainer: true
+        },
+        styleProps: {
+            generalStyleProps: {
+                height: "50px",
+                width: "50px",
+                position: "absolute",
+                cursor: "pointer",
+                hoverBackgroundColor: "lightgrey",
+                borderStyle: "",
+                borderRadius: 0,
+                borderWidth: "0",
+                boxShadow: ""
+            },
+            iconStyleProps: {
+                cursor: "pointer",
+                align: "center",
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                backgroundImage: "url(https://www.freeiconspng.com/uploads/live-chat-icon-20.png)",
+                backgroundSize: "100% 100%",
+                borderStyle: "",
+                borderRadius: 0,
+                borderWidth: "0",
+                boxShadow: "",
+                "&:hover": {
+                    filter: "brightness(0.8)"
+                },
+                margin: 0
+            }
+        }
+    },
+    headerProps: {
+        controlProps: {
+            hideIcon: true,
+            headerTitleProps: {
+                id: "oc-lcw-header-title",
+                text: "Support Chat"
+            }
+        },
+        styleProps: {
+            generalStyleProps: {
+                borderRadius: "0px",
+                backgroundColor: "#1b1a19",
+                height: "40px"
+            },
+            closeButtonStyleProps: {
+                color: "#2266E3"
+            },
+            minimizeButtonStyleProps: {
+                color: "#2266E3"
+            },
+            titleStyleProps: {
+                fontSize: "20px",
+                fontFamily: "Segoe UI",
+                margin: "0 0 0 10px",
+                color: "white",
+                fontWeight: "600"
+            }
+        }
+    },
+    loadingPaneProps: {
+        controlProps: {
+            titleText: "Support Chat",
+            spinnerText: "We will be with you shortly",
+            spinnerSize: 3,
+            hideSubtitle: true,
+            hideIcon: true,
+            hideSpinnerText: true
+        },
+        styleProps: {
+            generalStyleProps: {
+                position: "initial",
+                width: "100%",
+                height: "100%",
+                left: "0%",
+                top: "0%",
+                borderRadius: "0px",
+                borderWidth: "0px",
+                backgroundColor: "#1b1a19",
+                alignItems: "center"
+            },
+            titleStyleProps: {
+                color: "white",
+                margin: "0 0 50px 0",
+                fontSize: "24px",
+                width: "auto",
+                fontFamily: "Segoe UI",
+                order: 1,
+                fontWeight: 600
+            }
+        }
+    },
+    webChatContainerProps: {
+        webChatStyles: {
+            backgroundColor: "#1b1a19",
+            botAvatarInitials: "",
+            botAvatarImage: "https://www.freeiconspng.com/uploads/female-call-center-agent-vector-icon--people-icons--icons-download-14.png",
+            bubbleBackground: "#0078d4",
+            bubbleBorderRadius: 0,
+            bubbleBorderWidth: 0,
+            bubbleFromUserBackground: "#F7F7F9",
+            bubbleFromUserBorderRadius: 0,
+            bubbleFromUserBorderWidth: 0,
+            bubbleFromUserTextColor: "black",
+            bubbleImageHeight: 300,
+            bubbleMaxWidth: 250,
+            bubbleMinHeight: 40,
+            bubbleMinWidth: 40,
+            bubbleTextColor: "white",
+            hideSendBox: false,
+            hideUploadButton: true,
+            primaryFont: "Segoe UI",
+            rootHeight: "100%",
+            rootWidth: "100%",
+            sendBoxTextWrap: true,
+            sendBoxHeight: 70,
+            sendBoxMaxHeight: 120,
+            sendBoxBackground: "#F7F7F9",
+            bubbleFromUserNubOffset: "bottom",
+            bubbleNubOffset: "bottom",
+            bubbleFromUserNubSize: 8,
+            bubbleNubSize: 8,
+            avatarBorderRadius: 0,
+            timestampFormat: "absolute"
+        },
+        renderingMiddlewareProps: {
+            disableTypingIndicatorMiddleware: true,
+            disableAvatarMiddleware: true,
+            disableActivityMiddleware: true
+        }
+    },
+    confirmationPaneProps: {
+        controlProps: {
+            hideSubtitle: true,
+            titleText: "Are you sure you want to leave the conversation?",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No"
+        },
+        styleProps: {
+            generalStyleProps: {
+                borderRadius: "0px",
+                fontFamily: "Segoe UI, Arial, sans-serif",
+                fontSize: "14px",
+                height: "100%",
+                padding: "10px 20px",
+                width: "100%",
+                backgroundColor: "#1b1a19"
+            },
+            titleStyleProps: {
+                fontFamily: "Segoe UI",
+                marginBottom: "15px",
+                color: "white"
+            },
+            confirmButtonStyleProps: {
+                borderRadius: "0",
+                backgroundColor: "#2266E3"
+            },
+            confirmButtonHoveredStyleProps: {
+                borderRadius: "0"
+            },
+            cancelButtonStyleProps: {
+                borderRadius: "0"
+            },
+            cancelButtonHoveredStyleProps: {
+                borderRadius: "0"
+            }
+        }
+    },
+    preChatSurveyPaneProps: {
+        controlProps: {
+            adaptiveCardHostConfig: "{\"fontFamily\":\"Segoe UI, Helvetica Neue, sans-serif\",\"containerStyles\":{\"default\":{\"foregroundColors\":{\"default\":{\"default\":\"#FFFFFF\",\"subtle\":\"#FFFFFF\"}},\"backgroundColor\":\"rgb(27, 26, 25)\"}},\"actions\":{\"actionsOrientation\":\"Vertical\",\"actionAlignment\":\"stretch\"}}",
+        },
+        styleProps: {
+            generalStyleProps: {
+                backgroundColor: "#1b1a19",
+                borderWidth: "1px"
+            },
+            adaptiveCardContainerStyleProps: {
+                backgroundColor: "#1b1a19",
+                borderStyle: "none"
+            },
+            customButtonStyleProps: {
+                backgroundColor: "#2266E3",
+                color: "#1b1a19"
+            }
+        }
+    },
+    footerProps: {
+        controlProps: {
+            hideAudioNotificationButton: true,
+            hideDownloadTranscriptButton: true,
+            hideEmailTranscriptButton: true,
+            leftGroup: {
+                children: [
+                    // eslint-disable-next-line quotes
+                    '{"$$typeof":"$$Symbol:react.element","type":"button","key":"1","ref":null,"props":{"role":"button","style":{"fontSize":"12px","margin":"10px","padding":"5px","fontFamily":"Segoe UI","cursor":"pointer","backgroundColor":"#0078D4","borderRadius":0,"borderStyle":"none","color":"white","fontWeight":400},"children":"Upload Attachment"},"_owner":null,"_store":{}}',
+                ]
+            },
+            rightGroup: {
+                children: [
+                    // eslint-disable-next-line quotes
+                    '{"$$typeof":"$$Symbol:react.element","type":"div","key":"1","ref":null,"props":{"style":{"fontSize":"11px","fontFamily":"Segoe UI","margin":"10px","padding":"2px"},"children":"© Microsoft 2022"},"_owner":null,"_store":{}}',
+                ]
+            }
+        },
+        styleProps: {
+            generalStyleProps: {
+                backgroundColor: "#1b1a19"
+            }
+        }
+    },
+    telemetryConfig: undefined
+};
+
+Custom.args = liveChatWidgetCustom;
