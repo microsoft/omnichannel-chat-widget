@@ -26,15 +26,14 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
 
             if (!isNullOrEmptyString(collectiorUriForTelemetry)) {
                 configuration.collectorUri = collectiorUriForTelemetry;
-            }
-            else{
+            } else {
                 if(TelemetryManager.InternalTelemetryData.environmentVersion == EnvironmentVersion.prod){
                     const orgUrl = TelemetryManager.InternalTelemetryData?.orgUrl;
                     if(!isNullOrUndefined(orgUrl)){
                         // If the given org is a Production EU org, modify the Aria collector uri
                         const region = getDomain(orgUrl);
 
-                        if (!isNullOrUndefined(region) && region === AriaTelemetryConstants.EU) {
+                        if (region === AriaTelemetryConstants.EU) {
                             configuration.collectorUri = AriaTelemetryConstants.EUROPE_ENDPOINT;
                         }
                     }

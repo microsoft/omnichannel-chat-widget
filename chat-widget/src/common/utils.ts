@@ -271,8 +271,9 @@ export const createTimer = (): ITimer => {
 // Returns the domain of the org
 export const getDomain = (hostValue: any): string => {
     for (let i = 0; i < AriaTelemetryConstants.lcwEUDomainNames.length; i++) {
-        if (hostValue.endsWith(AriaTelemetryConstants.lcwEUDomainNames[i]))
-         return AriaTelemetryConstants.EU;
+        if (hostValue.endsWith(AriaTelemetryConstants.lcwEUDomainNames[i])) {
+            return AriaTelemetryConstants.EU;
+        }
     }
     return AriaTelemetryConstants.Public;
-}
+};
