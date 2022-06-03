@@ -277,11 +277,11 @@ export class TelemetryHelper {
 
     public static logWebChatEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
         const telemetryEvent: ITelemetryEvent = {
-            eventName: TelemetryEvent.event,
+            eventName: TelemetryEvent.WebChatEvent,
             logLevel: logLevel,
             payload: {
                 ...payload,
-                type: TelemetryEvent.event,
+                type: TelemetryEvent.WebChatEvent,
                 scenarioType: ScenarioType.WEBCHAT
             } as WebChatTelemetryData
         };
