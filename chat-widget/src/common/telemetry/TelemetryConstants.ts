@@ -121,6 +121,7 @@ export enum TelemetryEvent {
     InvalidConfiguration = "InvalidConfiguration",
     SendTypingIndicatorSucceeded = "SendTypingIndicatorSucceeded",
     SendTypingIndicatorFailed = "SendTypingIndicatorFailed",
+    WebChatEvent = "WebChatEvent",
 
     PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
     ChatAlreadyTriggered = "ChatAlreadyTriggered",

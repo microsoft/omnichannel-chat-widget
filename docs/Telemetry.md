@@ -234,6 +234,11 @@ Refer to the below table to understand different critical telemetry events raise
 | -------- |-------- |
 |`ParseAdaptiveCardFailed`|On parsing adaptive card failure|
 
+#### Web Chat Events
+| Event Name | Scenario |
+| -------- |-------- |
+|`WebChatEvent`|On Web Chat specific events, see [BotFramework-WebChat](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/TELEMETRY.md)|
+
 ## Bring Your Own Logger
 
 Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as shown below.
