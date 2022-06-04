@@ -89,7 +89,6 @@ export class Constants {
 
     // reconnect chat
     public static readonly ReconnectIdAttributeName = "oc.reconnectid";
-    public static readonly redirectPageRequest = "redirectPageRequest";
 
     public static readonly LiveChatWidget = "LiveChatWidgetNew";
     public static readonly GuidPattern = "xx-x-4m-ym-xxx";

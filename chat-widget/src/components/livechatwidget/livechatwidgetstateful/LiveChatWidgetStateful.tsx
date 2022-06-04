@@ -110,7 +110,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         if (state.appStates.skipChatButtonRendering) {
             if (props.reconnectChatPaneProps?.reconnectId && !state.appStates.reconnectId) {
-                handleUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
+                handleUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
             } else {
                 getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
                     if (authReconnectId && !state.appStates.reconnectId) {
@@ -118,7 +118,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
                     } else {
                         const chatStartedSkippingChatButtonRendering: ICustomEvent = {
-                            eventName: "StartChatSkippingChatButtonRendering",
+                            eventName: BroadcastEvent.StartChatSkippingChatButtonRendering,
                         };
                         BroadcastService.postMessage(chatStartedSkippingChatButtonRendering);
                         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
