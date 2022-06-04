@@ -1,7 +1,8 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getIconText, getLocaleDirection, getTimestampHourMinute, isNullOrEmptyString, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, isNullOrEmptyString, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
 
+import { AriaTelemetryConstants } from "./Constants";
 import { cleanup } from "@testing-library/react";
 
 describe("utils unit test", () => {
@@ -245,5 +246,16 @@ describe("utils unit test", () => {
 
         const resultFalse = isNullOrEmptyString("test");
         expect(resultFalse).toBe(false);
+    });
+
+    it("Test getDomain", () => {
+        let resultTrue = getDomain("https://uniqueorgname.crm4.omnichannelengagementhub.com");
+        expect(resultTrue).toBe(AriaTelemetryConstants.EU);
+
+        resultTrue = getDomain("https://uniqueorgname.crm12.omnichannelengagementhub.com");
+        expect(resultTrue).toBe(AriaTelemetryConstants.EU);
+
+        const resultFalse = isNullOrEmptyString("https://uniqueorgname.crm10.omnichannelengagementhub.com");
+        expect(resultFalse).toBe(AriaTelemetryConstants.Public);
     });
 });
