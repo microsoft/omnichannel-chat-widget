@@ -122,6 +122,9 @@ Refer to the below table to understand different broadcast events raised during 
 | `InvalidAdaptiveCardFormat`       |On invalid adaptive card format |
 | `NewMessageReceived`              |On new message received |
 | `NewMessageSent`                  |On new user message sent |
+| `RedirectPageRequest`             |On redirecting unauthenticated reconnect chat |
+| `StartChatSkippingChatButtonRendering`      |On starting chat skipping chat button rendering |
+| `StartUnauthenticatedReconnectChat`      |On starting unauthenticated reconnect chat |
 
 ### Telemetry Events
 
