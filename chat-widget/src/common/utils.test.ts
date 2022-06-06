@@ -255,7 +255,7 @@ describe("utils unit test", () => {
         resultTrue = getDomain("https://uniqueorgname.crm12.omnichannelengagementhub.com");
         expect(resultTrue).toBe(AriaTelemetryConstants.EU);
 
-        const resultFalse = isNullOrEmptyString("https://uniqueorgname.crm10.omnichannelengagementhub.com");
+        const resultFalse = getDomain("https://uniqueorgname.crm10.omnichannelengagementhub.com");
         expect(resultFalse).toBe(AriaTelemetryConstants.Public);
     });
 });
