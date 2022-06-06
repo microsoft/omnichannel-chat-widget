@@ -1375,7 +1375,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         authClientFunction: undefined,
         isReconnectEnabled: undefined,
-        reconnectId: undefined
+        reconnectId: undefined,
+        redirectInSameWindow: undefined
     },
     styleProps: {
         generalStyles: {
