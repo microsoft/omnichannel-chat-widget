@@ -1,6 +1,5 @@
 import { Page } from "playwright";
 import fs from "fs";
-import { TestSettings } from "../../configuration/test-settings";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 
 export class BasePage {

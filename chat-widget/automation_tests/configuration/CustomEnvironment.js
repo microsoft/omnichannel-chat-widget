@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const PlaywrightEnvironment =
   require("jest-playwright-preset/lib/PlaywrightEnvironment").default;
-/* eslint-disable @typescript-eslint/no-var-requires */
-const fs = require("fs");
 const testDoneEventName = "test_done";
 class CustomEnvironment extends PlaywrightEnvironment {
     async handleTestEvent(event) {
