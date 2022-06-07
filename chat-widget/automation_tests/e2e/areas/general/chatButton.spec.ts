@@ -33,6 +33,5 @@ describe("live chat button", () => {
         const isLiveChatButtonVisible = await page.waitUntilLiveChatSelectorIsVisible(
             CustomLiveChatWidgetConstants.LiveChatButtonId
         );
-        expect(isLiveChatButtonVisible).toBe(true);
     });
 });
