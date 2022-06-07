@@ -10,6 +10,7 @@ export interface ILiveChatWidgetComponentOverrides {
     outOfOfficeHoursPane?: ReactNode | string;
     postChatLoadingPane?: ReactNode | string;
     postChatSurveyPane?: ReactNode | string;
+    preChatSurveyPane?: ReactNode | string;
     proactiveChatPane?: ReactNode | string;
     reconnectChatPane?: ReactNode | string;
     webChatContainer?: ReactNode | string;

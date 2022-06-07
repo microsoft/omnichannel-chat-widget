@@ -79,8 +79,9 @@ export const FooterStateful = (props: any) => {
             />
             <AudioNotificationStateful
                 audioSrc={audioNotificationProps?.audioSrc ?? NewMessageNotificationSoundBase64}
-                hideAudioNotificationButton={footerProps?.controlProps?.hideAudioNotificationButton ?? false}
-                isAudioMuted={state.appStates.isAudioMuted ?? false}
+                isAudioMuted={state.appStates.isAudioMuted === null ? 
+                    footerProps?.controlProps?.hideAudioNotificationButton ?? false :
+                    state.appStates.isAudioMuted ?? false}
             />
         </>
     );

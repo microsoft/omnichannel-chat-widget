@@ -12,3 +12,7 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added lcw event support
 - Fixed an issue where telemetry is not flowing correctly
 - Added support for conversation force closure
+- Added broadcast event support for startChat and endChat
+- Added custom componentOverride for preChat
+- Added Telemetry events for PostChat Loading Pane
+- Added web chat telemetry logger

@@ -36,10 +36,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
             if (conversationState.current === ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
-            } else if (conversationState.current === ConversationState.Postchat) {
-                dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT, payload: false });
-                await endChat(adapter);
-            } else if (conversationState.current === ConversationState.InActive) {
+            } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 await endChat(adapter, skipEndChatSDK, skipCloseChat);

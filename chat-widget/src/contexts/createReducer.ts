@@ -7,7 +7,6 @@ import { ILiveChatWidgetContext } from "./common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "./common/ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
-import { TelemetryManager } from "../common/telemetry/TelemetryManager";
 
 export const createReducer = () => {
     const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): ILiveChatWidgetContext => {
@@ -109,15 +108,6 @@ export const createReducer = () => {
                         ...state.domainStates,
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         postChatContext: action.payload as any
-                    }
-                };
-
-            case LiveChatWidgetActionType.SET_SHOULD_SHOW_POST_CHAT:
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        shouldShowPostChat: action.payload as boolean
                     }
                 };
 
