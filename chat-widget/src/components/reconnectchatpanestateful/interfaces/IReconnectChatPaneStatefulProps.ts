@@ -4,4 +4,5 @@ export interface IReconnectChatPaneStatefulProps extends IReconnectChatPaneProps
     authClientFunction?: string;
     isReconnectEnabled?: boolean;
     reconnectId?: string;
+    redirectInSameWindow?: boolean;
 }

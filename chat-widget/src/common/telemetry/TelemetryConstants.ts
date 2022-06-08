@@ -31,7 +31,10 @@ export enum BroadcastEvent {
     ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
     InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",
     NewMessageSent = "NewMessageSent",
-    NewMessageReceived = "NewMessageReceived"
+    NewMessageReceived = "NewMessageReceived",
+    RedirectPageRequest = "RedirectPageRequest",
+    StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
+    StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
 }
 
 // Events being logged
@@ -121,6 +124,7 @@ export enum TelemetryEvent {
     InvalidConfiguration = "InvalidConfiguration",
     SendTypingIndicatorSucceeded = "SendTypingIndicatorSucceeded",
     SendTypingIndicatorFailed = "SendTypingIndicatorFailed",
+    WebChatEvent = "WebChatEvent",
 
     PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
     ChatAlreadyTriggered = "ChatAlreadyTriggered",

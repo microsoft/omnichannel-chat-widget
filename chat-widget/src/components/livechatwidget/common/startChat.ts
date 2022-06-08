@@ -15,7 +15,7 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { createTimer } from "../../../common/utils";
-import { getReconnectIdForAuthenticatedChat } from "./reconnectChatHelper";
+import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconnectChat } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 
@@ -24,24 +24,28 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
         return;
     }
-
-    // Getting PreChat Survey Context
-    const parseToJson = false;
-    const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
-    const showPrechat = state.appStates.conversationState === ConversationState.ProactiveChat ?
-        preChatSurveyResponse && state.appStates.proactiveChatStates.proactiveChatEnablePrechat :
-        preChatSurveyResponse;
-    // Getting reconnectId for authenticated chat
-    const reconnectId = await getReconnectIdForAuthenticatedChat(props, chatSDK);
-    if (reconnectId) {
-        dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
-    } else if (showPrechat) {
-        dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
+    // Redirecting if unauthenticated reconnect chat expired
+    if (props.reconnectChatPaneProps?.reconnectId) {
+        await handleRedirectUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
     } else {
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-        await initStartChat(chatSDK, dispatch, setAdapter);
+        // Getting PreChat Survey Context
+        const parseToJson = false;
+        const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
+        const showPrechat = state.appStates.conversationState === ConversationState.ProactiveChat ?
+            preChatSurveyResponse && state.appStates.proactiveChatStates.proactiveChatEnablePrechat :
+            preChatSurveyResponse;
+        // Getting reconnectId for authenticated chat
+        const reconnectId = await getReconnectIdForAuthenticatedChat(props, chatSDK);
+        if (reconnectId) {
+            dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
+        } else if (showPrechat) {
+            dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
+        } else {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+            await initStartChat(chatSDK, dispatch, setAdapter);
+        }
     }
 };
 
