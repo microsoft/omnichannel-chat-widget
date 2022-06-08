@@ -11,6 +11,11 @@ import { clientDataStoreProvider } from "./Common/clientDataStoreProvider";
 import { memoryDataStore } from "./Common/MemoryDataStore";
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
+// Below version numbers will help us to troubleshoot issues with specific package
+import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
+import { version as chatWidgetVersion } from "../package.json";
+import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
+
 let liveChatWidgetProps;
 
 const main = async () => {
@@ -42,7 +47,12 @@ const main = async () => {
             chatSDK: chatSDK,
             chatConfig: chatConfig,
             liveChatContextFromCache: widgetStateJson,
-            contextDataStore: clientDataStoreProvider()
+            contextDataStore: clientDataStoreProvider(),
+            telemetryConfig: {
+                chatWidgetVersion: chatWidgetVersion,
+                chatComponentVersion: chatComponentVersion,
+                OCChatSDKVersion: chatSdkVersion
+            }
         };
 
         ReactDOM.render(

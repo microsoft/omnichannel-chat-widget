@@ -7,19 +7,11 @@ import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetryConfig";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
-import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
 import { defaultAriaConfig } from "../../../common/telemetry/defaultConfigs/defaultAriaConfig";
 import { defaultInternalTelemetryData } from "../../../common/telemetry/defaultConfigs/defaultTelemetryInternalData";
 import { defaultTelemetryConfiguration } from "../../../common/telemetry/defaultConfigs/defaultTelemetryConfiguration";
 
 export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    let widgetPackageInfo;
-    try {
-        widgetPackageInfo = require("@microsoft/omnichannel-chat-widget/package.json");
-    } catch (error) {
-        widgetPackageInfo = "0.0.0-0";
-    }
     const telemetryConfig: ITelemetryConfig = { ...defaultTelemetryConfiguration, ...props.telemetryConfig };
     if (props.liveChatContextFromCache?.domainStates?.telemetryInternalData) {
         TelemetryManager.InternalTelemetryData = props.liveChatContextFromCache?.domainStates?.telemetryInternalData;
@@ -34,14 +26,14 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
             telemetryData = TelemetryHelper.addChatConfigDataToTelemetry(props?.chatConfig, telemetryData);
         }
         telemetryData = TelemetryHelper.addWidgetDataToTelemetry(telemetryConfig, telemetryData);
-        telemetryData.OCChatSDKVersion = chatSdkVersion;
-        telemetryData.chatComponentVersion = chatComponentVersion;
-        telemetryData.chatWidgetVersion = widgetPackageInfo;
+        telemetryData.OCChatSDKVersion = telemetryConfig.OCChatSDKVersion ?? "0.0.0-0";
+        telemetryData.chatComponentVersion = telemetryConfig.chatComponentVersion ?? "0.0.0-0";
+        telemetryData.chatWidgetVersion = telemetryConfig.chatWidgetVersion ?? "0.0.0-0";
         telemetryData.orgId = props.chatSDK?.omnichannelConfig?.orgId;
         telemetryData.widgetId = props.chatSDK?.omnichannelConfig?.widgetId;
         telemetryData.orgUrl = props.chatSDK?.omnichannelConfig?.orgUrl;
         TelemetryManager.InternalTelemetryData = telemetryData;
-        
+
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
     }
     RegisterLoggers();
