@@ -1,3 +1,4 @@
+import { Object } from "core-js";
 import { Constants, LocaleConstants } from "./Constants";
 
 import { ITimer } from "./interfaces/ITimer";
@@ -266,4 +267,62 @@ export const createTimer = (): ITimer => {
             return ms;
         }
     };
+};
+
+export const transformCustomContext = (customContext: any): string  => {
+    /**
+    * Constructs the Default Value Mapping for the Custom properties Bag
+    */
+    const getCustomPropertiesDefaultValueMapping = (): object => {
+        return {
+            "value": null,
+            "isDisplayable": false
+        };
+    };
+
+    /**
+     * Constructs the Custom properties Bag for a given Context Item Key's Values
+     * * @param {object} valueDictionary - Value Dictionary of user passed properties
+     */
+    const getCustomPropertiesBag = (valueDictionary: object): any => {
+        const customProperties = getCustomPropertiesDefaultValueMapping();
+        for (const key of Object.keys(customProperties)) {    
+            if (key in valueDictionary) {
+                const value = Object.getOwnPropertyDescriptor(valueDictionary, key).value;                
+                if (typeof value === "function" || (typeof value === "object" && value !== null)) {
+                    continue;
+                }
+                Object.defineProperty(customProperties, key, value);
+            }
+        }
+
+        if ("value" in customProperties)
+            return customProperties;
+        else
+            return null;
+    };
+    
+    const dataToStore: { [key: string]: string | object } = {}; 
+    if (customContext) {
+        for (const key of Object.keys(customContext)) {
+            const value = customContext[key];
+            let data = {};
+            if (typeof value === "function" || value === null) {
+                continue;
+            }
+            if (typeof value === "object") {
+                data = getCustomPropertiesBag(value);
+            }
+            // To maintain backwward compatibility ith the Old contextProvider contract.
+            else {
+                data = getCustomPropertiesBag(
+                    { "value": value }
+                );
+            }
+            if (data) {
+                dataToStore[key] = data;
+            }
+        }
+    }
+    return dataToStore.toString();
 };
