@@ -35,6 +35,7 @@ export enum BroadcastEvent {
     RedirectPageRequest = "RedirectPageRequest",
     StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
     StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
+    SetCustomContext = "SetCustomContext"
 }
 
 // Events being logged
@@ -139,7 +140,8 @@ export enum TelemetryEvent {
     ReconnectChatMinimize = "ReconnectChatMinimize",
     
     MessageSent = "MessageSent",
-    MessageReceived = "MessageReceived"
+    MessageReceived = "MessageReceived",
+    CustomContextReceived = "CustomContextReceived"
 }
 
 export interface TelemetryInput {

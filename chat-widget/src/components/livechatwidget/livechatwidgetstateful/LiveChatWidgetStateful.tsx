@@ -2,7 +2,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getLocaleDirection } from "../../../common/utils";
+import { createTimer, getLocaleDirection, transformCustomContext } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat } from "../common/startChat";
 import {
@@ -101,9 +101,19 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Initialize global dir
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
+        
+        let optionalParams = null;
+        if (state.domainStates?.customContext) {
+            optionalParams = {
+                customContext: state.domainStates.customContext
+            };
+        }
 
         if (state.domainStates?.chatToken) {
-            const optionalParams = { liveChatContext: { chatToken: state.domainStates?.chatToken } };
+            optionalParams = Object.assign({}, optionalParams, { liveChatContext: { chatToken: state.domainStates?.chatToken } });
+        }
+
+        if (optionalParams) {
             initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
         }
     }, []);
@@ -131,6 +141,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [state.appStates.skipChatButtonRendering]);
 
     useEffect(() => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.SetCustomContext).subscribe((msg: ICustomEvent) => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.CustomContextReceived,
+                Description: "CustomContext received."
+            });
+
+            dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: transformCustomContext(msg.payload) });
+        });
+        
         BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,

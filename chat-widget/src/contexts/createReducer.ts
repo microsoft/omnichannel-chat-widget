@@ -83,6 +83,15 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_CUSTOM_CONTEXT:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        customContext: action.payload as string
+                    }
+                };
+
             case LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT:
                 return {
                     ...state,
