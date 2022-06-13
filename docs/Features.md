@@ -45,28 +45,34 @@ The Proactive Chat Pane is a component designed to be a pop-up after a certain t
 
 The "StartProactiveChat" event can be released through implementation of LiveChatWidget SDK method call. Below is an example of how this can be implemented and initiated:
 ```js
-class ProactiveChatNotificationConfig {
-    message?: string;
-}
 
 class LiveChatWidgetSDK {
-    public startProactiveChat(notificationUIConfig: ProactiveChatNotificationConfig, showPrechat: boolean, inNewWindow: boolean) {
+    public startProactiveChat(notificationConfig: any, enablePreChat: boolean | null = null, options: any) => {
+        const message = {
+        } as any;
+        if (notificationConfig) {
+            message.notificationConfig = notificationConfig;
+        }
+        if (enablePreChat) {
+            message.enablePreChat = enablePreChat;
+        }
+        if (options != null) {
+            message.inNewWindow = options.inNewWindow;
+        }
         const startProactiveChatEvent: ICustomEvent = {
             eventName: "StartProactiveChat",
-            payload: {
-                bodyTitle: (notificationUIConfig && notificationUIConfig.message) ? notificationUIConfig.message : "",
-                showPrechat: showPrechat,
-                inNewWindow: inNewWindow
-            }
+            payload: message
         };
         BroadcastService.postMessage(startProactiveChatEvent);
+        postIframeMessage(message);
     }
+}
 ```
 
 After implementing and initializing startProactiveChat() method, the customer can pass 3 optional parameters:
-1. "bodyTitle": a string value to customize the body text that appears on the proactive chat pane,
-2. "showPrechat": a boolean value, whether to show the preChat survey after starting proactive chat,
-3. "inNewWindow": a boolean value, whether to start the proactive chat in popout mode. If this value is set to true, then the customer also needs to subscribe to a broadcast event "StartPopoutChat", as this is what will be released if they accept the invitation and start proactive chat.
+1. "notificationConfig": an object that contains a string value to customize the body text that appears on the proactive chat pane,
+2. "enablePreChat": a boolean value, whether to enable the preChat survey after starting proactive chat,
+3. "options": an object that contains a boolean value, whether to start the proactive chat in popout mode. If this value is set to true, then the customer also needs to subscribe to a broadcast event "StartPopoutChat", as this is what will be released if they accept the invitation and start proactive chat.
 
 After the "StartProactiveChat" event gets released by the customer, the proactive chat pane pops up that has a default timeout of 1 minute. This can be overriden by setting "ProactiveChatInviteTimeoutInMs" as part of props interface. After the timeout expires, the proactive chat pane will disappear and be replaced by the chat button.
 
@@ -75,7 +81,7 @@ The widget itself is agnostic of whether the chat is authenticated or not. The o
 
 ### Reconnect Chat
 There are 2 types of chat reconnect:
-1. Unauthenticated chat: the customer gets the reconnect link after the chat starts that can be used later to continue the previous conversation, if the customer closes the browser tab. The reconnect link will be valid for the time duration set in the reconnect settings.
+1. Unauthenticated chat: the customer gets the reconnect id after the chat starts that can be used later to continue the previous conversation, if the customer closes the browser tab. The reconnect id will be valid for the time duration set in the reconnect settings. After the time duration, or if chat has ended, the customer will be redirected to the redirection page set in the reconnect settings, or if redirection page is not set in the reconnect settings, then a new chat will be initiated.
 2. Authenticated chat: When the customer closes the browser tab after chat has started, they will have the option to continue the previous conversation or start a new conversation. The ```<ReconnectChatPane/>``` will show up in this case.
 
 > :warning: Chat reconnect may not be used if chat has ended.
