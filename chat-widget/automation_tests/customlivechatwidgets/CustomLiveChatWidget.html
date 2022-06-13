@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Live Chat Widget</title>
+</head>
+
+<body style="margin: 0">
+  <script>
+    function lcw() {
+      return {
+        styleProps: {
+          generalStyles: {
+            width: "360px",
+            height: "560px",
+            bottom: "20px",
+            right: "20px"
+          }
+        },
+        chatButtonProps: {
+          styleProps: {
+            generalStyleProps: {
+              position: "absolute"
+            }
+          }
+        }
+      }
+    }
+
+    function setData(key, data, type) {
+      try {
+        if (type === "localStorage") {
+          localStorage.setItem(key, value);
+        } else {
+          sessionStorage.setItem(key, value);
+        }
+      } catch (error) {
+        console.error("logging to first party failed!")
+      }
+    }
+
+    function getData(key, type) {
+      if (type == "localStorage") {
+        localStorage.getItem(key);
+      } else {
+        sessionStorage.getItem(key);
+      }
+    }
+  </script>
+  <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
+  <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" data-org-id="7d223c8d-6ef4-4eb9-9d96-47b5eea8afd2" data-app-id="aa10489e-a0c3-44d6-967c-f0a533653962"
+    data-org-url="https://unq7d223c8d6ef44eb99d9647b5eea8a-crm.oc.crmlivetie.com" set-data-callback="SetData" get-data-callback="GetData"></script>
+</body>
+
+</html>

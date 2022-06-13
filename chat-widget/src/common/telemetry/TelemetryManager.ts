@@ -73,7 +73,8 @@ export const RegisterLoggers = () => {
     const logTelemetry = (telemetryEvent: ICustomEvent) => {
         loggers.map((logger: IChatSDKLogger) => {
             const logLevel = (telemetryEvent as ITelemetryEvent).logLevel ?? LogLevel.INFO;
-            logger.log(logLevel, parseInput(telemetryEvent?.payload));
+            const scenarioType = (telemetryEvent as ITelemetryEvent).payload?.scenarioType ?? ScenarioType.UNDEFINED;
+            logger.log(logLevel, parseInput(telemetryEvent?.payload, scenarioType));
         });
     };
     return registerLoggers();
