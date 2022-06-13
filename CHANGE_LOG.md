@@ -12,3 +12,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added lcw event support
 - Fixed an issue where telemetry is not flowing correctly
 - Added support for conversation force closure
+- Updated ARIA Collector URLs for EU vs Non-EU telemetry data to comply with EUDB requirements

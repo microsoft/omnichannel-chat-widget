@@ -190,10 +190,10 @@ export enum ChatSDKError {
 }
 
 export enum EnvironmentVersion {
-    prod = 'prod',
-    dogfood = 'df',
-    int = 'int',
-    test = 'test'
+    prod = "prod",
+    dogfood = "df",
+    int = "int",
+    test = "test"
 }
 
 export class TranscriptConstants {

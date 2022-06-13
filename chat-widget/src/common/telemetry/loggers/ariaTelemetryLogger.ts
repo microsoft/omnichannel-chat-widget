@@ -27,9 +27,9 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
             if (!isNullOrEmptyString(collectiorUriForTelemetry)) {
                 configuration.collectorUri = collectiorUriForTelemetry;
             } else {
-                if(TelemetryManager.InternalTelemetryData.environmentVersion == EnvironmentVersion.prod){
+                if (TelemetryManager.InternalTelemetryData.environmentVersion == EnvironmentVersion.prod) {
                     const orgUrl = TelemetryManager.InternalTelemetryData?.orgUrl;
-                    if(!isNullOrUndefined(orgUrl)){
+                    if (!isNullOrUndefined(orgUrl)){
                         // If the given org is a Production EU org, modify the Aria collector uri
                         const region = getDomain(orgUrl);
 
