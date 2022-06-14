@@ -2,7 +2,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getLocaleDirection, transformCustomContext } from "../../../common/utils";
+import { createTimer, getLocaleDirection } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat } from "../common/startChat";
 import {
@@ -141,13 +141,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [state.appStates.skipChatButtonRendering]);
 
     useEffect(() => {
+        // Add the custom context on receiving the SetCustomContext event
         BroadcastService.getMessageByEventName(BroadcastEvent.SetCustomContext).subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CustomContextReceived,
                 Description: "CustomContext received."
             });
 
-            dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: transformCustomContext(msg.payload) });
+            dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
         });
         
         BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {

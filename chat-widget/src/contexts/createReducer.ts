@@ -88,7 +88,7 @@ export const createReducer = () => {
                     ...state,
                     domainStates: {
                         ...state.domainStates,
-                        customContext: action.payload as string
+                        customContext: action.payload as any
                     }
                 };
 

@@ -189,6 +189,9 @@ export class TelemetryConstants {
         case TelemetryEvent.PreChatSurveyStartChatMethodFailed:
         case TelemetryEvent.HeaderCloseButtonClicked:
         case TelemetryEvent.HeaderMinimizeButtonClicked:
+        case TelemetryEvent.MessageSent:
+        case TelemetryEvent.MessageReceived:
+        case TelemetryEvent.CustomContextReceived:
             return ScenarioType.ACTIONS;
 
         case TelemetryEvent.StartChatSDKCall:

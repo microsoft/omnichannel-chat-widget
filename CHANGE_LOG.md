@@ -16,3 +16,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added custom componentOverride for preChat
 - Added Telemetry events for PostChat Loading Pane
 - Added web chat telemetry logger
+- Added custom context support
