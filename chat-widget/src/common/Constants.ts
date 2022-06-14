@@ -188,6 +188,13 @@ export enum ChatSDKError {
     WidgetUseOutsideOperatingHour = "WidgetUseOutsideOperatingHour"
 }
 
+export enum EnvironmentVersion {
+    prod = "prod",
+    dogfood = "df",
+    int = "int",
+    test = "test"
+}
+
 export class TranscriptConstants {
     public static readonly ChatTranscriptsBodyColor = "#F5F5F5";
     public static readonly TranscriptMessageEmojiMessageType = "http://schema.skype.com/emoji";
@@ -199,4 +206,26 @@ export class TranscriptConstants {
     public static readonly InternalMode = "internal";
     public static readonly AgentDialogColor = "#2266E3";
     public static readonly AgentFontColor = "white";
+}
+
+export class AriaTelemetryConstants {
+    // Aria Endpoint for different environment types.
+    public static readonly GERMANY_ENDPOINT: string = "https://de.pipe.aria.microsoft.com/Collector/3.0/";
+    public static readonly GCCH_ENDPOINT: string = "https://tb.pipe.aria.microsoft.com/Collector/3.0/";
+    public static readonly DOD_ENDPOINT: string = "https://pf.pipe.aria.microsoft.com/Collector/3.0";
+    public static readonly EUROPE_ENDPOINT: string = "https://eu-mobile.events.data.microsoft.com/Collector/3.0/"; // EUDB Collector URL
+    public static readonly MOONCAKE_ENDPOINT: string = ""; // Add MoonCake ARIA Endpoint whenever available
+
+    // Environment types
+    public static readonly Public: string = "Public";
+    public static readonly EU: string = "Europe";
+
+    // EUR: crm4; FRA: crm12; GER: crm16; CHE: crm17; NOR: crm19
+    public static readonly lcwEUDomainNames : Array<string> = [
+        "crm4.omnichannelengagementhub.com",
+        "crm12.omnichannelengagementhub.com",
+        "crm16.omnichannelengagementhub.com",
+        "crm17.omnichannelengagementhub.com",
+        "crm19.omnichannelengagementhub.com"
+    ];
 }

@@ -1,5 +1,6 @@
+import { AriaTelemetryConstants, EnvironmentVersion } from "../../../../src/common/Constants";
 import { LogLevel, TelemetryInput } from "../TelemetryConstants";
-import { isNullOrEmptyString, isNullOrUndefined } from "../../utils";
+import { getDomain, isNullOrEmptyString, isNullOrUndefined } from "../../utils";
 
 import AWTEventProperties from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/AWTEventProperties";
 import { AWTLogConfiguration } from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/DataModels";
@@ -9,6 +10,7 @@ import { AWTPiiKind } from "@microsoft/omnichannel-chat-sdk/lib/external/aria/co
 import { Constants } from "../../Constants";
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
 import { TelemetryHelper } from "../TelemetryHelper";
+import { TelemetryManager } from "../TelemetryManager";
 
 export const ariaTelemetryLogger = (ariaTelemetryKey: string,
     disabledCookieUsage: boolean,
@@ -24,7 +26,20 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
 
             if (!isNullOrEmptyString(collectiorUriForTelemetry)) {
                 configuration.collectorUri = collectiorUriForTelemetry;
+            } else {
+                if (TelemetryManager.InternalTelemetryData.environmentVersion == EnvironmentVersion.prod) {
+                    const orgUrl = TelemetryManager.InternalTelemetryData?.orgUrl;
+                    if (!isNullOrUndefined(orgUrl)) {
+                        // If the given org is a Production EU org, modify the Aria collector uri
+                        const region = getDomain(orgUrl);
+
+                        if (region === AriaTelemetryConstants.EU) {
+                            configuration.collectorUri = AriaTelemetryConstants.EUROPE_ENDPOINT;
+                        }
+                    }
+                }
             }
+            
             try {
                 _logger = AWTLogManager.initialize(ariaTelemetryKey, configuration);
                 if (_logger === undefined) {
