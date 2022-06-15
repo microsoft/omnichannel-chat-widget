@@ -1,0 +1,50 @@
+{
+  "rules": {
+    "indent": [true],
+    "member-access": true,
+    "member-ordering": [true, "variables-before-functions"],
+    "no-angle-bracket-type-assertion": true,
+    "no-any": true,
+    "no-arg": true,
+    "no-construct": true,
+    "no-parameter-properties": false,
+    "no-debugger": true,
+    "no-eval": true,
+    "no-inferrable-types": [true, "ignore-params", "ignore-properties"],
+    "no-internal-module": true,
+    "no-require-imports": true,
+    "no-shadowed-variable": true,
+    "no-string-literal": true,
+    "no-trailing-whitespace": [true, "ignore-comments"],
+    "no-var-keyword": true,
+    "no-var-requires": true,
+    "quotemark": [true, "double", "jsx-double", "avoid-escape"],
+    "radix": true,
+    "semicolon": [true, "always"],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "never",
+        "singline": "never"
+      }
+    ],
+    "triple-equals": [true, "allow-null-check"],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-module",
+      "check-operator",
+      "check-separator",
+      "check-type",
+      "check-typecast"
+    ],
+    "max-line-length": {
+      "severity": "warning",
+      "options": {
+        "limit": 160,
+        "ignore-pattern": "^import [^,]+ from |^export | implements "
+      }
+    }
+  }
+}
