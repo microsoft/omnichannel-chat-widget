@@ -102,8 +102,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
-        if (state.domainStates?.chatToken) {
-            const optionalParams = { liveChatContext: { chatToken: state.domainStates?.chatToken } };
+        if (state.domainStates?.liveChatContext) {
+            const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
             initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
         }
     }, []);

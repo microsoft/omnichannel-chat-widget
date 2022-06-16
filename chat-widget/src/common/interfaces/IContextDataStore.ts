@@ -8,7 +8,8 @@ export interface IContextDataStore {
     /**
      * setData: Set data to data store
      */
-    setData: (key: string, value: string) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setData: (key: string, value: any, type: string) => void;
 
     /**
      * removeData: Remove data from data store by key

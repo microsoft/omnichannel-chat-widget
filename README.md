@@ -58,7 +58,7 @@ import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
 //Below version numbers will help us to troubleshoot issues with specific package
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
-import { version as chatWidgetVersion } from "../package.json";
+import { version as chatWidgetVersion } from "@microsoft/omnichannel-chat-widget/package.json";
 import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 
 const render = async () => {
@@ -83,7 +83,12 @@ const render = async () => {
             }
         },
         chatSDK: chatSDK, // mandatory
-        chatConfig: chatConfig // mandatory
+        chatConfig: chatConfig, // mandatory
+         telemetryConfig: { //mandatory for telemetry
+            chatWidgetVersion: chatWidgetVersion,
+            chatComponentVersion: chatComponentVersion,
+            OCChatSDKVersion: chatSdkVersion
+        }
     };
 
     ReactDOM.render(
