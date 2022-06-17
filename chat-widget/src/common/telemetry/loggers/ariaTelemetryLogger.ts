@@ -1,4 +1,3 @@
-import { AriaTelemetryConstants, EnvironmentVersion } from "../../../../src/common/Constants";
 import { LogLevel, TelemetryInput } from "../TelemetryConstants";
 import { getDomain, isNullOrEmptyString, isNullOrUndefined } from "../../utils";
 
@@ -7,7 +6,7 @@ import { AWTLogConfiguration } from "@microsoft/omnichannel-chat-sdk/lib/externa
 import AWTLogManager from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/AWTLogManager";
 import AWTLogger from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/AWTLogger";
 import { AWTPiiKind } from "@microsoft/omnichannel-chat-sdk/lib/external/aria/common/Enums";
-import { Constants } from "../../Constants";
+import { Constants, AriaTelemetryConstants, EnvironmentVersion  } from "../../Constants";
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
 import { TelemetryHelper } from "../TelemetryHelper";
 import { TelemetryManager } from "../TelemetryManager";
