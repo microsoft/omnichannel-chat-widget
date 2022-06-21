@@ -6,7 +6,7 @@ import { AWTLogConfiguration } from "@microsoft/omnichannel-chat-sdk/lib/externa
 import AWTLogManager from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/AWTLogManager";
 import AWTLogger from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/AWTLogger";
 import { AWTPiiKind } from "@microsoft/omnichannel-chat-sdk/lib/external/aria/common/Enums";
-import { Constants, AriaTelemetryConstants, EnvironmentVersion  } from "../../Constants";
+import { Constants, AriaTelemetryConstants, EnvironmentVersion } from "../../Constants";
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
 import { TelemetryHelper } from "../TelemetryHelper";
 import { TelemetryManager } from "../TelemetryManager";
@@ -38,7 +38,7 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
                     }
                 }
             }
-            
+
             try {
                 _logger = AWTLogManager.initialize(ariaTelemetryKey, configuration);
                 if (_logger === undefined) {
@@ -53,18 +53,23 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
 
     const ariaLogger: IChatSDKLogger = {
         log: (logLevel: LogLevel, telemetryInput: TelemetryInput): void => {
-            let property;
-            const eventProperties = new AWTEventProperties();
-            const event = TelemetryHelper.buildTelemetryEvent(logLevel, telemetryInput);
-            eventProperties.setName(telemetryInput.scenarioType);
-            for (const key of Object.keys(event)) {
-                property = typeof (event[key]) === "object" ? JSON.stringify(event[key]) : event[key];
-                eventProperties.setProperty(key, property);
+            try {
+                let property;
+                const eventProperties = new AWTEventProperties();
+                const event = TelemetryHelper.buildTelemetryEvent(logLevel, telemetryInput);
+                eventProperties.setName(telemetryInput.scenarioType);
+                for (const key of Object.keys(event)) {
+                    property = typeof (event[key]) === "object" ? JSON.stringify(event[key]) : event[key];
+                    eventProperties.setProperty(key, property);
+                }
+                eventProperties.setPropertyWithPii(ariaTelemetryApplicationName,
+                    Constants.LiveChatWidget,
+                    AWTPiiKind.GenericData);
+                logger() ? logger().logEvent(eventProperties) : console.log("Unable to initialize aria logger");
             }
-            eventProperties.setPropertyWithPii(ariaTelemetryApplicationName,
-                Constants.LiveChatWidget,
-                AWTPiiKind.GenericData);
-            logger() ? logger().logEvent(eventProperties) : console.log("Unable to initialize aria logger");
+            catch (error) {
+                console.error("Error in logging telemetry to Aria logger:" + error);
+            }
         },
         dispose: () => {
             AWTLogManager.flush(function () { console.log("Aria logger disposed"); });
