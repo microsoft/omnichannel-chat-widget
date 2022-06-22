@@ -145,6 +145,7 @@ export enum TelemetryEvent {
 export interface TelemetryInput {
     scenarioType: ScenarioType;
     payload: TelemetryData;
+    event?: any;
 }
 
 export class TelemetryConstants {
