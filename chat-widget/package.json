@@ -16,7 +16,8 @@
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js",
       "types": "./lib/types/index.d.ts"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
@@ -71,13 +72,9 @@
     "webpack": "^4.44.2",
     "webpack-cli": "^4.9.2"
   },
-  "peerDependencies": {
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
-  },
   "dependencies": {
     "@fluentui/react": "^8.49.1",
-    "@microsoft/omnichannel-chat-components": "0.1.0-main.2eda736",
+    "@microsoft/omnichannel-chat-components": "^0.1.0-main.ae27766",
     "@microsoft/omnichannel-chat-sdk": "1.0.1-main.077d17c",
     "abort-controller-es5": "^2.0.1",
     "dompurify": "^2.3.4",

@@ -51,7 +51,7 @@ export interface ILiveChatWidgetProps {
     proactiveChatPaneProps?: IProactiveChatPaneStatefulProps;
     reconnectChatPaneProps?: IReconnectChatPaneStatefulProps;
     styleProps?: ILiveChatWidgetStyleProps;
-    telemetryConfig?: ITelemetryConfig;
+    telemetryConfig: ITelemetryConfig;
     webChatContainerProps?: IWebChatContainerStatefulProps;
     liveChatContextFromCache?: ILiveChatWidgetContext;
     contextDataStore?: IContextDataStore;

@@ -16,7 +16,8 @@
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js",
       "types": "./lib/types/index.d.ts"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
@@ -63,10 +64,6 @@
     "react-test-renderer": "^17.0.2",
     "storybook-addon-playwright": "^4.9.2",
     "typescript": "^4.4.4"
-  },
-  "peerDependencies": {
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
   },
   "dependencies": {
     "@fluentui/react": "^8.46.0",
