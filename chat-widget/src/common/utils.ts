@@ -1,6 +1,4 @@
-import { Object } from "core-js";
-import { Constants, LocaleConstants } from "./Constants";
-
+import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 
@@ -267,4 +265,14 @@ export const createTimer = (): ITimer => {
             return ms;
         }
     };
+};
+
+// Returns the domain of the org
+export const getDomain = (hostValue: any): string => {
+    for (let i = 0; i < AriaTelemetryConstants.lcwEUDomainNames.length; i++) {
+        if (hostValue.endsWith(AriaTelemetryConstants.lcwEUDomainNames[i])) {
+            return AriaTelemetryConstants.EU;
+        }
+    }
+    return AriaTelemetryConstants.Public;
 };

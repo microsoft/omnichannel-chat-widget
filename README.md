@@ -58,7 +58,7 @@ import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
 //Below version numbers will help us to troubleshoot issues with specific package
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
-import { version as chatWidgetVersion } from "../package.json";
+import { version as chatWidgetVersion } from "@microsoft/omnichannel-chat-widget/package.json";
 import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 
 const render = async () => {
@@ -83,7 +83,12 @@ const render = async () => {
             }
         },
         chatSDK: chatSDK, // mandatory
-        chatConfig: chatConfig // mandatory
+        chatConfig: chatConfig, // mandatory
+         telemetryConfig: { //mandatory for telemetry
+            chatWidgetVersion: chatWidgetVersion,
+            chatComponentVersion: chatComponentVersion,
+            OCChatSDKVersion: chatSdkVersion
+        }
     };
 
     ReactDOM.render(
@@ -224,4 +229,5 @@ const customizedFooterProp: IFooterProps = {
 [Create LCW widget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md)\
 [Omnichannel Features](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Features.md)\
 [How to Add Visual Regression Tests](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/VisualRegressionTestingGuide.md)\
-[Security](https://github.com/microsoft/omnichannel-chat-widget/blob/main/SECURITY.md)
+[Security](https://github.com/microsoft/omnichannel-chat-widget/blob/main/SECURITY.md)\
+[Third Party Cookie Support](https://github.com/microsoft/omnichannel-chat-widget/blob/main/TPC.md)

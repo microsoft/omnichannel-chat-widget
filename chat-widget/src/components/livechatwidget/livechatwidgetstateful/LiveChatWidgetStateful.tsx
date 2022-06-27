@@ -103,17 +103,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
         
         let optionalParams = null;
-        if (state.domainStates?.customContext) {
-            optionalParams = {
-                customContext: state.domainStates.customContext
-            };
-        }
-
-        if (state.domainStates?.chatToken) {
-            optionalParams = Object.assign({}, optionalParams, { liveChatContext: { chatToken: state.domainStates?.chatToken } });
-        }
-
-        if (optionalParams) {
+      
+        if (state.domainStates?.liveChatContext) {
+            const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
             initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
         }
     }, []);
