@@ -31,7 +31,7 @@ const liveChatWidgetDefaultProps: ILiveChatWidgetProps = {
             left: "20px"
         }
     },
-    telemetryConfig: undefined
+    telemetryConfig: { OCChatSDKVersion: "", chatComponentVersion: "", chatWidgetVersion: "" }
 };
 
 Default.args = liveChatWidgetDefaultProps;
@@ -110,7 +110,7 @@ const liveChatWidgetDefaultWithSurveyProps: ILiveChatWidgetProps = {
             }
         }
     },
-    telemetryConfig: undefined
+    telemetryConfig: { OCChatSDKVersion: "", chatComponentVersion: "", chatWidgetVersion: "" }
 };
 
 DefaultWithSurvey.args = liveChatWidgetDefaultWithSurveyProps;
@@ -348,7 +348,7 @@ const liveChatWidgetCustom: ILiveChatWidgetProps = {
             }
         }
     },
-    telemetryConfig: undefined
+    telemetryConfig: { OCChatSDKVersion: "", chatComponentVersion: "", chatWidgetVersion: "" }
 };
 
 Custom.args = liveChatWidgetCustom;

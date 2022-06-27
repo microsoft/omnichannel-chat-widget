@@ -68,7 +68,7 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
                 logger() ? logger().logEvent(eventProperties) : console.log("Unable to initialize aria logger");
             }
             catch (error) {
-                console.error("Error in logging telemetry to Aria logger:" + error);
+                console.log("Error in logging telemetry to Aria logger:" + error);
             }
         },
         dispose: () => {
