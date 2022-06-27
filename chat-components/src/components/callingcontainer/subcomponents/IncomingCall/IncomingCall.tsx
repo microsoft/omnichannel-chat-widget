@@ -9,7 +9,7 @@ import { IIncomingCallProps } from "./interfaces/IIncomingCallProps";
 import { decodeComponentString } from "../../../../common/decodeComponentString";
 import { defaultIncomingCallProps } from "./common/defaultProps/defaultIncomingCallProps";
 import { processCustomComponents } from "../../../../common/utils";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 function IncomingCall(props: IIncomingCallProps) {
 
@@ -93,6 +93,36 @@ function IncomingCall(props: IIncomingCallProps) {
         if (props.controlProps?.onAudioCallClick) {
             props.controlProps?.onAudioCallClick();
         }
+    }, []);
+
+    useEffect(() => {
+        const declineCallShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === "D";
+        const acceptAudioCallShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === "S";
+        const acceptVideoCallShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === "A";
+
+        const handler = (e: KeyboardEvent) => {
+            if (declineCallShortcut(e)) {
+                handleDeclineCallClick();
+            } else if (acceptAudioCallShortcut(e)) {
+                handleAudioCallClick();
+            } else if (acceptVideoCallShortcut(e)) {
+                handleVideoCallClick();
+            }
+        };
+
+        const ignoreDefault = (e: KeyboardEvent) => {
+            if (declineCallShortcut(e) || acceptAudioCallShortcut(e) || acceptVideoCallShortcut(e)) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener("keyup", handler);
+        window.addEventListener("keydown", ignoreDefault);
+
+        return () => {
+            window.removeEventListener("keyup", handler);
+            window.removeEventListener("keydown", ignoreDefault);
+        };
     }, []);
 
     return (

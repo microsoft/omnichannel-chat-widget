@@ -55,8 +55,8 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
         log: (logLevel: LogLevel, telemetryInput: TelemetryInput): void => {
             try {
                 let property;
-                const event = telemetryInput?.event?.eventDetails;
-                const eventProperties = new AWTEventProperties("test");
+                const event = telemetryInput?.telemetryInfo;
+                const eventProperties = new AWTEventProperties();
                 eventProperties.setName(telemetryInput.scenarioType);
                 for (const key of Object.keys(event)) {
                     property = typeof (event[key]) === "object" ? JSON.stringify(event[key]) : event[key];

@@ -8,7 +8,7 @@ Live Chat Widget (LCW) make use of third-party cookies mainly `localStorage`, fo
 
 If you plan to host Live Chat Widget script on another domain, which is not same as your hosted application domain, you're very likely to run into issues to make multi-tab functionality working when third party cookies are blocked. The below design approach to fallback to first-party is one way to get around it. We encourage to use `iframe` when following this approach. 
 
-![tcp-design-approach](.attachments/tcp-design-approach.png)
+![tpc-design-approach](.attachments/tpc-design-approach.png)
 
 ### **Components**
 

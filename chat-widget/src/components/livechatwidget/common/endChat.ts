@@ -44,6 +44,9 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                 Event: TelemetryEvent.EndChatSDKCall
             });
             await chatSDK?.endChat();
+            // Need to clear these states to stop users from connecting to existing chat if chat is ended.
+            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
         } catch (ex) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.EndChatSDKCallFailed,
@@ -57,14 +60,12 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
         try {
             adapter?.end();
             setAdapter(undefined);
-            setWebChatStyles({...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles});
+            setWebChatStyles({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
             WebChatStoreLoader.store = null;
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
-            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.EndChat
             });
