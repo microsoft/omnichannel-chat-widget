@@ -49,18 +49,6 @@ export const customizedCurrentCallStyleProps: ICurrentCallStyleProps = {
         width: "50px",
         margin: "1px"
     },
-    currentCallTimerStyleProps: {
-        borderRadius: "2px",
-        margin: "1px",
-        color: "white",
-        paddingTop: "18px",
-        fontSize: 12,
-        fontFamily: "Segoe UI, Arial, sans-serif",
-        backgroundColor: "transparent",
-        height: "50px",
-        width: "55px",
-        textAlign: "center"
-    },
     videoTileStyleProps: {
         minHeight: "180px",
         height: "300px",
