@@ -4,14 +4,14 @@ import { IButtonStyles, IIconProps, IStackStyles, IStackTokens, IconButton, Stac
 
 import { BroadcastService } from "../../../../services/BroadcastService";
 import CommandButton from "../../../common/commandbutton/CommandButton";
-import { ElementType } from "../../../../common/Constants";
+import { ElementType, KeyCodes } from "../../../../common/Constants";
 import { ICurrentCallProps } from "./interfaces/ICurrentCallProps";
 import { ICustomEvent } from "../../../../interfaces/ICustomEvent";
 import Timer from "../Timer/Timer";
 import { defaultCurrentCallProps } from "./common/defaultProps/defaultCurrentCallProps";
 import { processCustomComponents } from "../../../../common/utils";
 import { useBoolean } from "@fluentui/react-hooks";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 function CurrentCall(props: ICurrentCallProps) {
 
@@ -159,6 +159,36 @@ function CurrentCall(props: ICurrentCallProps) {
     }, []);
 
     const hideCallTimer = props.controlProps?.hideCallTimer ?? defaultCurrentCallProps.controlProps?.hideCallTimer;
+
+    useEffect(() => {
+        const endCallShortcut = (e: KeyboardEvent) => e.key === KeyCodes.ENTER;
+        const toggleMicShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === KeyCodes.ToggleMicHotKey;
+        const toggleVideoShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === KeyCodes.ToggleCameraHotKey;
+
+        const shortcutKeysHandler = (e: KeyboardEvent) => {
+            if (endCallShortcut(e)) {
+                handleEndCallClick();
+            } else if (toggleMicShortcut(e)) {
+                handleMicClick();
+            } else if (toggleVideoShortcut(e)) {
+                handleVideoOffClick();
+            }
+        };
+
+        const ignoreDefault = (e: KeyboardEvent) => {
+            if (endCallShortcut(e) || toggleMicShortcut(e) || toggleVideoShortcut(e)) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener("keyup", shortcutKeysHandler);
+        window.addEventListener("keydown", ignoreDefault);
+
+        return () => {
+            window.removeEventListener("keyup", shortcutKeysHandler);
+            window.removeEventListener("keydown", ignoreDefault);
+        };
+    }, []);
 
     return (
         <Stack className={props.styleProps?.classNames?.currentCallComponentClassName}
