@@ -66,13 +66,15 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
     const confirmButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultConfirmationPaneConfirmButtonStyles, props.styleProps?.confirmButtonStyleProps),
         rootHovered: Object.assign({}, defaultConfirmationPaneConfirmButtonHoveredStyles, props.styleProps?.confirmButtonHoveredStyleProps),
-        rootFocused: Object.assign({}, defaultConfirmationPaneConfirmButtonFocusedStyles, props.styleProps?.confirmButtonFocusedStyleProps)
+        rootFocused: Object.assign({}, defaultConfirmationPaneConfirmButtonFocusedStyles, props.styleProps?.confirmButtonFocusedStyleProps),
+        rootPressed: Object.assign({}, defaultConfirmationPaneConfirmButtonHoveredStyles, props.styleProps?.confirmButtonHoveredStyleProps),
     };
 
     const cancelButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultConfirmationPaneCancelButtonStyles, props.styleProps?.cancelButtonStyleProps),
         rootHovered: Object.assign({}, defaultConfirmationPaneCancelButtonHoveredStyles, props.styleProps?.cancelButtonHoveredStyleProps),
-        rootFocused: Object.assign({}, defaultConfirmationPaneCancelButtonFocusedStyles, props.styleProps?.cancelButtonFocusedStyleProps)
+        rootFocused: Object.assign({}, defaultConfirmationPaneCancelButtonFocusedStyles, props.styleProps?.cancelButtonFocusedStyleProps),
+        rootPressed: Object.assign({}, defaultConfirmationPaneCancelButtonHoveredStyles, props.styleProps?.cancelButtonHoveredStyleProps)
     };
 
     return (

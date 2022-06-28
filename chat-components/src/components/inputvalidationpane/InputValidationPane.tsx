@@ -173,12 +173,14 @@ function InputValidationPane(props: IInputValidationPaneProps) {
 
     const sendButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultInputValidationPaneSendButtonStyles, props.styleProps?.sendButtonStyleProps),
-        rootHovered: Object.assign({}, defaultInputValidationPaneSendButtonHoveredStyles, props.styleProps?.sendButtonHoveredStyleProps)
+        rootHovered: Object.assign({}, defaultInputValidationPaneSendButtonHoveredStyles, props.styleProps?.sendButtonHoveredStyleProps),
+        rootPressed: Object.assign({}, defaultInputValidationPaneSendButtonHoveredStyles, props.styleProps?.sendButtonHoveredStyleProps)
     };
 
     const cancelButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultInputValidationPaneCancelButtonStyles, props.styleProps?.cancelButtonStyleProps),
-        rootHovered: Object.assign({}, defaultInputValidationPaneCancelButtonHoveredStyles, props.styleProps?.cancelButtonHoveredStyleProps)
+        rootHovered: Object.assign({}, defaultInputValidationPaneCancelButtonHoveredStyles, props.styleProps?.cancelButtonHoveredStyleProps),
+        rootPressed: Object.assign({}, defaultInputValidationPaneCancelButtonHoveredStyles, props.styleProps?.cancelButtonHoveredStyleProps)
     };
 
     return (
