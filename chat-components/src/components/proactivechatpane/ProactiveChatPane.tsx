@@ -82,7 +82,8 @@ function ProactiveChatPane(props: IProactiveChatPaneProps) {
 
     const closeButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultProactiveChatPaneCloseButtonStyles, props.styleProps?.closeButtonStyleProps),
-        rootHovered: Object.assign({}, defaultProactiveChatPaneCloseButtonHoveredStyles, props.styleProps?.closeButtonHoveredStyleProps)
+        rootHovered: Object.assign({}, defaultProactiveChatPaneCloseButtonHoveredStyles, props.styleProps?.closeButtonHoveredStyleProps),
+        rootPressed: Object.assign({}, defaultProactiveChatPaneCloseButtonHoveredStyles, props.styleProps?.closeButtonHoveredStyleProps)
     };
 
     const bodyContainerStyles: IStackStyles = {
@@ -95,7 +96,8 @@ function ProactiveChatPane(props: IProactiveChatPaneProps) {
 
     const startButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultProactiveChatPaneStartButtonStyles, props.styleProps?.startButtonStyleProps),
-        rootHovered: Object.assign({}, defaultProactiveChatPaneStartButtonHoveredStyles, props.styleProps?.startButtonHoveredStyleProps)
+        rootHovered: Object.assign({}, defaultProactiveChatPaneStartButtonHoveredStyles, props.styleProps?.startButtonHoveredStyleProps),
+        rootPressed: Object.assign({}, defaultProactiveChatPaneStartButtonHoveredStyles, props.styleProps?.startButtonHoveredStyleProps)
     };
 
     return (

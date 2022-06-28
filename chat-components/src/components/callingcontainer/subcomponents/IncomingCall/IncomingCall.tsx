@@ -3,13 +3,13 @@ import * as React from "react";
 import { IStackStyles, IStackTokens, Label, Stack } from "@fluentui/react";
 
 import CommandButton from "../../../common/commandbutton/CommandButton";
-import { ElementType } from "../../../../common/Constants";
+import { ElementType, KeyCodes } from "../../../../common/Constants";
 import { ICustomEvent } from "../../../../interfaces/ICustomEvent";
 import { IIncomingCallProps } from "./interfaces/IIncomingCallProps";
 import { decodeComponentString } from "../../../../common/decodeComponentString";
 import { defaultIncomingCallProps } from "./common/defaultProps/defaultIncomingCallProps";
 import { processCustomComponents } from "../../../../common/utils";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
 function IncomingCall(props: IIncomingCallProps) {
 
@@ -93,6 +93,36 @@ function IncomingCall(props: IIncomingCallProps) {
         if (props.controlProps?.onAudioCallClick) {
             props.controlProps?.onAudioCallClick();
         }
+    }, []);
+
+    useEffect(() => {
+        const declineCallShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === KeyCodes.DeclineCallHotKey;
+        const acceptAudioCallShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === KeyCodes.AcceptAudioCallHotKey;
+        const acceptVideoCallShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === KeyCodes.AcceptVideoCallHotKey;
+
+        const shortcutKeysHandler = (e: KeyboardEvent) => {
+            if (declineCallShortcut(e)) {
+                handleDeclineCallClick();
+            } else if (acceptAudioCallShortcut(e)) {
+                handleAudioCallClick();
+            } else if (acceptVideoCallShortcut(e)) {
+                handleVideoCallClick();
+            }
+        };
+
+        const ignoreDefault = (e: KeyboardEvent) => {
+            if (declineCallShortcut(e) || acceptAudioCallShortcut(e) || acceptVideoCallShortcut(e)) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener("keyup", shortcutKeysHandler);
+        window.addEventListener("keydown", ignoreDefault);
+
+        return () => {
+            window.removeEventListener("keyup", shortcutKeysHandler);
+            window.removeEventListener("keydown", ignoreDefault);
+        };
     }, []);
 
     return (

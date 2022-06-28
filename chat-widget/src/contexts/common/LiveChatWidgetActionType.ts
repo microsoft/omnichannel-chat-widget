@@ -58,6 +58,12 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
+        string: The custom context in json format
+    */
+    SET_CUSTOM_CONTEXT,
+
+    /*
+        Parameters:
         - true: When close chat button is clicked
         - false: when clicked on Confirm button on confirmation pane
     */

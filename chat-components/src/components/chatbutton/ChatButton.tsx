@@ -19,15 +19,18 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
         root: Object.assign({}, defaultChatButtonNotificationBubbleStyles, props.styleProps?.notificationBubbleStyleProps)
     };
 
-    const unreadMessageCount = props.controlProps?.unreadMessageCount ?? defaultChatButtonControlProps?.unreadMessageCount;
-    return (decodeComponentString(props.componentOverrides?.notificationBubble) || 
-        <Label
-            styles={notificationBubbleStyles}
-            className={props.styleProps?.classNames?.notificationBubbleClassName}
-            id={parentId + "-notification-bubble"}>
-            {unreadMessageCount}
-        </Label>
-    );
+    const unreadMessageCount = props.controlProps?.unreadMessageCount ?? defaultChatButtonControlProps?.unreadMessageCount  ;
+    if (unreadMessageCount !== "0") {
+        return (decodeComponentString(props.componentOverrides?.notificationBubble) || 
+            <Label
+                styles={notificationBubbleStyles}
+                className={props.styleProps?.classNames?.notificationBubbleClassName}
+                id={parentId + "-notification-bubble"}>
+                {unreadMessageCount}
+            </Label>
+        );
+    }
+    return null;
 }
 
 function IconContainer(props: IChatButtonProps, parentId: string) {

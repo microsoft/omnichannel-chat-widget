@@ -1,5 +1,5 @@
 import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
-import { IButtonStyles, ILabelStyles, IStackStyles, IStyle, Label, Stack, TextField } from "@fluentui/react";
+import { IButtonStyles, ILabelStyles, IStackStyles, IStyle, ITextFieldStyles, Label, Stack, TextField } from "@fluentui/react";
 import React, {useEffect, useState} from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
@@ -127,12 +127,40 @@ function InputValidationPane(props: IInputValidationPaneProps) {
         borderStyle: "solid"
     };
 
-    const inputStyles: IButtonStyles = {
-        root: Object.assign({}, defaultInputValidationPaneInputStyles, props.styleProps?.inputStyleProps)
+    const inputStyles: ITextFieldStyles = {
+        root: Object.assign({}, defaultInputValidationPaneInputStyles, props.styleProps?.inputStyleProps),
+        field: Object.assign({}, defaultInputValidationPaneInputStyles, props.styleProps?.inputStyleProps),
+        fieldGroup: undefined,
+        prefix: undefined,
+        suffix: undefined,
+        icon: undefined,
+        description: undefined,
+        wrapper: undefined,
+        errorMessage: undefined,
+        subComponentStyles: {
+            label: {}
+        },
+        revealButton: undefined,
+        revealSpan: undefined,
+        revealIcon: undefined
     };
 
-    const inputWithErrorMessageStyles: IButtonStyles = {
-        root: Object.assign({}, defaultInputValidationPaneInputStyles, redBorderStyles, props.styleProps?.inputStyleProps)
+    const inputWithErrorMessageStyles: ITextFieldStyles = {
+        root: Object.assign({}, defaultInputValidationPaneInputStyles, redBorderStyles, props.styleProps?.inputStyleProps),
+        field: Object.assign({}, defaultInputValidationPaneInputStyles, redBorderStyles, props.styleProps?.inputStyleProps),
+        fieldGroup: undefined,
+        prefix: undefined,
+        suffix: undefined,
+        icon: undefined,
+        description: undefined,
+        wrapper: undefined,
+        errorMessage: undefined,
+        subComponentStyles: {
+            label: {}
+        },
+        revealButton: undefined,
+        revealSpan: undefined,
+        revealIcon: undefined
     };
 
     const invalidInputErrorMessageStyles: IStackStyles = {
@@ -145,12 +173,14 @@ function InputValidationPane(props: IInputValidationPaneProps) {
 
     const sendButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultInputValidationPaneSendButtonStyles, props.styleProps?.sendButtonStyleProps),
-        rootHovered: Object.assign({}, defaultInputValidationPaneSendButtonHoveredStyles, props.styleProps?.sendButtonHoveredStyleProps)
+        rootHovered: Object.assign({}, defaultInputValidationPaneSendButtonHoveredStyles, props.styleProps?.sendButtonHoveredStyleProps),
+        rootPressed: Object.assign({}, defaultInputValidationPaneSendButtonHoveredStyles, props.styleProps?.sendButtonHoveredStyleProps)
     };
 
     const cancelButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultInputValidationPaneCancelButtonStyles, props.styleProps?.cancelButtonStyleProps),
-        rootHovered: Object.assign({}, defaultInputValidationPaneCancelButtonHoveredStyles, props.styleProps?.cancelButtonHoveredStyleProps)
+        rootHovered: Object.assign({}, defaultInputValidationPaneCancelButtonHoveredStyles, props.styleProps?.cancelButtonHoveredStyleProps),
+        rootPressed: Object.assign({}, defaultInputValidationPaneCancelButtonHoveredStyles, props.styleProps?.cancelButtonHoveredStyleProps)
     };
 
     return (

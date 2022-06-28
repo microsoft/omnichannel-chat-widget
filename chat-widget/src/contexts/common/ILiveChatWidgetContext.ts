@@ -19,6 +19,7 @@ export interface ILiveChatWidgetContext {
         globalDir: "rtl" | "ltr";
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         liveChatContext: any;
+        customContext: any; //Contains the customContext payload if set
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in

@@ -17,3 +17,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added Telemetry events for PostChat Loading Pane
 - Added web chat telemetry logger
 - Updated ARIA Collector URLs for EU vs Non-EU telemetry data to comply with EUDB requirements
+- Added custom context support

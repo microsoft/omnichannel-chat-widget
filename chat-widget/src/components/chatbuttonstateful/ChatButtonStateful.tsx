@@ -29,7 +29,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         dir: state.domainStates.globalDir,
         titleText: "Let's Chat!",
         subtitleText: "We're online.",
-        hideNotificationBubble: !(state.appStates.isMinimized === true && state.appStates.unreadMessageCount > 0) || buttonProps?.controlProps?.hideNotificationBubble === true,
+        hideNotificationBubble: buttonProps?.controlProps?.hideNotificationBubble === true || state.appStates.isMinimized === false,
         unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? Constants.maximumUnreadMessageCount.toString() + "+" : state.appStates.unreadMessageCount.toString()) : "0",
         onClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {

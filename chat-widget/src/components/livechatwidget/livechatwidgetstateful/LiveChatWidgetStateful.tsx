@@ -101,7 +101,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Initialize global dir
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
-
+        
         if (state.domainStates?.liveChatContext) {
             const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
             initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
@@ -131,6 +131,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [state.appStates.skipChatButtonRendering]);
 
     useEffect(() => {
+        // Add the custom context on receiving the SetCustomContext event
+        BroadcastService.getMessageByEventName(BroadcastEvent.SetCustomContext).subscribe((msg: ICustomEvent) => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.CustomContextReceived,
+                Description: "CustomContext received."
+            });
+
+            dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
+        });
+        
         BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
