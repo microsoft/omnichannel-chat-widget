@@ -69,9 +69,34 @@ describe("Chat Button component", () => {
 
             try {
                 screen.getByText("0");
-            // eslint-disable-next-line no-empty
-            } catch (ex) {
                 fail("Notification Bubble should not be in the document");
+            // eslint-disable-next-line no-empty
+            } catch (ex) {                
+            }
+        });
+    });
+
+    act(() => {
+        it("show notification bubble with unread Messages", () => {
+            const chatButtonPropsShow: IChatButtonProps = {
+                //...defaultChatButtonProps,
+                controlProps: {
+                    ...defaultChatButtonControlProps,
+                    hideNotificationBubble: false,
+                    unreadMessageCount: "10"
+                }
+                , 
+                styleProps: {
+                    ...defaultChatButtonStyleProps
+                }
+            };
+            render(<ChatButton {...chatButtonPropsShow}/>);
+
+            try {
+                screen.getByText("10");                
+            // eslint-disable-next-line no-empty
+            } catch (ex) {     
+                fail("Notification Bubble should be in the document");           
             }
         });
     });
