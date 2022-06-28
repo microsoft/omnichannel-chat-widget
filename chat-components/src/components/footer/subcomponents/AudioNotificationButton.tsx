@@ -13,7 +13,8 @@ function AudioNotificationButton(props: ICommandButtonProps) {
     const iconButtonStyles: IButtonStyles = {
         root: props?.styles,
         rootHovered: props?.hoverStyles,
-        rootFocused: props?.focusStyles
+        rootFocused: props?.focusStyles,
+        rootPressed: props?.hoverStyles
     };
 
     //imageIconProps > iconName

@@ -13,6 +13,7 @@ function CommandButton(props: ICommandButtonProps) {
         root: props.styles,
         rootHovered: props.hoverStyles,
         rootFocused: props.focusStyles,
+        rootPressed: props.hoverStyles
     };
 
     const handleOnClick = useCallback(() => {
