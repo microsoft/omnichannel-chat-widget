@@ -55,11 +55,11 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
         log: (logLevel: LogLevel, telemetryInput: TelemetryInput): void => {
             try {
                 let property;
+                const telemetryInfo = telemetryInput?.telemetryInfo;
                 const eventProperties = new AWTEventProperties();
-                const event = TelemetryHelper.buildTelemetryEvent(logLevel, telemetryInput);
                 eventProperties.setName(telemetryInput.scenarioType);
-                for (const key of Object.keys(event)) {
-                    property = typeof (event[key]) === "object" ? JSON.stringify(event[key]) : event[key];
+                for (const key of Object.keys(telemetryInfo)) {
+                    property = typeof (telemetryInfo[key]) === "object" ? JSON.stringify(telemetryInfo[key]) : telemetryInfo[key];
                     eventProperties.setProperty(key, property);
                 }
                 eventProperties.setPropertyWithPii(ariaTelemetryApplicationName,
@@ -68,7 +68,7 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
                 logger() ? logger().logEvent(eventProperties) : console.log("Unable to initialize aria logger");
             }
             catch (error) {
-                console.error("Error in logging telemetry to Aria logger:" + error);
+                console.log("Error in logging telemetry to Aria logger:" + error);
             }
         },
         dispose: () => {
