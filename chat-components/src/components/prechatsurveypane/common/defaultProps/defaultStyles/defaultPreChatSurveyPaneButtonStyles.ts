@@ -3,5 +3,5 @@ import { IPreChatSurveyPaneButtonStyles } from "../../../interfaces/IPreChatSurv
 export const defaultPreChatSurveyPaneButtonStyles: IPreChatSurveyPaneButtonStyles = {
     backgroundColor: "rgb(49, 95, 162)",
     color: "#FFFFFF",
-    fontFamily: "sans-serif"
+    fontFamily: "Segoe UI, Arial, sans-serif"
 };
