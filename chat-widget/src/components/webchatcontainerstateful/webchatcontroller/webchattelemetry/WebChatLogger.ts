@@ -2,6 +2,7 @@ import { LogLevel } from "../../../../common/telemetry/TelemetryConstants";
 import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
 
 export function createWebChatTelemetry() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleTelemetry = (event: any) => {
         const { level } = event;
         const loglevel = level ? level.toUpperCase() : "";

@@ -10,6 +10,7 @@ describe("live chat button", () => {
     let page: BasePage;
 
     beforeEach(async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         newBrowser = await playwright[TestSettings.Browsers as any].launch(
             TestSettings.LaunchBrowserSettings
         );
@@ -30,7 +31,7 @@ describe("live chat button", () => {
     test("chat button visible", async () => {
         page = new BasePage(await context.newPage());
         await page.openLiveChatWidget();
-        const isLiveChatButtonVisible = await page.waitUntilLiveChatSelectorIsVisible(
+        await page.waitUntilLiveChatSelectorIsVisible(
             CustomLiveChatWidgetConstants.LiveChatButtonId
         );
     });

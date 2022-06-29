@@ -136,6 +136,16 @@ export const CallingContainerStateful = (props: ICallingContainerStatefulProps) 
                 });
             }
         });
+        window.addEventListener("beforeunload", () => {
+            if (state.uiStates.isIncomingCall) {
+                voiceVideoCallingSdk?.rejectCall();
+            } else {
+                voiceVideoCallingSdk?.stopCall();
+            }
+            voiceVideoCallingSdk?.close();
+            dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
+            resetCallingStates(true);
+        });
     }, []);
 
     const controlProps: ICallingContainerControlProps = {

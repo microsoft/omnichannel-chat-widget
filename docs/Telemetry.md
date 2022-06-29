@@ -259,23 +259,26 @@ import { TelemetryInput } from "@microsoft/omnichannel-chat-widget/lib/types/com
 export const customConsoleLogger = (): IChatSDKLogger => {
     const customConsoleLogger: IChatSDKLogger = {
         log: (logLevel: LogLevel, telemetryInput: TelemetryInput): void => {
-            const payload = telemetryInput?.payload && Object.keys(telemetryInput?.payload).length > 0 ? telemetryInput?.payload : "";
+            const payload = telemetryInput?.payload && 
+                Object.keys(telemetryInput?.payload).length > 0 ? telemetryInput?.payload : "";
+            const telemetryInfo = telemetryInput?.telemetryInfo && 
+            Object.keys(telemetryInput?.telemetryInfo).length > 0 ? telemetryInput?.telemetryInfo : "";
             try {
                 switch (logLevel) {
                 case LogLevel.INFO:
-                    console.info("Custom Logger:", payload);
+                    console.info("Custom Logger:", payload, telemetryInfo);
                     break;
                 case LogLevel.DEBUG:
-                    console.debug("Custom Logger:", payload);
+                    console.debug("Custom Logger:", payload, telemetryInfo);
                     break;
                 case LogLevel.WARN:
-                    console.warn("Custom Logger:", payload);
+                    console.warn("Custom Logger:", payload, telemetryInfo);
                     break;
                 case LogLevel.ERROR:
                     console.error("Custom Logger:", payload);
                     break;
                 default:
-                    console.debug("Custom Logger:", payload);
+                    console.debug("Custom Logger:", payload, telemetryInfo);
                     break;
                 }
             }

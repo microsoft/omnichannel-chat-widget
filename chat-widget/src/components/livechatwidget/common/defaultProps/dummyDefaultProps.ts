@@ -235,18 +235,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                     width: "50px",
                     fontSize: "18px"
                 },
-                currentCallTimerStyleProps: {
-                    borderRadius: "2px",
-                    margin: "1px",
-                    color: "#FFFFFF",
-                    paddingTop: "18px",
-                    fontSize: 12,
-                    fontFamily: "Segoe UI, Arial, sans-serif",
-                    backgroundColor: "darkgrey",
-                    height: "45px",
-                    width: "50px",
-                    textAlign: "center"
-                },
                 videoTileStyleProps: {
                     width: "100%",
                     marginLeft: "auto",

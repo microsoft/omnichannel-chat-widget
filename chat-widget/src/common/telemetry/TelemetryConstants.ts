@@ -147,6 +147,8 @@ export enum TelemetryEvent {
 export interface TelemetryInput {
     scenarioType: ScenarioType;
     payload: TelemetryData;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    telemetryInfo?: any;
 }
 
 export class TelemetryConstants {

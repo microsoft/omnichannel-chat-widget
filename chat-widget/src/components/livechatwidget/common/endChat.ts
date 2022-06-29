@@ -44,6 +44,9 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                 Event: TelemetryEvent.EndChatSDKCall
             });
             await chatSDK?.endChat();
+            // Need to clear these states immediately when chat ended from OC.
+            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
         } catch (ex) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.EndChatSDKCallFailed,
@@ -63,8 +66,6 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
-            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.EndChat
             });
