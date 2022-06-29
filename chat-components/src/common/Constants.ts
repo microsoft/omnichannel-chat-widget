@@ -8,6 +8,13 @@ export const KeyCodes = class {
     public static readonly ENTER = "Enter";
     public static readonly ESCAPE = "Escape";
     public static readonly SPACE = "Space";
+
+    // Calling container shortcuts
+    public static readonly DeclineCallHotKey = "D";
+    public static readonly AcceptAudioCallHotKey = "S";
+    public static readonly AcceptVideoCallHotKey = "A";
+    public static readonly ToggleMicHotKey = "M";
+    public static readonly ToggleCameraHotKey = "O";
 };
 
 export const Regex = class {

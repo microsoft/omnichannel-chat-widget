@@ -1,5 +1,4 @@
 import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants";
-
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 

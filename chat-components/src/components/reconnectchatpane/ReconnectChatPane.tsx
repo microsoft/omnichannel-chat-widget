@@ -86,12 +86,14 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
 
     const continueChatButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultReconnectChatPaneContinueChatButtonStyles, props.styleProps?.continueChatButtonStyleProps),
-        rootHovered: Object.assign({}, defaultReconnectChatPaneContinueChatButtonHoveredStyles, props.styleProps?.continueChatButtonHoveredStyleProps)
+        rootHovered: Object.assign({}, defaultReconnectChatPaneContinueChatButtonHoveredStyles, props.styleProps?.continueChatButtonHoveredStyleProps),
+        rootPressed: Object.assign({}, defaultReconnectChatPaneContinueChatButtonHoveredStyles, props.styleProps?.continueChatButtonHoveredStyleProps)
     };
 
     const startNewChatButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonStyles, props.styleProps?.startNewChatButtonStyleProps),
-        rootHovered: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonHoveredStyles, props.styleProps?.startNewChatButtonHoveredStyleProps)
+        rootHovered: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonHoveredStyles, props.styleProps?.startNewChatButtonHoveredStyleProps),
+        rootPressed: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonHoveredStyles, props.styleProps?.startNewChatButtonHoveredStyleProps)
     };
 
     return (

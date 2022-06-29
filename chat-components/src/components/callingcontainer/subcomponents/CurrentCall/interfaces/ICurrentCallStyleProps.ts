@@ -38,11 +38,6 @@ export interface ICurrentCallStyleProps {
     endCallButtonHoverStyleProps?: IStyle,
 
     /**
-    * Call Timer style props
-    */
-    currentCallTimerStyleProps?: IStyle,
-
-    /**
     * Video tile style props
     */
     videoTileStyleProps?: IStyle,
