@@ -8,7 +8,6 @@ import AWTLogger from "@microsoft/omnichannel-chat-sdk/lib/external/aria/webjs/A
 import { AWTPiiKind } from "@microsoft/omnichannel-chat-sdk/lib/external/aria/common/Enums";
 import { Constants, AriaTelemetryConstants, EnvironmentVersion } from "../../Constants";
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
-import { TelemetryHelper } from "../TelemetryHelper";
 import { TelemetryManager } from "../TelemetryManager";
 
 export const ariaTelemetryLogger = (ariaTelemetryKey: string,
@@ -58,17 +57,19 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
                 const telemetryInfo = telemetryInput?.telemetryInfo;
                 const eventProperties = new AWTEventProperties();
                 eventProperties.setName(telemetryInput.scenarioType);
-                for (const key of Object.keys(telemetryInfo)) {
-                    property = typeof (telemetryInfo[key]) === "object" ? JSON.stringify(telemetryInfo[key]) : telemetryInfo[key];
-                    eventProperties.setProperty(key, property);
+                if (telemetryInfo) {
+                    for (const key of Object.keys(telemetryInfo)) {
+                        property = typeof (telemetryInfo[key]) === "object" ? JSON.stringify(telemetryInfo[key]) : telemetryInfo[key];
+                        eventProperties.setProperty(key, property);
+                    }
+                    eventProperties.setPropertyWithPii(ariaTelemetryApplicationName,
+                        Constants.LiveChatWidget,
+                        AWTPiiKind.GenericData);
                 }
-                eventProperties.setPropertyWithPii(ariaTelemetryApplicationName,
-                    Constants.LiveChatWidget,
-                    AWTPiiKind.GenericData);
                 logger() ? logger().logEvent(eventProperties) : console.log("Unable to initialize aria logger");
             }
             catch (error) {
-                console.log("Error in logging telemetry to Aria logger:" + error);
+                console.error("Error in logging telemetry to Aria logger:" + error);
             }
         },
         dispose: () => {

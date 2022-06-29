@@ -269,6 +269,7 @@ export const createTimer = (): ITimer => {
 };
 
 // Returns the domain of the org
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDomain = (hostValue: any): string => {
     for (let i = 0; i < AriaTelemetryConstants.lcwEUDomainNames.length; i++) {
         if (hostValue.endsWith(AriaTelemetryConstants.lcwEUDomainNames[i])) {

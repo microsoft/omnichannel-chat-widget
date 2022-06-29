@@ -68,7 +68,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [webChatStyles, setWebChatStyles] = useState({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const chatSDK: any = useChatSDKStore();
-    const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState(undefined);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
     const canEndChat = useRef(true);
@@ -89,6 +90,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
+        dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
         initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
             .then((sdkCreated: boolean) => {
                 sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });

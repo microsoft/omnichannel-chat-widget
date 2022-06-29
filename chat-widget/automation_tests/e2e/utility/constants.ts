@@ -25,5 +25,6 @@ export const DiagnosticData = [
     "channelId",
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const stringFormat = (str: string, ...args: any[]) =>
     str.replace(/{(\d+)}/g, (match, index) => args[index].toString() || "");

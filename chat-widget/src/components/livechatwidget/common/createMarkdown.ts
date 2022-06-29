@@ -1,5 +1,4 @@
 import MarkdownIt from "markdown-it";
-import MarkdownSlack from "slack-markdown-it";
 import MarkdownItForInline from "markdown-it-for-inline";
 import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMarkdownLocalizedTexts";
 import { Constants } from "../../../common/Constants";
