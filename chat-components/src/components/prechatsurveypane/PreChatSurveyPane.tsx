@@ -91,9 +91,10 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 margin: 2px;
                 height: 48px;
                 border-radius: 5px;
+                cursor: pointer;
                 font-weight: bold;
                 font-size: 15px;
-                cursor: pointer;
+                font-family: ${props.styleProps?.customButtonStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.fontFamily};
                 color: ${props.styleProps?.customButtonStyleProps?.color ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.color};
                 background-color: ${props.styleProps?.customButtonStyleProps?.backgroundColor ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.backgroundColor}; 
             }`}</style>
