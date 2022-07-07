@@ -72,12 +72,10 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 } else {
                     const prechatResponseValues = extractPreChatSurveyResponseValues(state.domainStates.preChatSurveyResponse, values);
                     optionalParams = {
-                        initContext: {
-                            preChatResponse: prechatResponseValues
-                        }
+                        preChatResponse: prechatResponseValues
                     };
                     setPreChatResponseEmail(values);
-                    await initStartChat(optionalParams);
+                    await initStartChat(optionalParams, state, props);
                 }
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
