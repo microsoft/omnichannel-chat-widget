@@ -43,7 +43,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.MessageSent,
-                    Description: "New message sent"
+                    Description: "New message sent",
+                    Data: payload
                 });
             }
             else {
@@ -73,7 +74,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.MessageReceived,
-                    Description: "New message received"
+                    Description: "New message received",
+                    Data: payload
                 });
             }
         }

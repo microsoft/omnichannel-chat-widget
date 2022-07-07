@@ -245,6 +245,35 @@ Refer to the below table to understand different critical telemetry events raise
 | -------- |-------- |
 |`WebChatEvent`|On Web Chat specific events, see [BotFramework-WebChat](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/TELEMETRY.md)|
 
+### System Events
+At times you might have requirements to listen to system events as well which are raised throughout the lifetime of a chat e.g `agentassignmentready`, `agentaccepted` etc. For such telemetry requirements, the ideal way is to listen to `MessageReceived` events emitted from Live Chat Widget and add your own own logic to filter them. You can do that by obtaining the `Data` attribute from `MessageReceived` event. The sample structure of this attribute is provided below:
+```
+{
+    "text": "An agent will be with you in a moment.",
+    "id": "1657152889380",
+    "type": "message",
+    "timestamp": "2022-07-07T00:14:49.000Z",
+    "chatId": "19:xxxxxx_xxxxxxxxxxxxxxxxxxxxxxxxxx_1qeGA1@thread.v2",
+    "userId": "8:acs:xx-xx-xx-xx-xxxxxxx_00000012-xx-xx-xxx-xxx",
+    "conversationId": "axxxx-xx-xx-xx-xxxxxxxxxx",
+    "channelData": {
+        "webchat:sequence-id": 3,
+        "fromUserId": "8:acs:xxxx-xx-xx-xx-xxxxxxxxx",
+        "messageId": "1657152889380",
+        "state": "sent",
+        "tags": [
+            "system",
+            "agentassignmentready"
+        ],
+        "metadata": {
+            "tags": "system,agentassignmentready"
+        }
+    },
+    "messageType": "system"
+}
+```
+You can retrive the `tags` property from `Data` attribute and add your custom logic for advance telemetry experience.
+
 ## Bring Your Own Logger
 
 Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as shown below.
