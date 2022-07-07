@@ -21,14 +21,12 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         if (activity?.type === Constants.message) {
             const payload = {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                text: (activity as any)?.text,
-                id: activity?.id,
+                // To idenitfy hidden contents vs no content
+                text: (activity as any)?.text?.length >= 1 ? "*contents hidden*" : "",
                 type: activity?.type,
                 timestamp: activity?.timestamp,
-                chatId: chatId, 
                 userId: userId,
-                conversationId: TelemetryManager.InternalTelemetryData?.conversationId ?? "",
-                channelData: activity?.channelData,
+                tags: activity?.channelData?.tags,
                 messageType: "",
             };
 
@@ -43,8 +41,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.MessageSent,
-                    Description: "New message sent",
-                    Data: payload
+                    Description: "New message sent"
                 });
             }
             else {
@@ -65,7 +62,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     }
                     payload.messageType = Constants.userMessageTag;
                 }
-                
+
                 const newMessageReceivedEvent: ICustomEvent = {
                     eventName: BroadcastEvent.NewMessageReceived,
                     payload: payload
