@@ -20,8 +20,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     const raiseMessageEvent = (activity: IActivity) => {
         if (activity?.type === Constants.message) {
             const payload = {
+                // To identify hidden contents vs no content
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                // To idenitfy hidden contents vs no content
                 text: (activity as any)?.text?.length >= 1 ? "*contents hidden*" : "",
                 type: activity?.type,
                 timestamp: activity?.timestamp,
