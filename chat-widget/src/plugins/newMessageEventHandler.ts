@@ -21,7 +21,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             const payload = {
                 // To identify hidden contents vs empty content
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                text: (activity as any)?.text?.length >= 1 ? `*contents hidden (${(activity as any)?.text?.length})chars*` : "",
+                text: (activity as any)?.text?.length >= 1 ? `*contents hidden (${(activity as any)?.text?.length} chars)*` : "",
                 type: activity?.type,
                 timestamp: activity?.timestamp,
                 userId: userId,
