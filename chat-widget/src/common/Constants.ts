@@ -109,6 +109,8 @@ export class Constants {
     // internet connection test
     public static readonly internetConnectionTestUrl = "https://ocsdk-prod.azureedge.net/public/connecttest.txt";
     public static readonly internetConnectionTestUrlText = "Omnichannel Connect Test";
+
+    public static readonly ChatWidgetStateChangedPrefix = "ChatWidgetStateChanged";
 }
 
 export const Regex = class {

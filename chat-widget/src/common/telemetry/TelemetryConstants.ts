@@ -26,7 +26,6 @@ export enum BroadcastEvent {
     EndChat = "ChatEnded",
     NewMessageNotification = "NewMessageNotification",
     UnreadMessageCount = "UnreadMessageCount",
-    ChatWidgetStateChanged = "ChatWidgetStateChanged",
     ProactiveChatStartChat = "ProactiveChatStartChat",
     ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
     InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",

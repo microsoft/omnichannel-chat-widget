@@ -215,13 +215,13 @@ export const extractPreChatSurveyResponseValues = (preChatSurvey: string, values
                 const Id = body[index].id;
                 computedValues[Id] = val.value;
             }
-            const finalPayload = {...type, ...computedValues};
+            const finalPayload = { ...type, ...computedValues };
             return finalPayload;
         } catch (ex) {
             throw new Error(`PreChatSurvey Response parse error: ${ex}`);
         }
     }
-    
+
     return {};
 };
 
@@ -241,17 +241,17 @@ export const newGuid = () => {
     for (let i = 0; i < guidPattern.length; i++) {
         const randomString = Math.floor(Math.random() * Date.now());
         switch (guidPattern[i]) {
-        case "x":
-            newGuid += randomString.toString(16).substring(0, 4);
-            break; //get 4 digit
-        case "m":
-            newGuid += randomString.toString(16).substring(0, 3);
-            break; //Get 3 digit
-        case "y":
-            newGuid += (randomString & 0x3 | 0x8).toString(16);
-            break; // To get only one of 8, 9, A, or B
-        default:
-            newGuid += guidPattern[i]; //Default "-" and "4"
+            case "x":
+                newGuid += randomString.toString(16).substring(0, 4);
+                break; //get 4 digit
+            case "m":
+                newGuid += randomString.toString(16).substring(0, 3);
+                break; //Get 3 digit
+            case "y":
+                newGuid += (randomString & 0x3 | 0x8).toString(16);
+                break; // To get only one of 8, 9, A, or B
+            default:
+                newGuid += guidPattern[i]; //Default "-" and "4"
         }
     }
     return newGuid;

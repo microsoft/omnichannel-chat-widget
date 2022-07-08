@@ -60,6 +60,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { Constants } from "../../../common/Constants";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -103,7 +104,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Initialize global dir
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
-        
+
         if (state.domainStates?.liveChatContext) {
             const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
             initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
@@ -142,7 +143,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
         });
-        
+
         BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
@@ -178,7 +179,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Description: "End chat event received."
             });
             if (canEndChat.current) {
-                prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state); 
+                prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
@@ -245,7 +246,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             ...props.webChatContainerProps?.webChatStyles
         });
     }, [props.webChatContainerProps?.webChatStyles]);
-    
+
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -259,8 +260,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // publish chat widget state
     useEffect(() => {
+        const widgetStateEventName = Constants.ChatWidgetStateChangedPrefix + "_" + props.chatSDK?.omnichannelConfig?.orgId + "_" + props.chatSDK?.omnichannelConfig?.widgetId;
         const chatWidgetStateChangeEvent: ICustomEvent = {
-            eventName: BroadcastEvent.ChatWidgetStateChanged,
+            eventName: widgetStateEventName,
             payload: {
                 ...state
             }
