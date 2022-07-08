@@ -7,9 +7,9 @@ import { ElementType } from "../../../common/Constants";
 
 function CommandButton(props: ICommandButtonProps) {
     //imageIconProps > iconName
-    const iconProp: IIconProps = props.imageIconProps ? { imageProps: props.imageIconProps } : { iconName: props.iconName, styles:{ root: props.styles} };
+    const iconProp: IIconProps = props.imageIconProps ? { imageProps: props.imageIconProps } : { iconName: props.iconName };
  
-    const iconButtonStyles: IButtonStyles = {
+    const buttonStyles: IButtonStyles = {
         root: props.styles,
         rootHovered: props.hoverStyles,
         rootFocused: props.focusStyles,
@@ -39,7 +39,7 @@ function CommandButton(props: ICommandButtonProps) {
                     onClick={handleOnClick}
                     disabled={props.disabled}
                     className={props.className}
-                    styles={iconButtonStyles}
+                    styles={buttonStyles}
                 />
             }
 
@@ -50,7 +50,7 @@ function CommandButton(props: ICommandButtonProps) {
                     title={props.ariaLabel}
                     ariaLabel={props.ariaLabel}
                     disabled={props.disabled}
-                    styles={iconButtonStyles}
+                    styles={buttonStyles}
                     onClick={handleOnClick}
                     className={props.className}
                 />
