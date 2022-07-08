@@ -5,7 +5,6 @@ import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
-import { TelemetryManager } from "../common/telemetry/TelemetryManager";
 
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
     const onNewAdapterActivityHandler = (activity: IActivity) => {
@@ -20,9 +19,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     const raiseMessageEvent = (activity: IActivity) => {
         if (activity?.type === Constants.message) {
             const payload = {
-                // To identify hidden contents vs no content
+                // To identify hidden contents vs empty content
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                text: (activity as any)?.text?.length >= 1 ? "*contents hidden*" : "",
+                text: (activity as any)?.text?.length >= 1 ? `*contents hidden (${(activity as any)?.text?.length})chars*` : "",
                 type: activity?.type,
                 timestamp: activity?.timestamp,
                 userId: userId,
