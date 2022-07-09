@@ -88,6 +88,7 @@ export const createReducer = () => {
                     ...state,
                     domainStates: {
                         ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         customContext: action.payload as any
                     }
                 };
@@ -285,7 +286,7 @@ export const createReducer = () => {
                         conversationEndedByAgent: action.payload as boolean
                     }
                 };
-                
+
             default:
                 return state;
         }
