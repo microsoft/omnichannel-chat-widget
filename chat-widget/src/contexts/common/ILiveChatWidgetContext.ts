@@ -19,6 +19,7 @@ export interface ILiveChatWidgetContext {
         globalDir: "rtl" | "ltr";
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         liveChatContext: any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         customContext: any; //Contains the customContext payload if set
     };
     appStates: {

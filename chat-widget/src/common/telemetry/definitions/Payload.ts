@@ -1,4 +1,9 @@
-export interface ConfigValidationTelemetryData {
+export interface BaseTelemetryData {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Data?: any
+}
+
+export interface ConfigValidationTelemetryData extends BaseTelemetryData {
     Event?: string;
     RequestId?: string;
     LCWVersion?: string;
@@ -9,7 +14,7 @@ export interface ConfigValidationTelemetryData {
     Domain?: string;
 }
 
-export interface LoadTelemetryData {
+export interface LoadTelemetryData extends BaseTelemetryData {
     Event?: string;
     ResourcePath?: string;
     ElapsedTimeInMilliseconds?: number;
@@ -22,12 +27,12 @@ export interface LoadTelemetryData {
     OCChatComponentsVersion?: string;
 }
 
-export interface MessageProcessingErrorData {
+export interface MessageProcessingErrorData extends BaseTelemetryData {
     Event: string;
     ExceptionDetails: object;
 }
 
-export interface OCChatSDKTelemetryData {
+export interface OCChatSDKTelemetryData extends BaseTelemetryData {
     RequestId: string;
     Event?: string;
     ElapsedTimeInMilliseconds?: number;
@@ -35,7 +40,7 @@ export interface OCChatSDKTelemetryData {
     ExceptionDetails?: object;
 }
 
-export interface IC3ClientTelemetryData {
+export interface IC3ClientTelemetryData extends BaseTelemetryData {
     SubscriptionId?: string;
     EndpointUrl?: string;
     EndpointId?: string;
@@ -47,7 +52,7 @@ export interface IC3ClientTelemetryData {
     Description?: string;
 }
 
-export interface WebChatTelemetryData {
+export interface WebChatTelemetryData extends BaseTelemetryData {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,7 +67,7 @@ export interface WebChatTelemetryData {
     type?: string;
 }
 
-export interface ACSAdapterTelemetryData {
+export interface ACSAdapterTelemetryData extends BaseTelemetryData {
     Description?: string;
     ACSUserId?: string;
     ChatThreadId?: string;
@@ -74,7 +79,7 @@ export interface ACSAdapterTelemetryData {
     ExceptionDetails?: any;
 }
 
-export interface ActionTelemetryData {
+export interface ActionTelemetryData extends BaseTelemetryData {
     Event?: string;
     ElapsedTimeInMilliseconds?: number;
     ActionType?: string;
@@ -82,7 +87,7 @@ export interface ActionTelemetryData {
     Description?: string;
 }
 
-export interface CallingTelemetryData {
+export interface CallingTelemetryData extends BaseTelemetryData {
     CallId?: string;
     Event?: string;
     ElapsedTimeInMilliseconds?: number;
