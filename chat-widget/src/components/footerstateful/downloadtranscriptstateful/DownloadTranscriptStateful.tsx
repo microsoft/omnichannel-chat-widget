@@ -115,7 +115,9 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 
             if (value.attachments && value.attachments.length > 0 && value.attachments[0].name) {
                 fileAttachmentName = value.attachments[0].name;
-                value.content = attachmentMessage ?? "The following attachment was uploaded during the conversation:" + fileAttachmentName;
+                value.content = attachmentMessage
+                    ? attachmentMessage + " " + fileAttachmentName
+                    : "The following attachment was uploaded during the conversation: " + fileAttachmentName;
             }
         }
         let displayNamePlaceholder = processCreatedDateTime(value.createdDateTime, chatCount);

@@ -20,6 +20,8 @@ import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurv
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
+let optionalParams: any = {};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
@@ -43,8 +45,10 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         } else if (showPrechat) {
             dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
+            setCustomContextParams(props, state);
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+            setCustomContextParams(props, state);         
             await initStartChat(chatSDK, dispatch, setAdapter);
         }
     }
@@ -69,7 +73,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatSDKCall
             });
-            await chatSDK.startChat(params);
+            optionalParams = Object.assign({}, params, optionalParams);
+            await chatSDK.startChat(optionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -142,6 +147,15 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         return true;
     } else {
         return false;
+    }
+};
+
+const setCustomContextParams = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
+    // Add custom context if any only for unauthenticated chat
+    if (!props.chatConfig?.LiveChatConfigAuthSettings && state.domainStates?.customContext) {
+        optionalParams = Object.assign({}, optionalParams, {
+            customContext: state.domainStates.customContext
+        });
     }
 };
 
