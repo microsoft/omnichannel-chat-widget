@@ -1,6 +1,7 @@
 import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
+import { BroadcastEvent } from "./telemetry/TelemetryConstants";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -241,17 +242,17 @@ export const newGuid = () => {
     for (let i = 0; i < guidPattern.length; i++) {
         const randomString = Math.floor(Math.random() * Date.now());
         switch (guidPattern[i]) {
-            case "x":
-                newGuid += randomString.toString(16).substring(0, 4);
-                break; //get 4 digit
-            case "m":
-                newGuid += randomString.toString(16).substring(0, 3);
-                break; //Get 3 digit
-            case "y":
-                newGuid += (randomString & 0x3 | 0x8).toString(16);
-                break; // To get only one of 8, 9, A, or B
-            default:
-                newGuid += guidPattern[i]; //Default "-" and "4"
+        case "x":
+            newGuid += randomString.toString(16).substring(0, 4);
+            break; //get 4 digit
+        case "m":
+            newGuid += randomString.toString(16).substring(0, 3);
+            break; //Get 3 digit
+        case "y":
+            newGuid += (randomString & 0x3 | 0x8).toString(16);
+            break; // To get only one of 8, 9, A, or B
+        default:
+            newGuid += guidPattern[i]; //Default "-" and "4"
         }
     }
     return newGuid;
@@ -276,4 +277,12 @@ export const getDomain = (hostValue: any): string => {
         }
     }
     return AriaTelemetryConstants.Public;
+};
+
+export const getWidgetCacheId = (orgId: string, widgetId: string): string => {
+    return `${Constants.ChatWidgetStateChangedPrefix}_${orgId}_${widgetId}`;
+};
+
+export const getWidgetEndChatEventName = (orgId: string, widgetId: string): string => {
+    return `${BroadcastEvent.EndChat}_${orgId}_${widgetId}`;
 };

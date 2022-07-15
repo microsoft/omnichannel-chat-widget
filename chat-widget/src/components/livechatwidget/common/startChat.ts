@@ -1,5 +1,5 @@
-import { ChatSDKError, Constants } from "../../../common/Constants";
-import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { ChatSDKError } from "../../../common/Constants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
@@ -14,10 +14,11 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
-import { createTimer } from "../../../common/utils";
+import { createTimer, getWidgetCacheId } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconnectChat } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
@@ -52,12 +53,24 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
     try {
+        let isStartChatSuccessful = false;
+        if (persistedState || params?.liveChatContext) {
+            // Broadcasting limited cached chat details
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.ChatRetrievedFromCache,
+                payload: {
+                    chatId: persistedState?.domainStates?.liveChatContext?.chatToken?.chatId,
+                    requestId: persistedState?.domainStates?.liveChatContext?.requestId
+                }
+            });
+        }
         try {
             TelemetryTimers.WidgetLoadTimer = createTimer();
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatSDKCall
             });
             await chatSDK.startChat(params);
+            isStartChatSuccessful = true;
         } catch (error) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.StartChatMethodException,
@@ -65,13 +78,13 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                     exception: `Failed to setup startChat: ${error}`
                 }
             });
+            isStartChatSuccessful = false;
         }
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
 
         const chatToken = await chatSDK.getChatToken();
         newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
-
         if (!persistedState) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if ((chatSDK as any)?.getVoiceVideoCalling) {
@@ -79,7 +92,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 const chatToken: any = await chatSDK?.getChatToken();
                 dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
             }
-
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
@@ -89,7 +101,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             await updateSessionDataForTelemetry(chatSDK, dispatch);
 
             // Set app state to Active
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
+            if (isStartChatSuccessful) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
+            }
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
             await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
@@ -118,9 +132,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
-    const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(Constants.widgetStateDataKey, "localStorage");
+    const widgetStateEventName = getWidgetCacheId(chatSDK?.omnichannelConfig?.orgId ?? "", chatSDK?.omnichannelConfig?.widgetId ?? "");
+    const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
     const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
-
     if (persistedState?.domainStates?.liveChatContext) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };

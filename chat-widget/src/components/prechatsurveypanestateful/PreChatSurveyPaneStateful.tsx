@@ -1,7 +1,7 @@
-import { Constants, HtmlAttributeNames, Regex } from "../../common/Constants";
+import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-import { extractPreChatSurveyResponseValues, findAllFocusableElement, parseAdaptiveCardPayload } from "../../common/utils";
+import { extractPreChatSurveyResponseValues, findAllFocusableElement, getWidgetCacheId, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../common/contextDataStore/DataStoreManager";
@@ -63,7 +63,10 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             try {
-                const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(Constants.widgetStateDataKey, "localStorage");
+                const widgetStateCacheId = getWidgetCacheId(
+                    state.domainStates?.telemetryInternalData?.orgId ?? "",
+                    state.domainStates.telemetryInternalData?.widgetId ?? "");
+                const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateCacheId, "localStorage");
                 const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
                 let optionalParams = {};
                 if (persistedState?.domainStates?.liveChatContext) {

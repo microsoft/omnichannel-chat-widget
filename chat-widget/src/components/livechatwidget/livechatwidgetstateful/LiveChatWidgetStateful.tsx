@@ -2,7 +2,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getLocaleDirection } from "../../../common/utils";
+import { createTimer, getLocaleDirection, getWidgetCacheId, getWidgetEndChatEventName } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat } from "../common/startChat";
 import {
@@ -60,7 +60,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { Constants } from "../../../common/Constants";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -187,6 +186,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        // Listen to end chat event from other tabs
+        const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+        BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
+            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
+        });
+
         window.addEventListener("beforeunload", () => {
             disposeTelemetryLoggers();
         });
@@ -260,7 +265,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // publish chat widget state
     useEffect(() => {
-        const widgetStateEventName = Constants.ChatWidgetStateChangedPrefix + "_" + props.chatSDK?.omnichannelConfig?.orgId + "_" + props.chatSDK?.omnichannelConfig?.widgetId;
+        const widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId, props?.chatSDK?.omnichannelConfig?.widgetId);
         const chatWidgetStateChangeEvent: ICustomEvent = {
             eventName: widgetStateEventName,
             payload: {
