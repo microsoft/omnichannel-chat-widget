@@ -21,3 +21,9 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added font-family property to preChat Survey button
 - Added `lcw:chatRetrieved` event
 - Multi-widget support on same browser
+
+## [0.1.0] - 2022-7-19
+### Added
+- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.423d0ce
+### Fixed
+- Fixed hover customizations for Audio notification button
