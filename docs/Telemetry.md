@@ -118,7 +118,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `ChatEnded`                       |On ending chat |
 | `NewMessageNotification`          |On getting a new message |
 | `UnreadMessageCount`              |On toggling minimize state or changing unread message count |
-| `ChatWidgetStateChanged`          |On changing chat widget state |
+| `ChatWidgetStateChanged_<orgid>_<widgetid>`          |On changing chat widget state |
 | `InvalidAdaptiveCardFormat`       |On invalid adaptive card format |
 | `NewMessageReceived`              |On new message received |
 | `NewMessageSent`                  |On new user message sent |
