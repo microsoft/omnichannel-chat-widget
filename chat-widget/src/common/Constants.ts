@@ -17,7 +17,6 @@ export class Constants {
     public static readonly true = "true";
     public static readonly false = "false";
     public static readonly maximumUnreadMessageCount = 99;
-    public static readonly widgetStateDataKey = "LcwChatWidgetState";
 
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";

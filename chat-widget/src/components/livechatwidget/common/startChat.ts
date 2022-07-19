@@ -20,6 +20,7 @@ import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurv
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

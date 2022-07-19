@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, isNullOrEmptyString, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { cleanup } from "@testing-library/react";
@@ -257,5 +257,17 @@ describe("utils unit test", () => {
 
         const resultFalse = getDomain("https://uniqueorgname.crm10.omnichannelengagementhub.com");
         expect(resultFalse).toBe(AriaTelemetryConstants.Public);
+    });
+
+    it("Test getWidgetCacheId", () => {
+        const testString = "ChatWidgetStateChanged_orgid_widgetid";
+        const resultString = getWidgetCacheId("orgid", "widgetid");
+        expect(resultString).toBe(testString);
+    });
+
+    it("Test getWidgetEndChatEventName", () => {
+        const testString = "ChatEnded_orgid_widgetid";
+        const resultString = getWidgetEndChatEventName("orgid", "widgetid");
+        expect(resultString).toBe(testString);
     });
 });
