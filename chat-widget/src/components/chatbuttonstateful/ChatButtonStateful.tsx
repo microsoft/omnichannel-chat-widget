@@ -30,7 +30,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         titleText: "Let's Chat!",
         subtitleText: "We're online.",
         hideNotificationBubble: buttonProps?.controlProps?.hideNotificationBubble === true || state.appStates.isMinimized === false,
-        unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? Constants.maximumUnreadMessageCount.toString() + "+" : state.appStates.unreadMessageCount.toString()) : "0",
+        unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? state.domainStates?.chatbuttonLocalizedTexts?.LARGE_UNREAD_MESSAGES_STRING : state.appStates.unreadMessageCount.toString()) : "0",
         onClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWChatButtonClicked
@@ -41,6 +41,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
                 await startChat();
             }
         },
+        unreadMessageString: state.domainStates?.chatbuttonLocalizedTexts?.UNREAD_MESSAGES_STRING,
         ...buttonProps?.controlProps,
     };
 
@@ -56,6 +57,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             }
         },
+        unreadMessageString: state.domainStates?.chatbuttonLocalizedTexts?.UNREAD_MESSAGES_STRING,
         ...outOfOfficeButtonProps?.controlProps
     };
 

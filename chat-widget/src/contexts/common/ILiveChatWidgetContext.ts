@@ -15,6 +15,7 @@ export interface ILiveChatWidgetContext {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         postChatContext: any;
         middlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts | undefined;
+        chatbuttonLocalizedTexts: ILiveChatWidgetLocalizedTexts | undefined;
         telemetryInternalData: IInternalTelemetryData;
         globalDir: "rtl" | "ltr";
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

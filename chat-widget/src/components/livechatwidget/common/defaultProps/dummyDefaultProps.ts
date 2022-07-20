@@ -1625,7 +1625,9 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             MIDDLEWARE_MESSAGE_NOT_DELIVERED: "Not Delivered",
             MIDDLEWARE_MESSAGE_RETRY: "Retry",
             PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE: "{0} field is required",
-            MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external."
+            MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external.",
+            LARGE_UNREAD_MESSAGES_STRING: "99+",
+            UNREAD_MESSAGES_STRING: "new messages"
         }
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
