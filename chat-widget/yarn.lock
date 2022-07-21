@@ -2217,10 +2217,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.0.tgz#277466f41169d233d52dd2db7899708a0d50ce0e"
   integrity sha512-9NOf+mAGeQCYuynYfhrZGYeq8wQSWs8jrnZG5W98vQZZXCoD/l4hcSf3fXHH2p7Ve82ZT8UG0dKCcwA5SEyzpg==
 
-"@microsoft/omnichannel-chat-components@^0.1.0-main.099196c":
-  version "0.1.0-main.099196c"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-0.1.0-main.099196c.tgz#5311c9f121949dd4af88846b3c1fa6390431bc57"
-  integrity sha512-GmFDBz/Eu/sQC2aWc5y3VUyAHw/9O1ThEjX5EmbzymSozhVlDVRFgk7/qFD5YqS9EOJ2IyS4gGr5fh5CEqDqwA==
+"@microsoft/omnichannel-chat-components@^0.1.0-main.423d0ce":
+  version "0.1.0-main.423d0ce"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-0.1.0-main.423d0ce.tgz#03aae8a71c883020a263bf144d070bcfcbff571f"
+  integrity sha512-p0ymuKN7g50KJyjIYlwphOQTJC3hdAzKKSz+/pmTthBXDgpBx7iOoCEh+IAppukzTdSLCYbKLh3NrwxFmDPLKQ==
   dependencies:
     "@fluentui/react" "^8.46.0"
     adaptivecards "^2.10.0"
@@ -13769,9 +13769,9 @@ terser@5.7.1:
     source-map-support "~0.5.19"
 
 terser@^4.1.2, terser@^4.6.3:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-4.8.0.tgz#63056343d7c70bb29f3af665865a46fe03a0df17"
-  integrity sha512-EAPipTNeWsb/3wLPeup1tVPaXfIaU68xMnVdPafIL1TV05OhASArYyIfFvnvJCNrR2NIOvDVNNTFRa+Re2MWyw==
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-4.8.1.tgz#a00e5634562de2239fd404c649051bf6fc21144f"
+  integrity sha512-4GnLC0x667eJG0ewJTa6z/yXrbLGv80D9Ru6HIpCQmO+Q4PfEtBFi0ObSckqwL6VyQv/7ENJieXHo2ANmdQwgw==
   dependencies:
     commander "^2.20.0"
     source-map "~0.6.1"
