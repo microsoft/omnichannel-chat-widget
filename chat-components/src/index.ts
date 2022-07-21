@@ -42,3 +42,7 @@ export {
     AudioNotificationOnIconBase64, ProactiveChatBannerBase64, TranscriptDownloadIconBase64, TranscriptEmailIconBase64,
     CallAcceptButtonBase64, CallRejectButtonBase64, VideoCallAcceptButtonIconBase64, VideoOffIconBase64, VideoOnIconBase64, VoiceOffIconBase64, VoiceOnIconBase64
 } from "./assets/Icons";
+
+import { defaultPreChatSurveyPaneControlProps } from "./components/prechatsurveypane/common/defaultProps/defaultPreChatSurveyPaneControlProps";
+
+export { defaultPreChatSurveyPaneControlProps };
