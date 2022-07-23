@@ -18,16 +18,27 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
     const notificationBubbleStyles: ILabelStyles = {
         root: Object.assign({}, defaultChatButtonNotificationBubbleStyles, props.styleProps?.notificationBubbleStyleProps)
     };
+    
+    const ihiddenTextStyles: React.CSSProperties = {
+        position: "absolute",
+        height: "1px",
+        width: "1px",
+        overflow: "hidden",
+        clip: "rect(1px, 1px, 1px, 1px)",
+        whiteSpace: "nowrap"
+    };
 
     const unreadMessageCount = props.controlProps?.unreadMessageCount ?? defaultChatButtonControlProps?.unreadMessageCount  ;
     if (unreadMessageCount !== "0") {
         return (decodeComponentString(props.componentOverrides?.notificationBubble) || 
-            <Label
+            <Stack
+                role="alert"
                 styles={notificationBubbleStyles}
                 className={props.styleProps?.classNames?.notificationBubbleClassName}
                 id={parentId + "-notification-bubble"}>
                 {unreadMessageCount}
-            </Label>
+                <span style={ihiddenTextStyles}>{props.controlProps?.unreadMessageString}</span>
+            </Stack>
         );
     }
     return null;
@@ -143,8 +154,8 @@ function ChatButton(props: IChatButtonProps) {
                 onKeyDown={handleInputKeyDown}
                 aria-label={defaultAriaLabel}>
                 {!hideChatIcon && IconContainer(props, elementId)}
-                {!hideChatTextContainer && TextContainer(props, elementId)}
                 {!hideNotificationBubble && NotificationBubble(props, elementId)}
+                {!hideChatTextContainer && TextContainer(props, elementId)}
             </Stack>}
         </>
     );
