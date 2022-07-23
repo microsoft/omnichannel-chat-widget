@@ -16,5 +16,6 @@ export const defaultChatButtonControlProps: IChatButtonControlProps = {
     hideChatTextContainer: false,
     hideChatSubtitle: false,
     hideChatTitle: false,
-    hideNotificationBubble: true
+    hideNotificationBubble: true,
+    unreadMessageString: "new messages"
 };
