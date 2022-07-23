@@ -19,3 +19,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Updated ARIA Collector URLs for EU vs Non-EU telemetry data to comply with EUDB requirements
 - Added custom context support
 - Added font-family property to preChat Survey button
+- Added and localized the unread Message Count alert text
