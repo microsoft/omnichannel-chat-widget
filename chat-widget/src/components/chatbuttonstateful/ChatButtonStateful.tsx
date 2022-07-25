@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useState } from "react";
 
 import { ChatButton } from "@microsoft/omnichannel-chat-components";
@@ -15,6 +15,8 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
@@ -35,7 +37,13 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWChatButtonClicked
             });
-            if (state.appStates.isMinimized) {
+            if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
+                const proactiveChatIsInPopoutModeEvent: ICustomEvent = {
+                    eventName: BroadcastEvent.ProactiveChatIsInPopoutMode,
+                };
+                BroadcastService.postMessage(proactiveChatIsInPopoutModeEvent);
+            }
+            else if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             } else {
                 await startChat();

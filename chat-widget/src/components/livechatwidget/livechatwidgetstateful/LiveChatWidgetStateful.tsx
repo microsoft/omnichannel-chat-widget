@@ -186,6 +186,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        // Close popout window
+        BroadcastService.getMessageByEventName("ClosePopoutWindow").subscribe(() => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.ClosePopoutWindowEventRecevied,
+                Description: "Close popout window event received."
+            });
+            dispatch({
+                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
+                    proactiveChatBodyTitle: "",
+                    proactiveChatEnablePrechat: false,
+                    proactiveChatInNewWindow: false
+                }
+            });
+        });
+
         window.addEventListener("beforeunload", () => {
             disposeTelemetryLoggers();
         });
