@@ -13,6 +13,7 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { Constants } from "../../../common/Constants";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
+import { getWidgetEndChatEventName } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
@@ -22,7 +23,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
     if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
         const skipEndChatSDK = false;
         const skipCloseChat = true;
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, true);
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
             const loadPostChatEvent: ICustomEvent = {
                 eventName: BroadcastEvent.LoadPostChatSurvey,
@@ -32,12 +33,12 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
         }
     } else {
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
+        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
     }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean) => {
+const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
     if (!skipEndChatSDK) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
@@ -54,13 +55,14 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                     exception: ex
                 }
             });
+            postMessageToOtherTab = false;
         }
     }
     if (!skipCloseChat) {
         try {
             adapter?.end();
             setAdapter(undefined);
-            setWebChatStyles({...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles});
+            setWebChatStyles({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
             WebChatStoreLoader.store = null;
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: false });
@@ -69,6 +71,12 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.EndChat
             });
+            if (postMessageToOtherTab) {
+                const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+                BroadcastService.postMessage({
+                    eventName: endChatEventName
+                });
+            }
         } catch (error) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.CloseChatMethodException,

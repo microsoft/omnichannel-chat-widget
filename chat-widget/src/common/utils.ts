@@ -1,6 +1,7 @@
 import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
+import { BroadcastEvent } from "./telemetry/TelemetryConstants";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -215,13 +216,13 @@ export const extractPreChatSurveyResponseValues = (preChatSurvey: string, values
                 const Id = body[index].id;
                 computedValues[Id] = val.value;
             }
-            const finalPayload = {...type, ...computedValues};
+            const finalPayload = { ...type, ...computedValues };
             return finalPayload;
         } catch (ex) {
             throw new Error(`PreChatSurvey Response parse error: ${ex}`);
         }
     }
-    
+
     return {};
 };
 
@@ -276,4 +277,12 @@ export const getDomain = (hostValue: any): string => {
         }
     }
     return AriaTelemetryConstants.Public;
+};
+
+export const getWidgetCacheId = (orgId: string, widgetId: string): string => {
+    return `${Constants.ChatWidgetStateChangedPrefix}_${orgId}_${widgetId}`;
+};
+
+export const getWidgetEndChatEventName = (orgId: string, widgetId: string): string => {
+    return `${BroadcastEvent.EndChat}_${orgId}_${widgetId}`;
 };

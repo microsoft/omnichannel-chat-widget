@@ -2,7 +2,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getLocaleDirection } from "../../../common/utils";
+import { createTimer, getLocaleDirection, getWidgetCacheId, getWidgetEndChatEventName } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat } from "../common/startChat";
 import {
@@ -103,7 +103,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Initialize global dir
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
-        
+
         if (state.domainStates?.liveChatContext) {
             const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
             initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
@@ -142,7 +142,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
         });
-        
+
         BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
@@ -178,12 +178,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Description: "End chat event received."
             });
             if (canEndChat.current) {
-                prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state); 
+                prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
             }
+        });
+
+        // Listen to end chat event from other tabs
+        const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+        BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
+            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
         });
 
         // Close popout window
@@ -260,7 +266,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             ...props.webChatContainerProps?.webChatStyles
         });
     }, [props.webChatContainerProps?.webChatStyles]);
-    
+
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -274,8 +280,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // publish chat widget state
     useEffect(() => {
+        const widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId, props?.chatSDK?.omnichannelConfig?.widgetId);
         const chatWidgetStateChangeEvent: ICustomEvent = {
-            eventName: BroadcastEvent.ChatWidgetStateChanged,
+            eventName: widgetStateEventName,
             payload: {
                 ...state
             }

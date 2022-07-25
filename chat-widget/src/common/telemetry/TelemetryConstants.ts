@@ -26,7 +26,6 @@ export enum BroadcastEvent {
     EndChat = "ChatEnded",
     NewMessageNotification = "NewMessageNotification",
     UnreadMessageCount = "UnreadMessageCount",
-    ChatWidgetStateChanged = "ChatWidgetStateChanged",
     ProactiveChatStartChat = "ProactiveChatStartChat",
     ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
     ProactiveChatIsInPopoutMode = "ProactiveChatIsInPopoutMode",
@@ -36,7 +35,8 @@ export enum BroadcastEvent {
     RedirectPageRequest = "RedirectPageRequest",
     StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
     StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
-    SetCustomContext = "SetCustomContext"
+    SetCustomContext = "SetCustomContext",
+    ChatRetrievedFromCache = "ChatRetrievedFromCache"
 }
 
 // Events being logged
