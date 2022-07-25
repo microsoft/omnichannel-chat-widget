@@ -19,12 +19,17 @@ export const createCardActionMiddleware = (botMagicCodeConfig: IBotMagicCodeFeat
 
             // Override signin url only if fwdUrl is valid & feature is enabled
             if (botMagicCodeConfig?.disabled === true && botMagicCodeConfig?.fwdUrl) {
+                const baseUrl = window.location.origin;
                 const result = botOauthUrlRegex.exec(card.cardAction.value);
+
                 if (result) {
                     dispatch({type: LiveChatWidgetActionType.SET_BOT_OAUTH_SIGNIN_ID, payload: `${result[1]}`});
                 }
 
-                card.cardAction.value += `&fwdUrl=${botMagicCodeConfig.fwdUrl}`;
+                // fwdUrl must be on the same domain as the chat widget
+                if (botMagicCodeConfig?.fwdUrl.startsWith(baseUrl)) {
+                    card.cardAction.value += `&fwdUrl=${botMagicCodeConfig.fwdUrl}`;
+                }
             }
         }
 
