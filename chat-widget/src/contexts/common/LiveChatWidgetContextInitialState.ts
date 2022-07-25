@@ -20,7 +20,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             telemetryInternalData: {},
             globalDir: "ltr",
             liveChatContext: undefined,
-            customContext: undefined
+            customContext: undefined,
+            botOAuthSignInId: undefined
         },
         appStates: {
             conversationState: ConversationState.Closed,

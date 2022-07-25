@@ -287,6 +287,15 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_BOT_OAUTH_SIGNIN_ID:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        botOAuthSignInId: action.payload as (string | undefined)
+                    }
+                };
+
             default:
                 return state;
         }

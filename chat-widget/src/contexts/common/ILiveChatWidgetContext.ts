@@ -21,6 +21,7 @@ export interface ILiveChatWidgetContext {
         liveChatContext: any;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         customContext: any; //Contains the customContext payload if set
+        botOAuthSignInId: string | undefined; // SignInId on authentication with bot
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
