@@ -1,7 +1,6 @@
 import { IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-
 import { Components } from "botframework-webchat";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -12,11 +11,14 @@ import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMi
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
+import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
+import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
 
 export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) => {
-
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const magicCodeBroadcastChannel = new BroadcastChannel("MagicCodeChannel");
+    const magicCodeResponseBroadcastChannel = new BroadcastChannel("MagicCodeResponseChannel");
 
     const containerStyles: IStackStyles = {
         root: Object.assign(
@@ -37,6 +39,44 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
             Event: TelemetryEvent.WebChatLoaded
         });
     }, []);
+
+    useEffect(() => {
+        magicCodeBroadcastChannel.addEventListener("message", (event) => {
+            const { data } = event;
+
+            if (state.domainStates.botOAuthSignInId === data.signin) {
+                const { signin, code } = data;
+                const text = `${code}`;
+                const action = {
+                    type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
+                    meta: { method: "keyboard" },
+                    payload: {
+                        activity: {
+                            channelData: {
+                                tags: ["Hidden"]
+                            },
+                            text,
+                            textFormat: "plain",
+                            type: "message",
+                        }
+                    }
+                };
+
+                WebChatStoreLoader.store.dispatch(action);
+
+                const response = {
+                    signin,
+                    result: "Success"
+                };
+
+                magicCodeResponseBroadcastChannel.postMessage(response);
+
+                dispatch({type: LiveChatWidgetActionType.SET_BOT_OAUTH_SIGNIN_ID, payload: ""});
+            } else {
+                console.log("ERROR");
+            }
+        });
+    }, [state.domainStates.botOAuthSignInId]);
 
     return (
         <><style>{`
