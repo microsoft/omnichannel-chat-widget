@@ -11,6 +11,7 @@
 1. [Installation](#installation)
 1. [Example Usage](#example-usage)
 1. [Components](#components)
+1. [Common Scenarios](#)
 1. [See Also](#see-also)
 
 ## Introduction
@@ -222,6 +223,13 @@ const customizedFooterProp: IFooterProps = {
 ```
 
 > :pushpin: Note that [WebChat hooks](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/HOOKS.md) can also be used in any custom components.
+
+## Common Scenarios
+
+### Bot Magic Code
+
+```
+```
 
 ## See Also
 
