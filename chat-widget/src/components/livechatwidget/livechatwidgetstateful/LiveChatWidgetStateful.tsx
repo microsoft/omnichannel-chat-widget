@@ -143,7 +143,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
         });
 
-        BroadcastService.getMessageByEventName("StartProactiveChat").subscribe((msg: ICustomEvent) => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.StartProactiveChat).subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
                 Description: "Start proactive chat event received."
@@ -159,7 +159,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // start chat from SDK Event
-        BroadcastService.getMessageByEventName("StartChat").subscribe(() => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe(() => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
@@ -172,7 +172,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // end chat from SDK Event
-        BroadcastService.getMessageByEventName("EndChat").subscribe(async () => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.EndChat).subscribe(async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "End chat event received."
@@ -190,6 +190,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
         BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
+        });
+
+        // Close popout window
+        BroadcastService.getMessageByEventName(BroadcastEvent.ClosePopoutWindow).subscribe(() => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.ClosePopoutWindowEventRecevied,
+                Description: "Close popout window event received."
+            });
+            dispatch({
+                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
+                    proactiveChatBodyTitle: "",
+                    proactiveChatEnablePrechat: false,
+                    proactiveChatInNewWindow: false
+                }
+            });
         });
 
         window.addEventListener("beforeunload", () => {
