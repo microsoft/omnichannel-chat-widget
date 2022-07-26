@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>Bot SSO Magic Code Forwarder</title>
+        <script>
+            // Create global vars
+            let currentSignInId = '';
+
+            // Register to cross-frame communication events & relay message from Token Page to LCW via magic code broadcast channel
+            const magicCodeBroadcastChannel = new BroadcastChannel('MagicCodeChannel');
+            window.addEventListener("message", (event) => {
+                const {data} = event;
+                const {signin} = data;
+                currentSignInId = signin; // Save current sign in id
+                magicCodeBroadcastChannel.postMessage(data);
+            });
+
+            // Register to magic code response broadcast channel to relay message from LCW to Token Page
+            const magicCodeResponseBroadcastChannel = new BroadcastChannel('MagicCodeResponseChannel');
+            magicCodeResponseBroadcastChannel.addEventListener("message", (event) => {
+                const {data} = event;
+                const {signin} = data;
+
+                // Validate signin
+                if (currentSignInId === signin) {
+                    if (window.parent && window.parent.postMessage) {
+                        window.parent.postMessage(data, '*');
+                    }
+                }
+            });
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
