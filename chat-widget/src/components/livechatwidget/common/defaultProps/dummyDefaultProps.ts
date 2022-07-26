@@ -298,7 +298,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             hideChatSubtitle: false,
             hideChatTitle: false,
             hideNotificationBubble: true,
-            unreadMessageString: "new messages"
+            unreadMessageString: "new messages",
+            largeUnreadMessageString: "99+"
         },
         styleProps: {
             generalStyleProps: {
@@ -1626,9 +1627,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             MIDDLEWARE_MESSAGE_NOT_DELIVERED: "Not Delivered",
             MIDDLEWARE_MESSAGE_RETRY: "Retry",
             PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE: "{0} field is required",
-            MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external.",
-            LARGE_UNREAD_MESSAGES_STRING: "99+",
-            UNREAD_MESSAGES_STRING: "new messages"
+            MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external."
         }
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,

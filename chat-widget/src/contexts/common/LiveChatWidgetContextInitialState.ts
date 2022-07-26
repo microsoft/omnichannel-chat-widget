@@ -2,7 +2,6 @@ import { ConversationState } from "./ConversationState";
 import { ILiveChatWidgetContext } from "./ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces/ILiveChatWidgetProps";
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
-import { defaultChatButtonLocalizedTexts } from "../../components/chatbuttonstateful/common/defaultProps/defaultChatButtonLocalizedTexts";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
     if (props?.liveChatContextFromCache) {
@@ -15,7 +14,6 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             widgetElementId: "",
             renderingMiddlewareProps: props.webChatContainerProps?.renderingMiddlewareProps,
             middlewareLocalizedTexts: defaultMiddlewareLocalizedTexts,
-            chatbuttonLocalizedTexts: defaultChatButtonLocalizedTexts,
             preChatSurveyResponse: "{}",
             chatToken: undefined,
             postChatContext: undefined,

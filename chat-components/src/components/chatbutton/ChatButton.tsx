@@ -2,7 +2,7 @@ import { IIconStyles, ILabelStyles, IStackStyles, Icon, Label, Stack } from "@fl
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType, KeyCodes } from "../../common/Constants";
+import { ElementType, HiddenTextStyles, KeyCodes } from "../../common/Constants";
 import type { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";
@@ -19,15 +19,6 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
         root: Object.assign({}, defaultChatButtonNotificationBubbleStyles, props.styleProps?.notificationBubbleStyleProps)
     };
 
-    const ihiddenTextStyles: React.CSSProperties = {
-        position: "absolute",
-        height: "1px",
-        width: "1px",
-        overflow: "hidden",
-        clip: "rect(1px, 1px, 1px, 1px)",
-        whiteSpace: "nowrap"
-    };
-
     const unreadMessageCount = props.controlProps?.unreadMessageCount ?? defaultChatButtonControlProps?.unreadMessageCount  ;
     if (unreadMessageCount !== "0") {
         return (decodeComponentString(props.componentOverrides?.notificationBubble) || 
@@ -37,7 +28,7 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
                 className={props.styleProps?.classNames?.notificationBubbleClassName}
                 id={parentId + "-notification-bubble"}>
                 {unreadMessageCount}
-                <span style={ihiddenTextStyles}>{props.controlProps?.unreadMessageString}</span>
+                <span style={HiddenTextStyles}>{props.controlProps?.unreadMessageString}</span>
             </Stack>     
         );
     }

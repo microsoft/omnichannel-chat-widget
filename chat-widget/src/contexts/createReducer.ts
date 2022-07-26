@@ -29,15 +29,6 @@ export const createReducer = () => {
                     }
                 };
 
-            case LiveChatWidgetActionType.SET_CHATBUTTON_LOCALIZED_TEXTS:
-                return {
-                    ...state,
-                    domainStates: {
-                        ...state.domainStates,
-                        chatbuttonLocalizedTexts: action.payload as ILiveChatWidgetLocalizedTexts
-                    }
-                };
-
             case LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS:
                 return {
                     ...state,

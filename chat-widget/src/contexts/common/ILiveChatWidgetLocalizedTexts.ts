@@ -127,14 +127,4 @@ export interface ILiveChatWidgetLocalizedTexts {
      * Markdown Text for URL opening in a new window
      */
     MARKDOWN_EXTERNAL_LINK_ALT?: string;
-
-    /*
-     * Display message for unread Message Count for more than 99 messages
-     */
-    LARGE_UNREAD_MESSAGES_STRING?: string;
-
-    /*
-     * Display message for unread Message Count
-     */
-    UNREAD_MESSAGES_STRING?: string;
 }

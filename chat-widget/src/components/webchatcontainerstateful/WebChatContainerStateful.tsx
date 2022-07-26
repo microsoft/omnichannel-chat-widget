@@ -12,7 +12,6 @@ import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMi
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
-import { defaultChatButtonLocalizedTexts } from "../chatbuttonstateful/common/defaultProps/defaultChatButtonLocalizedTexts";
 
 export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) => {
 
@@ -27,7 +26,6 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
     
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
-        ...defaultChatButtonLocalizedTexts,
         ...props?.localizedTexts
     };
 
