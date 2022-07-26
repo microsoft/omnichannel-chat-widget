@@ -95,7 +95,8 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
         if ((value.tags && value.tags.toLowerCase().indexOf(Constants.systemMessageTag) !== -1)
             || (value.isControlMessage && value.isControlMessage === true)
             || (value.contentType && value.contentType.toLowerCase() === TranscriptConstants.AdaptiveCardType)
-            || (value.deliveryMode && value.deliveryMode.toLowerCase() === TranscriptConstants.InternalMode)) {
+            || (value.deliveryMode && value.deliveryMode.toLowerCase() === TranscriptConstants.InternalMode)
+            || (value.tags && value.tags.toLowerCase().indexOf(Constants.hiddenTag.toLowerCase()) !== -1)) {
             return;
         } else if (value.from) {
             if (value.from.application) {
