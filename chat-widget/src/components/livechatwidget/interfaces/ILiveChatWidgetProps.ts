@@ -5,7 +5,6 @@ import { IChatButtonProps } from "@microsoft/omnichannel-chat-components/lib/typ
 import { IConfirmationPaneStatefulProps } from "../../confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps";
 import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
 import { IEmailTranscriptPaneProps } from "../../emailtranscriptpanestateful/interfaces/IEmailTranscriptPaneProps";
-import { IFeatureConfig } from "./IFeatureConfig";
 import { IFooterProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterProps";
 import { IHeaderProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderProps";
 import { ILiveChatWidgetComponentOverrides } from "./ILiveChatWidgetComponentOverrides";
@@ -56,5 +55,4 @@ export interface ILiveChatWidgetProps {
     webChatContainerProps?: IWebChatContainerStatefulProps;
     liveChatContextFromCache?: ILiveChatWidgetContext;
     contextDataStore?: IContextDataStore;
-    featureConfig?: IFeatureConfig;
 }

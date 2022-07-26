@@ -1,7 +1,7 @@
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { LiveChatWidgetActionType } from "../../../../../contexts/common/LiveChatWidgetActionType";
-import { IBotMagicCodeFeatureConfig } from "../../../../livechatwidget/interfaces/IFeatureConfig";
+import { IBotMagicCodeConfig } from "../../../interfaces/IBotMagicCodeConfig";
 
 enum CardActionType {
     OpenUrl = "openUrl",
@@ -11,7 +11,7 @@ enum CardActionType {
 const validCardActionTypes = [CardActionType.OpenUrl, CardActionType.SignIn];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
 
-export const createCardActionMiddleware = (botMagicCodeConfig: IBotMagicCodeFeatureConfig | undefined, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const createCardActionMiddleware = (botMagicCodeConfig: IBotMagicCodeConfig | undefined, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     const cardActionMiddleware = () => (next: any) => (...args: any) => {
         const [card] = args;
         
