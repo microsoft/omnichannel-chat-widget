@@ -20,12 +20,6 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        - props: The localized middlware texts for bhat button
-    */
-        SET_CHATBUTTON_LOCALIZED_TEXTS,
-
-    /*
-        Parameters:
         - dir: The global direction prop that will apply to each component if noit specified
     */
     SET_GLOBAL_DIR,

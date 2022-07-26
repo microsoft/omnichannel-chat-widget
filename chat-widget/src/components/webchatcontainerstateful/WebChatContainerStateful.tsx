@@ -33,7 +33,6 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
         setFocusOnSendBox();
         dispatch({type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: props?.renderingMiddlewareProps});
         dispatch({type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts});
-        dispatch({type: LiveChatWidgetActionType.SET_CHATBUTTON_LOCALIZED_TEXTS, payload: localizedTexts});
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.WebChatLoaded
         });
