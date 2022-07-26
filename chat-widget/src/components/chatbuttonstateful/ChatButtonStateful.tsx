@@ -42,8 +42,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
                     eventName: BroadcastEvent.ProactiveChatIsInPopoutMode,
                 };
                 BroadcastService.postMessage(proactiveChatIsInPopoutModeEvent);
-            }
-            else if (state.appStates.isMinimized) {
+            } else if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             } else {
                 await startChat();

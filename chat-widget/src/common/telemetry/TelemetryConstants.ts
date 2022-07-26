@@ -23,18 +23,22 @@ export enum LogLevel {
 // Events used in certain functionalities that are not being logged
 export enum BroadcastEvent {
     LoadPostChatSurvey = "LoadPostChatSurvey",
-    EndChat = "ChatEnded",
+    ChatEnded = "ChatEnded",
     NewMessageNotification = "NewMessageNotification",
     UnreadMessageCount = "UnreadMessageCount",
+    StartProactiveChat = "StartProactiveChat",
     ProactiveChatStartChat = "ProactiveChatStartChat",
     ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
     ProactiveChatIsInPopoutMode = "ProactiveChatIsInPopoutMode",
+    ClosePopoutWindow = "ClosePopoutWindow",
     InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",
     NewMessageSent = "NewMessageSent",
     NewMessageReceived = "NewMessageReceived",
     RedirectPageRequest = "RedirectPageRequest",
+    StartChat = "StartChat",
     StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
     StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
+    EndChat = "EndChat",
     SetCustomContext = "SetCustomContext",
     ChatRetrievedFromCache = "ChatRetrievedFromCache"
 }
