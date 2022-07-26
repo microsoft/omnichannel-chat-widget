@@ -113,6 +113,7 @@ export enum TelemetryEvent {
     EmailTranscriptButtonClicked = "EmailTranscriptButtonClicked",
     EmailTranscriptCancelButtonClicked = "EmailTranscriptCancelButtonClicked",
     AudioToggleButtonClicked = "AudioToggleButtonClicked",
+    SuppressBotMagicCode = "SuppressBotMagicCode",
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
     ProcessingSanitizationMiddlewareFailed = "ProcessingSanitizationMiddlewareFailed",
