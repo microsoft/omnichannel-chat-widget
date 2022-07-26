@@ -29,7 +29,7 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
                 id={parentId + "-notification-bubble"}>
                 {unreadMessageCount}
                 <span style={HiddenTextStyles}>{props.controlProps?.unreadMessageString}</span>
-            </Stack>     
+            </Stack>
         );
     }
     return null;

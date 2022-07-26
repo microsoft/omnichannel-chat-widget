@@ -17,7 +17,6 @@ export class Constants {
     public static readonly true = "true";
     public static readonly false = "false";
     public static readonly maximumUnreadMessageCount = 99;
-    public static readonly widgetStateDataKey = "LcwChatWidgetState";
 
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";
@@ -109,6 +108,8 @@ export class Constants {
     // internet connection test
     public static readonly internetConnectionTestUrl = "https://ocsdk-prod.azureedge.net/public/connecttest.txt";
     public static readonly internetConnectionTestUrlText = "Omnichannel Connect Test";
+
+    public static readonly ChatWidgetStateChangedPrefix = "ChatWidgetStateChanged";
 }
 
 export const Regex = class {

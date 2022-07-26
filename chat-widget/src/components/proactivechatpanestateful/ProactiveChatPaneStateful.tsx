@@ -25,6 +25,13 @@ export const ProactiveChatPaneStateful = (props: any) => {
     const handleProactiveChatInviteTimeout = () => {
         if (!timeoutRemoved) {
             setTimeoutRemoved(true);
+            dispatch({
+                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
+                    proactiveChatBodyTitle: "",
+                    proactiveChatEnablePrechat: false,
+                    proactiveChatInNewWindow: false
+                }
+            });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ProactiveChatRejected,
@@ -66,6 +73,13 @@ export const ProactiveChatPaneStateful = (props: any) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ProactiveChatClosed,
                 Description: "Proactive chat closed."
+            });
+            dispatch({
+                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
+                    proactiveChatBodyTitle: "",
+                    proactiveChatEnablePrechat: false,
+                    proactiveChatInNewWindow: false
+                }
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
         },
