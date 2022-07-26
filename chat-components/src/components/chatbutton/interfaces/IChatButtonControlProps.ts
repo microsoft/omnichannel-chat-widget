@@ -14,4 +14,5 @@ export interface IChatButtonControlProps {
     hideChatTitle?: boolean;
     hideNotificationBubble?: boolean;
     unreadMessageString?: string;
+    largeUnreadMessageString?: string;
 }
