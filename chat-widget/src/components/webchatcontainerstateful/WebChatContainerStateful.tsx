@@ -13,6 +13,23 @@ import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
+import { Constants } from "../../common/Constants";
+
+const postActivity = (activity: any) => {
+    return {
+        type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
+        meta: { method: "keyboard" },
+        payload: {
+            activity: {
+                channelData: undefined,
+                text: "",
+                textFormat: "plain",
+                type: Constants.message,
+                ...activity
+            }
+        }
+    };
+};
 
 export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) => {
     const { BasicWebChat } = Components;
@@ -47,20 +64,12 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
             if (state.domainStates.botOAuthSignInId === data.signin) {
                 const { signin, code } = data;
                 const text = `${code}`;
-                const action = {
-                    type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
-                    meta: { method: "keyboard" },
-                    payload: {
-                        activity: {
-                            channelData: {
-                                tags: ["Hidden"]
-                            },
-                            text,
-                            textFormat: "plain",
-                            type: "message",
-                        }
+                const action = postActivity({
+                    text,
+                    channelData: {
+                        tags: [Constants.hiddenTag]
                     }
-                };
+                });
 
                 WebChatStoreLoader.store.dispatch(action);
 

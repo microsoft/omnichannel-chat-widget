@@ -44,6 +44,7 @@ export class Constants {
     public static readonly queuePositionMessageTag = "queueposition";
     public static readonly averageWaitTimeMessageTag = "averagewaittime";
     public static readonly message = "message";
+    public static readonly hiddenTag = "Hidden";
 
     //attachmentMiddleware
     public static readonly supportedAdaptiveCardContentTypes: Array<string> = [
