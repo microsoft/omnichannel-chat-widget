@@ -2,7 +2,7 @@ import { IIconStyles, ILabelStyles, IStackStyles, Icon, Label, Stack } from "@fl
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType, KeyCodes, HiddenTextStyles } from "../../common/Constants";
+import { ElementType, HiddenTextStyles, KeyCodes } from "../../common/Constants";
 import type { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";

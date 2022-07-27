@@ -25,5 +25,8 @@ All notable changes to this project will be documented in this file.## [Unreleas
 ## [0.1.0] - 2022-7-19
 ### Added
 - Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.423d0ce
+- Added and localized the unread Message Count alert text
+- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.353ecff
 ### Fixed
 - Fixed hover customizations for Audio notification button
+

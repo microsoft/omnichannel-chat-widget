@@ -297,7 +297,9 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             hideChatTextContainer: false,
             hideChatSubtitle: false,
             hideChatTitle: false,
-            hideNotificationBubble: true
+            hideNotificationBubble: true,
+            unreadMessageString: "new messages",
+            largeUnreadMessageString: "99+"
         },
         styleProps: {
             generalStyleProps: {
