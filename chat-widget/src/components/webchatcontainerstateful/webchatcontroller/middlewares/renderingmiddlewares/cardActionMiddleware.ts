@@ -12,7 +12,7 @@ const validCardActionTypes = [CardActionType.OpenUrl, CardActionType.SignIn];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
 
 export const createCardActionMiddleware = (botMagicCodeConfig: IBotMagicCodeConfig | undefined, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    const cardActionMiddleware = () => (next: any) => (...args: any) => {
+    const cardActionMiddleware = () => (next: any) => (...args: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         const [card] = args;
         
         if (card.cardAction && validCardActionTypes.indexOf(card.cardAction.type) >= 0 && card.cardAction.value) {

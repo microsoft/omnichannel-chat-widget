@@ -3,7 +3,7 @@ import { createCardActionMiddleware } from "./cardActionMiddleware";
 
 describe("cardActionMiddleware test", () => {
     it ("createCardActionMiddleware() with undefined botMagicCodeConfig should not change the sign in card url", () => {
-        const next = (args: any) => args;
+        const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
         const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
@@ -22,7 +22,7 @@ describe("cardActionMiddleware test", () => {
             disabled: false
         };
 
-        const next = (args: any) => args;
+        const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
         const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
@@ -41,7 +41,7 @@ describe("cardActionMiddleware test", () => {
             disabled: true
         };
 
-        const next = (args: any) => args;
+        const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
         const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
@@ -62,7 +62,7 @@ describe("cardActionMiddleware test", () => {
             fwdUrl: "http://localhost/forwarder.html"
         };
 
-        const next = (args: any) => args;
+        const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
         const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
@@ -83,7 +83,7 @@ describe("cardActionMiddleware test", () => {
             fwdUrl: "https://localhost/forwarder.html"
         };
 
-        const next = (args: any) => args;
+        const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
         const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {

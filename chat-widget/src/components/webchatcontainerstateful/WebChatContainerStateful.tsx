@@ -15,7 +15,7 @@ import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
 import { Constants } from "../../common/Constants";
 
-const postActivity = (activity: any) => {
+const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
         type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
         meta: { method: "keyboard" },
