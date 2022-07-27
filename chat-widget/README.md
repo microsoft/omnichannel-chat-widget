@@ -238,8 +238,8 @@ const liveChatWidgetProps = {
     chatConfig: chatConfig, // mandatory
     webChatContainerProps: {
         botMagicCode: {
-            disabled: true,
-            fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html' // mandatory
+            disabled: true, 
+            fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
         }
     },    
 };
