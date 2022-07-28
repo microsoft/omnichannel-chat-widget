@@ -1,6 +1,5 @@
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
-import { LiveChatWidgetActionType } from "../../../../../contexts/common/LiveChatWidgetActionType";
 import { IBotMagicCodeConfig } from "../../../interfaces/IBotMagicCodeConfig";
 import { BotMagicCodeStore } from "../../BotMagicCodeStore";
 

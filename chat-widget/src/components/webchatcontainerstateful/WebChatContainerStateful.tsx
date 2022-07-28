@@ -1,6 +1,6 @@
 import { IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, useEffect } from "react";
 import { Components } from "botframework-webchat";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -67,7 +67,7 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
     }, []);
 
     useEffect(() => {
-        const eventListener = (event: { data: any; }) => {
+        const eventListener = (event: { data: any; }) => { // eslint-disable-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
             const { data } = event;
 
             if (BotMagicCodeStore.botOAuthSignInId === data.signin) {
@@ -90,6 +90,8 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
                 });
 
                 BotMagicCodeStore.botOAuthSignInId = "";
+                magicCodeBroadcastChannel.close();
+                magicCodeResponseBroadcastChannel.close();
             } else {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.SuppressBotMagicCode,
