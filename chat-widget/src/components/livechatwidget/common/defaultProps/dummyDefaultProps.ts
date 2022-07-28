@@ -1626,6 +1626,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             MIDDLEWARE_MESSAGE_RETRY: "Retry",
             PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE: "{0} field is required",
             MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external."
+        },
+        botMagicCode: {
+            disabled: false,
+            fwdUrl: ""
         }
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
