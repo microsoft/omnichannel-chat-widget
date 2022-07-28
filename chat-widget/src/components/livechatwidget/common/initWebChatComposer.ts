@@ -113,7 +113,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         groupActivitiesMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableGroupActivitiesMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.groupActivitiesMiddleware,
         typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,
         onTelemetry: createWebChatTelemetry(),
-        cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined, dispatch),
+        cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
         ...props.webChatContainerProps?.webChatProps
     };
 

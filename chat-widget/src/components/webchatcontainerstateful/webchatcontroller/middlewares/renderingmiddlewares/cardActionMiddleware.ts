@@ -1,5 +1,3 @@
-import { Dispatch } from "react";
-import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { IBotMagicCodeConfig } from "../../../interfaces/IBotMagicCodeConfig";
 import { BotMagicCodeStore } from "../../BotMagicCodeStore";
 
@@ -11,7 +9,7 @@ enum CardActionType {
 const validCardActionTypes = [CardActionType.OpenUrl, CardActionType.SignIn];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
 
-export const createCardActionMiddleware = (botMagicCodeConfig: IBotMagicCodeConfig | undefined, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const createCardActionMiddleware = (botMagicCodeConfig: IBotMagicCodeConfig | undefined) => {
     const cardActionMiddleware = () => (next: any) => (...args: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         const [card] = args;
         

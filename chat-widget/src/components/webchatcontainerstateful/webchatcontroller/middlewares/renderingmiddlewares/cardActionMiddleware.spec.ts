@@ -4,7 +4,6 @@ import { createCardActionMiddleware } from "./cardActionMiddleware";
 describe("cardActionMiddleware test", () => {
     it ("createCardActionMiddleware() with undefined botMagicCodeConfig should not change the sign in card url", () => {
         const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
-        const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
             cardAction: {
@@ -13,7 +12,7 @@ describe("cardActionMiddleware test", () => {
             }
         };
 
-        const results = createCardActionMiddleware(undefined, dispatch)()(next)(args);
+        const results = createCardActionMiddleware(undefined)()(next)(args);
         expect(signInUrl).toEqual(results.cardAction.value);
     });
 
@@ -23,7 +22,6 @@ describe("cardActionMiddleware test", () => {
         };
 
         const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
-        const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
             cardAction: {
@@ -32,7 +30,7 @@ describe("cardActionMiddleware test", () => {
             }
         };
 
-        const results = createCardActionMiddleware(botMagicCodeConfig, dispatch)()(next)(args);
+        const results = createCardActionMiddleware(botMagicCodeConfig)()(next)(args);
         expect(args.cardAction.value).toEqual(results.cardAction.value);
     });
 
@@ -42,7 +40,6 @@ describe("cardActionMiddleware test", () => {
         };
 
         const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
-        const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
             cardAction: {
@@ -51,7 +48,7 @@ describe("cardActionMiddleware test", () => {
             }
         };
 
-        const results = createCardActionMiddleware(botMagicCodeConfig, dispatch)()(next)(args);
+        const results = createCardActionMiddleware(botMagicCodeConfig)()(next)(args);
         expect(args.cardAction.value).toEqual(results.cardAction.value);
     });
 
@@ -63,7 +60,6 @@ describe("cardActionMiddleware test", () => {
         };
 
         const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
-        const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
             cardAction: {
@@ -72,7 +68,7 @@ describe("cardActionMiddleware test", () => {
             }
         };
 
-        const results = createCardActionMiddleware(botMagicCodeConfig, dispatch)()(next)(args);
+        const results = createCardActionMiddleware(botMagicCodeConfig)()(next)(args);
         expect(signInUrl === results.cardAction.value).toBe(false);
         expect(results.cardAction.value === `${signInUrl}&fwdUrl=${botMagicCodeConfig.fwdUrl}`).toBe(true);
     });
@@ -84,7 +80,6 @@ describe("cardActionMiddleware test", () => {
         };
 
         const next = (args: any) => args; // eslint-disable-line @typescript-eslint/no-explicit-any
-        const dispatch = jest.fn();
         const signInUrl = "https://token.botframework.com/api/oauth/signin?signin=[signin]";
         const args = {
             cardAction: {
@@ -93,7 +88,7 @@ describe("cardActionMiddleware test", () => {
             }
         };
 
-        const results = createCardActionMiddleware(botMagicCodeConfig, dispatch)()(next)(args);
+        const results = createCardActionMiddleware(botMagicCodeConfig)()(next)(args);
         expect(signInUrl === results.cardAction.value).toBe(true);
         expect(results.cardAction.value === `${signInUrl}&fwdUrl=${botMagicCodeConfig.fwdUrl}`).toBe(false);
     });    
