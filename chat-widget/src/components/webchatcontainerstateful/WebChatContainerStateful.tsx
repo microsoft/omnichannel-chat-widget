@@ -34,8 +34,8 @@ const postActivity = (activity: any) => { // eslint-disable-line @typescript-esl
 export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) => {
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const magicCodeBroadcastChannel = new BroadcastChannel("MagicCodeChannel");
-    const magicCodeResponseBroadcastChannel = new BroadcastChannel("MagicCodeResponseChannel");
+    const magicCodeBroadcastChannel = new BroadcastChannel(Constants.magicCodeBroadcastChannel);
+    const magicCodeResponseBroadcastChannel = new BroadcastChannel(Constants.magicCodeResponseBroadcastChannel);
 
     const containerStyles: IStackStyles = {
         root: Object.assign(
