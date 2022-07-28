@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { LiveChatWidgetActionType } from "../../../../../contexts/common/LiveChatWidgetActionType";
 import { IBotMagicCodeConfig } from "../../../interfaces/IBotMagicCodeConfig";
+import { BotMagicCodeStore } from "../../BotMagicCodeStore";
 
 enum CardActionType {
     OpenUrl = "openUrl",
@@ -23,7 +24,7 @@ export const createCardActionMiddleware = (botMagicCodeConfig: IBotMagicCodeConf
                 const result = botOauthUrlRegex.exec(card.cardAction.value);
 
                 if (result) {
-                    dispatch({type: LiveChatWidgetActionType.SET_BOT_OAUTH_SIGNIN_ID, payload: `${result[1]}`});
+                    BotMagicCodeStore.botOAuthSignInId = `${result[1]}`;
                 }
 
                 // fwdUrl must be on the same domain as the chat widget

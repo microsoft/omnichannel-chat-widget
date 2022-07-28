@@ -1,6 +1,6 @@
 import { IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { Components } from "botframework-webchat";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -14,6 +14,7 @@ import { useChatContextStore } from "../..";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
 import { Constants } from "../../common/Constants";
+import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 
 const broadcastChannelMessageEvent = "message";
 const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -66,10 +67,10 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
     }, []);
 
     useEffect(() => {
-        magicCodeBroadcastChannel.addEventListener(broadcastChannelMessageEvent, (event) => {
+        const eventListener = (event: { data: any; }) => {
             const { data } = event;
 
-            if (state.domainStates.botOAuthSignInId === data.signin) {
+            if (BotMagicCodeStore.botOAuthSignInId === data.signin) {
                 const { signin, code } = data;
                 const text = `${code}`;
                 const action = postActivity({
@@ -88,15 +89,17 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
                     Event: TelemetryEvent.SuppressBotMagicCode
                 });
 
-                dispatch({type: LiveChatWidgetActionType.SET_BOT_OAUTH_SIGNIN_ID, payload: ""});
+                BotMagicCodeStore.botOAuthSignInId = "";
             } else {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.SuppressBotMagicCode,
                     Description: "Signin does not match"
                 });
             }
-        });
-    }, [state.domainStates.botOAuthSignInId]);
+        };
+
+        magicCodeBroadcastChannel.addEventListener(broadcastChannelMessageEvent, eventListener);
+    }, []);
 
     return (
         <><style>{`
