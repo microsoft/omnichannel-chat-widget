@@ -15,6 +15,7 @@ import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
 import { Constants } from "../../common/Constants";
 
+const broadcastChannelMessageEvent = "message";
 const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
         type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
@@ -28,6 +29,13 @@ const postActivity = (activity: any) => { // eslint-disable-line @typescript-esl
                 ...activity
             }
         }
+    };
+};
+
+const createMagicCodeSuccessResponse = (signin: string) => {
+    return {
+        signin,
+        result: "Success"
     };
 };
 
@@ -58,7 +66,7 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
     }, []);
 
     useEffect(() => {
-        magicCodeBroadcastChannel.addEventListener("message", (event) => {
+        magicCodeBroadcastChannel.addEventListener(broadcastChannelMessageEvent, (event) => {
             const { data } = event;
 
             if (state.domainStates.botOAuthSignInId === data.signin) {
@@ -73,11 +81,7 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
 
                 WebChatStoreLoader.store.dispatch(action);
 
-                const response = {
-                    signin,
-                    result: "Success"
-                };
-
+                const response = createMagicCodeSuccessResponse(signin);
                 magicCodeResponseBroadcastChannel.postMessage(response);
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
