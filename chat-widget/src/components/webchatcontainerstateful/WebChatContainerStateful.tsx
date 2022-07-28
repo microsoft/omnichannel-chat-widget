@@ -86,7 +86,7 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
                 magicCodeResponseBroadcastChannel.postMessage(response);
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.SuppressBotMagicCode
+                    Event: TelemetryEvent.SuppressBotMagicCodeSucceeded
                 });
 
                 BotMagicCodeStore.botOAuthSignInId = "";
@@ -94,7 +94,7 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
                 magicCodeResponseBroadcastChannel.close();
             } else {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.SuppressBotMagicCode,
+                    Event: TelemetryEvent.SuppressBotMagicCodeFailed,
                     Description: "Signin does not match"
                 });
             }
