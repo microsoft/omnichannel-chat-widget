@@ -155,6 +155,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Event: TelemetryEvent.ChatAlreadyTriggered,
                     Description: "Start proactive chat method called, when chat was already triggered."
                 });
+                const proactiveChatCheckAndFocusPopoutModeEvent: ICustomEvent = {
+                    eventName: BroadcastEvent.ProactiveChatCheckAndFocusPopoutMode,
+                };
+                BroadcastService.postMessage(proactiveChatCheckAndFocusPopoutModeEvent);
             }
         });
 
@@ -186,18 +190,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
-        // Listen to end chat event from other tabs
-        const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
-        BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
-            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
-        });
-
-        // Close popout window
-        BroadcastService.getMessageByEventName(BroadcastEvent.ClosePopoutWindow).subscribe(() => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.ClosePopoutWindowEventRecevied,
-                Description: "Close popout window event received."
-            });
+        // reset proactive chat params
+        BroadcastService.getMessageByEventName(BroadcastEvent.ResetProactiveChatParams).subscribe(async () => {
             dispatch({
                 type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
                     proactiveChatBodyTitle: "",
@@ -207,7 +201,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             });
         });
 
+        // Listen to end chat event from other tabs
+        const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+        BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
+            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
+        });
+
+        // Close popout window
         window.addEventListener("beforeunload", () => {
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.WindowClosed,
+                Description: "Closed window."
+            });
             disposeTelemetryLoggers();
         });
         if (state.appStates.conversationEndedByAgent) {
@@ -216,7 +221,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, []);
 
     useEffect(() => {
-        canStartProactiveChat.current = state.appStates.conversationState === ConversationState.Closed;
         canEndChat.current = state.appStates.conversationState === ConversationState.Active;
 
         if (state.appStates.conversationState === ConversationState.Active) {
@@ -235,6 +239,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             });
         }
     }, [state.appStates.conversationState]);
+
+    useEffect(() => {
+        canStartProactiveChat.current = state.appStates.conversationState === ConversationState.Closed && !state.appStates.proactiveChatStates.proactiveChatInNewWindow;
+    }, [state.appStates.conversationState, state.appStates.proactiveChatStates.proactiveChatInNewWindow]);
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
