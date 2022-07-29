@@ -39,10 +39,10 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
                 Event: TelemetryEvent.LCWChatButtonClicked
             });
             if (proactiveChatInNewWindow.current) {
-                const proactiveChatCheckAndFocusPopoutModeEvent: ICustomEvent = {
-                    eventName: BroadcastEvent.ProactiveChatCheckAndFocusPopoutMode,
+                const proactiveChatIsInPopoutModeEvent: ICustomEvent = {
+                    eventName: BroadcastEvent.ProactiveChatIsInPopoutMode,
                 };
-                BroadcastService.postMessage(proactiveChatCheckAndFocusPopoutModeEvent);
+                BroadcastService.postMessage(proactiveChatIsInPopoutModeEvent);
             } else if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             } else {

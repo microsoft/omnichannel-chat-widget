@@ -115,7 +115,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `StartProactiveChat`              |On starting proactive chat through sdk method |
 | `ProactiveChatStartChat`          |On `ProactiveChatPane` start chat |
 | `ProactiveChatStartPopoutChat`    |On `ProactiveChatPane` start chat in a new window |
-| `ProactiveChatCheckAndFocusPopoutMode`     |On clicking on chat button or starting proactive chat |
+| `ProactiveChatIsInPopoutMode`     |On clicking on chat button, when a new window is open |
 | `ResetProactiveChatParams`        |On closing popout window for proactive chat |
 | `LoadPostChatSurvey`              |On loading post chat survey |
 | `ChatEnded`                       |On ending chat |

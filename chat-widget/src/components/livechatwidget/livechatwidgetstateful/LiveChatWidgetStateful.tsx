@@ -155,10 +155,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Event: TelemetryEvent.ChatAlreadyTriggered,
                     Description: "Start proactive chat method called, when chat was already triggered."
                 });
-                const proactiveChatCheckAndFocusPopoutModeEvent: ICustomEvent = {
-                    eventName: BroadcastEvent.ProactiveChatCheckAndFocusPopoutMode,
-                };
-                BroadcastService.postMessage(proactiveChatCheckAndFocusPopoutModeEvent);
             }
         });
 
