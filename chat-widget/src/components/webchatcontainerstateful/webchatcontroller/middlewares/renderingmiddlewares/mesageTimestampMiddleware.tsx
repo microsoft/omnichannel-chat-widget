@@ -18,17 +18,11 @@ const isApplicable = (action: IWebChatAction): boolean => {
 };
 
 const isPayloadValid = (action: IWebChatAction) => {
-    return action &&
-        action.payload &&
-        action.payload.activity;
+    return action?.payload?.activity;
 };
 
 const isValidChannel = (action: IWebChatAction): boolean => {
-    return action &&
-        action.payload &&
-        action.payload.activity &&
-        action.payload.activity.channelId &&
-        action.payload.activity.channelId === Constants.acsChannel;
+    return action?.payload?.activity?.channelId === Constants.acsChannel;
 };
 
 const isPVAConversation = (action: IWebChatAction): boolean => {
@@ -44,9 +38,7 @@ const isTagIncluded = (action: any, tag: string): boolean => {
 };
 
 const isRoleUserOn = (action: IWebChatAction) => {
-    return action.payload.activity &&
-        action.payload.activity.from &&
-        action.payload.activity.from.role === Constants.userMessageTag;
+    return action?.payload?.activity?.from?.role === Constants.userMessageTag;
 };
 
 const overrideTimeStamp = (timestampOriginal: string, timeStampNew: string): string => {
@@ -59,10 +51,7 @@ const isTimestampValid = (timeStamp: string): boolean => {
 };
 
 const isDataTagsPresent = (action: IWebChatAction) => {
-    return action.payload &&
-        action.payload.activity &&
-        action.payload.activity.channelData &&
-        action.payload.activity.channelData.tags &&
+    return action?.payload?.activity?.channelData?.tags &&
         action.payload.activity.channelData.tags.length > 0;
 };
 
