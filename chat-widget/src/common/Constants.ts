@@ -52,8 +52,6 @@ export class Constants {
     public static readonly prefixTimestampTag = "ServerMessageTimestamp_";
     public static readonly acsChannel = "ACS_CHANNEL";
     public static readonly publicMessageTag = "public";
-    public static readonly UserMessageTag = "user";
-    public static readonly SystemMessageTag = "system";
 
     //attachmentMiddleware
     public static readonly supportedAdaptiveCardContentTypes: Array<string> = [
