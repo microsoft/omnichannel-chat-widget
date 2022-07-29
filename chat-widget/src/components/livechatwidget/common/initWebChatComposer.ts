@@ -92,6 +92,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             createMessageTimeStampMiddleware,
             gifUploadMiddleware,
             htmlPlayerMiddleware,
+            htmlTextMiddleware,
             createMaxMessageSizeValidator(localizedTexts),
             sanitizationMiddleware,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
