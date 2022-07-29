@@ -48,6 +48,11 @@ export class Constants {
     public static readonly message = "message";
     public static readonly hiddenTag = "Hidden";
 
+    // messageTimestampMiddleware
+    public static readonly prefixTimestampTag = "ServerMessageTimestamp_";
+    public static readonly acsChannel = "ACS_CHANNEL";
+    public static readonly publicMessageTag = "public";
+
     //attachmentMiddleware
     public static readonly supportedAdaptiveCardContentTypes: Array<string> = [
         "application/vnd.microsoft.card.adaptive",
