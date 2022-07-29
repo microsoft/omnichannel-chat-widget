@@ -3,62 +3,62 @@ import { WebChatActionType } from "../../enums/WebChatActionType";
 import { Constants } from "../../../../../common/Constants";
 
 
-export const createMessageTimeStampMiddleware = () => ({dispatch} : {dispatch:any}) => (next : any) => (action:IWebChatAction)=>{
+export const createMessageTimeStampMiddleware = () => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
 
-if (isApplicable(action)){
-   return next (evaluateTagsAndOverrideTimeStamp(action));
-}
+    if (isApplicable(action)) {
+        return next(evaluateTagsAndOverrideTimeStamp(action));
+    }
 
-return next(action);
-}
+    return next(action);
+};
 
-const isApplicable = (action :IWebChatAction) : boolean => {
+const isApplicable = (action: IWebChatAction): boolean => {
     return action.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY &&
-    isPVAConversation(action) &&
-    isPayloadValid(action) &&
-    isValidChannel(action);
-}
+        isPVAConversation(action) &&
+        isPayloadValid(action) &&
+        isValidChannel(action);
+};
 
-const isPayloadValid = (action: any)  => {
+const isPayloadValid = (action: IWebChatAction) => {
     return action &&
         action.payload &&
         action.payload.activity;
-}
+};
 
-const isValidChannel = (action: any): boolean => {
+const isValidChannel = (action: IWebChatAction): boolean => {
     return action &&
         action.payload &&
         action.payload.activity &&
         action.payload.activity.channelId &&
         action.payload.activity.channelId === Constants.acsChannel;
-}
+};
 
-const isPVAConversation = (action: any): boolean => {
+const isPVAConversation = (action: IWebChatAction): boolean => {
     return !isTagIncluded(action, Constants.systemMessageTag) &&
         !isTagIncluded(action, Constants.publicMessageTag) &&
         !isRoleUserOn(action);
-}
+};
 
 const isTagIncluded = (action: any, tag: string): boolean => {
     return isDataTagsPresent(action) &&
         action.payload.activity.channelData.tags.includes(tag);
 
-}
+};
 
-const  isRoleUserOn = (action: any) => {
+const isRoleUserOn = (action: IWebChatAction) => {
     return action.payload.activity &&
         action.payload.activity.from &&
         action.payload.activity.from.role === Constants.userMessageTag;
-}
+};
 
-const overrideTimeStamp = (timestampOriginal: string, timeStampNew: string): string {
+const overrideTimeStamp = (timestampOriginal: string, timeStampNew: string): string => {
     return isTimestampValid(timeStampNew) ? timeStampNew : timestampOriginal;
-}
+};
 
-const isTimestampValid = (timeStamp: string): boolean {
-    const regex: RegExp = /(\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(T)(\d{2})(:{1})(\d{2})(:{1})(\d{2})(.\d+)([Z]{1}))/;
+const isTimestampValid = (timeStamp: string): boolean => {
+    const regex = /(\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(T)(\d{2})(:{1})(\d{2})(:{1})(\d{2})(.\d+)([Z]{1}))/;
     return regex.test(timeStamp);
-}
+};
 
 const isDataTagsPresent = (action: IWebChatAction) => {
     return action.payload &&
@@ -66,26 +66,26 @@ const isDataTagsPresent = (action: IWebChatAction) => {
         action.payload.activity.channelData &&
         action.payload.activity.channelData.tags &&
         action.payload.activity.channelData.tags.length > 0;
-}
+};
 
-const evaluateTagsAndOverrideTimeStamp =  (action : IWebChatAction): IWebChatAction => {
+const evaluateTagsAndOverrideTimeStamp = (action: IWebChatAction): IWebChatAction => {
     const tagValue = tagLookup(action, Constants.prefixTimestampTag);
     if (tagValue) {
         const newTimestamp = extractTimeStamp(tagValue);
         action.payload.activity.timestamp = overrideTimeStamp(action.payload.activity.timestamp, newTimestamp);
     }
     return action;
-}
+};
 
-const extractTimeStamp = (timeStamp: string): string  => {
+const extractTimeStamp = (timeStamp: string): string => {
     if (timeStamp && timeStamp.length > 0) {
-        let ts = timeStamp.split(Constants.prefixTimestampTag);
+        const ts = timeStamp.split(Constants.prefixTimestampTag);
         if (ts && ts.length > 1) {
             return ts[1];
         }
     }
     return timeStamp;
-}
+};
 
 const tagLookup = (action: IWebChatAction, tag: string): string | null => {
     if (!isDataTagsPresent(action)) {
@@ -104,5 +104,4 @@ const tagLookup = (action: IWebChatAction, tag: string): string | null => {
         }
     }
     return null;
-}
-
+};
