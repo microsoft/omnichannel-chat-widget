@@ -1,4 +1,6 @@
 export class Constants {
+    public static readonly magicCodeBroadcastChannel = "MagicCodeChannel";
+    public static readonly magicCodeResponseBroadcastChannel = "MagicCodeResponseChannel";
     public static readonly systemMessageTag = "system";
     public static readonly userMessageTag = "user";
     public static readonly historyMessageTag = "history";
@@ -44,6 +46,7 @@ export class Constants {
     public static readonly queuePositionMessageTag = "queueposition";
     public static readonly averageWaitTimeMessageTag = "averagewaittime";
     public static readonly message = "message";
+    public static readonly hiddenTag = "Hidden";
 
     //attachmentMiddleware
     public static readonly supportedAdaptiveCardContentTypes: Array<string> = [

@@ -68,8 +68,14 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
             return () => false;
         }
 
-        if (card.activity.channelData?.tags?.includes(Constants.systemMessageTag)) {
-            return handleSystemMessage(next, args, card, systemMessageStyleProps);
+        if (card.activity.channelData.tags) {
+            if (card.activity.channelData.tags.includes(Constants.hiddenTag)) {
+                return () => false;
+            }
+
+            if (card.activity.channelData.tags.includes(Constants.systemMessageTag)) {
+                return handleSystemMessage(next, args, card, systemMessageStyleProps);
+            }
         } else if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message
         ) {

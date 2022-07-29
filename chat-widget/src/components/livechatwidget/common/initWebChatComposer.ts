@@ -1,6 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { StyleOptions, createStore } from "botframework-webchat";
-
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
@@ -35,6 +34,7 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
+import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles: any) => {
@@ -113,6 +113,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         groupActivitiesMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableGroupActivitiesMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.groupActivitiesMiddleware,
         typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,
         onTelemetry: createWebChatTelemetry(),
+        cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
         ...props.webChatContainerProps?.webChatProps
     };
 

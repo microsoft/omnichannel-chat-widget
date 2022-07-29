@@ -195,6 +195,8 @@ Refer to the below table to understand different critical telemetry events raise
 |`MessageSent`|On Message Sent|
 |`MessageReceived`|On Message Received|
 |`CustomContextReceived`|On Custom Context Received|
+| `SuppressBotMagicCodeSucceeded` | On sending magic code behind the scenes succeeded |
+| `SuppressBotMagicCodeFailed` | On sending magic code behind the scenes failed |
 
 #### Calling Events
 

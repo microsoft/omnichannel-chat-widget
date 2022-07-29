@@ -1,3 +1,4 @@
+import { IBotMagicCodeConfig } from "./IBotMagicCodeConfig";
 import { ILiveChatWidgetLocalizedTexts } from "../../../contexts/common/ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "./IRenderingMiddlewareProps";
 import { IStyle } from "@fluentui/react";
@@ -16,5 +17,6 @@ export interface IWebChatContainerStatefulProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     storeMiddlewares?: any[];
     renderingMiddlewareProps?: IRenderingMiddlewareProps;
-    localizedTexts?: ILiveChatWidgetLocalizedTexts
+    localizedTexts?: ILiveChatWidgetLocalizedTexts;
+    botMagicCode?: IBotMagicCodeConfig;
 }
