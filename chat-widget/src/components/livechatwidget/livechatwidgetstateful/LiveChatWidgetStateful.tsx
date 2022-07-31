@@ -106,7 +106,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
         if (state.domainStates?.liveChatContext) {
-            console.log("calling init start chat from here");
             const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
             initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
         }

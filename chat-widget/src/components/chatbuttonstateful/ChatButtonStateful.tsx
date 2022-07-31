@@ -38,7 +38,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
                 payload: { wasMinimized: state.appStates.isMinimized }
             });
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.LCWChatButtonClicked,
+                Event: TelemetryEvent.LCWChatButtonClicked
             });
             if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
                 const proactiveChatIsInPopoutModeEvent: ICustomEvent = {
