@@ -55,6 +55,21 @@ const handleSystemMessage = (next: any, args: any[], card: any, systemMessageSty
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isTagIncluded = (card: any, tag: string): boolean => {
+    return isDataTagsPresent(card) &&
+        card.activity.channelData.tags.includes(tag);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isDataTagsPresent = (card: any) => {
+    return card &&
+        card.activity &&
+        card.activity.channelData &&
+        card.activity.channelData.tags &&
+        card.activity.channelData.tags.length > 0;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProperties, userMessageStyleProps?: React.CSSProperties) => () => (next: any) => (...args: any) => {
     const [card] = args;
     if (card.activity) {
@@ -68,7 +83,11 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
             return () => false;
         }
 
-        if (card.activity.channelData?.tags?.includes(Constants.systemMessageTag)) {
+        if (isTagIncluded(card, Constants.hiddenTag)) {
+            return () => false;
+        }
+        
+        if (isTagIncluded(card, Constants.systemMessageTag)) {
             return handleSystemMessage(next, args, card, systemMessageStyleProps);
         } else if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message

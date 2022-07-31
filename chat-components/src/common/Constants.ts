@@ -4,6 +4,15 @@ export const AccessibilityBrightnessRatio = 1.2;
 /* App constants*/
 export const BROADCAST_CHANNEL_NAME = "omnichannel_broadcast_channel";
 
+export const HiddenTextStyles: React.CSSProperties = {
+    position: "absolute",
+    height: "1px",
+    width: "1px",
+    overflow: "hidden",
+    clip: "rect(1px, 1px, 1px, 1px)",
+    whiteSpace: "nowrap"
+};
+
 export const KeyCodes = class {
     public static readonly ENTER = "Enter";
     public static readonly ESCAPE = "Escape";

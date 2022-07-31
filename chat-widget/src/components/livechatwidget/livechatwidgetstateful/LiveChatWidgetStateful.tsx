@@ -220,6 +220,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
         });
 
+        // Close popout window
+        BroadcastService.getMessageByEventName(BroadcastEvent.ClosePopoutWindow).subscribe(() => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.ClosePopoutWindowEventRecevied,
+                Description: "Close popout window event received."
+            });
+            dispatch({
+                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
+                    proactiveChatBodyTitle: "",
+                    proactiveChatEnablePrechat: false,
+                    proactiveChatInNewWindow: false
+                }
+            });
+        });
+
         window.addEventListener("beforeunload", () => {
             disposeTelemetryLoggers();
         });

@@ -1,7 +1,6 @@
 import { IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-
 import { Components } from "botframework-webchat";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -12,11 +11,40 @@ import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMi
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
+import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
+import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
+import { Constants } from "../../common/Constants";
+import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
+
+const broadcastChannelMessageEvent = "message";
+const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    return {
+        type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
+        meta: { method: "keyboard" },
+        payload: {
+            activity: {
+                channelData: undefined,
+                text: "",
+                textFormat: "plain",
+                type: Constants.message,
+                ...activity
+            }
+        }
+    };
+};
+
+const createMagicCodeSuccessResponse = (signin: string) => {
+    return {
+        signin,
+        result: "Success"
+    };
+};
 
 export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) => {
-
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const magicCodeBroadcastChannel = new BroadcastChannel(Constants.magicCodeBroadcastChannel);
+    const magicCodeResponseBroadcastChannel = new BroadcastChannel(Constants.magicCodeResponseBroadcastChannel);
 
     const containerStyles: IStackStyles = {
         root: Object.assign(
@@ -36,6 +64,43 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.WebChatLoaded
         });
+    }, []);
+
+    useEffect(() => {
+        const eventListener = (event: { data: any; }) => { // eslint-disable-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
+            const { data } = event;
+
+            if (BotMagicCodeStore.botOAuthSignInId === data.signin) {
+                const { signin, code } = data;
+                const text = `${code}`;
+                const action = postActivity({
+                    text,
+                    channelData: {
+                        tags: [Constants.hiddenTag]
+                    }
+                });
+
+                WebChatStoreLoader.store.dispatch(action);
+
+                const response = createMagicCodeSuccessResponse(signin);
+                magicCodeResponseBroadcastChannel.postMessage(response);
+
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.SuppressBotMagicCodeSucceeded
+                });
+
+                BotMagicCodeStore.botOAuthSignInId = "";
+                magicCodeBroadcastChannel.close();
+                magicCodeResponseBroadcastChannel.close();
+            } else {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.SuppressBotMagicCodeFailed,
+                    Description: "Signin does not match"
+                });
+            }
+        };
+
+        magicCodeBroadcastChannel.addEventListener(broadcastChannelMessageEvent, eventListener);
     }, []);
 
     return (
