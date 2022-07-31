@@ -29,4 +29,7 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.353ecff
 ### Fixed
 - Fixed hover customizations for Audio notification button
-
+### Fixed
+- Multiple issues with `startChat` SDK method
+- Clearing unread message after chat ended
+- Correcting the `lcw:onMaximize` event
