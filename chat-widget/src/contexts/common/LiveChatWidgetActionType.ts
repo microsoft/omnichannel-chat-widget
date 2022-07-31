@@ -195,4 +195,10 @@ export enum LiveChatWidgetActionType {
         any: Set live chat context
     */
     SET_LIVE_CHAT_CONTEXT,
+
+    /*
+        Parameters:
+        any: Set height and width of Widget
+    */
+    SET_WIDGET_SIZE
 }

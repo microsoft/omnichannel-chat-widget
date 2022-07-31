@@ -14,5 +14,5 @@ export interface IContextDataStore {
     /**
      * removeData: Remove data from data store by key
      */
-    removeData?: (key: string) => void;
+    removeData: (key: string, type: string) => void;
 }

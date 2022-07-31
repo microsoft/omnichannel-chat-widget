@@ -284,5 +284,5 @@ export const getWidgetCacheId = (orgId: string, widgetId: string): string => {
 };
 
 export const getWidgetEndChatEventName = (orgId: string, widgetId: string): string => {
-    return `${BroadcastEvent.EndChat}_${orgId}_${widgetId}`;
+    return `${BroadcastEvent.ChatEnded}_${orgId}_${widgetId}`;
 };

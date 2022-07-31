@@ -1,7 +1,7 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useState } from "react";
 
-import { ChatButton } from "@microsoft/omnichannel-chat-components";
+import { BroadcastService, ChatButton } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../common/Constants";
 import { setFocusOnElement } from "../../common/utils";
 import { ConversationState } from "../../contexts/common/ConversationState";
@@ -32,8 +32,12 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         hideNotificationBubble: buttonProps?.controlProps?.hideNotificationBubble === true || state.appStates.isMinimized === false,
         unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? Constants.maximumUnreadMessageCount.toString() + "+" : state.appStates.unreadMessageCount.toString()) : "0",
         onClick: async () => {
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.ChatInitiated,
+                payload: { wasMinimized: state.appStates.isMinimized }
+            });
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.LCWChatButtonClicked
+                Event: TelemetryEvent.LCWChatButtonClicked,
             });
             if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });

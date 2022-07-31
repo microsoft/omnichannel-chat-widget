@@ -287,6 +287,15 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_WIDGET_SIZE:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        widgetSize: action.payload as any
+                    }
+                };
             default:
                 return state;
         }
