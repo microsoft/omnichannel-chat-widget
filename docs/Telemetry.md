@@ -115,8 +115,8 @@ Refer to the below table to understand different broadcast events raised during 
 | `StartProactiveChat`              |On starting proactive chat through sdk method |
 | `ProactiveChatStartChat`          |On `ProactiveChatPane` start chat |
 | `ProactiveChatStartPopoutChat`    |On `ProactiveChatPane` start chat in a new window |
-| `ProactiveChatIsInPopoutMode`     |On  clicking on chat button, when a new window is open |
-| `ClosePopoutWindow`               |On  closing popout window |
+| `ProactiveChatIsInPopoutMode`     |On clicking on chat button, when a new window is open |
+| `ResetProactiveChatParams`        |On closing popout window for proactive chat |
 | `LoadPostChatSurvey`              |On loading post chat survey |
 | `ChatEnded`                       |On ending chat |
 | `NewMessageNotification`          |On getting a new message |
@@ -153,6 +153,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ConfirmationPaneLoaded`|On `ConfirmationPane` load complete |
 | `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
 | `ReconnectChatPaneLoaded` | On `ReconnectChatPane` load complete|
+| `WindowClosed`            |On window closed|
 
 #### Action Events
 
@@ -191,7 +192,6 @@ Refer to the below table to understand different critical telemetry events raise
 |`ConfirmationConfirmButtonClicked`|On confirmation pane Confirm button clicked|
 |`HeaderCloseButtonClicked`|On Header Close button clicked|
 |`HeaderMinimizeButtonClicked`|On Header Minimize button clicked|
-|`ClosePopoutWindowEventRecevied`|On popout window closed|
 |`MessageSent`|On Message Sent|
 |`MessageReceived`|On Message Received|
 |`CustomContextReceived`|On Custom Context Received|
