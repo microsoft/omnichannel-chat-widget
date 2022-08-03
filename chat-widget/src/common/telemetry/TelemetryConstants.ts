@@ -23,7 +23,7 @@ export enum LogLevel {
 // Events used in certain functionalities that are not being logged
 export enum BroadcastEvent {
     LoadPostChatSurvey = "LoadPostChatSurvey",
-    ChatEnded = "ChatEnded",
+    ChatEnded = "ChatEnded", // used for multitab notification when chat ended 
     NewMessageNotification = "NewMessageNotification",
     UnreadMessageCount = "UnreadMessageCount",
     StartProactiveChat = "StartProactiveChat",
@@ -38,9 +38,12 @@ export enum BroadcastEvent {
     StartChat = "StartChat",
     StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
     StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
-    EndChat = "EndChat",
+    InitiateEndChat = "InitiateEndChat",
     SetCustomContext = "SetCustomContext",
-    ChatRetrievedFromCache = "ChatRetrievedFromCache"
+    ChatRetrievedFromCache = "ChatRetrievedFromCache",
+    MaximizeChat = "MaximizeChat",
+    ChatInitiated = "ChatInitiated",
+    CloseChat = "CloseChat"
 }
 
 // Events being logged
@@ -92,7 +95,7 @@ export enum TelemetryEvent {
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
     StartChatEventRecevied = "StartChatEventReceived",
-    EndChatSDKCall = "EndChatCall",
+    EndChatSDKCall = "EndChatSDKCall",
     EndChatEventReceived = "EndChatEventReceived",
     WindowClosed = "WindowClosed",
     OnNewMessageFailed = "OnNewMessageFailed",
@@ -146,7 +149,7 @@ export enum TelemetryEvent {
     ReconnectChatContinueConversation = "ReconnectChatContinueConversation",
     ReconnectChatStartNewConversation = "ReconnectChatStartNewConversation",
     ReconnectChatMinimize = "ReconnectChatMinimize",
-    
+
     MessageSent = "MessageSent",
     MessageReceived = "MessageReceived",
     CustomContextReceived = "CustomContextReceived"

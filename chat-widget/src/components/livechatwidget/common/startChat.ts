@@ -49,7 +49,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
             setCustomContextParams(props, state);
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-            setCustomContextParams(props, state);         
+            setCustomContextParams(props, state);
             await initStartChat(chatSDK, dispatch, setAdapter);
         }
     }

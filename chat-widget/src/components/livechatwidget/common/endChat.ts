@@ -68,9 +68,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
-            BroadcastService.postMessage({
-                eventName: BroadcastEvent.ChatEnded
-            });
+            dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             if (postMessageToOtherTab) {
                 const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
                 BroadcastService.postMessage({

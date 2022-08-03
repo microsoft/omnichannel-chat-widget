@@ -83,6 +83,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
     const currentMessageCountRef = useRef<number>(0);
+    let widgetStateEventName = "";
 
     useEffect(() => {
         registerTelemetryLoggers(props, dispatch);
@@ -110,6 +111,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     }, []);
 
+    // useEffect for when skip chat button rendering
     useEffect(() => {
         if (state.appStates.skipChatButtonRendering) {
             if (props.reconnectChatPaneProps?.reconnectId && !state.appStates.reconnectId) {
@@ -132,6 +134,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     }, [state.appStates.skipChatButtonRendering]);
 
+    // useEffect for when skip chat button rendering
     useEffect(() => {
         // Add the custom context on receiving the SetCustomContext event
         BroadcastService.getMessageByEventName(BroadcastEvent.SetCustomContext).subscribe((msg: ICustomEvent) => {
@@ -139,7 +142,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.CustomContextReceived,
                 Description: "CustomContext received."
             });
-
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
         });
 
@@ -158,31 +160,65 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
-        // start chat from SDK Event
+        // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe(() => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
             });
-            if (state.appStates.isMinimized) {
-                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-            } else {
+            // Getting updated state from cache
+            const widgetStateEventName = getWidgetCacheId(chatSDK?.omnichannelConfig?.orgId ?? "", chatSDK?.omnichannelConfig?.widgetId ?? "");
+            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
+            const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+
+            if (persistedState.appStates.conversationState === ConversationState.Closed ||
+                persistedState.appStates.conversationState === ConversationState.InActive ||
+                persistedState.appStates.conversationState === ConversationState.Postchat) {
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.ChatInitiated
+                });
                 prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
+            } else {
+                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.MaximizeChat,
+                    payload: {
+                        height: persistedState?.domainStates?.widgetSize?.height,
+                        width: persistedState?.domainStates?.widgetSize?.width
+                    }
+                });
             }
         });
 
-        // end chat from SDK Event
-        BroadcastService.getMessageByEventName(BroadcastEvent.EndChat).subscribe(async () => {
+        // End chat
+        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async (msg: ICustomEvent) => {
+            const isChatUnloading = msg.payload?.chatUnloading ?? false;
+            const isSdkCall = msg.payload?.isSdkCall ?? false;
+            const eventDescription = isChatUnloading ? "End chat event received from unload." : "End chat event received.";
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
-                Description: "End chat event received."
+                Description: eventDescription
             });
-            if (canEndChat.current) {
+            if (isChatUnloading) {
+                //Browser close scenario/no room for PCS/so just end chat and notify agent immidiately
+                endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
+
+                // Clean local storage
+                DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
+            }
+            else if (canEndChat.current) {
                 prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+            }
+
+            // Raise chatClose for SDK events
+            if (isSdkCall) {
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.CloseChat
+                });
             }
         });
 
@@ -214,6 +250,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state.appStates.conversationEndedByAgent) {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
         }
+
+        //Listen to WidgetSize
+        BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
+            dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
+        });
     }, []);
 
     useEffect(() => {
@@ -271,6 +312,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
     }, [props.webChatContainerProps?.webChatStyles]);
 
+    // Publish chat widget state
+    useEffect(() => {
+        widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId, props?.chatSDK?.omnichannelConfig?.widgetId);
+        const chatWidgetStateChangeEvent: ICustomEvent = {
+            eventName: widgetStateEventName,
+            payload: {
+                ...state
+            }
+        };
+        BroadcastService.postMessage(chatWidgetStateChangeEvent);
+    }, [state]);
+
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -281,18 +334,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
-
-    // publish chat widget state
-    useEffect(() => {
-        const widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId, props?.chatSDK?.omnichannelConfig?.widgetId);
-        const chatWidgetStateChangeEvent: ICustomEvent = {
-            eventName: widgetStateEventName,
-            payload: {
-                ...state
-            }
-        };
-        BroadcastService.postMessage(chatWidgetStateChangeEvent);
-    }, [state]);
 
     return (
         <Composer

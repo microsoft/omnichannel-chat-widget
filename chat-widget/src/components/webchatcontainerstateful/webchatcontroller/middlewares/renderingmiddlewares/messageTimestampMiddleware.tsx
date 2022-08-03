@@ -31,6 +31,7 @@ const isPVAConversation = (action: IWebChatAction): boolean => {
         !isRoleUserOn(action);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isTagIncluded = (action: any, tag: string): boolean => {
     return isDataTagsPresent(action) &&
         action.payload.activity.channelData.tags.includes(tag);

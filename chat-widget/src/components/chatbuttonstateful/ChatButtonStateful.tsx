@@ -1,7 +1,7 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 
-import { ChatButton } from "@microsoft/omnichannel-chat-components";
+import { BroadcastService, ChatButton } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../common/Constants";
 import { setFocusOnElement } from "../../common/utils";
 import { ConversationState } from "../../contexts/common/ConversationState";
@@ -15,7 +15,6 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
