@@ -191,8 +191,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // End chat
-        BroadcastService.getMessageByEventName(BroadcastEvent.EndChat).subscribe(async (msg: ICustomEvent) => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async (msg: ICustomEvent) => {
             const isChatUnloading = msg.payload?.chatUnloading ?? false;
+            const isSdkCall = msg.payload?.isSdkCall ?? false;
             const eventDescription = isChatUnloading ? "End chat event received from unload." : "End chat event received.";
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
@@ -201,6 +202,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (isChatUnloading) {
                 //Browser close scenario/no room for PCS/so just end chat and notify agent immidiately
                 endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
+
                 // Clean local storage
                 DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
             }
@@ -210,6 +212,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+            }
+
+            // Raise chatClose for SDK events
+            if (isSdkCall) {
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.CloseChat
+                });
             }
         });
 

@@ -38,11 +38,12 @@ export enum BroadcastEvent {
     StartChat = "StartChat",
     StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
     StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
-    EndChat = "EndChat",
+    InitiateEndChat = "InitiateEndChat",
     SetCustomContext = "SetCustomContext",
     ChatRetrievedFromCache = "ChatRetrievedFromCache",
     MaximizeChat = "MaximizeChat",
-    ChatInitiated = "ChatInitiated"
+    ChatInitiated = "ChatInitiated",
+    CloseChat = "CloseChat"
 }
 
 // Events being logged
@@ -94,7 +95,7 @@ export enum TelemetryEvent {
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
     StartChatEventRecevied = "StartChatEventReceived",
-    EndChatSDKCall = "EndChatCall",
+    EndChatSDKCall = "EndChatSDKCall",
     EndChatEventReceived = "EndChatEventReceived",
     ClosePopoutWindowEventRecevied = "ClosePopoutWindowEventRecevied",
     OnNewMessageFailed = "OnNewMessageFailed",

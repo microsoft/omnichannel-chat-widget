@@ -33,10 +33,6 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         hideNotificationBubble: buttonProps?.controlProps?.hideNotificationBubble === true || state.appStates.isMinimized === false,
         unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? props.buttonProps?.controlProps?.largeUnreadMessageString : state.appStates.unreadMessageCount.toString()) : "0",
         onClick: async () => {
-            BroadcastService.postMessage({
-                eventName: BroadcastEvent.ChatInitiated,
-                payload: { wasMinimized: state.appStates.isMinimized }
-            });
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWChatButtonClicked
             });

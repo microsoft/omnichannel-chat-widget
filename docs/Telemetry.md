@@ -130,6 +130,9 @@ Refer to the below table to understand different broadcast events raised during 
 | `StartChatSkippingChatButtonRendering`      |On starting chat skipping chat button rendering |
 | `StartUnauthenticatedReconnectChat`      |On starting unauthenticated reconnect chat |
 | `EndChat`                         |On ending chat through sdk method |
+| `MaximizeChat`                         |On maximizing chat |
+| `ChatInitiated`                         |On SDK `startChat` method call |
+| `CloseChat`                         |On SDK `closeChat` method call |
 
 ### Telemetry Events
 
