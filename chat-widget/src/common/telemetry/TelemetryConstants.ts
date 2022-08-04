@@ -43,7 +43,8 @@ export enum BroadcastEvent {
     ChatRetrievedFromCache = "ChatRetrievedFromCache",
     MaximizeChat = "MaximizeChat",
     ChatInitiated = "ChatInitiated",
-    CloseChat = "CloseChat"
+    CloseChat = "CloseChat",
+    InitiateEndChatOnBrowserUnload = "InitiateEndChatOnBrowserUnload",
 }
 
 // Events being logged

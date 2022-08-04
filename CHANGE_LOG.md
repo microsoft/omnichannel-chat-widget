@@ -29,3 +29,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Multiple issues with `startChat` SDK method
 - Clearing unread message after chat ended
 - Correcting the `lcw:onMaximize` event
+- Fixing duplicate `EndChat` issue
