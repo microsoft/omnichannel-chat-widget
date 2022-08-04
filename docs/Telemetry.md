@@ -133,6 +133,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `MaximizeChat`                         |On maximizing chat |
 | `ChatInitiated`                         |On SDK `startChat` method call |
 | `CloseChat`                         |On SDK `closeChat` method call |
+| `InitiateEndChatOnBrowserUnload`      | End active chats on browser unload |
 
 ### Telemetry Events
 
