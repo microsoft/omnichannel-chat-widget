@@ -85,6 +85,26 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const currentMessageCountRef = useRef<number>(0);
     let widgetStateEventName = "";
 
+    const initiateEndChatOnBrowserUnload = () => {
+        const persistedState = getStateFromCache();
+        // End chat if the chat is still active and browser closed
+        if (persistedState.appStates.conversationState === ConversationState.Active) {
+            //Browser close scenario/no room for PCS/so just end chat and notify agent immidiately
+            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
+        }
+        // Clean local storage
+        DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const getStateFromCache = (): any => {
+        // Getting updated state from cache
+        const widgetStateEventName = getWidgetCacheId(chatSDK?.omnichannelConfig?.orgId ?? "", chatSDK?.omnichannelConfig?.widgetId ?? "");
+        const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
+        const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+        return persistedState;
+    };
+
     useEffect(() => {
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
@@ -114,6 +134,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // useEffect for when skip chat button rendering
     useEffect(() => {
         if (state.appStates.skipChatButtonRendering) {
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.ChatInitiated
+            });
             if (props.reconnectChatPaneProps?.reconnectId && !state.appStates.reconnectId) {
                 handleUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
             } else {
@@ -166,14 +189,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
             });
-            // Getting updated state from cache
-            const widgetStateEventName = getWidgetCacheId(chatSDK?.omnichannelConfig?.orgId ?? "", chatSDK?.omnichannelConfig?.widgetId ?? "");
-            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
-            const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
-
+            const persistedState = getStateFromCache();
             if (persistedState.appStates.conversationState === ConversationState.Closed ||
                 persistedState.appStates.conversationState === ConversationState.InActive ||
                 persistedState.appStates.conversationState === ConversationState.Postchat) {
+                console.log("Raising ChatInitiated event");
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
@@ -191,35 +211,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // End chat
-        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async (msg: ICustomEvent) => {
-            const isChatUnloading = msg.payload?.chatUnloading ?? false;
-            const isSdkCall = msg.payload?.isSdkCall ?? false;
-            const eventDescription = isChatUnloading ? "End chat event received from unload." : "End chat event received.";
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.EndChatEventReceived,
-                Description: eventDescription
-            });
-            if (isChatUnloading) {
-                //Browser close scenario/no room for PCS/so just end chat and notify agent immidiately
-                endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
-
-                // Clean local storage
-                DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
-            }
-            else if (canEndChat.current) {
+        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
+            if (canEndChat.current) {
                 prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
             }
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.CloseChat
+            });
+        });
 
-            // Raise chatClose for SDK events
-            if (isSdkCall) {
-                BroadcastService.postMessage({
-                    eventName: BroadcastEvent.CloseChat
-                });
-            }
+        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChatOnBrowserUnload).subscribe(() => {
+            initiateEndChatOnBrowserUnload();
         });
 
         // Listen to end chat event from other tabs
