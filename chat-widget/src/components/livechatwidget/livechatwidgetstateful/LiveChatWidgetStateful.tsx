@@ -193,7 +193,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (persistedState.appStates.conversationState === ConversationState.Closed ||
                 persistedState.appStates.conversationState === ConversationState.InActive ||
                 persistedState.appStates.conversationState === ConversationState.Postchat) {
-                console.log("Raising ChatInitiated event");
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
