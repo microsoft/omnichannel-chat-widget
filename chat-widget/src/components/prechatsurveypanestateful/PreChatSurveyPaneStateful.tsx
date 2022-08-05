@@ -61,7 +61,6 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         onSubmit: async (values: { index: number, label: any, id: any, value: string }[]) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSubmitted });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-
             try {
                 const widgetStateCacheId = getWidgetCacheId(
                     state.domainStates?.telemetryInternalData?.orgId ?? "",
@@ -69,7 +68,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateCacheId, "localStorage");
                 const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
                 let optionalParams = {};
-                if (persistedState?.domainStates?.liveChatContext) {
+                if (persistedState?.domainStates?.liveChatContext && !state.appStates.skipChatButtonRendering) {
                     optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
                     await initStartChat(optionalParams, persistedState);
                 } else {

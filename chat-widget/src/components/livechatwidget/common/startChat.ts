@@ -32,26 +32,29 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     if (props.reconnectChatPaneProps?.reconnectId) {
         await handleRedirectUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
     } else {
-        // Getting PreChat Survey Context
-        const parseToJson = false;
-        const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
-        const showPrechat = state.appStates.conversationState === ConversationState.ProactiveChat ?
-            preChatSurveyResponse && state.appStates.proactiveChatStates.proactiveChatEnablePrechat :
-            preChatSurveyResponse;
         // Getting reconnectId for authenticated chat
         const reconnectId = await getReconnectIdForAuthenticatedChat(props, chatSDK);
         if (reconnectId) {
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
-        } else if (showPrechat) {
-            dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
-            setCustomContextParams(props, state);
         } else {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             setCustomContextParams(props, state);
-            await initStartChat(chatSDK, dispatch, setAdapter);
+            setupChatState(chatSDK, dispatch, setAdapter, state.appStates.conversationState === ConversationState.ProactiveChat, state.appStates.proactiveChatStates.proactiveChatEnablePrechat);
         }
+    }
+};
+
+const setupChatState = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false) => {
+    // Getting PreChat Survey Context
+    const parseToJson = false;
+    const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
+    const showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : preChatSurveyResponse;
+    if (showPrechat) {
+        dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
+    } else {
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+        await initStartChat(chatSDK, dispatch, setAdapter);
     }
 };
 
@@ -160,4 +163,4 @@ const setCustomContextParams = (props: ILiveChatWidgetProps, state: ILiveChatWid
     }
 };
 
-export { prepareStartChat, initStartChat };
+export { prepareStartChat, initStartChat, setupChatState };
