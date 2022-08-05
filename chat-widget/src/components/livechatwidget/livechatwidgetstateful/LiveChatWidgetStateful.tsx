@@ -94,6 +94,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
+        BroadcastService.postMessage({
+            eventName: BroadcastEvent.ChatEnded
+        });
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -190,14 +193,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Description: "Start chat event received."
             });
             const persistedState = getStateFromCache();
-            if (persistedState.appStates.conversationState === ConversationState.Closed ||
+
+            if (persistedState && (persistedState.appStates.conversationState === ConversationState.Closed ||
                 persistedState.appStates.conversationState === ConversationState.InActive ||
-                persistedState.appStates.conversationState === ConversationState.Postchat) {
+                persistedState.appStates.conversationState === ConversationState.Postchat)) { // Embedded mode
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
                 prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
-            } else {
+            } else if (!persistedState) { // Popout chat
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.ChatInitiated
+                });
+                prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
+            }
+            else { // Minimize to Maximize
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
