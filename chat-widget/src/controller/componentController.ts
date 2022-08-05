@@ -2,8 +2,9 @@ import { ConversationState } from "../contexts/common/ConversationState";
 import { ILiveChatWidgetContext } from "../contexts/common/ILiveChatWidgetContext";
 
 export const shouldShowChatButton = (state: ILiveChatWidgetContext) => {
-    return state.appStates.isMinimized ||
-        (state.appStates.conversationState === ConversationState.Closed);
+    return (state.appStates.isMinimized ||
+        (state.appStates.conversationState === ConversationState.Closed)) 
+        && state.appStates.skipChatButtonRendering == false; // Do not show chat button in case of popout
 };
 
 export const shouldShowProactiveChatPane = (state: ILiveChatWidgetContext) => {
@@ -13,14 +14,14 @@ export const shouldShowProactiveChatPane = (state: ILiveChatWidgetContext) => {
 
 export const shouldShowHeader = (state: ILiveChatWidgetContext) => {
     return !state.appStates.isMinimized &&
-        (state.appStates.conversationState !== ConversationState.Closed && 
+        (state.appStates.conversationState !== ConversationState.Closed &&
             state.appStates.conversationState !== ConversationState.ProactiveChat);
 };
 
 export const shouldShowFooter = (state: ILiveChatWidgetContext) => {
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState === ConversationState.Active ||
-        state.appStates.conversationState === ConversationState.InActive);
+            state.appStates.conversationState === ConversationState.InActive);
 };
 
 export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => {
@@ -28,8 +29,8 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
-    return (state.appStates.conversationState === ConversationState.Active || 
-    state.appStates.conversationState === ConversationState.InActive);
+    return (state.appStates.conversationState === ConversationState.Active ||
+        state.appStates.conversationState === ConversationState.InActive);
 };
 
 export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
