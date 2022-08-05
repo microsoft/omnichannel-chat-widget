@@ -2,8 +2,8 @@ import { ConversationState } from "../contexts/common/ConversationState";
 import { ILiveChatWidgetContext } from "../contexts/common/ILiveChatWidgetContext";
 
 export const shouldShowChatButton = (state: ILiveChatWidgetContext) => {
-    return (state.appStates.isMinimized ||
-        (state.appStates.conversationState === ConversationState.Closed)) && !state.appStates.skipChatButtonRendering;
+    return state.appStates.isMinimized ||
+        (state.appStates.conversationState === ConversationState.Closed);
 };
 
 export const shouldShowProactiveChatPane = (state: ILiveChatWidgetContext) => {
