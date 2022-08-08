@@ -94,9 +94,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
-        BroadcastService.postMessage({
-            eventName: BroadcastEvent.ChatEnded
-        });
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
