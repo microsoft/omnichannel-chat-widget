@@ -30,3 +30,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Clearing unread message after chat ended
 - Correcting the `lcw:onMaximize` event
 - Fixing duplicate `EndChat` issue
+- Fixed `skipChatButtonRendering` flow when enabled

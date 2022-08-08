@@ -4,7 +4,7 @@ import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getLocaleDirection, getWidgetCacheId, getWidgetEndChatEventName } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
-import { initStartChat, prepareStartChat } from "../common/startChat";
+import { initStartChat, prepareStartChat, setupChatState } from "../common/startChat";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -149,8 +149,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                             eventName: BroadcastEvent.StartChatSkippingChatButtonRendering,
                         };
                         BroadcastService.postMessage(chatStartedSkippingChatButtonRendering);
-                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-                        initStartChat(chatSDK, dispatch, setAdapter);
+                        setupChatState(chatSDK, dispatch, setAdapter);
                     }
                 });
             }
@@ -357,7 +356,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 styles={generalStyles}
                 className={props.styleProps?.className}>
 
-                {!props.controlProps?.hideChatButton && shouldShowChatButton(state) && (decodeComponentString(props.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={props.chatButtonProps} outOfOfficeButtonProps={props.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
+                {!props.controlProps?.hideChatButton && !props.controlProps?.skipChatButtonRendering && shouldShowChatButton(state) && (decodeComponentString(props.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={props.chatButtonProps} outOfOfficeButtonProps={props.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
 
                 {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
