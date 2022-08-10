@@ -125,9 +125,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
-        if (state.domainStates?.liveChatContext) {
-            const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
-            initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
+        //Check if auth settings enabled, do not connect to existing chat from cache
+        const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
+        if (!isAuthenticationSettingsEnabled) {
+            if (state.domainStates?.liveChatContext) {
+                const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
+                initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
+            }
         }
     }, []);
 
