@@ -303,8 +303,12 @@ export const getStateFromCache = (orgId: string, widgetId: string): any => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isUndefinedOrEmpty = (object: any) => {
-    if (object && Object.keys(object).length === 0) {
+    if (object) {
+        if (Object.keys(object).length === 0) {
+            return true;
+        }
+        return false;
+    } else {
         return true;
     }
-    return false;
 };
