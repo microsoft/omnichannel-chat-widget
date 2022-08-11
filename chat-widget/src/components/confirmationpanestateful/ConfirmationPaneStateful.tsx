@@ -24,7 +24,6 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { prepareEndChat } = props;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
 
     const controlProps: IConfirmationPaneControlProps = {

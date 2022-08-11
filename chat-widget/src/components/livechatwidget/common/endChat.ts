@@ -19,8 +19,21 @@ import { getWidgetEndChatEventName } from "../../../common/utils";
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
     const isPostChatEnabled = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
     const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
-    const conversationDetails = await chatSDK.getConversationDetails();
-    if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let conversationDetails: any;
+    try {
+        conversationDetails = await chatSDK.getConversationDetails();
+    }
+    catch (erorr) {
+        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.GetConversationDetailsException,
+            ExceptionDetails: {
+                exception: `Failed to get conversation details: ${erorr}`
+            }
+        });
+    }
+    if (conversationDetails && isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
         const skipEndChatSDK = false;
         const skipCloseChat = true;
         await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, true);
@@ -32,9 +45,9 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
         } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
         }
-    } else {
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        return;
     }
+    await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,9 +58,6 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                 Event: TelemetryEvent.EndChatSDKCall
             });
             await chatSDK?.endChat();
-            // Need to clear these states immediately when chat ended from OC.
-            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
         } catch (ex) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.EndChatSDKCallFailed,
@@ -58,6 +68,11 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             postMessageToOtherTab = false;
         }
     }
+
+    // Need to clear these states immediately when chat ended from OC.
+    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+
     if (!skipCloseChat) {
         try {
             adapter?.end();

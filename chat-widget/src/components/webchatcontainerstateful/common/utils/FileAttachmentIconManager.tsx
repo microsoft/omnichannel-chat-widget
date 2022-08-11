@@ -4,7 +4,7 @@ import { getBrowserName, isChromiumEdge } from "./BrowserInfo";
 import { BrowserVendor } from "../../webchatcontroller/enums/BrowserVendor";
 import { Constants } from "../../../../common/Constants";
 
-const FileAttachmentIconMap:{[unit: string]: unknown} = {
+const FileAttachmentIconMap: { [unit: string]: unknown } = {
     "aac": AudioIcon,
     "aiff": AudioIcon,
     "alac": AudioIcon,
@@ -69,11 +69,11 @@ export const getFileAttachmentIconData = (extension: string) => {
 
 // Check if browser supports inline media playing for current media format
 export const isInlineMediaSupported = (attachmentName: string): boolean => {
-    switch(getBrowserName()) {
-    case BrowserVendor.CHROME:
-    case BrowserVendor.OPERA: return Constants.chromeSupportedInlineMediaRegex.test(attachmentName);
-    case BrowserVendor.FIREFOX: return Constants.firefoxSupportedInlineMediaRegex.test(attachmentName);
-    case BrowserVendor.EDGE: return isChromiumEdge() && Constants.chromeSupportedInlineMediaRegex.test(attachmentName);
-    default: return false;
+    switch (getBrowserName()) {
+        case BrowserVendor.CHROME:
+        case BrowserVendor.OPERA: return Constants.chromeSupportedInlineMediaRegex.test(attachmentName);
+        case BrowserVendor.FIREFOX: return Constants.firefoxSupportedInlineMediaRegex.test(attachmentName);
+        case BrowserVendor.EDGE: return isChromiumEdge() && Constants.chromeSupportedInlineMediaRegex.test(attachmentName);
+        default: return false;
     }
 };
