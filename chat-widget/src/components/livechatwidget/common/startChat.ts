@@ -13,7 +13,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
-import { createTimer, getStateFromCache } from "../../../common/utils";
+import { createTimer, getStateFromCache, isUndefinedOrEmpty } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconnectChat } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
@@ -96,9 +96,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatSDKCall
             });
+
             // Set optional params
             optionalParams = Object.assign({}, params, optionalParams);
-            console.log("optionalParams:" + JSON.stringify(optionalParams));
 
             await chatSDK.startChat(optionalParams);
             isStartChatSuccessful = true;
@@ -173,7 +173,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 
     //Connect to only active chat session
     if (persistedState &&
-        persistedState?.domainStates?.liveChatContext &&
+        !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
         persistedState?.appStates?.conversationState === ConversationState.Active) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };

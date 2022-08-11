@@ -2,7 +2,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName } from "../../../common/utils";
+import { createTimer, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isUndefinedOrEmpty } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
@@ -119,7 +119,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
         if (!isAuthenticationSettingsEnabled) {
-            if (state.domainStates?.liveChatContext && state.appStates.conversationState === ConversationState.Active) {
+            if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
                 initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
             }

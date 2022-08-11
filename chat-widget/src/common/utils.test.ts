@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { cleanup } from "@testing-library/react";
@@ -269,5 +269,11 @@ describe("utils unit test", () => {
         const testString = "ChatEnded_orgid_widgetid";
         const resultString = getWidgetEndChatEventName("orgid", "widgetid");
         expect(resultString).toBe(testString);
+    });
+
+    it("Test isUndefinedOrEmpty", () => {
+        const testobject = {};
+        const testResult = isUndefinedOrEmpty(testobject);
+        expect(testResult).toBe(true);
     });
 });

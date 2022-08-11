@@ -1,7 +1,7 @@
 import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, parseAdaptiveCardPayload } from "../../common/utils";
+import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -68,7 +68,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
 
                 //Connect to Active chats and chat is not popout
                 if (persistedState &&
-                    persistedState?.domainStates?.liveChatContext &&
+                    !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
                     persistedState?.appStates?.conversationState === ConversationState.Active &&
                     !state.appStates.skipChatButtonRendering) {
                     optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
