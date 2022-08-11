@@ -84,7 +84,9 @@ export const ProactiveChatPaneStateful = (props: any) => {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
         },
         ...proactiveChatProps?.controlProps,
-        bodyTitleText: state.appStates.proactiveChatStates.proactiveChatBodyTitle ?? proactiveChatProps?.controlProps?.bodyTitleText
+        bodyTitleText: state.appStates.proactiveChatStates.proactiveChatBodyTitle ? 
+            state.appStates.proactiveChatStates.proactiveChatBodyTitle : 
+            proactiveChatProps?.controlProps?.bodyTitleText
     };
 
     useEffect(() => {
