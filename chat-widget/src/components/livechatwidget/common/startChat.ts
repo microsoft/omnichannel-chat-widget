@@ -42,6 +42,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     if (reconnectId) {
         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
+        return;
     }
 
     // Set custom context params
