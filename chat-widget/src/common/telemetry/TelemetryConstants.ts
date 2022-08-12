@@ -45,6 +45,7 @@ export enum BroadcastEvent {
     ChatInitiated = "ChatInitiated",
     CloseChat = "CloseChat",
     InitiateEndChatOnBrowserUnload = "InitiateEndChatOnBrowserUnload",
+    ClosePopoutWindow = "ClosePopoutWindow",
 }
 
 // Events being logged
@@ -126,6 +127,7 @@ export enum TelemetryEvent {
     SuppressBotMagicCodeSucceeded = "SuppressBotMagicCodeSucceeded",
     SuppressBotMagicCodeFailed = "SuppressBotMagicCodeFailed",
     GetConversationDetailsException = "GetConversationDetailsException",
+    BrowserUnloadEventStarted = "BrowserUnloadEventStarted",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
@@ -208,6 +210,7 @@ export class TelemetryConstants {
             case TelemetryEvent.MessageSent:
             case TelemetryEvent.MessageReceived:
             case TelemetryEvent.CustomContextReceived:
+            case TelemetryEvent.BrowserUnloadEventStarted:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:

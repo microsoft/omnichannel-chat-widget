@@ -84,6 +84,13 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
+            dispatch({
+                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
+                    proactiveChatBodyTitle: "",
+                    proactiveChatEnablePrechat: false,
+                    proactiveChatInNewWindow: false
+                }
+            });
             if (postMessageToOtherTab) {
                 const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
                 BroadcastService.postMessage({

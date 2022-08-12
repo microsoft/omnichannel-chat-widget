@@ -85,6 +85,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     let widgetStateEventName = "";
 
     const initiateEndChatOnBrowserUnload = () => {
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.BrowserUnloadEventStarted,
+            Description: "Browser unload event received."
+        });
+
         const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
         // End chat if the chat is still active and browser closed
         if (persistedState.appStates.conversationState === ConversationState.Active) {
@@ -93,6 +98,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
+
+        //Message for clearing window[popouTab]
+        BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
     useEffect(() => {
@@ -208,16 +216,19 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
-            // This is to ensure to get latest state from cache in multitab
-            const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
-            if (persistedState &&
-                persistedState.appStates.conversationState === ConversationState.Active) {
-                prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
-            } else {
-                const skipEndChatSDK = true;
-                const skipCloseChat = false;
-                endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+            if (state.appStates.skipChatButtonRendering !== true) {
+                // This is to ensure to get latest state from cache in multitab
+                const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+                if (persistedState &&
+                    persistedState.appStates.conversationState === ConversationState.Active) {
+                    prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+                } else {
+                    const skipEndChatSDK = true;
+                    const skipCloseChat = false;
+                    endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+                }
             }
+
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.CloseChat
             });
@@ -228,17 +239,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             initiateEndChatOnBrowserUnload();
         });
 
-        // Reset proactive chat params
-        BroadcastService.getMessageByEventName(BroadcastEvent.ResetProactiveChatParams).subscribe(async () => {
-            dispatch({
-                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
-                    proactiveChatBodyTitle: "",
-                    proactiveChatEnablePrechat: false,
-                    proactiveChatInNewWindow: false
-                }
-            });
-        });
-
         // Listen to end chat event from other tabs
         const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
         BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
@@ -246,13 +246,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // Close popout window
-        window.addEventListener("beforeunload", () => {
+        /*window.addEventListener("beforeunload", () => {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.WindowClosed,
                 Description: "Closed window."
             });
-            disposeTelemetryLoggers();
-        });
+
+        });*/
 
         // When conversation ended by agent
         if (state.appStates.conversationEndedByAgent) {
@@ -263,6 +263,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
         });
+
+        return () => {
+            disposeTelemetryLoggers();
+        };
     }, []);
 
     useEffect(() => {
