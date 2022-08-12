@@ -31,3 +31,6 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Correcting the `lcw:onMaximize` event
 - Fixing duplicate `EndChat` issue
 - Fixed `skipChatButtonRendering` flow when enabled
+- 'startChat` readability improvement and optimized code
+- Making `.eslintrc.json` compatible with VS code
+- Fixing Auth chat not to connect cached chat
