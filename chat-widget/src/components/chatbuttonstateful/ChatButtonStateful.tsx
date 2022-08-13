@@ -58,6 +58,9 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         titleText: "We're Offline",
         subtitleText: "No agents available",
         onClick: async () => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.LCWChatButtonClicked
+            });
             if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             } else {
