@@ -31,7 +31,6 @@ export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Di
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
     });
 };

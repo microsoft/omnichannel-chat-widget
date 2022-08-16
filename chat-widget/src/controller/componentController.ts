@@ -35,7 +35,7 @@ export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
 
 export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
     return !state.appStates.isMinimized &&
-        !state.appStates.shouldShowPostChat &&
+        state.appStates.shouldShowPostChat === false &&
         (state.appStates.conversationState === ConversationState.Loading);
 };
 
@@ -46,7 +46,7 @@ export const shouldShowReconnectChatPane = (state: ILiveChatWidgetContext) => {
 
 export const shouldShowPostChatLoadingPane = (state: ILiveChatWidgetContext) => {
     return !state.appStates.isMinimized &&
-        state.appStates.shouldShowPostChat &&
+        state.appStates.shouldShowPostChat === true &&
         (state.appStates.conversationState === ConversationState.Loading);
 };
 

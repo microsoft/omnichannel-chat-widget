@@ -296,6 +296,16 @@ export const createReducer = () => {
                         widgetSize: action.payload as any
                     }
                 };
+
+            case LiveChatWidgetActionType.SET_POSTCHAT_LOADING:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        shouldShowPostChat: action.payload as boolean
+                    }
+                };
+
             default:
                 return state;
         }

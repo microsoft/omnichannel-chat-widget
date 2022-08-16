@@ -110,6 +110,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
+        dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: false });
+
         initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
             .then((sdkCreated: boolean) => {
                 sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
@@ -130,6 +132,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
                 initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
+            } else {
+                // All other case should show start chat button, skipChatButtonRendering will take care of it own
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             }
         }
     }, []);
@@ -244,15 +249,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
         });
-
-        // Close popout window
-        /*window.addEventListener("beforeunload", () => {
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.WindowClosed,
-                Description: "Closed window."
-            });
-
-        });*/
 
         // When conversation ended by agent
         if (state.appStates.conversationEndedByAgent) {

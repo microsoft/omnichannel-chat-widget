@@ -206,4 +206,10 @@ export enum LiveChatWidgetActionType {
         any: Set height and width of Widget
     */
     SET_WIDGET_SIZE,
+
+    /*
+        Parameters:
+        boolean: Set to true for loading post chat loading pane, false for loading pane
+    */
+    SET_POSTCHAT_LOADING,
 }

@@ -118,6 +118,7 @@ export class Constants {
     public static readonly internetConnectionTestUrlText = "Omnichannel Connect Test";
 
     public static readonly ChatWidgetStateChangedPrefix = "ChatWidgetStateChanged";
+    public static readonly PostChatLoadingDurationInMs = 4000;
 }
 
 export const Regex = class {

@@ -70,6 +70,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
     }
 
     //Initiate start chat
+    dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: false });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     await initStartChat(chatSDK, dispatch, setAdapter);
 };
@@ -111,8 +112,12 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 }
             });
             isStartChatSuccessful = false;
+            // Resetting the widget state to Closed, for recent introduction of OC rate limiting(429 Error) 
+            // TODO : How to diplay a proper UI message to customer to try after sometime at this point - cool down scenario
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+            return;
         }
-
+        
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
@@ -176,6 +181,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
     if (persistedState &&
         !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
         persistedState?.appStates?.conversationState === ConversationState.Active) {
+        dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: false });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
         await initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);

@@ -13,7 +13,7 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { Constants } from "../../../common/Constants";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
-import { getWidgetEndChatEventName } from "../../../common/utils";
+import { addDelayInMs, getWidgetEndChatEventName } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
@@ -21,7 +21,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
     const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let conversationDetails: any;
+    let conversationDetails: any = undefined;
     try {
         conversationDetails = await chatSDK.getConversationDetails();
     }
@@ -33,11 +33,23 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
             }
         });
     }
-    if (conversationDetails && isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
+
+    // Duplicate post chat loading on closing chat after PCS loaded
+    const isPostChatAlreadyLoaded = state.appStates.shouldShowPostChat;
+    if (isPostChatAlreadyLoaded === true) {
+        return;
+    }
+
+    if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
         const skipEndChatSDK = false;
         const skipCloseChat = true;
         await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, true);
+
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+            dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: true });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+            await addDelayInMs(Constants.PostChatLoadingDurationInMs);
+
             const loadPostChatEvent: ICustomEvent = {
                 eventName: BroadcastEvent.LoadPostChatSurvey,
             };
@@ -79,6 +91,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             setAdapter(undefined);
             setWebChatStyles({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
             WebChatStoreLoader.store = null;
+            dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });

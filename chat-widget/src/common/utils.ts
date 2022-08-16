@@ -312,3 +312,8 @@ export const isUndefinedOrEmpty = (object: any) => {
         return true;
     }
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const addDelayInMs = (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
