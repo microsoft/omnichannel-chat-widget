@@ -62,6 +62,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
+            WebChatStoreLoader.store = null;
             if (isPostChatEnabled === "true") {
                 if (postChatSurveyMode === PostChatSurveyMode.Embed) {
                     dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: true });
