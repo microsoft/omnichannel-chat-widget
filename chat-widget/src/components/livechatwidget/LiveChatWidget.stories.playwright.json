@@ -5613,7 +5613,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 6000
+                    "timeout": 10000
                   }
                 }
               ],
@@ -5734,7 +5734,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 6000
+                    "timeout": 10000
                   }
                 }
               ],
@@ -5855,7 +5855,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 6000
+                    "timeout": 10000
                   }
                 }
               ],
@@ -6510,7 +6510,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 7000
+                    "timeout": 10000
                   }
                 }
               ],
@@ -6625,7 +6625,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 7000
+                    "timeout": 10000
                   }
                 }
               ],
@@ -6740,7 +6740,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 7000
+                    "timeout": 10000
                   }
                 }
               ],
