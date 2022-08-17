@@ -306,7 +306,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Broadcast the UnreadMessageCount state on any change.
     useEffect(() => {
-        if (state.appStates.isMinimized && state.appStates.unreadMessageCount > 0) {
+        if (state.appStates.isMinimized === true && state.appStates.unreadMessageCount > 0) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.Custom,
                 eventName: BroadcastEvent.UnreadMessageCount,

@@ -38,7 +38,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
         } else {
-            setCustomContextParams(props, state);
+            setCustomContextParams(props, chatSDK);
             setupChatState(chatSDK, dispatch, setAdapter, state.appStates.conversationState === ConversationState.ProactiveChat, state.appStates.proactiveChatStates.proactiveChatEnablePrechat);
         }
     }
@@ -136,6 +136,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
         }
+    } finally {
+        optionalParams = {};
     }
 };
 
@@ -154,11 +156,14 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
     }
 };
 
-const setCustomContextParams = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
+const setCustomContextParams = (props: ILiveChatWidgetProps, chatSDK: any) => {
     // Add custom context if any only for unauthenticated chat
-    if (!props.chatConfig?.LiveChatConfigAuthSettings && state.domainStates?.customContext) {
+    const widgetStateEventName = getWidgetCacheId(chatSDK?.omnichannelConfig?.orgId ?? "", chatSDK?.omnichannelConfig?.widgetId ?? "");
+    const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
+    const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+    if (!props.chatConfig?.LiveChatConfigAuthSettings && persistedState?.domainStates?.customContext) {
         optionalParams = Object.assign({}, optionalParams, {
-            customContext: state.domainStates.customContext
+            customContext: persistedState?.domainStates?.customContext
         });
     }
 };
