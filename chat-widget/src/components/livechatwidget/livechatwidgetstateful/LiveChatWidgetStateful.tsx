@@ -2,9 +2,9 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getLocaleDirection, getWidgetCacheId, getWidgetEndChatEventName } from "../../../common/utils";
+import { createTimer, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isUndefinedOrEmpty } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
-import { initStartChat, prepareStartChat, setupChatState } from "../common/startChat";
+import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -72,7 +72,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
-    const canEndChat = useRef(true);
 
     // Process general styles
     const generalStyles: IStackStyles = {
@@ -86,7 +85,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     let widgetStateEventName = "";
 
     const initiateEndChatOnBrowserUnload = () => {
-        const persistedState = getStateFromCache();
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.BrowserUnloadEventStarted,
+            Description: "Browser unload event received."
+        });
+
+        const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
         // End chat if the chat is still active and browser closed
         if (persistedState.appStates.conversationState === ConversationState.Active) {
             //Browser close scenario/no room for PCS/so just end chat and notify agent immidiately
@@ -94,15 +98,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
-    };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const getStateFromCache = (): any => {
-        // Getting updated state from cache
-        const widgetStateEventName = getWidgetCacheId(chatSDK?.omnichannelConfig?.orgId ?? "", chatSDK?.omnichannelConfig?.widgetId ?? "");
-        const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
-        const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
-        return persistedState;
+        //Message for clearing window[popouTab]
+        BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
     useEffect(() => {
@@ -112,6 +110,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
+
         initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
             .then((sdkCreated: boolean) => {
                 sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
@@ -125,9 +124,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
-        if (state.domainStates?.liveChatContext) {
-            const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
-            initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
+        //Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
+        if (!isAuthenticationSettingsEnabled) {
+            if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
+                const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
+                initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
+            } else {
+                // All other case should show start chat button, skipChatButtonRendering will take care of it own
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+            }
         }
     }, []);
 
@@ -149,7 +156,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                             eventName: BroadcastEvent.StartChatSkippingChatButtonRendering,
                         };
                         BroadcastService.postMessage(chatStartedSkippingChatButtonRendering);
-                        setupChatState(chatSDK, dispatch, setAdapter);
+                        setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter);
                     }
                 });
             }
@@ -188,22 +195,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
             });
-            const persistedState = getStateFromCache();
 
-            if (persistedState && (persistedState.appStates.conversationState === ConversationState.Closed ||
-                persistedState.appStates.conversationState === ConversationState.InActive ||
-                persistedState.appStates.conversationState === ConversationState.Postchat)) { // Embedded mode
+            const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+
+            if (persistedState &&
+                (persistedState.appStates.conversationState === ConversationState.Closed ||
+                    persistedState.appStates.conversationState === ConversationState.InActive ||
+                    persistedState.appStates.conversationState === ConversationState.Postchat)) { // Embedded mode
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
                 prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
-            } else if (!persistedState) { // Popout chat
-                BroadcastService.postMessage({
-                    eventName: BroadcastEvent.ChatInitiated
-                });
-                prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
-            }
-            else { // Minimize to Maximize
+            } else { // Minimize to Maximize
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
@@ -217,31 +220,27 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
-            if (canEndChat.current) {
-                prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
-            } else {
-                const skipEndChatSDK = true;
-                const skipCloseChat = false;
-                endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+            if (state.appStates.skipChatButtonRendering !== true) {
+                // This is to ensure to get latest state from cache in multitab
+                const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+                if (persistedState &&
+                    persistedState.appStates.conversationState === ConversationState.Active) {
+                    prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+                } else {
+                    const skipEndChatSDK = true;
+                    const skipCloseChat = false;
+                    endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+                }
             }
+
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.CloseChat
             });
         });
 
+        // End chat on browser unload
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChatOnBrowserUnload).subscribe(() => {
             initiateEndChatOnBrowserUnload();
-        });
-
-        // reset proactive chat params
-        BroadcastService.getMessageByEventName(BroadcastEvent.ResetProactiveChatParams).subscribe(async () => {
-            dispatch({
-                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
-                    proactiveChatBodyTitle: "",
-                    proactiveChatEnablePrechat: false,
-                    proactiveChatInNewWindow: false
-                }
-            });
         });
 
         // Listen to end chat event from other tabs
@@ -250,40 +249,33 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
         });
 
-        // Close popout window
-        window.addEventListener("beforeunload", () => {
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.WindowClosed,
-                Description: "Closed window."
-            });
-            disposeTelemetryLoggers();
-        });
+        // When conversation ended by agent
         if (state.appStates.conversationEndedByAgent) {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
         }
 
-        //Listen to WidgetSize
+        //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
         });
+
+        return () => {
+            disposeTelemetryLoggers();
+        };
     }, []);
 
     useEffect(() => {
-        canEndChat.current = state.appStates.conversationState === ConversationState.Active;
-
+        // On new message
         if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {
+                // Track the message count
+                currentMessageCountRef.current++;
+                dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: currentMessageCountRef.current + 1 });
+
+                // New message notification
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.NewMessageNotification
                 });
-            });
-        }
-
-        // Track the message count
-        if (state.appStates.conversationState === ConversationState.Active) {
-            chatSDK?.onNewMessage(() => {
-                currentMessageCountRef.current++;
-                dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: currentMessageCountRef.current + 1 });
             });
         }
     }, [state.appStates.conversationState]);

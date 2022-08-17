@@ -296,6 +296,7 @@ export const createReducer = () => {
                         widgetSize: action.payload as any
                     }
                 };
+
             default:
                 return state;
         }

@@ -1,4 +1,5 @@
 import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants";
+import { DataStoreManager } from "./contextDataStore/DataStoreManager";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { BroadcastEvent } from "./telemetry/TelemetryConstants";
@@ -242,17 +243,17 @@ export const newGuid = () => {
     for (let i = 0; i < guidPattern.length; i++) {
         const randomString = Math.floor(Math.random() * Date.now());
         switch (guidPattern[i]) {
-        case "x":
-            newGuid += randomString.toString(16).substring(0, 4);
-            break; //get 4 digit
-        case "m":
-            newGuid += randomString.toString(16).substring(0, 3);
-            break; //Get 3 digit
-        case "y":
-            newGuid += (randomString & 0x3 | 0x8).toString(16);
-            break; // To get only one of 8, 9, A, or B
-        default:
-            newGuid += guidPattern[i]; //Default "-" and "4"
+            case "x":
+                newGuid += randomString.toString(16).substring(0, 4);
+                break; //get 4 digit
+            case "m":
+                newGuid += randomString.toString(16).substring(0, 3);
+                break; //Get 3 digit
+            case "y":
+                newGuid += (randomString & 0x3 | 0x8).toString(16);
+                break; // To get only one of 8, 9, A, or B
+            default:
+                newGuid += guidPattern[i]; //Default "-" and "4"
         }
     }
     return newGuid;
@@ -285,4 +286,40 @@ export const getWidgetCacheId = (orgId: string, widgetId: string): string => {
 
 export const getWidgetEndChatEventName = (orgId: string, widgetId: string): string => {
     return `${BroadcastEvent.ChatEnded}_${orgId}_${widgetId}`;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getStateFromCache = (orgId: string, widgetId: string): any => {
+    // Getting updated state from cache
+    try {
+        if (DataStoreManager.clientDataStore) {
+            const widgetStateEventName = getWidgetCacheId(orgId, widgetId);
+            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
+            const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+            return persistedState;
+        } else {
+            return null;
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return null;
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isUndefinedOrEmpty = (object: any) => {
+    if (object) {
+        if (Object.keys(object).length === 0) {
+            return true;
+        }
+        return false;
+    } else {
+        return true;
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const addDelayInMs = (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
 };

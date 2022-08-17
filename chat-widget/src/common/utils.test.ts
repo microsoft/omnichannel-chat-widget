@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { cleanup } from "@testing-library/react";
@@ -54,7 +54,7 @@ describe("utils unit test", () => {
             "       <div id=\"child4\" />" +
             "   </div>" +
             "</div>";
-    
+
         const elementId1 = "child5";
         const result1 = findParentFocusableElementsWithoutChildContainer(elementId1);
         expect(result1).toBe(null);
@@ -66,9 +66,9 @@ describe("utils unit test", () => {
         const elementId3 = "child1";
         const result3 = findParentFocusableElementsWithoutChildContainer(elementId3);
         expect(result3?.length).toBe(1);
-        
+
     });
-    
+
     it("Test getIconText", () => {
         const string1 = "Test String";
         const result1 = getIconText(string1);
@@ -104,7 +104,7 @@ describe("utils unit test", () => {
         expect(result).toBe(escapedHtml);
     });
 
-    it("Test getLocaleDirection method", function() {
+    it("Test getLocaleDirection method", function () {
 
         // Act
         const resultRTL = getLocaleDirection("1025");
@@ -119,7 +119,7 @@ describe("utils unit test", () => {
         expect(resultLTR).toEqual("ltr");
     });
 
-    it("Test changeLanguageCodeFormatForWebChat method", function() {
+    it("Test changeLanguageCodeFormatForWebChat method", function () {
 
         // Act
         const result1 = changeLanguageCodeFormatForWebChat("ar-ar");
@@ -269,5 +269,19 @@ describe("utils unit test", () => {
         const testString = "ChatEnded_orgid_widgetid";
         const resultString = getWidgetEndChatEventName("orgid", "widgetid");
         expect(resultString).toBe(testString);
+    });
+
+    it("Test isUndefinedOrEmpty", () => {
+        const testobject = undefined;
+        const testResult = isUndefinedOrEmpty(testobject);
+        expect(testResult).toBe(true);
+
+        const testobject1 = {};
+        const testResult1 = isUndefinedOrEmpty(testobject1);
+        expect(testResult1).toBe(true);
+
+        const testobject2 = { "test": "value" };
+        const testResult2 = isUndefinedOrEmpty(testobject2);
+        expect(testResult2).toBe(false);
     });
 });

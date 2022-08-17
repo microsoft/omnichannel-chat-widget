@@ -32,3 +32,6 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixing duplicate `EndChat` issue
 - Fixed `skipChatButtonRendering` flow when enabled
 - Fixed the custom context for the first time load
+- 'startChat` readability improvement and optimized code
+- Making `.eslintrc.json` compatible with VS code
+- Fixing Auth chat not to connect cached chat

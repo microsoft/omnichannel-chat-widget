@@ -27,15 +27,15 @@ export class TelemetryHelper {
 
     public static buildTelemetryEvent(level: LogLevel, input: TelemetryInput): TelemetryContract {
         switch (input.scenarioType) {
-        case ScenarioType.LOAD: return TelemetryHelper.conformToLoadContract(level, input);
-        case ScenarioType.IC3_CLIENT: return TelemetryHelper.conformToIC3ClientContract(level, input);
-        case ScenarioType.WEBCHAT: return TelemetryHelper.conformToWebChatContract(level, input);
-        case ScenarioType.OCCHATSDK: return TelemetryHelper.conformToOCChatSDKContract(level, input);
-        case ScenarioType.ACTIONS: return TelemetryHelper.conformToActionsContract(level, input);
-        case ScenarioType.CALLING: return TelemetryHelper.conformToCallingContract(level, input);
-        case ScenarioType.ACS_ADAPTER: return TelemetryHelper.conformToACSAdapterContract(level, input);
-        default:
-        case ScenarioType.CONFIG_VALIDATION: return TelemetryHelper.conformToConfigValidationContract(level, input);
+            case ScenarioType.LOAD: return TelemetryHelper.conformToLoadContract(level, input);
+            case ScenarioType.IC3_CLIENT: return TelemetryHelper.conformToIC3ClientContract(level, input);
+            case ScenarioType.WEBCHAT: return TelemetryHelper.conformToWebChatContract(level, input);
+            case ScenarioType.OCCHATSDK: return TelemetryHelper.conformToOCChatSDKContract(level, input);
+            case ScenarioType.ACTIONS: return TelemetryHelper.conformToActionsContract(level, input);
+            case ScenarioType.CALLING: return TelemetryHelper.conformToCallingContract(level, input);
+            case ScenarioType.ACS_ADAPTER: return TelemetryHelper.conformToACSAdapterContract(level, input);
+            default:
+            case ScenarioType.CONFIG_VALIDATION: return TelemetryHelper.conformToConfigValidationContract(level, input);
         }
     }
 
@@ -181,7 +181,7 @@ export class TelemetryHelper {
             event => {
                 event.RequestId = payload.RequestId;
                 event.Event = payload.Event;
-                event.OCChatSDKVersion = TelemetryManager.InternalTelemetryData.OCChatSDKVersion  ?? "";
+                event.OCChatSDKVersion = TelemetryManager.InternalTelemetryData.OCChatSDKVersion ?? "";
                 event.TransactionId = payload.TransactionId;
                 event.ElapsedTimeInMilliseconds = payload.ElapsedTimeInMilliseconds;
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
