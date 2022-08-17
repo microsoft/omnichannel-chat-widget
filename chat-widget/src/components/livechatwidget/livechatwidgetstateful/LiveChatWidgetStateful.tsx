@@ -110,7 +110,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
-        dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: false });
 
         initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
             .then((sdkCreated: boolean) => {

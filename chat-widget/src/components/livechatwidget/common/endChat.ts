@@ -85,7 +85,6 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             setAdapter(undefined);
             setWebChatStyles({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
             WebChatStoreLoader.store = null;
-            dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });

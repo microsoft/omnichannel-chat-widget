@@ -70,7 +70,6 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
     }
 
     //Initiate start chat
-    dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: false });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     await initStartChat(chatSDK, dispatch, setAdapter);
 };
@@ -183,7 +182,6 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
     if (persistedState &&
         !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
         persistedState?.appStates?.conversationState === ConversationState.Active) {
-        dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: false });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
         await initStartChat(chatSDK, dispatch, setAdapter, optionalParams, persistedState);
