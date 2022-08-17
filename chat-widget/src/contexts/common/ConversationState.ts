@@ -6,6 +6,7 @@ export enum ConversationState {
     ProactiveChat,
     Active,
     InActive,
+    PostchatLoading,
     Postchat,
     Closed
 }

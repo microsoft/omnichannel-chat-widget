@@ -65,8 +65,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             WebChatStoreLoader.store = null;
             if (isPostChatEnabled === "true") {
                 if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-                    dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: true });
-                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
                     await addDelayInMs(Constants.PostChatLoadingDurationInMs);
                     
                     const loadPostChatEvent: ICustomEvent = {

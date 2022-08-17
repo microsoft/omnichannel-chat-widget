@@ -134,6 +134,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `ChatInitiated`                         |On SDK `startChat` method call |
 | `CloseChat`                         |On SDK `closeChat` method call |
 | `InitiateEndChatOnBrowserUnload`      | End active chats on browser unload |
+| `ClosePopoutWindow`      | Event to close popout window  |
 
 ### Telemetry Events
 

@@ -291,12 +291,18 @@ export const getWidgetEndChatEventName = (orgId: string, widgetId: string): stri
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getStateFromCache = (orgId: string, widgetId: string): any => {
     // Getting updated state from cache
-    if (DataStoreManager.clientDataStore) {
-        const widgetStateEventName = getWidgetCacheId(orgId, widgetId);
-        const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
-        const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
-        return persistedState;
-    } else {
+    try {
+        if (DataStoreManager.clientDataStore) {
+            const widgetStateEventName = getWidgetCacheId(orgId, widgetId);
+            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
+            const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+            return persistedState;
+        } else {
+            return null;
+        }
+    }
+    catch (error) {
+        console.log(error);
         return null;
     }
 };

@@ -34,20 +34,13 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
         });
     }
 
-    // Duplicate post chat loading on closing chat after PCS loaded
-    const isPostChatAlreadyLoaded = state.appStates.shouldShowPostChat;
-    if (isPostChatAlreadyLoaded === true) {
-        return;
-    }
-
     if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
         const skipEndChatSDK = false;
         const skipCloseChat = true;
         await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, true);
 
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-            dispatch({ type: LiveChatWidgetActionType.SET_POSTCHAT_LOADING, payload: true });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
             await addDelayInMs(Constants.PostChatLoadingDurationInMs);
 
             const loadPostChatEvent: ICustomEvent = {
