@@ -46,7 +46,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     }
 
     // Set custom context params
-    setCustomContextParams(props, state);
+    setCustomContextParams(props, chatSDK);
 
     // Setting Proactive chat settings
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
@@ -165,6 +165,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
         }
+    } finally {
+        optionalParams = {};
     }
 };
 
@@ -191,11 +193,14 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
     }
 };
 
-const setCustomContextParams = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const setCustomContextParams = (props: ILiveChatWidgetProps, chatSDK: any) => {
     // Add custom context only for unauthenticated chat
-    if (!props.chatConfig?.LiveChatConfigAuthSettings && state.domainStates?.customContext) {
+    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+
+    if (!props.chatConfig?.LiveChatConfigAuthSettings && !isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
         optionalParams = Object.assign({}, optionalParams, {
-            customContext: state.domainStates.customContext
+            customContext: persistedState?.domainStates?.customContext
         });
     }
 };
