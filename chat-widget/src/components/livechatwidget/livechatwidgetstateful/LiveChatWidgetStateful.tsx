@@ -127,15 +127,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         //Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
+        console.log("isAuthenticationSettingsEnabled:" + isAuthenticationSettingsEnabled);
         if (!isAuthenticationSettingsEnabled) {
             if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
                 initStartChat(chatSDK, dispatch, setAdapter, optionalParams);
-            } else {
-                // All other case should show start chat button, skipChatButtonRendering will take care of it own
-                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+                return;
             }
         }
+        // All other case should show start chat button, skipChatButtonRendering will take care of it own
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
     }, []);
 
     // useEffect for when skip chat button rendering
