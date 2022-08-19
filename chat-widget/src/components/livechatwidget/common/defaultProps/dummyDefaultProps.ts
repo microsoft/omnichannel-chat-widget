@@ -1363,7 +1363,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 startNewChatButtonClassName: undefined
             }
         },
-        authClientFunction: undefined,
         isReconnectEnabled: undefined,
         reconnectId: undefined,
         redirectInSameWindow: undefined
@@ -1633,6 +1632,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             disabled: false,
             fwdUrl: ""
         }
+    },
+    authProps: {
+        authClientFunction: undefined,
+        setAuthTokenProviderToChatSdk: undefined
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
 };
