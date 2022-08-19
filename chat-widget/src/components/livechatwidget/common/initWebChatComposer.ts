@@ -62,12 +62,12 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            WebChatStoreLoader.store = null;
             if (isPostChatEnabled === "true") {
                 if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+                    WebChatStoreLoader.store = null;
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
                     await addDelayInMs(Constants.PostChatLoadingDurationInMs);
-                    
+
                     const loadPostChatEvent: ICustomEvent = {
                         eventName: BroadcastEvent.LoadPostChatSurvey,
                     };
