@@ -99,7 +99,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
 
-        //Displose calling instance
+        //Dispose calling instance
         if (voiceVideoCallingSDK) {
             voiceVideoCallingSDK?.close();
         }
