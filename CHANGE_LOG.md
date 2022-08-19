@@ -36,3 +36,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Making `.eslintrc.json` compatible with VS code
 - Fixing Auth chat not to connect cached chat
 - Fixed the header on the postchatloading pane
+- Added authProps to ILiveChatWidgetProps
