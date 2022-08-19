@@ -99,6 +99,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
 
+        //Dispose calling instance
+        if (voiceVideoCallingSDK) {
+            voiceVideoCallingSDK?.close();
+        }
         //Message for clearing window[popouTab]
         BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
@@ -116,18 +120,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
             });
 
-        if (!props.controlProps?.skipChatButtonRendering && props.reconnectChatPaneProps?.reconnectId) {
-            startUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
-        }
-
         // Initialize global dir
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
-        //Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
+        if (!props.controlProps?.skipChatButtonRendering && props.reconnectChatPaneProps?.reconnectId) {
+            startUnauthenticatedReconnectChat(chatSDK, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
+            return;
+        }
+
+        // Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
-        console.log("isAuthenticationSettingsEnabled:" + isAuthenticationSettingsEnabled);
         if (!isAuthenticationSettingsEnabled) {
             if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
@@ -135,6 +139,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 return;
             }
         }
+
         // All other case should show start chat button, skipChatButtonRendering will take care of it own
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
     }, []);
