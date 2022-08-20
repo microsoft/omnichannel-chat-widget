@@ -46,6 +46,8 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         return;
     }
 
+    console.log("ELOPEZANAYA DO NOT MERGE");
+
     // Set custom context params
     setCustomContextParams(props, chatSDK);
 
