@@ -790,7 +790,9 @@ const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
         }
     },
     reconnectChatPaneProps: {
-        isReconnectEnabled: true,
+        isReconnectEnabled: true
+    },
+    authProps: {
         authClientFunction: "testAuth"
     }
 };
