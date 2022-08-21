@@ -1,4 +1,4 @@
-import { DefaultActivitySubscriber } from "./ActivitySubscriber/DefaultActivitySubscriber";
+import { DefaultActivitySubscriber } from "./activitySubscribers/DefaultActivitySubscriber";
 import { shareObservable } from "./shareObservable";
 
 export class ChatAdapterShim {
