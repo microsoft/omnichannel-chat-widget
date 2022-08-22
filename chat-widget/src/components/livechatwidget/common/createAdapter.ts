@@ -2,7 +2,6 @@ import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontr
 import { NotificationLevel } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationLevel";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
-import { ChatAdapterShim } from "../../../common/ShimAdapter/ChatShimAdapter";
 import { createChatAdapterShim } from "./createChatAdapterShim";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,5 +28,6 @@ export const createAdapter = async (chatSDK: any) => {
     // return await chatSDK.createChatAdapter(chatAdapterOptionalParams);
     const adapter = await chatSDK.createChatAdapter(chatAdapterOptionalParams);
     const shimAdapter = await createChatAdapterShim(adapter);
-    return shimAdapter.chatAdapter;
+    return adapter;
+    //return shimAdapter.chatAdapter;
 };
