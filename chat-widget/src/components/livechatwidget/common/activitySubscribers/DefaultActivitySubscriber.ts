@@ -1,4 +1,4 @@
-import { IActivitySubscriber } from "./IActivitySubscriber";
+import { IActivitySubscriber } from "../../interfaces/IActivitySubscriber";
 
 export class DefaultActivitySubscriber implements IActivitySubscriber {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
