@@ -125,7 +125,7 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
         
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
-        setAdapter(newAdapter);
+        setAdapter(newAdapter.chatAdapter);
 
         const chatToken = await chatSDK.getChatToken();
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
