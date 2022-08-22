@@ -129,7 +129,7 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
 
         const chatToken = await chatSDK.getChatToken();
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
-        newAdapter?.chatAdapter.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
+        newAdapter?.chatAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
 
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
