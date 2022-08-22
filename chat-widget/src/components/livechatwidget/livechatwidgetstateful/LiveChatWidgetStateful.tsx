@@ -1,7 +1,7 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, { Dispatch, lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createTimer, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isUndefinedOrEmpty } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
@@ -21,30 +21,46 @@ import {
     shouldShowWebChatContainer
 } from "../../../controller/componentController";
 
-import CallingContainerStateful from "../../callingcontainerstateful/CallingContainerStateful";
-import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
+// Stateful components import
+// import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
+// import CallingContainerStateful from "../../callingcontainerstateful/CallingContainerStateful";
+// import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
+// import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
+// import HeaderStateful from "../../headerstateful/HeaderStateful";
+// import OutOfOfficeHoursPaneStateful from "../../ooohpanestateful/OOOHPaneStateful";
+// import PostChatLoadingPaneStateful from "../../postchatloadingpanestateful/PostChatLoadingPaneStateful";
+// import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostChatSurveyPaneStateful";
+// import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
+// import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
+// import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
+// import LoadingPaneStateful from "../../loadingpanestateful/LoadingPaneStateful";
+// import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
+
+const ChatButtonStateful = lazy(() => import(/* webpackChunkName: "ChatButtonStateful" */ "../../chatbuttonstateful/ChatButtonStateful"));
+const CallingContainerStateful = lazy(() => import(/* webpackChunkName: "CallingContainerStateful" */ "../../callingcontainerstateful/CallingContainerStateful"));
+const ConfirmationPaneStateful = lazy(() => import(/* webpackChunkName: "ConfirmationPaneStateful" */ "../../confirmationpanestateful/ConfirmationPaneStateful"));
+const EmailTranscriptPaneStateful = lazy(() => import(/* webpackChunkName: "EmailTranscriptPaneStateful" */ "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful"));
+const HeaderStateful = lazy(() => import(/* webpackChunkName: "HeaderStateful" */ "../../headerstateful/HeaderStateful"));
+const OutOfOfficeHoursPaneStateful = lazy(() => import(/* webpackChunkName: "OutOfOfficeHoursPaneStateful" */ "../../ooohpanestateful/OOOHPaneStateful"));
+const LoadingPaneStateful = lazy(() => import(/* webpackChunkName: "LoadingPaneStateful" */ "../../loadingpanestateful/LoadingPaneStateful"));
+const PostChatLoadingPaneStateful = lazy(() => import(/* webpackChunkName: "PostChatLoadingPaneStateful" */ "../../postchatloadingpanestateful/PostChatLoadingPaneStateful"));
+const PostChatSurveyPaneStateful = lazy(() => import(/* webpackChunkName: "PostChatSurveyPaneStateful" */ "../../postchatsurveypanestateful/PostChatSurveyPaneStateful"));
+const PreChatSurveyPaneStateful = lazy(() => import(/* webpackChunkName: "PreChatSurveyPaneStateful" */ "../../prechatsurveypanestateful/PreChatSurveyPaneStateful"));
+const ProactiveChatPaneStateful = lazy(() => import(/* webpackChunkName: "ProactiveChatPaneStateful" */ "../../proactivechatpanestateful/ProactiveChatPaneStateful"));
+const ReconnectChatPaneStateful = lazy(() => import(/* webpackChunkName: "ReconnectChatPaneStateful" */ "../../reconnectchatpanestateful/ReconnectChatPaneStateful"));
+const WebChatContainerStateful = lazy(() => import(/* webpackChunkName: "WebChatContainerStateful" */ "../../webchatcontainerstateful/WebChatContainerStateful"));
+
 import { Components } from "botframework-webchat";
-import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
-import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
-import HeaderStateful from "../../headerstateful/HeaderStateful";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
-import LoadingPaneStateful from "../../loadingpanestateful/LoadingPaneStateful";
-import OutOfOfficeHoursPaneStateful from "../../ooohpanestateful/OOOHPaneStateful";
-import PostChatLoadingPaneStateful from "../../postchatloadingpanestateful/PostChatLoadingPaneStateful";
-import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostChatSurveyPaneStateful";
-import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
-import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
-import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
-import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
@@ -354,33 +370,35 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 styles={generalStyles}
                 className={props.styleProps?.className}>
 
-                {!props.controlProps?.hideChatButton && !props.controlProps?.skipChatButtonRendering && shouldShowChatButton(state) && (decodeComponentString(props.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={props.chatButtonProps} outOfOfficeButtonProps={props.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
+                <Suspense fallback={<p>Loading...</p>}>
+                    {!props.controlProps?.hideChatButton && !props.controlProps?.skipChatButtonRendering && shouldShowChatButton(state) && (decodeComponentString(props.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={props.chatButtonProps} outOfOfficeButtonProps={props.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
 
-                {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
+                    {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
-                {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} />)}
+                    {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} />)}
 
-                {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful {...props.loadingPaneProps} />)}
+                    {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful {...props.loadingPaneProps} />)}
 
-                {!props.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(props.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...props.outOfOfficeHoursPaneProps} />)}
+                    {!props.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(props.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...props.outOfOfficeHoursPaneProps} />)}
 
-                {!props.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(props.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful reconnectChatProps={props.reconnectChatPaneProps} initStartChat={initStartChatRelay} />)}
+                    {!props.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(props.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful reconnectChatProps={props.reconnectChatPaneProps} initStartChat={initStartChatRelay} />)}
 
-                {!props.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful surveyProps={props.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />)}
+                    {!props.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful surveyProps={props.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />)}
 
-                {!props.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...props.callingContainerProps} />}
+                    {!props.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...props.callingContainerProps} />}
 
-                {!props.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(props.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...props.webChatContainerProps} />)}
+                    {!props.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(props.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...props.webChatContainerProps} />)}
 
-                {!props.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(props.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
+                    {!props.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(props.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 
-                {!props.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(props.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...props.postChatLoadingPaneProps} />)}
+                    {!props.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(props.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...props.postChatLoadingPaneProps} />)}
 
-                {shouldShowPostChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...props.postChatSurveyPaneProps} {...props.chatSDK} />)}
+                    {shouldShowPostChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...props.postChatSurveyPaneProps} {...props.chatSDK} />)}
 
-                {createFooter(props, state)}
+                    {createFooter(props, state)}
 
-                {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
+                    {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
+                </Suspense>
             </Stack>
         </Composer>
     );

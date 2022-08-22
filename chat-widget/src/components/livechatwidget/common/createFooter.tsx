@@ -1,10 +1,11 @@
-import FooterStateful from "../../footerstateful/FooterStateful";
+// import FooterStateful from "../../footerstateful/FooterStateful";
 import { IFooterProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterProps";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import React from "react";
 import { decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { shouldShowFooter } from "../../../controller/componentController";
+const FooterStateful = React.lazy(() => import(/* webpackChunkName: "FooterStateful" */ "../../footerstateful/FooterStateful"));
 
 export const createFooter = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
     const footerPropsHidden: IFooterProps = {
