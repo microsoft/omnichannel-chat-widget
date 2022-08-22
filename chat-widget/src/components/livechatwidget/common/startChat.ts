@@ -125,11 +125,11 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
         
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
-        setAdapter(newAdapter.chatAdapter);
+        setAdapter(newAdapter);
 
         const chatToken = await chatSDK.getChatToken();
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
-        newAdapter?.chatAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
+        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
 
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
