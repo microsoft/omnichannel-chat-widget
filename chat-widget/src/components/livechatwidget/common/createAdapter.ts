@@ -25,8 +25,8 @@ export const createAdapter = async (chatSDK: any) => {
             }
         }
     };
-    
-    let adapter = await chatSDK.createChatAdapter(chatAdapterOptionalParams);
-    adapter = new ChatAdapterShim(adapter);
-    return adapter.chatAdapter;
+    return await chatSDK.createChatAdapter(chatAdapterOptionalParams);
+    //let adapter = await chatSDK.createChatAdapter(chatAdapterOptionalParams);
+   // adapter = new ChatAdapterShim(adapter);
+    //return adapter.chatAdapter;
 };
