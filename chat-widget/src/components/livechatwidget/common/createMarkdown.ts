@@ -6,6 +6,7 @@ import { Constants } from "../../../common/Constants";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean) => {
     let markdown: MarkdownIt;
+
     if (!disableMarkdownMessageFormatting) {
         markdown = new MarkdownIt(
             Constants.Default,
@@ -17,34 +18,6 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         );
         // ToDo: Commenting below usage of plugin until deferred bug is resolved: https://github.com/mayashavin/markdown-it-slack/issues/1
         // markdown.use(MarkdownSlack);
-
-        // Markdown override for open link in new tab
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, quotes
-        markdown.use(MarkdownItForInline, "url_new_win", "link_open", function (tokens: any, idx: number, env: any) {
-            const targetAttrIndex = tokens[idx].attrIndex(Constants.Target);
-            // Put a transparent pixel instead of the "open in new window" icon, so developers can easily modify the icon in CSS.
-            const TRANSPARENT_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-
-            if (~targetAttrIndex) {
-                tokens[idx].attrs[targetAttrIndex][1] = Constants.Blank;
-            } else {
-                tokens[idx].attrPush([Constants.Target, Constants.Blank]);
-            }
-            const relAttrIndex = tokens[idx].attrIndex(Constants.TargetRelationship);
-            if (~relAttrIndex) {
-                tokens[idx].attrs[relAttrIndex][1] = Constants.TargetRelationshipAttributes;
-            } else {
-                tokens[idx].attrPush([Constants.TargetRelationship, Constants.TargetRelationshipAttributes]);
-                tokens[idx].attrPush([Constants.Title, defaultMarkdownLocalizedTexts.MARKDOWN_EXTERNAL_LINK_ALT]);
-                // eslint-disable-next-line quotes
-                const iconTokens = markdown.parseInline(`![${defaultMarkdownLocalizedTexts.MARKDOWN_EXTERNAL_LINK_ALT}](${TRANSPARENT_GIF})`, env)[0].children;
-
-                if (iconTokens && iconTokens.length > 0) {
-                    iconTokens[0].attrJoin("class", Constants.OpenLinkIconCssClass);
-                    tokens.splice(idx + 2, 0, ...iconTokens);
-                }
-            } 
-        });
     } else {
         markdown = new MarkdownIt(
             Constants.Zero,
@@ -62,6 +35,36 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
             "newline" // Rule to proceess '\n'
         ]);
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    markdown.use(MarkdownItForInline, "url_new_win", "link_open", function (tokens: any, idx: number, env: any) {
+        const targetAttrIndex = tokens[idx].attrIndex(Constants.Target);
+        // Put a transparent pixel instead of the "open in new window" icon, so developers can easily modify the icon in CSS.
+        const TRANSPARENT_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
+        if (~targetAttrIndex) {
+            tokens[idx].attrs[targetAttrIndex][1] = Constants.Blank;
+        } else {
+            tokens[idx].attrPush([Constants.Target, Constants.Blank]);
+        }
+        const relAttrIndex = tokens[idx].attrIndex(Constants.TargetRelationship);
+        if (~relAttrIndex) {
+            tokens[idx].attrs[relAttrIndex][1] = Constants.TargetRelationshipAttributes;
+        } else {
+            tokens[idx].attrPush([Constants.TargetRelationship, Constants.TargetRelationshipAttributes]);
+
+            if (!disableMarkdownMessageFormatting) {
+                tokens[idx].attrPush([Constants.Title, defaultMarkdownLocalizedTexts.MARKDOWN_EXTERNAL_LINK_ALT]);
+                // eslint-disable-next-line quotes
+                const iconTokens = markdown.parseInline(`![${defaultMarkdownLocalizedTexts.MARKDOWN_EXTERNAL_LINK_ALT}](${TRANSPARENT_GIF})`, env)[0].children;
+
+                if (iconTokens && iconTokens.length > 0) {
+                    iconTokens[0].attrJoin("class", Constants.OpenLinkIconCssClass);
+                    tokens.splice(idx + 2, 0, ...iconTokens);
+                }
+            }
+        } 
+    });
 
     return markdown;
 };
