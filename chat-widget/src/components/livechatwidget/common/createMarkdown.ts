@@ -36,6 +36,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         ]);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     markdown.use(MarkdownItForInline, "url_new_win", "link_open", function (tokens: any, idx: number, env: any) {
         const targetAttrIndex = tokens[idx].attrIndex(Constants.Target);
         // Put a transparent pixel instead of the "open in new window" icon, so developers can easily modify the icon in CSS.
