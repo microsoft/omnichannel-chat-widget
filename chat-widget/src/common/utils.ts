@@ -232,7 +232,7 @@ export const isNullOrUndefined = (obj: any) => {
     return (obj === null || obj === undefined);
 };
 
-export const isNullOrEmptyString = (s: string) => {
+export const isNullOrEmptyString = (s: string | null) => {
     return isNullOrUndefined(s) || s === "";
 };
 

@@ -37,3 +37,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixing Auth chat not to connect cached chat
 - Fixed the header on the postchatloading pane
 - Added authProps to ILiveChatWidgetProps
+- Updated props for auth chat

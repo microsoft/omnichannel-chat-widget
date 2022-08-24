@@ -128,6 +128,8 @@ export enum TelemetryEvent {
     SuppressBotMagicCodeFailed = "SuppressBotMagicCodeFailed",
     GetConversationDetailsException = "GetConversationDetailsException",
     BrowserUnloadEventStarted = "BrowserUnloadEventStarted",
+    GetAuthTokenCalled = "GetAuthTokenCalled",
+    ReceivedNullOrEmptyToken = "ReceivedNullOrEmptyToken",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
