@@ -39,8 +39,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
-                const postMessageToOtherTabs = true;
-                await endChat(adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTabs);
+                await endChat(adapter, skipEndChatSDK, skipCloseChat);
             }
             dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT, payload: document.getElementById(`${controlProps.id}-closebutton`) });
         },
