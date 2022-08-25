@@ -75,6 +75,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
     await initStartChat(chatSDK, chatConfig, getAuthToken, dispatch, setAdapter);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
     if (getAuthToken) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
