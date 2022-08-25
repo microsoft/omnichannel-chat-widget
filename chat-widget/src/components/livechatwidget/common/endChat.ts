@@ -37,7 +37,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
     if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
         const skipEndChatSDK = false;
         const skipCloseChat = true;
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, true);
+        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, false);
 
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
@@ -56,7 +56,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
+const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>,
+    adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
     if (!skipEndChatSDK) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {

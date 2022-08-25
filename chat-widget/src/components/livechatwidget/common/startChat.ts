@@ -122,7 +122,7 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             return;
         }
-        
+
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
@@ -179,6 +179,12 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
 const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     // By pass this function in case of popout chat
     if (state.appStates.skipChatButtonRendering === true) {
+        return false;
+    }
+
+    // Cannot connect to existing chat when auth settings enabled
+    const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
+    if (isAuthenticationSettingsEnabled === true) {
         return false;
     }
 
