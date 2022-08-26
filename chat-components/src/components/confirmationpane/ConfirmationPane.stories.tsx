@@ -6,12 +6,14 @@ import { Story } from "@storybook/react";
 import { defaultConfirmationPaneProps } from "./common/defaultProps/defaultConfirmationPaneProps";
 import { encodeComponentString } from "../../common/encodeComponentString";
 import { useArgs } from "@storybook/client-api";
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
 
 export default {
     title: "Stateless Components/Confirmation Pane",
     component: ConfirmationPane,
 } as Meta;
 
+BroadcastServiceInitialize("testChannel");
 const ConfirmationPaneTemplate: Story<IConfirmationPaneProps> = (args) => <ConfirmationPane {...args}></ConfirmationPane>;
 
 /*
@@ -248,21 +250,21 @@ export const ConfirmationPanePreset3: Story<IConfirmationPaneProps> = (args) => 
         updateArgs({
             ...ConfirmationPanePreset3.args,
             controlProps: {
-                ...ConfirmationPanePreset3.args.controlProps,
+                ...ConfirmationPanePreset3.args?.controlProps,
                 titleText: "Row Layout"
             },
             styleProps: {
-                ...ConfirmationPanePreset3.args.styleProps,
-                generalStyleProps: Object.assign({}, ConfirmationPanePreset3.args.styleProps.generalStyleProps, {
+                ...ConfirmationPanePreset3.args?.styleProps,
+                generalStyleProps: Object.assign({}, ConfirmationPanePreset3.args?.styleProps?.generalStyleProps, {
                     flexFlow: "row",
                     buttonFlexDirection: "row",
                     height: "100px",
                     width: "500px"
                 }),
-                titleStyleProps: Object.assign({}, ConfirmationPanePreset3.args.styleProps.titleStyleProps, {
+                titleStyleProps: Object.assign({}, ConfirmationPanePreset3.args?.styleProps?.titleStyleProps, {
                     width: "80px"
                 }),
-                subtitleStyleProps: Object.assign({}, ConfirmationPanePreset3.args.styleProps.subtitleStyleProps, {
+                subtitleStyleProps: Object.assign({}, ConfirmationPanePreset3.args?.styleProps?.subtitleStyleProps, {
                     width: "80px"
                 }),
                 buttonGroupStyleProps: {

@@ -26,6 +26,8 @@ export { decodeComponentString } from "./common/decodeComponentString";
 
 export { BroadcastService } from "./services/BroadcastService";
 
+export { BroadcastServiceInitialize } from "./services/BroadcastService";
+
 export { ElementType } from "./common/Constants";
 
 export { default as CallingContainer } from "./components/callingcontainer/CallingContainer";

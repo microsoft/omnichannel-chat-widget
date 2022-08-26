@@ -8,6 +8,11 @@ import ProactiveChatPane from "./ProactiveChatPane";
 import { IProactiveChatPaneProps } from "./interfaces/IProactiveChatPaneProps";
 import React from "react";
 import { defaultProactiveChatPaneProps } from "./common/default/defaultProps/defaultProactiveChatPaneProps";
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+
+beforeAll(() => {
+    BroadcastServiceInitialize("testChannel");
+});
 
 describe("Proactive Chat Pane component", () => {
 
