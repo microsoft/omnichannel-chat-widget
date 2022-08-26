@@ -19,6 +19,7 @@ import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurv
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { IAuthProps } from "../interfaces/IAuthProps";
+import { ActivityStreamHandler } from "./ActivityStreamHandler";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
@@ -148,8 +149,11 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
         await updateSessionDataForTelemetry(chatSDK, dispatch);
 
         // Set app state to Active
-        if (isStartChatSuccessful) {
+        if (isStartChatSuccessful) {         
+            ActivityStreamHandler.subscribeEvents();
+            ActivityStreamHandler.uncork();
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
+
         }
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {

@@ -60,6 +60,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -213,6 +214,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
                 prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
             } else { // Minimize to Maximize
+
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
@@ -221,6 +223,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         width: persistedState?.domainStates?.widgetSize?.width
                     }
                 });
+
+                setTimeout(() => {
+                    console.log("ELOPEZANAYA uncorking");
+                    ActivityStreamHandler.uncork();
+                }, 100);
+
+
             }
         });
 
