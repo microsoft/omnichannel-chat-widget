@@ -29,6 +29,7 @@ export const createAdapter = async (chatSDK: any) => {
     //so far, there is no need to convert to the shim adapter when using visual tests
     if(chatSDK.isMockModeOn !== true){
         adapter = new ChatAdapterShim(adapter);
+        return adapter.chatAdapter;
     }
     return adapter;
 };
