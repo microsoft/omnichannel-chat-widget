@@ -203,6 +203,8 @@ Refer to the below table to understand different critical telemetry events raise
 |`CustomContextReceived`|On Custom Context Received|
 | `SuppressBotMagicCodeSucceeded` | On sending magic code behind the scenes succeeded |
 | `SuppressBotMagicCodeFailed` | On sending magic code behind the scenes failed |
+| `GetAuthTokenCalled` | On getting auth token |
+| `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 
 #### Calling Events
 

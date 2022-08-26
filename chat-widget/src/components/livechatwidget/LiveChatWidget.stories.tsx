@@ -781,6 +781,11 @@ export const LiveChatWidgetReconnectChatPane = LiveChatWidgetTemplate.bind({});
 const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
+    chatConfig: {
+        LiveChatConfigAuthSettings: {
+            msdyn_javascriptclientfunction: "testAuth"
+        }
+    },
     styleProps: {
         generalStyles: {
             width: "360px",
@@ -791,9 +796,6 @@ const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
     },
     reconnectChatPaneProps: {
         isReconnectEnabled: true
-    },
-    authProps: {
-        authClientFunction: "testAuth"
     }
 };
 
