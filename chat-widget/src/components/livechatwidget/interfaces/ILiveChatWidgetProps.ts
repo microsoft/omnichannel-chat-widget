@@ -21,7 +21,6 @@ import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/i
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
-import { IAuthProps } from "./IAuthProps";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -56,5 +55,5 @@ export interface ILiveChatWidgetProps {
     webChatContainerProps?: IWebChatContainerStatefulProps;
     liveChatContextFromCache?: ILiveChatWidgetContext;
     contextDataStore?: IContextDataStore;
-    authProps?: IAuthProps;
+    getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
 }

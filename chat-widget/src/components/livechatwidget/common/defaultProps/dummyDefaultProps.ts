@@ -1633,9 +1633,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             fwdUrl: ""
         }
     },
-    authProps: {
-        authClientFunction: undefined,
-        setAuthTokenProviderToChatSdk: undefined
-    },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
+    getAuthToken: undefined
 };
