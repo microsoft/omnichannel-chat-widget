@@ -38,4 +38,5 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed the header on the postchatloading pane
 - Added authProps to ILiveChatWidgetProps
 - Fixed a bug where links are incorrectly processed by markdown
+- Added ChatAdapterShim
 - Updating widget specific `BroadcastService`
