@@ -222,9 +222,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         width: persistedState?.domainStates?.widgetSize?.width
                     }
                 });
-                setTimeout(() => {
-                    ActivityStreamHandler.uncork();
-                }, 100);
             }
         });
 
