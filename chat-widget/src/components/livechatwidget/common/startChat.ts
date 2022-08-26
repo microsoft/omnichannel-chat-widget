@@ -150,7 +150,6 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
 
         // Set app state to Active
         if (isStartChatSuccessful) {         
-            ActivityStreamHandler.subscribeEvents();
             ActivityStreamHandler.uncork();
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
 

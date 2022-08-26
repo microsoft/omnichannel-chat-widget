@@ -214,7 +214,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
                 prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
             } else { // Minimize to Maximize
-
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
@@ -223,13 +222,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         width: persistedState?.domainStates?.widgetSize?.width
                     }
                 });
-
                 setTimeout(() => {
-                    console.log("ELOPEZANAYA uncorking");
                     ActivityStreamHandler.uncork();
                 }, 100);
-
-
             }
         });
 
@@ -301,6 +296,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
+        if (state.appStates.isMinimized){
+            ActivityStreamHandler.cork();
+        }else{
+            setTimeout(()=> ActivityStreamHandler.uncork(), 500);
+        }
+
         currentMessageCountRef.current = -1;
         dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
         const customEvent: ICustomEvent = {
