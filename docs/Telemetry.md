@@ -82,13 +82,14 @@ _Publishing Event_:
 _Subscribing Event_:
 
 ```js
-    import { BroadcastService } from "../../services/BroadcastService";
+    import { BroadcastService, BroadcastServiceInitialize } from "../../services/BroadcastService";
     import { ICustomEvent } from "../../interfaces/ICustomEvent";
     import { ElementType } from "../../common/Constants";
 
 
     //inside function component
     React.useEffect(() => {
+        BroadcastServiceInitialize(props.chatSDK?.omnichannelConfig?.widgetId); // Initialize the broadcast service with widgetid
         const message : ICustomEvent = {
             elementType: ElementType.HeaderCloseButton,
             eventName: "OnClick",

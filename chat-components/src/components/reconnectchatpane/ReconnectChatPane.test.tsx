@@ -8,6 +8,11 @@ import ReconnectChatPane from "./ReconnectChatPane";
 import { IReconnectChatPaneProps } from "./interfaces/IReconnectChatPaneProps";
 import React from "react";
 import { defaultReconnectChatPaneProps } from "./common/default/defaultProps/defaultReconnectChatPaneProps";
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+
+beforeAll(() => {
+    BroadcastServiceInitialize("testChannel");
+});
 
 describe("Reconnect Chat Pane component", () => {
 

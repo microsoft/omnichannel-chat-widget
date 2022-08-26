@@ -8,6 +8,11 @@ import ConfirmationPane from "./ConfirmationPane";
 import { IConfirmationPaneProps } from "./interfaces/IConfirmationPaneProps";
 import React from "react";
 import { defaultConfirmationPaneProps } from "./common/defaultProps/defaultConfirmationPaneProps";
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+
+beforeAll(() => {
+    BroadcastServiceInitialize("testChannel");
+});
 
 describe("Confirmation Pane component", () => {
 
