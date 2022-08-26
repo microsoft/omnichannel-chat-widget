@@ -26,5 +26,16 @@ export const createAdapter = async (chatSDK: any) => {
         }
     };
     let adapter = await chatSDK.createChatAdapter(chatAdapterOptionalParams);
-    adapter = new ChatAdapterShim(adapter);
-    return adapter;};
+    //so far, there is no need to convert to the shim adapter when using visual tests
+    console.log("ELOPEZANAYA " + chatSDK.isMockModeOn);
+    if(chatSDK.isMockModeOn !== true){
+        console.log("ELOPEZANAYA create shim adapter");
+
+        adapter = new ChatAdapterShim(adapter);
+    }
+
+    console.log("ELOPEZANAYA OFF");
+
+    
+    return adapter;
+};
