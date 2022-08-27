@@ -293,10 +293,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
-        if (state.appStates.isMinimized){
+        
+        if (state.appStates.isMinimized) {
             ActivityStreamHandler.cork();
-        }else{
-            setTimeout(()=> ActivityStreamHandler.uncork(), 500);
+        } else {
+            setTimeout(() => ActivityStreamHandler.uncork(), 500);
         }
 
         currentMessageCountRef.current = -1;

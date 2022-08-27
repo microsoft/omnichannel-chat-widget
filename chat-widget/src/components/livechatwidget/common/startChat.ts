@@ -19,7 +19,6 @@ import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconn
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { IAuthProps } from "../interfaces/IAuthProps";
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -171,7 +170,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         if (isStartChatSuccessful) {         
             ActivityStreamHandler.uncork();
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
-
         }
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {

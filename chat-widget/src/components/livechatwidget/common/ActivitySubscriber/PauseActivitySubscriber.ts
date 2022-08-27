@@ -14,7 +14,6 @@ export class PauseActivitySubscriber implements IActivitySubscriber {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
     public applicable(activity: any): boolean {
-
         return true;
     }
 
