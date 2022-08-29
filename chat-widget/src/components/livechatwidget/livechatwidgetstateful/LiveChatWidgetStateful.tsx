@@ -60,6 +60,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
 import { Constants } from "../../../common/Constants";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
@@ -121,7 +122,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
         if (!props.controlProps?.skipChatButtonRendering && props.reconnectChatPaneProps?.reconnectId) {
-            startUnauthenticatedReconnectChat(chatSDK, props.authProps, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
+            startUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
             return;
         }
 
@@ -131,7 +132,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (isAuthenticationSettingsEnabled === false) {
             if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
-                initStartChat(chatSDK, props.authProps, dispatch, setAdapter, optionalParams);
+                initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
                 return;
             }
         }
@@ -147,7 +148,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 eventName: BroadcastEvent.ChatInitiated
             });
             if (props.reconnectChatPaneProps?.reconnectId && !state.appStates.reconnectId) {
-                handleUnauthenticatedReconnectChat(chatSDK, props.authProps, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
+                handleUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
             } else {
                 getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
                     if (authReconnectId && !state.appStates.reconnectId) {
@@ -158,7 +159,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                             eventName: BroadcastEvent.StartChatSkippingChatButtonRendering,
                         };
                         BroadcastService.postMessage(chatStartedSkippingChatButtonRendering);
-                        setPreChatAndInitiateChat(chatSDK, props.authProps, dispatch, setAdapter);
+                        setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter);
                     }
                 });
             }
@@ -303,6 +304,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
+        if (state.appStates.isMinimized) {
+            ActivityStreamHandler.cork();
+        } else {
+            setTimeout(() => ActivityStreamHandler.uncork(), 500);
+        }
+
         currentMessageCountRef.current = -1;
         dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
         const customEvent: ICustomEvent = {
@@ -368,7 +375,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const prepareEndChatRelay = (adapter: any, state: ILiveChatWidgetContext) => prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, props.authProps, dispatch, setAdapter, optionalParams, persistedState);
+    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
 
     return (
