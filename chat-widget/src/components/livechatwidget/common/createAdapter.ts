@@ -3,6 +3,7 @@ import { NotificationLevel } from "../../webchatcontainerstateful/webchatcontrol
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { ChatAdapterShim } from "./ChatAdapterShim";
+import { PauseActivitySubscriber } from "./ActivitySubscriber/PauseActivitySubscriber";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createAdapter = async (chatSDK: any) => {
@@ -29,6 +30,7 @@ export const createAdapter = async (chatSDK: any) => {
     //so far, there is no need to convert to the shim adapter when using visual tests
     if (chatSDK.isMockModeOn !== true) {
         adapter = new ChatAdapterShim(adapter);
+        adapter.addSubscriber(new PauseActivitySubscriber());
         return adapter.chatAdapter;
     }
     return adapter;

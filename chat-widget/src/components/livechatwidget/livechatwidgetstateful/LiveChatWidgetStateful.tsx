@@ -60,6 +60,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -292,6 +293,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
+        if (state.appStates.isMinimized) {
+            ActivityStreamHandler.cork();
+        } else {
+            setTimeout(() => ActivityStreamHandler.uncork(), 500);
+        }
+
         currentMessageCountRef.current = -1;
         dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
         const customEvent: ICustomEvent = {

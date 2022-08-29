@@ -19,6 +19,7 @@ import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconn
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { ActivityStreamHandler } from "./ActivityStreamHandler";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
@@ -166,7 +167,8 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         await updateSessionDataForTelemetry(chatSDK, dispatch);
 
         // Set app state to Active
-        if (isStartChatSuccessful) {
+        if (isStartChatSuccessful) {         
+            ActivityStreamHandler.uncork();
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
 
