@@ -8,11 +8,14 @@ import { Meta } from "@storybook/react/types-6-0";
 import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
 import { Story } from "@storybook/react";
 import { hooks } from "botframework-webchat";
+import { BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 
 export default {
     title: "Stateful Components/Live Chat Widget",
     component: LiveChatWidget,
 } as Meta;
+
+BroadcastServiceInitialize("testChannel");
 
 const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatWidget {...args}></LiveChatWidget>;
 
