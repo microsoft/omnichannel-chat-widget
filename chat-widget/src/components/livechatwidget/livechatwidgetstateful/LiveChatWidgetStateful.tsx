@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { BroadcastService, decodeComponentString } from "@microsoft/omnichannel-chat-components";
+import { BroadcastService, decodeComponentString, BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isUndefinedOrEmpty } from "../../../common/utils";
@@ -60,6 +60,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { Constants } from "../../../common/Constants";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -89,13 +90,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
             Description: "Browser unload event received."
         });
-
-        const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
-        // End chat if the chat is still active and browser closed
-        if (persistedState.appStates.conversationState === ConversationState.Active) {
-            //Browser close scenario/no room for PCS/so just end chat and notify agent immidiately
-            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
-        }
+        endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
 
@@ -108,6 +103,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
+        BroadcastServiceInitialize(props.chatSDK?.omnichannelConfig?.widgetId);
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
         DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
@@ -132,7 +128,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
-        if (!isAuthenticationSettingsEnabled) {
+        if (isAuthenticationSettingsEnabled === false) {
             if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
                 initStartChat(chatSDK, props.authProps, dispatch, setAdapter, optionalParams);
@@ -204,15 +200,29 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
 
-            if (persistedState &&
-                (persistedState.appStates.conversationState === ConversationState.Closed ||
-                    persistedState.appStates.conversationState === ConversationState.InActive ||
-                    persistedState.appStates.conversationState === ConversationState.Postchat)) { // Embedded mode
+            // Chat not found in cache
+            if (persistedState === undefined) {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
                 prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
-            } else { // Minimize to Maximize
+                return;
+            }
+
+            // Chat exist in cache
+            if (persistedState) {
+                // Only initiate new chat if widget state in cache in one of the followings
+                if (persistedState.appStates.conversationState === ConversationState.Closed ||
+                    persistedState.appStates.conversationState === ConversationState.InActive ||
+                    persistedState.appStates.conversationState === ConversationState.Postchat) {
+                    BroadcastService.postMessage({
+                        eventName: BroadcastEvent.ChatInitiated
+                    });
+                    prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
+                    return;
+                }
+
+                // If minimized, maximize the chat
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
@@ -253,6 +263,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
         BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
+            return;
         });
 
         // When conversation ended by agent
@@ -323,6 +334,22 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Publish chat widget state
     useEffect(() => {
+        // Only activate these windows events when conversation state is active and chat widget is in popout mode
+        // Ghost chat scenarios
+        if (state.appStates.conversationState === ConversationState.Active &&
+            props.controlProps?.skipChatButtonRendering === true) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            window.onbeforeunload = function () {
+                const prompt = Constants.BrowserUnloadConfirmationMessage;
+                return prompt;
+            };
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            window.onunload = function () {
+                initiateEndChatOnBrowserUnload();
+            };
+        }
+
         widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId, props?.chatSDK?.omnichannelConfig?.widgetId);
         const chatWidgetStateChangeEvent: ICustomEvent = {
             eventName: widgetStateEventName,
@@ -331,12 +358,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         };
         BroadcastService.postMessage(chatWidgetStateChangeEvent);
-    }, [state]);
+    }, [state.appStates.conversationState]);
 
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any) => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = (adapter: any, state: ILiveChatWidgetContext) => prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
