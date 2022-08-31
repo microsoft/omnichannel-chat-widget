@@ -223,7 +223,7 @@ const setCustomContextParams = (chatSDK: any) => {
     if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
         if(persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
             const errorMessage = "Use of custom context with authenticated chat is deprecated. The chat would not go through.";
-            TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+            TelemetryHelper.logSDKEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.StartChatMethodException,
                 ExceptionDetails: {
                     exception: errorMessage
