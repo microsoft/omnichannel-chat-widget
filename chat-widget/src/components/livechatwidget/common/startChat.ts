@@ -139,7 +139,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             return;
         }
-        
+
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
@@ -165,7 +165,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         await updateSessionDataForTelemetry(chatSDK, dispatch);
 
         // Set app state to Active
-        if (isStartChatSuccessful) {         
+        if (isStartChatSuccessful) {
             ActivityStreamHandler.uncork();
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
@@ -200,7 +200,8 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         return false;
     }
 
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
+        chatSDK?.omnichannelConfig?.widgetId, props?.controlProps?.widgetInstanceId ?? "");
 
     //Connect to only active chat session
     if (persistedState &&
@@ -218,7 +219,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setCustomContextParams = (chatSDK: any) => {
     // Add custom context only for unauthenticated chat
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, props?.controlProps?.widgetInstanceId ?? "");
 
     if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
         if(persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {

@@ -41,5 +41,6 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added ChatAdapterShim
 - Updating widget specific `BroadcastService`
 - Updated props for auth chat
+- Adding `WidgetInstanceId` to support same widget with multi origin
 - Fixed custom context when `skipchatbuttonrendering` is enabled
 - Added exception for authenticated chat when context is passed 

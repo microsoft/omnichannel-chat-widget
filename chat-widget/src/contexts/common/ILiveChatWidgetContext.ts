@@ -23,6 +23,7 @@ export interface ILiveChatWidgetContext {
         customContext: any; //Contains the customContext payload if set
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         widgetSize: any;
+        widgetInstanceId: string;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
