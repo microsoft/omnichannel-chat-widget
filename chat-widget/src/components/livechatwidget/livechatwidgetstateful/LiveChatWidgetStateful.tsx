@@ -2,7 +2,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService, decodeComponentString, BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
@@ -85,7 +85,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
     const currentMessageCountRef = useRef<number>(0);
     let widgetStateEventName = "";
-
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
@@ -104,7 +103,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
-        BroadcastServiceInitialize(props.chatSDK?.omnichannelConfig?.widgetId);
+        const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
+
+        BroadcastServiceInitialize(broadcastServiceChannelName);
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
         DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
