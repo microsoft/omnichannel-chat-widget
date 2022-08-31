@@ -4,6 +4,7 @@ import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyRes
 
 import { AriaTelemetryConstants } from "./Constants";
 import { cleanup } from "@testing-library/react";
+import { Md5 } from "md5-typescript";
 
 describe("utils unit test", () => {
     afterEach(() => {
@@ -261,14 +262,19 @@ describe("utils unit test", () => {
 
     it("Test getWidgetCacheId", () => {
         const testString = "ChatWidgetStateChanged_orgid_widgetid";
-        const resultString = getWidgetCacheId("orgid", "widgetid");
-        expect(resultString).toBe(testString);
+        const md5HashtestString = Md5.init(testString);
+        const resultHashString = getWidgetCacheId("orgid", "widgetid","ChatWidgetStateChanged");
+        expect(md5HashtestString).toBe(resultHashString);
     });
 
     it("Test getWidgetEndChatEventName", () => {
         const testString = "ChatEnded_orgid_widgetid";
-        const resultString = getWidgetEndChatEventName("orgid", "widgetid");
+        const resultString = getWidgetEndChatEventName("orgid", "widgetid","");
         expect(resultString).toBe(testString);
+
+        const testString1 = "ChatEnded_instance1_orgid_widgetid";
+        const resultString1 = getWidgetEndChatEventName("orgid", "widgetid","instance1");
+        expect(resultString1).toBe(testString1);
     });
 
     it("Test isUndefinedOrEmpty", () => {

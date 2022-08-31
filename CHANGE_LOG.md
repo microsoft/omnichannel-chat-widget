@@ -41,3 +41,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added ChatAdapterShim
 - Updating widget specific `BroadcastService`
 - Updated props for auth chat
+- Adding `WidgetInstanceId` to support same widget with multi origin
