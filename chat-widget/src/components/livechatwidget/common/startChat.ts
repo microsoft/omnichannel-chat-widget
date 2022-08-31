@@ -47,9 +47,6 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         return;
     }
 
-    // Set custom context params
-    setCustomContextParams(props, chatSDK);
-
     // Setting Proactive chat settings
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
@@ -120,7 +117,8 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
                 Event: TelemetryEvent.StartChatSDKCall
             });
 
-            // Set optional params
+            // Set custom context params
+            await setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
 
             // set auth token to chat sdk before start chat
@@ -218,11 +216,21 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = (props: ILiveChatWidgetProps, chatSDK: any) => {
+const setCustomContextParams = async (chatSDK: any) => {
     // Add custom context only for unauthenticated chat
     const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
 
-    if (!props.chatConfig?.LiveChatConfigAuthSettings && !isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
+    if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
+        if(persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
+            const errorMessage = "Use of custom context with authenticated chat is deprecated. The chat would not go through.";
+            TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.StartChatMethodException,
+                ExceptionDetails: {
+                    exception: errorMessage
+                }
+            });
+            throw new Error(errorMessage);
+        }
         optionalParams = Object.assign({}, optionalParams, {
             customContext: persistedState?.domainStates?.customContext
         });
