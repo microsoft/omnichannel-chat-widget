@@ -298,7 +298,6 @@ export const createReducer = () => {
                 };
 
             case LiveChatWidgetActionType.SET_WIDGET_INSTANCE_ID:
-                console.log("SET_WIDGET_INSTANCE_ID:" + action.payload);
                 return {
                     ...state,
                     domainStates: {
