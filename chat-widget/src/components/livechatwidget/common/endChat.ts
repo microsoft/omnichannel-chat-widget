@@ -99,7 +99,10 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                 }
             });
             if (postMessageToOtherTab) {
-                const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+                const endChatEventName = getWidgetEndChatEventName(
+                    chatSDK?.omnichannelConfig?.orgId,
+                    chatSDK?.omnichannelConfig?.widgetId,
+                    props?.controlProps?.widgetInstanceId ?? "");
                 BroadcastService.postMessage({
                     eventName: endChatEventName
                 });

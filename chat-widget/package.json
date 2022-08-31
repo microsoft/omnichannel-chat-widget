@@ -80,6 +80,7 @@
     "dompurify": "^2.3.4",
     "markdown-it": "^12.3.2",
     "markdown-it-for-inline": "^0.1.1",
+    "md5-typescript": "^1.0.5",
     "p-defer-es5": "^2.0.1",
     "slack-markdown-it": "^1.0.5"
   },

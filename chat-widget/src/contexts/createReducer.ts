@@ -297,6 +297,17 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_WIDGET_INSTANCE_ID:
+                console.log("SET_WIDGET_INSTANCE_ID:" + action.payload);
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        widgetInstanceId: action.payload as string
+                    }
+                };
+
             default:
                 return state;
         }

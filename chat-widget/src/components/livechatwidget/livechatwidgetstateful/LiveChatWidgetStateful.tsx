@@ -2,7 +2,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService, decodeComponentString, BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
@@ -111,7 +111,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
-
+        if (props.controlProps?.widgetInstanceId && !isNullOrEmptyString(props.controlProps?.widgetInstanceId)) {
+            dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_INSTANCE_ID, payload: props.controlProps?.widgetInstanceId });
+        }
         initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
             .then((sdkCreated: boolean) => {
                 sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
@@ -199,7 +201,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Description: "Start chat event received."
             });
 
-            const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+            const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
+                chatSDK?.omnichannelConfig?.widgetId,
+                props?.controlProps?.widgetInstanceId ?? "");
 
             // Chat not found in cache
             if (persistedState === undefined) {
@@ -239,7 +243,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
             if (state.appStates.skipChatButtonRendering !== true) {
                 // This is to ensure to get latest state from cache in multitab
-                const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+                const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
+                    chatSDK?.omnichannelConfig?.widgetId,
+                    props?.controlProps?.widgetInstanceId ?? "");
+
                 if (persistedState &&
                     persistedState.appStates.conversationState === ConversationState.Active) {
                     prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
@@ -261,7 +268,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // Listen to end chat event from other tabs
-        const endChatEventName = getWidgetEndChatEventName(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+        const endChatEventName = getWidgetEndChatEventName(
+            chatSDK?.omnichannelConfig?.orgId,
+            chatSDK?.omnichannelConfig?.widgetId,
+            props.controlProps?.widgetInstanceId ?? "");
         BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
             return;
@@ -299,7 +309,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [state.appStates.conversationState]);
 
     useEffect(() => {
-        canStartProactiveChat.current = state.appStates.conversationState === ConversationState.Closed && !state.appStates.proactiveChatStates.proactiveChatInNewWindow;
+        canStartProactiveChat.current = state.appStates.conversationState === ConversationState.Closed &&
+            !state.appStates.proactiveChatStates.proactiveChatInNewWindow;
     }, [state.appStates.conversationState, state.appStates.proactiveChatStates.proactiveChatInNewWindow]);
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
@@ -357,7 +368,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             };
         }
 
-        widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId, props?.chatSDK?.omnichannelConfig?.widgetId);
+        widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId,
+            props?.chatSDK?.omnichannelConfig?.widgetId,
+            props?.controlProps?.widgetInstanceId ?? "");
         const chatWidgetStateChangeEvent: ICustomEvent = {
             eventName: widgetStateEventName,
             payload: {
