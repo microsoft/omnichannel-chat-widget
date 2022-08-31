@@ -119,6 +119,7 @@ export class Constants {
 
     public static readonly ChatWidgetStateChangedPrefix = "ChatWidgetStateChanged";
     public static readonly PostChatLoadingDurationInMs = 2000;
+    public static readonly BrowserUnloadConfirmationMessage = "Do you want to leave chat?";
 }
 
 export const Regex = class {
