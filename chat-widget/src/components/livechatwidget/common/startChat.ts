@@ -118,7 +118,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             });
 
             // Set custom context params
-            await setCustomContextParams(chatSDK);
+            setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
 
             // set auth token to chat sdk before start chat
@@ -216,7 +216,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = async (chatSDK: any) => {
+const setCustomContextParams = (chatSDK: any) => {
     // Add custom context only for unauthenticated chat
     const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
 
