@@ -328,3 +328,8 @@ export const isUndefinedOrEmpty = (object: any) => {
 export const addDelayInMs = (ms: number): Promise<void> => {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
+
+export const getBroadcastChannelName = (widgetId: string, widgetInstanceId: string): string => {
+    return (widgetInstanceId && !isNullOrEmptyString(widgetInstanceId)) ?
+        `${widgetInstanceId}_${widgetId}` : widgetId;
+};
