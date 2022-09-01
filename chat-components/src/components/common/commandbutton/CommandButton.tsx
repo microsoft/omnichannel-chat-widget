@@ -7,8 +7,10 @@ import { ElementType } from "../../../common/Constants";
 
 function CommandButton(props: ICommandButtonProps) {
     //imageIconProps > iconName
-    const iconProp: IIconProps = props.imageIconProps ? { imageProps: props.imageIconProps } : { iconName: props.iconName };
- 
+    const iconProp: IIconProps = props.imageIconProps ?
+        { imageProps: props.imageIconProps } :
+        { iconName: props.iconName, styles: { root: props.styles } };
+
     const buttonStyles: IButtonStyles = {
         root: props.styles,
         rootHovered: props.hoverStyles,
