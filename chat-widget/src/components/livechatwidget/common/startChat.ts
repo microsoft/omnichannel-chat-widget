@@ -23,10 +23,13 @@ import { ActivityStreamHandler } from "./ActivityStreamHandler";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let widgetInstanceId: any | "";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
+    widgetInstanceId = props?.controlProps?.widgetInstanceId;
 
     // Can connect to existing chat session
     if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
@@ -190,6 +193,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         }
     } finally {
         optionalParams = {};
+        widgetInstanceId = "";
     }
 };
 
@@ -219,7 +223,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setCustomContextParams = (chatSDK: any) => {
     // Add custom context only for unauthenticated chat
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, props?.controlProps?.widgetInstanceId ?? "");
+    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, widgetInstanceId ?? "");
 
     if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
         if(persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
