@@ -23,10 +23,13 @@ import { ActivityStreamHandler } from "./ActivityStreamHandler";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let widgetInstanceId: any | "";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
+    widgetInstanceId = props?.controlProps?.widgetInstanceId;
 
     // Can connect to existing chat session
     if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
@@ -46,9 +49,6 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
         return;
     }
-
-    // Set custom context params
-    setCustomContextParams(props, chatSDK);
 
     // Setting Proactive chat settings
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
@@ -120,7 +120,8 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
                 Event: TelemetryEvent.StartChatSDKCall
             });
 
-            // Set optional params
+            // Set custom context params
+            setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
 
             // set auth token to chat sdk before start chat
@@ -192,6 +193,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         }
     } finally {
         optionalParams = {};
+        widgetInstanceId = "";
     }
 };
 
@@ -219,11 +221,21 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = (props: ILiveChatWidgetProps, chatSDK: any) => {
+const setCustomContextParams = (chatSDK: any) => {
     // Add custom context only for unauthenticated chat
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, props?.controlProps?.widgetInstanceId ?? "");
+    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, widgetInstanceId ?? "");
 
-    if (!props.chatConfig?.LiveChatConfigAuthSettings && !isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
+    if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
+        if(persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
+            const errorMessage = "Use of custom context with authenticated chat is deprecated. The chat would not go through.";
+            TelemetryHelper.logSDKEvent(LogLevel.WARN, {
+                Event: TelemetryEvent.StartChatMethodException,
+                ExceptionDetails: {
+                    exception: errorMessage
+                }
+            });
+            throw new Error(errorMessage);
+        }
         optionalParams = Object.assign({}, optionalParams, {
             customContext: persistedState?.domainStates?.customContext
         });
