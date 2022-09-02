@@ -185,7 +185,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
                 Description: "Start proactive chat event received."
             });
-            if (canStartProactiveChat.current) {
+            if (canStartProactiveChat.current === true) {
                 startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
             } else {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -379,7 +379,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         };
         BroadcastService.postMessage(chatWidgetStateChangeEvent);
-    }, [state.appStates.conversationState]);
+    }, [state]);
 
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
