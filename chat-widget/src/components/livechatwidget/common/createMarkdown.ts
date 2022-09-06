@@ -7,20 +7,25 @@ import { Constants } from "../../../common/Constants";
 export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean) => {
     let markdown: MarkdownIt;
 
-    if (!disableMarkdownMessageFormatting) {
+    if (disableMarkdownMessageFormatting) {
         markdown = new MarkdownIt(
-            Constants.Default,
+            Constants.Zero,
             {
                 html: true,
                 linkify: true,
                 breaks: (!disableNewLineMarkdownSupport)
             }
         );
+
+        markdown.enable([
+            "linkify", // Rule to replace link-like texts with link nodes
+        ], true);
+
         // ToDo: Commenting below usage of plugin until deferred bug is resolved: https://github.com/mayashavin/markdown-it-slack/issues/1
         // markdown.use(MarkdownSlack);
     } else {
+        disableNewLineMarkdownSupport = false;
         markdown = new MarkdownIt(
-            Constants.Zero,
             {
                 html: true,
                 linkify: true,
@@ -33,7 +38,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
             "html_block", // Rule to process html blocks and paragraphs
             "html_inline", // Rule to process html tags
             "newline" // Rule to proceess '\n'
-        ]);
+        ], true);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
