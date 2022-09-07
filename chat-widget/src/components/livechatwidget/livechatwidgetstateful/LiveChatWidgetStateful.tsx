@@ -125,7 +125,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
         if (!props.controlProps?.skipChatButtonRendering && props.reconnectChatPaneProps?.reconnectId) {
-            startUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
+            startUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, initStartChat);
             return;
         }
 
@@ -151,7 +151,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 eventName: BroadcastEvent.ChatInitiated
             });
             if (props.reconnectChatPaneProps?.reconnectId && !state.appStates.reconnectId) {
-                handleUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
+                handleUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
             } else {
                 getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
                     if (authReconnectId && !state.appStates.reconnectId) {

@@ -6,12 +6,12 @@ import { isNullOrEmptyString } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
-    if (getAuthToken) {
+    let authClientFunction = undefined;
+    if (chatConfig?.LiveChatConfigAuthSettings) {
+        authClientFunction = (chatConfig?.LiveChatConfigAuthSettings as AuthSettings)?.msdyn_javascriptclientfunction ?? undefined;
+    }
+    if (getAuthToken && authClientFunction) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
-        let authClientFunction = undefined;
-        if (chatConfig?.LiveChatConfigAuthSettings) {
-            authClientFunction = (chatConfig?.LiveChatConfigAuthSettings as AuthSettings)?.msdyn_javascriptclientfunction ?? undefined;
-        }
         const token = await getAuthToken(authClientFunction);
         if (!isNullOrEmptyString(token)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
