@@ -1,7 +1,6 @@
 import { ChatSDKError } from "../../../common/Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
-import AuthSettings from "@microsoft/omnichannel-chat-sdk/lib/core/AuthSettings";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -14,12 +13,13 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
-import { createTimer, getStateFromCache, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getStateFromCache, isUndefinedOrEmpty } from "../../../common/utils";
 import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconnectChat } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
+import { handleAuthentication } from "./authHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
@@ -38,7 +38,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 
     // Redirecting if unauthenticated reconnect chat expired
     if (props.reconnectChatPaneProps?.reconnectId) {
-        await handleRedirectUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
+        await handleRedirectUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
         return;
     }
 
@@ -74,26 +74,6 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     await initStartChat(chatSDK, chatConfig, getAuthToken, dispatch, setAdapter);
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
-    if (getAuthToken) {
-        TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
-        let authClientFunction = undefined;
-        if (chatConfig?.LiveChatConfigAuthSettings) {
-            authClientFunction = (chatConfig?.LiveChatConfigAuthSettings as AuthSettings)?.msdyn_javascriptclientfunction ?? undefined;
-        }
-        const token = await getAuthToken(authClientFunction);
-        if (!isNullOrEmptyString(token)) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (chatSDK as any).setAuthTokenProvider(async () => {
-                return token;
-            });
-        } else {
-            TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken });
-        }
-    }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
