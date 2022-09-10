@@ -15,6 +15,8 @@ import { defaultChatButtonTextContainerStyles } from "./common/defaultStyles/def
 import { defaultChatButtonTitleStyles } from "./common/defaultStyles/defaultChatButtonTitleStyles";
 
 function NotificationBubble(props: IChatButtonProps, parentId: string) {
+
+
     const notificationBubbleStyles: ILabelStyles = {
         root: Object.assign({}, defaultChatButtonNotificationBubbleStyles, props.styleProps?.notificationBubbleStyleProps)
     };
@@ -23,12 +25,13 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
     if (unreadMessageCount !== "0") {
         return (decodeComponentString(props.componentOverrides?.notificationBubble) || 
             <Stack
-                role="alert"
+                aria-live="polite" 
                 styles={notificationBubbleStyles}
+                aria-label = {props.controlProps?.ariaLabelUnreadMessageString?? defaultChatButtonControlProps.ariaLabelUnreadMessageString}
                 className={props.styleProps?.classNames?.notificationBubbleClassName}
                 id={parentId + "-notification-bubble"}>
                 {unreadMessageCount}
-                <span style={HiddenTextStyles}>{props.controlProps?.unreadMessageString}</span>
+                <span style={HiddenTextStyles}>{props.controlProps?.unreadMessageString?? defaultChatButtonControlProps.unreadMessageString}</span>
             </Stack>
         );
     }
@@ -100,6 +103,8 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
 }
 
 function ChatButton(props: IChatButtonProps) {
+
+    console.log("ELOPEZANAYA building chat button");
     const elementId = props.controlProps?.id ?? "lcw-components-chat-button";
     const defaultAriaLabel = props.controlProps?.ariaLabel ?? "live chat button";
     const defaultRole = props.controlProps?.role ?? defaultChatButtonControlProps?.role;
