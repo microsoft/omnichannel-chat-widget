@@ -103,8 +103,6 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
 }
 
 function ChatButton(props: IChatButtonProps) {
-
-    console.log("ELOPEZANAYA building chat button");
     const elementId = props.controlProps?.id ?? "lcw-components-chat-button";
     const defaultAriaLabel = props.controlProps?.ariaLabel ?? "live chat button";
     const defaultRole = props.controlProps?.role ?? defaultChatButtonControlProps?.role;
