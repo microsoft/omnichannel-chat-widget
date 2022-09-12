@@ -20,5 +20,5 @@ export interface IWebChatContainerStatefulProps {
     renderingMiddlewareProps?: IRenderingMiddlewareProps;
     localizedTexts?: ILiveChatWidgetLocalizedTexts;
     botMagicCode?: IBotMagicCodeConfig;
-    adaptiveCardStyles? : IAdaptiveCardStyles;
+    adaptiveCardStyles?: IAdaptiveCardStyles;
 }
