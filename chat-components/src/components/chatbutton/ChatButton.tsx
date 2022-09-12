@@ -23,12 +23,13 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
     if (unreadMessageCount !== "0") {
         return (decodeComponentString(props.componentOverrides?.notificationBubble) || 
             <Stack
-                role="alert"
+                aria-live="polite" 
                 styles={notificationBubbleStyles}
+                aria-label={props.controlProps?.ariaLabelUnreadMessageString ? props.controlProps?.ariaLabelUnreadMessageString : defaultChatButtonControlProps.ariaLabelUnreadMessageString}
                 className={props.styleProps?.classNames?.notificationBubbleClassName}
                 id={parentId + "-notification-bubble"}>
                 {unreadMessageCount}
-                <span style={HiddenTextStyles}>{props.controlProps?.unreadMessageString}</span>
+                <span style={HiddenTextStyles}>{props.controlProps?.unreadMessageString ? props.controlProps?.unreadMessageString : defaultChatButtonControlProps.unreadMessageString}</span>
             </Stack>
         );
     }
