@@ -1,4 +1,4 @@
 export interface IAdaptiveCardStyles {
     background?: string;
-    color? : string; 
+    color?: string;
 }
