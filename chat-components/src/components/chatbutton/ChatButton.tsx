@@ -15,8 +15,6 @@ import { defaultChatButtonTextContainerStyles } from "./common/defaultStyles/def
 import { defaultChatButtonTitleStyles } from "./common/defaultStyles/defaultChatButtonTitleStyles";
 
 function NotificationBubble(props: IChatButtonProps, parentId: string) {
-
-
     const notificationBubbleStyles: ILabelStyles = {
         root: Object.assign({}, defaultChatButtonNotificationBubbleStyles, props.styleProps?.notificationBubbleStyleProps)
     };
@@ -27,11 +25,11 @@ function NotificationBubble(props: IChatButtonProps, parentId: string) {
             <Stack
                 aria-live="polite" 
                 styles={notificationBubbleStyles}
-                aria-label = {props.controlProps?.ariaLabelUnreadMessageString?? defaultChatButtonControlProps.ariaLabelUnreadMessageString}
+                aria-label={props.controlProps?.ariaLabelUnreadMessageString ? props.controlProps?.ariaLabelUnreadMessageString : defaultChatButtonControlProps.ariaLabelUnreadMessageString}
                 className={props.styleProps?.classNames?.notificationBubbleClassName}
                 id={parentId + "-notification-bubble"}>
                 {unreadMessageCount}
-                <span style={HiddenTextStyles}>{props.controlProps?.unreadMessageString?? defaultChatButtonControlProps.unreadMessageString}</span>
+                <span style={HiddenTextStyles}>{props.controlProps?.unreadMessageString ? props.controlProps?.unreadMessageString : defaultChatButtonControlProps.unreadMessageString}</span>
             </Stack>
         );
     }
