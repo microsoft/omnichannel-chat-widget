@@ -20,5 +20,4 @@ export const defaultChatButtonControlProps: IChatButtonControlProps = {
     unreadMessageString: "new messages",
     largeUnreadMessageString: "99+",
     ariaLabelUnreadMessageString: "you have new messages"
-
 };
