@@ -4,7 +4,7 @@ import { IRenderingMiddlewareProps } from "./IRenderingMiddlewareProps";
 import { IStyle } from "@fluentui/react";
 import { IWebChatProps } from "./IWebChatProps";
 import { StyleOptions } from "botframework-webchat-api";
-import { IAdaptiveCardStyle } from "./IAdaptiveCardStyle";
+import { IAdaptiveCardStyles } from "./IAdaptiveCardStyles";
 
 export interface IWebChatContainerStatefulProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,5 +20,5 @@ export interface IWebChatContainerStatefulProps {
     renderingMiddlewareProps?: IRenderingMiddlewareProps;
     localizedTexts?: ILiveChatWidgetLocalizedTexts;
     botMagicCode?: IBotMagicCodeConfig;
-    adaptiveCardStyle? : IAdaptiveCardStyle;
+    adaptiveCardStyles? : IAdaptiveCardStyles;
 }
