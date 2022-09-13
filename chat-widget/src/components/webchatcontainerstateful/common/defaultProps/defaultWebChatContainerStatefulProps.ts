@@ -3,6 +3,7 @@ import MockAdapter from "../mockadapter";
 import { defaultWebChatStatefulContainerStyles } from "../defaultStyles/defaultWebChatStatefulContainerStyles";
 import { defaultWebChatStatefulProps } from "./defaultWebChatStatefulProps";
 import { defaultWebChatStatefulStyles } from "../defaultStyles/defaultWebChatContainerStatefulStyles";
+import { defaultAdaptiveCardStyles } from "../defaultStyles/defaultAdaptiveCardStyles";
 
 export const defaultWebChatContainerStatefulProps: IWebChatContainerStatefulProps = {
     webChatStyles: defaultWebChatStatefulStyles,
@@ -10,5 +11,6 @@ export const defaultWebChatContainerStatefulProps: IWebChatContainerStatefulProp
     containerStyles: defaultWebChatStatefulContainerStyles,
     disableNewLineMarkdownSupport: false,
     disableMarkdownMessageFormatting: false,
-    directLine: new MockAdapter()
+    directLine: new MockAdapter(),
+    adaptiveCardStyles: defaultAdaptiveCardStyles
 };

@@ -45,3 +45,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed custom context when `skipchatbuttonrendering` is enabled
 - Added exception for authenticated chat when context is passed 
 - Fixed description for new messages notification from screen reader.
+- Added default properties for background and color for  adaptive cards and properties for customization of the same.

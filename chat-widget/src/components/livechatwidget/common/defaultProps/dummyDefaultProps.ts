@@ -1381,7 +1381,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         className: undefined
     },
-    webChatContainerProps: {
+    webChatContainerProps: {    
         containerStyles: {
             height: "100%",
             width: "100%",
@@ -1631,6 +1631,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         botMagicCode: {
             disabled: false,
             fwdUrl: ""
+        },
+        adaptiveCardStyles: {
+            background: "white",
+            color: "black"
         }
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
