@@ -1,6 +1,6 @@
 import { ChatSDKError } from "../../../common/Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-
+import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -18,14 +18,18 @@ import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconn
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { IAuthProps } from "../interfaces/IAuthProps";
+import { ActivityStreamHandler } from "./ActivityStreamHandler";
+import { handleAuthentication } from "./authHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let widgetInstanceId: any | "";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
+    widgetInstanceId = props?.controlProps?.widgetInstanceId;
 
     // Can connect to existing chat session
     if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
@@ -34,7 +38,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 
     // Redirecting if unauthenticated reconnect chat expired
     if (props.reconnectChatPaneProps?.reconnectId) {
-        await handleRedirectUnauthenticatedReconnectChat(chatSDK, props.authProps, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
+        await handleRedirectUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
         return;
     }
 
@@ -46,19 +50,16 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         return;
     }
 
-    // Set custom context params
-    setCustomContextParams(props, chatSDK);
-
     // Setting Proactive chat settings
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
 
     //Setting PreChat and intiate chat
-    setPreChatAndInitiateChat(chatSDK, props.authProps, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat);
+    setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setPreChatAndInitiateChat = async (chatSDK: any, authProps: IAuthProps | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false) => {
+const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false) => {
     // Getting prechat Survey Context
     const parseToJson = false;
     const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
@@ -72,11 +73,11 @@ const setPreChatAndInitiateChat = async (chatSDK: any, authProps: IAuthProps | u
 
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-    await initStartChat(chatSDK, authProps, dispatch, setAdapter);
+    await initStartChat(chatSDK, chatConfig, getAuthToken, dispatch, setAdapter);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
+const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
     try {
         let isStartChatSuccessful = false;
 
@@ -99,13 +100,12 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
                 Event: TelemetryEvent.StartChatSDKCall
             });
 
-            // Set optional params
+            // Set custom context params
+            setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
 
             // set auth token to chat sdk before start chat
-            if (authProps && authProps.setAuthTokenProviderToChatSdk) {
-                await authProps.setAuthTokenProviderToChatSdk(chatSDK, authProps.authClientFunction);
-            }
+            await handleAuthentication(chatSDK, chatConfig, getAuthToken);
 
             await chatSDK.startChat(optionalParams);
             isStartChatSuccessful = true;
@@ -122,7 +122,7 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             return;
         }
-        
+
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
@@ -149,6 +149,7 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
 
         // Set app state to Active
         if (isStartChatSuccessful) {
+            ActivityStreamHandler.uncork();
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
 
@@ -172,6 +173,7 @@ const initStartChat = async (chatSDK: any, authProps: IAuthProps | undefined, di
         }
     } finally {
         optionalParams = {};
+        widgetInstanceId = "";
     }
 };
 
@@ -182,7 +184,8 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         return false;
     }
 
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
+        chatSDK?.omnichannelConfig?.widgetId, props?.controlProps?.widgetInstanceId ?? "");
 
     //Connect to only active chat session
     if (persistedState &&
@@ -190,7 +193,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         persistedState?.appStates?.conversationState === ConversationState.Active) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
-        await initStartChat(chatSDK, props.authProps, dispatch, setAdapter, optionalParams, persistedState);
+        await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams, persistedState);
         return true;
     } else {
         return false;
@@ -198,11 +201,21 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = (props: ILiveChatWidgetProps, chatSDK: any) => {
+const setCustomContextParams = (chatSDK: any) => {
     // Add custom context only for unauthenticated chat
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId);
+    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, widgetInstanceId ?? "");
 
-    if (!props.chatConfig?.LiveChatConfigAuthSettings && !isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
+    if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
+        if(persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
+            const errorMessage = "Use of custom context with authenticated chat is deprecated. The chat would not go through.";
+            TelemetryHelper.logSDKEvent(LogLevel.WARN, {
+                Event: TelemetryEvent.StartChatMethodException,
+                ExceptionDetails: {
+                    exception: errorMessage
+                }
+            });
+            throw new Error(errorMessage);
+        }
         optionalParams = Object.assign({}, optionalParams, {
             customContext: persistedState?.domainStates?.customContext
         });

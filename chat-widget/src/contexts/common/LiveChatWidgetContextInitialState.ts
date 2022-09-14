@@ -21,7 +21,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             globalDir: "ltr",
             liveChatContext: undefined,
             customContext: undefined,
-            widgetSize: undefined
+            widgetSize: undefined,
+            widgetInstanceId: "",
         },
         appStates: {
             conversationState: ConversationState.Closed,

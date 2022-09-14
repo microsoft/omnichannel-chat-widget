@@ -37,3 +37,12 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixing Auth chat not to connect cached chat
 - Fixed the header on the postchatloading pane
 - Added authProps to ILiveChatWidgetProps
+- Fixed a bug where links are incorrectly processed by markdown
+- Added ChatAdapterShim
+- Updating widget specific `BroadcastService`
+- Updated props for auth chat
+- Adding `WidgetInstanceId` to support same widget with multi origin
+- Fixed custom context when `skipchatbuttonrendering` is enabled
+- Added exception for authenticated chat when context is passed 
+- Fixed description for new messages notification from screen reader.
+- Added default properties for background and color for  adaptive cards and properties for customization of the same.

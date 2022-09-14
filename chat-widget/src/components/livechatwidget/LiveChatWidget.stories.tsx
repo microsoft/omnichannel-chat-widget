@@ -8,11 +8,14 @@ import { Meta } from "@storybook/react/types-6-0";
 import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
 import { Story } from "@storybook/react";
 import { hooks } from "botframework-webchat";
+import { BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 
 export default {
     title: "Stateful Components/Live Chat Widget",
     component: LiveChatWidget,
 } as Meta;
+
+BroadcastServiceInitialize("testChannel");
 
 const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatWidget {...args}></LiveChatWidget>;
 
@@ -781,6 +784,11 @@ export const LiveChatWidgetReconnectChatPane = LiveChatWidgetTemplate.bind({});
 const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
+    chatConfig: {
+        LiveChatConfigAuthSettings: {
+            msdyn_javascriptclientfunction: "testAuth"
+        }
+    },
     styleProps: {
         generalStyles: {
             width: "360px",
@@ -791,9 +799,6 @@ const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
     },
     reconnectChatPaneProps: {
         isReconnectEnabled: true
-    },
-    authProps: {
-        authClientFunction: "testAuth"
     }
 };
 

@@ -299,7 +299,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             hideChatTitle: false,
             hideNotificationBubble: true,
             unreadMessageString: "new messages",
-            largeUnreadMessageString: "99+"
+            largeUnreadMessageString: "99+",
+            ariaLabelUnreadMessageString: "you have new messages"
         },
         styleProps: {
             generalStyleProps: {
@@ -1381,7 +1382,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         className: undefined
     },
-    webChatContainerProps: {
+    webChatContainerProps: {    
         containerStyles: {
             height: "100%",
             width: "100%",
@@ -1631,11 +1632,12 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         botMagicCode: {
             disabled: false,
             fwdUrl: ""
+        },
+        adaptiveCardStyles: {
+            background: "white",
+            color: "black"
         }
     },
-    authProps: {
-        authClientFunction: undefined,
-        setAuthTokenProviderToChatSdk: undefined
-    },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
+    getAuthToken: undefined
 };

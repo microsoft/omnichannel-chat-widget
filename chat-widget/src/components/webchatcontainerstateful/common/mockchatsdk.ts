@@ -4,6 +4,8 @@ export class MockChatSDK {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     protected sleep = (ms: any) => new Promise(r => setTimeout(r, ms));
 
+    public isMockModeOn = true;
+
     public async startChat() {
         await this.sleep(1000);
     }

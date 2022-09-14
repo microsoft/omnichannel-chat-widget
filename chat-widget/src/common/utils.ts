@@ -3,6 +3,7 @@ import { DataStoreManager } from "./contextDataStore/DataStoreManager";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { BroadcastEvent } from "./telemetry/TelemetryConstants";
+import { Md5 } from "md5-typescript";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -232,7 +233,7 @@ export const isNullOrUndefined = (obj: any) => {
     return (obj === null || obj === undefined);
 };
 
-export const isNullOrEmptyString = (s: string) => {
+export const isNullOrEmptyString = (s: string | null) => {
     return isNullOrUndefined(s) || s === "";
 };
 
@@ -280,20 +281,24 @@ export const getDomain = (hostValue: any): string => {
     return AriaTelemetryConstants.Public;
 };
 
-export const getWidgetCacheId = (orgId: string, widgetId: string): string => {
-    return `${Constants.ChatWidgetStateChangedPrefix}_${orgId}_${widgetId}`;
+export const getWidgetCacheId = (orgId: string, widgetId: string, widgetInstanceId: string): string => {
+    const widgetCacheId = `${widgetInstanceId}_${orgId}_${widgetId}`;
+    return Md5.init(widgetCacheId);
 };
 
-export const getWidgetEndChatEventName = (orgId: string, widgetId: string): string => {
+export const getWidgetEndChatEventName = (orgId: string, widgetId: string, widgetInstanceId: string): string => {
+    if (!isNullOrEmptyString(widgetInstanceId)) {
+        return `${BroadcastEvent.ChatEnded}_${widgetInstanceId}_${orgId}_${widgetId}`;
+    }
     return `${BroadcastEvent.ChatEnded}_${orgId}_${widgetId}`;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getStateFromCache = (orgId: string, widgetId: string): any => {
+export const getStateFromCache = (orgId: string, widgetId: string, widgetInstanceId: string): any => {
     // Getting updated state from cache
     try {
         if (DataStoreManager.clientDataStore) {
-            const widgetStateEventName = getWidgetCacheId(orgId, widgetId);
+            const widgetStateEventName = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
             const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
             const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
             return persistedState;
@@ -322,4 +327,9 @@ export const isUndefinedOrEmpty = (object: any) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const addDelayInMs = (ms: number): Promise<void> => {
     return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+export const getBroadcastChannelName = (widgetId: string, widgetInstanceId: string): string => {
+    return (widgetInstanceId && !isNullOrEmptyString(widgetInstanceId)) ?
+        `${widgetInstanceId}_${widgetId}` : widgetId;
 };

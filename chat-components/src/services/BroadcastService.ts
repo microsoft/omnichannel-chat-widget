@@ -2,16 +2,40 @@ import { Subject } from "rxjs";
 import { ICustomEvent } from "../interfaces/ICustomEvent";
 import { filter } from "rxjs/operators";
 import { BroadcastChannel } from "broadcast-channel";
-import { BROADCAST_CHANNEL_NAME } from "../common/Constants";
 
 const newMessage = new Subject<ICustomEvent>();
 
-const pubChannel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
-const subChannel = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const broadcastServicePubList: Record<string, any> = {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const broadcastServiceSubList: Record<string, any> = {};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-subChannel.onmessage = (message: any) => {
-    newMessage.next(message);
+let pubChannel: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let subChannel: any;
+
+export const BroadcastServiceInitialize = (channelName: string) => {
+    if (broadcastServicePubList[channelName]) {
+        pubChannel = broadcastServicePubList[channelName];
+    } else {
+        const newPubChannel = new BroadcastChannel(channelName);
+        broadcastServicePubList[channelName] = newPubChannel;
+        pubChannel = newPubChannel;
+    }
+
+    if (broadcastServiceSubList[channelName]) {
+        subChannel = broadcastServiceSubList[channelName];
+    } else {
+        const newSubChannel = new BroadcastChannel(channelName);
+        broadcastServiceSubList[channelName] = newSubChannel;
+        subChannel = newSubChannel;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    subChannel.onmessage = (message: any) => {
+        newMessage.next(message);
+    };
 };
 
 export const BroadcastService = {
@@ -37,6 +61,6 @@ export const BroadcastService = {
     getAnyMessage: () => {
         return newMessage;
     },
-    
+
     disposeChannel: () => { pubChannel.close(); subChannel.close(); }
 };

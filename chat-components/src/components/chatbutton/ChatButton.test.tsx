@@ -3,11 +3,16 @@ import * as ReactDOM from "react-dom";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 
 import ChatButton from "./ChatButton";
-import { defaultChatButtonProps }  from "./common/defaultProps/defaultChatButtonProps";
+import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonProps";
 import React from "react";
 import { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import { defaultChatButtonControlProps } from "./common/defaultProps/defaultChatButtonControlProps";
 import { defaultChatButtonStyleProps } from "./common/defaultStyles/defaultChatButtonStyleProps";
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+
+beforeAll(() => {
+    BroadcastServiceInitialize("testChannel");
+});
 
 describe("Chat Button component", () => {
 
@@ -15,12 +20,12 @@ describe("Chat Button component", () => {
         cleanup;
         jest.resetAllMocks();
     });
-    
+
     act(() => {
         it("renders chat button", () => {
             const container = document.createElement("div");
             ReactDOM.render(
-                <ChatButton {...defaultChatButtonProps}/>, container);
+                <ChatButton {...defaultChatButtonProps} />, container);
             expect(container.childElementCount).toBe(1);
         });
     });
@@ -34,19 +39,19 @@ describe("Chat Button component", () => {
                     hideChatTextContainer: true
                 }
             };
-            render(<ChatButton {...chatButtonPropsHide}/>);
+            render(<ChatButton {...chatButtonPropsHide} />);
 
             try {
                 screen.getByText("Let's Chat!");
                 fail("Title should not be in the document");
-            // eslint-disable-next-line no-empty
+                // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
                 screen.getByText("We're online.");
                 fail("Title should not be in the document");
-            // eslint-disable-next-line no-empty
+                // eslint-disable-next-line no-empty
             } catch (ex) {
             }
         });
@@ -60,18 +65,18 @@ describe("Chat Button component", () => {
                     ...defaultChatButtonControlProps,
                     hideNotificationBubble: false
                 }
-                , 
+                ,
                 styleProps: {
                     ...defaultChatButtonStyleProps
                 }
             };
-            render(<ChatButton {...chatButtonPropsShow}/>);
+            render(<ChatButton {...chatButtonPropsShow} />);
 
             try {
                 screen.getByText("0");
                 fail("Notification Bubble should not be in the document");
-            // eslint-disable-next-line no-empty
-            } catch (ex) {                
+                // eslint-disable-next-line no-empty
+            } catch (ex) {
             }
         });
     });
@@ -85,25 +90,25 @@ describe("Chat Button component", () => {
                     hideNotificationBubble: false,
                     unreadMessageCount: "10"
                 }
-                , 
+                ,
                 styleProps: {
                     ...defaultChatButtonStyleProps
                 }
             };
-            render(<ChatButton {...chatButtonPropsShow}/>);
+            render(<ChatButton {...chatButtonPropsShow} />);
 
             try {
-                screen.getByText("10");                
-            // eslint-disable-next-line no-empty
-            } catch (ex) {     
-                fail("Notification Bubble should be in the document");           
+                screen.getByText("10");
+                // eslint-disable-next-line no-empty
+            } catch (ex) {
+                fail("Notification Bubble should be in the document");
             }
         });
     });
     act(() => {
         it("chat button key down", () => {
-            render(<ChatButton {...defaultChatButtonProps}/>);
-            const handleKeyDown = jest.fn();        
+            render(<ChatButton {...defaultChatButtonProps} />);
+            const handleKeyDown = jest.fn();
             const startChatButton = screen.getByText("Let's Chat!");
             startChatButton.onkeydown = handleKeyDown;
             fireEvent.keyDown(startChatButton);
@@ -112,8 +117,8 @@ describe("Chat Button component", () => {
     });
     act(() => {
         it("chat button click", () => {
-            render(<ChatButton {...defaultChatButtonProps}/>);
-            const handleClick = jest.fn();        
+            render(<ChatButton {...defaultChatButtonProps} />);
+            const handleClick = jest.fn();
             const startChatButton = screen.getByText("Let's Chat!");
             startChatButton.onclick = handleClick;
             fireEvent.click(startChatButton);

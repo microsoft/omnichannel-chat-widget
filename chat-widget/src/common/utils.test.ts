@@ -1,9 +1,10 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { cleanup } from "@testing-library/react";
+import { Md5 } from "md5-typescript";
 
 describe("utils unit test", () => {
     afterEach(() => {
@@ -261,14 +262,19 @@ describe("utils unit test", () => {
 
     it("Test getWidgetCacheId", () => {
         const testString = "ChatWidgetStateChanged_orgid_widgetid";
-        const resultString = getWidgetCacheId("orgid", "widgetid");
-        expect(resultString).toBe(testString);
+        const md5HashtestString = Md5.init(testString);
+        const resultHashString = getWidgetCacheId("orgid", "widgetid","ChatWidgetStateChanged");
+        expect(md5HashtestString).toBe(resultHashString);
     });
 
     it("Test getWidgetEndChatEventName", () => {
         const testString = "ChatEnded_orgid_widgetid";
-        const resultString = getWidgetEndChatEventName("orgid", "widgetid");
+        const resultString = getWidgetEndChatEventName("orgid", "widgetid","");
         expect(resultString).toBe(testString);
+
+        const testString1 = "ChatEnded_instance1_orgid_widgetid";
+        const resultString1 = getWidgetEndChatEventName("orgid", "widgetid","instance1");
+        expect(resultString1).toBe(testString1);
     });
 
     it("Test isUndefinedOrEmpty", () => {
@@ -283,5 +289,15 @@ describe("utils unit test", () => {
         const testobject2 = { "test": "value" };
         const testResult2 = isUndefinedOrEmpty(testobject2);
         expect(testResult2).toBe(false);
+    });
+
+    it("Test getBroadcastChannelName", () => {
+        const testChannelName = "instance_widgetid";
+        const testResult = getBroadcastChannelName("widgetid", "instance");
+        expect(testResult).toBe(testChannelName);
+
+        const testChannelName1 = "widgetid";
+        const testResult1 = getBroadcastChannelName("widgetid","");
+        expect(testResult1).toBe(testChannelName1);
     });
 });

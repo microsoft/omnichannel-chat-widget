@@ -8,11 +8,12 @@ export interface IChatButtonControlProps {
     unreadMessageCount?: string;
     onClick?: () => void;
     hideChatButton?: boolean;
-    hideChatIcon?:boolean; 
+    hideChatIcon?: boolean;
     hideChatTextContainer?: boolean;
     hideChatSubtitle?: boolean;
     hideChatTitle?: boolean;
     hideNotificationBubble?: boolean;
     unreadMessageString?: string;
     largeUnreadMessageString?: string;
+    ariaLabelUnreadMessageString?: string;
 }
