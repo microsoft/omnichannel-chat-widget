@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { BroadcastService } from "../lib/esm/index.js";
+import { BroadcastService, BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 import LiveChatWidget from "../lib/esm/components/livechatwidget/LiveChatWidget.js";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
@@ -32,6 +32,7 @@ const main = async () => {
         orgUrl: orgUrl ?? script?.getAttribute("data-org-url"),
         widgetId: appId ?? script?.getAttribute("data-app-id")
     };
+    BroadcastServiceInitialize(omnichannelConfig.widgetId);
     const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
     await chatSDK.initialize();
     const chatConfig = await chatSDK.getLiveChatConfig();

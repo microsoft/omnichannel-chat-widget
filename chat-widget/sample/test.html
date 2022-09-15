@@ -9,64 +9,64 @@
 </head>
 
 <body style="margin: 0">
-  <script>
-    function lcw() {
-      return {
-        styleProps: {
-          generalStyles: {
-            width: "360px",
-            height: "560px",
-            bottom: "20px",
-            right: "20px"
+      <script>
+        function lcw() {
+          return {
+            styleProps: {
+              generalStyles: {
+                width: "360px",
+                height: "560px",
+                bottom: "20px",
+                right: "20px"
+              }
+            },
+            chatButtonProps: {
+              styleProps: {
+                generalStyleProps: {
+                  position: "absolute"
+                }
+              }
+            },
+            webChatContainerProps: {
+              webChatStyles: {
+                hideUploadButton: false
+              },
+              botMagicCode: {
+                disabled: false,
+                fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
+              }
+            },
           }
-        },
-        chatButtonProps: {
-          styleProps: {
-            generalStyleProps: {
-              position: "absolute"
-            }
-          }
-        },
-        webChatContainerProps: {
-          webChatStyles: {
-            hideUploadButton: false
-          },
-          botMagicCode: {
-            disabled: false,
-            fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
-          }
-        },
-      }
-    }
-
-    // browser compatibility
-    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-    var eventer = window[eventMethod];
-    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
-
-    eventer(messageEvent, function (e) {
-      try {
-        localStorage.setItem(e.data.key, e.data.data);
-      }
-      catch (ex) {
-        console.log(ex);
-      }
-    });
-
-    // Raise event after data found in localStorage
-    if (localStorage.getItem("LcwChatWidgetState")) {
-      var evt = new CustomEvent("lcw:onWidgetStateUpdated", {
-        detail: {
-          key: "LcwChatWidgetState",
-          data: widgetData
         }
-      });
-      window.dispatchEvent(evt);
-    }
-  </script>
-  <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
-  <script id="oc-lcw-script" src="../dist/out.js" data-customization-callback="lcw" data-org-id="" data-app-id=""
-    data-org-url=""></script>
+
+        // browser compatibility
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+        eventer(messageEvent, function (e) {
+          try {
+            localStorage.setItem(e.data.key, e.data.data);
+          }
+          catch (ex) {
+            console.log(ex);
+          }
+        });
+
+        // Raise event after data found in localStorage
+        if (localStorage.getItem("LcwChatWidgetState")) {
+          var evt = new CustomEvent("lcw:onWidgetStateUpdated", {
+            detail: {
+              key: "LcwChatWidgetState",
+              data: widgetData
+            }
+          });
+          window.dispatchEvent(evt);
+        }
+      </script>
+      <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
+      <script id="oc-lcw-script" src="../dist/out.js" data-customization-callback="lcw" data-org-id="" data-app-id=""
+        data-org-url=""></script>
 </body>
 
 </html>
