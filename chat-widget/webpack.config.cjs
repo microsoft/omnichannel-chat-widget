@@ -16,10 +16,10 @@ const _optimization = {
             vendor: {
                 test: /[\\/]node_modules[\\/]/,
                 name(module) {
-                    // node_modules/packageName/not/this/part.js or node_modules/packageName
+                    // node_modules/packageName
                     const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
 
-                    // npm package names are URL-safe, but some servers don't like @ symbols
+                    // replacing @ because some server doesn't honor @ in url
                     return `npm.${packageName.replace('@', '')}`;
                 },
             },
