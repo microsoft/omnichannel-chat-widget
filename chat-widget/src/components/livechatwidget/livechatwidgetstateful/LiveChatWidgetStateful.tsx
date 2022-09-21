@@ -62,6 +62,8 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
 import { Constants } from "../../../common/Constants";
+import { registerBroadcastServiceForLocalStorage } from "../../../common/storage/default/defaultCacheManager";
+import { defaultClientDataStoreProvider } from "../../../common/storage/default/defaultClientDataStoreProvider";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -104,8 +106,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
-
         BroadcastServiceInitialize(broadcastServiceChannelName);
+
+        // Add default localStorage support for widget
+        if (props.contextDataStore === undefined) {
+            registerBroadcastServiceForLocalStorage(chatSDK?.omnichannelConfig?.orgId,
+                chatSDK?.omnichannelConfig?.widgetId,
+                props?.controlProps?.widgetInstanceId ?? "");
+
+            props.contextDataStore = defaultClientDataStoreProvider();
+        }
+
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
         DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
