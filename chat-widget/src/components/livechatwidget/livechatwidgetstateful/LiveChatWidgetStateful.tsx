@@ -80,6 +80,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles)
     };
 
+    const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
+    BroadcastServiceInitialize(broadcastServiceChannelName);
     TelemetryTimers.LcwLoadToChatButtonTimer = createTimer();
 
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
@@ -103,9 +105,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
-        const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
 
-        BroadcastServiceInitialize(broadcastServiceChannelName);
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
         DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
