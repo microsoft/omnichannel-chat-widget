@@ -129,6 +129,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
+        // Checks if reconnectId is present for auth chat. If it is present, then it shows reconnect chat pane,
+        // where customer can choose to continue previous conversation or start new conversation
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
         if (!state.appStates.skipChatButtonRendering && 
             state.appStates.conversationState === ConversationState.Active && 
@@ -144,7 +147,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         // Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if (isAuthenticationSettingsEnabled === false) {
             if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
