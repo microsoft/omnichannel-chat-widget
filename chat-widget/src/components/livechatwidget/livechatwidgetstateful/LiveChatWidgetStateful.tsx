@@ -129,9 +129,22 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
+        const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
+        if (!state.appStates.skipChatButtonRendering && 
+            state.appStates.conversationState === ConversationState.Active && 
+            isAuthenticationSettingsEnabled === true && 
+            props.reconnectChatPaneProps?.isReconnectEnabled) {
+            getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
+                if (authReconnectId && !state.appStates.reconnectId) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: authReconnectId });
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
+                }
+            });
+            return;
+        }
+
         // Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
         if (isAuthenticationSettingsEnabled === false) {
             if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
