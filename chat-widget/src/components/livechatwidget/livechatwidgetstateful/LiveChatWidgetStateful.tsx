@@ -82,11 +82,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles)
     };
 
+    const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
+    BroadcastServiceInitialize(broadcastServiceChannelName);
     TelemetryTimers.LcwLoadToChatButtonTimer = createTimer();
 
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
     const currentMessageCountRef = useRef<number>(0);
     let widgetStateEventName = "";
+    
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
@@ -105,21 +108,19 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
-        const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
-        BroadcastServiceInitialize(broadcastServiceChannelName);
-
         // Add default localStorage support for widget
         if (props.contextDataStore === undefined) {
             registerBroadcastServiceForLocalStorage(chatSDK?.omnichannelConfig?.orgId,
                 chatSDK?.omnichannelConfig?.widgetId,
                 props?.controlProps?.widgetInstanceId ?? "");
 
-            props.contextDataStore = defaultClientDataStoreProvider();
+            DataStoreManager.clientDataStore = defaultClientDataStoreProvider();
+        } else {
+            DataStoreManager.clientDataStore = props.contextDataStore;
         }
 
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
-        DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
@@ -140,9 +141,24 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
-        // Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
+        // Checks if reconnectId is present for auth chat. If it is present, then it shows reconnect chat pane,
+        // where customer can choose to continue previous conversation or start new conversation
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
+        if (!state.appStates.skipChatButtonRendering &&
+            state.appStates.conversationState === ConversationState.Active &&
+            isAuthenticationSettingsEnabled === true &&
+            props.reconnectChatPaneProps?.isReconnectEnabled) {
+            getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
+                if (authReconnectId && !state.appStates.reconnectId) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: authReconnectId });
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
+                }
+            });
+            return;
+        }
+
+        // Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
         if (isAuthenticationSettingsEnabled === false) {
             if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
                 const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
