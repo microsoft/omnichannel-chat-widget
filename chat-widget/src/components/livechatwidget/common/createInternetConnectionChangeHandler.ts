@@ -2,6 +2,8 @@ import { Constants } from "../../../common/Constants";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
 const isInternetConnected = async () => {
     try {
@@ -17,8 +19,14 @@ export const createInternetConnectionChangeHandler = async () => {
     const handler = async () => {
         const connected = await isInternetConnected();
         if (!connected) {
+            TelemetryHelper.logActionEvent(LogLevel.WARN, {
+                Event: TelemetryEvent.NetworkDisconnected
+            });
             NotificationHandler.notifyError(NotificationScenarios.InternetConnection, defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION as string);
         } else {
+            TelemetryHelper.logActionEvent(LogLevel.WARN, {
+                Event: TelemetryEvent.NetworkReconnected
+            });
             NotificationHandler.notifySuccess(NotificationScenarios.InternetConnection, defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE as string);
         }
     };

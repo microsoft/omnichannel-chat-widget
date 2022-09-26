@@ -159,7 +159,11 @@ export enum TelemetryEvent {
 
     MessageSent = "MessageSent",
     MessageReceived = "MessageReceived",
-    CustomContextReceived = "CustomContextReceived"
+    CustomContextReceived = "CustomContextReceived",
+
+    // Internet connection
+    NetworkDisconnected = "NetworkDisconnected",
+    NetworkReconnected = "NetworkReconnected"
 }
 
 export interface TelemetryInput {
@@ -213,6 +217,8 @@ export class TelemetryConstants {
             case TelemetryEvent.MessageReceived:
             case TelemetryEvent.CustomContextReceived:
             case TelemetryEvent.BrowserUnloadEventStarted:
+            case TelemetryEvent.NetworkDisconnected:
+            case TelemetryEvent.NetworkReconnected:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
