@@ -52,6 +52,7 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
                 {sendState === SendStatus.SendFailed && <NotDeliveredTimestamp args={args}/>}
                 {sendState === SendStatus.Sent && <DeliveredTimestamp args={args} role={current_role} name={current_name} />}
             </span>
-        );
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ) as any;
     }
 };
