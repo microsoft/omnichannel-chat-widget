@@ -18,8 +18,8 @@ function AudioNotificationButton(props: ICommandButtonProps) {
     };
 
     //imageIconProps > iconName
-    const volume0Icon: IIconProps = props.imageToggleIconProps ? { imageProps: props?.imageToggleIconProps } : { iconName: props?.toggleIconName ?? "Volume0" };
-    const volume3Icon: IIconProps = props.imageIconProps ? { imageProps: props?.imageIconProps } : { iconName: props?.iconName ?? "Volume3" };
+    const volume0Icon: IIconProps = props.imageToggleIconProps ? { imageProps: props?.imageToggleIconProps } : { iconName: props?.toggleIconName ?? "Volume0", styles: { root: props.styles } };
+    const volume3Icon: IIconProps = props.imageIconProps ? { imageProps: props?.imageIconProps } : { iconName: props?.iconName ?? "Volume3", styles: { root: props.styles } };
 
     const handleOnClick = useCallback(() => {
         setMuted(!muted);
