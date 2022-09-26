@@ -2,6 +2,7 @@ import { IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 import { Components } from "botframework-webchat";
+import { BroadcastChannel } from "broadcast-channel";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IWebChatContainerStatefulProps } from "./interfaces/IWebChatContainerStatefulProps";
