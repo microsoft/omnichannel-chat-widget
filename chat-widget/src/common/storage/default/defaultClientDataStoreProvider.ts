@@ -14,7 +14,7 @@ export const defaultClientDataStoreProvider = (): IContextDataStore => {
             return false;
         }
     };
-    const TtlInMs = 5 * 60 * 1000; // 5mins
+    const TtlInMs = 15 * 60 * 1000; // 15 mins
     const dataStoreProvider = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setData: (key: any, data: any, type: any) => {
