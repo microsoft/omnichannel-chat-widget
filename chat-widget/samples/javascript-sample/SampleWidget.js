@@ -1,19 +1,17 @@
 import * as React from "react";
 
-import { BroadcastService } from "../lib/esm/index.js";
-import LiveChatWidget from "../lib/esm/components/livechatwidget/LiveChatWidget.js";
+import { BroadcastService } from "../../lib/esm/index.js";
+import LiveChatWidget from "../../lib/esm/components/livechatwidget/LiveChatWidget.js";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
 import { getCustomizationJson } from "./getCustomizationJson";
-import { registerCacheWidgetStateEvent, restoreWidgetStateIfExistInCache } from "./cacheWidgetState.js";
 import { getUnreadMessageCount } from "./getUnreadMessageCount";
-import { clientDataStoreProvider } from "./Common/clientDataStoreProvider";
 import { memoryDataStore } from "./Common/MemoryDataStore";
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
 // Below version numbers will help us to troubleshoot issues with specific package
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
-import { version as chatWidgetVersion } from "../package.json";
+import { version as chatWidgetVersion } from "../../package.json";
 import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 
 let liveChatWidgetProps;
@@ -35,10 +33,7 @@ const main = async () => {
     const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
     await chatSDK.initialize();
     const chatConfig = await chatSDK.getLiveChatConfig();
-    await registerCacheWidgetStateEvent();
     memoryDataStore();
-    const widgetStateFromCache = await restoreWidgetStateIfExistInCache();
-    const widgetStateJson = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
     await getUnreadMessageCount();
     const switchConfig = (config) => {
         liveChatWidgetProps = config;
@@ -46,8 +41,6 @@ const main = async () => {
             ...liveChatWidgetProps,
             chatSDK: chatSDK,
             chatConfig: chatConfig,
-            liveChatContextFromCache: widgetStateJson,
-            contextDataStore: clientDataStoreProvider(),
             telemetryConfig: {
                 chatWidgetVersion: chatWidgetVersion,
                 chatComponentVersion: chatComponentVersion,

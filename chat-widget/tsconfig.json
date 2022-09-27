@@ -30,11 +30,11 @@
     "src/**/*.d.ts"
   ],
   "exclude": [
-    "samples",
+    //"samples",
     "node_modules",
     "lib",
     "**/*.stories.tsx",
     "**/*.test.ts",
-    "**/*.test.tsx",
+    "**/*.test.tsx"
   ]
 }

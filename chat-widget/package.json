@@ -95,7 +95,7 @@
     "test:e2e:build": "yarn build-sample && cd automation_tests && yarn test",
     "test:visual": "jest -c jest.config.visual.cjs",
     "test:all": "yarn test:unit && yarn test:visual",
-    "build:esm": "babel ./src --config-file ./babel.esm.config.json --out-dir lib/esm --extensions .ts,.js,.tsx --ignore **/*.test.ts,**/*.stories.tsx,**/*.test.tsx,",
+    "build:esm": "babel ./src --config-file ./babel.esm.config.json --out-dir lib/esm --extensions .ts,.js,.tsx --ignore **/*.test.ts,**/*.stories.tsx,**/*.test.tsx",
     "build:cjs": "babel ./src --config-file ./babel.config.json --out-dir lib/cjs --extensions .ts,.js,.tsx --ignore **/*.test.ts,**/*.stories.tsx,**/*.test.tsx",
     "verify": "yarn install && yarn build-storybook && yarn test:all && yarn build && yarn storybook",
     "testpack": "yarn build && yarn pack",

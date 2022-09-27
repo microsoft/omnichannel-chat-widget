@@ -1,7 +1,7 @@
 import path from "path";
 import { Configuration } from "webpack";
 //import * as webpack from 'webpack';
-//import * as webpackDevServer from "webpack-dev-server";
+import * as webpackDevServer from "webpack-dev-server";
 
 const disableFullyQualifiedNameResolutions = {
     test: /\.m?js/,

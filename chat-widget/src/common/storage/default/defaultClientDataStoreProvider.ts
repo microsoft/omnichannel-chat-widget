@@ -20,17 +20,19 @@ export const defaultClientDataStoreProvider = (): IContextDataStore => {
         setData: (key: any, data: any, type: any) => {
             if (isCookieAllowed()) {
                 try {
-                    const now = new Date();
-                    const item = {
-                        data: data,
-                        expiry: now.getTime() + TtlInMs,
-                    };
-                    const strItem = JSON.stringify(item);
+                    if (key) {
+                        const now = new Date();
+                        const item = {
+                            data: data,
+                            expiry: now.getTime() + TtlInMs,
+                        };
+                        const strItem = JSON.stringify(item);
 
-                    if (type === "localStorage") {
-                        localStorage.setItem(key, strItem);
-                    } else {
-                        sessionStorage.setItem(key, strItem);
+                        if (type === "localStorage") {
+                            localStorage.setItem(key, strItem);
+                        } else {
+                            sessionStorage.setItem(key, strItem);
+                        }
                     }
                 } catch (error) {
                     TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
@@ -79,10 +81,12 @@ export const defaultClientDataStoreProvider = (): IContextDataStore => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         removeData: (key: any, type: any) => {
             if (isCookieAllowed()) {
-                if (type === "localStorage") {
-                    return localStorage.removeItem(key);
-                } else {
-                    return sessionStorage.removeItem(key);
+                if (key) {
+                    if (type === "localStorage") {
+                        return localStorage.removeItem(key);
+                    } else {
+                        return sessionStorage.removeItem(key);
+                    }
                 }
             } else {
                 // get data from in memory db when cookie is disabled

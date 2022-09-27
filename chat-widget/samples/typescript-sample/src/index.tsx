@@ -26,7 +26,7 @@ const App = () => {
     const widgetCacheId = getWidgetCacheId(omnichannelConfig.widgetId, omnichannelConfig.orgId, "");
     
     //get widget state from localStorage
-    const widgetStateFromCache = localStorage.getItem(widgetCacheId);
+    //const widgetStateFromCache = localStorage.getItem(widgetCacheId);
 
     useEffect(() => {
         const init = async () => {
@@ -48,7 +48,7 @@ const App = () => {
                 webChatContainerProps: {
                     disableMarkdownMessageFormatting: true, //setting the default to true for a known issue with markdown
                 },
-                liveChatContextFromCache : widgetStateFromCache
+                //liveChatContextFromCache : widgetStateFromCache
             };
 
             setLiveChatWidgetProps(liveChatWidgetProps);
