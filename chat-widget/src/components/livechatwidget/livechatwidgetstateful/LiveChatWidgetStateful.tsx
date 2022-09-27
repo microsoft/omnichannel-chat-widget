@@ -61,7 +61,6 @@ import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
-import { Constants } from "../../../common/Constants";
 import { registerBroadcastServiceForLocalStorage } from "../../../common/storage/default/defaultCacheManager";
 import { defaultClientDataStoreProvider } from "../../../common/storage/default/defaultClientDataStoreProvider";
 
@@ -382,9 +381,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         // Only activate these windows events when conversation state is active and chat widget is in popout mode
         // Ghost chat scenarios
+        /* COMMENTING THIS CODE FOR PARITY WITH OLD LCW
         if (state.appStates.conversationState === ConversationState.Active &&
             props.controlProps?.skipChatButtonRendering === true) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            
             window.onbeforeunload = function () {
                 const prompt = Constants.BrowserUnloadConfirmationMessage;
                 return prompt;
@@ -394,7 +395,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             window.onunload = function () {
                 initiateEndChatOnBrowserUnload();
             };
-        }
+        }*/
 
         widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId,
             props?.chatSDK?.omnichannelConfig?.widgetId,
