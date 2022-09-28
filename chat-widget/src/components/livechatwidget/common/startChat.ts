@@ -79,8 +79,6 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
     try {
-        let isStartChatSuccessful = false;
-
         const authClientFunction = getAuthClientFunction(chatConfig);
         if (getAuthToken && authClientFunction) {
             // set auth token to chat sdk before start chat
@@ -89,6 +87,8 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
                 return;
             }
         }
+
+        let isStartChatSuccessful = false;
 
         //Check if chat retrieved from cache
         if (persistedState || params?.liveChatContext) {
