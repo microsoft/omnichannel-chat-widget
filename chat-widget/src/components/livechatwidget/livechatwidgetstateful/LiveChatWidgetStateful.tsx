@@ -146,13 +146,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
-        // Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
-        if (isAuthenticationSettingsEnabled === false) {
-            if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
-                const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
-                initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
-                return;
-            }
+        if (!state.appStates.skipChatButtonRendering &&
+            !isUndefinedOrEmpty(state.domainStates?.liveChatContext)
+            && state.appStates.conversationState === ConversationState.Active) {
+            const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
+            initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
+            return;
         }
 
         // All other case should show start chat button, skipChatButtonRendering will take care of it own
