@@ -255,7 +255,8 @@ Refer to the below table to understand different critical telemetry events raise
 | Event Name | Scenario |
 | -------- |-------- |
 |`ParseAdaptiveCardFailed`|On parsing adaptive card failure|
-
+|`ClientDataStoreProviderFailed`| On failing to store data to localStorage|
+|`InMemoryDataStoreFailed`| On failing to store data to in-memory storage|
 #### Web Chat Events
 | Event Name | Scenario |
 | -------- |-------- |
