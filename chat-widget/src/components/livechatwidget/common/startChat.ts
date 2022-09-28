@@ -19,7 +19,7 @@ import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurv
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
-import { handleAuthentication } from "./authHelper";
+import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
@@ -81,6 +81,15 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
     try {
         let isStartChatSuccessful = false;
 
+        const authClientFunction = getAuthClientFunction(chatConfig);
+        if (getAuthToken && authClientFunction) {
+            // set auth token to chat sdk before start chat
+            const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
+            if (!authSuccess) {
+                return;
+            }
+        }
+
         //Check if chat retrieved from cache
         if (persistedState || params?.liveChatContext) {
             BroadcastService.postMessage({
@@ -103,9 +112,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             // Set custom context params
             setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
-
-            // set auth token to chat sdk before start chat
-            await handleAuthentication(chatSDK, chatConfig, getAuthToken);
 
             await chatSDK.startChat(optionalParams);
             isStartChatSuccessful = true;
