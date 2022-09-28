@@ -46,5 +46,6 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added exception for authenticated chat when context is passed 
 - Fixed description for new messages notification from screen reader.
 - Added default properties for background and color for  adaptive cards and properties for customization of the same.
+- Added a fix for auth chat to connect to the same chat after refresh.
 - Adding `localStorage` support for widget
 - Adding `typescript` sample
