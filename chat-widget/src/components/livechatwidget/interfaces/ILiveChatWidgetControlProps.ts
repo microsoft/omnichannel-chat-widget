@@ -14,4 +14,5 @@ export interface ILiveChatWidgetControlProps {
     hideReconnectChatPane?: boolean;
     hideWebChatContainer?: boolean;
     skipChatButtonRendering?: boolean;
+    widgetInstanceId?: string | undefined;
 }

@@ -1,6 +1,9 @@
 import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants";
+import { DataStoreManager } from "./contextDataStore/DataStoreManager";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
+import { BroadcastEvent } from "./telemetry/TelemetryConstants";
+import { Md5 } from "md5-typescript";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -215,13 +218,13 @@ export const extractPreChatSurveyResponseValues = (preChatSurvey: string, values
                 const Id = body[index].id;
                 computedValues[Id] = val.value;
             }
-            const finalPayload = {...type, ...computedValues};
+            const finalPayload = { ...type, ...computedValues };
             return finalPayload;
         } catch (ex) {
             throw new Error(`PreChatSurvey Response parse error: ${ex}`);
         }
     }
-    
+
     return {};
 };
 
@@ -230,7 +233,7 @@ export const isNullOrUndefined = (obj: any) => {
     return (obj === null || obj === undefined);
 };
 
-export const isNullOrEmptyString = (s: string) => {
+export const isNullOrEmptyString = (s: string | null) => {
     return isNullOrUndefined(s) || s === "";
 };
 
@@ -241,17 +244,17 @@ export const newGuid = () => {
     for (let i = 0; i < guidPattern.length; i++) {
         const randomString = Math.floor(Math.random() * Date.now());
         switch (guidPattern[i]) {
-        case "x":
-            newGuid += randomString.toString(16).substring(0, 4);
-            break; //get 4 digit
-        case "m":
-            newGuid += randomString.toString(16).substring(0, 3);
-            break; //Get 3 digit
-        case "y":
-            newGuid += (randomString & 0x3 | 0x8).toString(16);
-            break; // To get only one of 8, 9, A, or B
-        default:
-            newGuid += guidPattern[i]; //Default "-" and "4"
+            case "x":
+                newGuid += randomString.toString(16).substring(0, 4);
+                break; //get 4 digit
+            case "m":
+                newGuid += randomString.toString(16).substring(0, 3);
+                break; //Get 3 digit
+            case "y":
+                newGuid += (randomString & 0x3 | 0x8).toString(16);
+                break; // To get only one of 8, 9, A, or B
+            default:
+                newGuid += guidPattern[i]; //Default "-" and "4"
         }
     }
     return newGuid;
@@ -268,6 +271,7 @@ export const createTimer = (): ITimer => {
 };
 
 // Returns the domain of the org
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getDomain = (hostValue: any): string => {
     for (let i = 0; i < AriaTelemetryConstants.lcwEUDomainNames.length; i++) {
         if (hostValue.endsWith(AriaTelemetryConstants.lcwEUDomainNames[i])) {
@@ -275,4 +279,57 @@ export const getDomain = (hostValue: any): string => {
         }
     }
     return AriaTelemetryConstants.Public;
+};
+
+export const getWidgetCacheId = (orgId: string, widgetId: string, widgetInstanceId: string): string => {
+    const widgetCacheId = `${widgetInstanceId}_${orgId}_${widgetId}`;
+    return Md5.init(widgetCacheId);
+};
+
+export const getWidgetEndChatEventName = (orgId: string, widgetId: string, widgetInstanceId: string): string => {
+    if (!isNullOrEmptyString(widgetInstanceId)) {
+        return `${BroadcastEvent.ChatEnded}_${widgetInstanceId}_${orgId}_${widgetId}`;
+    }
+    return `${BroadcastEvent.ChatEnded}_${orgId}_${widgetId}`;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getStateFromCache = (orgId: string, widgetId: string, widgetInstanceId: string): any => {
+    // Getting updated state from cache
+    try {
+        if (DataStoreManager.clientDataStore) {
+            const widgetStateEventName = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
+            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
+            const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+            return persistedState;
+        } else {
+            return null;
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return null;
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const isUndefinedOrEmpty = (object: any) => {
+    if (object) {
+        if (Object.keys(object).length === 0) {
+            return true;
+        }
+        return false;
+    } else {
+        return true;
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const addDelayInMs = (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+export const getBroadcastChannelName = (widgetId: string, widgetInstanceId: string): string => {
+    return (widgetInstanceId && !isNullOrEmptyString(widgetInstanceId)) ?
+        `${widgetInstanceId}_${widgetId}` : widgetId;
 };

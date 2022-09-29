@@ -1,9 +1,10 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, isNullOrEmptyString, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { cleanup } from "@testing-library/react";
+import { Md5 } from "md5-typescript";
 
 describe("utils unit test", () => {
     afterEach(() => {
@@ -54,7 +55,7 @@ describe("utils unit test", () => {
             "       <div id=\"child4\" />" +
             "   </div>" +
             "</div>";
-    
+
         const elementId1 = "child5";
         const result1 = findParentFocusableElementsWithoutChildContainer(elementId1);
         expect(result1).toBe(null);
@@ -66,9 +67,9 @@ describe("utils unit test", () => {
         const elementId3 = "child1";
         const result3 = findParentFocusableElementsWithoutChildContainer(elementId3);
         expect(result3?.length).toBe(1);
-        
+
     });
-    
+
     it("Test getIconText", () => {
         const string1 = "Test String";
         const result1 = getIconText(string1);
@@ -104,7 +105,7 @@ describe("utils unit test", () => {
         expect(result).toBe(escapedHtml);
     });
 
-    it("Test getLocaleDirection method", function() {
+    it("Test getLocaleDirection method", function () {
 
         // Act
         const resultRTL = getLocaleDirection("1025");
@@ -119,7 +120,7 @@ describe("utils unit test", () => {
         expect(resultLTR).toEqual("ltr");
     });
 
-    it("Test changeLanguageCodeFormatForWebChat method", function() {
+    it("Test changeLanguageCodeFormatForWebChat method", function () {
 
         // Act
         const result1 = changeLanguageCodeFormatForWebChat("ar-ar");
@@ -257,5 +258,46 @@ describe("utils unit test", () => {
 
         const resultFalse = getDomain("https://uniqueorgname.crm10.omnichannelengagementhub.com");
         expect(resultFalse).toBe(AriaTelemetryConstants.Public);
+    });
+
+    it("Test getWidgetCacheId", () => {
+        const testString = "ChatWidgetStateChanged_orgid_widgetid";
+        const md5HashtestString = Md5.init(testString);
+        const resultHashString = getWidgetCacheId("orgid", "widgetid","ChatWidgetStateChanged");
+        expect(md5HashtestString).toBe(resultHashString);
+    });
+
+    it("Test getWidgetEndChatEventName", () => {
+        const testString = "ChatEnded_orgid_widgetid";
+        const resultString = getWidgetEndChatEventName("orgid", "widgetid","");
+        expect(resultString).toBe(testString);
+
+        const testString1 = "ChatEnded_instance1_orgid_widgetid";
+        const resultString1 = getWidgetEndChatEventName("orgid", "widgetid","instance1");
+        expect(resultString1).toBe(testString1);
+    });
+
+    it("Test isUndefinedOrEmpty", () => {
+        const testobject = undefined;
+        const testResult = isUndefinedOrEmpty(testobject);
+        expect(testResult).toBe(true);
+
+        const testobject1 = {};
+        const testResult1 = isUndefinedOrEmpty(testobject1);
+        expect(testResult1).toBe(true);
+
+        const testobject2 = { "test": "value" };
+        const testResult2 = isUndefinedOrEmpty(testobject2);
+        expect(testResult2).toBe(false);
+    });
+
+    it("Test getBroadcastChannelName", () => {
+        const testChannelName = "instance_widgetid";
+        const testResult = getBroadcastChannelName("widgetid", "instance");
+        expect(testResult).toBe(testChannelName);
+
+        const testChannelName1 = "widgetid";
+        const testResult1 = getBroadcastChannelName("widgetid","");
+        expect(testResult1).toBe(testChannelName1);
     });
 });

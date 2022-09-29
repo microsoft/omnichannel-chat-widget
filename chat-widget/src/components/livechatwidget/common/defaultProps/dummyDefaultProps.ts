@@ -235,18 +235,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                     width: "50px",
                     fontSize: "18px"
                 },
-                currentCallTimerStyleProps: {
-                    borderRadius: "2px",
-                    margin: "1px",
-                    color: "#FFFFFF",
-                    paddingTop: "18px",
-                    fontSize: 12,
-                    fontFamily: "Segoe UI, Arial, sans-serif",
-                    backgroundColor: "darkgrey",
-                    height: "45px",
-                    width: "50px",
-                    textAlign: "center"
-                },
                 videoTileStyleProps: {
                     width: "100%",
                     marginLeft: "auto",
@@ -309,7 +297,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             hideChatTextContainer: false,
             hideChatSubtitle: false,
             hideChatTitle: false,
-            hideNotificationBubble: true
+            hideNotificationBubble: true,
+            unreadMessageString: "new messages",
+            largeUnreadMessageString: "99+",
+            ariaLabelUnreadMessageString: "you have new messages"
         },
         styleProps: {
             generalStyleProps: {
@@ -1373,7 +1364,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 startNewChatButtonClassName: undefined
             }
         },
-        authClientFunction: undefined,
         isReconnectEnabled: undefined,
         reconnectId: undefined,
         redirectInSameWindow: undefined
@@ -1392,7 +1382,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         className: undefined
     },
-    webChatContainerProps: {
+    webChatContainerProps: {    
         containerStyles: {
             height: "100%",
             width: "100%",
@@ -1638,7 +1628,16 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             MIDDLEWARE_MESSAGE_RETRY: "Retry",
             PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE: "{0} field is required",
             MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external."
+        },
+        botMagicCode: {
+            disabled: false,
+            fwdUrl: ""
+        },
+        adaptiveCardStyles: {
+            background: "white",
+            color: "black"
         }
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
+    getAuthToken: undefined
 };

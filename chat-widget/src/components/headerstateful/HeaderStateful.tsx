@@ -39,13 +39,14 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
-                await endChat(adapter, skipEndChatSDK, skipCloseChat);
+                const postMessageToOtherTabs = true;
+                await endChat(adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTabs);
             }
             dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT, payload: document.getElementById(`${controlProps.id}-closebutton`) });
         },
         ...headerProps?.controlProps,
-        hideTitle: state.appStates.conversationState === ConversationState.Loading || headerProps?.controlProps?.hideTitle,
-        hideIcon: state.appStates.conversationState === ConversationState.Loading || headerProps?.controlProps?.hideIcon,
+        hideTitle: state.appStates.conversationState === ConversationState.Loading || state.appStates.conversationState === ConversationState.PostchatLoading || headerProps?.controlProps?.hideTitle,
+        hideIcon: state.appStates.conversationState === ConversationState.Loading || state.appStates.conversationState === ConversationState.PostchatLoading || headerProps?.controlProps?.hideIcon,
         hideCloseButton: state.appStates.conversationState === ConversationState.Loading || state.appStates.conversationState === ConversationState.Prechat || state.appStates.conversationState === ConversationState.ReconnectChat || headerProps?.controlProps?.hideCloseButton
     };
 

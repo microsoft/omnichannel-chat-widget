@@ -5,7 +5,6 @@ import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
-import { TelemetryManager } from "../common/telemetry/TelemetryManager";
 
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
     const onNewAdapterActivityHandler = (activity: IActivity) => {
@@ -20,15 +19,13 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     const raiseMessageEvent = (activity: IActivity) => {
         if (activity?.type === Constants.message) {
             const payload = {
+                // To identify hidden contents vs empty content
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                text: (activity as any)?.text,
-                id: activity?.id,
+                text: (activity as any)?.text?.length >= 1 ? `*contents hidden (${(activity as any)?.text?.length} chars)*` : "",
                 type: activity?.type,
                 timestamp: activity?.timestamp,
-                chatId: chatId, 
                 userId: userId,
-                conversationId: TelemetryManager.InternalTelemetryData?.conversationId ?? "",
-                channelData: activity?.channelData,
+                tags: activity?.channelData?.tags,
                 messageType: "",
             };
 
@@ -64,7 +61,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     }
                     payload.messageType = Constants.userMessageTag;
                 }
-                
+
                 const newMessageReceivedEvent: ICustomEvent = {
                     eventName: BroadcastEvent.NewMessageReceived,
                     payload: payload
@@ -73,7 +70,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.MessageReceived,
-                    Description: "New message received"
+                    Description: "New message received",
+                    Data: payload
                 });
             }
         }

@@ -1,7 +1,7 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useState } from "react";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 
-import { ChatButton } from "@microsoft/omnichannel-chat-components";
+import { BroadcastService, ChatButton } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../common/Constants";
 import { setFocusOnElement } from "../../common/utils";
 import { ConversationState } from "../../contexts/common/ConversationState";
@@ -15,6 +15,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
@@ -22,6 +23,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     const { buttonProps, outOfOfficeButtonProps, startChat } = props;
     //Setting OutOfOperatingHours Flag
     const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
+    const proactiveChatInNewWindow = useRef(state.appStates.proactiveChatStates.proactiveChatInNewWindow);
 
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);
     const controlProps: IChatButtonControlProps = {
@@ -30,17 +32,23 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         titleText: "Let's Chat!",
         subtitleText: "We're online.",
         hideNotificationBubble: buttonProps?.controlProps?.hideNotificationBubble === true || state.appStates.isMinimized === false,
-        unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? Constants.maximumUnreadMessageCount.toString() + "+" : state.appStates.unreadMessageCount.toString()) : "0",
+        unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? props.buttonProps?.controlProps?.largeUnreadMessageString : state.appStates.unreadMessageCount.toString()) : "0",
         onClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWChatButtonClicked
             });
-            if (state.appStates.isMinimized) {
+            if (proactiveChatInNewWindow.current) {
+                const proactiveChatIsInPopoutModeEvent: ICustomEvent = {
+                    eventName: BroadcastEvent.ProactiveChatIsInPopoutMode,
+                };
+                BroadcastService.postMessage(proactiveChatIsInPopoutModeEvent);
+            } else if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             } else {
                 await startChat();
             }
         },
+        unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
         ...buttonProps?.controlProps,
     };
 
@@ -50,12 +58,16 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         titleText: "We're Offline",
         subtitleText: "No agents available",
         onClick: async () => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.LCWChatButtonClicked
+            });
             if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             } else {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             }
         },
+        unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
         ...outOfOfficeButtonProps?.controlProps
     };
 
@@ -74,6 +86,10 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             dispatch({ type: LiveChatWidgetActionType.SET_FOCUS_CHAT_BUTTON, payload: true });
         }
     }, []);
+
+    useEffect(() => {
+        proactiveChatInNewWindow.current = state.appStates.proactiveChatStates.proactiveChatInNewWindow;
+    }, [state.appStates.proactiveChatStates.proactiveChatInNewWindow]);
 
     return (
         <ChatButton

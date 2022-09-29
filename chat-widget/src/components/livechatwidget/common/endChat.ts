@@ -13,17 +13,36 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { Constants } from "../../../common/Constants";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
+import { addDelayInMs, getWidgetEndChatEventName } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
     const isPostChatEnabled = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
     const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
-    const conversationDetails = await chatSDK.getConversationDetails();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let conversationDetails: any = undefined;
+    try {
+        conversationDetails = await chatSDK.getConversationDetails();
+    }
+    catch (erorr) {
+        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.GetConversationDetailsException,
+            ExceptionDetails: {
+                exception: `Failed to get conversation details: ${erorr}`
+            }
+        });
+    }
+
     if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
         const skipEndChatSDK = false;
         const skipCloseChat = true;
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat);
+        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, false);
+
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
+            await addDelayInMs(Constants.PostChatLoadingDurationInMs);
+
             const loadPostChatEvent: ICustomEvent = {
                 eventName: BroadcastEvent.LoadPostChatSurvey,
             };
@@ -31,13 +50,14 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
         } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
         }
-    } else {
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
+        return;
     }
+    await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean) => {
+const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any,
+    skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
     if (!skipEndChatSDK) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
@@ -51,23 +71,42 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                     exception: ex
                 }
             });
+            postMessageToOtherTab = false;
         }
     }
+
+    // Need to clear these states immediately when chat ended from OC.
+    dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+
     if (!skipCloseChat) {
         try {
             adapter?.end();
             setAdapter(undefined);
-            setWebChatStyles({...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles});
+            setWebChatStyles({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
             WebChatStoreLoader.store = null;
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
-            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
-            BroadcastService.postMessage({
-                eventName: BroadcastEvent.EndChat
+            dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
+            dispatch({
+                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
+                    proactiveChatBodyTitle: "",
+                    proactiveChatEnablePrechat: false,
+                    proactiveChatInNewWindow: false
+                }
             });
+            if (postMessageToOtherTab) {
+                const endChatEventName = getWidgetEndChatEventName(
+                    chatSDK?.omnichannelConfig?.orgId,
+                    chatSDK?.omnichannelConfig?.widgetId,
+                    props?.controlProps?.widgetInstanceId ?? "");
+                BroadcastService.postMessage({
+                    eventName: endChatEventName
+                });
+            }
         } catch (error) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.CloseChatMethodException,

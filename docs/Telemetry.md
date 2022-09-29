@@ -82,13 +82,14 @@ _Publishing Event_:
 _Subscribing Event_:
 
 ```js
-    import { BroadcastService } from "../../services/BroadcastService";
+    import { BroadcastService, BroadcastServiceInitialize } from "../../services/BroadcastService";
     import { ICustomEvent } from "../../interfaces/ICustomEvent";
     import { ElementType } from "../../common/Constants";
 
 
     //inside function component
     React.useEffect(() => {
+        BroadcastServiceInitialize(props.chatSDK?.omnichannelConfig?.widgetId); // Initialize the broadcast service with widgetid
         const message : ICustomEvent = {
             elementType: ElementType.HeaderCloseButton,
             eventName: "OnClick",
@@ -112,19 +113,29 @@ Refer to the below table to understand different broadcast events raised during 
 
 | Event Name | Scenario |
 | -------- | -------- |
+| `StartProactiveChat`              |On starting proactive chat through sdk method |
 | `ProactiveChatStartChat`          |On `ProactiveChatPane` start chat |
 | `ProactiveChatStartPopoutChat`    |On `ProactiveChatPane` start chat in a new window |
+| `ProactiveChatIsInPopoutMode`     |On clicking on chat button, when a new window is open |
+| `ResetProactiveChatParams`        |On closing popout window for proactive chat |
 | `LoadPostChatSurvey`              |On loading post chat survey |
 | `ChatEnded`                       |On ending chat |
 | `NewMessageNotification`          |On getting a new message |
 | `UnreadMessageCount`              |On toggling minimize state or changing unread message count |
-| `ChatWidgetStateChanged`          |On changing chat widget state |
+| `ChatWidgetStateChanged_<orgid>_<widgetid>`          |On changing chat widget state |
 | `InvalidAdaptiveCardFormat`       |On invalid adaptive card format |
 | `NewMessageReceived`              |On new message received |
 | `NewMessageSent`                  |On new user message sent |
 | `RedirectPageRequest`             |On redirecting unauthenticated reconnect chat |
+| `StartChat`                       |On starting chat through sdk method |
 | `StartChatSkippingChatButtonRendering`      |On starting chat skipping chat button rendering |
 | `StartUnauthenticatedReconnectChat`      |On starting unauthenticated reconnect chat |
+| `EndChat`                         |On ending chat through sdk method |
+| `MaximizeChat`                         |On maximizing chat |
+| `ChatInitiated`                         |On SDK `startChat` method call |
+| `CloseChat`                         |On SDK `closeChat` method call |
+| `InitiateEndChatOnBrowserUnload`      | End active chats on browser unload |
+| `ClosePopoutWindow`      | Event to close popout window  |
 
 ### Telemetry Events
 
@@ -148,6 +159,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ConfirmationPaneLoaded`|On `ConfirmationPane` load complete |
 | `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
 | `ReconnectChatPaneLoaded` | On `ReconnectChatPane` load complete|
+| `WindowClosed`            |On window closed|
 
 #### Action Events
 
@@ -189,6 +201,10 @@ Refer to the below table to understand different critical telemetry events raise
 |`MessageSent`|On Message Sent|
 |`MessageReceived`|On Message Received|
 |`CustomContextReceived`|On Custom Context Received|
+| `SuppressBotMagicCodeSucceeded` | On sending magic code behind the scenes succeeded |
+| `SuppressBotMagicCodeFailed` | On sending magic code behind the scenes failed |
+| `GetAuthTokenCalled` | On getting auth token |
+| `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 
 #### Calling Events
 
@@ -245,6 +261,23 @@ Refer to the below table to understand different critical telemetry events raise
 | -------- |-------- |
 |`WebChatEvent`|On Web Chat specific events, see [BotFramework-WebChat](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/TELEMETRY.md)|
 
+### System Events
+At times you might have requirements to listen to system events as well which are raised throughout the lifetime of a chat e.g `agentassignmentready`, `agentaccepted` etc. For such telemetry requirements, the ideal way is to listen to `MessageReceived` events emitted from Live Chat Widget and add your own own logic to filter them. You can do that by obtaining the `Data` attribute from `MessageReceived` event. The sample structure of this attribute is provided below:
+```
+{
+    "text": "*contents hidden*",
+    "type": "message",
+    "timestamp": "2022-07-07T21:24:15.000Z",
+    "userId": "8:acs:8078a5f3-eeb7-4501-9536-fb67c2a1b190_00000012-7464-f185-9ffb-9c3a0d004133",
+    "tags": [
+        "system",
+        "agentaccepted"
+    ],
+    "messageType": "system"
+}
+```
+You can retrive the `tags` property from `Data` attribute and add your custom logic for advance telemetry experience.
+
 ## Bring Your Own Logger
 
 Customized LCW provides a way to inject your own custom logger to Live Chat Widget. For this, the custom logger should implement type [IChatSDKLogger](#ichatsdklogger). Then this logger is passed into chat widget to as part of telemetryConfiguration property as shown below.
@@ -259,23 +292,26 @@ import { TelemetryInput } from "@microsoft/omnichannel-chat-widget/lib/types/com
 export const customConsoleLogger = (): IChatSDKLogger => {
     const customConsoleLogger: IChatSDKLogger = {
         log: (logLevel: LogLevel, telemetryInput: TelemetryInput): void => {
-            const payload = telemetryInput?.payload && Object.keys(telemetryInput?.payload).length > 0 ? telemetryInput?.payload : "";
+            const payload = telemetryInput?.payload && 
+                Object.keys(telemetryInput?.payload).length > 0 ? telemetryInput?.payload : "";
+            const telemetryInfo = telemetryInput?.telemetryInfo && 
+            Object.keys(telemetryInput?.telemetryInfo).length > 0 ? telemetryInput?.telemetryInfo : "";
             try {
                 switch (logLevel) {
                 case LogLevel.INFO:
-                    console.info("Custom Logger:", payload);
+                    console.info("Custom Logger:", payload, telemetryInfo);
                     break;
                 case LogLevel.DEBUG:
-                    console.debug("Custom Logger:", payload);
+                    console.debug("Custom Logger:", payload, telemetryInfo);
                     break;
                 case LogLevel.WARN:
-                    console.warn("Custom Logger:", payload);
+                    console.warn("Custom Logger:", payload, telemetryInfo);
                     break;
                 case LogLevel.ERROR:
                     console.error("Custom Logger:", payload);
                     break;
                 default:
-                    console.debug("Custom Logger:", payload);
+                    console.debug("Custom Logger:", payload, telemetryInfo);
                     break;
                 }
             }

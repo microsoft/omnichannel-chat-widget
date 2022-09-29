@@ -1,6 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { StyleOptions, createStore } from "botframework-webchat";
-
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
@@ -15,7 +14,7 @@ import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostC
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import attachmentProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentProcessingMiddleware";
-import { changeLanguageCodeFormatForWebChat } from "../../../common/utils";
+import { addDelayInMs, changeLanguageCodeFormatForWebChat } from "../../../common/utils";
 import channelDataMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/channelDataMiddleware";
 import { createActivityMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware";
 import createAttachmentMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
@@ -35,6 +34,9 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
+import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
+import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
+import { Constants } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles: any) => {
@@ -62,6 +64,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             }
             if (isPostChatEnabled === "true") {
                 if (postChatSurveyMode === PostChatSurveyMode.Embed) {
+                    WebChatStoreLoader.store = null;
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
+                    await addDelayInMs(Constants.PostChatLoadingDurationInMs);
+
                     const loadPostChatEvent: ICustomEvent = {
                         eventName: BroadcastEvent.LoadPostChatSurvey,
                     };
@@ -70,9 +76,11 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
                 }
             } else {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
             }
             dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
         };
 
         webChatStore = createStore(
@@ -87,6 +95,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             channelDataMiddleware,
             createConversationEndMiddleware(conversationEndCallback),
             createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
+            createMessageTimeStampMiddleware,
             gifUploadMiddleware,
             htmlPlayerMiddleware,
             htmlTextMiddleware,
@@ -112,6 +121,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         groupActivitiesMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableGroupActivitiesMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.groupActivitiesMiddleware,
         typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,
         onTelemetry: createWebChatTelemetry(),
+        cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
         ...props.webChatContainerProps?.webChatProps
     };
 

@@ -10,6 +10,7 @@ import { TelemetryData } from "./definitions/Payload";
 import { ariaTelemetryLogger } from "./loggers/ariaTelemetryLogger";
 import { consoleLogger } from "./loggers/consoleLogger";
 import { defaultAriaConfig } from "./defaultConfigs/defaultAriaConfig";
+import { TelemetryHelper } from "./TelemetryHelper";
 
 export class TelemetryTimers {
     public static LcwLoadToChatButtonTimer: ITimer;
@@ -74,7 +75,9 @@ export const RegisterLoggers = () => {
         loggers.map((logger: IChatSDKLogger) => {
             const logLevel = (telemetryEvent as ITelemetryEvent).logLevel ?? LogLevel.INFO;
             const scenarioType = (telemetryEvent as ITelemetryEvent).payload?.scenarioType ?? ScenarioType.UNDEFINED;
-            logger.log(logLevel, parseInput(telemetryEvent?.payload, scenarioType));
+            const telemetryInput = parseInput(telemetryEvent?.payload, scenarioType);
+            telemetryInput.telemetryInfo = { telemetryInfo: TelemetryHelper.buildTelemetryEvent(logLevel, telemetryInput) };
+            logger.log(logLevel, telemetryInput);
         });
     };
     return registerLoggers();

@@ -11,6 +11,8 @@
 1. [Installation](#installation)
 1. [Example Usage](#example-usage)
 1. [Components](#components)
+1. [Common Scenarios](#common-scenarios)
+    - [Disable Bot Magic Code](#disable-bot-magic-code)
 1. [See Also](#see-also)
 
 ## Introduction
@@ -217,6 +219,36 @@ const customizedFooterProp: IFooterProps = {
 ```
 
 > :pushpin: Note that [WebChat hooks](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/HOOKS.md) can also be used in any custom components.
+
+## Common Scenarios
+
+### Disable Bot Magic Code
+
+Configuration to disable the default behaviour of having to type the magic code in the conversation to complete the sign-in proccess with a bot. Instead, the magic code will be sent to the bot behind the scenes.
+
+1. Add [MagicCodeForwarder.html](sample/MagicCodeForwarder.html) in the same location as the chat widget
+
+2. Add `botMagicCode` configuration to disable default magic code feature
+
+> :exclamation: `fwdUrl` **MUST** have the same `origin` as the chat widget URL
+
+```js
+const liveChatWidgetProps = {
+    chatSDK: chatSDK, // mandatory
+    chatConfig: chatConfig, // mandatory
+    webChatContainerProps: {
+        botMagicCode: {
+            disabled: true, 
+            fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
+        }
+    },    
+};
+
+ReactDOM.render(
+    <LiveChatWidget {...liveChatWidgetProps}/>,
+    document.getElementById("my-container")
+);
+```
 
 ## See Also
 

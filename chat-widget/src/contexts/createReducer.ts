@@ -88,6 +88,7 @@ export const createReducer = () => {
                     ...state,
                     domainStates: {
                         ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         customContext: action.payload as any
                     }
                 };
@@ -285,7 +286,27 @@ export const createReducer = () => {
                         conversationEndedByAgent: action.payload as boolean
                     }
                 };
-                
+
+            case LiveChatWidgetActionType.SET_WIDGET_SIZE:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        widgetSize: action.payload as any
+                    }
+                };
+
+            case LiveChatWidgetActionType.SET_WIDGET_INSTANCE_ID:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        widgetInstanceId: action.payload as string
+                    }
+                };
+
             default:
                 return state;
         }

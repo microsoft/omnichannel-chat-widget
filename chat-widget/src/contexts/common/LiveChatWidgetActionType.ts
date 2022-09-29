@@ -195,4 +195,21 @@ export enum LiveChatWidgetActionType {
         any: Set live chat context
     */
     SET_LIVE_CHAT_CONTEXT,
+
+    /*
+        string: SignIn ID for authentication
+    */
+    SET_BOT_OAUTH_SIGNIN_ID,
+
+    /*
+        Parameters:
+        any: Set height and width of Widget
+    */
+    SET_WIDGET_SIZE,
+
+    /*
+        Parameters:
+        any: Set widget instance id
+    */
+    SET_WIDGET_INSTANCE_ID,
 }

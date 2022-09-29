@@ -1,10 +1,9 @@
-import { Constants, HtmlAttributeNames, Regex } from "../../common/Constants";
+import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-import { extractPreChatSurveyResponseValues, findAllFocusableElement, parseAdaptiveCardPayload } from "../../common/utils";
+import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
-import { DataStoreManager } from "../../common/contextDataStore/DataStoreManager";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IPreChatSurveyPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneControlProps";
@@ -63,20 +62,27 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             try {
-                const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(Constants.widgetStateDataKey, "localStorage");
-                const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
+                const persistedState = getStateFromCache(state.domainStates?.telemetryInternalData?.orgId ?? "",
+                    state.domainStates.telemetryInternalData?.widgetId ?? "", state.domainStates.widgetInstanceId ?? "");
                 let optionalParams = {};
-                if (persistedState?.domainStates?.liveChatContext) {
+
+                //Connect to Active chats and chat is not popout
+                if (persistedState &&
+                    !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
+                    persistedState?.appStates?.conversationState === ConversationState.Active &&
+                    !state.appStates.skipChatButtonRendering) {
                     optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
+
                     await initStartChat(optionalParams, persistedState);
                 } else {
                     const prechatResponseValues = extractPreChatSurveyResponseValues(state.domainStates.preChatSurveyResponse, values);
+
                     optionalParams = {
-                        initContext: {
-                            preChatResponse: prechatResponseValues
-                        }
+                        preChatResponse: prechatResponseValues
                     };
+
                     setPreChatResponseEmail(values);
+
                     await initStartChat(optionalParams);
                 }
             } catch (ex) {

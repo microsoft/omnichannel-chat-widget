@@ -8,6 +8,11 @@ import InputValidationPane from "./InputValidationPane";
 import { IInputValidationPaneProps } from "./interfaces/IInputValidationPaneProps";
 import React from "react";
 import { defaultInputValidationPaneProps } from "./common/default/defaultProps/defaultInputValidationPaneProps";
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+
+beforeAll(() => {
+    BroadcastServiceInitialize("testChannel");
+});
 
 describe("Input Validation Pane component", () => {
 

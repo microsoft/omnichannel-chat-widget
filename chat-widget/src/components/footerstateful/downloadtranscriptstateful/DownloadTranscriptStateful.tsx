@@ -92,10 +92,13 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
         let dialogColor = TranscriptConstants.CustomerDialogColor;
         let fontColor = TranscriptConstants.CustomerFontColor;
 
-        if ((value.tags && value.tags.toLowerCase().indexOf(Constants.systemMessageTag) !== -1)
-            || (value.isControlMessage && value.isControlMessage === true)
-            || (value.contentType && value.contentType.toLowerCase() === TranscriptConstants.AdaptiveCardType)
-            || (value.deliveryMode && value.deliveryMode.toLowerCase() === TranscriptConstants.InternalMode)) {
+        const isSystemMessage = value.tags && value.tags.toLowerCase().indexOf(Constants.systemMessageTag) !== -1;
+        const isControlMessage = value.isControlMessage && value.isControlMessage === true;
+        const isAdaptiveCard = value.contentType && value.contentType.toLowerCase() === TranscriptConstants.AdaptiveCardType;
+        const isInternalMessage = value.deliveryMode && value.deliveryMode.toLowerCase() === TranscriptConstants.InternalMode;
+        const isHiddenMessage = value.tags && value.tags.toLowerCase().indexOf(Constants.hiddenTag.toLowerCase()) !== -1;
+        const shouldIgnoreMessage = isSystemMessage || isControlMessage || isAdaptiveCard || isInternalMessage || isHiddenMessage;
+        if (shouldIgnoreMessage) {
             return;
         } else if (value.from) {
             if (value.from.application) {
@@ -115,7 +118,9 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 
             if (value.attachments && value.attachments.length > 0 && value.attachments[0].name) {
                 fileAttachmentName = value.attachments[0].name;
-                value.content = attachmentMessage ?? "The following attachment was uploaded during the conversation:" + fileAttachmentName;
+                value.content = attachmentMessage
+                    ? attachmentMessage + " " + fileAttachmentName
+                    : "The following attachment was uploaded during the conversation: " + fileAttachmentName;
             }
         }
         let displayNamePlaceholder = processCreatedDateTime(value.createdDateTime, chatCount);

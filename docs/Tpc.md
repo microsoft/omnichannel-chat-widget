@@ -8,7 +8,7 @@ Live Chat Widget (LCW) make use of third-party cookies mainly `localStorage`, fo
 
 If you plan to host Live Chat Widget script on another domain, which is not same as your hosted application domain, you're very likely to run into issues to make multi-tab functionality working when third party cookies are blocked. The below design approach to fallback to first-party is one way to get around it. We encourage to use `iframe` when following this approach. 
 
-![tcp-design-approach](.attachments/tcp-design-approach.png)
+![tcp-design-approach](.attachments/tpc-design-approach.png)
 
 ### **Components**
 
@@ -20,12 +20,13 @@ export class CacheManager {
     public static InternalCache: any = {};
 }
 
-export const initializeInMemoryDataStore = () => {
+export const initializeInMemoryDataStore = (widgetId: string) => {
     try {
         localStorage;
     } catch (error) {
         // Register below events when localStorage is not accessible
         // Listening to event raised from client browser
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         window.addEventListener("message", function (e: any) {
             try {
                 if (e.data.key) {
@@ -36,16 +37,20 @@ export const initializeInMemoryDataStore = () => {
                     CacheManager.InternalCache[browserData.key] = browserData.data;
                 }
             } catch (error) {
-                console.error(error);
+                const event: TelemetryEventWrapper = {
+                    Event: TelemetryEvent.InMemoryDataStoreFailed,
+                    ExceptionDetails: { message: ExceptionConstants.InMemoryDataStoreFailedMessage }
+                };
+                TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, event);
             }
         });
 
         // send cache initialize message to client
         if (CacheManager.InternalCache === undefined || {}) {
-            parent.postMessage({ data: "cacheinitialize" }, "*");
+            parent.postMessage({ data: "cacheinitialize", widgetId: widgetId }, "*");
         }
     }
-}
+};
 
 export const inMemoryDataStore = () => {
     const dataStoreProvider = {
@@ -54,11 +59,16 @@ export const inMemoryDataStore = () => {
                 return CacheManager.InternalCache[key];
             }
         },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setData: (key: any, data: any) => {
             try {
                 CacheManager.InternalCache[key] = data;
             } catch (error) {
-                console.error(error);
+                const event: TelemetryEventWrapper = {
+                    Event: TelemetryEvent.InMemoryDataStoreSetDataFailed,
+                    ExceptionDetails: { message: ExceptionConstants.InMemoryDataStoreSetDataFailedMessage }
+                };
+                TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, event);
             }
         }
     };
@@ -72,7 +82,7 @@ Do not forget to intialize the in-memory data store in your main method:
 
 ```
 const main = async () => {
-    initializeInMemoryDataStore();
+    initializeInMemoryDataStore(widgetCacheId);
     ...
   };  
 ```
@@ -178,35 +188,33 @@ If you've embedded Live Chat Widget to `index.html`, below scripts are expected 
         /*Third party cookie blocked scripts*/
         eventer(messageEvent, function (e) {
             try {
-                console.log("incoming message from iframe");
-                console.log(e.data);
                 if (e.data.key) {
                     localStorage.setItem(e.data.key, e.data.data);
                 }
 
                 // Raise event after data found in localStorage
-                var widgetData = localStorage.getItem("LcwChatWidgetState");
-                console.log("widgetDataBrowser:" + JSON.stringify(widgetData));
+                var widgetData = localStorage.getItem(e.data.key);
                 if (widgetData) {
                     var dataToIFrame = {
-                        key: "LcwChatWidgetState",
+                        key: e.data.key,
                         data: widgetData
                     };
-                    // send data to iframe
-                    document.getElementById("Microsoft_Omnichannel_LCWidget_Chat_Iframe_Window").contentWindow.postMessage(dataToIFrame, '*');
+                    //Send msg to iframe by iframe Id
+                    document.getElementById("Microsoft_Omnichannel_LCWidget_Chat_Iframe_Window").contentWindow.postMessage(dataToIFrame,
+                        '*');
                 }
 
-                // cache initialize
+                // Below code is needed during the cache initialization scenario
                 if (e.data && e.data.data && e.data.data.includes("cacheinitialize")) {
-                    var widgetData = localStorage.getItem("LcwChatWidgetState");
-                    
+                    var widgetId = e.data.widgetId;
+                    var widgetData = localStorage.getItem(widgetId);
                     if (widgetData) {
                         var dataToIFrame = {
-                            key: "LcwChatWidgetState",
+                            key: widgetId,
                             data: widgetData
                         };
-                        // send data to iframe
-                        document.getElementById("Microsoft_Omnichannel_LCWidget_Chat_Iframe_Window").contentWindow.postMessage(dataToIFrame, '*');
+                        document.getElementById("Microsoft_Omnichannel_LCWidget_Chat_Iframe_Window").contentWindow.postMessage(dataToIFrame,
+                            '*');
                     }
                 }
             }

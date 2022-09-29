@@ -55,4 +55,5 @@ export interface ILiveChatWidgetProps {
     webChatContainerProps?: IWebChatContainerStatefulProps;
     liveChatContextFromCache?: ILiveChatWidgetContext;
     contextDataStore?: IContextDataStore;
+    getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
 }

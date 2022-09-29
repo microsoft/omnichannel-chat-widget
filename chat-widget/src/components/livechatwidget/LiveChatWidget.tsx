@@ -18,7 +18,6 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
 
     return (
-
         <ChatSDKStore.Provider value={props.chatSDK}>
             <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
                 <ChatContextStore.Provider value={[state, dispatch]}>

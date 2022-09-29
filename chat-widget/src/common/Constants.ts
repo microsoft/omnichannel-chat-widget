@@ -1,4 +1,6 @@
 export class Constants {
+    public static readonly magicCodeBroadcastChannel = "MagicCodeChannel";
+    public static readonly magicCodeResponseBroadcastChannel = "MagicCodeResponseChannel";
     public static readonly systemMessageTag = "system";
     public static readonly userMessageTag = "user";
     public static readonly historyMessageTag = "history";
@@ -17,7 +19,6 @@ export class Constants {
     public static readonly true = "true";
     public static readonly false = "false";
     public static readonly maximumUnreadMessageCount = 99;
-    public static readonly widgetStateDataKey = "LcwChatWidgetState";
 
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";
@@ -45,6 +46,12 @@ export class Constants {
     public static readonly queuePositionMessageTag = "queueposition";
     public static readonly averageWaitTimeMessageTag = "averagewaittime";
     public static readonly message = "message";
+    public static readonly hiddenTag = "Hidden";
+
+    // messageTimestampMiddleware
+    public static readonly prefixTimestampTag = "ServerMessageTimestamp_";
+    public static readonly acsChannel = "ACS_CHANNEL";
+    public static readonly publicMessageTag = "public";
 
     //attachmentMiddleware
     public static readonly supportedAdaptiveCardContentTypes: Array<string> = [
@@ -109,6 +116,10 @@ export class Constants {
     // internet connection test
     public static readonly internetConnectionTestUrl = "https://ocsdk-prod.azureedge.net/public/connecttest.txt";
     public static readonly internetConnectionTestUrlText = "Omnichannel Connect Test";
+
+    public static readonly ChatWidgetStateChangedPrefix = "ChatWidgetStateChanged";
+    public static readonly PostChatLoadingDurationInMs = 2000;
+    public static readonly BrowserUnloadConfirmationMessage = "Do you want to leave chat?";
 }
 
 export const Regex = class {
