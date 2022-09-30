@@ -43,5 +43,4 @@ export interface IWebChatProps {
     //                 I.e. not using composition mode (or <Composer>).
     className?: string;
     role?: "complementary" | "contentinfo" | "form" | "main" | "region";
-    receivedMessageAnchorColor?: string;
 }
