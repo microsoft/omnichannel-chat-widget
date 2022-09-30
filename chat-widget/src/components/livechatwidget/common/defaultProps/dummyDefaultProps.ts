@@ -830,7 +830,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 className: undefined
             },
             closeButtonProps: {
-                id: "oc-lcw-header-minimize-button",
+                id: "oc-lcw-header-close-button",
                 type: "icon",
                 iconName: "ChromeClose",
                 ariaLabel: "Close",
@@ -1141,7 +1141,17 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             hideSubtitle: false,
             subtitleText: "Live chat support!",
             hideCloseButton: false,
-            closeButtonAriaLabel: "Close Button",
+            closeButtonProps: {
+                id: "oc-lcw-proactivechat-closebutton",
+                type: "icon",
+                iconName: "ChromeClose",
+                ariaLabel: "Close",
+                imageIconProps: undefined,
+                text: "Close",
+                onClick: undefined,
+                className: undefined,
+                hideButtonTitle: true
+            },
             isBodyContainerHorizantal: false,
             hideBodyTitle: false,
             bodyTitleText: "Hi! Have any questions? I am here to help.",
