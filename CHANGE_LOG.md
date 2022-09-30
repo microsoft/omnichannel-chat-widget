@@ -47,6 +47,8 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed description for new messages notification from screen reader.
 - Added default properties for background and color for  adaptive cards and properties for customization of the same.
 - Added a fix for auth chat to connect to the same chat after refresh.
+- Fixed the sound notification when the footer is hidden.
+- Replaced proactive chat pane close button with header close button.
 - Adding `localStorage` support for widget
 - Adding `typescript` sample
 - Adding support for customizing anchor tag color in webchat
