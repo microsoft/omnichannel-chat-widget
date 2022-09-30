@@ -49,7 +49,7 @@ function CommandButton(props: ICommandButtonProps) {
                 <IconButton
                     id={props.id}
                     iconProps={iconProp}
-                    title={props.ariaLabel}
+                    title={props.hideButtonTitle ? undefined : props.ariaLabel}
                     ariaLabel={props.ariaLabel}
                     disabled={props.disabled}
                     styles={buttonStyles}

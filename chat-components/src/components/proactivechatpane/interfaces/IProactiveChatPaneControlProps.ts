@@ -1,3 +1,5 @@
+import { ICommandButtonControlProps } from "../../common/interfaces/ICommandButtonControlProps";
+
 export interface IProactiveChatPaneControlProps {
     id?: string;
     dir?: "ltr" | "rtl" | "auto";
@@ -11,7 +13,7 @@ export interface IProactiveChatPaneControlProps {
     subtitleText?: string;
 
     hideCloseButton?: boolean;
-    closeButtonAriaLabel?: string;
+    closeButtonProps?: ICommandButtonControlProps;
 
     isBodyContainerHorizantal?: boolean;
     
