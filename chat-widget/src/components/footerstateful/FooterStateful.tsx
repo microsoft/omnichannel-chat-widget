@@ -64,19 +64,15 @@ export const FooterStateful = (props: any) => {
         },
     };
 
-    const footerId = controlProps?.id ?? "oc-lcw-footer";
-    const footer: HTMLElement | null = document.getElementById(footerId);
-    if (footer) {
-        footer.style.display = hideFooterDisplay ? "none" : "";
-    }
-
     return (
         <>
-            <Footer
-                componentOverrides={footerProps?.componentOverrides}
-                controlProps={controlProps}
-                styleProps={footerProps?.styleProps}
-            />
+            {!hideFooterDisplay &&
+                <Footer
+                    componentOverrides={footerProps?.componentOverrides}
+                    controlProps={controlProps}
+                    styleProps={footerProps?.styleProps}
+                />
+            }
             <AudioNotificationStateful
                 audioSrc={audioNotificationProps?.audioSrc ?? NewMessageNotificationSoundBase64}
                 isAudioMuted={state.appStates.isAudioMuted === null ? 
