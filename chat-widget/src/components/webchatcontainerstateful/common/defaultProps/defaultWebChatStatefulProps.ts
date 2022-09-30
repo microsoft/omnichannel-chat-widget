@@ -11,4 +11,5 @@ export const defaultWebChatStatefulProps: IWebChatProps = {
     groupActivitiesMiddleware: groupActivitiesMiddleware as any,
     typingIndicatorMiddleware: typingIndicatorMiddleware,
     // attachmentMiddleware: createAttachmentMiddleware(false), - this is implemented elsewhere and can be customized
+    receivedMessageAnchorColor: "white"
 };

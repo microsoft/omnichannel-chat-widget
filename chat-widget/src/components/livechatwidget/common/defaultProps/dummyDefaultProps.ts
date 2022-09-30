@@ -1459,7 +1459,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             // "bundle" props: these stuff are not available if you "decompose" or "recompose" Web Chat.
             //                 I.e. not using composition mode (or <Composer>).
             className: undefined,
-            role: undefined
+            role: undefined,
+            receivedMessageAnchorColor: "white"
         },
         directLine: undefined,
         storeMiddlewares: undefined, // Additional store middlewares

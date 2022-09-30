@@ -49,3 +49,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added a fix for auth chat to connect to the same chat after refresh.
 - Adding `localStorage` support for widget
 - Adding `typescript` sample
+- Adding support for customizing anchor tag color in webchat

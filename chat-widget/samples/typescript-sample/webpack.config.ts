@@ -1,5 +1,6 @@
 import path from "path";
 import { Configuration } from "webpack";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as webpackDevServer from "webpack-dev-server";
 
 const disableFullyQualifiedNameResolutions = {
