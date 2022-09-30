@@ -52,3 +52,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Adding `localStorage` support for widget
 - Adding `typescript` sample
 - Adding support for customizing anchor tag color in webchat
+- Upgraded chat components in widget to replace proactive chat pane close button with header close button.
