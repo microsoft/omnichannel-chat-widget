@@ -19,10 +19,12 @@ export const clientDataStoreProvider = () => {
         setData: (key, data, type) => {
             if (isCookieAllowed()) {
                 try {
-                    if (type === Constants.LocalStorage) {
-                        localStorage.setItem(key, data);
-                    } else {
-                        sessionStorage.setItem(key, data);
+                    if (key) {
+                        if (type === Constants.LocalStorage) {
+                            localStorage.setItem(key, data);
+                        } else {
+                            sessionStorage.setItem(key, data);
+                        }
                     }
                 } catch (error) {
                     console.error("logging third-party failed!");

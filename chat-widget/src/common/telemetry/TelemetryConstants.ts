@@ -85,6 +85,8 @@ export enum TelemetryEvent {
     PostChatContextCallSucceed = "PostChatContextCallSucceed",
     PostChatContextCallFailed = "PostChatContextCallFailed",
     ParseAdaptiveCardFailed = "ParseAdaptiveCardFailed",
+    ClientDataStoreProviderFailed = "ClientDataStoreProviderFailed",
+    InMemoryDataStoreFailed = "InMemoryDataStoreFailed",
 
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClicked = "LCWChatButtonClicked",

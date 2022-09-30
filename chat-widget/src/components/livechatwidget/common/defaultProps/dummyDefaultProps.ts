@@ -322,8 +322,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 selectors: {
                     ":hover": {
                         backgroundColor: "lightgrey"
-                    },                    
-                    ":focus" : {
+                    },
+                    ":focus": {
                         outline: "dotted 2px #000"
                     }
                 }
@@ -1160,7 +1160,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 height: "auto",
                 margin: "3px",
                 minHeight: "133px",
-                position: "absolute", 
+                position: "absolute",
                 right: "0",
                 width: "245px",
                 zIndex: "9999"
@@ -1382,7 +1382,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         className: undefined
     },
-    webChatContainerProps: {    
+    webChatContainerProps: {
         containerStyles: {
             height: "100%",
             width: "100%",
@@ -1459,7 +1459,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             // "bundle" props: these stuff are not available if you "decompose" or "recompose" Web Chat.
             //                 I.e. not using composition mode (or <Composer>).
             className: undefined,
-            role: undefined
+            role: undefined,
         },
         directLine: undefined,
         storeMiddlewares: undefined, // Additional store middlewares
@@ -1605,6 +1605,9 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             },
             attachmentSizeStyles: {
                 display: "none"
+            },
+            receivedMessageAnchorStyles: {
+                color: "white"
             }
         },
         localizedTexts: {
