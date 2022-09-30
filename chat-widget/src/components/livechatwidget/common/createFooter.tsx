@@ -1,5 +1,4 @@
 import FooterStateful from "../../footerstateful/FooterStateful";
-import { IFooterProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterProps";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import React from "react";
@@ -7,19 +6,8 @@ import { decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { shouldShowFooter } from "../../../controller/componentController";
 
 export const createFooter = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
-    const footerPropsHidden: IFooterProps = {
-        ...props.footerProps,
-        controlProps: {
-            ...props.footerProps?.controlProps,
-            hideDownloadTranscriptButton: true,
-            hideEmailTranscriptButton: true,
-            hideAudioNotificationButton: true
-        }
-    };
-
-    const footer = (!props.controlProps?.hideFooter && shouldShowFooter(state)) ?
-        (decodeComponentString(props.componentOverrides?.footer) || <FooterStateful footerProps={props.footerProps} downloadTranscriptProps={props.downloadTranscriptProps} audioNotificationProps={props.audioNotificationProps} hideFooterDisplay={false}/>) :
-        (decodeComponentString(props.componentOverrides?.footer) || <FooterStateful footerProps={footerPropsHidden} downloadTranscriptProps={props.downloadTranscriptProps} audioNotificationProps={props.audioNotificationProps} hideFooterDisplay={true}/>);
+    const hideFooterDisplay = (!props.controlProps?.hideFooter && shouldShowFooter(state)) ? false : true;
+    const footer = (decodeComponentString(props.componentOverrides?.footer) || <FooterStateful footerProps={props.footerProps} downloadTranscriptProps={props.downloadTranscriptProps} audioNotificationProps={props.audioNotificationProps} hideFooterDisplay={hideFooterDisplay}/>);
 
     return footer;
 };
