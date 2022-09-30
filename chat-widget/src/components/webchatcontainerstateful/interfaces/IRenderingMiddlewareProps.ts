@@ -1,5 +1,5 @@
-import { IAttachmentProps } from "./IAttachmentProps";
 import React from "react";
+import { IAttachmentProps } from "./IAttachmentProps";
 
 export interface IRenderingMiddlewareProps {
     timestampDir?: "ltr" | "rtl" | "auto";
@@ -30,4 +30,5 @@ export interface IRenderingMiddlewareProps {
     attachmentDownloadIconStyles?: React.CSSProperties;
     attachmentContentStyles?: React.CSSProperties;
     attachmentSizeStyles?: React.CSSProperties;
+    receivedMessageAnchorStyles?: React.CSSProperties;
 }

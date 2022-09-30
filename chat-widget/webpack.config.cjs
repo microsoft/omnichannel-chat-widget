@@ -4,7 +4,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
     devtool: "source-map",
-    entry: "./sample/SampleWidget.js",
+    entry: "./samples/javascript-sample/SampleWidget.js",
     mode: "production",
     output: {
         filename: "out.js"
