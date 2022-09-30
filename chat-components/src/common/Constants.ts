@@ -31,7 +31,7 @@ export const Regex = class {
 
 export enum ElementType {
     ChatButton = "ChatButton",
-    HeaderCloseButton = "HeaderCloseButton",
+    CloseButton = "CloseButton",
     HeaderMinimizeButton = "HeaderMinimizeButton",
     FooterDownloadTranscriptButton = "FooterDownloadTranscriptButton",
     FooterEmailTranscriptButton = "FooterEmailTranscriptButton",

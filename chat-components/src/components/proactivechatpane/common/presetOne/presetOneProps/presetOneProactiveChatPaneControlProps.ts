@@ -13,7 +13,11 @@ export const presetOneProactiveChatPaneControlProps: IProactiveChatPaneControlPr
     subtitleText: "Live chat support!",
 
     hideCloseButton: false,
-    closeButtonAriaLabel: "Close Button",
+    closeButtonProps: {
+        type: "icon",
+        iconName: "ChromeClose",
+        hideButtonTitle: true
+    },
 
     isBodyContainerHorizantal: true,
 

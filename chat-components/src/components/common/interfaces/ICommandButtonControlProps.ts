@@ -15,4 +15,5 @@ export interface ICommandButtonControlProps {
     onClick?: () => void;
     className?: string;
     disabled?: boolean;
+    hideButtonTitle?: boolean;
 }
