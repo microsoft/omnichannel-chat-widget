@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { IImageStyles, ILabelStyles, IStackStyles, Image, Label, Stack, initializeIcons } from "@fluentui/react";
 
-import CloseButton from "./subcomponents/CloseButton";
+import CloseButton from "../common/subcomponents/CloseButton";
 import { IHeaderProps } from "./interfaces/IHeaderProps";
 import MinimizeButton from "./subcomponents/MinimizeButton";
 import { decodeComponentString } from "../../common/decodeComponentString";

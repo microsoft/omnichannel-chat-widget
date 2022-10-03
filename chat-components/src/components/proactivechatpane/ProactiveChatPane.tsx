@@ -1,16 +1,15 @@
-import { IButtonStyles, IStackStyles, IconButton, Label, Stack } from "@fluentui/react";
+import { IButtonStyles, IStackStyles, Label, Stack } from "@fluentui/react";
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
+import CloseButton from "../common/subcomponents/CloseButton";
 import { IProactiveChatPaneProps } from "./interfaces/IProactiveChatPaneProps";
 import { KeyCodes } from "../../common/Constants";
 import { decodeComponentString } from "../../common/decodeComponentString";
 import { defaultProactiveChatPaneBodyContainerStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneBodyContainerStyles";
 import { defaultProactiveChatPaneBodyTitleStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneBodyTitleStyles";
-import { defaultProactiveChatPaneCloseButtonHoveredStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneCloseButtonHoveredStyles";
-import { defaultProactiveChatPaneCloseButtonStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneCloseButtonStyles";
 import { defaultProactiveChatPaneControlProps } from "./common/default/defaultProps/defaultProactiveChatPaneControlProps";
 import { defaultProactiveChatPaneGeneralStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneGeneralStyles";
 import { defaultProactiveChatPaneHeaderContainerStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneHeaderContainerStyles";
@@ -20,6 +19,7 @@ import { defaultProactiveChatPaneSubtitleStyles } from "./common/default/default
 import { defaultProactiveChatPaneTextContainerStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneTextContainerStyles";
 import { defaultProactiveChatPaneTitleStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneTitleStyles";
 import { generateEventName } from "../../common/utils";
+import { defaultProactiveChatPaneProps } from "./common/default/defaultProps/defaultProactiveChatPaneProps";
 
 function ProactiveChatPane(props: IProactiveChatPaneProps) {
 
@@ -60,6 +60,9 @@ function ProactiveChatPane(props: IProactiveChatPaneProps) {
         }
     }, []);
 
+    const closeButtonProps = Object.assign({}, defaultProactiveChatPaneProps.controlProps?.closeButtonProps,
+        props.controlProps?.closeButtonProps);
+
     const containerStyles: IStackStyles = {
         root: Object.assign({}, defaultProactiveChatPaneGeneralStyles, props.styleProps?.generalStyleProps)
     };
@@ -80,11 +83,11 @@ function ProactiveChatPane(props: IProactiveChatPaneProps) {
         root: Object.assign({}, defaultProactiveChatPaneSubtitleStyles, props.styleProps?.subtitleStyleProps)
     };
 
-    const closeButtonStyles: IButtonStyles = {
-        root: Object.assign({}, defaultProactiveChatPaneCloseButtonStyles, props.styleProps?.closeButtonStyleProps),
-        rootHovered: Object.assign({}, defaultProactiveChatPaneCloseButtonHoveredStyles, props.styleProps?.closeButtonHoveredStyleProps),
-        rootPressed: Object.assign({}, defaultProactiveChatPaneCloseButtonHoveredStyles, props.styleProps?.closeButtonHoveredStyleProps)
-    };
+    const closeButtonStyles = Object.assign({}, defaultProactiveChatPaneProps.styleProps?.closeButtonStyleProps,
+        props.styleProps?.closeButtonStyleProps);
+
+    const closeButtonHoverStyles = Object.assign({}, defaultProactiveChatPaneProps.styleProps?.closeButtonHoveredStyleProps,
+        props.styleProps?.closeButtonHoveredStyleProps);
 
     const bodyContainerStyles: IStackStyles = {
         root: Object.assign({}, defaultProactiveChatPaneBodyContainerStyles, props.styleProps?.bodyContainerStyleProps)
@@ -142,14 +145,13 @@ function ProactiveChatPane(props: IProactiveChatPaneProps) {
                         </Stack>
 
                         {!props.controlProps?.hideCloseButton && (decodeComponentString(props.componentOverrides?.closeButton) ||
-                        <IconButton
+                        <CloseButton
+                            {...closeButtonProps}
                             className={props.styleProps?.classNames?.closeButtonClassName}
-                            styles={closeButtonStyles}
-                            tabIndex={0}
                             onClick={handleCloseClick}
-                            id={elementId + "-closebutton"}
-                            aria-label={props.controlProps?.closeButtonAriaLabel || defaultProactiveChatPaneControlProps.closeButtonAriaLabel}
-                        />) }
+                            styles={closeButtonStyles}
+                            hoverStyles={closeButtonHoverStyles}
+                            id={elementId + "-closebutton"}/>) }
                     </Stack>
                     <Stack horizontal={props.controlProps?.isBodyContainerHorizantal || defaultProactiveChatPaneControlProps.isBodyContainerHorizantal}
                         className={props.styleProps?.classNames?.bodyContainerClassName}

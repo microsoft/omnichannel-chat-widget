@@ -3,7 +3,7 @@ const path = require("path");
 
 module.exports = {
     devtool: "source-map",
-    entry: "./sample/SampleWidget.js",
+    entry: "./samples/javascript-sample/SampleWidget.js",
     mode: "development",
     output: {
         filename: "out.js"

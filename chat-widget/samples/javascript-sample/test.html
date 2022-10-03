@@ -46,7 +46,9 @@
 
     eventer(messageEvent, function (e) {
       try {
-        localStorage.setItem(e.data.key, e.data.data);
+        if (e.data.key) {
+          localStorage.setItem(e.data.key, e.data.data);
+        }
       }
       catch (ex) {
         console.log(ex);

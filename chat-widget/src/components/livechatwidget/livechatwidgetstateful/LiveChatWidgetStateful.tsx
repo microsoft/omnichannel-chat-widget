@@ -61,7 +61,8 @@ import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
-import { Constants } from "../../../common/Constants";
+import { registerBroadcastServiceForLocalStorage } from "../../../common/storage/default/defaultCacheManager";
+import { defaultClientDataStoreProvider } from "../../../common/storage/default/defaultClientDataStoreProvider";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -87,6 +88,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
     const currentMessageCountRef = useRef<number>(0);
     let widgetStateEventName = "";
+    
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
@@ -105,10 +107,19 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
+        // Add default localStorage support for widget
+        if (props.contextDataStore === undefined) {
+            registerBroadcastServiceForLocalStorage(chatSDK?.omnichannelConfig?.orgId,
+                chatSDK?.omnichannelConfig?.widgetId,
+                props?.controlProps?.widgetInstanceId ?? "");
+
+            DataStoreManager.clientDataStore = defaultClientDataStoreProvider();
+        } else {
+            DataStoreManager.clientDataStore = props.contextDataStore;
+        }
 
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
-        DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
@@ -133,9 +144,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // where customer can choose to continue previous conversation or start new conversation
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
-        if (!state.appStates.skipChatButtonRendering && 
-            state.appStates.conversationState === ConversationState.Active && 
-            isAuthenticationSettingsEnabled === true && 
+        if (!state.appStates.skipChatButtonRendering &&
+            state.appStates.conversationState === ConversationState.Active &&
+            isAuthenticationSettingsEnabled === true &&
             props.reconnectChatPaneProps?.isReconnectEnabled) {
             getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
                 if (authReconnectId && !state.appStates.reconnectId) {
@@ -369,9 +380,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         // Only activate these windows events when conversation state is active and chat widget is in popout mode
         // Ghost chat scenarios
+        /* COMMENTING THIS CODE FOR PARITY WITH OLD LCW
         if (state.appStates.conversationState === ConversationState.Active &&
             props.controlProps?.skipChatButtonRendering === true) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            
             window.onbeforeunload = function () {
                 const prompt = Constants.BrowserUnloadConfirmationMessage;
                 return prompt;
@@ -381,7 +394,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             window.onunload = function () {
                 initiateEndChatOnBrowserUnload();
             };
-        }
+        }*/
 
         widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId,
             props?.chatSDK?.omnichannelConfig?.widgetId,
