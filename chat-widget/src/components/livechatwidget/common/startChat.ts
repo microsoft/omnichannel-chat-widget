@@ -59,7 +59,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false) => {
+const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, params?: any) => {
     // Getting prechat Survey Context
     const parseToJson = false;
     const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
@@ -73,7 +73,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
 
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-    await initStartChat(chatSDK, chatConfig, getAuthToken, dispatch, setAdapter);
+    await initStartChat(chatSDK, chatConfig, getAuthToken, dispatch, setAdapter, params);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -187,7 +187,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                             eventName: BroadcastEvent.StartChatSkippingChatButtonRendering,
                         };
                         BroadcastService.postMessage(chatStartedSkippingChatButtonRendering);
-                        setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter);
+                        const optionalParams = (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) ?
+                            { liveChatContext: state.domainStates?.liveChatContext } :
+                            undefined;
+                        setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, undefined, undefined, optionalParams);
                     }
                 });
             }
