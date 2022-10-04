@@ -11,15 +11,33 @@ function AudioNotificationButton(props: ICommandButtonProps) {
     const [muted, setMuted] = useState<boolean | undefined>(props.isAudioMuted);
 
     const iconButtonStyles: IButtonStyles = {
-        root: props?.styles,
-        rootHovered: props?.hoverStyles,
-        rootFocused: props?.focusStyles,
-        rootPressed: props?.hoverStyles
+        icon: props.styles,
+        root: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            width: (props?.styles as any).width,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            height: (props?.styles as any).height,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            backgroundColor: (props?.styles as any).backgroundColor,
+            selectors: {
+                ":hover .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    color: (props?.hoverStyles as any).color
+                },
+                ":active .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    color: (props?.focusStyles as any).color
+                }
+            }
+        },
+        rootHovered: props.hoverStyles,
+        rootFocused: props.focusStyles,
+        rootPressed: props.hoverStyles
     };
 
     //imageIconProps > iconName
-    const volume0Icon: IIconProps = props.imageToggleIconProps ? { imageProps: props?.imageToggleIconProps } : { iconName: props?.toggleIconName ?? "Volume0", styles: { root: props.styles } };
-    const volume3Icon: IIconProps = props.imageIconProps ? { imageProps: props?.imageIconProps } : { iconName: props?.iconName ?? "Volume3", styles: { root: props.styles } };
+    const volume0Icon: IIconProps = props.imageToggleIconProps ? { imageProps: props?.imageToggleIconProps } : { iconName: props?.toggleIconName ?? "Volume0" };
+    const volume3Icon: IIconProps = props.imageIconProps ? { imageProps: props?.imageIconProps } : { iconName: props?.iconName ?? "Volume3" };
 
     const handleOnClick = useCallback(() => {
         setMuted(!muted);

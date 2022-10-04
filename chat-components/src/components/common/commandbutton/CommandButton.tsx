@@ -9,10 +9,28 @@ function CommandButton(props: ICommandButtonProps) {
     //imageIconProps > iconName
     const iconProp: IIconProps = props.imageIconProps ?
         { imageProps: props.imageIconProps } :
-        { iconName: props.iconName, styles: { root: props.styles } };
+        { iconName: props.iconName };
 
     const buttonStyles: IButtonStyles = {
-        root: props.styles,
+        icon: props.styles,
+        root: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            width: (props?.styles as any).width,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            height: (props?.styles as any).height,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            backgroundColor: (props?.styles as any).backgroundColor,
+            selectors: {
+                ":hover .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    color: (props?.hoverStyles as any).color
+                },
+                ":active .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    color: (props?.focusStyles as any).color
+                }
+            }
+        },
         rootHovered: props.hoverStyles,
         rootFocused: props.focusStyles,
         rootPressed: props.hoverStyles
