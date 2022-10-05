@@ -192,7 +192,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                             const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
                             initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
                         } else {
-                            setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, undefined, undefined);
+                            setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter);
                         }
                     }
                 });
