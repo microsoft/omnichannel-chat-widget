@@ -39,9 +39,9 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        HTML element: The element that the control will return to after a popup/modal is closed
+        string or null: The element id that the control will return to after a popup/modal is closed
     */
-    SET_PREVIOUS_FOCUSED_ELEMENT,
+    SET_PREVIOUS_FOCUSED_ELEMENT_ID,
 
     /*
         Parameters:

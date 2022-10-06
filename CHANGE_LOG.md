@@ -53,3 +53,5 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Adding `typescript` sample
 - Adding support for customizing anchor tag color in webchat
 - Upgraded chat components in widget to replace proactive chat pane close button with header close button.
+- Fixed refreshing chat in popout mode and upgraded chat components in widget to fix footer icons.
+- Replaced HTMLElement with string in state variables.

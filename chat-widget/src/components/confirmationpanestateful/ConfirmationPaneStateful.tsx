@@ -54,11 +54,11 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
                 Description: "Confirmation pane Cancel button clicked."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
-            const previousFocused = state.appStates.previousElementOnFocusBeforeModalOpen;
+            const previousFocusedElementId = state.appStates.previousElementIdOnFocusBeforeModalOpen;
 
-            if (previousFocused) {
-                setFocusOnElement(previousFocused);
-                dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT, payload: null });
+            if (previousFocusedElementId) {
+                setFocusOnElement("#" + previousFocusedElementId);
+                dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: null });
             } else {
                 setFocusOnSendBox();
             }

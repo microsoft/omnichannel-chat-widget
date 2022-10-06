@@ -46,10 +46,9 @@ export const FooterStateful = (props: any) => {
         },
         onEmailTranscriptClick: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptButtonClicked, Description: "Email Transcript button clicked." });
-            const emailTranscriptButtonId = footerProps?.controlProps?.emailTranscriptButtonProps?.id ?? "oc-lcw-footer-emailtranscript-button";
-            const emailTranscriptButton: HTMLElement | null = document.getElementById(emailTranscriptButtonId);
-            if (emailTranscriptButton) {
-                dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT, payload: emailTranscriptButton });
+            const emailTranscriptButtonId = footerProps?.controlProps?.emailTranscriptButtonProps?.id ??  `${controlProps.id}-emailtranscript-button`;
+            if (emailTranscriptButtonId) {
+                dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: emailTranscriptButtonId });
             }
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE, payload: true });
         },
