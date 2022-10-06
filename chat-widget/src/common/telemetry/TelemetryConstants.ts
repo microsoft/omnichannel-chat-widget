@@ -179,6 +179,10 @@ export class TelemetryConstants {
     private static map(eventTypeOrScenarioType: TelemetryEvent): ScenarioType {
         switch (eventTypeOrScenarioType) {
             case TelemetryEvent.ParseAdaptiveCardFailed:
+            case TelemetryEvent.ReceivedNullOrEmptyToken:
+            case TelemetryEvent.GetAuthTokenCalled:
+            case TelemetryEvent.SuppressBotMagicCodeSucceeded:
+            case TelemetryEvent.SuppressBotMagicCodeFailed:
                 return ScenarioType.CONFIG_VALIDATION;
 
             case TelemetryEvent.WebChatLoaded:
@@ -194,6 +198,7 @@ export class TelemetryConstants {
             case TelemetryEvent.OutOfOfficePaneLoaded:
             case TelemetryEvent.ConfirmationPaneLoaded:
             case TelemetryEvent.ProactiveChatPaneLoaded:
+            case TelemetryEvent.BrowserUnloadEventStarted:
                 return ScenarioType.LOAD;
 
             case TelemetryEvent.PrechatSubmitted:
@@ -221,6 +226,8 @@ export class TelemetryConstants {
             case TelemetryEvent.BrowserUnloadEventStarted:
             case TelemetryEvent.NetworkDisconnected:
             case TelemetryEvent.NetworkReconnected:
+            case TelemetryEvent.AudioToggleButtonClicked:
+            case TelemetryEvent.EmailTranscriptCancelButtonClicked:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
@@ -237,6 +244,7 @@ export class TelemetryConstants {
             case TelemetryEvent.EndChatSDKCallFailed:
             case TelemetryEvent.PostChatContextCallFailed:
             case TelemetryEvent.PostChatContextCallSucceed:
+            case TelemetryEvent.GetConversationDetailsException:
                 return ScenarioType.SDK;
 
             case TelemetryEvent.VideoCallAcceptButtonClick:
