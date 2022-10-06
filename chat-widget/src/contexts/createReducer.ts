@@ -93,12 +93,12 @@ export const createReducer = () => {
                     }
                 };
 
-            case LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT:
+            case LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID:
                 return {
                     ...state,
                     appStates: {
                         ...state.appStates,
-                        previousElementOnFocusBeforeModalOpen: action.payload as HTMLElement
+                        previousElementIdOnFocusBeforeModalOpen: action.payload as string | null
                     }
                 };
 
