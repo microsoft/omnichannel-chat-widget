@@ -198,7 +198,6 @@ export class TelemetryConstants {
             case TelemetryEvent.OutOfOfficePaneLoaded:
             case TelemetryEvent.ConfirmationPaneLoaded:
             case TelemetryEvent.ProactiveChatPaneLoaded:
-            case TelemetryEvent.BrowserUnloadEventStarted:
                 return ScenarioType.LOAD;
 
             case TelemetryEvent.PrechatSubmitted:
