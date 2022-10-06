@@ -12,15 +12,16 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPostChatSurveyPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralPostChatSurveyPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
 
 export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneProps) => {
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    // ToDo : TASK 2628392 Fix PostChat iframe reloading on Minimize
+    const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPostChatSurveyPaneStyleProps, props.styleProps?.generalStyleProps,
         {display: state.appStates.isMinimized ? "none" : ""});
     let surveyInviteLink = "";
     if (state.domainStates.postChatContext.surveyInviteLink) {
-        surveyInviteLink = state.domainStates.postChatContext.surveyInviteLink + "&lang=" + (state.domainStates.postChatContext.formsProLocale ?? "en");
+        surveyInviteLink = state.domainStates.postChatContext.surveyInviteLink + "&embed=" + (postChatSurveyMode === PostChatSurveyMode.Embed).toString() + "&compact=true" + "&lang=" + (state.domainStates.postChatContext.formsProLocale ?? "en") + "&showmultilingual=false";
     }
 
     const styleProps: IPostChatSurveyPaneStyleProps = {
