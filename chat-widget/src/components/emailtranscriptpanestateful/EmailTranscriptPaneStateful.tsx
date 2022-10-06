@@ -26,13 +26,13 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
     const [initialEmail, setInitialEmail] = useState("");
     const closeEmailTranscriptPane = () => {
         dispatch({ type: LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE, payload: false });
-        const previousFocused = state.appStates.previousElementOnFocusBeforeModalOpen;
-        if (previousFocused) {
-            setFocusOnElement(previousFocused);
+        const previousFocusedElementId = state.appStates.previousElementIdOnFocusBeforeModalOpen;
+        if (previousFocusedElementId) {
+            setFocusOnElement("#" + previousFocusedElementId);
         } else {
             setFocusOnSendBox();
         }
-        dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT, payload: null });
+        dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: null });
         setTabIndices(elements, initialTabIndexMap, true);
     };
 
