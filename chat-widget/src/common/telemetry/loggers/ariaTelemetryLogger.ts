@@ -55,7 +55,7 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const eventProperties: any = { name: telemetryInput.scenarioType, properties: {} };
                 if (telemetryInfo) {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (Object.keys(telemetryInfo) as (keyof typeof telemetryInfo)[]).forEach((key, index) => {
                         if (!isNullOrUndefined(telemetryInfo[key]) && !isNullOrEmptyString(telemetryInfo[key])) {
                             const property = {
