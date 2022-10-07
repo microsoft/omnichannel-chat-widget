@@ -21,7 +21,8 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         {display: state.appStates.isMinimized ? "none" : ""});
     let surveyInviteLink = "";
     if (state.domainStates.postChatContext.surveyInviteLink) {
-        surveyInviteLink = state.domainStates.postChatContext.surveyInviteLink + "&embed=" + (postChatSurveyMode === PostChatSurveyMode.Embed).toString() + "&compact=" + (props.isCustomerVoiceSurveyCompact ?? true).toString() + "&lang=" + (state.domainStates.postChatContext.formsProLocale ?? "en") + "&showmultilingual=false";
+        surveyInviteLink = state.domainStates.postChatContext.surveyInviteLink + "&embed=" + (postChatSurveyMode === PostChatSurveyMode.Embed).toString() + 
+        "&compact=" + (props.isCustomerVoiceSurveyCompact ?? true).toString() + "&lang=" + (state.domainStates.postChatContext.formsProLocale ?? "en") + "&showmultilingual=false";
     }
 
     const styleProps: IPostChatSurveyPaneStyleProps = {
