@@ -1121,7 +1121,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 backgroundColor: "#FFFFFF",
                 borderColor: "#F1F1F1"
             }
-        }
+        },
+        isCustomerVoiceSurveyCompact: undefined
     },
     proactiveChatPaneProps: {
         componentOverrides: {
