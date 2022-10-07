@@ -41,7 +41,8 @@ export const BroadcastServiceInitialize = (channelName: string) => {
 export const BroadcastService = {
     //broadcast a message
     postMessage: (message: ICustomEvent) => {
-        pubChannel.postMessage(message);
+        //pubChannel.postMessage(message);
+        pubChannel.postMessage(JSON.parse(JSON.stringify(message)));
     },
 
     getMessage: (message: ICustomEvent) => {

@@ -27,6 +27,10 @@ function CommandButton(props: ICommandButtonProps) {
                 },
                 ":active .ms-Button-icon": {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    color: (props?.hoverStyles as any)?.color
+                },
+                ":focus .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     color: (props?.focusStyles as any)?.color
                 }
             }
