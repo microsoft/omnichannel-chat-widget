@@ -113,6 +113,10 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
             background: ${props?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background};
         }
 
+        .webchat__stacked-layout__content div.webchat__stacked-layout__message-row div.webchat__bubble--from-user {
+            max-width: 75%
+        }
+
         div[class="ac-textBlock"]>p{color:${props?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color};}
 
         .ms_lcw_webchat_received_message img.webchat__markdown__external-link-icon { 
