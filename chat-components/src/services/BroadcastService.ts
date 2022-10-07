@@ -41,6 +41,10 @@ export const BroadcastServiceInitialize = (channelName: string) => {
 export const BroadcastService = {
     //broadcast a message
     postMessage: (message: ICustomEvent) => {
+        /**
+         * Omit copying methods to prevent 'DataCloneError' in older browsers when passing an object with functions
+         * This exception occurs when an object can't be clone with the 'structured clone algorithm' (used by postMessage)
+         */
         pubChannel.postMessage(JSON.parse(JSON.stringify(message)));
     },
 
