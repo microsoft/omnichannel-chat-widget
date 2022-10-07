@@ -12,7 +12,6 @@ import { ILiveChatWidgetControlProps } from "./ILiveChatWidgetControlProps";
 import { ILiveChatWidgetStyleProps } from "./ILiveChatWidgetStyleProps";
 import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
 import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneProps";
-import { IPostChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/postchatsurveypane/interfaces/IPostChatSurveyPaneProps";
 import { IPreChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneProps";
 import { IProactiveChatPaneStatefulProps } from "../../proactivechatpanestateful/interfaces/IProactiveChatPaneStatefulProps";
 import { IReconnectChatPaneStatefulProps } from "../../reconnectchatpanestateful/interfaces/IReconnectChatPaneStatefulProps";
@@ -21,6 +20,7 @@ import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/i
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
+import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestateful/interfaces/IPostChatSurveyPaneStatefulProps";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -46,7 +46,7 @@ export interface ILiveChatWidgetProps {
     outOfOfficeHeaderProps?: IHeaderProps;
     outOfOfficeHoursPaneProps?: IOOOHPaneProps;
     postChatLoadingPaneProps?: ILoadingPaneProps;
-    postChatSurveyPaneProps?: IPostChatSurveyPaneProps;
+    postChatSurveyPaneProps?: IPostChatSurveyPaneStatefulProps;
     preChatSurveyPaneProps?: IPreChatSurveyPaneProps;
     proactiveChatPaneProps?: IProactiveChatPaneStatefulProps;
     reconnectChatPaneProps?: IReconnectChatPaneStatefulProps;
