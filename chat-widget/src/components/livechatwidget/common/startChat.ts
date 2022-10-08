@@ -81,9 +81,11 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
     try {
         const authClientFunction = getAuthClientFunction(chatConfig);
         if (getAuthToken && authClientFunction) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             // set auth token to chat sdk before start chat
             const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
             if (!authSuccess) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
                 return;
             }
         }
