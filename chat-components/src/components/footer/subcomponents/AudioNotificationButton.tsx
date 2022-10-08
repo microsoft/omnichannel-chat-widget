@@ -10,29 +10,31 @@ function AudioNotificationButton(props: ICommandButtonProps) {
 
     const [muted, setMuted] = useState<boolean | undefined>(props.isAudioMuted);
 
+    let iconStyles = {};
+    if (props.type === "icon") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        iconStyles = { ...((props?.styles as any).icon as any) };
+    }
+
     const iconButtonStyles: IButtonStyles = {
-        icon: props.styles,
+        icon: iconStyles,
         root: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            width: (props?.styles as any)?.width,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            height: (props?.styles as any)?.height,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            backgroundColor: (props?.styles as any)?.backgroundColor,
             selectors: {
                 ":hover .ms-Button-icon": {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    color: (props?.hoverStyles as any)?.color
+                    ...((props?.hoverStyles as any).icon as any)
                 },
                 ":active .ms-Button-icon": {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    color: (props?.hoverStyles as any)?.color
+                    ...((props?.hoverStyles as any).icon as any)
                 },
                 ":focus .ms-Button-icon": {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    color: (props?.focusStyles as any)?.color
+                    ...((props?.focusStyles as any).icon as any)
                 }
-            }
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ...(props?.styles as any)
         },
         rootHovered: props.hoverStyles,
         rootFocused: props.focusStyles,
