@@ -25,6 +25,7 @@ export const defaultFooterControlProps: IFooterControlProps = {
     },
     audioNotificationButtonProps: {
         id: "oc-lcw-footer-audionotification-button",
+        type: "icon",
         ariaLabel: "Turn sound off",
         toggleAriaLabel: "Turn sound on",
         iconName: "Volume3",
