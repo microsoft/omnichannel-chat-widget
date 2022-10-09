@@ -148,24 +148,28 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 audioCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "#FFFFFF",
                     backgroundColor: "#008000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
-                    fontSize: 18
+                    icon: {
+                        fontSize: 18,
+                        color: "#FFFFFF"
+                    }
                 },
                 audioCallButtonHoverStyleProps: {
                     filter: "brightness(0.8)"
                 },
                 videoCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "#FFFFFF",
                     backgroundColor: "#008000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
-                    fontSize: 18
+                    icon: {
+                        fontSize: 18,
+                        color: "#FFFFFF"
+                    }
                 },
                 videoCallButtonHoverStyleProps: {
                     filter: "brightness(0.8)"
@@ -176,13 +180,15 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 declineCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "#FFFFFF",
                     backgroundColor: "#DC0000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
-                    fontSize: 18,
-                    marginLeft: "5px"
+                    marginLeft: "5px",
+                    icon: {
+                        fontSize: 18,
+                        color: "#FFFFFF"
+                    },
                 },
                 incomingCallTitleStyleProps: {
                     margin: "0 5px",
@@ -739,6 +745,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             },
             audioNotificationButtonProps: {
                 id: "oc-lcw-footer-audionotification-button",
+                type: "icon",
                 ariaLabel: "Turn sound off",
                 toggleAriaLabel: "Turn sound on",
                 iconName: "Volume3",
@@ -764,8 +771,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 padding: "0 10px 5px 10px"
             },
             downloadTranscriptButtonStyleProps: {
-                color: "blue",
-                fontSize: 16,
+                icon: {
+                    color: "blue",
+                    fontSize: 16,
+                },
                 height: "25px",
                 lineHeight: "25px",
                 width: "25px"
@@ -775,8 +784,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 backgroundColor: "#C8C8C8"
             },
             emailTranscriptButtonStyleProps: {
-                color: "blue",
-                fontSize: 16,
+                cicon: {
+                    color: "blue",
+                    fontSize: 16,
+                },
                 height: "25px",
                 lineHeight: "25px",
                 width: "25px"
@@ -786,8 +797,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 backgroundColor: "#C8C8C8"
             },
             audioNotificationButtonStyleProps: {
-                color: "blue",
-                fontSize: 16,
+                icon: {
+                    color: "blue",
+                    fontSize: 16,
+                },
                 height: "25px",
                 lineHeight: "25px",
                 width: "25px"
