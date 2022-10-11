@@ -57,3 +57,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Replaced HTMLElement with string in state variables.
 - Updated the version of @microsoft/omnichannel-chat-sdk to 1.1.1-main.2f608b7
 - Fixed resizing the message box when screen resize
+- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.c74643c
