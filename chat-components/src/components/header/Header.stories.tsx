@@ -56,11 +56,11 @@ const azureCustomHeaderProps: IHeaderProps = {
             padding: "4px"
         },
         closeButtonStyleProps: {
-            color: "#000",
+            color: "#0078d4",
             margin: "5px 5px"
         },
         closeButtonHoverStyleProps: {
-            color: "#0078d4"
+            color: "blue"
         }
     }
 };
