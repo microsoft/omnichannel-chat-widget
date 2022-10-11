@@ -18,6 +18,8 @@ import { Constants } from "../../common/Constants";
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import { defaultAdaptiveCardStyles } from "./common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultReceivedMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultReceivedMessageAnchorStyles";
+import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
+import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles copy";
 
 const broadcastChannelMessageEvent = "message";
 const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -114,7 +116,11 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
         }
 
         .webchat__stacked-layout__content div.webchat__stacked-layout__message-row div.webchat__bubble--from-user {
-            max-width: 75%
+            max-width: ${props?.renderingMiddlewareProps?.userMessageBoxStyles?.maxWidth ?? defaultUserMessageBoxStyles?.maxWidth}
+        }
+
+        .webchat__stacked-layout--show-avatar div.webchat__stacked-layout__content div.webchat__stacked-layout__message-row div.webchat__stacked-layout__message {
+            max-width: ${props?.renderingMiddlewareProps?.systemMessageBoxStyles?.maxWidth ?? defaultSystemMessageBoxStyles?.maxWidth}
         }
 
         div[class="ac-textBlock"]>p{color:${props?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color};}

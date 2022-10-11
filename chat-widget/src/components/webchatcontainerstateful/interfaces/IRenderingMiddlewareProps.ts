@@ -13,6 +13,8 @@ export interface IRenderingMiddlewareProps {
 
     userMessageStyleProps?: React.CSSProperties;
     systemMessageStyleProps?: React.CSSProperties;
+    userMessageBoxStyles?: React.CSSProperties;
+    systemMessageBoxStyles?: React.CSSProperties;
     typingIndicatorStyleProps?: React.CSSProperties;
     typingIndicatorBubbleStyleProps?: React.CSSProperties;
     typingIndicatorMessageStyleProps?: React.CSSProperties;
