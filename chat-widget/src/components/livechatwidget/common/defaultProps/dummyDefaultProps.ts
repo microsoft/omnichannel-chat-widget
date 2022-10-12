@@ -1510,6 +1510,12 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 lineHeight: "16px",
                 padding: "0px 10px 0 10px"
             },
+            userMessageBoxStyles: {
+                maxWidth: "75%"
+            },
+            systemMessageBoxStyles: {
+                maxWidth: "75%"
+            }, 
             typingIndicatorStyleProps: {
                 marginLeft: "10px",
                 marginBottom: "5px",
