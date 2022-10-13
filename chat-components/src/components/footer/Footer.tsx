@@ -84,7 +84,7 @@ function Footer(props: IFooterProps) {
                 </Stack>
             </Stack>
             <Stack horizontal id="footerRightGroup" verticalAlign="start">
-                <Stack horizontal verticalAlign="start">
+                <Stack horizontal verticalAlign="center">
                     {processCustomComponents(props.controlProps?.rightGroup?.children)}
                     {!props.controlProps?.hideAudioNotificationButton && (decodeComponentString(props.componentOverrides?.AudioNotificationButton) ||
                         <AudioNotificationButton
