@@ -24,10 +24,12 @@ export const azureHeaderControlProps: IHeaderControlProps = {
     headerIconProps: {
         id: "oc-lcw-header-icon",
         src: LegacyChatIconBase64,
-        alt: "Chat Icon"
+        alt: "Chat Icon",
+        ariaLabel: "Header Icon"
     },
     headerTitleProps: {
         id: "oc-lcw-header-title",
-        text: "Azure Chat Support"
+        text: "Azure Chat Support",
+        ariaLabel: "Header Title"
     }
 };

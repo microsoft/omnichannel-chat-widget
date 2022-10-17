@@ -3,4 +3,5 @@ export interface IImageControlProps {
     src?: string;
     alt?: string;
     className?: string;
+    ariaLabel?: string;
 }

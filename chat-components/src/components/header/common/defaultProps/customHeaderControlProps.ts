@@ -33,10 +33,12 @@ export const customHeaderControlProps: IHeaderControlProps = {
     headerIconProps: {
         id: "oc-lcw-header-icon",
         src: LegacyChatIconBase64,
-        alt: "Chat Icon"
+        alt: "Chat Icon",
+        ariaLabel: "Header Icon"
     },
     headerTitleProps: {
         id: "oc-lcw-header-title",
-        text: "Let's Chat"
+        text: "Let's Chat",
+        ariaLabel: "Header Title"
     }
 };
