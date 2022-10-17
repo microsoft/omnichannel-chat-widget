@@ -17,14 +17,13 @@ export const initCallingSdk = async (chatSDK: any, setVoiceVideoCallingSDK: any)
         }
         return false;
     } catch (error) {
-        if (error !== "Voice and video call is not enabled") {
-            TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
-                Event: TelemetryEvent.CallingSDKLoadFailed,
-                ExceptionDetails: {
-                    exception: error
-                }
-            });
-        }
+        TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.CallingSDKLoadFailed,
+            ExceptionDetails: {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                exception: (error as any).message
+            }
+        });
         return false;
     }
 };
