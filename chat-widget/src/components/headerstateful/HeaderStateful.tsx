@@ -19,7 +19,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
-    const { headerProps, outOfOfficeHeaderProps, endChat } = props;
+    const { headerProps, outOfOfficeHeaderProps, isEmailTranscriptDisabled, isDownloadTranscriptDisabled, endChat } = props;
     //Setting OutOfOperatingHours Flag
     const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
 
@@ -34,7 +34,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         },
         onCloseClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
-            if (conversationState.current === ConversationState.Active) {
+            if (conversationState.current === ConversationState.Active || (conversationState.current === ConversationState.Postchat) && !isDownloadTranscriptDisabled && !isEmailTranscriptDisabled) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
             } else {
                 const skipEndChatSDK = true;
