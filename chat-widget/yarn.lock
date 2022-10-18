@@ -2159,15 +2159,15 @@
     "@types/node" "^12.20.26"
     axios "^0.21.4"
 
-"@microsoft/omnichannel-amsclient@^0.1.0":
+"@microsoft/omnichannel-amsclient@^0.1.2":
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.2.tgz#686650d94013906f7accf3cfc2c700430e16bd2e"
   integrity sha512-Ih8ztzwjUWIKaGCGagQThUxNNSp62aVvgxi4Tg7aCV8TlSgqHw7LUwGqPOAOOTxTtInCavfi6D7Z1sSeGX9pzQ==
 
-"@microsoft/omnichannel-chat-components@0.1.0-main.600e05c":
-  version "0.1.0-main.600e05c"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-0.1.0-main.600e05c.tgz#e94d32e9095e48d47b0f4b8094baaa9269453d24"
-  integrity sha512-RFxGUf7qOg2W41VhDQVoGqRyhGteQhu2PrjEv1F2tfDlO9HjBv0ELpIy0LY04whxh6hPfq08p/TxbkWF59U39A==
+"@microsoft/omnichannel-chat-components@0.1.0-main.c74643c":
+  version "0.1.0-main.c74643c"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-0.1.0-main.c74643c.tgz#ac864793e2e5f7b20eca4a9f808d56512cbdeb93"
+  integrity sha512-K0mdkL8IGJZKp/0PH8PLDFYNRO3YM6VawENzw9rVmytFaHPa7+SXCeTkXDEEZNX2uYn8PVKCnhg3UNyAWCXmhw==
   dependencies:
     "@fluentui/react" "^8.46.0"
     adaptivecards "^2.10.0"
@@ -2177,15 +2177,15 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@1.1.1-main.4e1bf63":
-  version "1.1.1-main.4e1bf63"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.1.1-main.4e1bf63.tgz#a61c436545d947610b78f211677a6a0f5865f706"
-  integrity sha512-q9QO8BFxMQ0Y+dqdrYbaGXn0hYwR86txo6Uwd6BlF66JikyVAHJR6mmOGlw1a4rpaETnd+AyirV5B0FG6X6j7g==
+"@microsoft/omnichannel-chat-sdk@1.1.1-main.2f608b7":
+  version "1.1.1-main.2f608b7"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.1.1-main.2f608b7.tgz#bbb8144d3145a4e408a2c61439b5a0e0653e3ae0"
+  integrity sha512-jChT13sgbk+pAw5zajQ6/kf+M27aBQOP4/nOsvwhqKVhxq0vJiAaW06f0/EBX2M/8Ay4atbw+W2q3gwIEtpVhQ==
   dependencies:
     "@azure/communication-chat" "1.1.1"
     "@azure/communication-common" "1.1.0"
     "@microsoft/ocsdk" "^0.3.1"
-    "@microsoft/omnichannel-amsclient" "^0.1.0"
+    "@microsoft/omnichannel-amsclient" "^0.1.2"
     "@microsoft/omnichannel-ic3core" "^0.1.2"
 
 "@microsoft/omnichannel-ic3core@^0.1.2":

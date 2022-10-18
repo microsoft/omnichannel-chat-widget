@@ -9,14 +9,12 @@ import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
     const onNewAdapterActivityHandler = (activity: IActivity) => {
         const isActivityMessage: boolean = activity?.type === Constants.message;
-        const isNotHistoryMessage: boolean = isActivityMessage && !activity?.channelData?.tags?.includes(Constants.historyMessageTag) && !activity?.channelData?.fromList;
+        const isHistoryMessage: boolean = isActivityMessage && (activity?.channelData?.tags?.includes(Constants.historyMessageTag) || activity?.channelData?.fromList);
 
-        if (isNotHistoryMessage) {
-            raiseMessageEvent(activity);
-        }
+        raiseMessageEvent(activity, isHistoryMessage);
     };
 
-    const raiseMessageEvent = (activity: IActivity) => {
+    const raiseMessageEvent = (activity: IActivity, isHistoryMessage: boolean) => {
         if (activity?.type === Constants.message) {
             const payload = {
                 // To identify hidden contents vs empty content
@@ -63,16 +61,18 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 }
 
                 const newMessageReceivedEvent: ICustomEvent = {
-                    eventName: BroadcastEvent.NewMessageReceived,
+                    eventName: isHistoryMessage ? BroadcastEvent.HistoryMessageReceived : BroadcastEvent.NewMessageReceived,
                     payload: payload
                 };
                 BroadcastService.postMessage(newMessageReceivedEvent);
 
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.MessageReceived,
-                    Description: "New message received",
-                    Data: payload
-                });
+                if (!isHistoryMessage) {
+                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                        Event: TelemetryEvent.MessageReceived,
+                        Description: "New message received",
+                        Data: payload
+                    });
+                }
             }
         }
     };
