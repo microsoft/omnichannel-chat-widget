@@ -7,11 +7,13 @@ export const defaultFooterStyleProps: IFooterStyleProps = {
         minHeight: "25px",
         width: "100%",
         minWidth: "250px",
-        padding:"0 10px 5px 10px"
+        padding: "0 10px 5px 10px"
     },
     downloadTranscriptButtonStyleProps: {
-        color: "blue",
-        fontSize: 16,
+        icon: {
+            color: "blue",
+            fontSize: 16,
+        },
         height: "25px",
         lineHeight: "25px",
         width: "25px"
@@ -21,8 +23,10 @@ export const defaultFooterStyleProps: IFooterStyleProps = {
         backgroundColor: "#C8C8C8"
     },
     emailTranscriptButtonStyleProps: {
-        color: "blue",
-        fontSize: 16,
+        icon: {
+            color: "blue",
+            fontSize: 16,
+        },
         height: "25px",
         lineHeight: "25px",
         width: "25px"
@@ -32,8 +36,10 @@ export const defaultFooterStyleProps: IFooterStyleProps = {
         backgroundColor: "#C8C8C8"
     },
     audioNotificationButtonStyleProps: {
-        color: "blue",
-        fontSize: 16,
+        icon: {
+            color: "blue",
+            fontSize: 16,
+        },
         height: "25px",
         lineHeight: "25px",
         width: "25px"
