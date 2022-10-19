@@ -133,6 +133,9 @@ export enum TelemetryEvent {
     BrowserUnloadEventStarted = "BrowserUnloadEventStarted",
     GetAuthTokenCalled = "GetAuthTokenCalled",
     ReceivedNullOrEmptyToken = "ReceivedNullOrEmptyToken",
+    CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
+    CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",
+    CustomerVoiceFormResponseError = "CustomerVoiceFormResponseError",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
@@ -228,6 +231,9 @@ export class TelemetryConstants {
             case TelemetryEvent.NetworkReconnected:
             case TelemetryEvent.AudioToggleButtonClicked:
             case TelemetryEvent.EmailTranscriptCancelButtonClicked:
+            case TelemetryEvent.CustomerVoiceResponsePageLoaded:
+            case TelemetryEvent.CustomerVoiceFormResponseSubmitted:
+            case TelemetryEvent.CustomerVoiceFormResponseError:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
