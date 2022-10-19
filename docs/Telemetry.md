@@ -125,6 +125,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `ChatWidgetStateChanged_<orgid>_<widgetid>`          |On changing chat widget state |
 | `InvalidAdaptiveCardFormat`       |On invalid adaptive card format |
 | `NewMessageReceived`              |On new message received |
+| `HistoryMessageReceived`          |On history message received |
 | `NewMessageSent`                  |On new user message sent |
 | `RedirectPageRequest`             |On redirecting unauthenticated reconnect chat |
 | `StartChat`                       |On starting chat through sdk method |

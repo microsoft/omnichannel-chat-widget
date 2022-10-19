@@ -34,6 +34,7 @@ export enum BroadcastEvent {
     InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",
     NewMessageSent = "NewMessageSent",
     NewMessageReceived = "NewMessageReceived",
+    HistoryMessageReceived = "HistoryMessageReceived",
     RedirectPageRequest = "RedirectPageRequest",
     StartChat = "StartChat",
     StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
