@@ -13,18 +13,6 @@ export interface IHeaderStatefulParams {
      */
     outOfOfficeHeaderProps?: IHeaderProps;
 
-   /**
-    * isEmailTranscriptDisabled: Props to check if Email Transcript is Disabled
-    * These props are used for maintaining consistent behaviour between header and footer
-    */
-    isEmailTranscriptDisabled?: boolean;
-
-   /**
-    * isDownloadTranscriptDisabled: Props to check if Download Transcript is Disabled
-    * These props are used for maintaining consistent behaviour between header and footer
-    */
-    isDownloadTranscriptDisabled?: boolean;
-
     /**
      * endChat: Internal Prop injected for triggering end of a chat using chatSDK
      * @param adapter : The chat adapter for the live chat session

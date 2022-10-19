@@ -424,8 +424,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
-    const emailTranscriptDisabled = props.footerProps?.controlProps?.hideEmailTranscriptButton ?? false;
-    const downloadTranscriptDisabled = props.footerProps?.controlProps?.hideDownloadTranscriptButton ?? false;
 
     return (
         <Composer
@@ -441,7 +439,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                 {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
-                {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} isEmailTranscriptDisabled={emailTranscriptDisabled} isDownloadTranscriptDisabled={downloadTranscriptDisabled} endChat={endChatRelay} />)}
+                {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} />)}
 
                 {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful {...props.loadingPaneProps} />)}
 
