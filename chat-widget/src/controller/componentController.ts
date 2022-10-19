@@ -21,7 +21,8 @@ export const shouldShowHeader = (state: ILiveChatWidgetContext) => {
 export const shouldShowFooter = (state: ILiveChatWidgetContext) => {
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState === ConversationState.Active ||
-            state.appStates.conversationState === ConversationState.InActive);
+            state.appStates.conversationState === ConversationState.InActive ||
+            state.appStates.conversationState === ConversationState.Postchat);
 };
 
 export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => {
