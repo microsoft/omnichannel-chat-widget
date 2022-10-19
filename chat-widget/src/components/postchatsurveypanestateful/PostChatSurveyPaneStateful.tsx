@@ -48,18 +48,14 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         //Customer Voice Telemetry Events
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         window.addEventListener("message", (message: any) => {
-            const { data } = message;
+            const {data} = message;
 
             if (!data) return;
-
             if (data === CustomerVoiceEvents.ResponsePageLoaded) {
-                console.log(TelemetryEvent.CustomerVoiceResponsePageLoaded);
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceResponsePageLoaded });
             } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
-                console.log(TelemetryEvent.CustomerVoiceFormResponseSubmitted);
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted });
             } else if (data === CustomerVoiceEvents.FormResponseError) {
-                console.log(TelemetryEvent.CustomerVoiceFormResponseError);
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.CustomerVoiceFormResponseError });
             }
         });
