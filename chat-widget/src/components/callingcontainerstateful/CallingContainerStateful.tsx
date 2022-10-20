@@ -47,7 +47,7 @@ export const CallingContainerStateful = (props: ICallingContainerStatefulProps) 
                 });
             } catch (e) {
                 TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.VoiceVideoInitializeException,
+                    Event: TelemetryEvent.VoiceVideoSdkInitializeException,
                     Description: `Failed to initialize VideoVoiceCalling Sdk:  ${e}`
                 });
             }
@@ -55,7 +55,7 @@ export const CallingContainerStateful = (props: ICallingContainerStatefulProps) 
         init().then(() => {
             if (voiceVideoCallingSdk) {
                 TelemetryHelper.logCallingEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.VoiceVideoInitialize,
+                    Event: TelemetryEvent.VoiceVideoSdkInitialize,
                     Description: "Initialize VideoVoiceCalling Sdk Success",
                 }, callId);
 
