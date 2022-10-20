@@ -161,7 +161,9 @@ Refer to the below table to understand different critical telemetry events raise
 | `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
 | `ReconnectChatPaneLoaded` | On `ReconnectChatPane` load complete|
 | `WindowClosed`            |On window closed|
-
+| `CustomerVoiceResponsePageLoaded` | On survey page load complete|
+| `CustomerVoiceFormResponseSubmitted` | On survey submitted |
+| `CustomerVoiceFormResponseError` | On survey response error|
 #### Action Events
 
 | Event Name| Scenario |

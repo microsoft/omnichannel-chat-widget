@@ -13,6 +13,7 @@ import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
 import { IPostChatSurveyPaneStatefulProps } from "./interfaces/IPostChatSurveyPaneStatefulProps";
+import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
 
 export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulProps) => {
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -43,6 +44,21 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             firstElement[0].focus();
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PostChatSurveyLoaded });
+
+        //Customer Voice Telemetry Events
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        window.addEventListener("message", (message: any) => {
+            const {data} = message;
+
+            if (!data) return;
+            if (data === CustomerVoiceEvents.ResponsePageLoaded) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceResponsePageLoaded });
+            } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted });
+            } else if (data === CustomerVoiceEvents.FormResponseError) {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.CustomerVoiceFormResponseError });
+            }
+        });
     }, []);
     
     return (

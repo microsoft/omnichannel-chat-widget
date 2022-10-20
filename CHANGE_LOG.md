@@ -64,3 +64,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added Download Transcript support on PostChat Survey Screen (V1 Parity)
 - Fixed multiple scrollbars in PostChat to display single scroll bar.
 - Fixed chat loading issue, Updating datamasking events
+- Added Customer Voice Form Event loggin for PostChat Survey (V1 Parity)
