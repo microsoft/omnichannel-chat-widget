@@ -79,6 +79,7 @@ export class TelemetryHelper {
                 event.ActionType = payload.ActionType;
                 event.ElapsedTimeInMilliseconds = payload.ElapsedTimeInMilliseconds;
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
+                event.Description = payload.Description;
             });
     }
 
@@ -109,6 +110,7 @@ export class TelemetryHelper {
                 event.ElapsedTimeInMilliseconds = payload.ElapsedTimeInMilliseconds;
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
                 event.Language = TelemetryManager.InternalTelemetryData?.chatWidgetLocaleLCID || "";
+                event.Description = payload.Data;
             });
     }
 

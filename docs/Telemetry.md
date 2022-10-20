@@ -161,7 +161,9 @@ Refer to the below table to understand different critical telemetry events raise
 | `ProactiveChatPaneLoaded`|On `PropactiveChatPane` load complete|
 | `ReconnectChatPaneLoaded` | On `ReconnectChatPane` load complete|
 | `WindowClosed`            |On window closed|
-
+| `CustomerVoiceResponsePageLoaded` | On survey page load complete|
+| `CustomerVoiceFormResponseSubmitted` | On survey submitted |
+| `CustomerVoiceFormResponseError` | On survey response error|
 #### Action Events
 
 | Event Name| Scenario |
@@ -187,6 +189,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ConversationEndedThreadEventReceived`     |On Conversation ended by agent side or by timeout |
 | `InvalidConfiguration`     |On Invalid data masking regex rule collection |
 | `DataMaskingRuleApplied`     |On data masking regex rule applied |
+| `DataMaskingRuleApplyFailed`     |On data masking regex rule failed to apply |
 | `EmailTranscriptSent`     |On transcript sent to email successfully |
 |`EmailTranscriptFailed`|On transcript sent to email failure|
 |`EmailTranscriptButtonClicked`|On Email Transcript footer button clicked|
@@ -219,8 +222,8 @@ Refer to the below table to understand different critical telemetry events raise
 | `RemoteVideoStreamRemoved`     |      On remote video stream removed |
 | `CallDisconnected`     |      On call disconnected successfully  |
 | `IncomingCallEnded`           |On incoming call reject button clicked |
-| `VoiceVideoInitialize`     |      On video and voice calling SDK initialization |
-| `VoiceVideoInitializeException`           |On exception while video and voice calling SDK initialization |
+| `VoiceVideoSdkInitialize`     |      On video and voice calling SDK initialization |
+| `VoiceVideoSdkInitializeException`           |On exception while video and voice calling SDK initialization |
 |`VoiceVideoAcceptCallException`|On failed to accept call without video|
 |`VoiceVideoAcceptCallWithVideoException`|On failed to accept call with video|
 |`VoiceCallAcceptButtonClick`|On accepting incoming call without video|
