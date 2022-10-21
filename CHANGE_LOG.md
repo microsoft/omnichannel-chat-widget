@@ -66,3 +66,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed chat loading issue, Updating datamasking events
 - Added Customer Voice Form Event loggin for PostChat Survey (V1 Parity)
 - Removed isReconnectEnabled from props
+- Fixed OutOfOffice Chat Button Icon appearance
