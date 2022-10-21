@@ -3,7 +3,7 @@ import { BroadcastService, decodeComponentString, BroadcastServiceInitialize } f
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
-import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
+import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, isReconnectEnabled, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
 import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     shouldShowCallingContainer,
@@ -136,7 +136,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
         if (!props.controlProps?.skipChatButtonRendering && props.reconnectChatPaneProps?.reconnectId) {
-            startUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, initStartChat);
+            startUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat);
             return;
         }
 
@@ -147,7 +147,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (!state.appStates.skipChatButtonRendering &&
             state.appStates.conversationState === ConversationState.Active &&
             isAuthenticationSettingsEnabled === true &&
-            props.reconnectChatPaneProps?.isReconnectEnabled) {
+            isReconnectEnabled(props.chatConfig)) {
             getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
                 if (authReconnectId && !state.appStates.reconnectId) {
                     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: authReconnectId });
@@ -176,7 +176,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 eventName: BroadcastEvent.ChatInitiated
             });
             if (props.reconnectChatPaneProps?.reconnectId && !state.appStates.reconnectId) {
-                handleUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
+                handleUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
             } else {
                 getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
                     if (authReconnectId && !state.appStates.reconnectId) {

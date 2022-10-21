@@ -59,3 +59,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed resizing the message box when screen resize
 - Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.c74643c
 - Uptake chat sdk version to fix image file send failures
+- Removed isReconnectEnabled from props
