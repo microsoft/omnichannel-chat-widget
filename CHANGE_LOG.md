@@ -67,3 +67,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added Customer Voice Form Event loggin for PostChat Survey (V1 Parity)
 - Removed isReconnectEnabled from props
 - Fixed OutOfOffice Chat Button Icon appearance
+- Adding support for customizing widget scroll bar
