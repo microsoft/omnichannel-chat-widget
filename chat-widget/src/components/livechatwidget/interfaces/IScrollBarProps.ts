@@ -2,7 +2,7 @@ export interface IScrollBarProps {
     /**
      * Scrollbar width in px
      */
-    width: string;
+    width?: string;
 
     /**
      * Scrollbar track background color
