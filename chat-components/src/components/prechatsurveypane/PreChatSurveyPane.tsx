@@ -58,6 +58,7 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     }, []);
 
     //Adaptive Card Initilializations
+    AdaptiveCards.GlobalSettings.setTabIndexAtCardRoot = false;
     const adaptiveCard = new AdaptiveCards.AdaptiveCard();
     adaptiveCard.hostConfig = new AdaptiveCards.HostConfig(adaptiveCardHostConfig);
     adaptiveCard.parse(adpativeCardPayload);
