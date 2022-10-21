@@ -27,6 +27,7 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
         return action;
     }
 
+    let isRuleMatched = false;
     for (const ruleId of Object.keys(regexCollection)) {
         const item = regexCollection[ruleId];
         if (item) {
@@ -37,16 +38,25 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                 while (match = regex.exec(text)) {
                     const replaceStr = match[0].replace(/./gi, maskedChar);
                     text = text.replace(match[0], replaceStr);
+                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                        Event: TelemetryEvent.DataMaskingRuleApplied,
+                        Description: `Data Masking Rule Id: ${ruleId} applied.`
+                    });
+                    isRuleMatched = true;
                 }
             } catch (err) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.DataMaskingRuleApplied,
+                    Event: TelemetryEvent.DataMaskingRuleApplyFailed,
                     ExceptionDetails: {
                         RuleId: ruleId,
                         Exception: err
                     }
                 });
             }
+        }
+        // Exit if rule matched
+        if (isRuleMatched === true) {
+            break;
         }
     }
 

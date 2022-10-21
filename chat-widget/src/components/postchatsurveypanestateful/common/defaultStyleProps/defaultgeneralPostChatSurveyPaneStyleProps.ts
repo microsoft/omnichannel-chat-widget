@@ -8,5 +8,5 @@ export const defaultGeneralPostChatSurveyPaneStyleProps: IStyle = {
     top: "0%",
     borderRadius: "0 0 4px 4px",
     borderWidth: "0px",
-    overflowY: "auto"
+    maxHeight: "calc(100% - 80px)"
 };

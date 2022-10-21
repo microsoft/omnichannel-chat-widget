@@ -59,4 +59,10 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed resizing the message box when screen resize
 - Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.c74643c
 - Uptake chat sdk version to fix image file send failures
+- Raise HistoryMessageReceived event on polling
+- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.cb39af7
+- Added Download Transcript support on PostChat Survey Screen (V1 Parity)
+- Fixed multiple scrollbars in PostChat to display single scroll bar.
+- Fixed chat loading issue, Updating datamasking events
+- Added Customer Voice Form Event loggin for PostChat Survey (V1 Parity)
 - Removed isReconnectEnabled from props

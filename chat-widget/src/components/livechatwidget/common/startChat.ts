@@ -148,7 +148,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
 
         // Set post chat context in state, no survey load
-        await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+        setPostChatContextAndLoadSurvey(chatSDK, dispatch);
 
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);

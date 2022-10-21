@@ -34,6 +34,7 @@ export enum BroadcastEvent {
     InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",
     NewMessageSent = "NewMessageSent",
     NewMessageReceived = "NewMessageReceived",
+    HistoryMessageReceived = "HistoryMessageReceived",
     RedirectPageRequest = "RedirectPageRequest",
     StartChat = "StartChat",
     StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
@@ -58,8 +59,8 @@ export enum TelemetryEvent {
     CallDisconnected = "CallDisconnected",
     CallDisconnectedException = "CallDisconnectedException",
     IncomingCallEnded = "incomingCallEnded", //case sensitive
-    VoiceVideoInitialize = "VoiceVideoInitialize",
-    VoiceVideoInitializeException = "VoiceVideoInitializeException",
+    VoiceVideoSdkInitialize = "VoiceVideoSdkInitialize",
+    VoiceVideoSdkInitializeException = "VoiceVideoSdkInitializeException",
     VoiceVideoLoading = "VoiceVideoLoading",
     VoiceVideoNotLoaded = "VoiceVideoNotLoaded",
     VoiceVideoLoadingException = "VoiceVideoLoadingException",
@@ -132,6 +133,9 @@ export enum TelemetryEvent {
     BrowserUnloadEventStarted = "BrowserUnloadEventStarted",
     GetAuthTokenCalled = "GetAuthTokenCalled",
     ReceivedNullOrEmptyToken = "ReceivedNullOrEmptyToken",
+    CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
+    CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",
+    CustomerVoiceFormResponseError = "CustomerVoiceFormResponseError",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
@@ -140,6 +144,7 @@ export enum TelemetryEvent {
     QueuePositionMessageRecieved = "QueuePositionMessageRecieved",
     AverageWaitTimeMessageRecieved = "AverageWaitTimeMessageRecieved",
     DataMaskingRuleApplied = "DataMaskingRuleApplied",
+    DataMaskingRuleApplyFailed = "DataMaskingRuleApplyFailed",
     IC3ClientEvent = "IC3ClientEvent",
     ConversationEndedThreadEventReceived = "ConversationEndedThreadEventReceived",
     InvalidConfiguration = "InvalidConfiguration",
@@ -227,6 +232,9 @@ export class TelemetryConstants {
             case TelemetryEvent.NetworkReconnected:
             case TelemetryEvent.AudioToggleButtonClicked:
             case TelemetryEvent.EmailTranscriptCancelButtonClicked:
+            case TelemetryEvent.CustomerVoiceResponsePageLoaded:
+            case TelemetryEvent.CustomerVoiceFormResponseSubmitted:
+            case TelemetryEvent.CustomerVoiceFormResponseError:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
@@ -255,8 +263,8 @@ export class TelemetryConstants {
             case TelemetryEvent.CallDisconnected:
             case TelemetryEvent.CallDisconnectedException:
             case TelemetryEvent.IncomingCallEnded:
-            case TelemetryEvent.VoiceVideoInitialize:
-            case TelemetryEvent.VoiceVideoInitializeException:
+            case TelemetryEvent.VoiceVideoSdkInitialize:
+            case TelemetryEvent.VoiceVideoSdkInitializeException:
             case TelemetryEvent.VoiceVideoLoading:
             case TelemetryEvent.VoiceVideoNotLoaded:
             case TelemetryEvent.VoiceVideoLoadingException:
