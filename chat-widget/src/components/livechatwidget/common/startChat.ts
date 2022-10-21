@@ -38,7 +38,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 
     // Redirecting if unauthenticated reconnect chat expired
     if (props.reconnectChatPaneProps?.reconnectId) {
-        await handleRedirectUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
+        await handleRedirectUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
         return;
     }
 

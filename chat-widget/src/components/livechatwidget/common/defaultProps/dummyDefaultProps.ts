@@ -1388,7 +1388,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 startNewChatButtonClassName: undefined
             }
         },
-        isReconnectEnabled: undefined,
         reconnectId: undefined,
         redirectInSameWindow: undefined
     },
