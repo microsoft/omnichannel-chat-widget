@@ -787,6 +787,9 @@ const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
     chatConfig: {
         LiveChatConfigAuthSettings: {
             msdyn_javascriptclientfunction: "testAuth"
+        },
+        LiveWSAndLiveChatEngJoin: {
+            msdyn_enablechatreconnect: "true"
         }
     },
     styleProps: {
@@ -796,9 +799,6 @@ const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
             top: "20px",
             left: "20px"
         }
-    },
-    reconnectChatPaneProps: {
-        isReconnectEnabled: true
     }
 };
 
