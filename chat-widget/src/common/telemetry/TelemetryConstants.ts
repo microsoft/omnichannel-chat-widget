@@ -47,6 +47,7 @@ export enum BroadcastEvent {
     CloseChat = "CloseChat",
     InitiateEndChatOnBrowserUnload = "InitiateEndChatOnBrowserUnload",
     ClosePopoutWindow = "ClosePopoutWindow",
+    RaiseErrorEvent = "RaiseErrorEvent"
 }
 
 // Events being logged

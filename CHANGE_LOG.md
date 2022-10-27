@@ -68,3 +68,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Removed isReconnectEnabled from props
 - Fixed OutOfOffice Chat Button Icon appearance
 - Adding support for customizing widget scroll bar
+- Clearing live chat context for raise error event
