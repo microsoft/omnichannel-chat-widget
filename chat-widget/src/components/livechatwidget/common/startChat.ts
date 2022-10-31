@@ -14,12 +14,12 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { createTimer, getStateFromCache, isUndefinedOrEmpty } from "../../../common/utils";
-import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconnectChat } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
+import { handleChatReconnect } from "./reconnectChatHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
@@ -36,17 +36,10 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         return;
     }
 
-    // Redirecting if unauthenticated reconnect chat expired
-    if (props.reconnectChatPaneProps?.reconnectId) {
-        await handleRedirectUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
-        return;
-    }
+    handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat);
 
-    // Getting reconnectId for authenticated chat
-    const reconnectId = await getReconnectIdForAuthenticatedChat(props, chatSDK);
-    if (reconnectId) {
-        dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
+    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
         return;
     }
 
@@ -176,7 +169,10 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
+            return;
         }
+        // Show the loading pane in other cases for failure, this will help for both skipchatbuttonrending case
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     } finally {
         optionalParams = {};
         widgetInstanceId = "";
@@ -212,7 +208,7 @@ const setCustomContextParams = (chatSDK: any) => {
     const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, widgetInstanceId ?? "");
 
     if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
-        if(persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
+        if (persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
             const errorMessage = "Use of custom context with authenticated chat is deprecated. The chat would not go through.";
             TelemetryHelper.logSDKEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.StartChatMethodException,

@@ -79,6 +79,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
     dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
 
     if (!skipCloseChat) {
         try {

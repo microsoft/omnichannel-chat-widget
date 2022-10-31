@@ -6,14 +6,17 @@ import { getWidgetCacheId, isNullOrUndefined } from "../../common/utils";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
+
     const widgetCacheId = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId,
         props?.chatSDK?.omnichannelConfig?.widgetId,
         props?.controlProps?.widgetInstanceId ?? "");
+
     const initialState = defaultClientDataStoreProvider().getData(widgetCacheId, "localStorage");
+
     if (!isNullOrUndefined(initialState)) {
         return JSON.parse(initialState);
     }
-
+    
     const LiveChatWidgetContextInitialState: ILiveChatWidgetContext = {
         domainStates: {
             liveChatConfig: props.chatConfig,
