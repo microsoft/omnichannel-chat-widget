@@ -132,6 +132,7 @@ export enum TelemetryEvent {
     GetConversationDetailsException = "GetConversationDetailsException",
     BrowserUnloadEventStarted = "BrowserUnloadEventStarted",
     GetAuthTokenCalled = "GetAuthTokenCalled",
+    GetAuthTokenFailed = "GetAuthTokenFailed",
     ReceivedNullOrEmptyToken = "ReceivedNullOrEmptyToken",
     CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
     CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",

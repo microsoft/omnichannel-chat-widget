@@ -36,7 +36,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         return;
     }
 
-    handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat);
+    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat);
 
     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
     if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
@@ -72,6 +72,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
     try {
+        console.log("Starting chat");
         const authClientFunction = getAuthClientFunction(chatConfig);
         if (getAuthToken && authClientFunction) {
             // set auth token to chat sdk before start chat
@@ -105,7 +106,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             // Set custom context params
             setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
-
+            console.log("optional param:" + JSON.stringify(optionalParams));
             await chatSDK.startChat(optionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
@@ -224,4 +225,45 @@ const setCustomContextParams = (chatSDK: any) => {
     }
 };
 
-export { prepareStartChat, initStartChat, setPreChatAndInitiateChat };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId: any): Promise<boolean> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let conversationDetails: any = undefined;
+
+    //For auth chat
+    if (props.getAuthToken) {
+        const authClientFunction = getAuthClientFunction(props.chatConfig);
+        if (props.getAuthToken && authClientFunction) {
+            // set auth token to chat sdk before start chat
+            const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
+            if (!authSuccess) {
+                return false;
+            }
+        }
+    }
+    const oldRequestId = chatSDK.requestId;
+    try {
+        chatSDK.requestId = requestId;
+        conversationDetails = await chatSDK.getConversationDetails();
+        if (Object.keys(conversationDetails).length === 0) {
+            chatSDK.requestId = oldRequestId;
+            return false;
+        }
+        if (conversationDetails.state === "Closed" || conversationDetails.state === "WrapUp") {
+            chatSDK.requestId = oldRequestId;
+            return false;
+        }
+        return true;
+    }
+    catch (erorr) {
+        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.GetConversationDetailsException,
+            ExceptionDetails: {
+                exception: `Conversation is not valid: ${erorr}`
+            }
+        });
+        chatSDK.requestId = oldRequestId;
+        return false;
+    }
+};
+export { prepareStartChat, initStartChat, setPreChatAndInitiateChat, checkIfConversationStillValid };

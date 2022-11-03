@@ -3,8 +3,7 @@ import { BroadcastService, decodeComponentString, BroadcastServiceInitialize } f
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
-import { handleChatReconnect } from "../common/reconnectChatHelper";
-import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
+import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -96,28 +95,34 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let optionalParams: any;
     let activeCachedChatExist = false;
+    let canReconnectChat = false;
 
     if (!isUndefinedOrEmpty(state.appStates?.reconnectId)) {
-        activeCachedChatExist = true;
+        canReconnectChat = true;
         optionalParams = { reconnectId: state.appStates.reconnectId };
-    } else if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
+    } else if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext)) {
         activeCachedChatExist = true;
         optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
     } else {
         activeCachedChatExist = false;
+        canReconnectChat = false;
         optionalParams = undefined;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: any,) => {
         //Start a chat from cache
-        if (activeCachedChatExist === true) {
-            initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
-            return;
+        if (activeCachedChatExist === true && canReconnectChat === false) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+            const isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId);
+            if (isChatValid === true) {
+                await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
+                return;
+            }
+            // Clear optional params for new start chat
+            optionalParams = undefined;
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
         }
-
-        // Handle chat reconnect scenario
-        await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat);
     };
 
     useEffect(() => {
@@ -154,7 +159,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             startChat(props);
 
             // if unable to get chat from cache or reconnect then set the chat to closed state
-            if (!(state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat)) {
+            if (!(state.appStates.conversationState === ConversationState.Active ||
+                state.appStates.conversationState === ConversationState.ReconnectChat)) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             }
         }
