@@ -759,7 +759,7 @@ const liveChatWidgetPopoutStyleProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     controlProps: {
-        skipChatButtonRendering: true,
+        hideStartChatButton: true,
         hideHeader: true
     },
     styleProps: {

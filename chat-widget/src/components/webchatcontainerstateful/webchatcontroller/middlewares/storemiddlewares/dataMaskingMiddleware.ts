@@ -27,7 +27,7 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
         return action;
     }
 
-    let isRuleMatched = false;
+    // let isRuleMatched = false;
     for (const ruleId of Object.keys(regexCollection)) {
         const item = regexCollection[ruleId];
         if (item) {
@@ -42,7 +42,6 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                         Event: TelemetryEvent.DataMaskingRuleApplied,
                         Description: `Data Masking Rule Id: ${ruleId} applied.`
                     });
-                    isRuleMatched = true;
                 }
             } catch (err) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -53,10 +52,6 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                     }
                 });
             }
-        }
-        // Exit if rule matched
-        if (isRuleMatched === true) {
-            break;
         }
     }
 

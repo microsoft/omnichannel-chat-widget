@@ -172,7 +172,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             return;
         }
-        // Show the loading pane in other cases for failure, this will help for both skipchatbuttonrending case
+        // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     } finally {
         optionalParams = {};
@@ -183,7 +183,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     // By pass this function in case of popout chat
-    if (state.appStates.skipChatButtonRendering === true) {
+    if (state.appStates.hideStartChatButton === true) {
         return false;
     }
 
@@ -241,6 +241,8 @@ const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId
             }
         }
     }
+
+    //Preserve old requestId
     const oldRequestId = chatSDK.requestId;
     try {
         chatSDK.requestId = requestId;

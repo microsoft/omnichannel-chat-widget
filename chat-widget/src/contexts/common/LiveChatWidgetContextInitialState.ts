@@ -16,7 +16,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
     if (!isNullOrUndefined(initialState)) {
         return JSON.parse(initialState);
     }
-    
+
     const LiveChatWidgetContextInitialState: ILiveChatWidgetContext = {
         domainStates: {
             liveChatConfig: props.chatConfig,
@@ -41,7 +41,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             preChatResponseEmail: "",
             isAudioMuted: null,
             newMessage: false,
-            skipChatButtonRendering: false,
+            hideStartChatButton: false,
             reconnectId: undefined,
             proactiveChatStates: {
                 proactiveChatBodyTitle: "",

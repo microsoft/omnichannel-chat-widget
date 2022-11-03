@@ -37,7 +37,6 @@ export enum BroadcastEvent {
     HistoryMessageReceived = "HistoryMessageReceived",
     RedirectPageRequest = "RedirectPageRequest",
     StartChat = "StartChat",
-    StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
     StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
     InitiateEndChat = "InitiateEndChat",
     SetCustomContext = "SetCustomContext",

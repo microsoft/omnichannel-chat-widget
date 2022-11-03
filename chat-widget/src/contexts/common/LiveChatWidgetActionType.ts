@@ -144,9 +144,9 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        true/false: Decides whether to skip the chat button rendering
+        true/false: Decides whether to show the start chat button
     */
-    SET_SKIP_CHAT_BUTTON_RENDERING,
+    SET_START_CHAT_BUTTON_DISPLAY,
 
     /*
         Parameters:
