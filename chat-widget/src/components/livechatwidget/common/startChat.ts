@@ -36,7 +36,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         return;
     }
 
-    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat);
+    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
 
     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
     if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
@@ -52,7 +52,16 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false) => {
+const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
+    //Handle reconnect scenario
+    if (state) {
+        await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+        // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+        if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+            return;
+        }
+    }
+
     // Getting prechat Survey Context
     const parseToJson = false;
     const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
@@ -72,7 +81,6 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
     try {
-        console.log("Starting chat");
         const authClientFunction = getAuthClientFunction(chatConfig);
         if (getAuthToken && authClientFunction) {
             // set auth token to chat sdk before start chat
@@ -106,7 +114,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             // Set custom context params
             setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
-            console.log("optional param:" + JSON.stringify(optionalParams));
             await chatSDK.startChat(optionalParams);
             isStartChatSuccessful = true;
         } catch (error) {

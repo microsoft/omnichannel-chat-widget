@@ -12,12 +12,13 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { handleAuthentication, removeAuthTokenProvider } from "./authHelper";
 import { isNullOrEmptyString, isNullOrUndefined } from "../../../common/utils";
+import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any) => {
+const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext) => {
 
     if (!isReconnectEnabled(props.chatConfig)) return;
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
 
@@ -39,6 +40,7 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
         }
 
         //show reconnect pane
+        state.appStates.conversationState = ConversationState.ReconnectChat;
         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectChatContext.reconnectId ?? "" });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
         return;

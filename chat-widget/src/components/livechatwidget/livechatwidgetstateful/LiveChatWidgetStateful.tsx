@@ -129,7 +129,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         if (isChatValid === false) {
             if (localState) {
-                await setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter);
+                await setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, undefined, undefined, localState, props);
                 return;
             } else {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
