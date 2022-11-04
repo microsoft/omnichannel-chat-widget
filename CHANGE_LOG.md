@@ -69,3 +69,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed OutOfOffice Chat Button Icon appearance
 - Adding support for customizing widget scroll bar
 - Clearing live chat context for raise error event
+- Refactoring input validation pane and replacing keyDown event with keyUp
