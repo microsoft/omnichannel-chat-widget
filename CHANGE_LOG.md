@@ -73,5 +73,5 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Refactoring reconnect functionality code
 - Fixing chat widget refresh bug showing reconnect pane
 - Supporting to start new chat if localStorage has stale Active state
-- Fixing end chat to gracefully if auth token has expired
+- Fixing end chat to gracefully complete if auth token has expired
  
