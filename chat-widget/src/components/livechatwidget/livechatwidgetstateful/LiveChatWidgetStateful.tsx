@@ -95,17 +95,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let optionalParams: any;
     let activeCachedChatExist = false;
-    let canReconnectChat = false;
 
     if (!isUndefinedOrEmpty(state.appStates?.reconnectId)) {
-        canReconnectChat = true;
+        activeCachedChatExist = true;
         optionalParams = { reconnectId: state.appStates.reconnectId };
     } else if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext)) {
         activeCachedChatExist = true;
         optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
     } else {
         activeCachedChatExist = false;
-        canReconnectChat = false;
         optionalParams = undefined;
     }
 
@@ -113,13 +111,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const startChat = async (props: any, localState?: any) => {
         let isChatValid = false;
 
-        //Start a chat from cache
-        if (activeCachedChatExist === true && canReconnectChat === false) {
+        //Start a chat from cache/reconnectid
+        if (activeCachedChatExist === true) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             if (localState) {
                 localState.appStates.conversationState = ConversationState.Loading;
             }
 
+            //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId);
             if (isChatValid === true) {
                 await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
