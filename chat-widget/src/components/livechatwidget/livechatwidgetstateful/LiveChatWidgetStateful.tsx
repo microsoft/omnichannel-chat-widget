@@ -303,6 +303,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
         });
 
+        // Reset state variables
+        BroadcastService.getMessageByEventName(BroadcastEvent.RaiseErrorEvent).subscribe(() => {
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONFIG, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+        });
+
         return () => {
             disposeTelemetryLoggers();
         };

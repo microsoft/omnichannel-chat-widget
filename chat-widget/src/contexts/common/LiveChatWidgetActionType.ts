@@ -212,4 +212,10 @@ export enum LiveChatWidgetActionType {
         any: Set widget instance id
     */
     SET_WIDGET_INSTANCE_ID,
+
+    /*
+        Parameters:
+        any: Set live chat config
+    */
+    SET_LIVE_CHAT_CONFIG,
 }

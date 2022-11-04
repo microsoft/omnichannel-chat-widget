@@ -306,6 +306,16 @@ export const createReducer = () => {
                         widgetInstanceId: action.payload as string
                     }
                 };
+            
+            case LiveChatWidgetActionType.SET_LIVE_CHAT_CONFIG:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        liveChatConfig: action.payload as any
+                    }
+                };
 
             default:
                 return state;
