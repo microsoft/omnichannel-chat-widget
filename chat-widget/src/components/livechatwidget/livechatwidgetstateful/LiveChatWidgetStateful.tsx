@@ -64,6 +64,7 @@ import { registerBroadcastServiceForLocalStorage } from "../../../common/storage
 import { defaultClientDataStoreProvider } from "../../../common/storage/default/defaultClientDataStoreProvider";
 import { IScrollBarProps } from "../interfaces/IScrollBarProps";
 import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
+import { E2VVOptions } from "../../../common/Constants";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -156,10 +157,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (props.controlProps?.widgetInstanceId && !isNullOrEmptyString(props.controlProps?.widgetInstanceId)) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_INSTANCE_ID, payload: props.controlProps?.widgetInstanceId });
         }
-        initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
-            .then((sdkCreated: boolean) => {
-                sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
-            });
+
+        if (props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_callingoptions !== E2VVOptions.NoCalling) {
+            initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
+                .then((sdkCreated: boolean) => {
+                    sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
+                });
+        }
 
         // Initialize global dir
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);

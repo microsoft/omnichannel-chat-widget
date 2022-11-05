@@ -81,6 +81,14 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
     try {
+        //Start widget load timer
+        TelemetryTimers.WidgetLoadTimer = createTimer();
+
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.WidgetLoadStarted,
+            Description: "Widget loading started",
+        });
+
         const authClientFunction = getAuthClientFunction(chatConfig);
         if (getAuthToken && authClientFunction) {
             // set auth token to chat sdk before start chat
@@ -104,9 +112,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         }
 
         try {
-            //Start widget load timer
-            TelemetryTimers.WidgetLoadTimer = createTimer();
-
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatSDKCall
             });
@@ -140,7 +145,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
 
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
-            await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+            setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
             return;
         }
 

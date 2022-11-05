@@ -206,6 +206,12 @@ export enum EnvironmentVersion {
     test = "test"
 }
 
+export enum E2VVOptions{
+    NoCalling = "192350000",
+    VideoAndVoiceCalling = "192350001",
+    VoiceOnly = "192350002"
+}
+
 export class TranscriptConstants {
     public static readonly ChatTranscriptsBodyColor = "#F5F5F5";
     public static readonly TranscriptMessageEmojiMessageType = "http://schema.skype.com/emoji";
