@@ -97,16 +97,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     let optionalParams: any;
     let activeCachedChatExist = false;
 
-    if (!isUndefinedOrEmpty(state.appStates?.reconnectId)) {
-        activeCachedChatExist = true;
-        optionalParams = { reconnectId: state.appStates.reconnectId };
-    } else if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext)) {
-        activeCachedChatExist = true;
-        optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
-    } else {
-        activeCachedChatExist = false;
-        optionalParams = undefined;
-    }
+    const setOptionalParams = () => {
+        if (!isUndefinedOrEmpty(state.appStates?.reconnectId)) {
+            activeCachedChatExist = true;
+            optionalParams = { reconnectId: state.appStates.reconnectId };
+        } else if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext)) {
+            activeCachedChatExist = true;
+            optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
+        } else {
+            activeCachedChatExist = false;
+            optionalParams = undefined;
+        }
+    };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: any, localState?: any) => {
@@ -129,7 +131,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         if (isChatValid === false) {
             if (localState) {
-                await setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, undefined, undefined, localState, props);
+                await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 return;
             } else {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
@@ -168,6 +170,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Initialize global dir
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
+
+        setOptionalParams();
 
         // Unauth chat
         if (state.appStates.hideStartChatButton === false) {

@@ -27,7 +27,7 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
 
     if (hasReconnectId(reconnectChatContext)) {
         //Redirect if enabled
-        if (reconnectChatContext.redirectURL) {
+        if (reconnectChatContext.redirectURL && !isNullOrEmptyString(reconnectChatContext.redirectURL)) {
             redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow);
             return;
         }
@@ -35,7 +35,7 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
         //if reconnect id is provided in props, don't show reconnect pane
         if (props.reconnectChatPaneProps?.reconnectId && !isNullOrEmptyString(props.reconnectChatPaneProps?.reconnectId)) {
             const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig, props, isAuthenticatedChat);
-            await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);
+            await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, props, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);
             return;
         }
 
@@ -76,10 +76,10 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, reconnectId: string, initStartChat: any) => {
+const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, reconnectId: string, initStartChat: any) => {
     if (isAuthenticatedChat) {
         // Get auth token for for getting chat reconnect context
-        await handleAuthentication(chatSDK, chatConfig, getAuthToken);
+        await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
     } else {
         const startUnauthenticatedReconnectChat: ICustomEvent = {
             eventName: BroadcastEvent.StartUnauthenticatedReconnectChat,
@@ -87,13 +87,14 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK:
         BroadcastService.postMessage(startUnauthenticatedReconnectChat);
     }
     const optionalParams = { reconnectId: reconnectId };
+
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-    await initStartChat(chatSDK, chatConfig, getAuthToken, dispatch, setAdapter, optionalParams);
+
+    await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
 };
 
-
-const redirectPage = (redirectURL: string, redirectInSameWindow: boolean | undefined) => {
+const redirectPage = (redirectURL: string, redirectInSameWindow: boolean) => {
     const redirectPageRequest: ICustomEvent = {
         eventName: BroadcastEvent.RedirectPageRequest,
         payload: {
@@ -106,9 +107,9 @@ const redirectPage = (redirectURL: string, redirectInSameWindow: boolean | undef
     }
 };
 
-const isReconnectEnabled = (chatConfig: ChatConfig | undefined) => {
+const isReconnectEnabled = (chatConfig: ChatConfig) => {
     return chatConfig &&
-        chatConfig.LiveWSAndLiveChatEngJoin.msdyn_enablechatreconnect &&
+        chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_enablechatreconnect &&
         (chatConfig.LiveWSAndLiveChatEngJoin.msdyn_enablechatreconnect === "true" || chatConfig.LiveWSAndLiveChatEngJoin.msdyn_enablechatreconnect === true);
 };
 

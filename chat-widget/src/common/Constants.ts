@@ -212,6 +212,14 @@ export enum E2VVOptions{
     VoiceOnly = "192350002"
 }
 
+export enum LiveWorkItemState  {
+    Active = "Active",
+    Closed = "Closed",
+    Open = "Open",
+    Waiting = "Waiting",
+    WrapUp = "WrapUp"
+}
+
 export class TranscriptConstants {
     public static readonly ChatTranscriptsBodyColor = "#F5F5F5";
     public static readonly TranscriptMessageEmojiMessageType = "http://schema.skype.com/emoji";

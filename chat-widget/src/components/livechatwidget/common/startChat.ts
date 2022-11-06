@@ -1,4 +1,4 @@
-import { ChatSDKError } from "../../../common/Constants";
+import { ChatSDKError, LiveWorkItemState } from "../../../common/Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "../../../contexts/common/ConversationState";
@@ -48,11 +48,11 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
 
     //Setting PreChat and intiate chat
-    setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat);
+    setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, undefined, props);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
+const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
     //Handle reconnect scenario
     if (state) {
         await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
@@ -75,7 +75,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
 
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-    await initStartChat(chatSDK, chatConfig, getAuthToken, dispatch, setAdapter);
+    await initStartChat(chatSDK, props?.chatConfig, props?.getAuthToken, dispatch, setAdapter);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -238,20 +238,30 @@ const setCustomContextParams = (chatSDK: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId: any): Promise<boolean> => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let conversationDetails: any = undefined;
-
+const handleAuthenticationIfEnabled = async (chatSDK: any, props: any): Promise<boolean> => {
     //For auth chat
     if (props.getAuthToken) {
         const authClientFunction = getAuthClientFunction(props.chatConfig);
-        if (props.getAuthToken && authClientFunction) {
+        if (authClientFunction) {
             // set auth token to chat sdk before start chat
             const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
             if (!authSuccess) {
                 return false;
             }
+            return true;
         }
+    }
+    return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId: any): Promise<boolean> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let conversationDetails: any = undefined;
+
+    const authSucceed = await handleAuthenticationIfEnabled(chatSDK, props);
+    if (!authSucceed) {
+        return false;
     }
 
     //Preserve old requestId
@@ -259,14 +269,17 @@ const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId
     try {
         chatSDK.requestId = requestId;
         conversationDetails = await chatSDK.getConversationDetails();
+
         if (Object.keys(conversationDetails).length === 0) {
             chatSDK.requestId = oldRequestId;
             return false;
         }
-        if (conversationDetails.state === "Closed" || conversationDetails.state === "WrapUp") {
+
+        if (conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {
             chatSDK.requestId = oldRequestId;
             return false;
         }
+
         return true;
     }
     catch (erorr) {
