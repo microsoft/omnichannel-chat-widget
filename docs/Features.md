@@ -2,12 +2,12 @@
 
 ### Pop-Out Chat
 
-The chat can be enabled in a pop-out window with the help of the prop "skipChatButtonRendering". When this is turned on, the button will be automatically clicked on widget load. See the below chat widget example:
+The chat can be enabled in a pop-out window with the help of the prop "hideStartChatButton". When this is turned on, the button will be automatically clicked on widget load. See the below chat widget example:
 
 ```js
 liveChatWidgetProps = {
     controlProps: {
-        skipChatButtonRendering: true
+        hideStartChatButton: true
     }
 };
 

@@ -69,4 +69,9 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed OutOfOffice Chat Button Icon appearance
 - Adding support for customizing widget scroll bar
 - Clearing live chat context for raise error event
+- Renaming `skipChatButtonRendering` to `hideStartChatButton`
+- Refactoring reconnect functionality code
+- Fixing chat widget refresh bug showing reconnect pane
+- Supporting to start new chat if localStorage has stale Active state
+- Fixing end chat to gracefully complete if auth token has expired
 - Refactoring input validation pane and replacing keyDown event with keyUp

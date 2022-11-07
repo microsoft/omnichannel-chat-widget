@@ -1,4 +1,4 @@
-import { ChatSDKError } from "../../../common/Constants";
+import { ChatSDKError, LiveWorkItemState } from "../../../common/Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "../../../contexts/common/ConversationState";
@@ -14,12 +14,12 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { createTimer, getStateFromCache, isUndefinedOrEmpty } from "../../../common/utils";
-import { getReconnectIdForAuthenticatedChat, handleRedirectUnauthenticatedReconnectChat } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
+import { handleChatReconnect } from "./reconnectChatHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: any = {};
@@ -36,17 +36,10 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         return;
     }
 
-    // Redirecting if unauthenticated reconnect chat expired
-    if (props.reconnectChatPaneProps?.reconnectId) {
-        await handleRedirectUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, initStartChat, props.reconnectChatPaneProps?.reconnectId, props.reconnectChatPaneProps?.redirectInSameWindow);
-        return;
-    }
+    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
 
-    // Getting reconnectId for authenticated chat
-    const reconnectId = await getReconnectIdForAuthenticatedChat(props, chatSDK);
-    if (reconnectId) {
-        dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
+    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
         return;
     }
 
@@ -55,11 +48,20 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
 
     //Setting PreChat and intiate chat
-    setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat);
+    setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, undefined, props);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false) => {
+const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
+    //Handle reconnect scenario
+    if (state) {
+        await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+        // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+        if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+            return;
+        }
+    }
+
     // Getting prechat Survey Context
     const parseToJson = false;
     const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
@@ -73,12 +75,20 @@ const setPreChatAndInitiateChat = async (chatSDK: any, chatConfig: ChatConfig | 
 
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-    await initStartChat(chatSDK, chatConfig, getAuthToken, dispatch, setAdapter);
+    await initStartChat(chatSDK, props?.chatConfig, props?.getAuthToken, dispatch, setAdapter);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
     try {
+        //Start widget load timer
+        TelemetryTimers.WidgetLoadTimer = createTimer();
+
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.WidgetLoadStarted,
+            Description: "Widget loading started",
+        });
+
         const authClientFunction = getAuthClientFunction(chatConfig);
         if (getAuthToken && authClientFunction) {
             // set auth token to chat sdk before start chat
@@ -102,9 +112,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         }
 
         try {
-            //Start widget load timer
-            TelemetryTimers.WidgetLoadTimer = createTimer();
-
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatSDKCall
             });
@@ -112,7 +119,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             // Set custom context params
             setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
-
             await chatSDK.startChat(optionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
@@ -139,7 +145,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
 
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
-            await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+            setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
             return;
         }
 
@@ -176,7 +182,10 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
+            return;
         }
+        // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     } finally {
         optionalParams = {};
         widgetInstanceId = "";
@@ -186,7 +195,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     // By pass this function in case of popout chat
-    if (state.appStates.skipChatButtonRendering === true) {
+    if (state.appStates.hideStartChatButton === true) {
         return false;
     }
 
@@ -212,7 +221,7 @@ const setCustomContextParams = (chatSDK: any) => {
     const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, widgetInstanceId ?? "");
 
     if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
-        if(persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
+        if (persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
             const errorMessage = "Use of custom context with authenticated chat is deprecated. The chat would not go through.";
             TelemetryHelper.logSDKEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.StartChatMethodException,
@@ -228,4 +237,60 @@ const setCustomContextParams = (chatSDK: any) => {
     }
 };
 
-export { prepareStartChat, initStartChat, setPreChatAndInitiateChat };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleAuthenticationIfEnabled = async (chatSDK: any, props: any): Promise<boolean> => {
+    //For auth chat
+    if (props.getAuthToken) {
+        const authClientFunction = getAuthClientFunction(props.chatConfig);
+        if (authClientFunction) {
+            // set auth token to chat sdk before start chat
+            const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
+            if (!authSuccess) {
+                return false;
+            }
+            return true;
+        }
+    }
+    return true;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId: any): Promise<boolean> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let conversationDetails: any = undefined;
+
+    const authSucceed = await handleAuthenticationIfEnabled(chatSDK, props);
+    if (!authSucceed) {
+        return false;
+    }
+
+    //Preserve old requestId
+    const oldRequestId = chatSDK.requestId;
+    try {
+        chatSDK.requestId = requestId;
+        conversationDetails = await chatSDK.getConversationDetails();
+
+        if (Object.keys(conversationDetails).length === 0) {
+            chatSDK.requestId = oldRequestId;
+            return false;
+        }
+
+        if (conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {
+            chatSDK.requestId = oldRequestId;
+            return false;
+        }
+
+        return true;
+    }
+    catch (erorr) {
+        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.GetConversationDetailsException,
+            ExceptionDetails: {
+                exception: `Conversation is not valid: ${erorr}`
+            }
+        });
+        chatSDK.requestId = oldRequestId;
+        return false;
+    }
+};
+export { prepareStartChat, initStartChat, setPreChatAndInitiateChat, checkIfConversationStillValid };

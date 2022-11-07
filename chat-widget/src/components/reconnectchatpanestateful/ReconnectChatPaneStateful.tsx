@@ -22,9 +22,10 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
     const startChat = async (continueChat: boolean) => {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         if (continueChat && state.appStates.reconnectId) {
-            const optionalParams = {reconnectId: state.appStates.reconnectId};
+            const optionalParams = { reconnectId: state.appStates.reconnectId };
             await initStartChat(optionalParams);
         } else {
+            dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
             const parseToJson = false;
             const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
             if (preChatSurveyResponse) {
@@ -68,7 +69,7 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
         setFocusOnElement(document.getElementById(controlProps.id as string) as HTMLElement);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ReconnectChatPaneLoaded });
     }, []);
-    
+
     return (
         <ReconnectChatPane
             componentOverrides={reconnectChatProps?.componentOverrides}
