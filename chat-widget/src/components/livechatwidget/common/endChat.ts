@@ -58,6 +58,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
         const chatSession = await chatSDK?.getCurrentLiveChatContext();
         await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, false);
         if (chatSession) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (chatSDK as any).chatToken = chatSession.chatToken ?? {};
             chatSDK.requestId = chatSession.requestId;
         }
