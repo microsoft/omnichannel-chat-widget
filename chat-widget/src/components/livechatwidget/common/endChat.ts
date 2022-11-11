@@ -55,8 +55,14 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
     if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
         const skipEndChatSDK = false;
         const skipCloseChat = true;
+        const chatSession = await chatSDK?.getCurrentLiveChatContext();
         await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, false);
-
+        if (chatSession) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (chatSDK as any).chatToken = chatSession.chatToken ?? {};
+            chatSDK.requestId = chatSession.requestId;
+        }
+        
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
             await addDelayInMs(Constants.PostChatLoadingDurationInMs);
