@@ -47,6 +47,7 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
         }
     }, []);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleEscKeyDown = useCallback((e: any) => {
         if (e.code === KeyCodes.ESCAPE) {
             handleCancelClick();
