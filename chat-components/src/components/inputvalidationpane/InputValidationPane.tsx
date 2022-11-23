@@ -130,7 +130,8 @@ function InputValidationPane(props: IInputValidationPaneProps) {
     const redBorderStyles: IStyle = {
         borderColor: props.controlProps?.inputWithErrorMessageBorderColor ?? defaultInputValidationPaneControlProps.inputWithErrorMessageBorderColor,
         borderRadius: "1px",
-        borderStyle: "solid"
+        borderStyle: "solid",
+        borderWidth: "1px"
     };
 
     const inputStyles: ITextFieldStyles = {

@@ -76,3 +76,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixing end chat to gracefully complete if auth token has expired
 - Refactoring input validation pane and replacing keyDown event with keyUp
 - Fixed download and email transcript after post chat survey is sent / rendered
+- Fixed styles for input validation pane
