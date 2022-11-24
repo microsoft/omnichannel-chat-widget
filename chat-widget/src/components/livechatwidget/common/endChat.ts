@@ -62,7 +62,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
             (chatSDK as any).chatToken = chatSession.chatToken ?? {};
             chatSDK.requestId = chatSession.requestId;
         }
-        
+
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
             await addDelayInMs(Constants.PostChatLoadingDurationInMs);
@@ -73,6 +73,12 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
             BroadcastService.postMessage(loadPostChatEvent);
         } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+
+            // Disable SendBox
+            if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                setWebChatStyles((styles: any) => { return { ...styles, hideSendBox: true }; });
+            }
         }
         return;
     }
