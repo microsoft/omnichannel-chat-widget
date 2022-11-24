@@ -77,3 +77,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Refactoring input validation pane and replacing keyDown event with keyUp
 - Fixed download and email transcript after post chat survey is sent / rendered
 - Adding ESC shortcut for confirmation dismiss, Disable sendBox for linked survey
+- Fixed styles for input validation pane
