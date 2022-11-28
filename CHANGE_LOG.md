@@ -78,3 +78,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed download and email transcript after post chat survey is sent / rendered
 - Adding ESC shortcut for confirmation dismiss, Disable sendBox for linked survey
 - Fixed styles for input validation pane
+- Uptake `chat-components` 0.1.0-main.a7ac5de
