@@ -70,7 +70,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 if (persistedState &&
                     !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
                     persistedState?.appStates?.conversationState === ConversationState.Active &&
-                    !state.appStates.skipChatButtonRendering) {
+                    state.appStates.hideStartChatButton === false) {
                     optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
 
                     await initStartChat(optionalParams, persistedState);

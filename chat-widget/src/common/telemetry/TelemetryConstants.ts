@@ -37,7 +37,6 @@ export enum BroadcastEvent {
     HistoryMessageReceived = "HistoryMessageReceived",
     RedirectPageRequest = "RedirectPageRequest",
     StartChat = "StartChat",
-    StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
     StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
     InitiateEndChat = "InitiateEndChat",
     SetCustomContext = "SetCustomContext",
@@ -47,6 +46,7 @@ export enum BroadcastEvent {
     CloseChat = "CloseChat",
     InitiateEndChatOnBrowserUnload = "InitiateEndChatOnBrowserUnload",
     ClosePopoutWindow = "ClosePopoutWindow",
+    RaiseErrorEvent = "RaiseErrorEvent"
 }
 
 // Events being logged
@@ -92,6 +92,7 @@ export enum TelemetryEvent {
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
+    WidgetLoadStarted = "WidgetLoadStarted",
     WidgetLoadComplete = "WidgetLoadComplete",
     WidgetLoadFailed = "WidgetLoadFailed",
     StartChatMethodException = "StartChatMethodException",
@@ -132,6 +133,7 @@ export enum TelemetryEvent {
     GetConversationDetailsException = "GetConversationDetailsException",
     BrowserUnloadEventStarted = "BrowserUnloadEventStarted",
     GetAuthTokenCalled = "GetAuthTokenCalled",
+    GetAuthTokenFailed = "GetAuthTokenFailed",
     ReceivedNullOrEmptyToken = "ReceivedNullOrEmptyToken",
     CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
     CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",

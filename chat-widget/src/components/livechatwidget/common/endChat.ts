@@ -14,11 +14,29 @@ import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostC
 import { Constants } from "../../../common/Constants";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { addDelayInMs, getWidgetEndChatEventName } from "../../../common/utils";
+import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
     const isPostChatEnabled = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
     const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
+
+    //Unable to end chat if token has expired
+    if (props.getAuthToken) {
+        const authClientFunction = getAuthClientFunction(props.chatConfig);
+        if (props.getAuthToken && authClientFunction) {
+            // set auth token to chat sdk before start chat
+            const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
+            if (!authSuccess) {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.GetAuthTokenFailed,
+                    ExceptionDetails: {
+                        exception: "Unable to get auth token during end chat"
+                    }
+                });
+            }
+        }
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
@@ -37,7 +55,13 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
     if (isPostChatEnabled === "true" && conversationDetails?.canRenderPostChat === Constants.truePascal) {
         const skipEndChatSDK = false;
         const skipCloseChat = true;
+        const chatSession = await chatSDK?.getCurrentLiveChatContext();
         await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, false);
+        if (chatSession) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (chatSDK as any).chatToken = chatSession.chatToken ?? {};
+            chatSDK.requestId = chatSession.requestId;
+        }
 
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
@@ -49,6 +73,12 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
             BroadcastService.postMessage(loadPostChatEvent);
         } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+
+            // Disable SendBox
+            if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                setWebChatStyles((styles: any) => { return { ...styles, hideSendBox: true }; });
+            }
         }
         return;
     }
@@ -79,6 +109,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
     dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
 
     if (!skipCloseChat) {
         try {

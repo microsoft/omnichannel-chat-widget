@@ -555,7 +555,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         hideProactiveChatPane: false,
         hideReconnectChatPane: false,
         hideWebChatContainer: false,
-        skipChatButtonRendering: false
+        hideStartChatButton: false
     },
     directLine: new MockAdapter(),
     downloadTranscriptProps: {
@@ -1388,7 +1388,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 startNewChatButtonClassName: undefined
             }
         },
-        isReconnectEnabled: undefined,
         reconnectId: undefined,
         redirectInSameWindow: undefined
     },

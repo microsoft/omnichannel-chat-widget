@@ -216,12 +216,12 @@ export const createReducer = () => {
                         e2vvEnabled: action.payload as boolean
                     }
                 };
-            case LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING:
+            case LiveChatWidgetActionType.SET_START_CHAT_BUTTON_DISPLAY:
                 return {
                     ...state,
                     appStates: {
                         ...state.appStates,
-                        skipChatButtonRendering: action.payload as boolean
+                        hideStartChatButton: action.payload as boolean
                     }
                 };
             case LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS:
@@ -304,6 +304,16 @@ export const createReducer = () => {
                         ...state.domainStates,
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         widgetInstanceId: action.payload as string
+                    }
+                };
+            
+            case LiveChatWidgetActionType.SET_LIVE_CHAT_CONFIG:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        liveChatConfig: action.payload as any
                     }
                 };
 

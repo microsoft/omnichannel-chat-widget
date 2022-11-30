@@ -33,7 +33,7 @@ export interface ILiveChatWidgetContext {
         preChatResponseEmail: string; // The email from preChat survey response
         isAudioMuted: boolean | null; // true/false if the sound notification is on/off. Initial value is null, in such case it gets set to true if audio notification icon is set, otherwise it gets set to false
         newMessage: boolean; // new message state
-        skipChatButtonRendering: boolean; // true if we want to open popout chat
+        hideStartChatButton: boolean; // true if we want to open popout chat
         reconnectId: string | undefined; // used to reconnect to previous chat if one exists
         proactiveChatStates: {
             proactiveChatBodyTitle: string; // proactive chat body title

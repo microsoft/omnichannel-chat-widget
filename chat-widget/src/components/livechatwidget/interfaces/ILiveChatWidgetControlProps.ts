@@ -13,6 +13,6 @@ export interface ILiveChatWidgetControlProps {
     hideProactiveChatPane?: boolean;
     hideReconnectChatPane?: boolean;
     hideWebChatContainer?: boolean;
-    skipChatButtonRendering?: boolean;
+    hideStartChatButton?: boolean;
     widgetInstanceId?: string | undefined;
 }

@@ -54,6 +54,7 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                 });
             }
         }
+
         // Exit if rule matched
         if (isRuleMatched === true) {
             break;

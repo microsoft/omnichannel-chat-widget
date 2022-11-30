@@ -220,14 +220,14 @@ describe("Input Validation Pane component", () => {
     });
 
     act(() => {
-        it("input validation pane input textfield key down", () => {
-            const handleInputKeyDown = jest.fn();
+        it("input validation pane input textfield key up", () => {
+            const handleInputKeyUp = jest.fn();
 
             const inputValidationPaneProps: IInputValidationPaneProps = {
                 ...defaultInputValidationPaneProps,
                 controlProps: {
                     ...defaultInputValidationPaneProps.controlProps,
-                    onSend: handleInputKeyDown,
+                    onSend: handleInputKeyUp,
                     checkInput: undefined
                 }
             };
@@ -236,10 +236,10 @@ describe("Input Validation Pane component", () => {
 
             const textfields = screen.getAllByRole("textbox");
             const input = textfields[0];
-            fireEvent.keyDown(input, {
+            fireEvent.keyUp(input, {
                 code: "Enter"
             });
-            expect(handleInputKeyDown).toHaveBeenCalledTimes(1);
+            expect(handleInputKeyUp).toHaveBeenCalledTimes(1);
         });
     });
 

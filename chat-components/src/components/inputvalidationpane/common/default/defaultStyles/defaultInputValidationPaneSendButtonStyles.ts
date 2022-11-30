@@ -8,5 +8,6 @@ export const defaultInputValidationPaneSendButtonStyles: IStyle = {
     fontWeight: "500",
     lineHeight: "19px",
     textOverflow: "ellipsis",
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
+    width: "80px"
 };

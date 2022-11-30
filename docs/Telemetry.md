@@ -137,6 +137,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `CloseChat`                         |On SDK `closeChat` method call |
 | `InitiateEndChatOnBrowserUnload`      | End active chats on browser unload |
 | `ClosePopoutWindow`      | Event to close popout window  |
+| `RaiseErrorEvent`                 | On raising error events |
 
 ### Telemetry Events
 
@@ -146,6 +147,7 @@ Refer to the below table to understand different critical telemetry events raise
 
 | Event Name | Scenario |
 | -------- | -------- |
+| `WidgetLoadStarted`     |On Chat Widget load started |
 | `WebChatLoaded`     | On `WebChatContainer` load complete |
 | `WidgetLoadComplete`     |On Chat Widget load complete |
 | `WidgetLoadFailed`     |On Chat Widget load failure |
@@ -164,6 +166,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `CustomerVoiceResponsePageLoaded` | On survey page load complete|
 | `CustomerVoiceFormResponseSubmitted` | On survey submitted |
 | `CustomerVoiceFormResponseError` | On survey response error|
+
 #### Action Events
 
 | Event Name| Scenario |
@@ -186,11 +189,11 @@ Refer to the below table to understand different critical telemetry events raise
 |`AverageWaitTimeMessageRecieved`|On Average Wait Time system message Received|
 |`QueuePositionMessageRecieved`|On Queue Position system message Received|
 |`IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
-| `ConversationEndedThreadEventReceived`     |On Conversation ended by agent side or by timeout |
-| `InvalidConfiguration`     |On Invalid data masking regex rule collection |
-| `DataMaskingRuleApplied`     |On data masking regex rule applied |
-| `DataMaskingRuleApplyFailed`     |On data masking regex rule failed to apply |
-| `EmailTranscriptSent`     |On transcript sent to email successfully |
+|`ConversationEndedThreadEventReceived`     |On Conversation ended by agent side or by timeout |
+|`InvalidConfiguration`     |On Invalid data masking regex rule collection |
+|`DataMaskingRuleApplied`     |On data masking regex rule applied |
+|`DataMaskingRuleApplyFailed`     |On data masking regex rule failed to apply |
+|`EmailTranscriptSent`     |On transcript sent to email successfully |
 |`EmailTranscriptFailed`|On transcript sent to email failure|
 |`EmailTranscriptButtonClicked`|On Email Transcript footer button clicked|
 |`EmailTranscriptCancelButtonClicked`|On Email Transcript Pane Cancel button clicked|
@@ -205,25 +208,26 @@ Refer to the below table to understand different critical telemetry events raise
 |`MessageSent`|On Message Sent|
 |`MessageReceived`|On Message Received|
 |`CustomContextReceived`|On Custom Context Received|
-| `SuppressBotMagicCodeSucceeded` | On sending magic code behind the scenes succeeded |
-| `SuppressBotMagicCodeFailed` | On sending magic code behind the scenes failed |
-| `GetAuthTokenCalled` | On getting auth token |
-| `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
+|`SuppressBotMagicCodeSucceeded` | On sending magic code behind the scenes succeeded |
+|`SuppressBotMagicCodeFailed` | On sending magic code behind the scenes failed |
+|`GetAuthTokenCalled` | On getting auth token |
+|`GetAuthTokenFailed` | On getting auth token failed |
+|`ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 
 #### Calling Events
 
 | Event Name | Scenario |
 | -------- |-------- |
-| `VideoCallAcceptButtonClick`      |On accepting call with video on |
-| `CallAdded`     |      On receiving incoming call |
-| `LocalVideoStreamAdded`     |      On local video stream added |
-| `LocalVideoStreamRemoved`     |      On local video stream removed |
-| `RemoteVideoStreamAdded`     |      On remote video stream added |
-| `RemoteVideoStreamRemoved`     |      On remote video stream removed |
-| `CallDisconnected`     |      On call disconnected successfully  |
-| `IncomingCallEnded`           |On incoming call reject button clicked |
-| `VoiceVideoSdkInitialize`     |      On video and voice calling SDK initialization |
-| `VoiceVideoSdkInitializeException`           |On exception while video and voice calling SDK initialization |
+|`VideoCallAcceptButtonClick`      |On accepting call with video on |
+|`CallAdded`     |      On receiving incoming call |
+|`LocalVideoStreamAdded`     |      On local video stream added |
+|`LocalVideoStreamRemoved`     |      On local video stream removed |
+|`RemoteVideoStreamAdded`     |      On remote video stream added |
+|`RemoteVideoStreamRemoved`     |      On remote video stream removed |
+|`CallDisconnected`     |      On call disconnected successfully  |
+|`IncomingCallEnded`           |On incoming call reject button clicked |
+|`VoiceVideoSdkInitialize`     |      On video and voice calling SDK initialization |
+|`VoiceVideoSdkInitializeException`           |On exception while video and voice calling SDK initialization |
 |`VoiceVideoAcceptCallException`|On failed to accept call without video|
 |`VoiceVideoAcceptCallWithVideoException`|On failed to accept call with video|
 |`VoiceCallAcceptButtonClick`|On accepting incoming call without video|

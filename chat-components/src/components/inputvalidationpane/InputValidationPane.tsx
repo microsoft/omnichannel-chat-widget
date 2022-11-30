@@ -1,6 +1,6 @@
 import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
 import { IButtonStyles, ILabelStyles, IStackStyles, IStyle, ITextFieldStyles, Label, Stack, TextField } from "@fluentui/react";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
@@ -30,21 +30,27 @@ function InputValidationPane(props: IInputValidationPaneProps) {
     const [isInvalidInput, setIsInvalidInput] = useState(false);
     const [isSendButtonEnabled, setIsSendButtonEnabled] = useState(false);
     
-    const isValidInput = () => {
-        return props.controlProps?.checkInput ? (inputValue && props.controlProps?.checkInput(inputValue)) : true;
-    };
+    const isValidInput = useCallback(() => {
+        if (!props.controlProps?.checkInput) {
+            return true;
+        }
+        if (!inputValue) {
+            return false;
+        }
+        return props.controlProps?.checkInput(inputValue);
+    }, [inputValue]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleInputChange = (e: any) => {
+    const handleInputChange = useCallback((e: any) => {
         setInputValue(e.target.value);
 
         e.target.value ? setIsSendButtonEnabled(props.controlProps?.enableSendButton || e.target.value !== "")
             : setIsSendButtonEnabled(props.controlProps?.enableSendButton ?? false);
 
         setIsInvalidInput(false);
-    };
+    }, []);
 
-    const send = (controlId: string, suffix: string) => {
+    const send = useCallback((controlId: string, suffix: string) => {
         if (props.controlProps?.onSend) {
             if (isValidInput()) {
                 const eventName = generateEventName(controlId, "on", suffix);
@@ -57,20 +63,20 @@ function InputValidationPane(props: IInputValidationPaneProps) {
                 setIsInvalidInput(true);
             }
         }
-    };
+    }, [inputValue]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleInputKeyDown = (e: any) => {
+    const handleInputKeyUp = useCallback((e: any) => {
         if (e.code === KeyCodes.ENTER) {
-            send(elementId + "-textField", "KeyDown");
+            send(elementId + "-textField", "KeyUp");
         }
-    };
+    }, [inputValue]);
 
-    const handleSendClick = () => {
+    const handleSendClick = useCallback(() => {
         send(elementId + "-sendbutton", "Click");
-    };
+    }, [inputValue]);
 
-    const cancel = (controlId: string, suffix: string) => {
+    const cancel = useCallback((controlId: string, suffix: string) => {
         if (props.controlProps?.onCancel) {
             setInputValue("");
             setIsInvalidInput(false);
@@ -81,18 +87,18 @@ function InputValidationPane(props: IInputValidationPaneProps) {
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onCancel();
         }
-    };
+    }, []);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleEscKeyDown = (e: any) => {
+    const handleEscKeyDown = useCallback((e: any) => {
         if (e.code === KeyCodes.ESCAPE) {
             cancel(elementId as string, "KeyDown");
         }
-    };
+    }, []);
 
-    const handleCancelClick = () => {
+    const handleCancelClick = useCallback(() => {
         cancel(elementId + "-cancelbutton", "Click");
-    };
+    }, []);
 
     useEffect(() => {
         setInputValue(props.controlProps?.inputInitialText ?? "");
@@ -124,7 +130,8 @@ function InputValidationPane(props: IInputValidationPaneProps) {
     const redBorderStyles: IStyle = {
         borderColor: props.controlProps?.inputWithErrorMessageBorderColor ?? defaultInputValidationPaneControlProps.inputWithErrorMessageBorderColor,
         borderRadius: "1px",
-        borderStyle: "solid"
+        borderStyle: "solid",
+        borderWidth: "1px"
     };
 
     const inputStyles: ITextFieldStyles = {
@@ -229,7 +236,7 @@ function InputValidationPane(props: IInputValidationPaneProps) {
                             ariaLabel={props.controlProps?.inputAriaLabel || defaultInputValidationPaneControlProps.inputAriaLabel}
                             borderless={isInvalidInput}
                             onChange={handleInputChange}
-                            onKeyDown={handleInputKeyDown}
+                            onKeyUp={handleInputKeyUp}
                         />) }
 
                         { isInvalidInput && (decodeComponentString(props.componentOverrides?.invalidInputErrorMessage) ||
