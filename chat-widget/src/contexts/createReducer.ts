@@ -65,6 +65,15 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_START_CHAT_FAILING:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        isStartChatFailing: action.payload as boolean
+                    }
+                };
+
             case LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS:
                 return {
                     ...state,

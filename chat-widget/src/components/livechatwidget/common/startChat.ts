@@ -162,6 +162,8 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         // Set app state to Active
         if (isStartChatSuccessful) {
             ActivityStreamHandler.uncork();
+            // Update start chat failure app state if chat loads successfully
+            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false});
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
 
@@ -184,6 +186,8 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             return;
         }
+        // Set app state to failing start chat
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true});
         // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     } finally {
@@ -255,10 +259,12 @@ const handleAuthenticationIfEnabled = async (chatSDK: any, props: any): Promise<
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId: any): Promise<boolean> => {
+const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId: any, dispatch: Dispatch<ILiveChatWidgetAction>): Promise<boolean> => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
 
+    // Show Loading screen during auth check and start chat calls 
+    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     const authSucceed = await handleAuthenticationIfEnabled(chatSDK, props);
     if (!authSucceed) {
         return false;
