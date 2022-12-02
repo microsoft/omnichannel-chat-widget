@@ -16,7 +16,6 @@ import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUI
 
 export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const [isStartChatFailing, setIsStartChatFailing] = useState(false);
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, props.styleProps?.generalStyleProps);
     const styleProps: ILoadingPaneStyleProps = {
         ...props.styleProps,
@@ -49,17 +48,13 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
             firstElement[0].focus();
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.LoadingPaneLoaded, Description: "Loading pane loaded." });
-
-        if (state.appStates.isStartChatFailing) {
-            setIsStartChatFailing(true);
-        }
     }, []);
     
     return (
         <LoadingPane
             componentOverrides={props.componentOverrides}
-            controlProps={isStartChatFailing ? errorUIControlProps : controlProps}
-            styleProps={isStartChatFailing ? errorUIStyleProps : styleProps}
+            controlProps={state.appStates.isStartChatFailing ? errorUIControlProps : controlProps}
+            styleProps={state.appStates.isStartChatFailing ? errorUIStyleProps : styleProps}
         />
     );
 };
