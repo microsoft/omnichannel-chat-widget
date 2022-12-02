@@ -122,7 +122,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
 
             //Check if conversation state is not in wrapup or closed state
-            isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId);
+            isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId, dispatch);
             if (isChatValid === true) {
                 await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
                 return;
