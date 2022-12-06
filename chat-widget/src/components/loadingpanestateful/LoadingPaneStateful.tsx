@@ -12,20 +12,32 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralLoadingPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralLoadingPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 
 export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, props.styleProps?.generalStyleProps);
-    
     const styleProps: ILoadingPaneStyleProps = {
         ...props.styleProps,
         generalStyleProps: generalStyleProps
+    };
+    const errorUIStyleProps: ILoadingPaneStyleProps = {
+        ...errorUILoadingPaneStyleProps
     };
 
     const controlProps: ILoadingPaneControlProps = {
         id: "oc-lcw-loading-pane",
         dir: state.domainStates.globalDir,
+        ...props.controlProps
+    };
+
+    const errorUIControlProps: ILoadingPaneControlProps = {
+        id: "oc-lcw-alert-pane",
+        dir: state.domainStates.globalDir,
+        titleText: "Chat is failing to load.",
+        subtitleText: "Please Close the chat and try again.",
+        hideSpinner: true,
+        hideSpinnerText: true,
         ...props.controlProps
     };
 
@@ -41,8 +53,8 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
     return (
         <LoadingPane
             componentOverrides={props.componentOverrides}
-            controlProps={controlProps}
-            styleProps={styleProps}
+            controlProps={state.appStates.isStartChatFailing ? errorUIControlProps : controlProps}
+            styleProps={state.appStates.isStartChatFailing ? errorUIStyleProps : styleProps}
         />
     );
 };

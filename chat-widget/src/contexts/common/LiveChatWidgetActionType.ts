@@ -45,8 +45,15 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        - true: When the chat starts successfully
-        - false: When the chat ends or crashes unexpectedly
+        - true: When chat is failing to start
+        - false: When chat is functioning normally
+    */
+    SET_START_CHAT_FAILING,
+
+    /*
+        Parameters:
+        - true: When chat is outside operating hours
+        - false: When chat is not outside operatin hours
     */
     SET_OUTSIDE_OPERATING_HOURS,
 

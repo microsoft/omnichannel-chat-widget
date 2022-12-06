@@ -48,9 +48,9 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             }
         },
         ...headerProps?.controlProps,
-        hideTitle: state.appStates.conversationState === ConversationState.Loading || state.appStates.conversationState === ConversationState.PostchatLoading || headerProps?.controlProps?.hideTitle,
-        hideIcon: state.appStates.conversationState === ConversationState.Loading || state.appStates.conversationState === ConversationState.PostchatLoading || headerProps?.controlProps?.hideIcon,
-        hideCloseButton: state.appStates.conversationState === ConversationState.Loading || state.appStates.conversationState === ConversationState.Prechat || state.appStates.conversationState === ConversationState.ReconnectChat || headerProps?.controlProps?.hideCloseButton
+        hideTitle: (state.appStates.conversationState === ConversationState.Loading && !state.appStates.isStartChatFailing) || state.appStates.conversationState === ConversationState.PostchatLoading || headerProps?.controlProps?.hideTitle,
+        hideIcon: (state.appStates.conversationState === ConversationState.Loading && !state.appStates.isStartChatFailing) || state.appStates.conversationState === ConversationState.PostchatLoading || headerProps?.controlProps?.hideIcon,
+        hideCloseButton: (state.appStates.conversationState === ConversationState.Loading && !state.appStates.isStartChatFailing) || state.appStates.conversationState === ConversationState.Prechat || state.appStates.conversationState === ConversationState.ReconnectChat || headerProps?.controlProps?.hideCloseButton
     };
 
     const outOfOfficeControlProps: IHeaderControlProps = {

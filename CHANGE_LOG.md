@@ -79,3 +79,5 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Adding ESC shortcut for confirmation dismiss, Disable sendBox for linked survey
 - Fixed styles for input validation pane
 - Uptake `chat-components` 0.1.0-main.a7ac5de
+- Added Error screen in case start chat fails
+- Added Loading Screen before auth checks on refresh

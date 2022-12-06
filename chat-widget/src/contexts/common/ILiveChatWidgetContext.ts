@@ -29,7 +29,8 @@ export interface ILiveChatWidgetContext {
         conversationState: ConversationState; // The state that the conversation is currently in
         isMinimized: boolean; // true when chat button is visible & chat widget is hidden & chat is ongoing
         previousElementIdOnFocusBeforeModalOpen: string | null; // The previous element id on focus before a modal opened. Focus will return to this element after the modal is closed by default
-        outsideOperatingHours: boolean; // true when chat session failed to start
+        isStartChatFailing: boolean; // true when start chat is failing
+        outsideOperatingHours: boolean; // true when chat session is out of office hours
         preChatResponseEmail: string; // The email from preChat survey response
         isAudioMuted: boolean | null; // true/false if the sound notification is on/off. Initial value is null, in such case it gets set to true if audio notification icon is set, otherwise it gets set to false
         newMessage: boolean; // new message state
