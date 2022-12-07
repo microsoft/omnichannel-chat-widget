@@ -112,10 +112,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         }
 
         try {
-            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.StartChatSDKCall
-            });
-
             // Set custom context params
             setCustomContextParams(chatSDK);
             optionalParams = Object.assign({}, params, optionalParams);
