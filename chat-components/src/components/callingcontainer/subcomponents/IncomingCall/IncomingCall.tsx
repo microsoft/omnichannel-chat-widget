@@ -129,7 +129,8 @@ function IncomingCall(props: IIncomingCallProps) {
 
         <Stack horizontal className={props.styleProps?.className} horizontalAlign="space-between"
             styles={stackStyles}
-            dir={props.controlProps?.dir ?? defaultIncomingCallProps.controlProps?.dir}>
+            dir={props.controlProps?.dir ?? defaultIncomingCallProps.controlProps?.dir} role="alert"
+            aria-label={incomingCallTitleProps?.text}>
             <Stack horizontal id="incomingCallLeftGroup" verticalAlign="center" tokens={leftGroupStackTokens}>
                 {!props.controlProps?.hideIncomingCallTitle && (decodeComponentString(props.componentOverrides?.incomingCallTitle) ||
                     <Label
