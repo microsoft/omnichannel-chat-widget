@@ -81,3 +81,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Uptake `chat-components` 0.1.0-main.a7ac5de
 - Added Error screen in case start chat fails
 - Added Loading Screen before auth checks on refresh
+- Uptake component for calling a11y fix
