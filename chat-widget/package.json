@@ -74,7 +74,7 @@
   },
   "dependencies": {
     "@fluentui/react": "^8.49.1",
-    "@microsoft/omnichannel-chat-components": "0.1.0-main.a7ac5de",
+    "@microsoft/omnichannel-chat-components": "0.1.0-main.d066b23",
     "@microsoft/omnichannel-chat-sdk": "1.1.1-main.b88f92d",
     "abort-controller-es5": "^2.0.1",
     "dompurify": "^2.3.4",
