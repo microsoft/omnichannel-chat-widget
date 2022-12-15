@@ -77,10 +77,7 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, reconnectId: string, initStartChat: any) => {
-    if (isAuthenticatedChat) {
-        // Get auth token for for getting chat reconnect context
-        await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
-    } else {
+    if (!isAuthenticatedChat) {
         const startUnauthenticatedReconnectChat: ICustomEvent = {
             eventName: BroadcastEvent.StartUnauthenticatedReconnectChat,
         };
