@@ -82,3 +82,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added Error screen in case start chat fails
 - Added Loading Screen before auth checks on refresh
 - Uptake component for calling a11y fix
+- Added more customization to prechat survey pane
