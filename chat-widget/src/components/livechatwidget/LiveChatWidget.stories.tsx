@@ -324,15 +324,26 @@ const liveChatWidgetCustom1Props: ILiveChatWidgetProps = {
         styleProps: {
             generalStyleProps: {
                 borderRadius: "0px",
+                boxSizing: undefined,
                 fontFamily: "Segoe UI, Arial, sans-serif",
                 fontSize: "14px",
                 height: "100%",
+                left: undefined,
+                maxHeight: undefined,
+                minHeight: undefined,
                 padding: "10px 20px",
+                right: undefined,
                 width: "100%"
             },
             titleStyleProps: {
                 fontFamily: "Helvetica",
                 marginBottom: "15px"
+            },
+            buttonGroupStyleProps: {
+                boxSizing: undefined,
+                height: undefined,
+                marginBottom: undefined,
+                width: undefined
             },
             confirmButtonStyleProps: {
                 fontFamily: "Helvetica",
