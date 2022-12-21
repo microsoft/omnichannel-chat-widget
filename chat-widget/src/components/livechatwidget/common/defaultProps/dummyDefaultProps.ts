@@ -453,20 +453,23 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         styleProps: {
             generalStyleProps: {
+                display: "flex",
+                minHeight: "160px",
+                maxHeight: "300px",
+                boxSizing: "border-box",
                 backgroundColor: "#FFFFFF",
                 borderRadius: "2px",
                 color: "black",
                 fontFamily: "Segoe UI, Arial, sans-serif",
                 fontSize: "14px",
-                height: "160px",
                 padding: "10px 20px",
-                width: "262px",
                 position: "absolute",
                 justifyContent: "center",
                 alignItems: "center",
-                display: "flex",
                 flexFlow: "column",
-                zIndex: "9999"
+                zIndex: "9999",
+                left: "26px",
+                right: "26px"
             },
             titleStyleProps: {
                 color: "#323130",
@@ -488,10 +491,14 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             },
             buttonGroupStyleProps: {
                 display: "flex",
+                width: "auto",
+                height: "auto",
+                boxSizing: "border-box",
                 flexFlow: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: "10px"
+                gap: "10px",
+                marginBottom: "10px"
             },
             confirmButtonStyleProps: {
                 backgroundColor: "rgba(9,72,159,1)",
@@ -1136,6 +1143,46 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             }
         },
         isCustomerVoiceSurveyCompact: undefined
+    },
+    preChatSurveyPaneProps: {
+        controlProps: {
+            id: "oc-lcw-prechatsurveypane-default",
+            dir: "auto",
+            hidePreChatSurveyPane: false,
+            adaptiveCardHostConfig: "{\"fontFamily\":\"Segoe UI, Helvetica Neue, sans-serif\",\"containerStyles\":{\"default\":{\"foregroundColors\":{\"default\":{\"default\":\"#000000\"}},\"backgroundColor\":\"#FFFFFF\"}},\"actions\":{\"actionsOrientation\":\"Vertical\",\"actionAlignment\":\"stretch\"}}",
+            payload: "{\"$schema\":\"http://adaptivecards.io/schemas/adaptive-card.json\",\"type\":\"AdaptiveCard\",\"version\":\"1.1\",\"body\":[{\"type\":\"TextBlock\",\"weight\":\"bolder\",\"text\":\"Please answer below questions.\"},{\"type\":\"Input.Text\",\"id\":\"1e5e4e7a-8f0b-ec11-b6e6-000d3a305d38\",\"label\":\"name pls?\",\"maxLength\":100,\"isRequired\":true,\"errorMessage\":\"Name is required\"},{\"type\":\"Input.Text\",\"id\":\"7f8f5d6d-995e-ec11-8f8f-000d3a31376e\",\"label\":\"multi\\nmulti\\nmulti\",\"style\":\"text\",\"isMultiline\":true,\"maxLength\":250},{\"type\":\"Input.ChoiceSet\",\"id\":\"e4bdf7cb-995e-ec11-8f8f-000d3a31376e\",\"label\":\"options\",\"isMultiSelect\":false,\"value\":\"1\",\"style\":\"compact\",\"choices\":[{\"title\":\"one\",\"value\":\"1\"},{\"title\":\"two\",\"value\":\"2\"},{\"title\":\"three\",\"value\":\"3\"}]},{\"type\":\"Input.Toggle\",\"id\":\"b26011d2-995e-ec11-8f8f-000d3a31376e\",\"title\":\"consent\",\"valueOn\":\"True\",\"valueOff\":\"False\",\"value\":\"false\"},{\"type\":\"TextBlock\",\"isSubtle\":true,\"text\":\"Fields marked with * are mandatory.\",\"wrap\":true}],\"actions\":[{\"type\":\"Action.Submit\",\"title\":\"Submit\",\"data\":{\"Type\":\"InputSubmit\"}}]}",
+            onSubmit: function () {} // Detailed implementation omitted
+        },
+        styleProps: {
+            generalStyleProps: {
+                borderStyle: "solid",
+                borderRadius: "4px",
+                borderWidth: "3px",
+                backgroundColor: "#FFFFFF",
+                borderColor: "#F1F1F1",
+                overflowY: "auto",
+                height: "inherit",
+                width: "inherit"
+            },
+            customButtonStyleProps: {
+                backgroundColor: "rgb(49, 95, 162)",
+                color: "#FFFFFF",
+                fontFamily: "Segoe UI, Arial, sans-serif",
+                fontSize: "15px",
+                height: "48px"
+            },
+            adaptiveCardContainerStyleProps: {
+                border: "1px solid #ECECEC",
+                borderRadius: "4px",
+                margin: "3%"
+            },
+            customTextInputStyleProps: {
+                height: "20px"
+            },
+            customMultilineTextInputStyleProps: {
+                height: "52px"
+            }
+        }
     },
     proactiveChatPaneProps: {
         componentOverrides: {
