@@ -4,7 +4,7 @@ export const defaultChatButtonControlProps: IChatButtonControlProps = {
     id: "lcw-components-chat-button",
     dir: "ltr",
     role: "button",
-    ariaLabel: "live chat button",
+    ariaLabel: "Let's chat We are online",
     unreadMessageCount: "0",
     titleText: "Let's Chat!",
     subtitleText: "We're online.",
