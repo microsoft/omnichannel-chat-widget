@@ -46,4 +46,43 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added exception for authenticated chat when context is passed 
 - Fixed description for new messages notification from screen reader.
 - Added default properties for background and color for  adaptive cards and properties for customization of the same.
-- Added support to attach and download AMR file (audio).
+- Added a fix for auth chat to connect to the same chat after refresh.
+- Fixed the sound notification when the footer is hidden.
+- Replaced proactive chat pane close button with header close button.
+- Adding `localStorage` support for widget
+- Adding `typescript` sample
+- Adding support for customizing anchor tag color in webchat
+- Upgraded chat components in widget to replace proactive chat pane close button with header close button.
+- Fixed refreshing chat in popout mode and upgraded chat components in widget to fix footer icons.
+- Replaced HTMLElement with string in state variables.
+- Updated the version of @microsoft/omnichannel-chat-sdk to 1.1.1-main.2f608b7
+- Fixed resizing the message box when screen resize
+- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.c74643c
+- Uptake chat sdk version to fix image file send failures
+- Raise HistoryMessageReceived event on polling
+- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.cb39af7
+- Added Download Transcript support on PostChat Survey Screen (V1 Parity)
+- Fixed multiple scrollbars in PostChat to display single scroll bar.
+- Fixed chat loading issue, Updating datamasking events
+- Added Customer Voice Form Event loggin for PostChat Survey (V1 Parity)
+- Removed isReconnectEnabled from props
+- Fixed OutOfOffice Chat Button Icon appearance
+- Adding support for customizing widget scroll bar
+- Clearing live chat context for raise error event
+- Renaming `skipChatButtonRendering` to `hideStartChatButton`
+- Refactoring reconnect functionality code
+- Fixing chat widget refresh bug showing reconnect pane
+- Supporting to start new chat if localStorage has stale Active state
+- Fixing end chat to gracefully complete if auth token has expired
+- Refactoring input validation pane and replacing keyDown event with keyUp
+- Fixed download and email transcript after post chat survey is sent / rendered
+- Adding ESC shortcut for confirmation dismiss, Disable sendBox for linked survey
+- Fixed styles for input validation pane
+- Uptake `chat-components` 0.1.0-main.a7ac5de
+- Added Error screen in case start chat fails
+- Added Loading Screen before auth checks on refresh
+- Uptake component for calling a11y fix
+- Added more customization to prechat survey pane
+- Uptake component for fixes for prechat survey pane, confirmation pane and calling container
+- Fixed aria label for chat button, double announcing for audio notification button, removed disableDimLayer from props
+- Added support to attach and download AMR audio files.

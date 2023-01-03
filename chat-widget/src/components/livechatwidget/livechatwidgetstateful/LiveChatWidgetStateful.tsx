@@ -3,8 +3,7 @@ import { BroadcastService, decodeComponentString, BroadcastServiceInitialize } f
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
-import { getReconnectIdForAuthenticatedChat, handleUnauthenticatedReconnectChat, startUnauthenticatedReconnectChat } from "../common/reconnectChatHelper";
-import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
+import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -61,7 +60,11 @@ import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
-import { Constants } from "../../../common/Constants";
+import { registerBroadcastServiceForLocalStorage } from "../../../common/storage/default/defaultCacheManager";
+import { defaultClientDataStoreProvider } from "../../../common/storage/default/defaultClientDataStoreProvider";
+import { IScrollBarProps } from "../interfaces/IScrollBarProps";
+import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
+import { E2VVOptions } from "../../../common/Constants";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -80,96 +83,114 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles)
     };
 
+    //Scrollbar styles
+    const scrollbarProps: IScrollBarProps = Object.assign({}, defaultScrollBarProps, props?.scrollBarProps);
+
+    const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
+    BroadcastServiceInitialize(broadcastServiceChannelName);
     TelemetryTimers.LcwLoadToChatButtonTimer = createTimer();
 
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
     const currentMessageCountRef = useRef<number>(0);
     let widgetStateEventName = "";
-    const initiateEndChatOnBrowserUnload = () => {
-        TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.BrowserUnloadEventStarted,
-            Description: "Browser unload event received."
-        });
-        endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
-        // Clean local storage
-        DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let optionalParams: any;
+    let activeCachedChatExist = false;
 
-        //Dispose calling instance
-        if (voiceVideoCallingSDK) {
-            voiceVideoCallingSDK?.close();
+    const setOptionalParams = () => {
+        if (!isUndefinedOrEmpty(state.appStates?.reconnectId)) {
+            activeCachedChatExist = true;
+            optionalParams = { reconnectId: state.appStates.reconnectId };
+        } else if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext)) {
+            activeCachedChatExist = true;
+            optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
+        } else {
+            activeCachedChatExist = false;
+            optionalParams = undefined;
         }
-        //Message for clearing window[popouTab]
-        BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const startChat = async (props: any, localState?: any) => {
+        let isChatValid = false;
+
+        //Start a chat from cache/reconnectid
+        if (activeCachedChatExist === true) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+            if (localState) {
+                localState.appStates.conversationState = ConversationState.Loading;
+            }
+
+            //Check if conversation state is not in wrapup or closed state
+            isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId, dispatch);
+            if (isChatValid === true) {
+                await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
+                return;
+            }
+        }
+
+        if (isChatValid === false) {
+            if (localState) {
+                await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
+                return;
+            } else {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+            }
+        }
     };
 
     useEffect(() => {
-        const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
+        // Add default localStorage support for widget
+        if (props.contextDataStore === undefined) {
+            registerBroadcastServiceForLocalStorage(chatSDK?.omnichannelConfig?.orgId,
+                chatSDK?.omnichannelConfig?.widgetId,
+                props?.controlProps?.widgetInstanceId ?? "");
 
-        BroadcastServiceInitialize(broadcastServiceChannelName);
+            DataStoreManager.clientDataStore = defaultClientDataStoreProvider();
+        } else {
+            DataStoreManager.clientDataStore = props.contextDataStore;
+        }
+
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
-        DataStoreManager.clientDataStore = props.contextDataStore ?? undefined;
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
-        dispatch({ type: LiveChatWidgetActionType.SET_SKIP_CHAT_BUTTON_RENDERING, payload: props.controlProps?.skipChatButtonRendering || false });
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_BUTTON_DISPLAY, payload: props.controlProps?.hideStartChatButton || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
         if (props.controlProps?.widgetInstanceId && !isNullOrEmptyString(props.controlProps?.widgetInstanceId)) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_INSTANCE_ID, payload: props.controlProps?.widgetInstanceId });
         }
-        initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
-            .then((sdkCreated: boolean) => {
-                sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
-            });
+
+        if (props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_callingoptions !== E2VVOptions.NoCalling) {
+            initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
+                .then((sdkCreated: boolean) => {
+                    sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
+                });
+        }
 
         // Initialize global dir
         const globalDir = props.controlProps?.dir ?? getLocaleDirection(props.chatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         dispatch({ type: LiveChatWidgetActionType.SET_GLOBAL_DIR, payload: globalDir });
 
-        if (!props.controlProps?.skipChatButtonRendering && props.reconnectChatPaneProps?.reconnectId) {
-            startUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, initStartChat);
-            return;
-        }
+        setOptionalParams();
 
-        // Check if auth settings enabled, do not connect to existing chat from cache during refresh/re-load
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const isAuthenticationSettingsEnabled = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
-        if (isAuthenticationSettingsEnabled === false) {
-            if (!isUndefinedOrEmpty(state.domainStates?.liveChatContext) && state.appStates.conversationState === ConversationState.Active) {
-                const optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
-                initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
-                return;
-            }
+        // Unauth chat
+        if (state.appStates.hideStartChatButton === false) {
+            startChat(props);
         }
-
-        // All other case should show start chat button, skipChatButtonRendering will take care of it own
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
     }, []);
 
     // useEffect for when skip chat button rendering
     useEffect(() => {
-        if (state.appStates.skipChatButtonRendering) {
+        if (state.appStates.hideStartChatButton === true) {
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.ChatInitiated
             });
-            if (props.reconnectChatPaneProps?.reconnectId && !state.appStates.reconnectId) {
-                handleUnauthenticatedReconnectChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, props.reconnectChatPaneProps?.isReconnectEnabled, props.reconnectChatPaneProps?.reconnectId, initStartChat, props.reconnectChatPaneProps?.redirectInSameWindow);
-            } else {
-                getReconnectIdForAuthenticatedChat(props, chatSDK).then((authReconnectId) => {
-                    if (authReconnectId && !state.appStates.reconnectId) {
-                        dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: authReconnectId });
-                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
-                    } else {
-                        const chatStartedSkippingChatButtonRendering: ICustomEvent = {
-                            eventName: BroadcastEvent.StartChatSkippingChatButtonRendering,
-                        };
-                        BroadcastService.postMessage(chatStartedSkippingChatButtonRendering);
-                        setPreChatAndInitiateChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter);
-                    }
-                });
-            }
+            //Pass the state to avoid getting stale state
+            startChat(props, state);
         }
-    }, [state.appStates.skipChatButtonRendering]);
+    }, [state.appStates.hideStartChatButton]);
 
-    // useEffect for when skip chat button rendering
+    // useEffect for custom context
     useEffect(() => {
         // Add the custom context on receiving the SetCustomContext event
         BroadcastService.getMessageByEventName(BroadcastEvent.SetCustomContext).subscribe((msg: ICustomEvent) => {
@@ -242,7 +263,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
-            if (state.appStates.skipChatButtonRendering !== true) {
+            if (state.appStates.hideStartChatButton === false) {
                 // This is to ensure to get latest state from cache in multitab
                 const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
                     chatSDK?.omnichannelConfig?.widgetId,
@@ -273,6 +294,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             chatSDK?.omnichannelConfig?.orgId,
             chatSDK?.omnichannelConfig?.widgetId,
             props.controlProps?.widgetInstanceId ?? "");
+
         BroadcastService.getMessageByEventName(endChatEventName).subscribe(async () => {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
             return;
@@ -286,6 +308,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
+        });
+
+        // Reset state variables
+        BroadcastService.getMessageByEventName(BroadcastEvent.RaiseErrorEvent).subscribe(() => {
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONFIG, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
         });
 
         return () => {
@@ -355,9 +385,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         // Only activate these windows events when conversation state is active and chat widget is in popout mode
         // Ghost chat scenarios
+        /* COMMENTING THIS CODE FOR PARITY WITH OLD LCW
         if (state.appStates.conversationState === ConversationState.Active &&
-            props.controlProps?.skipChatButtonRendering === true) {
+            props.controlProps?.hideStartChatButton === true) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            
             window.onbeforeunload = function () {
                 const prompt = Constants.BrowserUnloadConfirmationMessage;
                 return prompt;
@@ -367,11 +399,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             window.onunload = function () {
                 initiateEndChatOnBrowserUnload();
             };
-        }
+        }*/
 
         widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId,
             props?.chatSDK?.omnichannelConfig?.widgetId,
             props?.controlProps?.widgetInstanceId ?? "");
+
         const chatWidgetStateChangeEvent: ICustomEvent = {
             eventName: widgetStateEventName,
             payload: {
@@ -380,6 +413,23 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         };
         BroadcastService.postMessage(chatWidgetStateChangeEvent);
     }, [state]);
+
+    const initiateEndChatOnBrowserUnload = () => {
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.BrowserUnloadEventStarted,
+            Description: "Browser unload event received."
+        });
+        endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
+        // Clean local storage
+        DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
+
+        //Dispose calling instance
+        if (voiceVideoCallingSDK) {
+            voiceVideoCallingSDK?.close();
+        }
+        //Message for clearing window[popouTab]
+        BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
+    };
 
     const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
@@ -393,44 +443,64 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const confirmationPaneProps = initConfirmationPropsComposer(props);
 
     return (
-        <Composer
-            {...webChatProps}
-            styleOptions={webChatStyles}
-            directLine={props.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine}>
-            <Stack
-                id={widgetElementId}
-                styles={generalStyles}
-                className={props.styleProps?.className}>
+        <>
+            <style>{`
+            ::-webkit-scrollbar {
+                width: ${scrollbarProps.width};
+            }
+            
+            ::-webkit-scrollbar-track {
+                background: ${scrollbarProps.trackBackgroundColor};
+            }
+            
+            ::-webkit-scrollbar-thumb {
+                background: ${scrollbarProps.thumbBackgroundColor};
+                border-radius: ${scrollbarProps.thumbBorderRadius};
+            }
+            
+            ::-webkit-scrollbar-thumb:hover {
+                background: ${scrollbarProps.thumbHoverColor};
+            } 
+            `}</style>
+            <Composer
+                {...webChatProps}
+                styleOptions={webChatStyles}
+                directLine={props.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine}>
+                <Stack
+                    id={widgetElementId}
+                    styles={generalStyles}
+                    className={props.styleProps?.className}>
 
-                {!props.controlProps?.hideChatButton && !props.controlProps?.skipChatButtonRendering && shouldShowChatButton(state) && (decodeComponentString(props.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={props.chatButtonProps} outOfOfficeButtonProps={props.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
+                    {!props.controlProps?.hideChatButton && !props.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(props.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={props.chatButtonProps} outOfOfficeButtonProps={props.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
 
-                {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
+                    {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
-                {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} />)}
+                    {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} />)}
 
-                {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful {...props.loadingPaneProps} />)}
+                    {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful {...props.loadingPaneProps} />)}
 
-                {!props.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(props.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...props.outOfOfficeHoursPaneProps} />)}
+                    {!props.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(props.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...props.outOfOfficeHoursPaneProps} />)}
 
-                {!props.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(props.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful reconnectChatProps={props.reconnectChatPaneProps} initStartChat={initStartChatRelay} />)}
+                    {!props.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(props.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful reconnectChatProps={props.reconnectChatPaneProps} initStartChat={initStartChatRelay} />)}
 
-                {!props.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful surveyProps={props.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />)}
+                    {!props.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful surveyProps={props.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />)}
 
-                {!props.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...props.callingContainerProps} />}
+                    {!props.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...props.callingContainerProps} />}
 
-                {!props.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(props.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...props.webChatContainerProps} />)}
+                    {!props.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(props.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...props.webChatContainerProps} />)}
 
-                {!props.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(props.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
+                    {!props.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(props.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 
-                {!props.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(props.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...props.postChatLoadingPaneProps} />)}
+                    {!props.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(props.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...props.postChatLoadingPaneProps} />)}
 
-                {shouldShowPostChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...props.postChatSurveyPaneProps} {...props.chatSDK} />)}
+                    {shouldShowPostChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...props.postChatSurveyPaneProps} {...props.chatSDK} />)}
 
-                {createFooter(props, state)}
+                    {createFooter(props, state)}
 
-                {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
-            </Stack>
-        </Composer>
+                    {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
+                </Stack>
+            </Composer>
+        </>
     );
 };
 

@@ -58,6 +58,7 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     }, []);
 
     //Adaptive Card Initilializations
+    AdaptiveCards.GlobalSettings.setTabIndexAtCardRoot = false;
     const adaptiveCard = new AdaptiveCards.AdaptiveCard();
     adaptiveCard.hostConfig = new AdaptiveCards.HostConfig(adaptiveCardHostConfig);
     adaptiveCard.parse(adpativeCardPayload);
@@ -70,18 +71,30 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     return (
         <>
             <style>{`
+            .ac-textBlock {
+                font-size: ${props.styleProps?.customTextStyleProps?.fontSize} !important;
+                height: ${props.styleProps?.customTextStyleProps?.height};
+                padding-top: ${props.styleProps?.customTextStyleProps?.paddingTop};
+            }
+            .ac-textRun {
+                font-size: ${props.styleProps?.customTextStyleProps?.fontSize} !important;
+                padding-top: ${props.styleProps?.customTextStyleProps?.paddingTop};
+            }
             .ac-input {
                 margin-bottom: 6px;
             }
             .ac-input.ac-textInput {
-                height: 20px;
+                font-size: ${props.styleProps?.customTextInputStyleProps?.fontSize};
+                height: ${props.styleProps?.customTextInputStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customTextInputStyleProps?.height};
                 padding: 8px;
             }
             .ac-input.ac-textInput.ac-multiline {
-                height: 52px;
+                font-size: ${props.styleProps?.customMultilineTextInputStyleProps?.fontSize};
+                height: ${props.styleProps?.customMultilineTextInputStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customMultilineTextInputStyleProps?.height};
                 resize: none;
             }
             .ac-input.ac-multichoiceInput {
+                font-size: ${props.styleProps?.customMultichoiceInputStyleProps?.fontSize};
                 padding: 3px;
                 padding-top: 7px;
                 padding-bottom: 7px;
@@ -89,11 +102,11 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
             .ac-pushButton { 
                 border: 1px solid #00000000;
                 margin: 2px;
-                height: 48px;
+                height: ${props.styleProps?.customButtonStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.height};
                 border-radius: 5px;
                 cursor: pointer;
                 font-weight: bold;
-                font-size: 15px;
+                font-size: ${props.styleProps?.customButtonStyleProps?.fontSize ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.fontSize};
                 font-family: ${props.styleProps?.customButtonStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.fontFamily};
                 color: ${props.styleProps?.customButtonStyleProps?.color ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.color};
                 background-color: ${props.styleProps?.customButtonStyleProps?.backgroundColor ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.backgroundColor}; 

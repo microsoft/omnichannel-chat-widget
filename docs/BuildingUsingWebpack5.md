@@ -288,3 +288,5 @@ ReactDOM.render(
     document.getElementById("root")
 );
 ```
+
+#### 15. [Sample app](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample)

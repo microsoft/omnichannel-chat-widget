@@ -47,6 +47,7 @@ const FileAttachmentIconMap: { [unit: string]: unknown } = {
     "vsdx": VisioIcon,
     "wav": AudioIcon,
     "webm": VideoIcon,
+    "webp": ImageIcon,
     "wma": AudioIcon,
     "wmv": VideoIcon,
     "xls": ExcelIcon,

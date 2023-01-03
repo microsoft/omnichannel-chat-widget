@@ -4,7 +4,6 @@ import React, { Dispatch, useEffect } from "react";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IPostChatSurveyPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/postchatsurveypane/interfaces/IPostChatSurveyPaneControlProps";
-import { IPostChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/postchatsurveypane/interfaces/IPostChatSurveyPaneProps";
 import { IPostChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/postchatsurveypane/interfaces/IPostChatSurveyPaneStyleProps";
 import { IStyle } from "@fluentui/react";
 import { PostChatSurveyPane } from "@microsoft/omnichannel-chat-components";
@@ -12,15 +11,19 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPostChatSurveyPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralPostChatSurveyPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
+import { IPostChatSurveyPaneStatefulProps } from "./interfaces/IPostChatSurveyPaneStatefulProps";
+import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
 
-export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneProps) => {
+export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulProps) => {
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    // ToDo : TASK 2628392 Fix PostChat iframe reloading on Minimize
+    const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPostChatSurveyPaneStyleProps, props.styleProps?.generalStyleProps,
         {display: state.appStates.isMinimized ? "none" : ""});
     let surveyInviteLink = "";
     if (state.domainStates.postChatContext.surveyInviteLink) {
-        surveyInviteLink = state.domainStates.postChatContext.surveyInviteLink + "&lang=" + (state.domainStates.postChatContext.formsProLocale ?? "en");
+        surveyInviteLink = state.domainStates.postChatContext.surveyInviteLink + "&embed=" + (postChatSurveyMode === PostChatSurveyMode.Embed).toString() + 
+        "&compact=" + (props.isCustomerVoiceSurveyCompact ?? true).toString() + "&lang=" + (state.domainStates.postChatContext.formsProLocale ?? "en") + "&showmultilingual=false";
     }
 
     const styleProps: IPostChatSurveyPaneStyleProps = {
@@ -41,6 +44,21 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneProps) => {
             firstElement[0].focus();
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PostChatSurveyLoaded });
+
+        //Customer Voice Telemetry Events
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        window.addEventListener("message", (message: any) => {
+            const {data} = message;
+
+            if (!data) return;
+            if (data === CustomerVoiceEvents.ResponsePageLoaded) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceResponsePageLoaded });
+            } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted });
+            } else if (data === CustomerVoiceEvents.FormResponseError) {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.CustomerVoiceFormResponseError });
+            }
+        });
     }, []);
     
     return (

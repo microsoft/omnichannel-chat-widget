@@ -20,4 +20,5 @@ export interface ICommandButtonProps {
     className?: string;
     disabled?: boolean;
     customEvent?: ICustomEvent;
+    hideButtonTitle?: boolean;
 }

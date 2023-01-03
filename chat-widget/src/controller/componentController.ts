@@ -4,7 +4,7 @@ import { ILiveChatWidgetContext } from "../contexts/common/ILiveChatWidgetContex
 export const shouldShowChatButton = (state: ILiveChatWidgetContext) => {
     return (state.appStates.isMinimized ||
         (state.appStates.conversationState === ConversationState.Closed)) 
-        && state.appStates.skipChatButtonRendering == false; // Do not show chat button in case of popout
+        && state.appStates.hideStartChatButton === false; // Do not show chat button in case of popout
 };
 
 export const shouldShowProactiveChatPane = (state: ILiveChatWidgetContext) => {
@@ -21,7 +21,8 @@ export const shouldShowHeader = (state: ILiveChatWidgetContext) => {
 export const shouldShowFooter = (state: ILiveChatWidgetContext) => {
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState === ConversationState.Active ||
-            state.appStates.conversationState === ConversationState.InActive);
+            state.appStates.conversationState === ConversationState.InActive ||
+            state.appStates.conversationState === ConversationState.Postchat);
 };
 
 export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => {

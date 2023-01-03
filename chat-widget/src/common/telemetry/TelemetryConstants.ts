@@ -34,9 +34,9 @@ export enum BroadcastEvent {
     InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",
     NewMessageSent = "NewMessageSent",
     NewMessageReceived = "NewMessageReceived",
+    HistoryMessageReceived = "HistoryMessageReceived",
     RedirectPageRequest = "RedirectPageRequest",
     StartChat = "StartChat",
-    StartChatSkippingChatButtonRendering = "StartChatSkippingChatButtonRendering",
     StartUnauthenticatedReconnectChat = "StartUnauthenticatedReconnectChat",
     InitiateEndChat = "InitiateEndChat",
     SetCustomContext = "SetCustomContext",
@@ -46,6 +46,7 @@ export enum BroadcastEvent {
     CloseChat = "CloseChat",
     InitiateEndChatOnBrowserUnload = "InitiateEndChatOnBrowserUnload",
     ClosePopoutWindow = "ClosePopoutWindow",
+    RaiseErrorEvent = "RaiseErrorEvent"
 }
 
 // Events being logged
@@ -58,8 +59,8 @@ export enum TelemetryEvent {
     CallDisconnected = "CallDisconnected",
     CallDisconnectedException = "CallDisconnectedException",
     IncomingCallEnded = "incomingCallEnded", //case sensitive
-    VoiceVideoInitialize = "VoiceVideoInitialize",
-    VoiceVideoInitializeException = "VoiceVideoInitializeException",
+    VoiceVideoSdkInitialize = "VoiceVideoSdkInitialize",
+    VoiceVideoSdkInitializeException = "VoiceVideoSdkInitializeException",
     VoiceVideoLoading = "VoiceVideoLoading",
     VoiceVideoNotLoaded = "VoiceVideoNotLoaded",
     VoiceVideoLoadingException = "VoiceVideoLoadingException",
@@ -85,10 +86,13 @@ export enum TelemetryEvent {
     PostChatContextCallSucceed = "PostChatContextCallSucceed",
     PostChatContextCallFailed = "PostChatContextCallFailed",
     ParseAdaptiveCardFailed = "ParseAdaptiveCardFailed",
+    ClientDataStoreProviderFailed = "ClientDataStoreProviderFailed",
+    InMemoryDataStoreFailed = "InMemoryDataStoreFailed",
 
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
+    WidgetLoadStarted = "WidgetLoadStarted",
     WidgetLoadComplete = "WidgetLoadComplete",
     WidgetLoadFailed = "WidgetLoadFailed",
     StartChatMethodException = "StartChatMethodException",
@@ -129,7 +133,11 @@ export enum TelemetryEvent {
     GetConversationDetailsException = "GetConversationDetailsException",
     BrowserUnloadEventStarted = "BrowserUnloadEventStarted",
     GetAuthTokenCalled = "GetAuthTokenCalled",
+    GetAuthTokenFailed = "GetAuthTokenFailed",
     ReceivedNullOrEmptyToken = "ReceivedNullOrEmptyToken",
+    CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
+    CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",
+    CustomerVoiceFormResponseError = "CustomerVoiceFormResponseError",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
@@ -138,6 +146,7 @@ export enum TelemetryEvent {
     QueuePositionMessageRecieved = "QueuePositionMessageRecieved",
     AverageWaitTimeMessageRecieved = "AverageWaitTimeMessageRecieved",
     DataMaskingRuleApplied = "DataMaskingRuleApplied",
+    DataMaskingRuleApplyFailed = "DataMaskingRuleApplyFailed",
     IC3ClientEvent = "IC3ClientEvent",
     ConversationEndedThreadEventReceived = "ConversationEndedThreadEventReceived",
     InvalidConfiguration = "InvalidConfiguration",
@@ -159,7 +168,11 @@ export enum TelemetryEvent {
 
     MessageSent = "MessageSent",
     MessageReceived = "MessageReceived",
-    CustomContextReceived = "CustomContextReceived"
+    CustomContextReceived = "CustomContextReceived",
+
+    // Internet connection
+    NetworkDisconnected = "NetworkDisconnected",
+    NetworkReconnected = "NetworkReconnected"
 }
 
 export interface TelemetryInput {
@@ -173,6 +186,10 @@ export class TelemetryConstants {
     private static map(eventTypeOrScenarioType: TelemetryEvent): ScenarioType {
         switch (eventTypeOrScenarioType) {
             case TelemetryEvent.ParseAdaptiveCardFailed:
+            case TelemetryEvent.ReceivedNullOrEmptyToken:
+            case TelemetryEvent.GetAuthTokenCalled:
+            case TelemetryEvent.SuppressBotMagicCodeSucceeded:
+            case TelemetryEvent.SuppressBotMagicCodeFailed:
                 return ScenarioType.CONFIG_VALIDATION;
 
             case TelemetryEvent.WebChatLoaded:
@@ -213,6 +230,13 @@ export class TelemetryConstants {
             case TelemetryEvent.MessageReceived:
             case TelemetryEvent.CustomContextReceived:
             case TelemetryEvent.BrowserUnloadEventStarted:
+            case TelemetryEvent.NetworkDisconnected:
+            case TelemetryEvent.NetworkReconnected:
+            case TelemetryEvent.AudioToggleButtonClicked:
+            case TelemetryEvent.EmailTranscriptCancelButtonClicked:
+            case TelemetryEvent.CustomerVoiceResponsePageLoaded:
+            case TelemetryEvent.CustomerVoiceFormResponseSubmitted:
+            case TelemetryEvent.CustomerVoiceFormResponseError:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
@@ -229,6 +253,7 @@ export class TelemetryConstants {
             case TelemetryEvent.EndChatSDKCallFailed:
             case TelemetryEvent.PostChatContextCallFailed:
             case TelemetryEvent.PostChatContextCallSucceed:
+            case TelemetryEvent.GetConversationDetailsException:
                 return ScenarioType.SDK;
 
             case TelemetryEvent.VideoCallAcceptButtonClick:
@@ -240,8 +265,8 @@ export class TelemetryConstants {
             case TelemetryEvent.CallDisconnected:
             case TelemetryEvent.CallDisconnectedException:
             case TelemetryEvent.IncomingCallEnded:
-            case TelemetryEvent.VoiceVideoInitialize:
-            case TelemetryEvent.VoiceVideoInitializeException:
+            case TelemetryEvent.VoiceVideoSdkInitialize:
+            case TelemetryEvent.VoiceVideoSdkInitializeException:
             case TelemetryEvent.VoiceVideoLoading:
             case TelemetryEvent.VoiceVideoNotLoaded:
             case TelemetryEvent.VoiceVideoLoadingException:

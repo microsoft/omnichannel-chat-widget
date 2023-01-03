@@ -10,11 +10,35 @@ function AudioNotificationButton(props: ICommandButtonProps) {
 
     const [muted, setMuted] = useState<boolean | undefined>(props.isAudioMuted);
 
+    let iconStyles = {};
+    if (props.type === "icon") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        iconStyles = { ...((props?.styles as any).icon as any) };
+    }
+
     const iconButtonStyles: IButtonStyles = {
-        root: props?.styles,
-        rootHovered: props?.hoverStyles,
-        rootFocused: props?.focusStyles,
-        rootPressed: props?.hoverStyles
+        icon: iconStyles,
+        root: {
+            selectors: {
+                ":hover .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...((props?.hoverStyles as any).icon as any)
+                },
+                ":active .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...((props?.hoverStyles as any).icon as any)
+                },
+                ":focus .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...((props?.focusStyles as any).icon as any)
+                }
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ...(props?.styles as any)
+        },
+        rootHovered: props.hoverStyles,
+        rootFocused: props.focusStyles,
+        rootPressed: props.hoverStyles
     };
 
     //imageIconProps > iconName

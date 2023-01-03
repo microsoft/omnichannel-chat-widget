@@ -2,10 +2,19 @@ import { ConversationState } from "./ConversationState";
 import { ILiveChatWidgetContext } from "./ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces/ILiveChatWidgetProps";
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
+import { getWidgetCacheId, isNullOrUndefined } from "../../common/utils";
+import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
-    if (props?.liveChatContextFromCache) {
-        return props?.liveChatContextFromCache;
+
+    const widgetCacheId = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId,
+        props?.chatSDK?.omnichannelConfig?.widgetId,
+        props?.controlProps?.widgetInstanceId ?? "");
+
+    const initialState = defaultClientDataStoreProvider().getData(widgetCacheId, "localStorage");
+
+    if (!isNullOrUndefined(initialState)) {
+        return JSON.parse(initialState);
     }
 
     const LiveChatWidgetContextInitialState: ILiveChatWidgetContext = {
@@ -27,12 +36,13 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         appStates: {
             conversationState: ConversationState.Closed,
             isMinimized: false,
-            previousElementOnFocusBeforeModalOpen: null,
+            previousElementIdOnFocusBeforeModalOpen: null,
+            isStartChatFailing: false,
             outsideOperatingHours: false,
             preChatResponseEmail: "",
             isAudioMuted: null,
             newMessage: false,
-            skipChatButtonRendering: false,
+            hideStartChatButton: false,
             reconnectId: undefined,
             proactiveChatStates: {
                 proactiveChatBodyTitle: "",

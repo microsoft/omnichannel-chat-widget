@@ -100,7 +100,9 @@ const render = async () => {
 render();
 ```
 
-A sample widget can be found in this repo [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/sample). To build it, do ```yarn build-sample``` or ```yarn build-sample:dev``` from project root.
+A javascript sample widget can be found in this repo [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/javascript-sample). To build it, do ```yarn build-sample``` or ```yarn build-sample:dev``` from project root. 
+
+A typescript sample widget can be found [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample)
 
 ## Components
 
@@ -132,6 +134,7 @@ These are components that are included in the ```@microsoft/omnichannel-chat-com
 | ----- | -------- | ----- |
 | WebChatContainer | The default wrapper around BotFramework's [WebChat](https://github.com/microsoft/BotFramework-WebChat), which is the message container we are using | [IWebChatContainerStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps.ts) |
 | LiveChatWidget | The default widget that stitches the UI components with Chat SDK | [ILiveChatWidgetProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetProps.ts) |
+| PostChatLoadingPane | The default loading pane used after the chat is ended and before the post chat pane loads completely | [ILoadingPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/loadingpane/interfaces/ILoadingPaneProps.ts) |
 
 Some of the interfaces listed in the Stateless table have Stateful counterparts defined in the ```@microsoft/omnichannel-chat-widget``` package. For example, [IConfirmationPaneStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps.ts) extends [IConfirmationPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneProps.ts) with additional attributes that only makes sense in the stateful context.
 

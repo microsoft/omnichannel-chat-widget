@@ -39,14 +39,21 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        HTML element: The element that the control will return to after a popup/modal is closed
+        string or null: The element id that the control will return to after a popup/modal is closed
     */
-    SET_PREVIOUS_FOCUSED_ELEMENT,
+    SET_PREVIOUS_FOCUSED_ELEMENT_ID,
 
     /*
         Parameters:
-        - true: When the chat starts successfully
-        - false: When the chat ends or crashes unexpectedly
+        - true: When chat is failing to start
+        - false: When chat is functioning normally
+    */
+    SET_START_CHAT_FAILING,
+
+    /*
+        Parameters:
+        - true: When chat is outside operating hours
+        - false: When chat is not outside operatin hours
     */
     SET_OUTSIDE_OPERATING_HOURS,
 
@@ -144,9 +151,9 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        true/false: Decides whether to skip the chat button rendering
+        true/false: Decides whether to show the start chat button
     */
-    SET_SKIP_CHAT_BUTTON_RENDERING,
+    SET_START_CHAT_BUTTON_DISPLAY,
 
     /*
         Parameters:
@@ -212,4 +219,10 @@ export enum LiveChatWidgetActionType {
         any: Set widget instance id
     */
     SET_WIDGET_INSTANCE_ID,
+
+    /*
+        Parameters:
+        any: Set live chat config
+    */
+    SET_LIVE_CHAT_CONFIG,
 }

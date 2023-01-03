@@ -3,7 +3,7 @@ import { IButtonStyles, IStackStyles, Label, Stack } from "@fluentui/react";
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType } from "../../common/Constants";
+import { ElementType, KeyCodes } from "../../common/Constants";
 import { IConfirmationPaneProps } from "./interfaces/IConfirmationPaneProps";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";
@@ -47,6 +47,13 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
         }
     }, []);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleEscKeyDown = useCallback((e: any) => {
+        if (e.code === KeyCodes.ESCAPE) {
+            handleCancelClick();
+        }
+    }, []);
+
     const containerStyles: IStackStyles = {
         root: Object.assign({}, defaultConfirmationPaneGeneralStyles, props.styleProps?.generalStyleProps)
     };
@@ -82,11 +89,12 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
             {!props.controlProps?.hideConfirmationPane &&
                 <Stack
                     id={elementId}
+                    onKeyDown={handleEscKeyDown}
                     tabIndex={-1}
                     dir={props.controlProps?.dir || defaultConfirmationPaneControlProps.dir}
                     styles={containerStyles}
                     role="dialog"
-                    aria-labelledby={elementId + "-title"} 
+                    aria-labelledby={elementId + "-title"}
                     aria-describedby={elementId + "-subtitle"}>
 
                     {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.title) ||

@@ -324,15 +324,26 @@ const liveChatWidgetCustom1Props: ILiveChatWidgetProps = {
         styleProps: {
             generalStyleProps: {
                 borderRadius: "0px",
+                boxSizing: undefined,
                 fontFamily: "Segoe UI, Arial, sans-serif",
                 fontSize: "14px",
                 height: "100%",
+                left: undefined,
+                maxHeight: undefined,
+                minHeight: undefined,
                 padding: "10px 20px",
+                right: undefined,
                 width: "100%"
             },
             titleStyleProps: {
                 fontFamily: "Helvetica",
                 marginBottom: "15px"
+            },
+            buttonGroupStyleProps: {
+                boxSizing: undefined,
+                height: undefined,
+                marginBottom: undefined,
+                width: undefined
             },
             confirmButtonStyleProps: {
                 fontFamily: "Helvetica",
@@ -759,7 +770,7 @@ const liveChatWidgetPopoutStyleProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     controlProps: {
-        skipChatButtonRendering: true,
+        hideStartChatButton: true,
         hideHeader: true
     },
     styleProps: {
@@ -787,6 +798,9 @@ const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
     chatConfig: {
         LiveChatConfigAuthSettings: {
             msdyn_javascriptclientfunction: "testAuth"
+        },
+        LiveWSAndLiveChatEngJoin: {
+            msdyn_enablechatreconnect: "true"
         }
     },
     styleProps: {
@@ -796,9 +810,6 @@ const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
             top: "20px",
             left: "20px"
         }
-    },
-    reconnectChatPaneProps: {
-        isReconnectEnabled: true
     }
 };
 

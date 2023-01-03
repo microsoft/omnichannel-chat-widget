@@ -1,5 +1,5 @@
-import { IAttachmentProps } from "./IAttachmentProps";
 import React from "react";
+import { IAttachmentProps } from "./IAttachmentProps";
 
 export interface IRenderingMiddlewareProps {
     timestampDir?: "ltr" | "rtl" | "auto";
@@ -13,6 +13,8 @@ export interface IRenderingMiddlewareProps {
 
     userMessageStyleProps?: React.CSSProperties;
     systemMessageStyleProps?: React.CSSProperties;
+    userMessageBoxStyles?: React.CSSProperties;
+    systemMessageBoxStyles?: React.CSSProperties;
     typingIndicatorStyleProps?: React.CSSProperties;
     typingIndicatorBubbleStyleProps?: React.CSSProperties;
     typingIndicatorMessageStyleProps?: React.CSSProperties;
@@ -30,4 +32,5 @@ export interface IRenderingMiddlewareProps {
     attachmentDownloadIconStyles?: React.CSSProperties;
     attachmentContentStyles?: React.CSSProperties;
     attachmentSizeStyles?: React.CSSProperties;
+    receivedMessageAnchorStyles?: React.CSSProperties;
 }

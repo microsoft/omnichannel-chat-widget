@@ -9,10 +9,34 @@ function CommandButton(props: ICommandButtonProps) {
     //imageIconProps > iconName
     const iconProp: IIconProps = props.imageIconProps ?
         { imageProps: props.imageIconProps } :
-        { iconName: props.iconName, styles: { root: props.styles } };
+        { iconName: props.iconName };
+
+    let iconStyles = {};
+    if (props.type === "icon") {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        iconStyles = { ...((props?.styles as any)?.icon as any) };
+    }
 
     const buttonStyles: IButtonStyles = {
-        root: props.styles,
+        icon: { ...iconStyles },
+        root: {
+            selectors: {
+                ":hover .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...((props?.hoverStyles as any)?.icon as any)
+                },
+                ":active .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...((props?.hoverStyles as any)?.icon as any)
+                },
+                ":focus .ms-Button-icon": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...((props?.focusStyles as any)?.icon as any)
+                }
+            },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ...(props?.styles as any)
+        },
         rootHovered: props.hoverStyles,
         rootFocused: props.focusStyles,
         rootPressed: props.hoverStyles
@@ -49,7 +73,7 @@ function CommandButton(props: ICommandButtonProps) {
                 <IconButton
                     id={props.id}
                     iconProps={iconProp}
-                    title={props.ariaLabel}
+                    title={props.hideButtonTitle ? undefined : props.ariaLabel}
                     ariaLabel={props.ariaLabel}
                     disabled={props.disabled}
                     styles={buttonStyles}

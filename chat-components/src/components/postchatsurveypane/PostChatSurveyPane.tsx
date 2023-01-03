@@ -18,7 +18,8 @@ function PostChatSurveyPane(props: IPostChatSurveyPaneProps) {
     const iframeStyles: React.CSSProperties = {
         height: "100vh",
         width: "100%",
-        display: "block"
+        display: "block",
+        maxHeight: "100%"
     };
 
     return (

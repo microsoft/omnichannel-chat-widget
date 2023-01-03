@@ -148,24 +148,28 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 audioCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "#FFFFFF",
                     backgroundColor: "#008000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
-                    fontSize: 18
+                    icon: {
+                        fontSize: 18,
+                        color: "#FFFFFF"
+                    }
                 },
                 audioCallButtonHoverStyleProps: {
                     filter: "brightness(0.8)"
                 },
                 videoCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "#FFFFFF",
                     backgroundColor: "#008000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
-                    fontSize: 18
+                    icon: {
+                        fontSize: 18,
+                        color: "#FFFFFF"
+                    }
                 },
                 videoCallButtonHoverStyleProps: {
                     filter: "brightness(0.8)"
@@ -176,13 +180,15 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 },
                 declineCallButtonStyleProps: {
                     borderRadius: "50%",
-                    color: "#FFFFFF",
                     backgroundColor: "#DC0000",
                     lineHeight: "40px",
                     height: "40px",
                     width: "40px",
-                    fontSize: 18,
-                    marginLeft: "5px"
+                    marginLeft: "5px",
+                    icon: {
+                        fontSize: 18,
+                        color: "#FFFFFF"
+                    },
                 },
                 incomingCallTitleStyleProps: {
                     margin: "0 5px",
@@ -300,6 +306,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             hideNotificationBubble: true,
             unreadMessageString: "new messages",
             largeUnreadMessageString: "99+",
+            ariaLabelUnreadMessageString: "you have new messages"
         },
         styleProps: {
             generalStyleProps: {
@@ -321,8 +328,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 selectors: {
                     ":hover": {
                         backgroundColor: "lightgrey"
-                    },                    
-                    ":focus" : {
+                    },
+                    ":focus": {
                         outline: "dotted 2px #000"
                     }
                 }
@@ -446,20 +453,23 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         styleProps: {
             generalStyleProps: {
+                display: "flex",
+                minHeight: "160px",
+                maxHeight: "300px",
+                boxSizing: "border-box",
                 backgroundColor: "#FFFFFF",
                 borderRadius: "2px",
                 color: "black",
                 fontFamily: "Segoe UI, Arial, sans-serif",
                 fontSize: "14px",
-                height: "160px",
                 padding: "10px 20px",
-                width: "262px",
                 position: "absolute",
                 justifyContent: "center",
                 alignItems: "center",
-                display: "flex",
                 flexFlow: "column",
-                zIndex: "9999"
+                zIndex: "9999",
+                left: "26px",
+                right: "26px"
             },
             titleStyleProps: {
                 color: "#323130",
@@ -481,10 +491,14 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             },
             buttonGroupStyleProps: {
                 display: "flex",
+                width: "auto",
+                height: "auto",
+                boxSizing: "border-box",
                 flexFlow: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                gap: "10px"
+                gap: "10px",
+                marginBottom: "10px"
             },
             confirmButtonStyleProps: {
                 backgroundColor: "rgba(9,72,159,1)",
@@ -548,7 +562,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         hideProactiveChatPane: false,
         hideReconnectChatPane: false,
         hideWebChatContainer: false,
-        skipChatButtonRendering: false
+        hideStartChatButton: false
     },
     directLine: new MockAdapter(),
     downloadTranscriptProps: {
@@ -738,6 +752,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             },
             audioNotificationButtonProps: {
                 id: "oc-lcw-footer-audionotification-button",
+                type: "icon",
                 ariaLabel: "Turn sound off",
                 toggleAriaLabel: "Turn sound on",
                 iconName: "Volume3",
@@ -763,8 +778,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 padding: "0 10px 5px 10px"
             },
             downloadTranscriptButtonStyleProps: {
-                color: "blue",
-                fontSize: 16,
+                icon: {
+                    color: "blue",
+                    fontSize: 16,
+                },
                 height: "25px",
                 lineHeight: "25px",
                 width: "25px"
@@ -774,8 +791,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 backgroundColor: "#C8C8C8"
             },
             emailTranscriptButtonStyleProps: {
-                color: "blue",
-                fontSize: 16,
+                cicon: {
+                    color: "blue",
+                    fontSize: 16,
+                },
                 height: "25px",
                 lineHeight: "25px",
                 width: "25px"
@@ -785,8 +804,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 backgroundColor: "#C8C8C8"
             },
             audioNotificationButtonStyleProps: {
-                color: "blue",
-                fontSize: 16,
+                icon: {
+                    color: "blue",
+                    fontSize: 16,
+                },
                 height: "25px",
                 lineHeight: "25px",
                 width: "25px"
@@ -829,7 +850,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 className: undefined
             },
             closeButtonProps: {
-                id: "oc-lcw-header-minimize-button",
+                id: "oc-lcw-header-close-button",
                 type: "icon",
                 iconName: "ChromeClose",
                 ariaLabel: "Close",
@@ -1120,6 +1141,47 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 backgroundColor: "#FFFFFF",
                 borderColor: "#F1F1F1"
             }
+        },
+        isCustomerVoiceSurveyCompact: undefined
+    },
+    preChatSurveyPaneProps: {
+        controlProps: {
+            id: "oc-lcw-prechatsurveypane-default",
+            dir: "auto",
+            hidePreChatSurveyPane: false,
+            adaptiveCardHostConfig: "{\"fontFamily\":\"Segoe UI, Helvetica Neue, sans-serif\",\"containerStyles\":{\"default\":{\"foregroundColors\":{\"default\":{\"default\":\"#000000\"}},\"backgroundColor\":\"#FFFFFF\"}},\"actions\":{\"actionsOrientation\":\"Vertical\",\"actionAlignment\":\"stretch\"}}",
+            payload: "{\"$schema\":\"http://adaptivecards.io/schemas/adaptive-card.json\",\"type\":\"AdaptiveCard\",\"version\":\"1.1\",\"body\":[{\"type\":\"TextBlock\",\"weight\":\"bolder\",\"text\":\"Please answer below questions.\"},{\"type\":\"Input.Text\",\"id\":\"1e5e4e7a-8f0b-ec11-b6e6-000d3a305d38\",\"label\":\"name pls?\",\"maxLength\":100,\"isRequired\":true,\"errorMessage\":\"Name is required\"},{\"type\":\"Input.Text\",\"id\":\"7f8f5d6d-995e-ec11-8f8f-000d3a31376e\",\"label\":\"multi\\nmulti\\nmulti\",\"style\":\"text\",\"isMultiline\":true,\"maxLength\":250},{\"type\":\"Input.ChoiceSet\",\"id\":\"e4bdf7cb-995e-ec11-8f8f-000d3a31376e\",\"label\":\"options\",\"isMultiSelect\":false,\"value\":\"1\",\"style\":\"compact\",\"choices\":[{\"title\":\"one\",\"value\":\"1\"},{\"title\":\"two\",\"value\":\"2\"},{\"title\":\"three\",\"value\":\"3\"}]},{\"type\":\"Input.Toggle\",\"id\":\"b26011d2-995e-ec11-8f8f-000d3a31376e\",\"title\":\"consent\",\"valueOn\":\"True\",\"valueOff\":\"False\",\"value\":\"false\"},{\"type\":\"TextBlock\",\"isSubtle\":true,\"text\":\"Fields marked with * are mandatory.\",\"wrap\":true}],\"actions\":[{\"type\":\"Action.Submit\",\"title\":\"Submit\",\"data\":{\"Type\":\"InputSubmit\"}}]}",
+            onSubmit: function () {} // Detailed implementation omitted
+        },
+        styleProps: {
+            generalStyleProps: {
+                borderStyle: "solid",
+                borderRadius: "4px",
+                borderWidth: "3px",
+                backgroundColor: "#FFFFFF",
+                borderColor: "#F1F1F1",
+                overflowY: "auto",
+                height: "inherit",
+                width: "inherit"
+            },
+            customButtonStyleProps: {
+                backgroundColor: "rgb(49, 95, 162)",
+                color: "#FFFFFF",
+                fontFamily: "Segoe UI, Arial, sans-serif",
+                fontSize: "15px",
+                height: "48px"
+            },
+            adaptiveCardContainerStyleProps: {
+                border: "1px solid #ECECEC",
+                borderRadius: "4px",
+                margin: "3%"
+            },
+            customTextInputStyleProps: {
+                height: "20px"
+            },
+            customMultilineTextInputStyleProps: {
+                height: "52px"
+            }
         }
     },
     proactiveChatPaneProps: {
@@ -1140,7 +1202,17 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             hideSubtitle: false,
             subtitleText: "Live chat support!",
             hideCloseButton: false,
-            closeButtonAriaLabel: "Close Button",
+            closeButtonProps: {
+                id: "oc-lcw-proactivechat-closebutton",
+                type: "icon",
+                iconName: "ChromeClose",
+                ariaLabel: "Close",
+                imageIconProps: undefined,
+                text: "Close",
+                onClick: undefined,
+                className: undefined,
+                hideButtonTitle: true
+            },
             isBodyContainerHorizantal: false,
             hideBodyTitle: false,
             bodyTitleText: "Hi! Have any questions? I am here to help.",
@@ -1159,7 +1231,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 height: "auto",
                 margin: "3px",
                 minHeight: "133px",
-                position: "absolute", 
+                position: "absolute",
                 right: "0",
                 width: "245px",
                 zIndex: "9999"
@@ -1363,7 +1435,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 startNewChatButtonClassName: undefined
             }
         },
-        isReconnectEnabled: undefined,
         reconnectId: undefined,
         redirectInSameWindow: undefined
     },
@@ -1381,7 +1452,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         className: undefined
     },
-    webChatContainerProps: {    
+    webChatContainerProps: {
         containerStyles: {
             height: "100%",
             width: "100%",
@@ -1458,7 +1529,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             // "bundle" props: these stuff are not available if you "decompose" or "recompose" Web Chat.
             //                 I.e. not using composition mode (or <Composer>).
             className: undefined,
-            role: undefined
+            role: undefined,
         },
         directLine: undefined,
         storeMiddlewares: undefined, // Additional store middlewares
@@ -1485,6 +1556,12 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 lineHeight: "16px",
                 padding: "0px 10px 0 10px"
             },
+            userMessageBoxStyles: {
+                maxWidth: "75%"
+            },
+            systemMessageBoxStyles: {
+                maxWidth: "75%"
+            }, 
             typingIndicatorStyleProps: {
                 marginLeft: "10px",
                 marginBottom: "5px",
@@ -1604,6 +1681,9 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             },
             attachmentSizeStyles: {
                 display: "none"
+            },
+            receivedMessageAnchorStyles: {
+                color: "white"
             }
         },
         localizedTexts: {

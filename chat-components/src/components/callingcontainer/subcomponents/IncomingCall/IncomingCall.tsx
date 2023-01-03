@@ -125,11 +125,23 @@ function IncomingCall(props: IIncomingCallProps) {
         };
     }, []);
 
+    useEffect(() => {
+        // Setting focus to decline call button when incoming call alert appears
+        if (declineCallButtonId) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const declineCallButton: any = document.getElementById(declineCallButtonId);
+            if (declineCallButton) {
+                declineCallButton.focus();
+            }
+        }
+    },[]);
+
     return (
 
         <Stack horizontal className={props.styleProps?.className} horizontalAlign="space-between"
             styles={stackStyles}
-            dir={props.controlProps?.dir ?? defaultIncomingCallProps.controlProps?.dir}>
+            dir={props.controlProps?.dir ?? defaultIncomingCallProps.controlProps?.dir} role="alert"
+            aria-label={incomingCallTitleProps?.text}>
             <Stack horizontal id="incomingCallLeftGroup" verticalAlign="center" tokens={leftGroupStackTokens}>
                 {!props.controlProps?.hideIncomingCallTitle && (decodeComponentString(props.componentOverrides?.incomingCallTitle) ||
                     <Label

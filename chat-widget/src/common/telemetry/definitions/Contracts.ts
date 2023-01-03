@@ -7,8 +7,10 @@ export interface BaseContract {
     OrganizationId: string;
     LCWRuntimeId: string;
     CurrentRequestId: string;
-    ExceptionDetails?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ExceptionDetails?: any;
     LogLevel: string;
+    Description?: string;
 }
 
 export interface ConfigValidationContract extends BaseContract {
@@ -44,7 +46,6 @@ export interface IC3ClientContract extends BaseContract {
     EndpointId?: string;
     ErrorCode?: string;
     ShouldBubbleToHost?: boolean;
-    Description?: string;
 }
 
 export interface OCChatSDKContract extends BaseContract {
@@ -65,7 +66,6 @@ export interface WebChatContract extends BaseContract {
 export interface CallingContract extends BaseContract {
     CallId?: string;
     Event?: string;
-    Description?: string;
 }
 
 export interface ACSAdapterContract extends BaseContract {
@@ -76,8 +76,6 @@ export interface ACSAdapterContract extends BaseContract {
     TimeStamp?: string;
     Event?: string;
     ErrorCode?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ExceptionDetails?: any;
 }
 
 export type TelemetryContract = OCChatSDKContract | IC3ClientContract | ActionsContract |

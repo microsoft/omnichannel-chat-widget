@@ -64,8 +64,13 @@ export class Constants {
         "application/vnd.microsoft.card.oauth",
     ];
     public static readonly maxUploadFileSize = "500000";
+<<<<<<< HEAD
     public static readonly imageRegex = /(\.)(jpeg|jpg|jiff|png|gif|bmp)$/i;
     public static readonly audioMediaRegex = /(\.)(amr|aac|aiff|alac|flac|mp2|mp3|pcm|wav|wma)$/i;
+=======
+    public static readonly imageRegex = /(\.)(jpeg|jpg|jiff|png|gif|bmp|webp)$/i;
+    public static readonly audioMediaRegex = /(\.)(aac|aiff|alac|flac|mp2|mp3|pcm|wav|wma)$/i;
+>>>>>>> origin/main
     public static readonly videoMediaRegex = /(\.)(avchd|avi|flv|mpe|mpeg|mpg|mpv|mp4|m4p|m4v|mov|qt|swf|webm|wmv)$/i;
     public static readonly chromeSupportedInlineMediaRegex = /(\.)(aac|mp3|wav|mp4)$/i;
     public static readonly firefoxSupportedInlineMediaRegex = /(\.)(aac|flac|mp3|wav|mp4|mov)$/i;
@@ -204,6 +209,20 @@ export enum EnvironmentVersion {
     dogfood = "df",
     int = "int",
     test = "test"
+}
+
+export enum E2VVOptions{
+    NoCalling = "192350000",
+    VideoAndVoiceCalling = "192350001",
+    VoiceOnly = "192350002"
+}
+
+export enum LiveWorkItemState  {
+    Active = "Active",
+    Closed = "Closed",
+    Open = "Open",
+    Waiting = "Waiting",
+    WrapUp = "WrapUp"
 }
 
 export class TranscriptConstants {

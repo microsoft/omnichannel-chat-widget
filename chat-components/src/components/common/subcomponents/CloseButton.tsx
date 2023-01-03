@@ -1,13 +1,13 @@
 import React from "react";
 import { ElementType } from "../../../common/Constants";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
-import CommandButton from "../../common/commandbutton/CommandButton";
-import { ICommandButtonProps } from "../../common/interfaces/ICommandButtonProps";
+import CommandButton from "../commandbutton/CommandButton";
+import { ICommandButtonProps } from "../interfaces/ICommandButtonProps";
 
 function CloseButton(props: ICommandButtonProps) {
     const { type } = props;
     const customEvent: ICustomEvent = {
-        elementType: ElementType.HeaderCloseButton,
+        elementType: ElementType.CloseButton,
         elementId: props?.id,
         eventName: "OnClick"
     };
@@ -20,12 +20,13 @@ function CloseButton(props: ICommandButtonProps) {
             styles={props.styles}
             hoverStyles={props.hoverStyles}
             focusStyles={props.focusStyles}
-            iconName={props.iconName?? "ChromeClose"}
+            iconName={props.iconName ?? "ChromeClose"}
             imageIconProps={props.imageIconProps}
             onClick={props.onClick}
             ariaLabel={props.ariaLabel ?? "Close"}
             className={props.className} 
-            customEvent={customEvent} />
+            customEvent={customEvent} 
+            hideButtonTitle = {props.hideButtonTitle}/>
     );
 }
 

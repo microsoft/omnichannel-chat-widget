@@ -102,7 +102,7 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
 
 function ChatButton(props: IChatButtonProps) {
     const elementId = props.controlProps?.id ?? "lcw-components-chat-button";
-    const defaultAriaLabel = props.controlProps?.ariaLabel ?? "live chat button";
+    const defaultAriaLabel = props.controlProps?.ariaLabel ?? defaultChatButtonControlProps.ariaLabel;
     const defaultRole = props.controlProps?.role ?? defaultChatButtonControlProps?.role;
     const containersDir = props.controlProps?.dir ?? defaultChatButtonControlProps?.dir;
     const hideChatButton = props.controlProps?.hideChatButton ?? defaultChatButtonControlProps?.hideChatButton;
