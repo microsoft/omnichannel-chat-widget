@@ -5,6 +5,7 @@ import { BrowserVendor } from "../../webchatcontroller/enums/BrowserVendor";
 import { Constants } from "../../../../common/Constants";
 
 const FileAttachmentIconMap: { [unit: string]: unknown } = {
+    "amr": AudioIcon,
     "aac": AudioIcon,
     "aiff": AudioIcon,
     "alac": AudioIcon,
