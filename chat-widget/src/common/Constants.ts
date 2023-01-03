@@ -64,7 +64,7 @@ export class Constants {
         "application/vnd.microsoft.card.oauth",
     ];
     public static readonly maxUploadFileSize = "500000";
-    public static readonly imageRegex = /(\.)(jpeg|jpg|jiff|png|gif|bmp)$/i;
+    public static readonly imageRegex = /(\.)(jpeg|jpg|jiff|png|gif|bmp|webp)$/i;
     public static readonly audioMediaRegex = /(\.)(aac|aiff|alac|flac|mp2|mp3|pcm|wav|wma)$/i;
     public static readonly videoMediaRegex = /(\.)(avchd|avi|flv|mpe|mpeg|mpg|mpv|mp4|m4p|m4v|mov|qt|swf|webm|wmv)$/i;
     public static readonly chromeSupportedInlineMediaRegex = /(\.)(aac|mp3|wav|mp4)$/i;
