@@ -8,6 +8,7 @@ const FileAttachmentIconMap: { [unit: string]: unknown } = {
     "aac": AudioIcon,
     "aiff": AudioIcon,
     "alac": AudioIcon,
+    "amr": AudioIcon,
     "avchd": VideoIcon,
     "avi": VideoIcon,
     "bmp": ImageIcon,
