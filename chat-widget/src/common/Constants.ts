@@ -65,7 +65,7 @@ export class Constants {
     ];
     public static readonly maxUploadFileSize = "500000";
     public static readonly imageRegex = /(\.)(jpeg|jpg|jiff|png|gif|bmp|webp)$/i;
-    public static readonly audioMediaRegex = /(\.)(amr|aac|aiff|alac|flac|mp2|mp3|pcm|wav|wma)$/i;
+    public static readonly audioMediaRegex = /(\.)(aac|aiff|alac|amr|flac|mp2|mp3|pcm|wav|wma)$/i;
     public static readonly videoMediaRegex = /(\.)(avchd|avi|flv|mpe|mpeg|mpg|mpv|mp4|m4p|m4v|mov|qt|swf|webm|wmv)$/i;
     public static readonly chromeSupportedInlineMediaRegex = /(\.)(aac|mp3|wav|mp4)$/i;
     public static readonly firefoxSupportedInlineMediaRegex = /(\.)(aac|flac|mp3|wav|mp4|mov)$/i;
