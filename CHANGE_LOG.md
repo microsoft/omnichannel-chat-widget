@@ -86,3 +86,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Uptake component for fixes for prechat survey pane, confirmation pane and calling container
 - Fixed aria label for chat button, double announcing for audio notification button, removed disableDimLayer from props
 - Added support to attach and download AMR audio files.
+- Uptake components and fixed confirmation pane not showing

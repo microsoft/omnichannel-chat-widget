@@ -25,6 +25,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
     const conversationState = useRef(state.appStates.conversationState);
+    const conversationEndedByAgent = useRef(state.appStates.conversationEndedByAgent);
     const controlProps: IHeaderControlProps = {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
@@ -34,7 +35,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         },
         onCloseClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
-            if (conversationState.current === ConversationState.Active) {
+            if (conversationState.current === ConversationState.Active || conversationEndedByAgent.current) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
             } else {
                 const skipEndChatSDK = true;
@@ -73,6 +74,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         if (state.appStates.conversationState) {
             conversationState.current = state.appStates.conversationState;
         }
+        conversationEndedByAgent.current = state.appStates.conversationEndedByAgent;
     }, [state.appStates]);
 
 
