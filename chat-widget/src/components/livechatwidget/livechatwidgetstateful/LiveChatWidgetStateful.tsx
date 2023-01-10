@@ -1,9 +1,10 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { BroadcastService, decodeComponentString, BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
+import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
+import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
+import { endChat, prepareEndChat } from "../common/endChat";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -20,12 +21,14 @@ import {
     shouldShowWebChatContainer
 } from "../../../controller/componentController";
 
+import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
 import CallingContainerStateful from "../../callingcontainerstateful/CallingContainerStateful";
 import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
 import { Components } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
+import { E2VVOptions } from "../../../common/Constants";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
@@ -33,6 +36,7 @@ import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/i
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { IScrollBarProps } from "../interfaces/IScrollBarProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import LoadingPaneStateful from "../../loadingpanestateful/LoadingPaneStateful";
 import OutOfOfficeHoursPaneStateful from "../../ooohpanestateful/OOOHPaneStateful";
@@ -41,30 +45,27 @@ import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostCha
 import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
 import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
+import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
+import { defaultClientDataStoreProvider } from "../../../common/storage/default/defaultClientDataStoreProvider";
+import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
-import { endChat, prepareEndChat } from "../common/endChat";
 import { getGeneralStylesForButton } from "../common/getGeneralStylesForButton";
 import { initCallingSdk } from "../common/initCallingSdk";
 import { initConfirmationPropsComposer } from "../common/initConfirmationPropsComposer";
 import { initWebChatComposer } from "../common/initWebChatComposer";
+import { registerBroadcastServiceForLocalStorage } from "../../../common/storage/default/defaultCacheManager";
 import { registerTelemetryLoggers } from "../common/registerTelemetryLoggers";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
 import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
-import { registerBroadcastServiceForLocalStorage } from "../../../common/storage/default/defaultCacheManager";
-import { defaultClientDataStoreProvider } from "../../../common/storage/default/defaultClientDataStoreProvider";
-import { IScrollBarProps } from "../interfaces/IScrollBarProps";
-import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
-import { E2VVOptions } from "../../../common/Constants";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -94,7 +95,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const currentMessageCountRef = useRef<number>(0);
     let widgetStateEventName = "";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let optionalParams: any;
+    let optionalParams: StartChatOptionalParams;
     let activeCachedChatExist = false;
 
     const setOptionalParams = () => {
@@ -106,7 +107,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             optionalParams = { liveChatContext: state.domainStates?.liveChatContext };
         } else {
             activeCachedChatExist = false;
-            optionalParams = undefined;
+            optionalParams = {};
         }
     };
 

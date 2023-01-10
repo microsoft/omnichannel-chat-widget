@@ -1,5 +1,10 @@
-import { ChatSDKError, LiveWorkItemState } from "../../../common/Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { ChatSDKError, LiveWorkItemState } from "../../../common/Constants";
+import { createTimer, getStateFromCache, isUndefinedOrEmpty } from "../../../common/utils";
+import { getAuthClientFunction, handleAuthentication } from "./authHelper";
+
+import { ActivityStreamHandler } from "./ActivityStreamHandler";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
@@ -9,20 +14,17 @@ import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
+import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
-import { createTimer, getStateFromCache, isUndefinedOrEmpty } from "../../../common/utils";
+import { handleChatReconnect } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { ActivityStreamHandler } from "./ActivityStreamHandler";
-import { getAuthClientFunction, handleAuthentication } from "./authHelper";
-import { handleChatReconnect } from "./reconnectChatHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let optionalParams: any = {};
+let optionalParams: StartChatOptionalParams = {};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let widgetInstanceId: any | "";
 
@@ -75,11 +77,12 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
 
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-    await initStartChat(chatSDK, props?.chatConfig, props?.getAuthToken, dispatch, setAdapter);
+    const optionalParams: StartChatOptionalParams = { isProactiveChat };
+    await initStartChat(chatSDK, props?.chatConfig, props?.getAuthToken, dispatch, setAdapter, optionalParams);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: any, persistedState?: any) => {
+const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: StartChatOptionalParams, persistedState?: any) => {
     try {
         //Start widget load timer
         TelemetryTimers.WidgetLoadTimer = createTimer();
@@ -114,8 +117,12 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         try {
             // Set custom context params
             setCustomContextParams(chatSDK);
-            optionalParams = Object.assign({}, params, optionalParams);
-            await chatSDK.startChat(optionalParams);
+            const defaultOptionalParams: StartChatOptionalParams = {
+                sendDefaultInitContext: true,
+                isProactiveChat: !!params?.isProactiveChat
+            };
+            const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+            await chatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
