@@ -386,6 +386,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 width: "90px",
                 cursor: "pointer",
                 overflow: "hidden",
+                padding: "0px",
                 whiteSpace: "nowrap"
             },
             subtitleStyleProps: {
@@ -393,6 +394,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 fontWeight: "200",
                 color: "#666",
                 overflow: "hidden",
+                padding: "0px",
                 fontFamily: "'Segoe UI',Arial,sans-serif",
                 display: "block",
                 alignItems: "center",
@@ -447,7 +449,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             cancelButtonText: "Cancel",
             cancelButtonAriaLabel: "Cancel. Return to Chat",
             brightnessValueOnDim: "0.2",
-            disableDimLayer: false,
             onConfirm: () => { }, // Detailed implementation omitted
             onCancel: () => { } // Detailed implementation omitted
         },
@@ -603,7 +604,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             cancelButtonText: "Cancel",
             cancelButtonAriaLabel: "Cancel",
             brightnessValueOnDim: "0.2",
-            disableDimLayer: false,
             onSend: undefined,
             onCancel: undefined,
             checkInput: undefined,
