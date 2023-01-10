@@ -89,7 +89,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
 
     return (
         <>
-            {!controlProps?.disableDimLayer && <DimLayer brightness={controlProps?.brightnessValueOnDim ?? "0.2"} />}
+            <DimLayer brightness={controlProps?.brightnessValueOnDim ?? "0.2"} />
             <InputValidationPane
                 componentOverrides={props.componentOverrides}
                 controlProps={controlProps}
