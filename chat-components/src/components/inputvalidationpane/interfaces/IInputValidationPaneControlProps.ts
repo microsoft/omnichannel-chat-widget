@@ -30,7 +30,6 @@ export interface IInputValidationPaneControlProps {
     cancelButtonAriaLabel?: string;
 
     brightnessValueOnDim?: string;
-    disableDimLayer?: boolean;
 
     onSend?: (input: string) => void;
     onCancel?: () => void;

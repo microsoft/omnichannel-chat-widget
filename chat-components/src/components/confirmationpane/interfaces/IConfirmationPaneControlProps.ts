@@ -13,7 +13,6 @@ export interface IConfirmationPaneControlProps {
     cancelButtonText?: string;
     cancelButtonAriaLabel?: string;
     brightnessValueOnDim?: string;
-    disableDimLayer?: boolean;
     onConfirm?: () => void;
     onCancel?: () => void;
 }
