@@ -83,7 +83,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
 
     return (
         <>
-            {!controlProps?.disableDimLayer && <DimLayer brightness={controlProps?.brightnessValueOnDim ?? "0.2"} />}
+            <DimLayer brightness={controlProps?.brightnessValueOnDim ?? "0.2"} />
             <ConfirmationPane
                 componentOverrides={props?.componentOverrides}
                 controlProps={controlProps}
