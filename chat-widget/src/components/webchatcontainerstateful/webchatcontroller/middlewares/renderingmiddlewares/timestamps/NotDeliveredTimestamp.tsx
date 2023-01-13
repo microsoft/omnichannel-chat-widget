@@ -1,6 +1,5 @@
 ﻿import React, { Dispatch, useCallback, useEffect, useRef } from "react";
 
-import { HtmlAttributeNames } from "../../../../../../common/Constants";
 import { ILiveChatWidgetAction } from "../../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../../contexts/common/ILiveChatWidgetContext";
 import { KeyCodes } from "../../../../../../common/KeyCodes";
@@ -62,17 +61,14 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
     };
 
     const removeNotDeliveredTimestamp = (event: any) => {
-        let parent = event.target.parentElement;
+        const retryButton = event.target;
+        const ancestor = retryButton.closest("article");
 
-        while (parent.tagName !== HtmlAttributeNames.listItem) {
-            parent = parent.parentElement;
-
-            if (parent.tagName === HtmlAttributeNames.unorderedList) {
-                return;
-            }
+        try {
+            ancestor.parentElement?.removeChild(ancestor);
+        } catch {
+            console.error("Failed to remove retried message.");
         }
-
-        parent.parentNode.removeChild(parent);
     };
 
     return (

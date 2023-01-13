@@ -48,7 +48,7 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
     } else {
         return (
             <span style={{padding: "2px"}}>
-                {sendState === SendStatus.Sending && <SendingTimestamp args={args}/>}
+                {sendState === SendStatus.Sending && <SendingTimestamp/>}
                 {sendState === SendStatus.SendFailed && <NotDeliveredTimestamp args={args}/>}
                 {sendState === SendStatus.Sent && <DeliveredTimestamp args={args} role={current_role} name={current_name} />}
             </span>
