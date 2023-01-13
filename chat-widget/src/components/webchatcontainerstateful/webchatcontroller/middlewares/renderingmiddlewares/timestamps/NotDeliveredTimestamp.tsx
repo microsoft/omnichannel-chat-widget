@@ -61,10 +61,9 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
     };
 
     const removeNotDeliveredTimestamp = (event: any) => {
-        const retryButton = event.target;
-        const ancestor = retryButton.closest("article");
-
         try {
+            const retryButton = event.target;
+            const ancestor = retryButton.closest("article");
             ancestor.parentElement?.removeChild(ancestor);
         } catch {
             console.error("Failed to remove retried message.");
