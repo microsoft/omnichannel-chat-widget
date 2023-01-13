@@ -46,8 +46,7 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
         }
     }, [timestampRef]);
 
-    const onRetryClick = useCallback(async (event) => {
-        removeNotDeliveredTimestamp(event);
+    const onRetryClick = useCallback(async () => {
         activity.previousClientActivityID = activity.channelData?.clientActivityID;
         await postActivity(activity);
         focus("sendBox");
@@ -56,17 +55,7 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
     const onRetryKeyEnter = (event: any) => {
         if (event.code === KeyCodes.ENTER) {
             event.preventDefault();
-            onRetryClick(event);
-        }
-    };
-
-    const removeNotDeliveredTimestamp = (event: any) => {
-        try {
-            const retryButton = event.target;
-            const ancestor = retryButton.closest("article");
-            ancestor.parentElement?.removeChild(ancestor);
-        } catch {
-            console.error("Failed to remove retried message.");
+            onRetryClick();
         }
     };
 
