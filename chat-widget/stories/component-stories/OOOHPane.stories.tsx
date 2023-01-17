@@ -129,11 +129,11 @@ const customTitle = encodeComponentString(
 );
 
 
-const loadingPaneSample3Props: IOOOHPaneProps = {
+const OOOHPaneSample3Props: IOOOHPaneProps = {
     componentOverrides: {
         title: customTitle
     }
 };
 
 export const OOOHPaneSample3 = OOOHPaneTemplate.bind({});
-OOOHPaneSample3.args = loadingPaneSample3Props;
+OOOHPaneSample3.args = OOOHPaneSample3Props;
