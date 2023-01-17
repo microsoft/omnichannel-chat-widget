@@ -80,6 +80,7 @@ export class TelemetryHelper {
                 event.ElapsedTimeInMilliseconds = payload.ElapsedTimeInMilliseconds;
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
                 event.Description = payload.Description;
+                event.CustomProperties = JSON.stringify(payload.CustomProperties);
             });
     }
 
