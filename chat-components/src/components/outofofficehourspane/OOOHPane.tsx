@@ -26,7 +26,7 @@ function OOOHPane(props: IOOOHPaneProps) {
                     id={elementId}
                     tabIndex={-1}
                     styles={containerStyles}
-                    role={props.controlProps?.role}
+                    role="alert"
                     className={props.styleProps?.classNames?.containerClassName}
                     dir={props.controlProps?.dir ?? defaultOOOHPaneControlProps.dir}>
 
@@ -34,7 +34,7 @@ function OOOHPane(props: IOOOHPaneProps) {
                         <Label
                             className={props.styleProps?.classNames?.titleClassName}
                             styles={titleStyles}
-                            tabIndex={-1}
+                            tabIndex={1}
                             id={elementId + "-title"}>
                             {props.controlProps?.titleText ?? defaultOOOHPaneControlProps.titleText}
                         </Label>)}
