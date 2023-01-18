@@ -1,18 +1,21 @@
 import "regenerator-runtime/runtime";
-import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
+
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { handleAuthentication, removeAuthTokenProvider } from "./authHelper";
+import { isNullOrEmptyString, isNullOrUndefined } from "../../../common/utils";
+
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
+import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { IReconnectChatContext } from "../../reconnectchatpanestateful/interfaces/IReconnectChatContext";
 import { IReconnectChatOptionalParams } from "../../reconnectchatpanestateful/interfaces/IReconnectChatOptionalParams";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { handleAuthentication, removeAuthTokenProvider } from "./authHelper";
-import { isNullOrEmptyString, isNullOrUndefined } from "../../../common/utils";
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext) => {
@@ -83,7 +86,7 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK:
         };
         BroadcastService.postMessage(startUnauthenticatedReconnectChat);
     }
-    const optionalParams = { reconnectId: reconnectId };
+    const optionalParams: StartChatOptionalParams = { reconnectId: reconnectId };
 
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });

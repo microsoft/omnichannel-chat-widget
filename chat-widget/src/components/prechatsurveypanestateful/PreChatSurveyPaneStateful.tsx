@@ -12,6 +12,7 @@ import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-compon
 import { IStyle } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
+import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps";
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
@@ -64,7 +65,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
             try {
                 const persistedState = getStateFromCache(state.domainStates?.telemetryInternalData?.orgId ?? "",
                     state.domainStates.telemetryInternalData?.widgetId ?? "", state.domainStates.widgetInstanceId ?? "");
-                let optionalParams = {};
+                let optionalParams: StartChatOptionalParams = {};
 
                 //Connect to Active chats and chat is not popout
                 if (persistedState &&
