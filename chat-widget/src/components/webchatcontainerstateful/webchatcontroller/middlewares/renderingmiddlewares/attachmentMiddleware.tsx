@@ -188,8 +188,9 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
                 />
             );
         }
-    
-        if (fileExtension === "txt") {
+
+        const isUnknownImageObject = contentType.toLowerCase().includes("image") && !imageExtension;    
+        if (fileExtension === "txt" || isUnknownImageObject) {
             return (
                 <Attachment
                     iconData={iconData}
