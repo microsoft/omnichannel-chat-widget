@@ -203,7 +203,7 @@ export class TelemetryHelper {
         telemetryDataLocal.widgetId = telemetryConfig?.appId;
         telemetryDataLocal.orgId = telemetryConfig?.orgId;
         telemetryDataLocal.orgUrl = telemetryConfig?.orgUrl;
-        telemetryDataLocal.lcwRuntimeId = newGuid();
+        telemetryDataLocal.lcwRuntimeId = telemetryConfig.LCWRuntimeId ?? newGuid();
 
         return telemetryDataLocal;
     }
