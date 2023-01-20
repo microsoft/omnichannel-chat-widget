@@ -5,5 +5,6 @@ export const defaultOOOHPaneControlProps: IOOOHPaneControlProps = {
     dir: "auto",
     hideOOOHPane: false,
     hideTitle: false,
+    role:"alert",
     titleText: "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.",
 };
