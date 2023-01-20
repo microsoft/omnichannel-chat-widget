@@ -85,6 +85,8 @@ export interface ActionTelemetryData extends BaseTelemetryData {
     ActionType?: string;
     ExceptionDetails?: object;
     Description?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    CustomProperties?: any;
 }
 
 export interface CallingTelemetryData extends BaseTelemetryData {
