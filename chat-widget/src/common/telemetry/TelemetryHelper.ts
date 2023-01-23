@@ -80,6 +80,7 @@ export class TelemetryHelper {
                 event.ElapsedTimeInMilliseconds = payload.ElapsedTimeInMilliseconds;
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
                 event.Description = payload.Description;
+                event.CustomProperties = JSON.stringify(payload.CustomProperties);
             });
     }
 
@@ -202,7 +203,7 @@ export class TelemetryHelper {
         telemetryDataLocal.widgetId = telemetryConfig?.appId;
         telemetryDataLocal.orgId = telemetryConfig?.orgId;
         telemetryDataLocal.orgUrl = telemetryConfig?.orgUrl;
-        telemetryDataLocal.lcwRuntimeId = newGuid();
+        telemetryDataLocal.lcwRuntimeId = telemetryConfig.LCWRuntimeId ?? newGuid();
 
         return telemetryDataLocal;
     }

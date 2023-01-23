@@ -51,4 +51,9 @@ export interface ITelemetryConfig {
     * Omnichannel Chat SDK Version
     */
     OCChatSDKVersion: string;
+
+    /**
+    * LCW Runtime Id
+    */
+    LCWRuntimeId?: string;
 }
