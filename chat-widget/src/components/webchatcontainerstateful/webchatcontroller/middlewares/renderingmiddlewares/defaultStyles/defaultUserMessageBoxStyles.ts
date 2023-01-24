@@ -1,3 +1,3 @@
 export const defaultUserMessageBoxStyles = {
-    maxWidth: "75%"
+    maxWidth: "90%"
 };

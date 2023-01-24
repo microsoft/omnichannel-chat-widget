@@ -8,6 +8,7 @@ import { IReconnectChatPaneControlProps } from "@microsoft/omnichannel-chat-comp
 import { IReconnectChatPaneStatefulParams } from "./interfaces/IReconnectChatPaneStatefulParams";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { ReconnectChatPane } from "@microsoft/omnichannel-chat-components";
+import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { setFocusOnElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
@@ -22,7 +23,7 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
     const startChat = async (continueChat: boolean) => {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         if (continueChat && state.appStates.reconnectId) {
-            const optionalParams = { reconnectId: state.appStates.reconnectId };
+            const optionalParams: StartChatOptionalParams = { reconnectId: state.appStates.reconnectId };
             await initStartChat(optionalParams);
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });

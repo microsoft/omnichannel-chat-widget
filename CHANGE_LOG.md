@@ -87,3 +87,6 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed aria label for chat button, double announcing for audio notification button, removed disableDimLayer from props
 - Added support to attach and download AMR audio files.
 - Uptake components and fixed confirmation pane not showing
+- Added getGeolocation feature if enabled in OC
+- Fixed default message bubble width to be 90%
+- Fixed multiple bugs with timestamp rendering
