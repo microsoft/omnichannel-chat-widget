@@ -36,6 +36,9 @@ export interface LoadContract extends BaseContract {
 export interface ActionsContract extends BaseContract {
     Event?: string;
     ActionType?: string;
+    Description?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    CustomProperties?: any;
 }
 
 export interface IC3ClientContract extends BaseContract {

@@ -1,3 +1,3 @@
 export const defaultSystemMessageBoxStyles = {
-    maxWidth: "75%"
+    maxWidth: "90%"
 };

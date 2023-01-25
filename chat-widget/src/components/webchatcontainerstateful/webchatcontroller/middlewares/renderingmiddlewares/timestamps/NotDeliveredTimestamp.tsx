@@ -1,6 +1,5 @@
 ﻿import React, { Dispatch, useCallback, useEffect, useRef } from "react";
 
-import { HtmlAttributeNames } from "../../../../../../common/Constants";
 import { ILiveChatWidgetAction } from "../../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../../contexts/common/ILiveChatWidgetContext";
 import { KeyCodes } from "../../../../../../common/KeyCodes";
@@ -47,8 +46,7 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
         }
     }, [timestampRef]);
 
-    const onRetryClick = useCallback(async (event) => {
-        removeNotDeliveredTimestamp(event);
+    const onRetryClick = useCallback(async () => {
         activity.previousClientActivityID = activity.channelData?.clientActivityID;
         await postActivity(activity);
         focus("sendBox");
@@ -57,22 +55,8 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
     const onRetryKeyEnter = (event: any) => {
         if (event.code === KeyCodes.ENTER) {
             event.preventDefault();
-            onRetryClick(event);
+            onRetryClick();
         }
-    };
-
-    const removeNotDeliveredTimestamp = (event: any) => {
-        let parent = event.target.parentElement;
-
-        while (parent.tagName !== HtmlAttributeNames.listItem) {
-            parent = parent.parentElement;
-
-            if (parent.tagName === HtmlAttributeNames.unorderedList) {
-                return;
-            }
-        }
-
-        parent.parentNode.removeChild(parent);
     };
 
     return (

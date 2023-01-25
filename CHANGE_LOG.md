@@ -88,3 +88,6 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added support to attach and download AMR audio files.
 - Uptake components and fixed confirmation pane not showing
 - Added getGeolocation feature if enabled in OC
+- Fixed default message bubble width to be 90%
+- Fixed multiple bugs with timestamp rendering
+- Added link and open link in new tab support in OutOfOffice Pane
