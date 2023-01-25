@@ -234,3 +234,4 @@ const customizedFooterProp: IFooterProps = {
 [How to Add Visual Regression Tests](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/VisualRegressionTestingGuide.md)\
 [Security](https://github.com/microsoft/omnichannel-chat-widget/blob/main/SECURITY.md)\
 [Third Party Cookie Support](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Tpc.md)
+[Storybook](https://microsoft.github.io/omnichannel-chat-widget/docs/storybook/)

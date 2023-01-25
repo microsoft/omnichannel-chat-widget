@@ -6,4 +6,5 @@ export const defaultOOOHPaneControlProps: IOOOHPaneControlProps = {
     hideOOOHPane: false,
     hideTitle: false,
     titleText: "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.",
+    openLinkInNewTab: false
 };
