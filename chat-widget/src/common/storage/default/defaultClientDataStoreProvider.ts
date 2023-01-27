@@ -1,7 +1,10 @@
-import { inMemoryDataStore } from "./defaultInMemoryDataStore";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
+
 import { IContextDataStore } from "../../interfaces/IContextDataStore";
 import { TelemetryHelper } from "../../telemetry/TelemetryHelper";
-import { LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
+import { inMemoryDataStore } from "./defaultInMemoryDataStore";
 
 export const defaultClientDataStoreProvider = (): IContextDataStore => {
     const isCookieAllowed = () => {
@@ -10,10 +13,14 @@ export const defaultClientDataStoreProvider = (): IContextDataStore => {
             sessionStorage;
             return true;
         } catch (error) {
-            console.error("Third party cookie blocked");
+            if (!(window as any).TPCWarningShown) {
+                console.warn("Third party cookies blocked.");
+                (window as any).TPCWarningShown = true;
+            }
             return false;
         }
     };
+    
     const TtlInMs = 15 * 60 * 1000; // 15 mins
     const dataStoreProvider = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
