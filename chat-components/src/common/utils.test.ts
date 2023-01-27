@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/extend-expect";
 
 import { act, cleanup } from "@testing-library/react";
-import { generateEventName, getValidatedURL, getHours, getMinutes, getSeconds, uuidv4 } from "./utils";
+import { generateEventName, getValidatedURL, getHours, getMinutes, getSeconds, uuidv4, replaceURLWithAnchor } from "./utils";
 
 describe("utils unit test", () => {
     afterEach(() => {
@@ -88,6 +88,25 @@ describe("utils unit test", () => {
 
             const threeSeconds = getSeconds(5.501*60*60*1000);
             expect(threeSeconds).toBe("03");
+        });
+    });
+
+    act(() => {
+        it("replaceURLWithAnchor should check text for valid URL and replace urls with anchor tag ", () => {
+            const validTestUrl = replaceURLWithAnchor("https://test.microsoft.com", true);
+            // eslint-disable-next-line quotes
+            expect(validTestUrl).toBe('<a href="https://test.microsoft.com" rel="noreferrer noopener" target="_blank">https://test.microsoft.com</a>');
+
+            const validTestUrl2 = replaceURLWithAnchor("text start : https://test.microsoft.com text end", true);
+            // eslint-disable-next-line quotes
+            expect(validTestUrl2).toBe('text start : <a href="https://test.microsoft.com" rel="noreferrer noopener" target="_blank">https://test.microsoft.com</a> text end');
+
+            const validTestUrl3 = replaceURLWithAnchor("https://test.microsoft.com", false);
+            // eslint-disable-next-line quotes
+            expect(validTestUrl3).toBe('<a href="https://test.microsoft.com">https://test.microsoft.com</a>');
+
+            const emptyUrl = replaceURLWithAnchor("", false);
+            expect(emptyUrl).toBe("");
         });
     });
 });

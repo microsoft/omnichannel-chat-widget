@@ -1113,7 +1113,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             subtitleText: "Please take a moment to give us feedback about your chat experience. We are loading the survey for you now."
         },
         styleProps: {
-            // ...[Existing chat button style props]
+            // ...[Existing loading pane style props]
             generalStyleProps: {
                 position: "initial",
                 width: "100%",

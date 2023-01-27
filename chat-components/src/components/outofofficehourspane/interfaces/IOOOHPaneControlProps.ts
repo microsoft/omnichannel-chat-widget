@@ -5,4 +5,5 @@ export interface IOOOHPaneControlProps {
     hideOOOHPane?: boolean;
     hideTitle?: boolean;
     titleText?: string;
+    openLinkInNewTab?: boolean;
 }

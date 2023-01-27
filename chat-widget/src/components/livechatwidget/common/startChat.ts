@@ -119,7 +119,8 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             setCustomContextParams(chatSDK);
             const defaultOptionalParams: StartChatOptionalParams = {
                 sendDefaultInitContext: true,
-                isProactiveChat: !!params?.isProactiveChat
+                isProactiveChat: !!params?.isProactiveChat,
+                portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
             await chatSDK.startChat(startChatOptionalParams);
