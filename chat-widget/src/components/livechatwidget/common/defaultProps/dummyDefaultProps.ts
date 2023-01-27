@@ -1071,7 +1071,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             dir: "auto",
             hideOOOHPane: false,
             hideTitle: false,
-            titleText: "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.",
+            titleText: "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open. Please see link https://microsoft.com",
+            openLinkInNewTab: true
         },
         styleProps: {
             generalStyleProps: {

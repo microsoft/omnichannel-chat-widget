@@ -91,3 +91,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed default message bubble width to be 90%
 - Fixed multiple bugs with timestamp rendering
 - Added link and open link in new tab support in OutOfOffice Pane
+- Uptake `chat-components` 0.1.0-main.d5e0dfe
