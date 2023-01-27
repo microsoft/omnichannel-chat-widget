@@ -117,8 +117,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 }
                 if (current && current.tagName.toLowerCase() == HtmlAttributeNames.div && current.childElementCount > 0) {
                     const input = current.children[0].children;
-                    if (input
-                        && input.length > 0
+                    if (input?.length > 0
                         && input[0].className != HtmlAttributeNames.adaptiveCardToggleInputClassName
                         && input[0].className != HtmlAttributeNames.adaptiveCardActionSetClassName) {
                         input[0].setAttribute(HtmlAttributeNames.ariaLabel, value);
