@@ -3,7 +3,8 @@ import { IContextDataStore } from "../../interfaces/IContextDataStore";
 import { TelemetryHelper } from "../../telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
 
-export const defaultClientDataStoreProvider = (): IContextDataStore => {
+export const defaultClientDataStoreProvider = (cacheTtlinMins = 0): IContextDataStore => {
+    let ttlInMs = 0;
     const isCookieAllowed = () => {
         try {
             localStorage;
@@ -14,7 +15,11 @@ export const defaultClientDataStoreProvider = (): IContextDataStore => {
             return false;
         }
     };
-    const TtlInMs = 15 * 60 * 1000; // 15 mins
+
+    if (ttlInMs == 0) {
+        ttlInMs = cacheTtlinMins * 60 * 1000;
+    }
+    
     const dataStoreProvider = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setData: (key: any, data: any, type: any) => {
@@ -24,7 +29,7 @@ export const defaultClientDataStoreProvider = (): IContextDataStore => {
                         const now = new Date();
                         const item = {
                             data: data,
-                            expiry: now.getTime() + TtlInMs,
+                            expiry: now.getTime() + ttlInMs,
                         };
                         const strItem = JSON.stringify(item);
 

@@ -46,7 +46,10 @@ export enum BroadcastEvent {
     CloseChat = "CloseChat",
     InitiateEndChatOnBrowserUnload = "InitiateEndChatOnBrowserUnload",
     ClosePopoutWindow = "ClosePopoutWindow",
-    RaiseErrorEvent = "RaiseErrorEvent"
+    RaiseErrorEvent = "RaiseErrorEvent",
+        // Internet connection
+    NetworkDisconnected = "NetworkDisconnected",
+    NetworkReconnected = "NetworkReconnected"
 }
 
 // Events being logged
