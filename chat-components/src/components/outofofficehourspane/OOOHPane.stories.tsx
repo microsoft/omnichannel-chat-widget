@@ -7,6 +7,7 @@ import { defaultOOOHPaneProps } from "./common/defaultProps/defaultOOOHPaneProps
 import { encodeComponentString } from "../../common/encodeComponentString";
 import { presetOneOOOHPaneProps } from "./common/presetOneProps/presetOneOOOHPaneProps";
 import { presetTwoOOOHPaneProps } from "./common/presetTwoProps/presetTwoOOOHPaneProps";
+import { presetFourOOOHPaneProps } from "./common/presetFourProps/presetFourOOOHPaneProps";
 
 export default {
     title: "Stateless Components/OutOfOfficeHours Pane",
@@ -54,3 +55,10 @@ const loadingPanePreset3Props: IOOOHPaneProps = {
 
 export const OOOHPanePreset3 = OOOHPaneTemplate.bind({});
 OOOHPanePreset3.args = loadingPanePreset3Props;
+
+/*
+    OOOH Pane Preset 4
+*/
+
+export const OOOHPanePreset4 = OOOHPaneTemplate.bind({});
+OOOHPanePreset4.args = presetFourOOOHPaneProps;

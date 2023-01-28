@@ -96,3 +96,18 @@ export const addNoreferrerNoopenerTag = (htmlNode: any) => {
         }
     }
 };
+
+export const replaceURLWithAnchor = (text: string | undefined, openInNewTab: boolean | undefined) => {
+    if (text) {
+        const modifiedText = text.replace(Regex.URLRegex, function(url) {
+            if (openInNewTab) {
+                // eslint-disable-next-line quotes
+                return '<a href="' + url + '" rel="noreferrer noopener" target="_blank">' + url + '</a>';
+            }
+            // eslint-disable-next-line quotes
+            return '<a href="' + url + '">' + url + '</a>';
+        });   
+        return modifiedText;
+    }
+    return text;
+};
