@@ -15,4 +15,5 @@ export interface ILiveChatWidgetControlProps {
     hideWebChatContainer?: boolean;
     hideStartChatButton?: boolean;
     widgetInstanceId?: string | undefined;
+    cacheTtlInMins?: number;
 }

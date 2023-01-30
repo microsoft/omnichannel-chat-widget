@@ -28,7 +28,7 @@ import { Components } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
-import { E2VVOptions } from "../../../common/Constants";
+import { Constants, E2VVOptions } from "../../../common/Constants";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
@@ -143,11 +143,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         // Add default localStorage support for widget
         if (props.contextDataStore === undefined) {
+            const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
+            DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins);
             registerBroadcastServiceForLocalStorage(chatSDK?.omnichannelConfig?.orgId,
                 chatSDK?.omnichannelConfig?.widgetId,
-                props?.controlProps?.widgetInstanceId ?? "");
-
-            DataStoreManager.clientDataStore = defaultClientDataStoreProvider();
+                props?.controlProps?.widgetInstanceId ?? "", cacheTtlInMins);
         } else {
             DataStoreManager.clientDataStore = props.contextDataStore;
         }
