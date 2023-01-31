@@ -1158,7 +1158,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             generalStyleProps: {
                 borderStyle: "solid",
                 borderRadius: "4px",
-                borderWidth: "3px",
+                borderWidth: "0px",
                 backgroundColor: "#FFFFFF",
                 borderColor: "#F1F1F1",
                 overflowY: "auto",
