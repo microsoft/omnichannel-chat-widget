@@ -18,5 +18,6 @@ export const getGeneralStylesForButton = (state: ILiveChatWidgetContext) => {
                 padding: "0.5"
             });
     }
+    console.log("ADAD generalStylesForButton", generalStylesForButton);
     return generalStylesForButton;
 };

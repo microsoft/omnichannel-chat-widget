@@ -13,9 +13,9 @@ import { createActivityMiddleware } from "../../../webchatcontainerstateful/webc
 import createAttachmentMiddleware from "../../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
 import { createAvatarMiddleware } from "../../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware";
 import { createMarkdown } from "../createMarkdown";
-import { createWebChatTelemetry } from "../../../webchatcontainerstateful/webchatcontroller/webchattelemetry/WebChatLogger";
 import { groupActivitiesMiddleware } from "../../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/groupActivitiesMiddleware";
 import { typingIndicatorMiddleware } from "../../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/typingIndicatorMiddleware";
+import { createWebChatTelemetry } from "../../../webchatcontainerstateful/webchatcontroller/webchattelemetry/WebChatLogger";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const dummyDefaultProps: ILiveChatWidgetProps = {
@@ -1071,8 +1071,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             dir: "auto",
             hideOOOHPane: false,
             hideTitle: false,
-            titleText: "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open. Please see link https://microsoft.com",
-            openLinkInNewTab: true
+            titleText: "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.",
         },
         styleProps: {
             generalStyleProps: {
@@ -1114,7 +1113,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             subtitleText: "Please take a moment to give us feedback about your chat experience. We are loading the survey for you now."
         },
         styleProps: {
-            // ...[Existing loading pane style props]
+            // ...[Existing chat button style props]
             generalStyleProps: {
                 position: "initial",
                 width: "100%",
@@ -1558,10 +1557,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 padding: "0px 10px 0 10px"
             },
             userMessageBoxStyles: {
-                maxWidth: "90%"
+                maxWidth: "75%"
             },
             systemMessageBoxStyles: {
-                maxWidth: "90%"
+                maxWidth: "75%"
             }, 
             typingIndicatorStyleProps: {
                 marginLeft: "10px",
