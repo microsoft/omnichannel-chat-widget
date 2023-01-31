@@ -93,4 +93,5 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added link and open link in new tab support in OutOfOffice Pane
 - Allowing to accept Cache Ttl from partners
 - Adding force close to endChat if chat stuck after sessionInit
-- Removing MesssageReceived event for system messages 
+- Removing MesssageReceived event for system messages
+- Fixed PostChat loading twice when Bot enabled
