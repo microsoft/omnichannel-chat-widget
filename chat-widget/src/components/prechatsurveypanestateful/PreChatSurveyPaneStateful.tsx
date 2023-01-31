@@ -23,11 +23,8 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { surveyProps, initStartChat } = props;
-    console.log("ADAD part 1 ~~~~~~");
-    console.log("ADAD surveyProps?.styleProps?.generalStyleProps", surveyProps?.styleProps?.generalStyleProps);
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPreChatSurveyPaneStyleProps, surveyProps?.styleProps?.generalStyleProps,
         { display: state.appStates.isMinimized ? "none" : "" });
-    console.log("ADAD prechat generalStyleProps", generalStyleProps);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setPreChatResponseEmail = (preChatResponse: { index: number, label: any, id: any, value: string }[]) => {
@@ -102,14 +99,10 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         ...surveyProps?.controlProps
     };
 
-    console.log("ADAD part 2 ~~~~~~");
-    console.log("ADAD surveyProps?.styleProps", surveyProps?.styleProps);
-    console.log("ADAD prechat generalStyleProps", generalStyleProps);
     const styleProps: IPreChatSurveyPaneStyleProps = {
         ...surveyProps?.styleProps,
         generalStyleProps: generalStyleProps
     };
-    console.log("ADAD prechat styleProps", styleProps);
 
     useEffect(() => {
         // Set Aria-Label Attribute for Inputs

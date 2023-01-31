@@ -79,14 +79,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
 
-    console.log("ADAD props.styleProps", props.styleProps);
-
     // Process general styles
-    console.log("ADAD props.styleProps?.generalStyles", props.styleProps?.generalStyles);
     const generalStyles: IStackStyles = {
         root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles)
     };
-    console.log("ADAD generalStyles", generalStyles);
 
     //Scrollbar styles
     const scrollbarProps: IScrollBarProps = Object.assign({}, defaultScrollBarProps, props?.scrollBarProps);
@@ -446,8 +442,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
-
-    console.log("ADAD props.preChatSurveyPaneProps", props.preChatSurveyPaneProps);
 
     return (
         <>
