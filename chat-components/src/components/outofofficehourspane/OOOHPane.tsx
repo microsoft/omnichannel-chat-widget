@@ -30,7 +30,7 @@ function OOOHPane(props: IOOOHPaneProps) {
                     id={elementId}
                     tabIndex={-1}
                     styles={containerStyles}
-                    role={props.controlProps?.role}
+                    role={props.controlProps?.role ?? defaultOOOHPaneControlProps.role}
                     className={props.styleProps?.classNames?.containerClassName}
                     dir={props.controlProps?.dir ?? defaultOOOHPaneControlProps.dir}>
                     {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.title) ||
