@@ -20,7 +20,7 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     let adaptiveCardHostConfig;
 
     const containerStyles: IStackStyles = {
-        root: Object.assign({}, defaultPreChatSurveyPaneGeneralStyles, props.styleProps?.generalStyleProps) 
+        root: Object.assign({}, defaultPreChatSurveyPaneGeneralStyles, props.styleProps?.generalStyleProps)
     };
 
     const adaptiveCardContainerStyles: IStackStyles = {
@@ -112,10 +112,10 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 background-color: ${props.styleProps?.customButtonStyleProps?.backgroundColor ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.backgroundColor}; 
             }`}</style>
             {!props.controlProps?.hidePreChatSurveyPane &&
-                <Stack 
+                <Stack
                     id={elementId}
                     tabIndex={-1}
-                    role={props.controlProps?.role}
+                    role={props.controlProps?.role ?? defaultPreChatSurveyPaneControlProps.role}
                     dir={props.controlProps?.dir ?? defaultPreChatSurveyPaneControlProps.dir}
                     styles={containerStyles}>
 
