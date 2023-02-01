@@ -185,34 +185,36 @@ Refer to the below table to understand different critical telemetry events raise
 | `ProcessingHTMLTextMiddlewareFailed`     |On HTML Field adding noopener noreferrer failed |
 | `ProcessingSanitizationMiddlewareFailed`     |On HTML Field sanitization failed |
 | `FormatTagsMiddlewareJSONStringifyFailed`     |On ACS Format Message Tags Middleware failed |
-|`IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
-|`AverageWaitTimeMessageRecieved`|On Average Wait Time system message Received|
-|`QueuePositionMessageRecieved`|On Queue Position system message Received|
-|`IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
-|`ConversationEndedThreadEventReceived`     |On Conversation ended by agent side or by timeout |
-|`InvalidConfiguration`     |On Invalid data masking regex rule collection |
-|`DataMaskingRuleApplied`     |On data masking regex rule applied |
-|`DataMaskingRuleApplyFailed`     |On data masking regex rule failed to apply |
-|`EmailTranscriptSent`     |On transcript sent to email successfully |
-|`EmailTranscriptFailed`|On transcript sent to email failure|
-|`EmailTranscriptButtonClicked`|On Email Transcript footer button clicked|
-|`EmailTranscriptCancelButtonClicked`|On Email Transcript Pane Cancel button clicked|
-|`DownloadTranscriptButtonClicked`|On download transcript button clicked|
-|`DownloadTranscriptFailed`|On download transcript failed|
+| `IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
+| `AverageWaitTimeMessageRecieved`|On Average Wait Time system message Received|
+| `QueuePositionMessageRecieved`|On Queue Position system message Received|
+| `IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
+| `ConversationEndedThreadEventReceived`     |On Conversation ended by agent side or by timeout |
+| `InvalidConfiguration`     |On Invalid data masking regex rule collection |
+| `DataMaskingRuleApplied`     |On data masking regex rule applied |
+| `DataMaskingRuleApplyFailed`     |On data masking regex rule failed to apply |
+| `EmailTranscriptSent`     |On transcript sent to email successfully |
+| `EmailTranscriptFailed`|On transcript sent to email failure|
+| `EmailTranscriptButtonClicked`|On Email Transcript footer button clicked|
+| `EmailTranscriptCancelButtonClicked`|On Email Transcript Pane Cancel button clicked|
+| `DownloadTranscriptButtonClicked`|On download transcript button clicked|
+| `DownloadTranscriptFailed`|On download transcript failed|
 | `DownloadTranscriptResponseNullOrUndefined`     |On downloading transcript response exception |
-|`AudioToggleButtonClicked`| On Audio Notification button clicked|
-|`ConfirmationCancelButtonClicked`|On confirmation pane Cancel button clicked|
-|`ConfirmationConfirmButtonClicked`|On confirmation pane Confirm button clicked|
-|`HeaderCloseButtonClicked`|On Header Close button clicked|
-|`HeaderMinimizeButtonClicked`|On Header Minimize button clicked|
-|`MessageSent`|On Message Sent|
-|`MessageReceived`|On Message Received|
-|`CustomContextReceived`|On Custom Context Received|
-|`SuppressBotMagicCodeSucceeded` | On sending magic code behind the scenes succeeded |
-|`SuppressBotMagicCodeFailed` | On sending magic code behind the scenes failed |
-|`GetAuthTokenCalled` | On getting auth token |
-|`GetAuthTokenFailed` | On getting auth token failed |
-|`ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
+| `AudioToggleButtonClicked`| On Audio Notification button clicked|
+| `ConfirmationCancelButtonClicked`|On confirmation pane Cancel button clicked|
+| `ConfirmationConfirmButtonClicked`|On confirmation pane Confirm button clicked|
+| `HeaderCloseButtonClicked`|On Header Close button clicked|
+| `HeaderMinimizeButtonClicked`|On Header Minimize button clicked|
+| `MessageSent`|On Message Sent|
+| `MessageReceived`|On Message Received|
+| `CustomContextReceived`|On Custom Context Received|
+| `SuppressBotMagicCodeSucceeded` | On sending magic code behind the scenes succeeded |
+| `SuppressBotMagicCodeFailed` | On sending magic code behind the scenes failed |
+| `GetAuthTokenCalled` | On getting auth token |
+| `GetAuthTokenFailed` | On getting auth token failed |
+| `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
+| `SystemMessageReceived` | On system message received |
+
 
 #### Calling Events
 

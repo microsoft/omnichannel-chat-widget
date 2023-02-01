@@ -62,20 +62,17 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            if (isPostChatEnabled === "true") {
-                if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-                    WebChatStoreLoader.store = null;
-                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
-                    await addDelayInMs(Constants.PostChatLoadingDurationInMs);
+            if (isPostChatEnabled === "true" && postChatSurveyMode === PostChatSurveyMode.Embed && state.appStates.conversationState === ConversationState.Active) {
+                WebChatStoreLoader.store = null;
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
+                await addDelayInMs(Constants.PostChatLoadingDurationInMs);
 
-                    const loadPostChatEvent: ICustomEvent = {
-                        eventName: BroadcastEvent.LoadPostChatSurvey,
-                    };
-                    BroadcastService.postMessage(loadPostChatEvent);
-                } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
-                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-                }
-            } else {
+                const loadPostChatEvent: ICustomEvent = {
+                    eventName: BroadcastEvent.LoadPostChatSurvey,
+                };
+                BroadcastService.postMessage(loadPostChatEvent);
+            }
+            if (state.appStates.conversationState === ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
             }

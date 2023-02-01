@@ -7,12 +7,12 @@ export class defaultCacheManager {
     public static InternalCache: any = {};
 }
 
-export const registerBroadcastServiceForLocalStorage = (orgid: string, widgetId: string, widgetInstanceId: string) => {
+export const registerBroadcastServiceForLocalStorage = (orgid: string, widgetId: string, widgetInstanceId: string, ttlInMins: number) => {
     const widgetCacheId = getWidgetCacheId(orgid, widgetId, widgetInstanceId);
     BroadcastService.getMessageByEventName(widgetCacheId)
         .subscribe((msg) => {
             try {
-                defaultClientDataStoreProvider().setData(
+                defaultClientDataStoreProvider(ttlInMins).setData(
                     widgetCacheId,
                     JSON.stringify(msg.payload),
                     "localStorage");

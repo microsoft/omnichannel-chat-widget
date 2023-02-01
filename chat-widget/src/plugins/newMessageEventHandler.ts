@@ -47,7 +47,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     payload.messageType = Constants.systemMessageTag;
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                        Event: TelemetryEvent.MessageReceived,
+                        Event: TelemetryEvent.SystemMessageReceived,
                         Description: "System message received"
                     });
                 }

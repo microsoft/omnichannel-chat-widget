@@ -83,6 +83,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: StartChatOptionalParams, persistedState?: any) => {
+    let isStartChatSuccessful = false;
     try {
         //Start widget load timer
         TelemetryTimers.WidgetLoadTimer = createTimer();
@@ -100,8 +101,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
                 return;
             }
         }
-
-        let isStartChatSuccessful = false;
 
         //Check if chat retrieved from cache
         if (persistedState || params?.liveChatContext) {
@@ -167,7 +166,7 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
         if (isStartChatSuccessful) {
             ActivityStreamHandler.uncork();
             // Update start chat failure app state if chat loads successfully
-            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false});
+            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
 
@@ -191,13 +190,30 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             return;
         }
         // Set app state to failing start chat
-        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true});
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
         // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+
+        // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
+        // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state 
+        if (isStartChatSuccessful === true) {
+            await forceEndChat(chatSDK);
+        }
     } finally {
         optionalParams = {};
         widgetInstanceId = "";
     }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const forceEndChat = async (chatSDK: any) => {
+    TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+        Event: TelemetryEvent.WidgetLoadFailed,
+        ExceptionDetails: {
+            Exception: "SessionInit was successful, but widget load failed."
+        }
+    });
+    chatSDK?.endChat();
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
