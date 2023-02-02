@@ -5,7 +5,6 @@ import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -78,12 +77,15 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
-    await initStartChat(chatSDK, props?.chatConfig, props?.getAuthToken, dispatch, setAdapter, optionalParams);
+    await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, params?: StartChatOptionalParams, persistedState?: any) => {
+const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
+    const chatConfig = props?.chatConfig;
+    const getAuthToken = props?.getAuthToken;
+    const hideErrorUIPane = props?.controlProps?.hideErrorUIPane;
     try {
         //Start widget load timer
         TelemetryTimers.WidgetLoadTimer = createTimer();
@@ -189,8 +191,14 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             return;
         }
-        // Set app state to failing start chat
-        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
+        if (!hideErrorUIPane) {
+            // Set app state to failing start chat if hideErrorUI is not turned on
+            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.ErrorUIPaneLoaded,
+                Description: "Error UI Pane Loaded"
+            });
+        }
         // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
@@ -232,7 +240,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         persistedState?.appStates?.conversationState === ConversationState.Active) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
-        await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams, persistedState);
+        await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
         return true;
     } else {
         return false;
@@ -279,7 +287,7 @@ const handleAuthenticationIfEnabled = async (chatSDK: any, props: any): Promise<
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId: any, dispatch: Dispatch<ILiveChatWidgetAction>): Promise<boolean> => {
+const checkIfConversationStillValid = async (chatSDK: any, props: ILiveChatWidgetProps, requestId: any, dispatch: Dispatch<ILiveChatWidgetAction>): Promise<boolean> => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
 
@@ -287,6 +295,14 @@ const checkIfConversationStillValid = async (chatSDK: any, props: any, requestId
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     const authSucceed = await handleAuthenticationIfEnabled(chatSDK, props);
     if (!authSucceed) {
+        if (!props?.controlProps?.hideErrorUIPane) {
+            // Set app state to failing start chat if hideErrorUI is not turned on
+            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.ErrorUIPaneLoaded,
+                Description: "Error UI Pane Loaded"
+            });
+        }
         return false;
     }
 
