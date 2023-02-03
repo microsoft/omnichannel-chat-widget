@@ -19,7 +19,7 @@ function LoadingPane(props: ILoadingPaneProps) {
     const containerStyles: IStackStyles = {
         root: Object.assign({}, defaultLoadingPaneGeneralStyles, props.styleProps?.generalStyleProps)
     };
-
+    
     const iconStyles: IIconStyles = {
         root: Object.assign({}, defaultLoadingPaneIconStyles, props.styleProps?.iconStyleProps)
     };

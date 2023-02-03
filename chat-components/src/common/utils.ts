@@ -3,7 +3,7 @@ import { ElementType, Regex } from "./Constants";
 import { AdaptiveCard } from "adaptivecards";
 import { BroadcastService } from "../services/BroadcastService";
 import { ICustomEvent } from "../interfaces/ICustomEvent";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { decodeComponentString } from "..";
 
 export const uuidv4 = (): string => {
@@ -97,17 +97,14 @@ export const addNoreferrerNoopenerTag = (htmlNode: any) => {
     }
 };
 
-export const replaceURLWithAnchor = (text: string | undefined, openInNewTab: boolean | undefined) => {
-    if (text) {
-        const modifiedText = text.replace(Regex.URLRegex, function(url) {
-            if (openInNewTab) {
-                // eslint-disable-next-line quotes
-                return '<a href="' + url + '" rel="noreferrer noopener" target="_blank">' + url + '</a>';
-            }
-            // eslint-disable-next-line quotes
-            return '<a href="' + url + '">' + url + '</a>';
-        });   
-        return modifiedText;
-    }
-    return text;
+export const useMediaQuery = (query: string) => {
+    const mediaMatch = window.matchMedia(query);
+    const [matches, setMatches] = useState(mediaMatch.matches);
+  
+    useEffect(() => {
+        const handler = (e: { matches: any; }) => setMatches(e.matches);
+        mediaMatch.addListener(handler);
+        return () => mediaMatch.removeListener(handler);
+    });
+    return matches;
 };
