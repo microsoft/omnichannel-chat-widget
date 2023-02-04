@@ -124,14 +124,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId, dispatch);
+            console.log("start chat:1");
             if (isChatValid === true) {
+                console.log("start chat:2");
                 await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
                 return;
             }
         }
 
         if (isChatValid === false) {
+            console.log("localState:,", JSON.stringify(localState));
             if (localState) {
+                console.log("start chat:3");
                 await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 return;
             } else {
@@ -140,7 +144,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     };
 
-    useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const setupClientDataStore = () => {
         // Add default localStorage support for widget
         if (props.contextDataStore === undefined) {
             const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
@@ -151,7 +156,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         } else {
             DataStoreManager.clientDataStore = props.contextDataStore;
         }
+    };
 
+    useEffect(() => {
+        setupClientDataStore();
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
