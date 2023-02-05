@@ -97,14 +97,61 @@ export const addNoreferrerNoopenerTag = (htmlNode: any) => {
     }
 };
 
+export const replaceURLWithAnchor = (text: string | undefined, openInNewTab: boolean | undefined) => {
+    if (text) {
+        const modifiedText = text.replace(Regex.URLRegex, function(url) {
+            if (openInNewTab) {
+                // eslint-disable-next-line quotes
+                return '<a href="' + url + '" rel="noreferrer noopener" target="_blank">' + url + '</a>';
+            }
+            // eslint-disable-next-line quotes
+            return '<a href="' + url + '">' + url + '</a>';
+        });   
+        return modifiedText;
+    }
+    return text;
+};
+
+
+
 export const useMediaQuery = (query: string) => {
-    const mediaMatch = window.matchMedia(query);
-    const [matches, setMatches] = useState(mediaMatch.matches);
-  
+    const getMatches = (query: string): boolean => {
+        // Prevents SSR issues
+        if (typeof window !== "undefined") {
+            return window.matchMedia(query).matches;
+        }
+        return false;
+    };
+    
+    const [matches, setMatches] = useState<boolean>(getMatches(query));
+    
+    function handleChange() {
+        setMatches(getMatches(query));
+    }
+    
     useEffect(() => {
-        const handler = (e: { matches: any; }) => setMatches(e.matches);
-        mediaMatch.addListener(handler);
-        return () => mediaMatch.removeListener(handler);
-    });
+        const matchMedia = window.matchMedia(query);
+    
+        // Triggered at the first client-side load and if query changes
+        handleChange();
+    
+        // Listen matchMedia
+        if (matchMedia.addListener) {
+            matchMedia.addListener(handleChange);
+        } else {
+            matchMedia.addEventListener("change", handleChange);
+        }
+    
+        return () => {
+            if (matchMedia.removeListener) {
+                matchMedia.removeListener(handleChange);
+            } else {
+                matchMedia.removeEventListener("change", handleChange);
+            }
+        };
+        //Eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [query]);
+    
     return matches;
 };
+
