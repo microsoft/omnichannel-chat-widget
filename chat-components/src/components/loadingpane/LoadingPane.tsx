@@ -41,7 +41,7 @@ function LoadingPane(props: ILoadingPaneProps) {
     const spinnerTextStyles: ILabelStyles = {
         root: Object.assign({}, defaultLoadingPaneSpinnerTextStyles, props.styleProps?.spinnerTextStyleProps)
     };
-    
+
     return (
         <>
             {!props.controlProps?.hideLoadingPane &&
