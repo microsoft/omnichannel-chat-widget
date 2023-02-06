@@ -133,9 +133,6 @@ const initStartChat = async (chatSDK: any, chatConfig: ChatConfig | undefined, g
                 }
             });
             isStartChatSuccessful = false;
-            // Resetting the widget state to Closed, for recent introduction of OC rate limiting(429 Error) 
-            // TODO : How to diplay a proper UI message to customer to try after sometime at this point - cool down scenario
-            //dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             return;
         }
 
