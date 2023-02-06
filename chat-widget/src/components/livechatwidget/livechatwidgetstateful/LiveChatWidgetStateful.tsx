@@ -124,18 +124,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId, dispatch);
-            console.log("start chat:1");
             if (isChatValid === true) {
-                console.log("start chat:2");
                 await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
                 return;
             }
         }
 
         if (isChatValid === false) {
-            console.log("localState:,", JSON.stringify(localState));
             if (localState) {
-                console.log("start chat:3");
                 await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 return;
             } else {
