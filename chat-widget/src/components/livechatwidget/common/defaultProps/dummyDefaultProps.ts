@@ -554,6 +554,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         hideCallingContainer: false,
         hideChatButton: false,
         hideConfirmationPane: false,
+        hideErrorUIPane: false,
         hideFooter: false,
         hideHeader: false,
         hideLoadingPane: false,

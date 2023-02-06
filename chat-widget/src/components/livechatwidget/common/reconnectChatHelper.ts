@@ -91,7 +91,7 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK:
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
-    await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
+    await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
 };
 
 const redirectPage = (redirectURL: string, redirectInSameWindow: boolean) => {
