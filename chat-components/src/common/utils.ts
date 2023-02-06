@@ -3,7 +3,7 @@ import { ElementType, Regex } from "./Constants";
 import { AdaptiveCard } from "adaptivecards";
 import { BroadcastService } from "../services/BroadcastService";
 import { ICustomEvent } from "../interfaces/ICustomEvent";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode } from "react";
 import { decodeComponentString } from "..";
 
 export const uuidv4 = (): string => {
@@ -111,47 +111,3 @@ export const replaceURLWithAnchor = (text: string | undefined, openInNewTab: boo
     }
     return text;
 };
-
-
-
-export const useMediaQuery = (query: string) => {
-    const getMatches = (query: string): boolean => {
-        // Prevents SSR issues
-        if (typeof window !== "undefined") {
-            return window.matchMedia(query).matches;
-        }
-        return false;
-    };
-    
-    const [matches, setMatches] = useState<boolean>(getMatches(query));
-    
-    function handleChange() {
-        setMatches(getMatches(query));
-    }
-    
-    useEffect(() => {
-        const matchMedia = window.matchMedia(query);
-    
-        // Triggered at the first client-side load and if query changes
-        handleChange();
-    
-        // Listen matchMedia
-        if (matchMedia.addListener) {
-            matchMedia.addListener(handleChange);
-        } else {
-            matchMedia.addEventListener("change", handleChange);
-        }
-    
-        return () => {
-            if (matchMedia.removeListener) {
-                matchMedia.removeListener(handleChange);
-            } else {
-                matchMedia.removeEventListener("change", handleChange);
-            }
-        };
-        //Eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [query]);
-    
-    return matches;
-};
-

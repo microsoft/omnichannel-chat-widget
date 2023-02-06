@@ -19,7 +19,7 @@ function LoadingPane(props: ILoadingPaneProps) {
     const containerStyles: IStackStyles = {
         root: Object.assign({}, defaultLoadingPaneGeneralStyles, props.styleProps?.generalStyleProps)
     };
-    
+
     const iconStyles: IIconStyles = {
         root: Object.assign({}, defaultLoadingPaneIconStyles, props.styleProps?.iconStyleProps)
     };
@@ -41,7 +41,7 @@ function LoadingPane(props: ILoadingPaneProps) {
     const spinnerTextStyles: ILabelStyles = {
         root: Object.assign({}, defaultLoadingPaneSpinnerTextStyles, props.styleProps?.spinnerTextStyleProps)
     };
-
+    
     return (
         <>
             {!props.controlProps?.hideLoadingPane &&
@@ -52,7 +52,7 @@ function LoadingPane(props: ILoadingPaneProps) {
                     role={props.controlProps?.role}
                     dir={props.controlProps?.dir ?? defaultLoadingPaneControlProps.dir}>
 
-                    {!props.controlProps?.hideIcon && (decodeComponentString(props.componentOverrides?.icon) ||
+                    {!props.controlProps?.hideIcon && props.windowHeight && props.windowHeight > 375 && (decodeComponentString(props.componentOverrides?.icon) ||
                         <Icon
                             className={props.styleProps?.classNames?.iconClassName}
                             styles={iconStyles}

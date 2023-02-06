@@ -66,6 +66,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import useWindowDimensions from "../../../hooks/useWindowDimensions";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -443,6 +444,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
 
+    const { height, width } = useWindowDimensions();
+    console.log(props);
+    if(props.loadingPaneProps){
+        props.loadingPaneProps.windowHeight = height;
+        props.loadingPaneProps.windowWidth = width;
+
+        console.log("**************");
+        console.log(props.loadingPaneProps?.windowHeight);
+        console.log(props.loadingPaneProps?.windowWidth);
+    }
     return (
         <>
             <style>{`
