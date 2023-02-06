@@ -7,7 +7,7 @@ export class MockChatSDK {
     public isMockModeOn = true;
 
     public async startChat() {
-        await this.sleep(1000);
+        await this.sleep(100000000);
     }
 
     public endChat() {
