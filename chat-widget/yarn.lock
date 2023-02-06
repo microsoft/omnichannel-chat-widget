@@ -2172,18 +2172,6 @@
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.3.tgz#fbfd667a11a8e21ee53a6d82e4da4ae5f187d3a1"
   integrity sha512-Ij+qoxhJFqyTzDZbibiYiOMAWNDLV03psForA+aH3oBKoisBUgsE/1UpmTYca3CerFqxa2AUjy9v7mBG8Cc3tg==
 
-"@microsoft/omnichannel-chat-components@./microsoft-omnichannel-chat-components-v0.1.0-2.tgz":
-  version "0.1.0-2"
-  resolved "./microsoft-omnichannel-chat-components-v0.1.0-2.tgz#6a0f1a344f8ab210a3054278853768a5e88cbda5"
-  dependencies:
-    "@fluentui/react" "^8.46.0"
-    adaptivecards "^2.10.0"
-    botframework-webchat "4.15.4"
-    broadcast-channel "^4.5.0"
-    jest-transform-stub "^2.0.0"
-    rxjs "^5.0.3"
-    styled-components "^5.3.1"
-
 "@microsoft/omnichannel-chat-components@0.1.0-main.d5e0dfe":
   version "0.1.0-main.d5e0dfe"
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-0.1.0-main.d5e0dfe.tgz#a49ac0509fc4843c9f4c9bc5c84f1a77acdc68be"
