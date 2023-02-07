@@ -12,5 +12,6 @@ export const defaultChatButtonSubTitleStyles: IStyle = {
     overflow: "hidden",
     padding: "0px",
     textOverflow: "ellipsis !important",
-    width: "max-content"
+    whiteSpace: "nowrap",
+    width: "90px"
 };
