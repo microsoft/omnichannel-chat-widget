@@ -111,6 +111,7 @@ export enum TelemetryEvent {
     DownloadTranscriptResponseNullOrUndefined = "DownloadTranscriptResponseNullOrUndefined",
     EmailTranscriptSent = "EmailTranscriptSent",
     EmailTranscriptFailed = "EmailTranscriptFailed",
+    ErrorUIPaneLoaded = "ErrorUIPaneLoaded",
     DownloadTranscriptFailed = "DownloadTranscriptFailed",
     StartChatFailed = "StartChatFailed",
     IC3ThreadUpdateEventReceived = "IC3ThreadUpdateEventReceived",
