@@ -96,3 +96,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Removing MesssageReceived event for system messages
 - Fixed PostChat loading twice when Bot enabled
 - Fixed Narrator/Ndva in PreChat Survey Pane 
+- Fix Start Chat icon disappearing due to subtitle length
