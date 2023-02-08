@@ -77,6 +77,12 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                         Description: "New message received",
                         Data: payload
                     });
+                } else {
+                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                        Event: TelemetryEvent.HistoryMessageReceived,
+                        Description: "History message received",
+                        Data: payload
+                    });
                 }
             }
         }
