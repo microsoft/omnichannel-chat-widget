@@ -4,5 +4,7 @@ import { presetThreeLoadingPaneControlProps } from "./presetThreeLoadingPaneCont
 
 export const presetThreeLoadingPaneProps: ILoadingPaneProps = {
     controlProps: presetThreeLoadingPaneControlProps,
-    styleProps: presetThreeLoadingPaneStyles
+    styleProps: presetThreeLoadingPaneStyles,
+    windowWidth: 500,
+    windowHeight: 500
 };

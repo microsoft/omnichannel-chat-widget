@@ -4,5 +4,7 @@ import { presetTwoLoadingPaneControlProps } from "./presetTwoLoadingPaneControlP
 
 export const presetTwoLoadingPaneProps: ILoadingPaneProps = {
     controlProps: presetTwoLoadingPaneControlProps,
-    styleProps: presetTwoLoadingPaneStyles
+    styleProps: presetTwoLoadingPaneStyles,
+    windowWidth: 500,
+    windowHeight: 500
 };
