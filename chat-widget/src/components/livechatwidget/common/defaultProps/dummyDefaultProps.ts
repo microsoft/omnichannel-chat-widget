@@ -400,7 +400,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 alignItems: "center",
                 margin: "0px 14px 0px 14px",
                 textOverflow: "ellipsis !important",
-                width: "max-content",
+                width: "90px",
+                whiteSpace: "nowrap",
                 cursor: "pointer"
             },
             classNames: {
