@@ -5,5 +5,5 @@ export const defaultInputValidationPaneSubtitleStyles: IStyle = {
     fontFamily: "'Segoe UI', Arial, sans-serif",
     fontSize: "14px",
     lineHeight: "16px",
-    marginBottom: "5px"
+    marginBottom: "10px"
 };
