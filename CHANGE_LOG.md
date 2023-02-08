@@ -95,5 +95,5 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Adding force close to endChat if chat stuck after sessionInit
 - Removing MesssageReceived event for system messages
 - Fixed PostChat loading twice when Bot enabled
-- Fixed Narrator/Ndva in PreChat Survey Pane
 - Adding `hideErrorUIPane` to `ILiveChatWidgetControlProps` to show/hide Error UI on start chat
+- Fix Start Chat icon disappearing due to subtitle length
