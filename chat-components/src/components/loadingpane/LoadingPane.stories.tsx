@@ -81,7 +81,9 @@ const loadingPanePreset4Props: ILoadingPaneProps = {
         subtitle: customSubtitle,
         spinner: customSpinner,
         spinnerText: customSpinnerText
-    }
+    },
+    windowWidth: 500,
+    windowHeight: 500
 };
 
 export const LoadingPanePreset4 = LoadingPaneTemplate.bind({});
