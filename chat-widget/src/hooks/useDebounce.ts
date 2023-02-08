@@ -1,10 +1,10 @@
 import { useRef, useEffect } from "react";
 
-type Timer = ReturnType<typeof setTimeout>;
-type SomeFunction = (...args: unknown[]) => void;
+type TimerType = ReturnType<typeof setTimeout>;
+type FunctionType = (...args: unknown[]) => void;
 
-export default function useDebounce<Fn extends SomeFunction>(func: Fn, delay = 1000) {
-    const timer = useRef<Timer>();
+export default function useDebounce<Fn extends FunctionType>(func: Fn, delay = 1000) {
+    const timer = useRef<TimerType>();
 
     useEffect(() => {
         return () => {
