@@ -12,6 +12,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralLoadingPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralLoadingPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 
 export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
@@ -40,6 +41,7 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
         hideSpinnerText: true,
         ...props.controlProps
     };
+    const { height, width } = useWindowDimensions();
 
     // Move focus to the first button
     useEffect(() => {
@@ -55,6 +57,8 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
             componentOverrides={props.componentOverrides}
             controlProps={state.appStates.isStartChatFailing ? errorUIControlProps : controlProps}
             styleProps={state.appStates.isStartChatFailing ? errorUIStyleProps : styleProps}
+            windowWidth={width}
+            windowHeight={height}
         />
     );
 };
