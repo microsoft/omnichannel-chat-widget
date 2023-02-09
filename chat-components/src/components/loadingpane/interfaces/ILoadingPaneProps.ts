@@ -6,4 +6,6 @@ export interface ILoadingPaneProps {
     componentOverrides?: ILoadingPaneComponentOverrides;
     controlProps?: ILoadingPaneControlProps;
     styleProps?: ILoadingPaneStyleProps;
+    windowWidth?: number;
+    windowHeight?: number;
 }

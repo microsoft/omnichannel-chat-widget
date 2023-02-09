@@ -9,9 +9,9 @@ export const defaultInputValidationPaneGeneralStyles: IStyle = {
     borderTopWidth: "1px",
     bottom: "0",
     left: "0",
-    minHeight: "180px",
     padding: "10px",
     position: "absolute",
     width: "100%",
+    maxHeight: "100%",
     zIndex: "9999"
 };
