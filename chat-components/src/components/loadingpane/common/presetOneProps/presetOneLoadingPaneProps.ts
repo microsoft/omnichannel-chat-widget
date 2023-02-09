@@ -4,7 +4,5 @@ import { defaultLoadingPaneStyles } from "../defaultProps/defaultStyles/defaultL
 
 export const presetOneLoadingPaneProps: ILoadingPaneProps = {
     controlProps: presetOneLoadingPaneControlProps,
-    styleProps: defaultLoadingPaneStyles,
-    windowWidth: 500,
-    windowHeight: 500
+    styleProps: defaultLoadingPaneStyles
 };
