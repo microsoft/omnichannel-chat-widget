@@ -49,7 +49,7 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.LoadingPaneLoaded, Description: "Loading pane loaded." });
     }, []);
-    const { height, width } = useWindowDimensions();
+    
     return (
         <LoadingPane
             componentOverrides={props.componentOverrides}
