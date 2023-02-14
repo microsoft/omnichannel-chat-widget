@@ -25,7 +25,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
     if (props.getAuthToken) {
         const authClientFunction = getAuthClientFunction(props.chatConfig);
         if (props.getAuthToken && authClientFunction) {
-            // set auth token to chat sdk before start chat
+            // set auth token to chat sdk before end chat
             const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
             if (!authSuccess) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
