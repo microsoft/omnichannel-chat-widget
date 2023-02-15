@@ -4,6 +4,7 @@ export interface ILiveChatWidgetControlProps {
     hideCallingContainer?: boolean;
     hideChatButton?: boolean;
     hideConfirmationPane?: boolean;
+    hideErrorUIPane?: boolean;
     hideFooter?: boolean;
     hideHeader?: boolean;
     hideLoadingPane?: boolean;
@@ -15,4 +16,5 @@ export interface ILiveChatWidgetControlProps {
     hideWebChatContainer?: boolean;
     hideStartChatButton?: boolean;
     widgetInstanceId?: string | undefined;
+    cacheTtlInMins?: number;
 }

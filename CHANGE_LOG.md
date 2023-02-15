@@ -90,3 +90,10 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added getGeolocation feature if enabled in OC
 - Fixed default message bubble width to be 90%
 - Fixed multiple bugs with timestamp rendering
+- Added link and open link in new tab support in OutOfOffice Pane
+- Allowing to accept Cache Ttl from partners
+- Adding force close to endChat if chat stuck after sessionInit
+- Removing MesssageReceived event for system messages
+- Fixed PostChat loading twice when Bot enabled
+- Adding `hideErrorUIPane` to `ILiveChatWidgetControlProps` to show/hide Error UI on start chat
+- Fix Start Chat icon disappearing due to subtitle length

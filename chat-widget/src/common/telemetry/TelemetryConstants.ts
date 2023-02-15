@@ -46,7 +46,9 @@ export enum BroadcastEvent {
     CloseChat = "CloseChat",
     InitiateEndChatOnBrowserUnload = "InitiateEndChatOnBrowserUnload",
     ClosePopoutWindow = "ClosePopoutWindow",
-    RaiseErrorEvent = "RaiseErrorEvent"
+    RaiseErrorEvent = "RaiseErrorEvent",
+    NetworkDisconnected = "NetworkDisconnected",
+    NetworkReconnected = "NetworkReconnected"
 }
 
 // Events being logged
@@ -109,6 +111,7 @@ export enum TelemetryEvent {
     DownloadTranscriptResponseNullOrUndefined = "DownloadTranscriptResponseNullOrUndefined",
     EmailTranscriptSent = "EmailTranscriptSent",
     EmailTranscriptFailed = "EmailTranscriptFailed",
+    ErrorUIPaneLoaded = "ErrorUIPaneLoaded",
     DownloadTranscriptFailed = "DownloadTranscriptFailed",
     StartChatFailed = "StartChatFailed",
     IC3ThreadUpdateEventReceived = "IC3ThreadUpdateEventReceived",
@@ -168,6 +171,8 @@ export enum TelemetryEvent {
 
     MessageSent = "MessageSent",
     MessageReceived = "MessageReceived",
+    SystemMessageReceived = "SystemMessageReceived",
+
     CustomContextReceived = "CustomContextReceived",
 
     // Internet connection

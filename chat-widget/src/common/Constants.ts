@@ -120,6 +120,7 @@ export class Constants {
     public static readonly ChatWidgetStateChangedPrefix = "ChatWidgetStateChanged";
     public static readonly PostChatLoadingDurationInMs = 2000;
     public static readonly BrowserUnloadConfirmationMessage = "Do you want to leave chat?";
+    public static readonly CacheTtlInMinutes = 15;
 }
 
 export const Regex = class {
@@ -171,6 +172,7 @@ export class HtmlAttributeNames {
     public static readonly adaptiveCardClassName = "ac-adaptiveCard";
     public static readonly adaptiveCardTextBlockClassName = "ac-textBlock";
     public static readonly adaptiveCardToggleInputClassName = "ac-toggleInput";
+    public static readonly adaptiveCardActionSetClassName = "ac-actionSet";
 }
 
 export class WebChatMiddlewareConstants {
@@ -206,13 +208,13 @@ export enum EnvironmentVersion {
     test = "test"
 }
 
-export enum E2VVOptions{
+export enum E2VVOptions {
     NoCalling = "192350000",
     VideoAndVoiceCalling = "192350001",
     VoiceOnly = "192350002"
 }
 
-export enum LiveWorkItemState  {
+export enum LiveWorkItemState {
     Active = "Active",
     Closed = "Closed",
     Open = "Open",
@@ -246,7 +248,7 @@ export class AriaTelemetryConstants {
     public static readonly EU: string = "Europe";
 
     // EUR: crm4; FRA: crm12; GER: crm16; CHE: crm17; NOR: crm19
-    public static readonly lcwEUDomainNames : Array<string> = [
+    public static readonly lcwEUDomainNames: Array<string> = [
         "crm4.omnichannelengagementhub.com",
         "crm12.omnichannelengagementhub.com",
         "crm16.omnichannelengagementhub.com",

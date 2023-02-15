@@ -100,6 +100,28 @@
           "title": "OutOfOfficeHours Pane Preset 3"
         }
       ]
+    },
+    "stateless-components-outofofficehours-pane--oooh-pane-preset-4": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "7pu_1bfSttcj",
+          "index": 0,
+          "title": "OutOfOffice Link Support"
+        },
+        {
+          "browserType": "firefox",
+          "id": "S5ylLJaS3ubQ",
+          "index": 1,
+          "title": "OutOfOffice Link Support"
+        },
+        {
+          "browserType": "webkit",
+          "id": "-cQt0mvJfS_-",
+          "index": 2,
+          "title": "OutOfOffice Link Support"
+        }
+      ]
     }
   },
   "screenshotOptions": {

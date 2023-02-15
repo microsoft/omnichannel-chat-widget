@@ -4,6 +4,7 @@ import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { getWidgetCacheId, isNullOrUndefined } from "../../common/utils";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
+import { Constants } from "../../common/Constants";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
@@ -11,7 +12,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         props?.chatSDK?.omnichannelConfig?.widgetId,
         props?.controlProps?.widgetInstanceId ?? "");
 
-    const initialState = defaultClientDataStoreProvider().getData(widgetCacheId, "localStorage");
+    const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
+    const initialState = defaultClientDataStoreProvider(cacheTtlInMins).getData(widgetCacheId, "localStorage");
 
     if (!isNullOrUndefined(initialState)) {
         return JSON.parse(initialState);

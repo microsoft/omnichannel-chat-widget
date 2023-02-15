@@ -28,7 +28,7 @@ import { Components } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
-import { E2VVOptions } from "../../../common/Constants";
+import { Constants, E2VVOptions } from "../../../common/Constants";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
@@ -112,7 +112,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const startChat = async (props: any, localState?: any) => {
+    const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
         let isChatValid = false;
 
         //Start a chat from cache/reconnectid
@@ -125,7 +125,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId, dispatch);
             if (isChatValid === true) {
-                await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
+                await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
                 return;
             }
         }
@@ -140,18 +140,22 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     };
 
-    useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const setupClientDataStore = () => {
         // Add default localStorage support for widget
         if (props.contextDataStore === undefined) {
+            const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
+            DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins);
             registerBroadcastServiceForLocalStorage(chatSDK?.omnichannelConfig?.orgId,
                 chatSDK?.omnichannelConfig?.widgetId,
-                props?.controlProps?.widgetInstanceId ?? "");
-
-            DataStoreManager.clientDataStore = defaultClientDataStoreProvider();
+                props?.controlProps?.widgetInstanceId ?? "", cacheTtlInMins);
         } else {
             DataStoreManager.clientDataStore = props.contextDataStore;
         }
+    };
 
+    useEffect(() => {
+        setupClientDataStore();
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
@@ -440,7 +444,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const prepareEndChatRelay = (adapter: any, state: ILiveChatWidgetContext) => prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams, persistedState);
+    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
 
     return (

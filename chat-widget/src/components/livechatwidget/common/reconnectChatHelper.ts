@@ -56,14 +56,14 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
         const chatReconnectOptionalParams: IReconnectChatOptionalParams = {
             reconnectId: props.reconnectChatPaneProps?.reconnectId
         };
+        // Get auth token for getting chat reconnect context
         if (isAuthenticatedChat) {
-            // Get auth token for for getting chat reconnect context
             await handleAuthentication(chatSDK, chatConfig, props.getAuthToken);
         }
         const reconnectChatContext = await chatSDK?.getChatReconnectContext(chatReconnectOptionalParams);
         if (isAuthenticatedChat) {
             // remove auth token after reconnectId is fetched
-            // this will be reset later at start chat
+            // AuthToken will be reset later at start chat
             removeAuthTokenProvider(chatSDK);
         }
         return reconnectChatContext;
@@ -91,7 +91,7 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK:
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
-    await initStartChat(chatSDK, props.chatConfig, props.getAuthToken, dispatch, setAdapter, optionalParams);
+    await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
 };
 
 const redirectPage = (redirectURL: string, redirectInSameWindow: boolean) => {
