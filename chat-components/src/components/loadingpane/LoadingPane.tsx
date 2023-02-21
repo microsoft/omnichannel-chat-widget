@@ -41,6 +41,8 @@ function LoadingPane(props: ILoadingPaneProps) {
     const spinnerTextStyles: ILabelStyles = {
         root: Object.assign({}, defaultLoadingPaneSpinnerTextStyles, props.styleProps?.spinnerTextStyleProps)
     };
+    
+    const showInSmallWindow: boolean =  props.windowHeight ? props.windowHeight > 375 : true;
 
     return (
         <>
@@ -52,7 +54,7 @@ function LoadingPane(props: ILoadingPaneProps) {
                     role={props.controlProps?.role}
                     dir={props.controlProps?.dir ?? defaultLoadingPaneControlProps.dir}>
 
-                    {!props.controlProps?.hideIcon && (decodeComponentString(props.componentOverrides?.icon) ||
+                    {!props.controlProps?.hideIcon && showInSmallWindow && (decodeComponentString(props.componentOverrides?.icon) ||
                         <Icon
                             className={props.styleProps?.classNames?.iconClassName}
                             styles={iconStyles}

@@ -140,7 +140,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     };
 
-    useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const setupClientDataStore = () => {
         // Add default localStorage support for widget
         if (props.contextDataStore === undefined) {
             const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
@@ -151,7 +152,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         } else {
             DataStoreManager.clientDataStore = props.contextDataStore;
         }
+    };
 
+    useEffect(() => {
+        setupClientDataStore();
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
