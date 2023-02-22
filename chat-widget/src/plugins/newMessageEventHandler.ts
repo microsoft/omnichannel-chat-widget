@@ -14,7 +14,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
         raiseMessageEvent(activity, isHistoryMessage);
     };
-
+    let isHistoryMessageReceivedEventRasied = false;
     const raiseMessageEvent = (activity: IActivity, isHistoryMessage: boolean) => {
         if (activity?.type === Constants.message) {
             const payload = {
@@ -78,11 +78,14 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                         Data: payload
                     });
                 } else {
-                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                        Event: TelemetryEvent.HistoryMessageReceived,
-                        Description: "History message received",
-                        Data: payload
-                    });
+                    if (!isHistoryMessageReceivedEventRasied) {
+                        isHistoryMessageReceivedEventRasied = true;
+                        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                            Event: TelemetryEvent.HistoryMessageReceived,
+                            Description: "History message received",
+                            Data: payload
+                        });
+                    }
                 }
             }
         }
