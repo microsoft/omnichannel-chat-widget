@@ -214,7 +214,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `GetAuthTokenFailed` | On getting auth token failed |
 | `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 | `SystemMessageReceived` | On system message received |
-
+| `HistoryMessageReceived` | On history message received |
 
 #### Calling Events
 
