@@ -4,4 +4,5 @@ export interface IPreChatSurveyPaneButtonStyles {
     fontFamily?: string;
     fontSize?: string;
     height?: string;
+    width?: string;
 }

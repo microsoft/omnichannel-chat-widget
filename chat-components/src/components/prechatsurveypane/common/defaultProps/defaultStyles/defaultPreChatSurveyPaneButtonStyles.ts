@@ -5,5 +5,6 @@ export const defaultPreChatSurveyPaneButtonStyles: IPreChatSurveyPaneButtonStyle
     color: "#FFFFFF",
     fontFamily: "Segoe UI, Arial, sans-serif",
     fontSize: "15px",
-    height: "48px"
+    height: "48px",
+    width: "auto"
 };

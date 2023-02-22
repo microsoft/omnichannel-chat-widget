@@ -103,6 +103,7 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 border: 1px solid #00000000;
                 margin: 2px;
                 height: ${props.styleProps?.customButtonStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.height};
+                width: ${props.styleProps?.customButtonStyleProps?.width ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.width};
                 border-radius: 5px;
                 cursor: pointer;
                 font-weight: bold;
