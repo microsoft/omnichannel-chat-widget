@@ -110,7 +110,6 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
-    dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
 
     if (!skipCloseChat) {
         try {
@@ -145,6 +144,8 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                     exception: `Failed to endChat: ${error}`
                 }
             });
+        }finally {
+            dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
         }
     }
 };
