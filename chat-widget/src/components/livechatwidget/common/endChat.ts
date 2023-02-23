@@ -144,7 +144,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                     exception: `Failed to endChat: ${error}`
                 }
             });
-        }finally {
+        } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
         }
     }
