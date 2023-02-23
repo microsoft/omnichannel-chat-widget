@@ -64,14 +64,20 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             }
             if (isPostChatEnabled === "true") {
                 if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-                    WebChatStoreLoader.store = null;
-                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
-                    await addDelayInMs(Constants.PostChatLoadingDurationInMs);
-
-                    const loadPostChatEvent: ICustomEvent = {
-                        eventName: BroadcastEvent.LoadPostChatSurvey,
-                    };
-                    BroadcastService.postMessage(loadPostChatEvent);
+                    // Only start embedded Postchat workflow if postchat context is set successfully else close chat
+                    if (state.domainStates.postChatContext) {
+                        WebChatStoreLoader.store = null;
+                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
+                        await addDelayInMs(Constants.PostChatLoadingDurationInMs);
+    
+                        const loadPostChatEvent: ICustomEvent = {
+                            eventName: BroadcastEvent.LoadPostChatSurvey,
+                        };
+                        BroadcastService.postMessage(loadPostChatEvent);
+                    } else {
+                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });                        
+                    }
                 } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
                 }
