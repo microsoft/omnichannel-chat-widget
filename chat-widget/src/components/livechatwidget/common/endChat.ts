@@ -64,13 +64,18 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
         }
 
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
-            await addDelayInMs(Constants.PostChatLoadingDurationInMs);
-
-            const loadPostChatEvent: ICustomEvent = {
-                eventName: BroadcastEvent.LoadPostChatSurvey,
-            };
-            BroadcastService.postMessage(loadPostChatEvent);
+            // Only start embedded Postchat workflow if postchat context is set successfully else close chat
+            if (state.domainStates.postChatContext) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
+                await addDelayInMs(Constants.PostChatLoadingDurationInMs);
+    
+                const loadPostChatEvent: ICustomEvent = {
+                    eventName: BroadcastEvent.LoadPostChatSurvey,
+                };
+                BroadcastService.postMessage(loadPostChatEvent);
+            } else {
+                await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, true, false, true);
+            }
         } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
 
