@@ -20,6 +20,10 @@ jobs:
     steps:
       - name: Checking out for ${{ github.ref }}
         uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.X
       - name: Install Chat Widget packages
         working-directory: chat-widget
         run: yarn install
