@@ -36,4 +36,3 @@ jobs:
           branch: gh-pages
           folder: ./chat-widget/storybook-build
           target-folder: docs/storybook
-
