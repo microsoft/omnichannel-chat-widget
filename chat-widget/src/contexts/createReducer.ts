@@ -66,6 +66,7 @@ export const createReducer = () => {
                 };
 
             case LiveChatWidgetActionType.SET_START_CHAT_FAILING:
+                console.log("ADAD SET_START_CHAT_FAILING", action.payload);
                 return {
                     ...state,
                     appStates: {
