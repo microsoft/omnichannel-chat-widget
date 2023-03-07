@@ -48,7 +48,8 @@ export enum BroadcastEvent {
     ClosePopoutWindow = "ClosePopoutWindow",
     RaiseErrorEvent = "RaiseErrorEvent",
     NetworkDisconnected = "NetworkDisconnected",
-    NetworkReconnected = "NetworkReconnected"
+    NetworkReconnected = "NetworkReconnected",
+    SigninCardReceived = "lcw:signInCardReceived"
 }
 
 // Events being logged
