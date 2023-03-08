@@ -48,8 +48,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
     const disableNewLineMarkdownSupport = props.webChatContainerProps?.disableNewLineMarkdownSupport ?? defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const markdown = createMarkdown((props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting)!, disableNewLineMarkdownSupport!);
-    const isPostChatEnabled = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
-    const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
+    const isPostChatEnabled = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
+    const postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
 
     // Initialize Web Chat's redux store
     let webChatStore = WebChatStoreLoader.store;

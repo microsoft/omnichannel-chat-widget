@@ -98,3 +98,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fix Start Chat icon disappearing due to subtitle length
 - Removed close button from PostChat Loading Screen
 - Added PostChat Context check for triggering Embedded PostChat Workflow
+- Fixed PostChat Stories and VRT
