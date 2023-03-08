@@ -4,6 +4,7 @@ import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcon
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { ChatAdapterShim } from "./ChatAdapterShim";
 import { PauseActivitySubscriber } from "./ActivitySubscriber/PauseActivitySubscriber";
+import { BotAuthActivitySubscriber } from "./ActivitySubscriber/BotAuthActivitySubscriber";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createAdapter = async (chatSDK: any) => {
@@ -31,6 +32,7 @@ export const createAdapter = async (chatSDK: any) => {
     if (chatSDK.isMockModeOn !== true) {
         adapter = new ChatAdapterShim(adapter);
         adapter.addSubscriber(new PauseActivitySubscriber());
+        adapter.addSubscriber(new BotAuthActivitySubscriber());
         return adapter.chatAdapter;
     }
     return adapter;

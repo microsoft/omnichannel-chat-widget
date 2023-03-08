@@ -1,13 +1,9 @@
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { BroadcastEvent } from "../../../../common/telemetry/TelemetryConstants";
-import { getStateFromCache } from "../../../../common/utils";
 import { IActivitySubscriber } from "./IActivitySubscriber";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 const supportedSignInCardContentTypes = ["application/vnd.microsoft.card.signin", "application/vnd.microsoft.card.oauth"];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
-const delay = (t: number | undefined) => new Promise(resolve => setTimeout(resolve, t));
-const fetchBotAuthConfigRetries = 3;
-const fetchBotAuthConfigRetryInterval = 1000;
 
 const extractSignInId = (signInUrl: string) => {
     const result = botOauthUrlRegex.exec(signInUrl);
@@ -72,7 +68,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
     public observer: any;
 
-    private signInCardSeen: Set<string> | undefined;
+    private signInCardSeen= new Set<string>();
 
     public applicable(activity: any): boolean {
         return activity && activity.attachments && activity.attachments.length && activity.attachments[0] && supportedSignInCardContentTypes.indexOf(activity.attachments[0].contentType) >= 0;
@@ -80,21 +76,17 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
 
     public async apply(activity: any): Promise<any> {
+
+
+        console.log("ELOPEZANAYA - BotAuthActivitySubscriber: init");
         this.observer.next(false); // Hides card
 
         const attachment = activity.attachments[0];
         const signInUrl = attachment.content.buttons[0].value;
         const signInId = extractSignInId(signInUrl);
 
-        if (!signInId) {
-            return;
-        }
-
-        const event  : ICustomEvent ={ eventName : BroadcastEvent.SigninCardReceived};
-
-        BroadcastService.postMessage(event);
-        
         if (this.signInCardSeen === undefined || this.signInCardSeen.has(signInId)) { // Prevents duplicate auth
+            console.log("ELOPEZANAYA : BotAuthActivitySubscriber returning due to signin");
             return;
         }
 
@@ -102,25 +94,13 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
         const sasUrl = await extractSasUrl(attachment);
 
-        if (!sasUrl) {
+        const event: ICustomEvent = { eventName: BroadcastEvent.SigninCardReceived, payload: {sasUrl} };
 
-            return activity;
-        }
+        console.log("ELOPEZANAYA - BotAuthActivitySubscriber: send event =>  "+ JSON.stringify(event));
 
-        /*
+        BroadcastService.postMessage(event);
 
-        try {
-            const response = await fetchBotAuthConfig(fetchBotAuthConfigRetries);
-
-           if (response === false) {
-
-            } else {
-                return activity;
-            }
-        } catch {
-
-        }*/
-
+        return activity;
 
     }
 
@@ -131,7 +111,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             return await this.apply(activity);
         }
         return activity;
-    };
+    }
 
 
 }
