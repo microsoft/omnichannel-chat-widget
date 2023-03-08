@@ -18,8 +18,8 @@ import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
-    const isPostChatEnabled = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
-    const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
+    const isPostChatEnabled = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
+    const postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
 
     //Unable to end chat if token has expired
     if (props.getAuthToken) {
@@ -68,7 +68,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
             if (state.domainStates.postChatContext) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
                 await addDelayInMs(Constants.PostChatLoadingDurationInMs);
-    
+
                 const loadPostChatEvent: ICustomEvent = {
                     eventName: BroadcastEvent.LoadPostChatSurvey,
                 };
