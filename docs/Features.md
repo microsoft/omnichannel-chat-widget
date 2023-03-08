@@ -91,3 +91,18 @@ For more details, see [Chat SDK documentation](https://github.com/microsoft/omni
 ### Voice and Video Call
 
 Once this feature is turned on from admin side, the widget will include ```CallingContainerPane``` automatically.
+
+
+### Setting Custom Context
+
+To send context using the chat-widget itself, post a `SetCustomContext` BroadcastEvent from the widget consumer before starting the chat. Refer to this document https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Telemetry.md for more information on `BroadcastService`.
+
+Sample code:
+
+```js
+const setCustomContextEvent = {
+    eventName: "SetCustomContext",
+    payload: {} //the context object
+};
+BroadcastService.postMessage(setCustomContextEvent);
+```
