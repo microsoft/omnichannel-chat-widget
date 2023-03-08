@@ -225,4 +225,6 @@ export enum LiveChatWidgetActionType {
         any: Set live chat config
     */
     SET_LIVE_CHAT_CONFIG,
+
+    SET_SHOW_SIGNING_CARD
 }

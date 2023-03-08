@@ -296,6 +296,16 @@ export const createReducer = () => {
                     }
                 };
 
+                case LiveChatWidgetActionType.SET_SHOW_SIGNING_CARD:
+                    return {
+                        ...state,
+                        appStates: {
+                            ...state.appStates,
+                            showSigningCard: action.payload as boolean
+                        }
+                    };
+    
+
             case LiveChatWidgetActionType.SET_WIDGET_SIZE:
                 return {
                     ...state,
