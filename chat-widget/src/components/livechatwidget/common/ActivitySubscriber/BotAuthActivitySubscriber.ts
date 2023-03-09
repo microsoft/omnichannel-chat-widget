@@ -47,12 +47,12 @@ const fetchBotAuthConfig = async (retries: number): Promise<any> => {
         Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
     });
 
-    const executeSigningCardRequest: ICustomEvent = { eventName: "executeSigninCardCallbackRequest" };
+    const executeSigningCardRequest: ICustomEvent = { eventName: BroadcastEvent.ExecuteSigninCardCallbackRequest };
     BroadcastService.postMessage(executeSigningCardRequest);
-    const sh = BroadcastService.getMessageByEventName("executeSigninCardCallbackResponse")
+    const listener = BroadcastService.getMessageByEventName(BroadcastEvent.ExecuteSigninCardCallbackResponse)
         .subscribe((data) => {
             response = data.payload?.response !== undefined ? data.payload?.response : response;
-            sh.unsubscribe();
+            listener.unsubscribe();
         });
 
     if (response !== undefined) {
