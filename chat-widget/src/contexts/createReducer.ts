@@ -295,6 +295,7 @@ export const createReducer = () => {
                         conversationEndedByAgent: action.payload as boolean
                     }
                 };
+                
             case LiveChatWidgetActionType.SET_WIDGET_SIZE:
                 return {
                     ...state,

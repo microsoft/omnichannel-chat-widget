@@ -53,7 +53,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             },
             e2vvEnabled: false,
             unreadMessageCount: 0,
-            conversationEndedByAgent: false,
+            conversationEndedByAgent: false
         },
         uiStates: {
             showConfirmationPane: false,
