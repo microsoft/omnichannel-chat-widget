@@ -50,8 +50,8 @@ export enum BroadcastEvent {
     NetworkDisconnected = "NetworkDisconnected",
     NetworkReconnected = "NetworkReconnected",
     SigninCardReceived = "SignInCardReceived",
-    ExecuteSigninCardCallbackRequest = "ExecuteSigninCardCallbackRequest",
-    ExecuteSigninCardCallbackResponse = "ExecuteSigninCardCallbackResponse",
+    BotAuthConfigRequest = "BotAuthConfigRequest",
+    BotAuthConfigResponse = "BotAuthConfigResponse",
 }
 
 // Events being logged
