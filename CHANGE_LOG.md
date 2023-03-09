@@ -94,6 +94,8 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Allowing to accept Cache Ttl from partners
 - Adding force close to endChat if chat stuck after sessionInit
 - Removing MesssageReceived event for system messages
-- Fixed PostChat loading twice when Bot enabled
 - Adding `hideErrorUIPane` to `ILiveChatWidgetControlProps` to show/hide Error UI on start chat
 - Fix Start Chat icon disappearing due to subtitle length
+- Removed close button from PostChat Loading Screen
+- Added PostChat Context check for triggering Embedded PostChat Workflow
+- Fixed PostChat Stories and VRT

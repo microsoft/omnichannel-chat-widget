@@ -826,9 +826,12 @@ class MockChatSDKSurveyEnabled extends MockChatSDK {
     }
 
     public async getPostChatSurveyContext() {
-        await this.sleep(1000);
+        await this.sleep(500);
         return {
-            surveyInviteLink: "https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false"
+            participantJoined: false, 
+            participantType: undefined, 
+            surveyInviteLink: "https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false", 
+            formsProLocale: "en-us"
         };
     }
 
@@ -843,21 +846,27 @@ class MockChatSDKSurveyEnabled extends MockChatSDK {
 
 const MockChatConfig: ChatConfig = {
     ChatWidgetLanguage: {
-        "msdyn_localeid": "1033",
-        "msdyn_languagename": "English - United States"
+        msdyn_localeid: "1033",
+        msdyn_languagename: "English - United States"
     },
     DataMaskingInfo: {},
     LiveChatConfigAuthSettings: {},
     LiveChatVersion: 2,
     LiveWSAndLiveChatEngJoin: {
-        "msdyn_postconversationsurveyenable": "true",
-        "msdyn_postconversationsurveymode": "192350000"
+        msdyn_postconversationsurveyenable: "true",
+        msdyn_postconversationsurveymode: "192350000"
     },
     allowedFileExtensions: "",
     maxUploadFileSize: ""
 };
 
 export const LiveChatWidgetFixedSizeSurveyEnabled = LiveChatWidgetTemplate.bind({});
+// Using Storybook loader for states to be loaded correctly
+LiveChatWidgetFixedSizeSurveyEnabled.loaders = [() => {
+    window.localStorage.setItem( 
+        "postChatContext",  "{participantJoined:false,participantType:undefined,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\"}"
+    );
+}];
 
 const liveChatWidgetFixedSizeSurveyEnabledProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -898,6 +907,12 @@ LiveChatWidgetFixedSizeSurveyEnabled.args = liveChatWidgetFixedSizeSurveyEnabled
 */
 
 export const LiveChatWidgetCustomizedSurveyEnabled = LiveChatWidgetTemplate.bind({});
+// Using Storybook loader for states to be loaded correctly
+LiveChatWidgetCustomizedSurveyEnabled.loaders = [() => {
+    window.localStorage.setItem( 
+        "postChatContext",  "{participantJoined:false,participantType:undefined,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\"}"
+    );
+}];
 
 const liveChatWidgetCustomizedSurveyEnabledProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
