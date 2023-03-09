@@ -29,7 +29,6 @@ const extractSasUrl = async (attachment: any) => {
     if (!sasUrl) {
         const signInId = extractSignInId(attachment.content.buttons[0].value);
         const getTestUrlEndpoint = `https://token.botframework.com/api/sas/gettesturl?signInId=${signInId}`;
-
         try {
             const response = await (window as any).fetch(getTestUrlEndpoint);
             if (response.status === 200) {
@@ -43,9 +42,7 @@ const extractSasUrl = async (attachment: any) => {
     return sasUrl;
 };
 
-
 const fetchBotAuthConfig = async (retries: number): Promise<any> => {
-
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
         Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
     });
@@ -71,9 +68,7 @@ const fetchBotAuthConfig = async (retries: number): Promise<any> => {
 };
 
 export class BotAuthActivitySubscriber implements IActivitySubscriber {
-
     public observer: any;
-
     private signInCardSeen: Set<string>;
 
     constructor() {
@@ -83,7 +78,6 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
     public applicable(activity: any): boolean {
         return activity && activity.attachments && activity.attachments.length && activity.attachments[0] && supportedSignInCardContentTypes.indexOf(activity.attachments[0].contentType) >= 0;
     }
-
 
     public async apply(activity: any): Promise<any> {
         this.observer.next(false); // Hides card
