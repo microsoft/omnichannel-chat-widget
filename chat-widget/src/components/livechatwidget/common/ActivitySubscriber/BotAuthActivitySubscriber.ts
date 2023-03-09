@@ -1,27 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { BroadcastEvent } from "../../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../../common/telemetry/TelemetryConstants";
 import { IActivitySubscriber } from "./IActivitySubscriber";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
-import { ILiveChatWidgetContext } from "../../../../contexts/common/ILiveChatWidgetContext";
-//import useChatContextStore from "../../../../hooks/useChatContextStore";
-import { ILiveChatWidgetAction } from "../../../../contexts/common/ILiveChatWidgetAction";
-import { Dispatch } from "react";
-//import { LiveChatWidgetActionType } from "../../../../contexts/common/LiveChatWidgetActionType";
+import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
 const supportedSignInCardContentTypes = ["application/vnd.microsoft.card.signin", "application/vnd.microsoft.card.oauth"];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
 const delay = (t: number | undefined) => new Promise(resolve => setTimeout(resolve, t));
 const fetchBotAuthConfigRetries = 3;
 const fetchBotAuthConfigRetryInterval = 1000;
-let sasUrl;
+let response: boolean | undefined;
 
 const extractSignInId = (signInUrl: string) => {
     const result = botOauthUrlRegex.exec(signInUrl);
     if (result && result[1]) {
         return result[1];
     }
-
     return "";
 };
 
@@ -45,35 +40,30 @@ const extractSasUrl = async (attachment: any) => {
             sasUrl = undefined;
         }
     }
-
-    console.log("ELOPEZANAYA - BotAuthActivitySubscriber: extractSasUrl : sasUrl =>  " + sasUrl);
     return sasUrl;
 };
-let response: boolean | undefined;
+
 
 const fetchBotAuthConfig = async (retries: number): Promise<any> => {
 
-    const event2: ICustomEvent = { eventName: "executeSigninCardCallbackRequest" };
-    console.log("ELOPEZANAYA - BotAuthActivitySubscriber2: send event =>  " + JSON.stringify(event2));
-    BroadcastService.postMessage(event2);
+    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+        Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
+    });
 
-    BroadcastService.getMessageByEventName("executeSigninCardCallbackResponse")
+    const executeSigningCardRequest: ICustomEvent = { eventName: "executeSigninCardCallbackRequest" };
+    BroadcastService.postMessage(executeSigningCardRequest);
+    const sh = BroadcastService.getMessageByEventName("executeSigninCardCallbackResponse")
         .subscribe((data) => {
-            console.log("ELOPEZANAYA - BotAuthActivitySubscriber: received RESPONSE from broadcast service=>  " + JSON.stringify(data));
-            response = data.payload?.response!==undefined?data.payload?.response:response;
-            //dispatch({ type: LiveChatWidgetActionType.SET_SHOW_SIGNING_CARD, payload: response });
+            response = data.payload?.response !== undefined ? data.payload?.response : response;
+            sh.unsubscribe();
         });
 
-    console.log("ELOPEZANAYA - BotAuthActivitySubscriber: response =>  " + response);
-
     if (response !== undefined) {
-        console.log("ELOPEZANAYA response is done fetchBotAuthConfig  =>  " + response);
         //return response;
         return response;
     }
 
     if (retries === 1) { // Base Case
-        console.log("ELOPEZANAYA - BotAuthActivitySubscriber: error thrown");
         throw new Error();
     }
     await delay(fetchBotAuthConfigRetryInterval);
@@ -84,7 +74,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
     public observer: any;
 
-    private signInCardSeen:Set<string>;
+    private signInCardSeen: Set<string>;
 
     constructor() {
         this.signInCardSeen = new Set();
@@ -96,67 +86,56 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
 
     public async apply(activity: any): Promise<any> {
-
-
-        console.log("ELOPEZANAYA - BotAuthActivitySubscriber: init");
         this.observer.next(false); // Hides card
-
         const attachment = activity.attachments[0];
         const signInUrl = attachment.content.buttons[0].value;
         const signInId = extractSignInId(signInUrl);
 
         if (!signInId) {
-            console.log("ELOPEZANAYA : BotAuthActivitySubscriber : signInId doesnt exist => ");
             return;
         }
 
-
-        if (this.signInCardSeen.has(signInId)) { 
-            console.log("ELOPEZANAYA : BotAuthActivitySubscriber : signInId already exist => " + signInId);
+        if (this.signInCardSeen.has(signInId)) {
             // Prevents duplicate auth
             return;
         }
 
         this.signInCardSeen.add(signInId);
         const sasUrl = await extractSasUrl(attachment);
-
         const event: ICustomEvent = { eventName: BroadcastEvent.SigninCardReceived, payload: { sasUrl } };
-        console.log("ELOPEZANAYA - BotAuthActivitySubscriber: send event =>  " + JSON.stringify(event));
-
 
         if (!sasUrl) {
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.BotAuthActivityEmptySasUrl,
+                Description: "SaS Url is empty",
+            });
             return activity;
         } else {
-
             BroadcastService.postMessage(event);
         }
-
-
         try {
-            console.log("ELOPEZANAYA : response about to be fetched");
             const response = await fetchBotAuthConfig(fetchBotAuthConfigRetries);
-            console.log("ELOPEZANAYA : response is try : response => " + response);
-
             if (response === false) {
-
-                console.log("ELOPEZANAYA : response is false");
+                TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.SetBotAuthProviderHideCard,
+                });
             } else {
-                console.log("ELOPEZANAYA : response is true");
-
+                TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.SetBotAuthProviderDisplayCard,
+                });
                 return activity;
             }
         } catch {
-            console.log("ELOPEZANAYA : response is error");
-            if (this.signInCardSeen.has(signInId)) {    
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.SetBotAuthProviderNotFound,
+            });
+            //this is to ensure listener continues waiting for response
+            if (this.signInCardSeen.has(signInId)) {
                 this.signInCardSeen.delete(signInId);
-
             }
             return activity;
         }
-
     }
-
-
 
     public async next(activity: any): Promise<any> {
         if (this.applicable(activity)) {
@@ -164,6 +143,4 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
         }
         return activity;
     }
-
-
 }

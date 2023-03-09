@@ -142,6 +142,11 @@ export enum TelemetryEvent {
     CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
     CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",
     CustomerVoiceFormResponseError = "CustomerVoiceFormResponseError",
+    BotAuthActivityEmptySasUrl = "BotAuthActivityEmptySasUrl",
+    SetBotAuthProviderFetchConfig = "SetBotAuthProviderFetchConfig",
+    SetBotAuthProviderHideCard = "SetBotAuthProviderHideCard",
+    SetBotAuthProviderDisplayCard = "SetBotAuthProviderDisplayCard",
+    SetBotAuthProviderNotFound = "SetBotAuthProviderNotFound",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
