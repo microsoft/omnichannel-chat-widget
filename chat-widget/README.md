@@ -11,8 +11,6 @@
 1. [Installation](#installation)
 1. [Example Usage](#example-usage)
 1. [Components](#components)
-1. [Common Scenarios](#common-scenarios)
-    - [Disable Bot Magic Code](#disable-bot-magic-code)
 1. [See Also](#see-also)
 
 ## Introduction
@@ -97,7 +95,9 @@ const render = async () => {
 render();
 ```
 
-A sample widget can be found in this repo [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/sample). To build it, do ```yarn build-sample``` or ```yarn build-sample:dev``` from project root.
+A javascript sample widget can be found in this repo [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/javascript-sample). To build it, do ```yarn build-sample``` or ```yarn build-sample:dev``` from project root. 
+
+A typescript sample widget can be found [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample)
 
 ## Components
 
@@ -129,6 +129,7 @@ These are components that are included in the ```@microsoft/omnichannel-chat-com
 | ----- | -------- | ----- |
 | WebChatContainer | The default wrapper around BotFramework's [WebChat](https://github.com/microsoft/BotFramework-WebChat), which is the message container we are using | [IWebChatContainerStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps.ts) |
 | LiveChatWidget | The default widget that stitches the UI components with Chat SDK | [ILiveChatWidgetProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetProps.ts) |
+| PostChatLoadingPane | The default loading pane used after the chat is ended and before the post chat pane loads completely | [ILoadingPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/loadingpane/interfaces/ILoadingPaneProps.ts) |
 
 Some of the interfaces listed in the Stateless table have Stateful counterparts defined in the ```@microsoft/omnichannel-chat-widget``` package. For example, [IConfirmationPaneStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps.ts) extends [IConfirmationPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneProps.ts) with additional attributes that only makes sense in the stateful context.
 
@@ -220,40 +221,12 @@ const customizedFooterProp: IFooterProps = {
 
 > :pushpin: Note that [WebChat hooks](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/HOOKS.md) can also be used in any custom components.
 
-## Common Scenarios
-
-### Disable Bot Magic Code
-
-Configuration to disable the default behaviour of having to type the magic code in the conversation to complete the sign-in proccess with a bot. Instead, the magic code will be sent to the bot behind the scenes.
-
-1. Add [MagicCodeForwarder.html](sample/MagicCodeForwarder.html) in the same location as the chat widget
-
-2. Add `botMagicCode` configuration to disable default magic code feature
-
-> :exclamation: `fwdUrl` **MUST** have the same `origin` as the chat widget URL
-
-```js
-const liveChatWidgetProps = {
-    chatSDK: chatSDK, // mandatory
-    chatConfig: chatConfig, // mandatory
-    webChatContainerProps: {
-        botMagicCode: {
-            disabled: true, 
-            fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
-        }
-    },    
-};
-
-ReactDOM.render(
-    <LiveChatWidget {...liveChatWidgetProps}/>,
-    document.getElementById("my-container")
-);
-```
-
 ## See Also
 
 [Telemetry](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Telemetry.md)\
 [Create LCW widget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md)\
 [Omnichannel Features](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Features.md)\
 [How to Add Visual Regression Tests](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/VisualRegressionTestingGuide.md)\
-[Security](https://github.com/microsoft/omnichannel-chat-widget/blob/main/SECURITY.md)
+[Security](https://github.com/microsoft/omnichannel-chat-widget/blob/main/SECURITY.md)\
+[Third Party Cookie Support](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Tpc.md)\
+[Storybook](https://microsoft.github.io/omnichannel-chat-widget/docs/storybook/)
