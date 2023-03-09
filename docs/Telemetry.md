@@ -215,7 +215,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 | `SystemMessageReceived` | On system message received |
 | `HistoryMessageReceived` | On history message received |
-| `ExecuteSigninCardCallbackRequest` | On Signin adaptive card received from bot |
+| `SigninCardReceived` | On sign-in adaptive card received from bot |
 | `BotAuthActivityEmptySasUrl` | On detecting a signing adaptive card with no SAS Url |
 | `ExecuteSigninCardCallbackRequest` | On triger the execution of the BotAuthTokenProvider function |
 
