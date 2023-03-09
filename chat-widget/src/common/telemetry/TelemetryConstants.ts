@@ -49,9 +49,9 @@ export enum BroadcastEvent {
     RaiseErrorEvent = "RaiseErrorEvent",
     NetworkDisconnected = "NetworkDisconnected",
     NetworkReconnected = "NetworkReconnected",
-    SigninCardReceived = "lcw:signInCardReceived",
-    ExecuteSigninCardCallbackRequest = "executeSigninCardCallbackRequest",
-    ExecuteSigninCardCallbackResponse = "executeSigninCardCallbackResponse",
+    SigninCardReceived = "SignInCardReceived",
+    ExecuteSigninCardCallbackRequest = "ExecuteSigninCardCallbackRequest",
+    ExecuteSigninCardCallbackResponse = "ExecuteSigninCardCallbackResponse",
 }
 
 // Events being logged

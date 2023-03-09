@@ -76,7 +76,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
     }
 
     public applicable(activity: any): boolean {
-        return activity && activity.attachments && activity.attachments.length && activity.attachments[0] && supportedSignInCardContentTypes.indexOf(activity.attachments[0].contentType) >= 0;
+        return (activity?.attachments?.length > 0) && activity.attachments[0] && supportedSignInCardContentTypes.indexOf(activity.attachments[0].contentType) >= 0;
     }
 
     public async apply(activity: any): Promise<any> {
