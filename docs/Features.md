@@ -91,3 +91,46 @@ For more details, see [Chat SDK documentation](https://github.com/microsoft/omni
 ### Voice and Video Call
 
 Once this feature is turned on from admin side, the widget will include ```CallingContainerPane``` automatically.
+
+
+### Setting Custom Context
+
+To send context using the chat-widget itself, post a `SetCustomContext` BroadcastEvent from the widget consumer before starting the chat. Refer to this document https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Telemetry.md for more information on `BroadcastService`.
+
+Sample code:
+
+```js
+const setCustomContextEvent = {
+    eventName: "SetCustomContext",
+    payload: {} //the context object
+};
+BroadcastService.postMessage(setCustomContextEvent);
+```
+
+### Disable Bot Magic Code
+
+Configuration to disable the default behaviour of having to type the magic code in the conversation to complete the sign-in proccess with a bot. Instead, the magic code will be sent to the bot behind the scenes.
+
+1. Add [MagicCodeForwarder.html](sample/MagicCodeForwarder.html) in the same location as the chat widget
+
+2. Add `botMagicCode` configuration to disable default magic code feature
+
+> :exclamation: `fwdUrl` **MUST** have the same `origin` as the chat widget URL
+
+```js
+const liveChatWidgetProps = {
+    chatSDK: chatSDK, // mandatory
+    chatConfig: chatConfig, // mandatory
+    webChatContainerProps: {
+        botMagicCode: {
+            disabled: true, 
+            fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
+        }
+    },    
+};
+
+ReactDOM.render(
+    <LiveChatWidget {...liveChatWidgetProps}/>,
+    document.getElementById("my-container")
+);
+```
