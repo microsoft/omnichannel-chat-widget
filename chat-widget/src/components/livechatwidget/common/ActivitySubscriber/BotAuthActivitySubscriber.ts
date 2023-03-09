@@ -49,7 +49,7 @@ const extractSasUrl = async (attachment: any) => {
     console.log("ELOPEZANAYA - BotAuthActivitySubscriber: extractSasUrl : sasUrl =>  " + sasUrl);
     return sasUrl;
 };
-let response: string | undefined;
+let response: boolean | undefined;
 
 const fetchBotAuthConfig = async (retries: number): Promise<any> => {
 
@@ -60,7 +60,7 @@ const fetchBotAuthConfig = async (retries: number): Promise<any> => {
     BroadcastService.getMessageByEventName("executeSigninCardCallbackResponse")
         .subscribe((data) => {
             console.log("ELOPEZANAYA - BotAuthActivitySubscriber: received RESPONSE from broadcast service=>  " + JSON.stringify(data));
-            response = data.payload?.response;
+            response = data.payload?.response!==undefined?data.payload?.response:response;
             //dispatch({ type: LiveChatWidgetActionType.SET_SHOW_SIGNING_CARD, payload: response });
         });
 
@@ -125,7 +125,6 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
 
         if (!sasUrl) {
-
             return activity;
         } else {
 
@@ -148,7 +147,10 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             }
         } catch {
             console.log("ELOPEZANAYA : response is error");
+            if (this.signInCardSeen.has(signInId)) {    
+                this.signInCardSeen.delete(signInId);
 
+            }
             return activity;
         }
 
