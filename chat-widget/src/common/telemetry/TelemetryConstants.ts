@@ -48,7 +48,10 @@ export enum BroadcastEvent {
     ClosePopoutWindow = "ClosePopoutWindow",
     RaiseErrorEvent = "RaiseErrorEvent",
     NetworkDisconnected = "NetworkDisconnected",
-    NetworkReconnected = "NetworkReconnected"
+    NetworkReconnected = "NetworkReconnected",
+    SigninCardReceived = "SignInCardReceived",
+    BotAuthConfigRequest = "BotAuthConfigRequest",
+    BotAuthConfigResponse = "BotAuthConfigResponse",
 }
 
 // Events being logged
@@ -141,6 +144,11 @@ export enum TelemetryEvent {
     CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
     CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",
     CustomerVoiceFormResponseError = "CustomerVoiceFormResponseError",
+    BotAuthActivityEmptySasUrl = "BotAuthActivityEmptySasUrl",
+    SetBotAuthProviderFetchConfig = "SetBotAuthProviderFetchConfig",
+    SetBotAuthProviderHideCard = "SetBotAuthProviderHideCard",
+    SetBotAuthProviderDisplayCard = "SetBotAuthProviderDisplayCard",
+    SetBotAuthProviderNotFound = "SetBotAuthProviderNotFound",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
