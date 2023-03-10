@@ -47,8 +47,8 @@ const fetchBotAuthConfig = async (retries: number): Promise<any> => {
         Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
     });
 
-    const executeSigningCardRequest: ICustomEvent = { eventName: BroadcastEvent.BotAuthConfigRequest };
-    BroadcastService.postMessage(executeSigningCardRequest);
+    const botAuthConfigRequestEvent: ICustomEvent = { eventName: BroadcastEvent.BotAuthConfigRequest };
+    BroadcastService.postMessage(botAuthConfigRequestEvent);
     const listener = BroadcastService.getMessageByEventName(BroadcastEvent.BotAuthConfigResponse)
         .subscribe((data) => {
             response = data.payload?.response !== undefined ? data.payload?.response : response;
