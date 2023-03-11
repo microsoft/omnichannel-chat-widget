@@ -344,5 +344,5 @@ export const debounceLeading = (fn: any, ms = 3000) => {
         }
 
         timeoutId = setTimeout(() => {timeoutId = null;}, ms);
-    }
+    };
 };
