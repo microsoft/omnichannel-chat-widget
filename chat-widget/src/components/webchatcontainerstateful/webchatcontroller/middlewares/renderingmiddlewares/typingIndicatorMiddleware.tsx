@@ -15,22 +15,9 @@ import { defaultTypingIndicatorBubbleStyles } from "./defaultStyles/defaultTypin
 import { defaultTypingIndicatorContainerStyles } from "./defaultStyles/defaultTypingIndicatorContainerStyles";
 import { defaultTypingIndicatorMessageStyles } from "./defaultStyles/defaultTypingIndicatorMessageStyles";
 import { useChatContextStore } from "../../../../..";
+import { debounceLeading } from "../../../../../common/utils";
 import useChatSDKStore from "../../../../../hooks/useChatSDKStore";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const debounceLeading = (fn: any, ms = 3000) => {
-    let timeoutId: ReturnType<typeof setTimeout> | null;
-    return (...args: any[]) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-
-        if (!timeoutId) {
-            fn.apply(this, args);
-        }
-
-        timeoutId = setTimeout(() => {timeoutId = null;}, ms);
-        // clearTimeout(timeoutId);
-        // timeoutId = setTimeout(() => fn.apply(this, args), ms);
-    }
-};
 
 const TypingIndicator = ({ activeTyping, visible }: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
