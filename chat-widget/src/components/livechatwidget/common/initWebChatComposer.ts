@@ -1,20 +1,16 @@
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { StyleOptions, createStore } from "botframework-webchat";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
-import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { IDataMaskingInfo } from "../../webchatcontainerstateful/interfaces/IDataMaskingInfo";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { IWebChatProps } from "../../webchatcontainerstateful/interfaces/IWebChatProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
-import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import attachmentProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentProcessingMiddleware";
-import { addDelayInMs, changeLanguageCodeFormatForWebChat } from "../../../common/utils";
+import { changeLanguageCodeFormatForWebChat } from "../../../common/utils";
 import channelDataMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/channelDataMiddleware";
 import { createActivityMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware";
 import createAttachmentMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
@@ -36,10 +32,9 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
-import { Constants } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles: any) => {
+export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, setWebChatStyles: any) => {
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
         ...props.webChatContainerProps?.localizedTexts
@@ -48,45 +43,18 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
     const disableNewLineMarkdownSupport = props.webChatContainerProps?.disableNewLineMarkdownSupport ?? defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const markdown = createMarkdown((props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting)!, disableNewLineMarkdownSupport!);
-    const isPostChatEnabled = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
-    const postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
-
     // Initialize Web Chat's redux store
     let webChatStore = WebChatStoreLoader.store;
     if (!webChatStore) {
         const conversationEndCallback = async () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.ConversationEndedThreadEventReceived,
-                Description: "Conversation is ended by agent side or by timeout."
-            });
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            if (isPostChatEnabled === "true") {
-                if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-                    // Only start embedded Postchat workflow if postchat context is set successfully else close chat
-                    if (state.domainStates.postChatContext) {
-                        WebChatStoreLoader.store = null;
-                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
-                        await addDelayInMs(Constants.PostChatLoadingDurationInMs);
-    
-                        const loadPostChatEvent: ICustomEvent = {
-                            eventName: BroadcastEvent.LoadPostChatSurvey,
-                        };
-                        BroadcastService.postMessage(loadPostChatEvent);
-                    } else {
-                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });                        
-                    }
-                } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
-                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-                }
-            } else {
-                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
-            }
-            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT_EVENT_RECEIVED, payload: true });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.ConversationEndedThreadEventReceived,
+                Description: "Conversation end by agent side or by timeout event received."
+            });
         };
 
         webChatStore = createStore(

@@ -9,11 +9,10 @@ import { IConfirmationPaneStatefulParams } from "./interfaces/IConfirmationPaneS
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
-import { NotificationHandler } from "../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
-import { NotificationScenarios } from "../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { ConversationEndEntity } from "../../contexts/common/ConversationEndEntity";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
@@ -22,8 +21,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
     let elements: HTMLElement[] | null = [];
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const { prepareEndChat } = props;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
 
     const controlProps: IConfirmationPaneControlProps = {
@@ -35,18 +33,12 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
                 Description: "Confirmation pane Confirm button clicked"
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
-            try {
-                setTabIndices(elements, initialTabIndexMap, true);
-                await prepareEndChat(adapter, state);
-            } catch (ex) {
-                TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.GetConversationDetailsCallFailed,
-                    ExceptionDetails: {
-                        exception: `Get Conversation Details Call Failed : ${ex}`
-                    }
-                });
-                NotificationHandler.notifyError(NotificationScenarios.Connection, "Get Conversation Details Call Failed: " + ex);
-            }
+            setTabIndices(elements, initialTabIndexMap, true);
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.ConversationEndedByCustomer,
+                Description: "Conversation is ended by customer."
+            });
         },
         onCancel: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
