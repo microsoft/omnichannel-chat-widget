@@ -69,14 +69,14 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
                         WebChatStoreLoader.store = null;
                         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
                         await addDelayInMs(Constants.PostChatLoadingDurationInMs);
-    
+
                         const loadPostChatEvent: ICustomEvent = {
                             eventName: BroadcastEvent.LoadPostChatSurvey,
                         };
                         BroadcastService.postMessage(loadPostChatEvent);
                     } else {
                         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });                        
+                        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT, payload: true });
                     }
                 } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
@@ -128,6 +128,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,
         onTelemetry: createWebChatTelemetry(),
         cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
+        sendTypingIndicator: true,
         ...props.webChatContainerProps?.webChatProps
     };
 
