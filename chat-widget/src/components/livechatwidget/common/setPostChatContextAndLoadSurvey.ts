@@ -198,7 +198,7 @@ const postChatInitiatedByAgent = async (props: any, chatSDK: any, setAdapter: an
 // Function will handle only postchat cases initiated by bot
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const postChatInitiatedByBot = async (props: any, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
-    const postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
+    const postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode;
     TelemetryHelper.logActionEvent(LogLevel.INFO, {
         Event: TelemetryEvent.PostChatWorkflowFromBot,
         Description: "PostChat Workflow was started by bot"

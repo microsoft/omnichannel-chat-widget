@@ -18,7 +18,7 @@ import { useChatContextStore } from "../../../../..";
 import { debounceLeading } from "../../../../../common/utils";
 import useChatSDKStore from "../../../../../hooks/useChatSDKStore";
 
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TypingIndicator = ({ activeTyping, visible }: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const chatSDK: any = useChatSDKStore();
