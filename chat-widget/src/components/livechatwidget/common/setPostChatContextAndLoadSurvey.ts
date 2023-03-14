@@ -63,12 +63,25 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
     dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_WORKFLOW_IN_PROGRESS, payload: true });
 
     // Below logic checks if chat is ended by customer or agent or bot and handles them separately
-    if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
-        await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails);
-    } else if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
-        if (conversationDetails?.participantType === Constants.userParticipantTypeTag) { 
+    if (conversationDetails?.participantType === Constants.userParticipantTypeTag) {
+        if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
+            await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, false);
+        } else if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
             await postChatInitiatedByAgent(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
-        } else if (conversationDetails?.participantType === Constants.botParticipantTypeTag) {
+        } else {
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.AppStatesException,
+                ExceptionDetails: {
+                    exception: `ConversationDetails was not set correctly: conversationDetails = ${JSON.stringify(conversationDetails)}`
+                }
+            });
+            // Ending chat because something went wrong
+            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        }
+    } else if (conversationDetails?.participantType === Constants.botParticipantTypeTag) {
+        if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
+            await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, true);
+        } else if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
             await postChatInitiatedByBot(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
         } else {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -135,8 +148,13 @@ const embedModePostChatWorkflow = async (props: any, chatSDK: any, setAdapter: a
 
 // Function will handle only postchat cases initiated by customer
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const postChatInitiatedByCustomer = async (props: any, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext, conversationDetails: any) => {
-    const postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
+const postChatInitiatedByCustomer = async (props: any, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext, conversationDetails: any, shouldUseBotSetting: boolean) => {
+    let postChatSurveyMode = "";
+    if (shouldUseBotSetting) {
+        postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode;
+    } else {
+        postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
+    }
     // Check if agent has joined conversation
     if (conversationDetails?.canRenderPostChat === Constants.truePascal) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
