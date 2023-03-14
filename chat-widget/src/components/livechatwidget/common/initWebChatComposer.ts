@@ -96,6 +96,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,
         onTelemetry: createWebChatTelemetry(),
         cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
+        sendTypingIndicator: true,
         ...props.webChatContainerProps?.webChatProps
     };
 
