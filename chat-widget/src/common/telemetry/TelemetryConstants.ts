@@ -48,7 +48,9 @@ export enum BroadcastEvent {
     ClosePopoutWindow = "ClosePopoutWindow",
     RaiseErrorEvent = "RaiseErrorEvent",
     NetworkDisconnected = "NetworkDisconnected",
-    NetworkReconnected = "NetworkReconnected"
+    NetworkReconnected = "NetworkReconnected",
+    initiatePopoutChat = "initiatePopoutChat",
+    HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent"
 }
 
 // Events being logged
@@ -90,6 +92,7 @@ export enum TelemetryEvent {
     ParseAdaptiveCardFailed = "ParseAdaptiveCardFailed",
     ClientDataStoreProviderFailed = "ClientDataStoreProviderFailed",
     InMemoryDataStoreFailed = "InMemoryDataStoreFailed",
+    ChatVisibilityChanged = "ChatVisibilityChanged",
 
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClicked = "LCWChatButtonClicked",
@@ -103,6 +106,7 @@ export enum TelemetryEvent {
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
     StartChatEventRecevied = "StartChatEventReceived",
+    StartChatEventReceviedinPopout = "StartChatEventReceviedinPopout",
     EndChatSDKCall = "EndChatSDKCall",
     EndChatEventReceived = "EndChatEventReceived",
     WindowClosed = "WindowClosed",
