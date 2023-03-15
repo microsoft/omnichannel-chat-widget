@@ -1,10 +1,10 @@
 /******
  * TypingIndicatorMiddleware
- * 
+ *
  * This middleware changes the component that shows who's actively typing. It uses the default Microsoft LiveChatWidget styles.
  ******/
 
-import React, { Dispatch } from "react";
+import React, { Dispatch, useCallback } from "react";
 
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
@@ -15,13 +15,15 @@ import { defaultTypingIndicatorBubbleStyles } from "./defaultStyles/defaultTypin
 import { defaultTypingIndicatorContainerStyles } from "./defaultStyles/defaultTypingIndicatorContainerStyles";
 import { defaultTypingIndicatorMessageStyles } from "./defaultStyles/defaultTypingIndicatorMessageStyles";
 import { useChatContextStore } from "../../../../..";
+import { debounceLeading } from "../../../../../common/utils";
 import useChatSDKStore from "../../../../../hooks/useChatSDKStore";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 const TypingIndicator = ({ activeTyping, visible }: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const chatSDK: any = useChatSDKStore();
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const debounceTyping = useCallback(debounceLeading(() => chatSDK?.sendTypingEvent()), []);
 
     if (!activeTyping || Object.keys(activeTyping).length === 0 || (state.domainStates.liveChatConfig?.LiveChatVersion === 1 && !visible)) {
         return null;
@@ -32,7 +34,7 @@ const TypingIndicator = ({ activeTyping, visible }: any) => {
         if (activeTyping[i].role && activeTyping[i].role === DirectLineSenderRole.User) {
             //visible is set to false if the current user is typing, in which case, we just send typing indicator to OC
             if (state.domainStates.liveChatConfig?.LiveChatVersion === 2 && !visible) {
-                chatSDK?.sendTypingEvent();
+                debounceTyping();
                 return null;
             }
             activeTyping.splice(i, 1);
@@ -108,10 +110,10 @@ const getTypingIndicatorMessage = (activeTyping: any[], localizedTexts: ILiveCha
         let message = localizedTexts.MIDDLEWARE_TYPING_INDICATOR_TWO;
         if (!message) {
             return "";
-        } 
+        }
         if (message.includes("{0}")) {
             message = message.replace("{0}", firstMember);
-        } 
+        }
         if (message.includes("{1}")) {
             message = message.replace("{1}", lastMember);
         }
