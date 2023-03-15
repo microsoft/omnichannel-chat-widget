@@ -62,7 +62,7 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
     // Start Postchat workflow
     dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_WORKFLOW_IN_PROGRESS, payload: true });
 
-    // Below logic checks if chat is ended by customer or agent or bot and handles them separately
+    // Below logic checks if agent or bot or noone joins conversation and handles them separately
     if (conversationDetails?.participantType === Constants.userParticipantTypeTag) {
         if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
             // Set use bot settings to false
@@ -73,7 +73,7 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.AppStatesException,
                 ExceptionDetails: {
-                    exception: `Conversation was Ended but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
+                    exception: `Conversation was Ended after agent joined but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
                 }
             });
             // Ending chat because something went wrong
@@ -89,7 +89,7 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.AppStatesException,
                 ExceptionDetails: {
-                    exception: `Conversation was Ended but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
+                    exception: `Conversation was Ended after bot joined but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
                 }
             });
             // Ending chat because something went wrong
@@ -103,7 +103,7 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.AppStatesException,
                 ExceptionDetails: {
-                    exception: `ConversationDetails was not set correctly: conversationDetails = ${JSON.stringify(conversationDetails)}`
+                    exception: `ConversationDetails and App state was not set correctly: conversationDetails = ${JSON.stringify(conversationDetails)} , conversationEndedBy = ${state.appStates.conversationEndedBy}`
                 }
             });
             // Ending chat because something went wrong
@@ -162,11 +162,11 @@ const postChatInitiatedByCustomer = async (props: any, chatSDK: any, setAdapter:
     } else {
         postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
     }
-    // Check if agent has joined conversation
+    // Check if agent or bot has joined conversation
     if (conversationDetails?.canRenderPostChat === Constants.truePascal) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.PostChatWorkflowFromCustomer,
-            Description: "PostChat Workflow was started by customer"
+            Description: shouldUseBotSetting ? "PostChat Workflow was started by customer using bot settings" : "PostChat Workflow was started by customer using agent settings"
         });
         const chatSession = await chatSDK?.getCurrentLiveChatContext();
         if (chatSession) {

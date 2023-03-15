@@ -267,6 +267,7 @@ export class TelemetryConstants {
             case TelemetryEvent.PostChatWorkflowFromCustomer:
             case TelemetryEvent.PostChatWorkflowFromAgent:
             case TelemetryEvent.PostChatWorkflowFromBot:
+            case TelemetryEvent.AppStatesException:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
