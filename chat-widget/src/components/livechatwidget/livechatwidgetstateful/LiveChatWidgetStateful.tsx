@@ -228,7 +228,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Event: TelemetryEvent.ChatVisibilityChanged,
                     Description: "Chat visibility changed to " + event?.payload?.isChatHidden
                 });
-                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
+                if (props.controlProps?.hideStartChatButton) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
+                }
             }
         });
 
