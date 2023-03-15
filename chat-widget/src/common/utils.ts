@@ -346,3 +346,16 @@ export const getWidgetCacheIdfromProps = (props: any): string => {
     const widgetCacheId = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
     return widgetCacheId;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const debounceLeading = (fn: any, ms = 3000) => {
+    let timeoutId: ReturnType<typeof setTimeout> | null;
+    return (...args: any[]) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+
+        if (!timeoutId) {
+            fn.apply(this, args);
+        }
+
+        timeoutId = setTimeout(() => {timeoutId = null;}, ms);
+    };
+};
