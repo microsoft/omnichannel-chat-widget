@@ -97,3 +97,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed PostChat loading twice when Bot enabled
 - Adding `hideErrorUIPane` to `ILiveChatWidgetControlProps` to show/hide Error UI on start chat
 - Fix Start Chat icon disappearing due to subtitle length
+- Adding support in case the chat window is hidden
