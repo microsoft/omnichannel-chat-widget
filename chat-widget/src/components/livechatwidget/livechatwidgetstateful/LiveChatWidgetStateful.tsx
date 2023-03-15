@@ -59,7 +59,7 @@ import { getGeneralStylesForButton } from "../common/getGeneralStylesForButton";
 import { initCallingSdk } from "../common/initCallingSdk";
 import { initConfirmationPropsComposer } from "../common/initConfirmationPropsComposer";
 import { initWebChatComposer } from "../common/initWebChatComposer";
-import { registerBroadcastServiceForLocalStorage } from "../../../common/storage/default/defaultCacheManager";
+import { registerBroadcastServiceForStorage } from "../../../common/storage/default/defaultCacheManager";
 import { registerTelemetryLoggers } from "../common/registerTelemetryLoggers";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
 import { startProactiveChat } from "../common/startProactiveChat";
@@ -158,7 +158,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
             const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
             DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins, storageType);
-            registerBroadcastServiceForLocalStorage(widgetCacheId, cacheTtlInMins, storageType);
+            registerBroadcastServiceForStorage(widgetCacheId, cacheTtlInMins, storageType);
         } else {
             DataStoreManager.clientDataStore = props.contextDataStore;
         }

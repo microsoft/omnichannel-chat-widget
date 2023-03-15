@@ -7,7 +7,7 @@ export class defaultCacheManager {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const registerBroadcastServiceForLocalStorage = (widgetCacheId: string, ttlInMins: number, storageType: StorageType) => {
+export const registerBroadcastServiceForStorage = (widgetCacheId: string, ttlInMins: number, storageType: StorageType) => {
     BroadcastService.getMessageByEventName(widgetCacheId)
         .subscribe((msg) => {
             try {

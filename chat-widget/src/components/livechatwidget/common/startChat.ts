@@ -269,7 +269,6 @@ const setCustomContextParams = () => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
-
     const requestId = state.domainStates?.liveChatContext?.requestId;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
