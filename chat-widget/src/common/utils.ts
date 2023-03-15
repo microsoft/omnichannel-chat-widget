@@ -294,12 +294,12 @@ export const getWidgetEndChatEventName = (orgId: string, widgetId: string, widge
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getStateFromCache = (orgId: string, widgetId: string, widgetInstanceId: string): any => {
+export const getStateFromCache = (widgetCahceId: string): any => {
     // Getting updated state from cache
     try {
         if (DataStoreManager.clientDataStore) {
-            const widgetStateEventName = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
-            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
+            const widgetStateEventName = widgetCahceId;
+            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName);
             const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
             return persistedState;
         } else {
@@ -332,4 +332,17 @@ export const addDelayInMs = (ms: number): Promise<void> => {
 export const getBroadcastChannelName = (widgetId: string, widgetInstanceId: string): string => {
     return (widgetInstanceId && !isNullOrEmptyString(widgetInstanceId)) ?
         `${widgetInstanceId}_${widgetId}` : widgetId;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getWidgetCacheIdfromProps = (props: any): string => {
+    const orgId = props?.chatSDK?.omnichannelConfig?.orgId;
+    const widgetId = props?.chatSDK?.omnichannelConfig?.widgetId;
+    let widgetInstanceId = props?.controlProps?.widgetInstanceId ?? "";
+    if (props.useSessionStorage) {
+        widgetInstanceId = widgetInstanceId + Constants.SessionCacheSuffix;
+    }
+    console.log(`widgetInstanceId:${widgetInstanceId}`);
+    const widgetCacheId = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
+    return widgetCacheId;
 };

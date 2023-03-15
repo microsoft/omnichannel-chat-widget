@@ -52,6 +52,7 @@ export enum BroadcastEvent {
     SigninCardReceived = "SignInCardReceived",
     BotAuthConfigRequest = "BotAuthConfigRequest",
     BotAuthConfigResponse = "BotAuthConfigResponse",
+    RemoveWidgetDataFromCache = "RemoveWidgetDataFromCache",
 }
 
 // Events being logged

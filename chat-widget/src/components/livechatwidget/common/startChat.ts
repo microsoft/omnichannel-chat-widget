@@ -1,6 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ChatSDKError, LiveWorkItemState } from "../../../common/Constants";
-import { createTimer, getStateFromCache, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getStateFromCache, getWidgetCacheIdfromProps, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
@@ -30,19 +30,20 @@ let widgetInstanceId: any | "";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
-    widgetInstanceId = props?.controlProps?.widgetInstanceId;
+    widgetInstanceId = getWidgetCacheIdfromProps(props);
+
+    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+        return;
+    }
 
     // Can connect to existing chat session
     if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
         return;
     }
 
-    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
 
-    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
-        return;
-    }
 
     // Setting Proactive chat settings
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
@@ -118,7 +119,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         try {
             // Set custom context params
-            setCustomContextParams(chatSDK);
+            setCustomContextParams();
             const defaultOptionalParams: StartChatOptionalParams = {
                 sendDefaultInitContext: true,
                 isProactiveChat: !!params?.isProactiveChat,
@@ -229,8 +230,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         return false;
     }
 
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
-        chatSDK?.omnichannelConfig?.widgetId, props?.controlProps?.widgetInstanceId ?? "");
+    const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
     //Connect to only active chat session
     if (persistedState &&
@@ -245,9 +245,9 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = (chatSDK: any) => {
+const setCustomContextParams = () => {
     // Add custom context only for unauthenticated chat
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, widgetInstanceId ?? "");
+    const persistedState = getStateFromCache(widgetInstanceId);
 
     if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
         if (persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
@@ -268,7 +268,10 @@ const setCustomContextParams = (chatSDK: any) => {
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkIfConversationStillValid = async (chatSDK: any, props: ILiveChatWidgetProps, requestId: any, dispatch: Dispatch<ILiveChatWidgetAction>): Promise<boolean> => {
+const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
+
+    const requestId = state.domainStates?.liveChatContext?.requestId;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
 

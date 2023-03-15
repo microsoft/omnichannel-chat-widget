@@ -57,5 +57,6 @@ export interface ILiveChatWidgetProps {
     liveChatContextFromCache?: ILiveChatWidgetContext;
     contextDataStore?: IContextDataStore;
     getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
-    scrollBarProps?: IScrollBarProps
+    scrollBarProps?: IScrollBarProps;
+    useSessionStorage?: boolean;
 }

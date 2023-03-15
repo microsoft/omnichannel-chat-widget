@@ -1,7 +1,7 @@
 import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
+import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -63,8 +63,9 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             try {
-                const persistedState = getStateFromCache(state.domainStates?.telemetryInternalData?.orgId ?? "",
+                const widgetInstanceId = getWidgetCacheId(state.domainStates?.telemetryInternalData?.orgId ?? "",
                     state.domainStates.telemetryInternalData?.widgetId ?? "", state.domainStates.widgetInstanceId ?? "");
+                const persistedState = getStateFromCache(widgetInstanceId);
                 let optionalParams: StartChatOptionalParams = {};
 
                 //Connect to Active chats and chat is not popout

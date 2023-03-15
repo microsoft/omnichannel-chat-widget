@@ -121,6 +121,7 @@ export class Constants {
     public static readonly PostChatLoadingDurationInMs = 2000;
     public static readonly BrowserUnloadConfirmationMessage = "Do you want to leave chat?";
     public static readonly CacheTtlInMinutes = 15;
+    public static readonly SessionCacheSuffix = "session";
 }
 
 export const Regex = class {

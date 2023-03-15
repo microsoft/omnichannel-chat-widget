@@ -3,7 +3,7 @@ import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } f
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
-import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, getWidgetCacheIdfromProps } from "../../../common/utils";
 import { endChat, prepareEndChat } from "../common/endChat";
 import {
     shouldShowCallingContainer,
@@ -51,7 +51,7 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
-import { defaultClientDataStoreProvider } from "../../../common/storage/default/defaultClientDataStoreProvider";
+import { defaultClientDataStoreProvider, StorageType } from "../../../common/storage/default/defaultClientDataStoreProvider";
 import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
@@ -66,6 +66,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { handleChatReconnect } from "../common/reconnectChatHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -93,7 +94,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
     const currentMessageCountRef = useRef<number>(0);
-    let widgetStateEventName = "";
+    let widgetStateEventId = "";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let optionalParams: StartChatOptionalParams;
     let activeCachedChatExist = false;
@@ -122,8 +123,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 localState.appStates.conversationState = ConversationState.Loading;
             }
 
+            // Prioritize reconnect over auth chat when enabled
+            await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+
+            // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+            if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+                return;
+            }
+            
             //Check if conversation state is not in wrapup or closed state
-            isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId, dispatch);
+            isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
             if (isChatValid === true) {
                 await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
                 return;
@@ -143,12 +152,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setupClientDataStore = () => {
         // Add default localStorage support for widget
+        const widgetCacheId = getWidgetCacheIdfromProps(props);
+
         if (props.contextDataStore === undefined) {
             const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
-            DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins);
-            registerBroadcastServiceForLocalStorage(chatSDK?.omnichannelConfig?.orgId,
-                chatSDK?.omnichannelConfig?.widgetId,
-                props?.controlProps?.widgetInstanceId ?? "", cacheTtlInMins);
+            const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
+            DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins, storageType);
+            registerBroadcastServiceForLocalStorage(widgetCacheId, cacheTtlInMins, storageType);
         } else {
             DataStoreManager.clientDataStore = props.contextDataStore;
         }
@@ -228,11 +238,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Description: "Start chat event received."
             });
 
-            const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
-                chatSDK?.omnichannelConfig?.widgetId,
-                props?.controlProps?.widgetInstanceId ?? "");
+            // DataStoreManager.clientDataStore?.swtichToSessionStorage(true);
+            const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
-            // Chat not found in cache
+            // Chat not found in cache - scenario: explicitly clearing cache and calling startChat SDK method
             if (persistedState === undefined) {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
@@ -244,9 +253,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             // Chat exist in cache
             if (persistedState) {
                 // Only initiate new chat if widget state in cache in one of the followings
-                if (persistedState.appStates.conversationState === ConversationState.Closed ||
-                    persistedState.appStates.conversationState === ConversationState.InActive ||
-                    persistedState.appStates.conversationState === ConversationState.Postchat) {
+                if (persistedState.appStates?.conversationState === ConversationState.Closed ||
+                    persistedState.appStates?.conversationState === ConversationState.InActive ||
+                    persistedState.appStates?.conversationState === ConversationState.Postchat) {
                     BroadcastService.postMessage({
                         eventName: BroadcastEvent.ChatInitiated
                     });
@@ -254,15 +263,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     return;
                 }
 
+                console.log(`persistedState.appStates.conversationState:${persistedState.appStates.conversationState}`);
                 // If minimized, maximize the chat
-                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-                BroadcastService.postMessage({
-                    eventName: BroadcastEvent.MaximizeChat,
-                    payload: {
-                        height: persistedState?.domainStates?.widgetSize?.height,
-                        width: persistedState?.domainStates?.widgetSize?.width
-                    }
-                });
+                if (persistedState?.appStates?.isMinimized === true) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+                    BroadcastService.postMessage({
+                        eventName: BroadcastEvent.MaximizeChat,
+                        payload: {
+                            height: persistedState?.domainStates?.widgetSize?.height,
+                            width: persistedState?.domainStates?.widgetSize?.width
+                        }
+                    });
+                }
             }
         });
 
@@ -270,9 +282,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
             if (state.appStates.hideStartChatButton === false) {
                 // This is to ensure to get latest state from cache in multitab
-                const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
-                    chatSDK?.omnichannelConfig?.widgetId,
-                    props?.controlProps?.widgetInstanceId ?? "");
+                const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
                 if (persistedState &&
                     persistedState.appStates.conversationState === ConversationState.Active) {
@@ -406,12 +416,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             };
         }*/
 
-        widgetStateEventName = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId,
-            props?.chatSDK?.omnichannelConfig?.widgetId,
-            props?.controlProps?.widgetInstanceId ?? "");
+        widgetStateEventId = getWidgetCacheIdfromProps(props);
 
         const chatWidgetStateChangeEvent: ICustomEvent = {
-            eventName: widgetStateEventName,
+            eventName: widgetStateEventId,
             payload: {
                 ...state
             }
@@ -426,7 +434,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
         endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, false);
         // Clean local storage
-        DataStoreManager.clientDataStore?.removeData(widgetStateEventName, "localStorage");
+        DataStoreManager.clientDataStore?.removeData(widgetStateEventId);
 
         //Dispose calling instance
         if (voiceVideoCallingSDK) {

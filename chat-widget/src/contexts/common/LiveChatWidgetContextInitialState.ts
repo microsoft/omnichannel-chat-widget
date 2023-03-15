@@ -2,18 +2,16 @@ import { ConversationState } from "./ConversationState";
 import { ILiveChatWidgetContext } from "./ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces/ILiveChatWidgetProps";
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
-import { getWidgetCacheId, isNullOrUndefined } from "../../common/utils";
-import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
+import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
+import { defaultClientDataStoreProvider, StorageType } from "../../common/storage/default/defaultClientDataStoreProvider";
 import { Constants } from "../../common/Constants";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
-    const widgetCacheId = getWidgetCacheId(props?.chatSDK?.omnichannelConfig?.orgId,
-        props?.chatSDK?.omnichannelConfig?.widgetId,
-        props?.controlProps?.widgetInstanceId ?? "");
-
+    const widgetCacheId = getWidgetCacheIdfromProps(props);
     const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
-    const initialState = defaultClientDataStoreProvider(cacheTtlInMins).getData(widgetCacheId, "localStorage");
+    const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
+    const initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType).getData(widgetCacheId);
 
     if (!isNullOrUndefined(initialState)) {
         return JSON.parse(initialState);
@@ -37,7 +35,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         },
         appStates: {
             conversationState: ConversationState.Closed,
-            isMinimized: false,
+            isMinimized: undefined,
             previousElementIdOnFocusBeforeModalOpen: null,
             isStartChatFailing: false,
             outsideOperatingHours: false,

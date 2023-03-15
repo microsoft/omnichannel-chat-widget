@@ -27,7 +27,7 @@ export interface ILiveChatWidgetContext {
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
-        isMinimized: boolean; // true when chat button is visible & chat widget is hidden & chat is ongoing
+        isMinimized?: boolean; // true when chat button is visible & chat widget is hidden & chat is ongoing
         previousElementIdOnFocusBeforeModalOpen: string | null; // The previous element id on focus before a modal opened. Focus will return to this element after the modal is closed by default
         isStartChatFailing: boolean; // true when start chat is failing
         outsideOperatingHours: boolean; // true when chat session is out of office hours

@@ -214,11 +214,11 @@ Refer to the below table to understand different critical telemetry events raise
 | `GetAuthTokenFailed` | On getting auth token failed |
 | `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 | `SystemMessageReceived` | On system message received |
-| `HistoryMessageReceived` | On history message received |
+| `HistoryMessageReceived` | On history message received (called only once) |
 | `SigninCardReceived` | On sign-in adaptive card received from bot |
 | `BotAuthActivityEmptySasUrl` | On detecting a sign-in adaptive card with no SAS Url |
 | `BotAuthConfigRequest` | On triggering the execution of the BotAuthTokenProvider function |
-
+| `RemoveWidgetDataFromCache` | On triggering `browserunload` on popout mode |
 
 #### Calling Events
 
