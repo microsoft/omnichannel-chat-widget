@@ -223,7 +223,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Toggle chat visibility
         BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe((event) => {
-            if(event?.payload?.isChatHidden !== undefined) {
+            if (event?.payload?.isChatHidden !== undefined) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatVisibilityChanged,
                     Description: "Chat visibility changed to " + event?.payload?.isChatHidden
