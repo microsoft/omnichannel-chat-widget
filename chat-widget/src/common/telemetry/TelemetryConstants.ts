@@ -49,7 +49,6 @@ export enum BroadcastEvent {
     RaiseErrorEvent = "RaiseErrorEvent",
     NetworkDisconnected = "NetworkDisconnected",
     NetworkReconnected = "NetworkReconnected",
-    initiatePopoutChat = "initiatePopoutChat",
     HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent"
 }
 
@@ -106,7 +105,6 @@ export enum TelemetryEvent {
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
     StartChatEventRecevied = "StartChatEventReceived",
-    StartChatEventReceviedinPopout = "StartChatEventReceviedinPopout",
     EndChatSDKCall = "EndChatSDKCall",
     EndChatEventReceived = "EndChatEventReceived",
     WindowClosed = "WindowClosed",

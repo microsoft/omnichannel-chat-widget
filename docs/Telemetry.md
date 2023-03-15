@@ -138,6 +138,9 @@ Refer to the below table to understand different broadcast events raised during 
 | `InitiateEndChatOnBrowserUnload`      | End active chats on browser unload |
 | `ClosePopoutWindow`      | Event to close popout window  |
 | `RaiseErrorEvent`                 | On raising error events |
+| `NetworkDisconnected`                 | On network Disconnects |
+| `NetworkReconnected`                 | On network reconnects |
+| `HideChatVisibilityChangeEvent`                 | On hiding the chat window or tab |
 
 ### Telemetry Events
 
@@ -215,6 +218,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 | `SystemMessageReceived` | On system message received |
 | `HistoryMessageReceived` | On history message received |
+| `ChatVisibilityChanged` | On minimizing the chat window |
 
 #### Calling Events
 
