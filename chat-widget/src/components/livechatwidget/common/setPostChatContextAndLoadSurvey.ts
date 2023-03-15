@@ -65,9 +65,40 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
     // Below logic checks if chat is ended by customer or agent or bot and handles them separately
     if (conversationDetails?.participantType === Constants.userParticipantTypeTag) {
         if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
+            // Set use bot settings to false
             await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, false);
         } else if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
             await postChatInitiatedByAgent(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+        } else {
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.AppStatesException,
+                ExceptionDetails: {
+                    exception: `Conversation was Ended but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
+                }
+            });
+            // Ending chat because something went wrong
+            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        }
+    } else if (conversationDetails?.participantType === Constants.botParticipantTypeTag) {
+        if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
+            // Set use bot settings to true
+            await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, true);
+        } else if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
+            await postChatInitiatedByBot(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+        } else {
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.AppStatesException,
+                ExceptionDetails: {
+                    exception: `Conversation was Ended but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
+                }
+            });
+            // Ending chat because something went wrong
+            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        }       
+    } else {
+        if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
+            // No one has joined chat will be handled by postChat customer
+            await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, false);
         } else {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.AppStatesException,
@@ -78,30 +109,6 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
             // Ending chat because something went wrong
             await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
         }
-    } else if (conversationDetails?.participantType === Constants.botParticipantTypeTag) {
-        if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
-            await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, true);
-        } else if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
-            await postChatInitiatedByBot(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
-        } else {
-            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                Event: TelemetryEvent.AppStatesException,
-                ExceptionDetails: {
-                    exception: `ConversationDetails was not set correctly: conversationDetails = ${JSON.stringify(conversationDetails)}`
-                }
-            });
-            // Ending chat because something went wrong
-            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
-        }       
-    } else {
-        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-            Event: TelemetryEvent.AppStatesException,
-            ExceptionDetails: {
-                exception: `Conversation was Ended but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
-            }
-        });
-        // Ending chat because something went wrong
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
     }
 };
 
