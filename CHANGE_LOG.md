@@ -101,4 +101,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed PostChat Stories and VRT
 - Adding support for PVA SSO
 - Adding an event listener in case the chat window is hidden for notifications
-- Fixed ErrorUIPane having wrong string
+- Fixed the issue where ErrorUIPane string is overwritten by loading pane strings
