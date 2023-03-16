@@ -103,3 +103,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed PostChat Workflows and added telemetry
 - Fixed Postchat loading twice issue
 - Adding an event listener in case the chat window is hidden for notifications
+- Fixed the issue where ErrorUIPane string is overwritten by loading pane strings

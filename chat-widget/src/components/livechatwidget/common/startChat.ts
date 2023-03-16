@@ -135,15 +135,15 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 }
             });
             isStartChatSuccessful = false;
-            return;
+            throw error;
         }
 
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
 
-        console.log("ADAD throwing manual error");
-        throw new Error();
+        // console.log("ADAD throwing manual error");
+        // throw new Error();
 
         const chatToken = await chatSDK.getChatToken();
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });

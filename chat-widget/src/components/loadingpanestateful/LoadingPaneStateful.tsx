@@ -37,8 +37,8 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
         ...props.controlProps,
         id: "oc-lcw-alert-pane",
         dir: state.domainStates.globalDir,
-        titleText: "Chat is failing to load.",
-        subtitleText: "Please close the chat and try again.",
+        titleText: "We are unable to load chat at this time.",
+        subtitleText: "Please try again later.",
         hideSpinner: true,
         hideSpinnerText: true
     };
