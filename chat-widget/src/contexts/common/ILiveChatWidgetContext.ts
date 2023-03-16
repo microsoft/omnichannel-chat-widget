@@ -3,6 +3,7 @@ import { ConversationState } from "./ConversationState";
 import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
+import { ConversationEndEntity } from "./ConversationEndEntity";
 
 export interface ILiveChatWidgetContext {
     domainStates: {
@@ -43,7 +44,9 @@ export interface ILiveChatWidgetContext {
         };
         e2vvEnabled: boolean; // true if voice/video calling is enabled and callingSDK instance created
         unreadMessageCount: number; // keep count of unread messages
-        conversationEndedByAgent: boolean; // true when agent ends the conversation
+        conversationEndedByAgentEventReceived: boolean; // true when agent end conversation or timeout event is received
+        conversationEndedBy: ConversationEndEntity | undefined; // The entity that ends conversation
+        postChatWorkflowInProgress: boolean; // true when customer ends conversation and postChat workflow has initiated
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

@@ -83,12 +83,7 @@ const render = async () => {
             }
         },
         chatSDK: chatSDK, // mandatory
-        chatConfig: chatConfig, // mandatory
-         telemetryConfig: { //mandatory for telemetry
-            chatWidgetVersion: chatWidgetVersion,
-            chatComponentVersion: chatComponentVersion,
-            OCChatSDKVersion: chatSdkVersion
-        }
+        chatConfig: chatConfig // mandatory
     };
 
     ReactDOM.render(

@@ -215,6 +215,16 @@ Refer to the below table to understand different critical telemetry events raise
 | `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 | `SystemMessageReceived` | On system message received |
 | `HistoryMessageReceived` | On history message received |
+| `ChatVisibilityChanged` | On minimizing the chat window |
+| `SigninCardReceived` | On sign-in adaptive card received from bot |
+| `BotAuthActivityEmptySasUrl` | On detecting a sign-in adaptive card with no SAS Url |
+| `BotAuthConfigRequest` | On triggering the execution of the BotAuthTokenProvider function |
+| `LinkModePostChatWorkflowStarted` | On link mode post chat workflow being triggered
+| `EmbedModePostChatWorkflowStarted` | On embed mode post chat workflow being triggered
+| `PostChatWorkflowFromCustomer` | On postchat workflow from customer being triggered
+| `PostChatWorkflowFromAgent` | On postchat workflow from agent being triggered
+| `PostChatWorkflowFromBot` | On postchat workflow from bot being triggered
+| `CloseChatCall ` | On triggering closed chat state
 
 #### Calling Events
 
@@ -267,6 +277,8 @@ Refer to the below table to understand different critical telemetry events raise
 |`ParseAdaptiveCardFailed`|On parsing adaptive card failure|
 |`ClientDataStoreProviderFailed`| On failing to store data to localStorage|
 |`InMemoryDataStoreFailed`| On failing to store data to in-memory storage|
+|`AppStatesException`| On app states failing to set correctly|
+
 #### Web Chat Events
 | Event Name | Scenario |
 | -------- |-------- |
