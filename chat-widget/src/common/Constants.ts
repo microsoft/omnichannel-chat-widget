@@ -122,6 +122,7 @@ export class Constants {
     public static readonly BrowserUnloadConfirmationMessage = "Do you want to leave chat?";
     public static readonly CacheTtlInMinutes = 15;
     public static readonly SessionCacheSuffix = "session";
+    public static readonly PopoutCacheSuffix = "popout";
 }
 
 export const Regex = class {

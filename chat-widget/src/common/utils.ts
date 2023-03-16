@@ -339,8 +339,13 @@ export const getWidgetCacheIdfromProps = (props: any): string => {
     const orgId = props?.chatSDK?.omnichannelConfig?.orgId;
     const widgetId = props?.chatSDK?.omnichannelConfig?.widgetId;
     let widgetInstanceId = props?.controlProps?.widgetInstanceId ?? "";
+    
     if (props.useSessionStorage) {
         widgetInstanceId = widgetInstanceId + Constants.SessionCacheSuffix;
+    }
+    
+    if (props?.controlProps.hideStartChatButton) {
+        widgetInstanceId = widgetInstanceId + Constants.PopoutCacheSuffix;
     }
     const widgetCacheId = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
     return widgetCacheId;
@@ -355,6 +360,6 @@ export const debounceLeading = (fn: any, ms = 3000) => {
             fn.apply(this, args);
         }
 
-        timeoutId = setTimeout(() => {timeoutId = null;}, ms);
+        timeoutId = setTimeout(() => { timeoutId = null; }, ms);
     };
 };
