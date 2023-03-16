@@ -5,11 +5,7 @@ import { LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
 import { IContextDataStore } from "../../interfaces/IContextDataStore";
 import { TelemetryHelper } from "../../telemetry/TelemetryHelper";
 import { inMemoryDataStore } from "./defaultInMemoryDataStore";
-
-export enum StorageType {
-    "localStorage",
-    "sessionStorage"
-}
+import { StorageType } from "../../Constants";
 
 export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage): IContextDataStore => {
     let ttlInMs = 0;

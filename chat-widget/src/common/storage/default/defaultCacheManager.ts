@@ -1,5 +1,6 @@
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { defaultClientDataStoreProvider, StorageType } from "./defaultClientDataStoreProvider";
+import { StorageType } from "../../Constants";
+import { defaultClientDataStoreProvider } from "./defaultClientDataStoreProvider";
 
 export class defaultCacheManager {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

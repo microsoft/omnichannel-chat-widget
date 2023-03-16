@@ -224,6 +224,11 @@ export enum LiveWorkItemState {
     WrapUp = "WrapUp"
 }
 
+export enum StorageType {
+    "localStorage",
+    "sessionStorage"
+}
+
 export class TranscriptConstants {
     public static readonly ChatTranscriptsBodyColor = "#F5F5F5";
     public static readonly TranscriptMessageEmojiMessageType = "http://schema.skype.com/emoji";

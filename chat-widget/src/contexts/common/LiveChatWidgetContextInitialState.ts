@@ -3,8 +3,8 @@ import { ILiveChatWidgetContext } from "./ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces/ILiveChatWidgetProps";
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
-import { defaultClientDataStoreProvider, StorageType } from "../../common/storage/default/defaultClientDataStoreProvider";
-import { Constants } from "../../common/Constants";
+import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
+import { Constants, StorageType } from "../../common/Constants";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
