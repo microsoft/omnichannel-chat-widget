@@ -221,6 +221,19 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        // Toggle chat visibility
+        BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe((event) => {
+            if (event?.payload?.isChatHidden !== undefined) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ChatVisibilityChanged,
+                    Description: "Chat visibility changed to " + event?.payload?.isChatHidden
+                });
+                if (props.controlProps?.hideStartChatButton) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
+                }
+            }
+        });
+
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe(() => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
