@@ -35,7 +35,12 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdap
     }
     const isPostChatEnabled = checkPostChatEnabled(props, state);
     if (isPostChatEnabled) {
-        await initiatePostChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+        try {
+            await initiatePostChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+        } catch (error) {
+            // Ending chat because something went wrong
+            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        }
     } else {
         if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
             dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });

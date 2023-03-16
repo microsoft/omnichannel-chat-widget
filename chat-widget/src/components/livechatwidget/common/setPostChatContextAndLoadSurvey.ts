@@ -68,46 +68,46 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
             // Set use bot settings to false
             await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, false);
         } else if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
-            await postChatInitiatedByAgent(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+            await postChatInitiatedByAgent(props, setWebChatStyles, dispatch, state);
         } else {
+            const error = `Conversation was Ended after agent joined but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`;
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.AppStatesException,
                 ExceptionDetails: {
-                    exception: `Conversation was Ended after agent joined but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
+                    exception: error
                 }
             });
-            // Ending chat because something went wrong
-            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+            throw new Error(error);
         }
     } else if (conversationDetails?.participantType === Constants.botParticipantTypeTag) {
         if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
             // Set use bot settings to true
             await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, true);
         } else if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
-            await postChatInitiatedByBot(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+            await postChatInitiatedByBot(props, setWebChatStyles, dispatch, state);
         } else {
+            const error = `Conversation was Ended after bot joined but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`;
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.AppStatesException,
                 ExceptionDetails: {
-                    exception: `Conversation was Ended after bot joined but App State was not set correctly: conversationEndedBy = ${state.appStates.conversationEndedBy}`
+                    exception: error
                 }
             });
-            // Ending chat because something went wrong
-            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+            throw new Error(error);
         }       
     } else {
         if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
             // No one has joined chat will be handled by postChat customer
             await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, false);
         } else {
+            const error = `ConversationDetails and App state was not set correctly: conversationDetails = ${JSON.stringify(conversationDetails)} , conversationEndedBy = ${state.appStates.conversationEndedBy}`;
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.AppStatesException,
                 ExceptionDetails: {
-                    exception: `ConversationDetails and App state was not set correctly: conversationDetails = ${JSON.stringify(conversationDetails)} , conversationEndedBy = ${state.appStates.conversationEndedBy}`
+                    exception: error
                 }
             });
-            // Ending chat because something went wrong
-            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+            throw new Error(error);
         }
     }
 };
@@ -129,7 +129,7 @@ const linkModePostChatWorkflow = (props: any, dispatch: Dispatch<ILiveChatWidget
 
 // Function for embed mode postchat workflow which is essentially same for both customer and agent
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const embedModePostChatWorkflow = async (props: any, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
+const embedModePostChatWorkflow = async (dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext) => {
     TelemetryHelper.logActionEvent(LogLevel.INFO, {
         Event: TelemetryEvent.EmbedModePostChatWorkflowStarted
     });
@@ -142,14 +142,14 @@ const embedModePostChatWorkflow = async (props: any, chatSDK: any, setAdapter: a
         };
         BroadcastService.postMessage(loadPostChatEvent);
     } else {
+        const error = `Conversation was Ended but App State was not set correctly: postChatContext = ${state.domainStates.postChatContext}`;
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AppStatesException,
             ExceptionDetails: {
-                exception: `Conversation was Ended but App State was not set correctly: postChatContext = ${state.domainStates.postChatContext}`
+                exception: error
             }
         });
-        // End chat call since postchat context was not set correctly
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        throw new Error(error);
     }
 };
 
@@ -177,18 +177,18 @@ const postChatInitiatedByCustomer = async (props: any, chatSDK: any, setAdapter:
         // End chat call to end chatsdk but not close chat, only if chat ended by customer
         await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, true, false);
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-            await embedModePostChatWorkflow(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+            await embedModePostChatWorkflow(dispatch, state);
         } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
             linkModePostChatWorkflow(props, dispatch, setWebChatStyles);
         } else {
+            const error = `Conversation was Ended but App State was not set correctly: msdyn_postconversationsurveymode = ${postChatSurveyMode}`;
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.AppStatesException,
                 ExceptionDetails: {
-                    exception: `Conversation was Ended but App State was not set correctly: msdyn_postconversationsurveymode = ${postChatSurveyMode}`
+                    exception: error
                 }
             });
-            // Ending chat because something went wrong
-            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+            throw new Error(error);
         }
     } else {
         // Agent did not join chat so end chat normally
@@ -198,49 +198,49 @@ const postChatInitiatedByCustomer = async (props: any, chatSDK: any, setAdapter:
 
 // Function will handle only postchat cases initiated by agent
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const postChatInitiatedByAgent = async (props: any, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
+const postChatInitiatedByAgent = async (props: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext) => {
     const postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
     TelemetryHelper.logActionEvent(LogLevel.INFO, {
         Event: TelemetryEvent.PostChatWorkflowFromAgent,
         Description: "PostChat Workflow was started by agent"
     });
     if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-        await embedModePostChatWorkflow(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+        await embedModePostChatWorkflow(dispatch, state);
     } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
         linkModePostChatWorkflow(props, dispatch, setWebChatStyles);
     } else {
+        const error = `Conversation was Ended but App State was not set correctly: msdyn_postconversationsurveymode = ${postChatSurveyMode}`;
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AppStatesException,
             ExceptionDetails: {
-                exception: `Conversation was Ended but App State was not set correctly: msdyn_postconversationsurveymode = ${postChatSurveyMode}`
+                exception: error
             }
         });
-        // Ending chat because something went wrong
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        throw new Error(error);
     }
 };
 
 // Function will handle only postchat cases initiated by bot
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const postChatInitiatedByBot = async (props: any, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
+const postChatInitiatedByBot = async (props: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext) => {
     const postChatSurveyMode = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode;
     TelemetryHelper.logActionEvent(LogLevel.INFO, {
         Event: TelemetryEvent.PostChatWorkflowFromBot,
         Description: "PostChat Workflow was started by bot"
     });
     if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-        await embedModePostChatWorkflow(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+        await embedModePostChatWorkflow(dispatch, state);
     } else if (postChatSurveyMode === PostChatSurveyMode.Link) {
         linkModePostChatWorkflow(props, dispatch, setWebChatStyles);
     } else {
+        const error = `Conversation was Ended but App State was not set correctly: msdyn_postconversationsurveybotsurveymode = ${postChatSurveyMode}`;
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AppStatesException,
             ExceptionDetails: {
-                exception: `Conversation was Ended but App State was not set correctly: msdyn_postconversationsurveymode = ${postChatSurveyMode}`
+                exception: error
             }
         });
-        // Ending chat because something went wrong
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        throw new Error(error);
     }
 };
 
