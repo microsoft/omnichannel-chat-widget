@@ -33,13 +33,13 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
     };
 
     const errorUIControlProps: ILoadingPaneControlProps = {
+        ...props.controlProps,
         id: "oc-lcw-alert-pane",
         dir: state.domainStates.globalDir,
-        titleText: "Chat is failing to load.",
-        subtitleText: "Please Close the chat and try again.",
+        titleText: "We are unable to load chat at this time.",
+        subtitleText: "Please try again later.",
         hideSpinner: true,
-        hideSpinnerText: true,
-        ...props.controlProps
+        hideSpinnerText: true
     };
     const { height, width } = useWindowDimensions();
 
