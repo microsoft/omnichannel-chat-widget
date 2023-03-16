@@ -102,3 +102,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Adding support for PVA SSO
 - Fixed PostChat Workflows and added telemetry
 - Fixed Postchat loading twice issue
+- Adding an event listener in case the chat window is hidden for notifications
