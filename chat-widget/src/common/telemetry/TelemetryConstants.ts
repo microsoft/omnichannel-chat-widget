@@ -53,6 +53,7 @@ export enum BroadcastEvent {
     BotAuthConfigRequest = "BotAuthConfigRequest",
     BotAuthConfigResponse = "BotAuthConfigResponse",
     RemoveWidgetDataFromCache = "RemoveWidgetDataFromCache",
+    HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent"
 }
 
 // Events being logged
@@ -94,6 +95,7 @@ export enum TelemetryEvent {
     ParseAdaptiveCardFailed = "ParseAdaptiveCardFailed",
     ClientDataStoreProviderFailed = "ClientDataStoreProviderFailed",
     InMemoryDataStoreFailed = "InMemoryDataStoreFailed",
+    ChatVisibilityChanged = "ChatVisibilityChanged",
 
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClicked = "LCWChatButtonClicked",

@@ -14,23 +14,12 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
 import { IPostChatSurveyPaneStatefulProps } from "./interfaces/IPostChatSurveyPaneStatefulProps";
 import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
-import { defaultPopOutGeneralPostChatSurveyPaneStyleProps } from "./common/defaultStyleProps/defaultPopOutgeneralPostChatSurveyPaneStyleProps";
 
 export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulProps) => {
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
-   
-    const chooseGeneralStylePropsToBeLoaded = () => {
-        if (state.appStates.hideStartChatButton){
-            return defaultPopOutGeneralPostChatSurveyPaneStyleProps;
-        }
-        return defaultGeneralPostChatSurveyPaneStyleProps;
-    };
-
-    const generalStyleProps: IStyle = Object.assign({}, chooseGeneralStylePropsToBeLoaded(), props.styleProps?.generalStyleProps,
+    const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPostChatSurveyPaneStyleProps, props.styleProps?.generalStyleProps,
         {display: state.appStates.isMinimized ? "none" : ""});
-
-   
     let surveyInviteLink = "";
     if (state.domainStates.postChatContext.surveyInviteLink) {
         surveyInviteLink = state.domainStates.postChatContext.surveyInviteLink + "&embed=" + (postChatSurveyMode === PostChatSurveyMode.Embed).toString() + 

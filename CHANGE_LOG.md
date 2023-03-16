@@ -102,3 +102,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Adding support for PVA SSO
 - Adding sessionStorage support to chat widget
 - Fixing reconnect pane not appearing on refresh
+- Adding an event listener in case the chat window is hidden for notifications
