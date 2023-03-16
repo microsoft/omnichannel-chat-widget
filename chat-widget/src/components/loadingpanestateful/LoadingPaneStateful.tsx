@@ -16,7 +16,6 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 
 export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
-    console.log("ADAD LoadingPaneProps", props);
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, props.styleProps?.generalStyleProps);
     const styleProps: ILoadingPaneStyleProps = {
@@ -52,10 +51,6 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.LoadingPaneLoaded, Description: "Loading pane loaded." });
     }, []);
-
-    console.log("ADAD state.appStates.isStartChatFailing", state.appStates.isStartChatFailing);
-    console.log("ADAD errorUIControlProps", errorUIControlProps);
-    console.log("ADAD controlProps", controlProps);
     
     return (
         <LoadingPane

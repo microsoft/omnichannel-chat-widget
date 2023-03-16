@@ -142,9 +142,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
 
-        // console.log("ADAD throwing manual error");
-        // throw new Error();
-
         const chatToken = await chatSDK.getChatToken();
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
         newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
@@ -188,14 +185,11 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
-            console.log("ADAD outside operating hours");
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             return;
         }
-        console.log("ADAD hideErrorUIPane", hideErrorUIPane);
         if (!hideErrorUIPane) {
-            console.log("ADAD loading error ui pane");
             // Set app state to failing start chat if hideErrorUI is not turned on
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -208,7 +202,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
         // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state 
-        console.log("ADAD isStartChatSuccessful", isStartChatSuccessful);
         if (isStartChatSuccessful === true) {
             await forceEndChat(chatSDK);
         }
