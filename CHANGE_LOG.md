@@ -100,4 +100,5 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added PostChat Context check for triggering Embedded PostChat Workflow
 - Fixed PostChat Stories and VRT
 - Adding support for PVA SSO
+- Adding an event listener in case the chat window is hidden for notifications
 - Fixed ErrorUIPane having wrong string
