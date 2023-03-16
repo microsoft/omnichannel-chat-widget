@@ -64,9 +64,9 @@ const validateFileSize = (attachmentSize: string, maxUploadFileSize: number): bo
     return (maxUploadFileSize * MBtoBRatio) > parseInt(attachmentSize);
 };
 
-const getmaxUploadFileSize = (maxFileSizeByDynamics:string, contentType: string): number => {
+const getmaxUploadFileSize = (maxFileSizeSupportedByDynamicsStr:string, contentType: string): number => {
     const isFileImage = isImage(contentType);
-    const maxFileSizeSupportedByDynamics = maxFileSizeByDynamics && parseInt(maxFileSizeByDynamics) ? parseInt(maxFileSizeByDynamics) : AMSConstants.maxSupportedFileSize;
+    const maxFileSizeSupportedByDynamics = maxFileSizeSupportedByDynamicsStr && parseInt(maxFileSizeSupportedByDynamicsStr) ? parseInt(maxFileSizeSupportedByDynamicsStr) : AMSConstants.maxSupportedFileSize;
 
     // Takes the smallest max file size configure betteween AMS and Dynamics Config
     if (isFileImage){
@@ -133,7 +133,7 @@ const getFileSizeErrorMessage = (maxUploadFileSize: string, localizedTexts: ILiv
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxUploadFileSize: string, localizedTexts: ILiveChatWidgetLocalizedTexts) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
     if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
         const {
             payload
@@ -141,7 +141,7 @@ const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string
 
         if (payload?.activity?.attachments && payload?.activity?.channelData?.attachmentSizes &&
             payload?.activity?.attachments?.length === payload?.activity?.channelData?.attachmentSizes?.length) {
-            return next(validateAttachment(action, allowedFileExtensions, maxUploadFileSize, localizedTexts));
+            return next(validateAttachment(action, allowedFileExtensions, maxFileSizeSupportedByDynamics, localizedTexts));
         }
     }
     return next(action);
