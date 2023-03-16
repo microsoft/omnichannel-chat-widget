@@ -182,6 +182,12 @@ export class WebChatMiddlewareConstants {
     public static readonly adaptiveCard = "AdaptiveCard";
 }
 
+export class AMSConstants {
+    public static readonly supportedImagesMimeTypes = ["image/jpeg", "image/png", "image/gif", "image/heic", "image/webp"]; //using same MIME types as AMSClient
+    public static readonly maxSupportedImageSize = 20; //AMS max size for images is 20MB
+    public static readonly maxSupportedFileSize = 300; //AMS max size limit is 300MB but Dynamics limit is 128MB this gets overwritten on AttachmentUploadValidatorMiddleware.ts line 78
+}
+
 export class MimeTypes {
     public static readonly UnknownFileType = "application/octet-stream";
 }

@@ -9,6 +9,7 @@ import { NotificationHandler } from "../../notification/NotificationHandler";
 import { NotificationScenarios } from "../../enums/NotificationScenarios";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
+import { AMSConstants } from "../../../../../common/Constants";
 
 const MBtoBRatio = 1000000;
 
@@ -16,16 +17,17 @@ const MBtoBRatio = 1000000;
 * If an attachment is invalid, delete this attachment from the attachments list
 * If the result attachment list is empty, return a dummy action
 */
-const validateAttachment = (action: IWebChatAction, allowedFileExtensions: string, maxUploadFileSize: string, localizedTexts: ILiveChatWidgetLocalizedTexts): IWebChatAction => {
+const validateAttachment = (action: IWebChatAction, allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts): IWebChatAction => {
     const attachments = action?.payload?.activity?.attachments;
     const attachmentSizes = action?.payload?.activity?.channelData?.attachmentSizes;
     if (attachments) {
         for (let i = 0; i < attachments.length; i++) {
+            const maxUploadFileSize = getmaxUploadFileSize(maxFileSizeSupportedByDynamics, attachments[i].contentType);
             const fileExtensionValid = validateFileExtension(attachments[i], allowedFileExtensions);
             const fileSizeValid = validateFileSize(attachmentSizes[i], maxUploadFileSize);
             const fileIsEmpty = parseInt(attachmentSizes[i]) == 0;
             if (!fileExtensionValid || !fileSizeValid || fileIsEmpty) {
-                NotificationHandler.notifyError(NotificationScenarios.AttachmentError, buildErrorMessage(attachments[i].name, fileExtensionValid, fileSizeValid, fileIsEmpty, maxUploadFileSize, localizedTexts));
+                NotificationHandler.notifyError(NotificationScenarios.AttachmentError, buildErrorMessage(attachments[i].name, fileExtensionValid, fileSizeValid, fileIsEmpty, maxUploadFileSize.toString(), localizedTexts));
                 attachments.splice(i, 1);
                 attachmentSizes.splice(i, 1);
                 i--;
@@ -58,8 +60,24 @@ const validateFileExtension = (attachment: any, allowedFileExtensions: string): 
     return allExtensions.indexOf(fileExtension) > -1;
 };
 
-const validateFileSize = (attachmentSize: string, maxUploadFileSize: string): boolean => {
-    return (maxUploadFileSize && parseInt(maxUploadFileSize) * MBtoBRatio) > parseInt(attachmentSize);
+const validateFileSize = (attachmentSize: string, maxUploadFileSize: number): boolean => {
+    return (maxUploadFileSize * MBtoBRatio) > parseInt(attachmentSize);
+};
+
+const getmaxUploadFileSize = (maxFileSizeByDynamics:string, contentType: string): number => {
+    const isFileImage = isImage(contentType);
+    const maxFileSizeSupportedByDynamics = maxFileSizeByDynamics && parseInt(maxFileSizeByDynamics) ? parseInt(maxFileSizeByDynamics) : AMSConstants.maxSupportedFileSize;
+
+    // Takes the smallest max file size configure betteween AMS and Dynamics Config
+    if (isFileImage){
+        return maxFileSizeSupportedByDynamics > AMSConstants.maxSupportedImageSize ? AMSConstants.maxSupportedImageSize : maxFileSizeSupportedByDynamics;
+    } else {
+        return maxFileSizeSupportedByDynamics > AMSConstants.maxSupportedFileSize ? AMSConstants.maxSupportedFileSize: maxFileSizeSupportedByDynamics;
+    }
+};
+
+const isImage = (contentType: string): boolean => {
+    return AMSConstants.supportedImagesMimeTypes.indexOf(contentType) > -1;
 };
 
 const buildErrorMessage = (fileName: string, supportedFileExtension: boolean, supportedFileSize: boolean, fileIsEmpty: boolean, maxUploadFileSize: string, localizedTexts: ILiveChatWidgetLocalizedTexts): string => {
