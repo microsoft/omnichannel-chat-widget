@@ -13,6 +13,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultOutOfOfficeHeaderStyleProps } from "./common/styleProps/defaultOutOfOfficeHeaderStyleProps";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { ConversationEndEntity } from "../../contexts/common/ConversationEndEntity";
 
 export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
@@ -25,7 +26,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
     const conversationState = useRef(state.appStates.conversationState);
-    const conversationEndedByAgent = useRef(state.appStates.conversationEndedByAgent);
+    const conversationEndedBy = useRef(state.appStates.conversationEndedBy);
     const controlProps: IHeaderControlProps = {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
@@ -35,7 +36,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         },
         onCloseClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
-            if (conversationState.current === ConversationState.Active || conversationEndedByAgent.current) {
+            if (conversationState.current === ConversationState.Active || conversationEndedBy.current === ConversationEndEntity.Agent) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
             } else {
                 const skipEndChatSDK = true;
@@ -74,7 +75,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         if (state.appStates.conversationState) {
             conversationState.current = state.appStates.conversationState;
         }
-        conversationEndedByAgent.current = state.appStates.conversationEndedByAgent;
+        conversationEndedBy.current = state.appStates.conversationEndedBy;
     }, [state.appStates]);
 
 

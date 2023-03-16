@@ -7,6 +7,7 @@ import { ILiveChatWidgetContext } from "./common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "./common/ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
+import { ConversationEndEntity } from "./common/ConversationEndEntity";
 
 export const createReducer = () => {
     const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): ILiveChatWidgetContext => {
@@ -287,12 +288,21 @@ export const createReducer = () => {
                     ...action.payload as ILiveChatWidgetContext
                 };
 
-            case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT:
+            case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT_EVENT_RECEIVED:
                 return {
                     ...state,
                     appStates: {
                         ...state.appStates,
-                        conversationEndedByAgent: action.payload as boolean
+                        conversationEndedByAgentEventReceived: action.payload as boolean
+                    }
+                };
+                
+            case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        conversationEndedBy: action.payload as ConversationEndEntity | undefined
                     }
                 };
 
@@ -323,6 +333,16 @@ export const createReducer = () => {
                         ...state.domainStates,
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         liveChatConfig: action.payload as any
+                    }
+                };
+
+            case LiveChatWidgetActionType.SET_POST_CHAT_WORKFLOW_IN_PROGRESS:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        postChatWorkflowInProgress: action.payload as boolean
                     }
                 };
 
