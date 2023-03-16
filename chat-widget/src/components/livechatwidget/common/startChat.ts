@@ -135,7 +135,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 }
             });
             isStartChatSuccessful = false;
-            return;
+            throw error;
         }
 
         // New adapter creation

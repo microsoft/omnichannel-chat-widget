@@ -10,10 +10,10 @@ import { IStyle } from "@fluentui/react";
 import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralLoadingPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralLoadingPaneStyleProps";
+import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 
 export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -33,14 +33,15 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
     };
 
     const errorUIControlProps: ILoadingPaneControlProps = {
+        ...props.controlProps,
         id: "oc-lcw-alert-pane",
         dir: state.domainStates.globalDir,
         titleText: "Chat is failing to load.",
         subtitleText: "Please Close the chat and try again.",
         hideSpinner: true,
-        hideSpinnerText: true,
-        ...props.controlProps
+        hideSpinnerText: true
     };
+    
     const { height, width } = useWindowDimensions();
 
     // Move focus to the first button
