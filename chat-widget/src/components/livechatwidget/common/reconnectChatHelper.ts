@@ -107,10 +107,12 @@ const redirectPage = (redirectURL: string, redirectInSameWindow: boolean) => {
     }
 };
 
-const isReconnectEnabled = (chatConfig: ChatConfig) => {
-    return chatConfig &&
-        chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_enablechatreconnect &&
-        (chatConfig.LiveWSAndLiveChatEngJoin.msdyn_enablechatreconnect === "true" || chatConfig.LiveWSAndLiveChatEngJoin.msdyn_enablechatreconnect === true);
+const isReconnectEnabled = (chatConfig?: ChatConfig): boolean => {
+    if (chatConfig) {
+        const reconnectEnabled = (chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_enablechatreconnect?.toLowerCase() === "true");
+        return reconnectEnabled;
+    }
+    return false;
 };
 
 const hasReconnectId = (reconnectAvailabilityResponse: IReconnectChatContext) => {

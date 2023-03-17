@@ -66,7 +66,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { handleChatReconnect } from "../common/reconnectChatHelper";
+import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -119,21 +119,25 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+
             if (localState) {
                 localState.appStates.conversationState = ConversationState.Loading;
             }
 
-            // Prioritize reconnect over auth chat when enabled
-            await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
-
-            // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-            if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
-                return;
-            }
-
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
+
             if (isChatValid === true) {
+                //Check if reconnect enabled
+                if (isReconnectEnabled(props.chatConfig) === true) {
+                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+                    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+                        return;
+                    }
+                }
+
+                // Connect to existing chat
                 await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
                 return;
             }
