@@ -20,6 +20,9 @@ export class Constants {
     public static readonly false = "false";
     public static readonly maximumUnreadMessageCount = 99;
 
+    public static readonly userParticipantTypeTag = "User";
+    public static readonly botParticipantTypeTag = "Bot";
+
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";
     public static readonly ChannelId = "lcw";

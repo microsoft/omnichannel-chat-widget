@@ -66,6 +66,8 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
+import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -319,7 +321,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // When conversation ended by agent
-        if (state.appStates.conversationEndedByAgent) {
+        if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
             endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
         }
 
@@ -432,6 +434,20 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.postMessage(chatWidgetStateChangeEvent);
     }, [state]);
 
+    // Initiate End chat from a single point
+    useEffect(() => {
+        if (state.appStates.conversationEndedBy !== undefined) {
+            prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
+        }
+    }, [state.appStates.conversationEndedBy]);
+
+    // Handle Agent end conversation cases
+    useEffect(() => {
+        if (state.appStates.conversationEndedByAgentEventReceived) {
+            handleAgentEndConversation(props, state, dispatch);
+        }
+    }, [state.appStates.conversationEndedByAgentEventReceived]);
+
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
@@ -449,12 +465,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
-    const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setWebChatStyles);
+    const webChatProps = initWebChatComposer(props, chatSDK, setAdapter, state, dispatch, adapter, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const prepareEndChatRelay = (adapter: any, state: ILiveChatWidgetContext) => prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
@@ -507,7 +521,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                     {!props.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(props.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...props.webChatContainerProps} />)}
 
-                    {!props.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(props.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
+                    {!props.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(props.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} />)}
 
                     {!props.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(props.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...props.postChatLoadingPaneProps} />)}
 
