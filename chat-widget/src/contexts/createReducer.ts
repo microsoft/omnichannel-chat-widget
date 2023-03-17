@@ -346,6 +346,16 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_SHOULD_USE_BOT_SURVEY:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        shouldUseBotSurvey: action.payload as boolean
+                    }
+                };
+
             default:
                 return state;
         }

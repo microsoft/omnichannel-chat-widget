@@ -47,6 +47,7 @@ export interface ILiveChatWidgetContext {
         conversationEndedByAgentEventReceived: boolean; // true when agent end conversation or timeout event is received
         conversationEndedBy: ConversationEndEntity | undefined; // The entity that ends conversation
         postChatWorkflowInProgress: boolean; // true when customer ends conversation and postChat workflow has initiated
+        shouldUseBotSurvey: boolean; // true when bot configured survey needs to be used
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show
