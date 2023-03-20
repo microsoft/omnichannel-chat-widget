@@ -2,12 +2,12 @@ import { ILiveChatWidgetLocalizedTexts } from "../../../../contexts/common/ILive
 
 export const defaultMiddlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts = {
     MIDDLEWARE_BANNER_FILE_NULL_ERROR: "There was an error uploading the file, please try again.",
-    MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR: "File exceeds the allowed limit of {0} MB and please upload the file with an appropriate file extension.",
-    MIDDLEWARE_BANNER_FILE_SIZE_EXTENSION_ERROR: "File exceeds the allowed limit of {0} MB and {1} files are not supported.",
-    MIDDLEWARE_BANNER_FILE_WITHOUT_EXTENSION: "File upload error. Please upload the file with an appropriate file extension.",
+    MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR: "File {0} exceeds the allowed limit of {1} MB and please upload the file with an appropriate file extension.",
+    MIDDLEWARE_BANNER_FILE_SIZE_EXTENSION_ERROR: "File {0} exceeds the allowed limit of {1} MB and {2} files are not supported.",
+    MIDDLEWARE_BANNER_FILE_WITHOUT_EXTENSION: "File upload error. Please upload the file {0} with an appropriate file extension.",
     MIDDLEWARE_BANNER_FILE_EXTENSION_ERROR: "{0} files are not supported.",
-    MIDDLEWARE_BANNER_FILE_SIZE_ERROR: "File exceeds the allowed limit of {0} MB.",
-    MIDDLEWARE_BANNER_FILE_IS_EMPTY_ERROR: "This file can't be attached because it's empty. Please try again with a different file.",
+    MIDDLEWARE_BANNER_FILE_SIZE_ERROR: "File {0} exceeds the allowed limit of {1} MB.",
+    MIDDLEWARE_BANNER_FILE_IS_EMPTY_ERROR: "This file {0} can't be attached because it's empty. Please try again with a different file.",
     MIDDLEWARE_BANNER_ERROR_MESSAGE: "Upload failed, please try again.",
     MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE: "You’re back online.",
     MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION: "Unable to connect—please check your internet connection.",
