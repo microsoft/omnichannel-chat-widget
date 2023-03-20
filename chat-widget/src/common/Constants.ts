@@ -188,7 +188,7 @@ export class WebChatMiddlewareConstants {
 export class AMSConstants {
     public static readonly supportedImagesMimeTypes = ["image/jpeg", "image/png", "image/gif", "image/heic", "image/webp"];
     public static readonly maxSupportedImageSize = 20; // AMS max file limit outside of supported Images MIME Types.
-    public static readonly maxSupportedFileSize = 300; // AMS max size limit is 300MB.
+    public static readonly maxSupportedFileSize = 300; // AMS max size limit.
 }
 
 export class MimeTypes {
