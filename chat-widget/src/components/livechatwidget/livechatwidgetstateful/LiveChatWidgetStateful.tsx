@@ -68,6 +68,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
 import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
+import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -125,8 +126,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
 
             //Check if conversation state is not in wrapup or closed state
-            isChatValid = await checkIfConversationStillValid(chatSDK, props, state.domainStates?.liveChatContext?.requestId, dispatch);
+            isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
             if (isChatValid === true) {
+                //Check if reconnect enabled
+                if (isReconnectEnabled(props.chatConfig) === true) {
+                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+                    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+                        return;
+                    }
+                }
+
                 await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
                 return;
             }

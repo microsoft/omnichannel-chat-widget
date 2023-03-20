@@ -34,6 +34,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             customContext: undefined,
             widgetSize: undefined,
             widgetInstanceId: "",
+            initialChatSdkRequestId: ""
         },
         appStates: {
             conversationState: ConversationState.Closed,

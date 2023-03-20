@@ -32,15 +32,16 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     optionalParams = {}; //Resetting to ensure no stale values
     widgetInstanceId = props?.controlProps?.widgetInstanceId;
 
-    // Can connect to existing chat session
-    if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
-        return;
-    }
-
+    // reconnect > chat from cache
     await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
 
     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
     if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+        return;
+    }
+
+    // Can connect to existing chat session
+    if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
         return;
     }
 
@@ -268,12 +269,15 @@ const setCustomContextParams = (chatSDK: any) => {
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkIfConversationStillValid = async (chatSDK: any, props: ILiveChatWidgetProps, requestId: any, dispatch: Dispatch<ILiveChatWidgetAction>): Promise<boolean> => {
+const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
+    const requestId = state.domainStates?.liveChatContext?.requestId;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
 
     //Preserve old requestId
     const oldRequestId = chatSDK.requestId;
+    dispatch({ type: LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID, payload: oldRequestId });
+
     try {
         chatSDK.requestId = requestId;
         conversationDetails = await chatSDK.getConversationDetails();

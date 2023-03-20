@@ -296,7 +296,7 @@ export const createReducer = () => {
                         conversationEndedByAgentEventReceived: action.payload as boolean
                     }
                 };
-                
+
             case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY:
                 return {
                     ...state,
@@ -325,7 +325,7 @@ export const createReducer = () => {
                         widgetInstanceId: action.payload as string
                     }
                 };
-            
+
             case LiveChatWidgetActionType.SET_LIVE_CHAT_CONFIG:
                 return {
                     ...state,
@@ -346,6 +346,15 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        initialChatSdkRequestId: action.payload as string
+                    }
+                };
             default:
                 return state;
         }
