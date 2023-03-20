@@ -1,6 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ChatSDKError, LiveWorkItemState } from "../../../common/Constants";
-import { createTimer, getStateFromCache, getWidgetCacheIdfromProps, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
@@ -26,11 +26,18 @@ import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 let optionalParams: StartChatOptionalParams = {};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let widgetInstanceId: any | "";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let popoutWidgetInstanceId: any | "";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
     widgetInstanceId = getWidgetCacheIdfromProps(props);
+
+    // Check if there is any active popout chats in cache
+    if (await canStartPopoutChat(props)) {
+        return;
+    }
 
     await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
@@ -42,8 +49,6 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     if (await canConnectToExistingChat(props, chatSDK, state, dispatch, setAdapter)) {
         return;
     }
-
-
 
     // Setting Proactive chat settings
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
@@ -266,6 +271,27 @@ const setCustomContextParams = () => {
     }
 };
 
+const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
+    if (props.sdkChatsAllowedInOrg === false) {
+        return false;
+    }
+    popoutWidgetInstanceId = getWidgetCacheIdfromProps(props, true);
+
+    if (!isNullOrEmptyString(popoutWidgetInstanceId)) {
+        const persistedState = getStateFromCache(popoutWidgetInstanceId);
+
+        if (persistedState &&
+            !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
+            persistedState?.appStates?.conversationState === ConversationState.Active) {
+            // Initiate popout chat
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.InitiateStartChatInPopoutMode
+            });
+            return true;
+        }
+    }
+    return false;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {

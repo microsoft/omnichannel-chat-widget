@@ -335,16 +335,16 @@ export const getBroadcastChannelName = (widgetId: string, widgetInstanceId: stri
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getWidgetCacheIdfromProps = (props: any): string => {
+export const getWidgetCacheIdfromProps = (props: any, popoutChats = false): string => {
     const orgId = props?.chatSDK?.omnichannelConfig?.orgId;
     const widgetId = props?.chatSDK?.omnichannelConfig?.widgetId;
     let widgetInstanceId = props?.controlProps?.widgetInstanceId ?? "";
-    
+
     if (props.useSessionStorage) {
         widgetInstanceId = widgetInstanceId + Constants.SessionCacheSuffix;
     }
-    
-    if (props?.controlProps.hideStartChatButton) {
+
+    if (props?.controlProps.hideStartChatButton || popoutChats === true) {
         widgetInstanceId = widgetInstanceId + Constants.PopoutCacheSuffix;
     }
     const widgetCacheId = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
