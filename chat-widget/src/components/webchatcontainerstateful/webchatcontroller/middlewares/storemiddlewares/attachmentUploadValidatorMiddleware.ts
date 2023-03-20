@@ -105,7 +105,7 @@ const buildErrorMessage = (fileName: string, supportedFileExtension: boolean, su
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
             Description: "Attachment validation failed",
-            ExceptionDetails: { ErrorDetails: "Unexpected error: supportedFileExtension=" + supportedFileExtension + " supportedFileSize=" + supportedFileSize + " fileIsEmpty=" + !fileIsEmpty }
+            ExceptionDetails: { ErrorDetails:  `Unexpected error: supportedFileExtension=${supportedFileExtension} supportedFileSize=${supportedFileSize} fileIsEmpty=${!fileIsEmpty}`}
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_ERROR_MESSAGE ?? "";
     }
@@ -117,11 +117,11 @@ const getFileSizeAndFileExtensionErrorMessage = (fileName: string, maxUploadFile
     let errorMessage, exceptionDetails: string;
     if (index < 0) {
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR;
-        exceptionDetails = "File exceeded the allowed limit of " + maxUploadFileSize + " MB and File provided without file extension";
+        exceptionDetails = `File exceeded the allowed limit of ${maxUploadFileSize} MB and File provided without file extension`;
     } else {
         const fileExtension = fileName.substring(index);
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_SIZE_EXTENSION_ERROR;
-        exceptionDetails = "File exceeds the allowed limit of " + maxUploadFileSize + " MB and " + fileExtension + " files are not supported";
+        exceptionDetails = `File exceeds the allowed limit of ${maxUploadFileSize} MB and ${fileExtension} files are not supported`;
         if (errorMessage?.includes("{1}")) {
             errorMessage = errorMessage.replace("{1}", fileExtension);
         }
@@ -129,7 +129,7 @@ const getFileSizeAndFileExtensionErrorMessage = (fileName: string, maxUploadFile
     TelemetryHelper.logActionEvent(LogLevel.ERROR, {
         Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
         Description: "Attachment validation failed",
-        ExceptionDetails: { ErrorDetails: exceptionDetails + " Dynamics file size limit=" + maxFileSizeSupportedByDynamics + " AMS image size limit=" + AMSConstants.maxSupportedImageSize + " AMS file size limit=" + AMSConstants.maxSupportedFileSize }
+        ExceptionDetails: { ErrorDetails: `${exceptionDetails} Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize } AMS file size limit=${AMSConstants.maxSupportedFileSize}`}
     });
     return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", maxUploadFileSize) : errorMessage) : "";
 };
@@ -148,7 +148,7 @@ const getFileExtensionErrorMessage = (fileName: string, localizedTexts: ILiveCha
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
             Description: "Attachment validation failed",
-            ExceptionDetails: { ErrorDetails: fileExtension + " files are not supported." }
+            ExceptionDetails: { ErrorDetails: `${fileExtension} files extension is not supported.` }
         });
         const errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_EXTENSION_ERROR;
         return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", fileExtension) : errorMessage) : "";
@@ -159,7 +159,7 @@ const getFileSizeErrorMessage = (maxUploadFileSize: string, maxFileSizeSupported
     TelemetryHelper.logActionEvent(LogLevel.ERROR, {
         Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
         Description: "Attachment validation failed",
-        ExceptionDetails: { ErrorDetails: "File exceeds the allowed limit of " + maxUploadFileSize + " MB. Dynamics file size limit=" + maxFileSizeSupportedByDynamics + " AMS image size limit=" + AMSConstants.maxSupportedImageSize + " AMS file size limit=" + AMSConstants.maxSupportedFileSize }
+        ExceptionDetails: { ErrorDetails: `File exceeds the allowed limit of ${maxUploadFileSize}MB. Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize} AMS file size limit=${AMSConstants.maxSupportedFileSize}`}
     });
     const errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_SIZE_ERROR;
     return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", maxUploadFileSize) : errorMessage) : "";
