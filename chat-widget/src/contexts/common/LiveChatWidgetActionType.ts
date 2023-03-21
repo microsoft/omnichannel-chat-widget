@@ -236,5 +236,17 @@ export enum LiveChatWidgetActionType {
         Parameters:
         true/false: Checks if Postchat workflow is already initiated
     */
-    SET_POST_CHAT_WORKFLOW_IN_PROGRESS
+    SET_POST_CHAT_WORKFLOW_IN_PROGRESS,
+
+    /*
+        Parameters:
+        any: Set initial chat sdk request id (for reconnect scenario when start new chat is deferred)
+    */
+    SET_INITIAL_CHAT_SDK_REQUEST_ID,
+
+    /*
+        Parameters:
+        true/false: To check if bot configured survey needs to be used
+    */
+    SET_SHOULD_USE_BOT_SURVEY
 }

@@ -55,6 +55,7 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
     // Check if Postchat already in progress and handle case where chat is ended by customer
     if (state.appStates.postChatWorkflowInProgress && state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
         await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+        return;
     }
 
     // Conversation Details call required by customer as well as agent 
@@ -80,6 +81,8 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAd
             throw new Error(error);
         }
     } else if (conversationDetails?.participantType === Constants.botParticipantTypeTag) {
+        // Set Use bot survey to true
+        dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_USE_BOT_SURVEY, payload: true });
         if (state.appStates.conversationEndedBy === ConversationEndEntity.Customer) {
             // Set use bot settings to true
             await postChatInitiatedByCustomer(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, conversationDetails, true);
@@ -169,13 +172,14 @@ const postChatInitiatedByCustomer = async (props: any, chatSDK: any, setAdapter:
             Description: shouldUseBotSetting ? "PostChat Workflow was started by customer using bot settings" : "PostChat Workflow was started by customer using agent settings"
         });
         const chatSession = await chatSDK?.getCurrentLiveChatContext();
+        // End chat call to end chatsdk but not close chat, only if chat ended by customer
+        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, true, false);
+        // Saving request Id below for chat transcript calls
         if (chatSession) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (chatSDK as any).chatToken = chatSession.chatToken ?? {};
             chatSDK.requestId = chatSession.requestId;
         }
-        // End chat call to end chatsdk but not close chat, only if chat ended by customer
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, true, false);
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
             await embedModePostChatWorkflow(dispatch, state);
         } else if (postChatSurveyMode === PostChatSurveyMode.Link) {

@@ -154,6 +154,7 @@ export enum TelemetryEvent {
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
     ProcessingSanitizationMiddlewareFailed = "ProcessingSanitizationMiddlewareFailed",
     FormatTagsMiddlewareJSONStringifyFailed = "FormatTagsMiddlewareJSONStringifyFailed",
+    AttachmentUploadValidatorMiddlewareFailed = "AttachmentUploadValidatorMiddlewareFailed",
     QueuePositionMessageRecieved = "QueuePositionMessageRecieved",
     AverageWaitTimeMessageRecieved = "AverageWaitTimeMessageRecieved",
     DataMaskingRuleApplied = "DataMaskingRuleApplied",
