@@ -100,5 +100,9 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Added PostChat Context check for triggering Embedded PostChat Workflow
 - Fixed PostChat Stories and VRT
 - Adding support for PVA SSO
+- Fixed PostChat Workflows and added telemetry
+- Fixed Postchat loading twice issue
 - Adding an event listener in case the chat window is hidden for notifications
-- Fixed the issue where ErrorUIPane string is overwritten by loading pane strings
+- Adding support for bot survey
+- Changing precedence of reconnect feature over local cache when reconnect is enabled
+- Fix for chat transcript download after end chat

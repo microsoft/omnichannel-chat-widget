@@ -20,6 +20,9 @@ export class Constants {
     public static readonly false = "false";
     public static readonly maximumUnreadMessageCount = 99;
 
+    public static readonly userParticipantTypeTag = "User";
+    public static readonly botParticipantTypeTag = "Bot";
+
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";
     public static readonly ChannelId = "lcw";
@@ -180,6 +183,12 @@ export class WebChatMiddlewareConstants {
     public static readonly timeBetweenTimestampGroups = 300000; //5 minutes
     public static readonly maxTextLength = 6000;
     public static readonly adaptiveCard = "AdaptiveCard";
+}
+
+export class AMSConstants {
+    public static readonly supportedImagesMimeTypes = ["image/jpeg", "image/png", "image/gif", "image/heic", "image/webp"];
+    public static readonly maxSupportedImageSize = 20; // AMS max file limit outside of supported Images MIME Types.
+    public static readonly maxSupportedFileSize = 300; // AMS max size limit.
 }
 
 export class MimeTypes {

@@ -34,6 +34,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             customContext: undefined,
             widgetSize: undefined,
             widgetInstanceId: "",
+            initialChatSdkRequestId: ""
         },
         appStates: {
             conversationState: ConversationState.Closed,
@@ -53,7 +54,10 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             },
             e2vvEnabled: false,
             unreadMessageCount: 0,
-            conversationEndedByAgent: false
+            conversationEndedByAgentEventReceived: false,
+            conversationEndedBy: undefined,
+            postChatWorkflowInProgress: false,
+            shouldUseBotSurvey: false
         },
         uiStates: {
             showConfirmationPane: false,
