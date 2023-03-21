@@ -1,29 +1,30 @@
+import { AriaLabels, Ids, Texts } from "../../../../../common/Constants";
 import { IReconnectChatPaneControlProps } from "../../../interfaces/IReconnectChatPaneControlProps";
 
 export const defaultReconnectChatPaneControlProps: IReconnectChatPaneControlProps = {
-    id: "oc-lcw-reconnectchat-pane",
+    id: Ids.DefaultReconnectChatPaneId,
     dir: "ltr",
     hideReconnectChatPane: false,
-    reconnectChatPaneAriaLabel: "Reconnect Chat Pane",
+    reconnectChatPaneAriaLabel: AriaLabels.ReconnectChatPane,
 
     hideTitle: false,
-    titleText: "Previous session detected",
+    titleText: Texts.ReconnectChatPaneTitleText,
 
     hideSubtitle: false,
-    subtitleText: "We have detected a previous chat session. Would you like to continue with your previous session?",
+    subtitleText: Texts.ReconnectChatPaneSubtitleText,
 
     hideIcon: false,
-    iconAriaLabel: "Reconnect Chat Pane Icon",
+    iconAriaLabel: AriaLabels.ReconnectChatPaneIcon,
 
     isButtonGroupHorizontal: false,
 
     hideContinueChatButton: false,
-    continueChatButtonText: "Continue conversation",
-    continueChatButtonAriaLabel: "Continue conversation",
+    continueChatButtonText: Texts.ReconnectChatPaneContinueChatButtonText,
+    continueChatButtonAriaLabel: AriaLabels.ContinueConversation,
 
     hideStartNewChatButton: false,
-    startNewChatButtonText: "Start new conversation",
-    startNewChatButtonAriaLabel: "Start new conversation",
+    startNewChatButtonText: Texts.ReconnectChatPaneStartNewChatButtonText,
+    startNewChatButtonAriaLabel: AriaLabels.StartNewConversation,
 
     onContinueChat: function () {
         console.log("on continue conversation");

@@ -1,8 +1,9 @@
 import { IHeaderControlProps } from "../../interfaces/IHeaderControlProps";
 import { ModernChatIconBase64 } from "../../../../assets/Icons";
+import { ButtonTypes, IconNames, Ids, Texts } from "../../../../common/Constants";
 
 export const defaultHeaderControlProps: IHeaderControlProps = {
-    id: "oc-lcw-header",
+    id: Ids.DefaultHeaderId,
     hideIcon: false,
     hideTitle: false,
     hideCloseButton: false,
@@ -13,22 +14,22 @@ export const defaultHeaderControlProps: IHeaderControlProps = {
     leftGroup: { children: [] },
     rightGroup: { children: [] },
     minimizeButtonProps: {
-        id: "oc-lcw-header-minimize-button",
-        type: "icon",
-        iconName:"ChromeMinimize"
+        id: Ids.MinimizeButtonId,
+        type: ButtonTypes.Icon,
+        iconName: IconNames.ChromeMinimize
     },
     closeButtonProps: {
-        id: "oc-lcw-header-close-button",
-        type: "icon",
-        iconName:"ChromeClose"
+        id: Ids.CloseButtonId,
+        type: ButtonTypes.Icon,
+        iconName: IconNames.ChromeClose
     },
     headerIconProps: {
-        id: "oc-lcw-header-icon",
+        id: Ids.HeaderIconId,
         src: ModernChatIconBase64,
-        alt: "Chat Icon"
+        alt: Texts.HeaderIcon
     },
     headerTitleProps: {
-        id: "oc-lcw-header-title",
-        text: "Let's Chat"
+        id: Ids.HeaderTitleId,
+        text: Texts.HeaderTitle
     }
 };

@@ -14,7 +14,7 @@ import { defaultLoadingPaneTitleStyles } from "./common/defaultProps/defaultStyl
 
 function LoadingPane(props: ILoadingPaneProps) {
 
-    const elementId = props.controlProps?.id ?? "lcw-components-loading-pane";
+    const elementId = props.controlProps?.id ?? defaultLoadingPaneControlProps.id;
 
     const containerStyles: IStackStyles = {
         root: Object.assign({}, defaultLoadingPaneGeneralStyles, props.styleProps?.generalStyleProps)

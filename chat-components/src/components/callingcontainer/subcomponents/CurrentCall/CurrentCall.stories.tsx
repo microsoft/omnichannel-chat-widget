@@ -7,6 +7,7 @@ import { defaultCurrentCallProps } from "./common/defaultProps/defaultCurrentCal
 import { defaultCurrentCallControlPropsRtl } from "./common/defaultProps/defaultCurrentCallControlPropsRtl";
 import { customizedCurrentCallStyleProps } from "./common/defaultStyles/customizedCurrentCallStyleProps";
 import CommandButton from "../../../common/commandbutton/CommandButton";
+import { IconNames, ButtonTypes } from "../../../../common/Constants";
 
 export default {
     title: "Stateless Components/Calling Container/Current Call",
@@ -44,8 +45,8 @@ Rtl.args = defaultRtl;
 
 /* Current Call - Component Overrides */
 const currentCallSpeakerButton: ReactNode = <CommandButton
-    iconName="volume3"
-    type="icon"
+    iconName={IconNames.Volume3}
+    type={ButtonTypes.Icon}
     styles={customizedCurrentCallStyleProps.micButtonStyleProps}
 />;
 

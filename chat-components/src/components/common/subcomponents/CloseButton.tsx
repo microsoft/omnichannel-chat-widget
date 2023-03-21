@@ -1,5 +1,5 @@
 import React from "react";
-import { ElementType } from "../../../common/Constants";
+import { AriaLabels, ElementType, EventNames, IconNames, Texts } from "../../../common/Constants";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
 import CommandButton from "../commandbutton/CommandButton";
 import { ICommandButtonProps } from "../interfaces/ICommandButtonProps";
@@ -9,21 +9,21 @@ function CloseButton(props: ICommandButtonProps) {
     const customEvent: ICustomEvent = {
         elementType: ElementType.CloseButton,
         elementId: props?.id,
-        eventName: "OnClick"
+        eventName: EventNames.onClick
     };
     
     return (
         <CommandButton
             id={props?.id}
             type={type}
-            text={props.text ?? "Close"}
+            text={props.text ?? Texts.CloseButtonText}
             styles={props.styles}
             hoverStyles={props.hoverStyles}
             focusStyles={props.focusStyles}
-            iconName={props.iconName ?? "ChromeClose"}
+            iconName={props.iconName ?? IconNames.ChromeClose}
             imageIconProps={props.imageIconProps}
             onClick={props.onClick}
-            ariaLabel={props.ariaLabel ?? "Close"}
+            ariaLabel={props.ariaLabel ?? AriaLabels.Close}
             className={props.className} 
             customEvent={customEvent} 
             hideButtonTitle = {props.hideButtonTitle}/>

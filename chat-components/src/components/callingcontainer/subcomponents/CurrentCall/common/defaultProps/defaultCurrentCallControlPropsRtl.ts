@@ -1,15 +1,16 @@
 import { CallRejectButtonBase64, VideoOffIconBase64, VideoOnIconBase64, VoiceOffIconBase64, VoiceOnIconBase64 } from "../../../../../../assets/Icons";
+import { AriaLabels, ButtonTypes, Ids } from "../../../../../../common/Constants";
 
 import { ICurrentCallControlProps } from "../../interfaces/ICurrentCallControlProps";
 
 export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
-    id: "currentCall-container",
+    id: Ids.DefaultCurrentCallId,
     nonActionIds: {
-        currentCallActionGroupId: "currentCall-actionicons",
-        currentCallFooterId: "currentCall-footer",
-        remoteVideoTileId: "remoteVideo",
-        selfVideoTileId: "selfVideo",
-        videoTileGroupId: "currentCall-body"
+        currentCallActionGroupId: Ids.CurrentCallActionGroupId,
+        currentCallFooterId: Ids.CurrentCallFooterId,
+        remoteVideoTileId: Ids.RemoteVideoTileId,
+        selfVideoTileId: Ids.SelfVideoTileId,
+        videoTileGroupId: Ids.VideoTileGroupId
     },
     hideMicButton: false,
     hideVideoButton: false,
@@ -25,19 +26,19 @@ export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
     rightGroup: { gap: 1, children: [] },
     dir: "rtl",
     endCallButtonProps: {
-        id: "callRejectButton",
-        type: "icon",
-        ariaLabel: "End Call",
+        id: Ids.EndCallButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.EndCall,
         imageIconProps: {
             src: CallRejectButtonBase64,
             styles: { image: { height: "18px", width: "18px" } }
         }
     },
     micButtonProps: {
-        id: "toggleAudio",
-        type: "icon",
-        ariaLabel: "Mute",
-        toggleAriaLabel: "Unmute",
+        id: Ids.MicButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.MicMute,
+        toggleAriaLabel: AriaLabels.MicUnmute,
         imageIconProps: {
             src: VoiceOnIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
@@ -49,10 +50,10 @@ export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
         iconSize: 18
     },
     videoButtonProps: {
-        id: "toggleVideo",
-        type: "icon",
-        ariaLabel: "Turn camera on",
-        toggleAriaLabel: "Turn camera off",
+        id: Ids.VideoButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.VideoTurnCameraOn,
+        toggleAriaLabel: AriaLabels.VideoTurnCameraOff,
         imageIconProps: {
             src: VideoOnIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
@@ -64,6 +65,6 @@ export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
         iconSize: 18
     },
     callTimerProps: {
-        id: "oc-lcw-CurrentCall-timer"
+        id: Ids.CallTimerId
     },
 };

@@ -9,6 +9,7 @@ import { IReconnectChatPaneProps } from "./interfaces/IReconnectChatPaneProps";
 import React from "react";
 import { defaultReconnectChatPaneProps } from "./common/default/defaultProps/defaultReconnectChatPaneProps";
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import { Texts } from "../../common/Constants";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -58,14 +59,14 @@ describe("Reconnect Chat Pane component", () => {
             render(<ReconnectChatPane {...reconnectChatPanePropsHide}/>);
 
             try {
-                screen.getByText("Previous session detected");
+                screen.getByText(Texts.ReconnectChatPaneTitleText);
                 fail("Title should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("We have detected a previous chat session. Would you like to continue with your previous session?");
+                screen.getByText(Texts.ReconnectChatPaneSubtitleText);
             } catch (ex) {
                 fail("Subtitle should be in the document");
             }
@@ -84,14 +85,14 @@ describe("Reconnect Chat Pane component", () => {
             render(<ReconnectChatPane {...reconnectChatPanePropsHide}/>);
 
             try {
-                screen.getByText("We have detected a previous chat session. Would you like to continue with your previous session?");
+                screen.getByText(Texts.ReconnectChatPaneSubtitleText);
                 fail("Subitle should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Previous session detected");
+                screen.getByText(Texts.ReconnectChatPaneTitleText);
             } catch (ex) {
                 fail("Title should be in the document");
             }
@@ -129,14 +130,14 @@ describe("Reconnect Chat Pane component", () => {
             render(<ReconnectChatPane {...reconnectChatPanePropsHide}/>);
 
             try {
-                screen.getByText("Continue conversation");
+                screen.getByText(Texts.ReconnectChatPaneContinueChatButtonText);
                 fail("Continue chat button should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Start new conversation");
+                screen.getByText(Texts.ReconnectChatPaneStartNewChatButtonText);
             } catch (ex) {
                 fail("Start new chat button should be in the document");
             }
@@ -155,14 +156,14 @@ describe("Reconnect Chat Pane component", () => {
             render(<ReconnectChatPane {...reconnectChatPanePropsHide}/>);
 
             try {
-                screen.getByText("Start new conversation");
+                screen.getByText(Texts.ReconnectChatPaneStartNewChatButtonText);
                 fail("Start new chat button should be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Continue conversation");
+                screen.getByText(Texts.ReconnectChatPaneContinueChatButtonText);
             } catch (ex) {
                 fail("Continue chat button should not be in the document");
             }
@@ -185,11 +186,11 @@ describe("Reconnect Chat Pane component", () => {
 
             render(<ReconnectChatPane {...reconnectChatPaneProps}/>);
 
-            const continueChatButton = screen.getByText("Continue conversation");
+            const continueChatButton = screen.getByText(Texts.ReconnectChatPaneContinueChatButtonText);
             fireEvent.click(continueChatButton);
             expect(handleContinueChatClick).toHaveBeenCalledTimes(1);
 
-            const startNewChatButton = screen.getByText("Start new conversation");
+            const startNewChatButton = screen.getByText(Texts.ReconnectChatPaneStartNewChatButtonText);
             fireEvent.click(startNewChatButton);
             expect(handleStartNewChatClick).toHaveBeenCalledTimes(1);
         });

@@ -11,6 +11,7 @@ import { FontIcon, IStackStyles, Label, mergeStyles, Stack } from "@fluentui/rea
 import { ILabelControlProps } from "../common/interfaces/ILabelControlProps";
 import { ICommandButtonProps } from "../common/interfaces/ICommandButtonProps";
 import CommandButton from "../common/commandbutton/CommandButton";
+import { ButtonTypes, Ids } from "../../common/Constants";
 
 export default {
     title: "Stateless Components/Header",
@@ -31,7 +32,7 @@ Default.args = defaultHeaderProps;
 * replace the chat icon with component overrides 
 */
 const labelProps: ILabelControlProps = {
-    id: "oc-lcw-header-title",
+    id: Ids.HeaderTitleId,
     text: "Azure Chat Support"
 };
 
@@ -91,11 +92,11 @@ const stackStyles: IStackStyles = {
 };
 
 const customIcon = <Stack styles={stackStyles} key="customIcon">
-    <FontIcon aria-label="ChatBot" iconName="ChatBot" className={customIconClass} id="oc-lcw-header-icon" /></Stack>;
+    <FontIcon aria-label="ChatBot" iconName="ChatBot" className={customIconClass} id={Ids.HeaderIconId} /></Stack>;
 
 const maximizeHeaderButtonProps: ICommandButtonProps = {
     id: "oc-lcw-header-maximizebutton",
-    type: "icon",
+    type: ButtonTypes.Icon,
     iconName: "FullScreen",
     ariaLabel: "Maximize",
     styles: { color: "White" },

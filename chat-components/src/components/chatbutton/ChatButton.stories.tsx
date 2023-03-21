@@ -13,6 +13,7 @@ import { defaultChatButtonStyleProps } from "./common/defaultStyles/defaultChatB
 import { defaultChatButtonTextContainerStyles } from "./common/defaultStyles/defaultChatButtonTextContainerStyles";
 import { defaultChatButtonTitleStyles } from "./common/defaultStyles/defaultChatButtonTitleStyles";
 import { encodeComponentString } from "../../common/encodeComponentString";
+import { Texts } from "../../common/Constants";
 
 export default {
     title: "Stateless Components/ChatButton",
@@ -175,7 +176,7 @@ const chatButtonPreset4Props: IChatButtonProps = {
         unreadMessageCount: "10",
         hideNotificationBubble: false,
         titleText: "لنتحدث!",
-        subtitleText: "We're online."
+        subtitleText: Texts.ChatButtonSubtitle
     },
     
     styleProps:{

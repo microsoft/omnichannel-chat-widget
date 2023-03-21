@@ -9,6 +9,7 @@ import { IProactiveChatPaneProps } from "./interfaces/IProactiveChatPaneProps";
 import React from "react";
 import { defaultProactiveChatPaneProps } from "./common/default/defaultProps/defaultProactiveChatPaneProps";
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import { Texts } from "../../common/Constants";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -58,14 +59,14 @@ describe("Proactive Chat Pane component", () => {
             render(<ProactiveChatPane {...proactiveChatPanePropsHide}/>);
 
             try {
-                screen.getByText("Welcome to");
+                screen.getByText(Texts.ProactiveChatPaneTitleText);
                 fail("Title should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Live chat support!");
+                screen.getByText(Texts.ProactiveChatPaneSubtitleText);
             } catch (ex) {
                 fail("Subtitle should be in the document");
             }
@@ -84,14 +85,14 @@ describe("Proactive Chat Pane component", () => {
             render(<ProactiveChatPane {...proactiveChatPanePropsHide}/>);
 
             try {
-                screen.getByText("Live chat support!");
+                screen.getByText(Texts.ProactiveChatPaneSubtitleText);
                 fail("Subitle should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Welcome to");
+                screen.getByText(Texts.ProactiveChatPaneTitleText);
             } catch (ex) {
                 fail("Title should be in the document");
             }
@@ -130,14 +131,14 @@ describe("Proactive Chat Pane component", () => {
             render(<ProactiveChatPane {...proactiveChatPanePropsHide}/>);
 
             try {
-                screen.getByText("Hi! Have any questions? I am here to help.");
+                screen.getByText(Texts.ProactiveChatPaneBodyTitleText);
                 fail("Body title should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Welcome to");
+                screen.getByText(Texts.ProactiveChatPaneTitleText);
             } catch (ex) {
                 fail("Title should be in the document");
             }
@@ -156,7 +157,7 @@ describe("Proactive Chat Pane component", () => {
             render(<ProactiveChatPane {...proactiveChatPanePropsHide}/>);
 
             try {
-                screen.getByText("Chat Now");
+                screen.getByText(Texts.ProactiveChatPaneStartButtonText);
                 fail("Start button should be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
@@ -200,7 +201,7 @@ describe("Proactive Chat Pane component", () => {
 
             render(<ProactiveChatPane {...proactiveChatPaneProps}/>);
 
-            const startButton = screen.getByText("Chat Now");
+            const startButton = screen.getByText(Texts.ProactiveChatPaneStartButtonText);
             fireEvent.click(startButton);
             expect(handleStartClick).toHaveBeenCalledTimes(1);
         });

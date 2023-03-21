@@ -2,7 +2,7 @@ import { DefaultButton, IButtonStyles, IStackStyles, Icon, Label, Stack } from "
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType } from "../../common/Constants";
+import { ElementType, EventNames } from "../../common/Constants";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { IReconnectChatPaneProps } from "./interfaces/IReconnectChatPaneProps";
 import { KeyCodes } from "../../common/Constants";
@@ -28,7 +28,7 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ReconnectChatContinueChatButton,
                 elementId: elementId + "-continueconversationbutton",
-                eventName: "OnClick"
+                eventName: EventNames.onClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onContinueChat();
@@ -40,7 +40,7 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ReconnectChatStartNewChatButton,
                 elementId: elementId + "-startnewconversationbutton",
-                eventName: "OnClick"
+                eventName: EventNames.onClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onStartNewChat();
@@ -53,7 +53,7 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ReconnectChatPane,
                 elementId: elementId,
-                eventName: "OnEscapeKeyDown"
+                eventName: EventNames.onEscapeKeyDown
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onMinimize();

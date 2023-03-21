@@ -2,7 +2,7 @@ import { IIconStyles, ILabelStyles, IStackStyles, Icon, Label, Stack } from "@fl
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType, HiddenTextStyles, KeyCodes } from "../../common/Constants";
+import { ElementType, EventNames, HiddenTextStyles, Ids, KeyCodes } from "../../common/Constants";
 import type { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";
@@ -101,7 +101,7 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
 }
 
 function ChatButton(props: IChatButtonProps) {
-    const elementId = props.controlProps?.id ?? "lcw-components-chat-button";
+    const elementId = props.controlProps?.id ?? Ids.DefaultChatButtonId;
     const defaultAriaLabel = props.controlProps?.ariaLabel ?? defaultChatButtonControlProps.ariaLabel;
     const defaultRole = props.controlProps?.role ?? defaultChatButtonControlProps?.role;
     const containersDir = props.controlProps?.dir ?? defaultChatButtonControlProps?.dir;
@@ -119,7 +119,7 @@ function ChatButton(props: IChatButtonProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ChatButton,
                 elementId: elementId,
-                eventName: "OnClick"
+                eventName: EventNames.onClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps.onClick();

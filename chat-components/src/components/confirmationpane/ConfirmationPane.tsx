@@ -3,7 +3,7 @@ import { IButtonStyles, IStackStyles, Label, Stack } from "@fluentui/react";
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType, KeyCodes } from "../../common/Constants";
+import { ElementType, EventNames, KeyCodes } from "../../common/Constants";
 import { IConfirmationPaneProps } from "./interfaces/IConfirmationPaneProps";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";
@@ -28,7 +28,7 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ConfirmationPaneConfirmButton,
                 elementId: elementId + "-confirmbutton",
-                eventName: "OnClick"
+                eventName: EventNames.onClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onConfirm();
@@ -40,7 +40,7 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ConfirmationPaneCancelButton,
                 elementId: elementId + "-cancelbutton",
-                eventName: "OnClick"
+                eventName: EventNames.onClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onCancel();

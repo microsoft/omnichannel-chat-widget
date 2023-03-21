@@ -4,7 +4,7 @@ import { IButtonStyles, IIconProps, IStackStyles, IStackTokens, IconButton, Stac
 
 import { BroadcastService } from "../../../../services/BroadcastService";
 import CommandButton from "../../../common/commandbutton/CommandButton";
-import { ElementType, KeyCodes } from "../../../../common/Constants";
+import { ElementType, EventNames, Ids, KeyCodes } from "../../../../common/Constants";
 import { ICurrentCallProps } from "./interfaces/ICurrentCallProps";
 import { ICustomEvent } from "../../../../interfaces/ICustomEvent";
 import Timer from "../Timer/Timer";
@@ -124,7 +124,7 @@ function CurrentCall(props: ICurrentCallProps) {
     const endCallCustomEvent: ICustomEvent = {
         elementType: ElementType.CurrentCallEndCallButton,
         elementId: endCallButtonId,
-        eventName: "OnClick"
+        eventName: EventNames.onClick
     };
 
     const handleEndCallClick = useCallback(() => {
@@ -138,7 +138,7 @@ function CurrentCall(props: ICurrentCallProps) {
             const videoOffCustomEvent: ICustomEvent = {
                 elementType: ElementType.CurrentCallVideoButton,
                 elementId: videoOffButtonId,
-                eventName: "OnClick"
+                eventName: EventNames.onClick
             };
             BroadcastService.postMessage(videoOffCustomEvent);
             props.controlProps?.onVideoOffClick();
@@ -151,7 +151,7 @@ function CurrentCall(props: ICurrentCallProps) {
             const micCustomEvent: ICustomEvent = {
                 elementType: ElementType.CurrentCallMicButton,
                 elementId: micButtonId,
-                eventName: "OnClick"
+                eventName: EventNames.onClick
             };
             BroadcastService.postMessage(micCustomEvent);
             props.controlProps?.onMicCallClick();
@@ -213,12 +213,12 @@ function CurrentCall(props: ICurrentCallProps) {
                 horizontalAlign="space-between"
                 styles={stackStyles}
                 dir={dir}>
-                <Stack horizontal id="currentCallLeftGroup"
+                <Stack horizontal id={Ids.CurrentCallLeftGroupId}
                     verticalAlign="center"
                     tokens={leftGroupStackTokens}>
                     {processCustomComponents(props.controlProps?.leftGroup?.children)}
                 </Stack>
-                <Stack horizontal id="currentCallMiddleGroup"
+                <Stack horizontal id={Ids.CurrentCallMiddleGroupId}
                     verticalAlign="center"
                     tokens={middleGroupStackTokens}
                     dir={dir} >
@@ -280,7 +280,7 @@ function CurrentCall(props: ICurrentCallProps) {
                     }
                 </Stack>
                 <Stack horizontal
-                    id="currentCallRightGroup"
+                    id={Ids.CurrentCallRightGroupId}
                     verticalAlign="center"
                     tokens={rightGroupStackTokens}>
                     {processCustomComponents(props.controlProps?.rightGroup?.children)}

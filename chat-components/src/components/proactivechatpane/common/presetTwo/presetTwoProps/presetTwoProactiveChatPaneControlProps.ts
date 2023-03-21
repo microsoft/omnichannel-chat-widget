@@ -1,16 +1,17 @@
+import { AriaLabels, Texts } from "../../../../../common/Constants";
 import { IProactiveChatPaneControlProps } from "../../../interfaces/IProactiveChatPaneControlProps";
 
 export const presetTwoProactiveChatPaneControlProps: IProactiveChatPaneControlProps = {
     id: "oclcw-incomingproactivechat",
     dir: "ltr",
     hideProactiveChatPane: false,
-    proactiveChatPaneAriaLabel: "Proactive Chat Pane",
+    proactiveChatPaneAriaLabel: AriaLabels.ProactiveChatPane,
 
     hideTitle: true,
-    titleText: "Welcome to",
+    titleText: Texts.ProactiveChatPaneTitleText,
 
     hideSubtitle: false,
-    subtitleText: "Live chat support!",
+    subtitleText: Texts.ProactiveChatPaneSubtitleText,
 
     hideCloseButton: false,
 
@@ -19,8 +20,8 @@ export const presetTwoProactiveChatPaneControlProps: IProactiveChatPaneControlPr
     hideBodyTitle: false,
     
     hideStartButton: false,
-    startButtonText: "Chat Now",
-    startButtonAriaLabel: "Chat Now",
+    startButtonText: Texts.ProactiveChatPaneStartButtonText,
+    startButtonAriaLabel: AriaLabels.ChatNow,
 
     onStart: function () {
         console.log("on start");

@@ -1,32 +1,33 @@
+import { AriaLabels, ButtonTypes, IconNames, Ids, Texts } from "../../../../../common/Constants";
 import { IProactiveChatPaneControlProps } from "../../../interfaces/IProactiveChatPaneControlProps";
 
 export const defaultProactiveChatPaneControlProps: IProactiveChatPaneControlProps = {
-    id: "oc-lcw-proactivechat",
+    id: Ids.DefaultProactiveChatPaneId,
     dir: "ltr",
     hideProactiveChatPane: false,
-    proactiveChatPaneAriaLabel: "Proactive Chat Pane",
+    proactiveChatPaneAriaLabel: AriaLabels.ProactiveChatPane,
 
     hideTitle: false,
-    titleText: "Welcome to",
+    titleText: Texts.ProactiveChatPaneTitleText,
 
     hideSubtitle: false,
-    subtitleText: "Live chat support!",
+    subtitleText: Texts.ProactiveChatPaneSubtitleText,
 
     hideCloseButton: false,
     closeButtonProps: {
-        type: "icon",
-        iconName: "ChromeClose",
+        type: ButtonTypes.Icon,
+        iconName: IconNames.ChromeClose,
         hideButtonTitle: true
     },
 
     isBodyContainerHorizantal: false,
 
     hideBodyTitle: false,
-    bodyTitleText: "Hi! Have any questions? I am here to help.",
+    bodyTitleText: Texts.ProactiveChatPaneBodyTitleText,
 
     hideStartButton: false,
-    startButtonText: "Chat Now",
-    startButtonAriaLabel: "Chat Now",
+    startButtonText: Texts.ProactiveChatPaneStartButtonText,
+    startButtonAriaLabel: AriaLabels.ChatNow,
 
     onClose: function () {
         console.log("on close");

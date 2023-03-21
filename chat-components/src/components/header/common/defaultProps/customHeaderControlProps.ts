@@ -1,9 +1,10 @@
 import { CloseChatButtonIconBase64, LegacyChatIconBase64, MinimizeChatButtonIconBase64 } from "../../../../assets/Icons";
+import { ButtonTypes, Ids, Texts } from "../../../../common/Constants";
 
 import { IHeaderControlProps } from "../../interfaces/IHeaderControlProps";
 
 export const customHeaderControlProps: IHeaderControlProps = {
-    id: "oc-lcw-header",
+    id: Ids.DefaultHeaderId,
     hideIcon: false,
     hideTitle: false,
     hideCloseButton: false,
@@ -15,7 +16,7 @@ export const customHeaderControlProps: IHeaderControlProps = {
     rightGroup: { children: [] },
     minimizeButtonProps: {
         id: "oc-lcw-header-minimizebutton",
-        type: "icon",
+        type: ButtonTypes.Icon,
         imageIconProps: {
             src: MinimizeChatButtonIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
@@ -24,19 +25,19 @@ export const customHeaderControlProps: IHeaderControlProps = {
     },
     closeButtonProps: {
         id: "oc-lcw-header-closebutton",
-        type: "icon",
+        type: ButtonTypes.Icon,
         imageIconProps: {
             src: CloseChatButtonIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
         }
     },
     headerIconProps: {
-        id: "oc-lcw-header-icon",
+        id: Ids.HeaderIconId,
         src: LegacyChatIconBase64,
-        alt: "Chat Icon"
+        alt: Texts.HeaderIcon
     },
     headerTitleProps: {
-        id: "oc-lcw-header-title",
-        text: "Let's Chat"
+        id: Ids.HeaderTitleId,
+        text: Texts.HeaderTitle
     }
 };

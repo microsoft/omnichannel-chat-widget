@@ -1,15 +1,16 @@
+import { Ids, Texts } from "../../../../common/Constants";
 import { ILoadingPaneControlProps } from "../../interfaces/ILoadingPaneControlProps";
 
 export const defaultLoadingPaneControlProps: ILoadingPaneControlProps = {
-    id: "oc-lcw-loadingpane",
+    id: Ids.DefaultLoadingPaneId,
     dir: "auto",
     hideLoadingPane: false,
     hideIcon: false,
     hideTitle: false,
-    titleText: "Welcome to",
+    titleText: Texts.LoadingPaneTitleText,
     hideSubtitle: false,
-    subtitleText: "live chat support ...",
+    subtitleText: Texts.LoadingPaneSubtitleText,
     hideSpinner: false,
     hideSpinnerText: false,
-    spinnerText: "Loading ..."
+    spinnerText: Texts.LoadingPaneSpinnerText
 };

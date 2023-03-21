@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { ICommandButtonProps } from "../../common/interfaces/ICommandButtonProps";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
 import { BroadcastService } from "../../../services/BroadcastService";
-import { ElementType } from "../../../common/Constants";
+import { AriaLabels, ButtonTypes, ElementType, EventNames, IconNames } from "../../../common/Constants";
 
 function AudioNotificationButton(props: ICommandButtonProps) {
     const { disabled } = props;
@@ -11,7 +11,7 @@ function AudioNotificationButton(props: ICommandButtonProps) {
     const [muted, setMuted] = useState<boolean | undefined>(props.isAudioMuted);
 
     let iconStyles = {};
-    if (props.type === "icon") {
+    if (props.type === ButtonTypes.Icon) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         iconStyles = { ...((props?.styles as any).icon as any) };
     }
@@ -42,8 +42,8 @@ function AudioNotificationButton(props: ICommandButtonProps) {
     };
 
     //imageIconProps > iconName
-    const volume0Icon: IIconProps = props.imageToggleIconProps ? { imageProps: props?.imageToggleIconProps } : { iconName: props?.toggleIconName ?? "Volume0" };
-    const volume3Icon: IIconProps = props.imageIconProps ? { imageProps: props?.imageIconProps } : { iconName: props?.iconName ?? "Volume3" };
+    const volume0Icon: IIconProps = props.imageToggleIconProps ? { imageProps: props?.imageToggleIconProps } : { iconName: props?.toggleIconName ?? IconNames.Volume0 };
+    const volume3Icon: IIconProps = props.imageIconProps ? { imageProps: props?.imageIconProps } : { iconName: props?.iconName ?? IconNames.Volume3 };
 
     const handleOnClick = useCallback(() => {
         setMuted(!muted);
@@ -52,7 +52,7 @@ function AudioNotificationButton(props: ICommandButtonProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.FooterSoundNotificationButton,
                 elementId: props?.id,
-                eventName: "OnClick"
+                eventName: EventNames.onClick
             };
             BroadcastService.postMessage(customEvent);
             props?.onClick();
@@ -73,8 +73,8 @@ function AudioNotificationButton(props: ICommandButtonProps) {
             styles={iconButtonStyles}
             className={props.className}
             title={muted ?
-                props.toggleAriaLabel ?? "Turn sound on" :
-                props.ariaLabel ?? "Turn sound off"}
+                props.toggleAriaLabel ?? AriaLabels.TurnSoundOn :
+                props.ariaLabel ?? AriaLabels.TurnSoundOff}
         />
     );
 }
