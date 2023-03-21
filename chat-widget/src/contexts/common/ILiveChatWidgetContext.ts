@@ -25,6 +25,7 @@ export interface ILiveChatWidgetContext {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         widgetSize: any;
         widgetInstanceId: string;
+        initialChatSdkRequestId: string;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
