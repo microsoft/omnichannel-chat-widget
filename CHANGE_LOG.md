@@ -104,4 +104,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Fixed Postchat loading twice issue
 - Adding an event listener in case the chat window is hidden for notifications
 - Adding support for bot survey
-- Fixing reconnect pane not appearing
+- Changing precedence of reconnect feature over local cache when reconnect is enabled

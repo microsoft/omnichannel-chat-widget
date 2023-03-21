@@ -275,7 +275,7 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
     let conversationDetails: any = undefined;
 
     //Preserve old requestId
-    const oldRequestId = chatSDK.requestId;
+    const oldRequestId = chatSDK.requestId ?? "";
     dispatch({ type: LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID, payload: oldRequestId });
 
     try {

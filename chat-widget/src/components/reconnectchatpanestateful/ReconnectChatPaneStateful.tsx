@@ -27,7 +27,7 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
             await initStartChat(optionalParams);
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
-            chatSDK.requestId = state.domainStates.initialChatSdkRequestId;
+            chatSDK.requestId = state?.domainStates?.initialChatSdkRequestId;
             const parseToJson = false;
             const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
             if (preChatSurveyResponse) {

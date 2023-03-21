@@ -109,7 +109,7 @@ const redirectPage = (redirectURL: string, redirectInSameWindow: boolean) => {
 
 const isReconnectEnabled = (chatConfig?: ChatConfig): boolean => {
     if (chatConfig) {
-        const reconnectEnabled = (chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_enablechatreconnect?.toLowerCase() === "true");
+        const reconnectEnabled = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_enablechatreconnect?.toLowerCase() === "true";
         return reconnectEnabled;
     }
     return false;
