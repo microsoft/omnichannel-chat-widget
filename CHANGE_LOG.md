@@ -105,3 +105,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Adding an event listener in case the chat window is hidden for notifications
 - Adding support for bot survey
 - Changing precedence of reconnect feature over local cache when reconnect is enabled
+- Fix for chat transcript download after end chat
