@@ -351,7 +351,6 @@ export const createReducer = () => {
                     ...state,
                     domainStates: {
                         ...state.domainStates,
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         initialChatSdkRequestId: action.payload as string
                     }
                 };
