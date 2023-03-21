@@ -77,6 +77,11 @@ const isImage = (contentType: string): boolean => {
     return AMSConstants.supportedImagesMimeTypes.includes(contentType);
 };
 
+const textEllipsis = (str: string, maxLength = 20): string => {
+    const ellipsis = "...";
+    return (str.length > maxLength) ? str.slice(0, maxLength - ellipsis.length) + ellipsis : str;
+};
+
 const buildErrorMessage = (fileName: string, supportedFileExtension: boolean, supportedFileSize: boolean, fileIsEmpty: boolean, maxUploadFileSize: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts): string => {
     let errorMessage = "";
     if (!fileName || !maxUploadFileSize) {
@@ -101,7 +106,7 @@ const buildErrorMessage = (fileName: string, supportedFileExtension: boolean, su
             ExceptionDetails: { ErrorDetails: "File provided is empty" }
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_IS_EMPTY_ERROR || "";
-        if (errorMessage?.includes("{0}")) errorMessage = errorMessage.replace("{0}", fileName);
+        if (errorMessage?.includes("{0}")) errorMessage = errorMessage.replace("{0}", textEllipsis(fileName));
     } else {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
@@ -131,7 +136,7 @@ const getFileSizeAndFileExtensionErrorMessage = (fileName: string, maxUploadFile
         ExceptionDetails: { ErrorDetails: `${exceptionDetails} Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize} AMS file size limit=${AMSConstants.maxSupportedFileSize}` }
     });
     if (errorMessage?.includes("{1}")) errorMessage = errorMessage.replace("{1}", maxUploadFileSize);
-    return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", fileName) : errorMessage) : "";
+    return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", textEllipsis(fileName)) : errorMessage) : "";
 };
 
 const getFileExtensionErrorMessage = (fileName: string, localizedTexts: ILiveChatWidgetLocalizedTexts): string => {
@@ -144,7 +149,7 @@ const getFileExtensionErrorMessage = (fileName: string, localizedTexts: ILiveCha
             ExceptionDetails: { ErrorDetails: "File provided without file extension" }
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_WITHOUT_EXTENSION;
-        return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", fileName) : errorMessage) : "";
+        return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", textEllipsis(fileName)) : errorMessage) : "";
     } else {
         const fileExtension = fileName.substring(index);
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -165,7 +170,7 @@ const getFileSizeErrorMessage = (fileName: string, maxUploadFileSize: string, ma
     });
     let errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_SIZE_ERROR;
     if (errorMessage?.includes("{1}")) errorMessage = errorMessage.replace("{1}", maxUploadFileSize);
-    return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", fileName) : errorMessage) : "";
+    return errorMessage ? (errorMessage.includes("{0}") ? errorMessage.replace("{0}", textEllipsis(fileName)) : errorMessage) : "";
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
