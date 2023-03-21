@@ -142,6 +142,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         const newAdapter = await createAdapter(chatSDK);
         setAdapter(newAdapter);
 
+        console.log("ADAD throwing manual error");
+        throw new Error();
+
         const chatToken = await chatSDK.getChatToken();
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
         newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
@@ -190,6 +193,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             return;
         }
         if (!hideErrorUIPane) {
+            console.log("ADAD loading error ui pane");
             // Set app state to failing start chat if hideErrorUI is not turned on
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {

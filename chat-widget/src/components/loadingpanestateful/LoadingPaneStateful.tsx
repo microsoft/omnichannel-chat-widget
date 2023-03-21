@@ -15,29 +15,35 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 
-export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
+// export const LoadingPaneStateful = (props: ILoadingPaneProps, startChatErrorPaneProps: IStartChatErrorPaneProps) => {
+// export const LoadingPaneStateful = (props: ILoadingPaneStatefulParams) => {
+export const LoadingPaneStateful = (props: any) => {
+    console.log("ADAD LoadingPaneProps props", props);
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const generalStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, props.styleProps?.generalStyleProps);
-    const styleProps: ILoadingPaneStyleProps = {
-        ...props.styleProps,
-        generalStyleProps: generalStyleProps
+    const { loadingPaneProps, startChatErrorPaneProps } = props;
+    console.log("ADAD loadingPaneProps", loadingPaneProps);
+    console.log("ADAD startChatErrorPaneProps", startChatErrorPaneProps);
+    const generalLoadingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, loadingPaneProps.styleProps?.generalStyleProps);
+    const loadingPaneStyleProps: ILoadingPaneStyleProps = {
+        ...loadingPaneProps.styleProps,
+        generalStyleProps: generalLoadingPaneStyleProps
     };
     const errorUIStyleProps: ILoadingPaneStyleProps = {
         ...errorUILoadingPaneStyleProps
     };
 
-    const controlProps: ILoadingPaneControlProps = {
+    const loadingPaneControlProps: ILoadingPaneControlProps = {
         id: "oc-lcw-loading-pane",
         dir: state.domainStates.globalDir,
-        ...props.controlProps
+        ...loadingPaneProps.controlProps
     };
 
     const errorUIControlProps: ILoadingPaneControlProps = {
         ...props.controlProps,
         id: "oc-lcw-alert-pane",
         dir: state.domainStates.globalDir,
-        titleText: "We are unable to load chat at this time.",
-        subtitleText: "Please try again later.",
+        titleText: startChatErrorPaneProps.controlProps?.titleText ?? "Chat is failing to load.",
+        subtitleText: startChatErrorPaneProps.controlProps?.subtitleText ?? "Please Close the chat and try again.",
         hideSpinner: true,
         hideSpinnerText: true
     };
@@ -51,12 +57,16 @@ export const LoadingPaneStateful = (props: ILoadingPaneProps) => {
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.LoadingPaneLoaded, Description: "Loading pane loaded." });
     }, []);
+
+    console.log("ADAD state.appStates.isStartChatFailing", state.appStates.isStartChatFailing);
+    console.log("ADAD errorUIControlProps", errorUIControlProps);
+    console.log("ADAD loadingPaneControlProps", loadingPaneControlProps);
     
     return (
         <LoadingPane
-            componentOverrides={props.componentOverrides}
-            controlProps={state.appStates.isStartChatFailing ? errorUIControlProps : controlProps}
-            styleProps={state.appStates.isStartChatFailing ? errorUIStyleProps : styleProps}
+            componentOverrides={loadingPaneProps.componentOverrides}
+            controlProps={state.appStates.isStartChatFailing ? errorUIControlProps : loadingPaneControlProps}
+            styleProps={state.appStates.isStartChatFailing ? errorUIStyleProps : loadingPaneStyleProps}
             windowWidth={width}
             windowHeight={height}
         />
