@@ -106,3 +106,4 @@ All notable changes to this project will be documented in this file.## [Unreleas
 - Adding support for bot survey
 - Changing precedence of reconnect feature over local cache when reconnect is enabled
 - Fix for chat transcript download after end chat
+- Fixed the issue where ErrorUIPane string is overwritten by loading pane strings
