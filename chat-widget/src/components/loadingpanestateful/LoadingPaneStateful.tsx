@@ -14,6 +14,7 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const LoadingPaneStateful = (props: any) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { loadingPaneProps, startChatErrorPaneProps } = props;
