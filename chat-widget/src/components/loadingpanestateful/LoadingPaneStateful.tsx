@@ -19,9 +19,9 @@ export const LoadingPaneStateful = (props: any) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { loadingPaneProps, startChatErrorPaneProps } = props;
 
-    const generalLoadingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, loadingPaneProps.styleProps?.generalStyleProps);
+    const generalLoadingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, loadingPaneProps?.styleProps?.generalStyleProps);
     const loadingPaneStyleProps: ILoadingPaneStyleProps = {
-        ...loadingPaneProps.styleProps,
+        ...loadingPaneProps?.styleProps,
         generalStyleProps: generalLoadingPaneStyleProps
     };
     
@@ -32,15 +32,15 @@ export const LoadingPaneStateful = (props: any) => {
     const loadingPaneControlProps: ILoadingPaneControlProps = {
         id: "oc-lcw-loading-pane",
         dir: state.domainStates.globalDir,
-        ...loadingPaneProps.controlProps
+        ...loadingPaneProps?.controlProps
     };
 
     const errorUIControlProps: ILoadingPaneControlProps = {
-        ...loadingPaneProps.controlProps,
+        ...loadingPaneProps?.controlProps,
         id: "oc-lcw-alert-pane",
         dir: state.domainStates.globalDir,
-        titleText: startChatErrorPaneProps.controlProps?.titleText ?? "We are unable to load chat at this time.",
-        subtitleText: startChatErrorPaneProps.controlProps?.subtitleText ?? "Please try again later.",
+        titleText: startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.",
+        subtitleText: startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.",
         hideSpinner: true,
         hideSpinnerText: true
     };
@@ -57,7 +57,7 @@ export const LoadingPaneStateful = (props: any) => {
     
     return (
         <LoadingPane
-            componentOverrides={loadingPaneProps.componentOverrides}
+            componentOverrides={loadingPaneProps?.componentOverrides}
             controlProps={state.appStates.isStartChatFailing ? errorUIControlProps : loadingPaneControlProps}
             styleProps={state.appStates.isStartChatFailing ? errorUIStyleProps : loadingPaneStyleProps}
             windowWidth={width}
