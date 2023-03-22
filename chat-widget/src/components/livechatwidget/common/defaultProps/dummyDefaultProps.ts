@@ -1442,6 +1442,12 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         reconnectId: undefined,
         redirectInSameWindow: undefined
     },
+    startChatErrorPaneProps: {
+        controlProps: {
+            titleText: "We are unable to load chat at this time.",
+            subtitleText: "Please try again later."
+        }
+    },
     styleProps: {
         generalStyles: {
             position: "absolute",
