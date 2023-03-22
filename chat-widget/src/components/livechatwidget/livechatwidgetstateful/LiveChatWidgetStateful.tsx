@@ -3,7 +3,7 @@ import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } f
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
-import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, getConversationDetailsCall } from "../../../common/utils";
 import { endChat, prepareEndChat } from "../common/endChat";
 import {
     shouldShowCallingContainer,
@@ -237,7 +237,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // Toggle chat visibility
-        BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe((event) => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event) => {
             if (event?.payload?.isChatHidden !== undefined) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatVisibilityChanged,
@@ -248,17 +248,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 }
                 const dateNow = Date.now();
                 if (dateNow - lastLWICheckTimeRef.current > Constants.LWICheckOnVisibilityTimeout) {
-                    chatSDK?.getConversationDetails()
-                        .then(async(conversationDetails: LiveWorkItemDetails) => {
-                            lastLWICheckTimeRef.current = dateNow;
-                            if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
-                                dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
-                                TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                                    Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
-                                    Description: "Chat disconnected due to timeout, left or removed."
-                                });
-                            }
+                    const conversationDetails = await getConversationDetailsCall(chatSDK);
+                    lastLWICheckTimeRef.current = dateNow;
+                    if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
+                        dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
+                        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                            Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
+                            Description: "Chat disconnected due to timeout, left or removed."
                         });
+                    }
                 }
             }
         });
