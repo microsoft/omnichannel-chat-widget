@@ -364,6 +364,14 @@ export const createReducer = () => {
                         shouldUseBotSurvey: action.payload as boolean
                     }
                 };
+            case LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        chatDisconnectEventReceived: action.payload as boolean
+                    }
+                };
 
             default:
                 return state;

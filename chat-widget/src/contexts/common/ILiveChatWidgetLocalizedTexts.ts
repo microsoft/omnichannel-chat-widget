@@ -127,4 +127,9 @@ export interface ILiveChatWidgetLocalizedTexts {
      * Markdown Text for URL opening in a new window
      */
     MARKDOWN_EXTERNAL_LINK_ALT?: string;
+
+    /*
+     * Chat disconnect message.
+     */
+    MIDDLEWARE_BANNER_CHAT_DISCONNECT?: string;
 }
