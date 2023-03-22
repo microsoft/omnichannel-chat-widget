@@ -3,6 +3,7 @@ import { ConversationState } from "./ConversationState";
 import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
+import { ConversationEndEntity } from "./ConversationEndEntity";
 
 export interface ILiveChatWidgetContext {
     domainStates: {
@@ -24,6 +25,7 @@ export interface ILiveChatWidgetContext {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         widgetSize: any;
         widgetInstanceId: string;
+        initialChatSdkRequestId: string;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
@@ -43,7 +45,10 @@ export interface ILiveChatWidgetContext {
         };
         e2vvEnabled: boolean; // true if voice/video calling is enabled and callingSDK instance created
         unreadMessageCount: number; // keep count of unread messages
-        conversationEndedByAgent: boolean; // true when agent ends the conversation
+        conversationEndedByAgentEventReceived: boolean; // true when agent end conversation or timeout event is received
+        conversationEndedBy: ConversationEndEntity | undefined; // The entity that ends conversation
+        postChatWorkflowInProgress: boolean; // true when customer ends conversation and postChat workflow has initiated
+        shouldUseBotSurvey: boolean; // true when bot configured survey needs to be used
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

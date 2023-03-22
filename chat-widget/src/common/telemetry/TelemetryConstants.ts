@@ -91,8 +91,6 @@ export enum TelemetryEvent {
     GetConversationDetailsCallFailed = "GetConversationDetailsCallFailed",
     EndChatSDKCallFailed = "EndChatSDKCallFailed",
     GetChatReconnectContextSDKCallFailed = "GetChatReconnectContextSDKCallFailed",
-    PostChatContextCallSucceed = "PostChatContextCallSucceed",
-    PostChatContextCallFailed = "PostChatContextCallFailed",
     ParseAdaptiveCardFailed = "ParseAdaptiveCardFailed",
     ClientDataStoreProviderFailed = "ClientDataStoreProviderFailed",
     InMemoryDataStoreFailed = "InMemoryDataStoreFailed",
@@ -105,6 +103,7 @@ export enum TelemetryEvent {
     WidgetLoadComplete = "WidgetLoadComplete",
     WidgetLoadFailed = "WidgetLoadFailed",
     StartChatMethodException = "StartChatMethodException",
+    CloseChatCall = "CloseChatCall",
     CloseChatMethodException = "CloseChatMethodException",
     PrechatSurveyLoaded = "PrechatSurveyLoaded",
     PrechatSubmitted = "PrechatSubmitted",
@@ -127,8 +126,6 @@ export enum TelemetryEvent {
     LoadingPaneLoaded = "LoadingPaneLoaded",
     EmailTranscriptLoaded = "EmailTranscriptLoaded",
     OutOfOfficePaneLoaded = "OutOfOfficePaneLoaded",
-    PostChatSurveyLoadingPaneLoaded = "PostChatSurveyLoadingPaneLoaded",
-    PostChatSurveyLoaded = "PostChatSurveyLoaded",
     ConfirmationPaneLoaded = "ConfirmationPaneLoaded",
     ProactiveChatPaneLoaded = "ProactiveChatPaneLoaded",
     ReconnectChatPaneLoaded = "ReconnectChatPaneLoaded",
@@ -141,6 +138,7 @@ export enum TelemetryEvent {
     SuppressBotMagicCodeSucceeded = "SuppressBotMagicCodeSucceeded",
     SuppressBotMagicCodeFailed = "SuppressBotMagicCodeFailed",
     GetConversationDetailsException = "GetConversationDetailsException",
+    AppStatesException = "AppStatesException",
     BrowserUnloadEventStarted = "BrowserUnloadEventStarted",
     GetAuthTokenCalled = "GetAuthTokenCalled",
     GetAuthTokenFailed = "GetAuthTokenFailed",
@@ -158,12 +156,15 @@ export enum TelemetryEvent {
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
     ProcessingSanitizationMiddlewareFailed = "ProcessingSanitizationMiddlewareFailed",
     FormatTagsMiddlewareJSONStringifyFailed = "FormatTagsMiddlewareJSONStringifyFailed",
+    AttachmentUploadValidatorMiddlewareFailed = "AttachmentUploadValidatorMiddlewareFailed",
     QueuePositionMessageRecieved = "QueuePositionMessageRecieved",
     AverageWaitTimeMessageRecieved = "AverageWaitTimeMessageRecieved",
     DataMaskingRuleApplied = "DataMaskingRuleApplied",
     DataMaskingRuleApplyFailed = "DataMaskingRuleApplyFailed",
     IC3ClientEvent = "IC3ClientEvent",
     ConversationEndedThreadEventReceived = "ConversationEndedThreadEventReceived",
+    ConversationEndedByCustomer = "ConversationEndedByCustomer",
+    ConversationEndedByAgent = "ConversationEndedByAgent",
     InvalidConfiguration = "InvalidConfiguration",
     SendTypingIndicatorSucceeded = "SendTypingIndicatorSucceeded",
     SendTypingIndicatorFailed = "SendTypingIndicatorFailed",
@@ -190,7 +191,18 @@ export enum TelemetryEvent {
 
     // Internet connection
     NetworkDisconnected = "NetworkDisconnected",
-    NetworkReconnected = "NetworkReconnected"
+    NetworkReconnected = "NetworkReconnected",
+
+    //Post Chat Workflow related
+    LinkModePostChatWorkflowStarted = "LinkModePostChatWorkflowStarted",
+    EmbedModePostChatWorkflowStarted = "EmbedModePostChatWorkflowStarted",
+    PostChatWorkflowFromCustomer = "PostChatWorkflowFromCustomer",
+    PostChatWorkflowFromAgent = "PostChatWorkflowFromAgent",
+    PostChatWorkflowFromBot = "PostChatWorkflowFromBot",
+    PostChatContextCallSucceed = "PostChatContextCallSucceed",
+    PostChatContextCallFailed = "PostChatContextCallFailed",
+    PostChatSurveyLoadingPaneLoaded = "PostChatSurveyLoadingPaneLoaded",
+    PostChatSurveyLoaded = "PostChatSurveyLoaded"
 }
 
 export interface TelemetryInput {
@@ -255,6 +267,12 @@ export class TelemetryConstants {
             case TelemetryEvent.CustomerVoiceResponsePageLoaded:
             case TelemetryEvent.CustomerVoiceFormResponseSubmitted:
             case TelemetryEvent.CustomerVoiceFormResponseError:
+            case TelemetryEvent.LinkModePostChatWorkflowStarted:
+            case TelemetryEvent.EmbedModePostChatWorkflowStarted:
+            case TelemetryEvent.PostChatWorkflowFromCustomer:
+            case TelemetryEvent.PostChatWorkflowFromAgent:
+            case TelemetryEvent.PostChatWorkflowFromBot:
+            case TelemetryEvent.AppStatesException:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:

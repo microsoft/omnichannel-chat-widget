@@ -34,14 +34,15 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     optionalParams = {}; //Resetting to ensure no stale values
     widgetInstanceId = getWidgetCacheIdfromProps(props);
 
-    // Check if there is any active popout chats in cache
-    if (await canStartPopoutChat(props)) {
-        return;
-    }
-
+    // reconnect > chat from cache
     await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
     if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+        return;
+    }
+
+    // Check if there is any active popout chats in cache
+    if (await canStartPopoutChat(props)) {
         return;
     }
 
@@ -141,7 +142,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 }
             });
             isStartChatSuccessful = false;
-            return;
+            throw error;
         }
 
         // New adapter creation
@@ -296,12 +297,13 @@ const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
     const requestId = state.domainStates?.liveChatContext?.requestId;
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
 
     //Preserve old requestId
-    const oldRequestId = chatSDK.requestId;
+    const oldRequestId = chatSDK.requestId ?? "";
+    dispatch({ type: LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID, payload: oldRequestId });
+
     try {
         chatSDK.requestId = requestId;
         conversationDetails = await chatSDK.getConversationDetails();
