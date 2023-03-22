@@ -36,7 +36,7 @@ export const LoadingPaneStateful = (props: any) => {
     };
 
     const errorUIControlProps: ILoadingPaneControlProps = {
-        ...props.controlProps,
+        ...loadingPaneProps.controlProps,
         id: "oc-lcw-alert-pane",
         dir: state.domainStates.globalDir,
         titleText: startChatErrorPaneProps.controlProps?.titleText ?? "We are unable to load chat at this time.",
