@@ -203,8 +203,7 @@ export enum TelemetryEvent {
     PostChatSurveyLoaded = "PostChatSurveyLoaded",
 
     // Chat disconnected
-    ChatDisconnected = "ChatDisconnected",
-    chatDisconnectThreadEventReceived = "chatDisconnectThreadEventReceived"
+    ChatDisconnectThreadEventReceived = "ChatDisconnectThreadEventReceived"
 }
 
 export interface TelemetryInput {

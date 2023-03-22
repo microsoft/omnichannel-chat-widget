@@ -251,11 +251,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     chatSDK?.getConversationDetails()
                         .then(async(conversationDetails: LiveWorkItemDetails) => {
                             lastLWICheckTimeRef.current = dateNow;
-                            if (conversationDetails &&
-                                (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails.state === LiveWorkItemState.Closed)) {
+                            if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
                                 dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
                                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                                    Event: TelemetryEvent.chatDisconnectThreadEventReceived,
+                                    Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
                                     Description: "Chat disconnected due to timeout, left or removed."
                                 });
                             }
