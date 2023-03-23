@@ -2,10 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.1] - Unreleased
+# Chat Widget
+
+## [Unreleased]
+
+## [1.0.1] - 2023-3-23
 
 ### Added
-- Adding `sessionStorage` support to chat widget, exposing a broadcast event `RemoveWidgetDataFromCache` to help removing cache data from widget
+
+- Added WebChat banner on chat disconnect depending on visibility events
+- Added `sessionStorage` support to chat widget, exposing a broadcast event `RemoveWidgetDataFromCache` to help removing cache data
 
 ## [1.0.0] - 2023-3-22
 
@@ -15,5 +21,20 @@ All notable changes to this project will be documented in this file.
 - Exposed CSS style customizations on all UI components
 - Hooked up with BotFramework WebChat and exposed all WebChat styles
 - Included Omnichannel features by default, including pre chat, post chat, voice/video call, operating hours, etc. 
-- Fixed various bugs on chat flow and customizability
 - Added various documentations on features and package usages
+
+### Fixed
+
+- Fixed various bugs on chat flow and customizability
+
+# Chat Components
+
+## [Unreleased]
+
+## [1.0.0] - 2023-3-15
+
+### Added
+
+- Added individual UI components like `Header`, `Footer`, and `ChatButton`, etc. with customizable `controlProps` and `styleProps`
+- Added `BroadcastService` to communicate with package consumer layer, and for telemetry purposes
+- Exposed `encodeComponentString` and `encodeComponentString`
