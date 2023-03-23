@@ -124,6 +124,9 @@ export class Constants {
     public static readonly PostChatLoadingDurationInMs = 2000;
     public static readonly BrowserUnloadConfirmationMessage = "Do you want to leave chat?";
     public static readonly CacheTtlInMinutes = 15;
+
+    // Visibility timeout for conversation details
+    public static readonly LWICheckOnVisibilityTimeout = 3 * 60 * 1000; // 3 minute
 }
 
 export const Regex = class {

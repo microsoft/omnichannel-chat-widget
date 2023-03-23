@@ -248,5 +248,11 @@ export enum LiveChatWidgetActionType {
         Parameters:
         true/false: To check if bot configured survey needs to be used
     */
-    SET_SHOULD_USE_BOT_SURVEY
+    SET_SHOULD_USE_BOT_SURVEY,
+
+    /*
+        Parameters:
+        any: Set customer disconnect
+    */
+    SET_CHAT_DISCONNECT_EVENT_RECEIVED
 }

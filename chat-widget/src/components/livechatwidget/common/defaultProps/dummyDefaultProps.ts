@@ -1716,7 +1716,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             MIDDLEWARE_MESSAGE_NOT_DELIVERED: "Not Delivered",
             MIDDLEWARE_MESSAGE_RETRY: "Retry",
             PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE: "{0} field is required",
-            MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external."
+            MARKDOWN_EXTERNAL_LINK_ALT: "Opens in a new window; external.",
+            MIDDLEWARE_BANNER_CHAT_DISCONNECT: "Your conversation has been disconnected. For additional assistance, please start a new chat."
         },
         botMagicCode: {
             disabled: false,
