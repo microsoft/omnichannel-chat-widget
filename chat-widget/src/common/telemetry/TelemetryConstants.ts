@@ -200,7 +200,10 @@ export enum TelemetryEvent {
     PostChatContextCallSucceed = "PostChatContextCallSucceed",
     PostChatContextCallFailed = "PostChatContextCallFailed",
     PostChatSurveyLoadingPaneLoaded = "PostChatSurveyLoadingPaneLoaded",
-    PostChatSurveyLoaded = "PostChatSurveyLoaded"
+    PostChatSurveyLoaded = "PostChatSurveyLoaded",
+
+    // Chat disconnected
+    ChatDisconnectThreadEventReceived = "ChatDisconnectThreadEventReceived"
 }
 
 export interface TelemetryInput {
