@@ -6,15 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-<br/>
-
 ## [1.0.1] - 2023-3-23
 
 ### Added
 
 - Added WebChat banner on chat disconnect depending on visibility events
-
-<br/>
 
 ## [1.0.0] - 2023-3-22
 
@@ -30,13 +26,9 @@ All notable changes to this project will be documented in this file.
 
 - Fixed various bugs on chat flow and customizability
 
-<br/>
-
 # Chat Components
 
 ## [Unreleased]
-
-<br/>
 
 ## [1.0.0] - 2023-3-15
 
