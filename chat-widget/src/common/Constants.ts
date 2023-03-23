@@ -126,6 +126,9 @@ export class Constants {
     public static readonly CacheTtlInMinutes = 15;
     public static readonly SessionCacheSuffix = "session";
     public static readonly PopoutCacheSuffix = "popout";
+
+    // Visibility timeout for conversation details
+    public static readonly LWICheckOnVisibilityTimeout = 3 * 60 * 1000; // 3 minute
 }
 
 export const Regex = class {

@@ -11,3 +11,13 @@ export const getUnreadMessageCount = async () => {
         }
     });
 };
+
+export const registerVisibilityListener = async () => {
+    window.addEventListener("visibilitychange", () => {
+        const hideChatVisibilityChangeEvent = {
+            eventName: "hideChatVisibilityChangeEvent",
+            payload: { isChatHidden: document.hidden }
+        };
+        BroadcastService.postMessage(hideChatVisibilityChangeEvent);
+    });
+};

@@ -3,7 +3,17 @@ import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } f
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
-import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, getWidgetCacheIdfromProps } from "../../../common/utils";
+import {
+    createTimer,
+    getBroadcastChannelName,
+    getLocaleDirection,
+    getStateFromCache,
+    getWidgetEndChatEventName,
+    isNullOrEmptyString,
+    isUndefinedOrEmpty,
+    getWidgetCacheIdfromProps,
+    getConversationDetailsCall
+} from "../../../common/utils";
 import { endChat, prepareEndChat } from "../common/endChat";
 import {
     shouldShowCallingContainer,
@@ -28,7 +38,7 @@ import { Components } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
-import { Constants, E2VVOptions, StorageType } from "../../../common/Constants";
+import { Constants, E2VVOptions, StorageType, LiveWorkItemState } from "../../../common/Constants";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
@@ -69,6 +79,7 @@ import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
 import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
 import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
+import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -97,7 +108,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
     const currentMessageCountRef = useRef<number>(0);
     let widgetStateEventId = "";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lastLWICheckTimeRef = useRef<number>(0);
     let optionalParams: StartChatOptionalParams;
     let activeCachedChatExist = false;
 
@@ -236,7 +247,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // Toggle chat visibility
-        BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe((event) => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event) => {
             if (event?.payload?.isChatHidden !== undefined) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatVisibilityChanged,
@@ -244,6 +255,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
                 if (props.controlProps?.hideStartChatButton) {
                     dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
+                }
+                const dateNow = Date.now();
+                if (dateNow - lastLWICheckTimeRef.current > Constants.LWICheckOnVisibilityTimeout) {
+                    const conversationDetails = await getConversationDetailsCall(chatSDK);
+                    lastLWICheckTimeRef.current = dateNow;
+                    if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
+                        dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
+                        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                            Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
+                            Description: "Chat disconnected due to timeout, left or removed."
+                        });
+                    }
                 }
             }
         });
@@ -457,6 +480,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             handleAgentEndConversation(props, state, dispatch);
         }
     }, [state.appStates.conversationEndedByAgentEventReceived]);
+
+    // Handle Chat disconnect cases
+    useEffect(() => {
+        if (state.appStates.chatDisconnectEventReceived) {
+            handleChatDisconnect(props, state, setWebChatStyles);
+        }
+    }, [state.appStates.chatDisconnectEventReceived]);
 
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {

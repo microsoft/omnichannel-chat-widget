@@ -273,7 +273,7 @@ const setCustomContextParams = () => {
 };
 
 const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
-    if (props.sdkChatsAllowedInOrg === false) {
+    if (props.allowSdkChatSupport === false) {
         return false;
     }
     popoutWidgetInstanceId = getWidgetCacheIdfromProps(props, true);

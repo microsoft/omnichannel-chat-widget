@@ -61,5 +61,5 @@ export interface ILiveChatWidgetProps {
     getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
     scrollBarProps?: IScrollBarProps;
     useSessionStorage?: boolean;
-    sdkChatsAllowedInOrg?: boolean; // to avoid any performance impact
+    allowSdkChatSupport?: boolean; // to avoid any performance impact
 }

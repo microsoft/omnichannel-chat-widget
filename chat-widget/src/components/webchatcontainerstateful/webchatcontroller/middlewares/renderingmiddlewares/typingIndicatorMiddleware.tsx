@@ -10,12 +10,12 @@ import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
+import { debounceLeading } from "../../../../../common/utils";
 import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultTypingIndicatorBubbleStyles } from "./defaultStyles/defaultTypingIndicatorBubbleStyles";
 import { defaultTypingIndicatorContainerStyles } from "./defaultStyles/defaultTypingIndicatorContainerStyles";
 import { defaultTypingIndicatorMessageStyles } from "./defaultStyles/defaultTypingIndicatorMessageStyles";
 import { useChatContextStore } from "../../../../..";
-import { debounceLeading } from "../../../../../common/utils";
 import useChatSDKStore from "../../../../../hooks/useChatSDKStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

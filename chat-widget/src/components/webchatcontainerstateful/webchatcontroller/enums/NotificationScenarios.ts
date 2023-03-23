@@ -4,5 +4,6 @@ export enum NotificationScenarios {
     EmailTranscriptError = "email transcript",
     AttachmentError = "attachment",
     InternetConnection = "internet connection",
-    MaxSizeError = "max size"
+    MaxSizeError = "max size",
+    ChatDisconnect = "chat disconnect"
 }

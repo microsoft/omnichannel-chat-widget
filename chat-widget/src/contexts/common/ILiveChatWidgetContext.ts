@@ -49,6 +49,7 @@ export interface ILiveChatWidgetContext {
         conversationEndedBy: ConversationEndEntity | undefined; // The entity that ends conversation
         postChatWorkflowInProgress: boolean; // true when customer ends conversation and postChat workflow has initiated
         shouldUseBotSurvey: boolean; // true when bot configured survey needs to be used
+        chatDisconnectEventReceived: boolean; // true when customer disconnect event is received
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show
