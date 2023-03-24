@@ -1697,10 +1697,12 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             }
         },
         localizedTexts: {
-            //MIDDLEWARE_BANNER_FILE parameters:
-            //{0} = file limit size
-            //{1} = file extension
-            //{2} = File name
+            /*
+            MIDDLEWARE_BANNER_FILE parameters:
+            {0} = File limit size
+            {1} = File extension
+            {2} = File name
+            */
             MIDDLEWARE_BANNER_FILE_NULL_ERROR: "There was an error uploading the file, please try again.",
             MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR: "File {2} exceeds the allowed limit of {0} MB and please upload the file with an appropriate file extension.",
             MIDDLEWARE_BANNER_FILE_SIZE_EXTENSION_ERROR: "File {2} exceeds the allowed limit of {0} MB and {1} files are not supported.",

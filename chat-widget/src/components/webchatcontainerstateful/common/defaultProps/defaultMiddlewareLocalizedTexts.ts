@@ -1,9 +1,11 @@
 import { ILiveChatWidgetLocalizedTexts } from "../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
 
-//MIDDLEWARE_BANNER_FILE parameters:
-//{0} = file limit size
-//{1} = file extension
-//{2} = File name
+/* 
+MIDDLEWARE_BANNER_FILE parameters:
+{0} = File limit size
+{1} = File extension
+{2} = File name 
+*/
 
 export const defaultMiddlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts = {
     MIDDLEWARE_BANNER_FILE_NULL_ERROR: "There was an error uploading the file, please try again.",
