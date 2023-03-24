@@ -28,7 +28,7 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ConfirmationPaneConfirmButton,
                 elementId: elementId + "-confirmbutton",
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onConfirm();
@@ -40,7 +40,7 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ConfirmationPaneCancelButton,
                 elementId: elementId + "-cancelbutton",
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onCancel();

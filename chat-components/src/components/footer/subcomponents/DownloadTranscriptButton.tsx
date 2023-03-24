@@ -9,7 +9,7 @@ function DownloadTranscriptButton(props: ICommandButtonProps) {
     const customEvent: ICustomEvent = {
         elementType: ElementType.FooterDownloadTranscriptButton,
         elementId: props?.id,
-        eventName: EventNames.onClick
+        eventName: EventNames.OnClick
     };
 
     return (

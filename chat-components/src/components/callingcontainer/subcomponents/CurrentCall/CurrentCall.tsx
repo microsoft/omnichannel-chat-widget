@@ -124,7 +124,7 @@ function CurrentCall(props: ICurrentCallProps) {
     const endCallCustomEvent: ICustomEvent = {
         elementType: ElementType.CurrentCallEndCallButton,
         elementId: endCallButtonId,
-        eventName: EventNames.onClick
+        eventName: EventNames.OnClick
     };
 
     const handleEndCallClick = useCallback(() => {
@@ -138,7 +138,7 @@ function CurrentCall(props: ICurrentCallProps) {
             const videoOffCustomEvent: ICustomEvent = {
                 elementType: ElementType.CurrentCallVideoButton,
                 elementId: videoOffButtonId,
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(videoOffCustomEvent);
             props.controlProps?.onVideoOffClick();
@@ -151,7 +151,7 @@ function CurrentCall(props: ICurrentCallProps) {
             const micCustomEvent: ICustomEvent = {
                 elementType: ElementType.CurrentCallMicButton,
                 elementId: micButtonId,
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(micCustomEvent);
             props.controlProps?.onMicCallClick();

@@ -9,7 +9,7 @@ function MinimizeButton(props: ICommandButtonProps) {
     const customEvent: ICustomEvent = {
         elementType: ElementType.HeaderMinimizeButton,
         elementId: props?.id,
-        eventName: EventNames.onClick
+        eventName: EventNames.OnClick
     };
 
     return (

@@ -11,10 +11,10 @@ export const defaultConfirmationPaneControlProps: IConfirmationPaneControlProps 
     subtitleText: Texts.ConfirmationPaneSubtitle,
     hideConfirmButton: false,
     confirmButtonText: Texts.ConfirmButtonText,
-    confirmButtonAriaLabel: AriaLabels.CloseChat,
+    confirmButtonAriaLabel: AriaLabels.ConfirmationPaneConfirm,
     hideCancelButton: false,
     cancelButtonText: Texts.CancelButtonText,
-    cancelButtonAriaLabel: AriaLabels.CancelReturnToChat,
+    cancelButtonAriaLabel: AriaLabels.ConfirmationPaneCancel,
     onConfirm: function () {
         console.log("on confirm");
     },

@@ -52,7 +52,7 @@ function AudioNotificationButton(props: ICommandButtonProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.FooterSoundNotificationButton,
                 elementId: props?.id,
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(customEvent);
             props?.onClick();

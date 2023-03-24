@@ -50,7 +50,7 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.PreChatSurveySubmitButton,
                 elementId: elementId,
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onSubmit(values);

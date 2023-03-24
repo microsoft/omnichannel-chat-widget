@@ -30,7 +30,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
+### Changed
 
 - Moved ids and strings to Constants file
 

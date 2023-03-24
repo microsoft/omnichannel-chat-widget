@@ -28,7 +28,7 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ReconnectChatContinueChatButton,
                 elementId: elementId + "-continueconversationbutton",
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onContinueChat();
@@ -40,7 +40,7 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ReconnectChatStartNewChatButton,
                 elementId: elementId + "-startnewconversationbutton",
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onStartNewChat();
@@ -53,7 +53,7 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ReconnectChatPane,
                 elementId: elementId,
-                eventName: EventNames.onEscapeKeyDown
+                eventName: EventNames.OnEscapeKeyDown
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onMinimize();

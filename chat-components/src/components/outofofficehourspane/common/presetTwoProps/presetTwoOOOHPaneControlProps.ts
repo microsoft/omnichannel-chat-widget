@@ -3,6 +3,6 @@ import { defaultOOOHPaneControlProps } from "../defaultProps/defaultOOOHPaneCont
 
 export const presetTwoOOOHPaneControlProps: IOOOHPaneControlProps = {
     ...defaultOOOHPaneControlProps,
-    id: "oc-lcw-outofofficehourspane-preset2",
+    id: "lcw-out-of-office-hours-pane-preset2",
     titleText: "Sorry but we are not operating during these hours!!"
 };

@@ -46,7 +46,7 @@ function CommandButton(props: ICommandButtonProps) {
         if (props?.onClick) {
             const customEvent: ICustomEvent = props.customEvent ??
             {
-                eventName: EventNames.onClick,
+                eventName: EventNames.OnClick,
                 elementType: ElementType.Custom,
                 elementId: props?.id
             };

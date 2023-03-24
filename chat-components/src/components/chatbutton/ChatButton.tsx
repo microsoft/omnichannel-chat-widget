@@ -119,7 +119,7 @@ function ChatButton(props: IChatButtonProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.ChatButton,
                 elementId: elementId,
-                eventName: EventNames.onClick
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps.onClick();

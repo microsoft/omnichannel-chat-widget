@@ -2,7 +2,7 @@ import { AriaLabels, Texts } from "../../../../../common/Constants";
 import { IProactiveChatPaneControlProps } from "../../../interfaces/IProactiveChatPaneControlProps";
 
 export const presetTwoProactiveChatPaneControlProps: IProactiveChatPaneControlProps = {
-    id: "oclcw-incomingproactivechat",
+    id: "lcw-incoming-proactive-chat",
     dir: "ltr",
     hideProactiveChatPane: false,
     proactiveChatPaneAriaLabel: AriaLabels.ProactiveChatPane,

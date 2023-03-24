@@ -9,7 +9,7 @@ function EmailTranscriptButton(props: ICommandButtonProps) {
     const customEvent: ICustomEvent = {
         elementType: ElementType.FooterEmailTranscriptButton,
         elementId: props?.id,
-        eventName: EventNames.onClick
+        eventName: EventNames.OnClick
     };
 
     return (

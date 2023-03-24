@@ -67,7 +67,7 @@ function IncomingCall(props: IIncomingCallProps) {
     const declineCustomEvent: ICustomEvent = {
         elementType: ElementType.IncomingCallDeclineCallButton,
         elementId: declineCallButtonId,
-        eventName: EventNames.incomingCallEnded
+        eventName: EventNames.IncomingCallEnded
     };
     const handleDeclineCallClick = useCallback(() => {
         if (props.controlProps?.onDeclineCallClick) {
@@ -77,7 +77,7 @@ function IncomingCall(props: IIncomingCallProps) {
     const videoCustomEvent: ICustomEvent = {
         elementType: ElementType.IncomingCallVideoCallButton,
         elementId: videoCallButtonId,
-        eventName: EventNames.onClick
+        eventName: EventNames.OnClick
     };
     const handleVideoCallClick = useCallback(() => {
         if (props.controlProps?.onVideoCallClick) {
@@ -87,7 +87,7 @@ function IncomingCall(props: IIncomingCallProps) {
     const audioCustomEvent: ICustomEvent = {
         elementType: ElementType.IncomingCallAudioCallButton,
         elementId: audioCallButtonId,
-        eventName: EventNames.onClick
+        eventName: EventNames.OnClick
     };
     const handleAudioCallClick = useCallback(() => {
         if (props.controlProps?.onAudioCallClick) {

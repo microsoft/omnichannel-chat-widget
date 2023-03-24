@@ -95,7 +95,7 @@ const customIcon = <Stack styles={stackStyles} key="customIcon">
     <FontIcon aria-label="ChatBot" iconName="ChatBot" className={customIconClass} id={Ids.HeaderIconId} /></Stack>;
 
 const maximizeHeaderButtonProps: ICommandButtonProps = {
-    id: "oc-lcw-header-maximizebutton",
+    id: "lcw-header-maximize-button",
     type: ButtonTypes.Icon,
     iconName: "FullScreen",
     ariaLabel: "Maximize",
