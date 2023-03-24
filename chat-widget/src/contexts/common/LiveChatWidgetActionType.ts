@@ -240,7 +240,19 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
+        any: Set initial chat sdk request id (for reconnect scenario when start new chat is deferred)
+    */
+    SET_INITIAL_CHAT_SDK_REQUEST_ID,
+
+    /*
+        Parameters:
         true/false: To check if bot configured survey needs to be used
     */
-    SET_SHOULD_USE_BOT_SURVEY
+    SET_SHOULD_USE_BOT_SURVEY,
+
+    /*
+        Parameters:
+        any: Set customer disconnect
+    */
+    SET_CHAT_DISCONNECT_EVENT_RECEIVED
 }

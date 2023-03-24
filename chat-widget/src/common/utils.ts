@@ -2,8 +2,9 @@ import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants"
 import { DataStoreManager } from "./contextDataStore/DataStoreManager";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
-import { BroadcastEvent } from "./telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
 import { Md5 } from "md5-typescript";
+import { TelemetryHelper } from "./telemetry/TelemetryHelper";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -345,4 +346,22 @@ export const debounceLeading = (fn: any, ms = 3000) => {
 
         timeoutId = setTimeout(() => {timeoutId = null;}, ms);
     };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getConversationDetailsCall = async (chatSDK: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let conversationDetails: any = undefined;
+    try {
+        conversationDetails = await chatSDK.getConversationDetails();
+    } catch (error) {
+        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.GetConversationDetailsCallFailed,
+            ExceptionDetails: {
+                exception: `Get Conversation Details Call Failed : ${error}`
+            }
+        });
+    }
+
+    return conversationDetails;
 };

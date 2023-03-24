@@ -172,13 +172,14 @@ const postChatInitiatedByCustomer = async (props: any, chatSDK: any, setAdapter:
             Description: shouldUseBotSetting ? "PostChat Workflow was started by customer using bot settings" : "PostChat Workflow was started by customer using agent settings"
         });
         const chatSession = await chatSDK?.getCurrentLiveChatContext();
+        // End chat call to end chatsdk but not close chat, only if chat ended by customer
+        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, true, false);
+        // Saving request Id below for chat transcript calls
         if (chatSession) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (chatSDK as any).chatToken = chatSession.chatToken ?? {};
             chatSDK.requestId = chatSession.requestId;
         }
-        // End chat call to end chatsdk but not close chat, only if chat ended by customer
-        await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, true, false);
         if (postChatSurveyMode === PostChatSurveyMode.Embed) {
             await embedModePostChatWorkflow(dispatch, state);
         } else if (postChatSurveyMode === PostChatSurveyMode.Link) {

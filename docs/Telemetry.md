@@ -166,6 +166,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `CustomerVoiceResponsePageLoaded` | On survey page load complete|
 | `CustomerVoiceFormResponseSubmitted` | On survey submitted |
 | `CustomerVoiceFormResponseError` | On survey response error|
+| `ChatDisconnectThreadEventReceived` | On chat disconnected|
 
 #### Action Events
 

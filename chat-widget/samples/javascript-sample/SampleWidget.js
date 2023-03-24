@@ -5,7 +5,7 @@ import LiveChatWidget from "../../lib/esm/components/livechatwidget/LiveChatWidg
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
 import { getCustomizationJson } from "./getCustomizationJson";
-import { getUnreadMessageCount } from "./getUnreadMessageCount";
+import { getUnreadMessageCount, registerVisibilityListener } from "./getUnreadMessageCount";
 import { memoryDataStore } from "./Common/MemoryDataStore";
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 
@@ -35,6 +35,7 @@ const main = async () => {
     const chatConfig = await chatSDK.getLiveChatConfig();
     memoryDataStore();
     await getUnreadMessageCount();
+    await registerVisibilityListener();
     const switchConfig = (config) => {
         liveChatWidgetProps = config;
         liveChatWidgetProps = {

@@ -1,106 +1,39 @@
-# Changelog
+# Change Log
 
-All notable changes to this project will be documented in this file.## [Unreleased]
+All notable changes to this project will be documented in this file.
+
+# Chat Widget
 
 ## [Unreleased]
-### Added 
-- Added the flag for toggling the focus on chatbutton component
-- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.3e712be
-- Added more telemetry and broadcast events for proactive chat pane
-- Added support for PostChat Link Mode
-- Refactored telemetry/broadcast events
-- Added lcw event support
-- Fixed an issue where telemetry is not flowing correctly
-- Added support for conversation force closure
-- Added broadcast event support for startChat and endChat
-- Added custom componentOverride for preChat
-- Added Telemetry events for PostChat Loading Pane
-- Added web chat telemetry logger
-- Updated ARIA Collector URLs for EU vs Non-EU telemetry data to comply with EUDB requirements
-- Added custom context support
-- Added font-family property to preChat Survey button
-- Added `lcw:chatRetrieved` event
-- Multi-widget support on same browser
-- Added support to ensure order of messages from PVA bot for orgs using ACS.
-- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.423d0ce
-- Added and localized the unread Message Count alert text
-- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.353ecff
-- Fixed hover customizations for Audio notification button
-- Multiple issues with `startChat` SDK method
-- Clearing unread message after chat ended
-- Correcting the `lcw:onMaximize` event
-- Fixing duplicate `EndChat` issue
-- Fixed `skipChatButtonRendering` flow when enabled
-- Fixed the custom context for the first time load
-- 'startChat` readability improvement and optimized code
-- Making `.eslintrc.json` compatible with VS code
-- Fixing Auth chat not to connect cached chat
-- Fixed the header on the postchatloading pane
-- Added authProps to ILiveChatWidgetProps
-- Fixed a bug where links are incorrectly processed by markdown
-- Added ChatAdapterShim
-- Updating widget specific `BroadcastService`
-- Updated props for auth chat
-- Adding `WidgetInstanceId` to support same widget with multi origin
-- Fixed custom context when `skipchatbuttonrendering` is enabled
-- Added exception for authenticated chat when context is passed 
-- Fixed description for new messages notification from screen reader.
-- Added default properties for background and color for  adaptive cards and properties for customization of the same.
-- Added a fix for auth chat to connect to the same chat after refresh.
-- Fixed the sound notification when the footer is hidden.
-- Replaced proactive chat pane close button with header close button.
-- Adding `localStorage` support for widget
-- Adding `typescript` sample
-- Adding support for customizing anchor tag color in webchat
-- Upgraded chat components in widget to replace proactive chat pane close button with header close button.
-- Fixed refreshing chat in popout mode and upgraded chat components in widget to fix footer icons.
-- Replaced HTMLElement with string in state variables.
-- Updated the version of @microsoft/omnichannel-chat-sdk to 1.1.1-main.2f608b7
-- Fixed resizing the message box when screen resize
-- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.c74643c
-- Uptake chat sdk version to fix image file send failures
-- Raise HistoryMessageReceived event on polling
-- Updated the version of @microsoft/omnichannel-chat-components to @0.1.0-main.cb39af7
-- Added Download Transcript support on PostChat Survey Screen (V1 Parity)
-- Fixed multiple scrollbars in PostChat to display single scroll bar.
-- Fixed chat loading issue, Updating datamasking events
-- Added Customer Voice Form Event loggin for PostChat Survey (V1 Parity)
-- Removed isReconnectEnabled from props
-- Fixed OutOfOffice Chat Button Icon appearance
-- Adding support for customizing widget scroll bar
-- Clearing live chat context for raise error event
-- Renaming `skipChatButtonRendering` to `hideStartChatButton`
-- Refactoring reconnect functionality code
-- Fixing chat widget refresh bug showing reconnect pane
-- Supporting to start new chat if localStorage has stale Active state
-- Fixing end chat to gracefully complete if auth token has expired
-- Refactoring input validation pane and replacing keyDown event with keyUp
-- Fixed download and email transcript after post chat survey is sent / rendered
-- Adding ESC shortcut for confirmation dismiss, Disable sendBox for linked survey
-- Fixed styles for input validation pane
-- Uptake `chat-components` 0.1.0-main.a7ac5de
-- Added Error screen in case start chat fails
-- Added Loading Screen before auth checks on refresh
-- Uptake component for calling a11y fix
-- Added more customization to prechat survey pane
-- Uptake component for fixes for prechat survey pane, confirmation pane and calling container
-- Fixed aria label for chat button, double announcing for audio notification button, removed disableDimLayer from props
-- Added support to attach and download AMR audio files.
-- Uptake components and fixed confirmation pane not showing
-- Added getGeolocation feature if enabled in OC
-- Fixed default message bubble width to be 90%
-- Fixed multiple bugs with timestamp rendering
-- Added link and open link in new tab support in OutOfOffice Pane
-- Allowing to accept Cache Ttl from partners
-- Adding force close to endChat if chat stuck after sessionInit
-- Removing MesssageReceived event for system messages
-- Adding `hideErrorUIPane` to `ILiveChatWidgetControlProps` to show/hide Error UI on start chat
-- Fix Start Chat icon disappearing due to subtitle length
-- Removed close button from PostChat Loading Screen
-- Added PostChat Context check for triggering Embedded PostChat Workflow
-- Fixed PostChat Stories and VRT
-- Adding support for PVA SSO
-- Fixed PostChat Workflows and added telemetry
-- Fixed Postchat loading twice issue
-- Adding an event listener in case the chat window is hidden for notifications
-- Adding support for bot survey
+
+## [1.0.1] - 2023-3-23
+
+### Added
+
+- Added WebChat banner on chat disconnect depending on visibility events
+
+## [1.0.0] - 2023-3-22
+
+### Added
+
+- Stitched all components in chat-components package with default Omnichannel chat flow
+- Exposed CSS style customizations on all UI components
+- Hooked up with BotFramework WebChat and exposed all WebChat styles
+- Included Omnichannel features by default, including pre chat, post chat, voice/video call, operating hours, etc. 
+- Added various documentations on features and package usages
+
+### Fixed
+
+- Fixed various bugs on chat flow and customizability
+
+# Chat Components
+
+## [Unreleased]
+
+## [1.0.0] - 2023-3-15
+
+### Added
+
+- Added individual UI components like `Header`, `Footer`, and `ChatButton`, etc. with customizable `controlProps` and `styleProps`
+- Added `BroadcastService` to communicate with package consumer layer, and for telemetry purposes
+- Exposed `encodeComponentString` and `encodeComponentString`

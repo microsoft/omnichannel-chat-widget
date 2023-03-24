@@ -25,6 +25,7 @@ export interface ILiveChatWidgetContext {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         widgetSize: any;
         widgetInstanceId: string;
+        initialChatSdkRequestId: string;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
@@ -48,6 +49,7 @@ export interface ILiveChatWidgetContext {
         conversationEndedBy: ConversationEndEntity | undefined; // The entity that ends conversation
         postChatWorkflowInProgress: boolean; // true when customer ends conversation and postChat workflow has initiated
         shouldUseBotSurvey: boolean; // true when bot configured survey needs to be used
+        chatDisconnectEventReceived: boolean; // true when customer disconnect event is received
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show
