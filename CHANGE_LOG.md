@@ -37,3 +37,4 @@ All notable changes to this project will be documented in this file.
 - Added individual UI components like `Header`, `Footer`, and `ChatButton`, etc. with customizable `controlProps` and `styleProps`
 - Added `BroadcastService` to communicate with package consumer layer, and for telemetry purposes
 - Exposed `encodeComponentString` and `encodeComponentString`
+- Added MIDDLEWARE_BANNER_FILE parameter `{2}` to show the user the file name when an exception occurs, also implementing standar for parameter to keep backwards compatibility
