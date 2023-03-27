@@ -5,7 +5,7 @@ import React, { useCallback } from "react";
 import { addNoreferrerNoopenerTag, broadcastError, getInputValuesFromAdaptiveCard } from "../../common/utils";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType } from "../../common/Constants";
+import { ElementType, EventNames } from "../../common/Constants";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { IPreChatSurveyPaneProps } from "./interfaces/IPreChatSurveyPaneProps";
 import { defaultPreChatSurveyPaneACContainerStyles } from "./common/defaultProps/defaultStyles/defaultPreChatSurveyPaneACContainerStyles";
@@ -15,7 +15,7 @@ import { defaultPreChatSurveyPaneStyles } from "./common/defaultProps/defaultSty
 
 function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
 
-    const elementId = props.controlProps?.id ?? "lcw-components-prechatsurvey-pane";
+    const elementId = props.controlProps?.id ?? defaultPreChatSurveyPaneControlProps.id as string;
     let adpativeCardPayload;
     let adaptiveCardHostConfig;
 
@@ -50,7 +50,7 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
             const customEvent: ICustomEvent = {
                 elementType: ElementType.PreChatSurveySubmitButton,
                 elementId: elementId,
-                eventName: "OnClick"
+                eventName: EventNames.OnClick
             };
             BroadcastService.postMessage(customEvent);
             props.controlProps?.onSubmit(values);

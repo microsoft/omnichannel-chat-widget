@@ -1,5 +1,5 @@
 import React from "react";
-import { ElementType } from "../../../common/Constants";
+import { AriaLabels, ElementType, EventNames, IconNames, Texts } from "../../../common/Constants";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
 import CommandButton from "../../common/commandbutton/CommandButton";
 import { ICommandButtonProps } from "../../common/interfaces/ICommandButtonProps";
@@ -9,21 +9,21 @@ function EmailTranscriptButton(props: ICommandButtonProps) {
     const customEvent: ICustomEvent = {
         elementType: ElementType.FooterEmailTranscriptButton,
         elementId: props?.id,
-        eventName: "OnClick"
+        eventName: EventNames.OnClick
     };
 
     return (
         <CommandButton
             id={props?.id}
             type={type}
-            text={props.text ?? "Email Transcript"}
+            text={props.text ?? Texts.EmailTranscriptText}
             styles={props.styles}
             hoverStyles={props.hoverStyles}
             focusStyles={props.focusStyles}
-            iconName={props.iconName ?? "Mail"}
+            iconName={props.iconName ?? IconNames.Mail}
             imageIconProps={props.imageIconProps}
             onClick={props.onClick}
-            ariaLabel={props.ariaLabel ?? "Email Transcript"}
+            ariaLabel={props.ariaLabel ?? AriaLabels.EmailTranscript}
             className={props.className}
             customEvent={customEvent} />
     );

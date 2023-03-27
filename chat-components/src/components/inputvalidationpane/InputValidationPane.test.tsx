@@ -9,6 +9,7 @@ import { IInputValidationPaneProps } from "./interfaces/IInputValidationPaneProp
 import React from "react";
 import { defaultInputValidationPaneProps } from "./common/default/defaultProps/defaultInputValidationPaneProps";
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import { Texts } from "../../common/Constants";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -58,14 +59,14 @@ describe("Input Validation Pane component", () => {
             render(<InputValidationPane {...inputValidationPanePropsHide}/>);
 
             try {
-                screen.getByText("Email this chat transcript");
+                screen.getByText(Texts.InputValidationPaneTitleText);
                 fail("Title should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("This will be sent after your chat ends.");
+                screen.getByText(Texts.InputValidationPaneSubtitleText);
             } catch (ex) {
                 fail("Subtitle should be in the document");
             }
@@ -84,14 +85,14 @@ describe("Input Validation Pane component", () => {
             render(<InputValidationPane {...inputValidationPanePropsHide}/>);
 
             try {
-                screen.getByText("This will be sent after your chat ends.");
+                screen.getByText(Texts.InputValidationPaneSubtitleText);
                 fail("Subitle should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Email this chat transcript");
+                screen.getByText(Texts.InputValidationPaneTitleText);
             } catch (ex) {
                 fail("Title should be in the document");
             }
@@ -129,7 +130,7 @@ describe("Input Validation Pane component", () => {
             render(<InputValidationPane {...inputValidationPanePropsHide}/>);
 
             try {
-                screen.getByText("Send");
+                screen.getByText(Texts.SendButtonText);
                 fail("Send button should be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
@@ -149,7 +150,7 @@ describe("Input Validation Pane component", () => {
             render(<InputValidationPane {...inputValidationPanePropsHide}/>);
 
             try {
-                screen.getByText("Cancel");
+                screen.getByText(Texts.CancelButtonText);
                 fail("Cancel button should be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
@@ -173,7 +174,7 @@ describe("Input Validation Pane component", () => {
 
             render(<InputValidationPane {...inputValidationPaneProps}/>);
 
-            const sendButton = screen.getByText("Send");
+            const sendButton = screen.getByText(Texts.SendButtonText);
             fireEvent.click(sendButton);
             expect(handleSendClick).toHaveBeenCalledTimes(1);
         });
@@ -193,7 +194,7 @@ describe("Input Validation Pane component", () => {
 
             render(<InputValidationPane {...inputValidationPaneProps}/>);
 
-            const sendButton = screen.getByText("Send");
+            const sendButton = screen.getByText(Texts.SendButtonText);
             fireEvent.click(sendButton);
             expect(handleSendClick).toHaveBeenCalledTimes(0);
         });
@@ -213,7 +214,7 @@ describe("Input Validation Pane component", () => {
 
             render(<InputValidationPane {...inputValidationPaneProps}/>);
 
-            const cancelButton = screen.getByText("Cancel");
+            const cancelButton = screen.getByText(Texts.CancelButtonText);
             fireEvent.click(cancelButton);
             expect(handleCancelClick).toHaveBeenCalledTimes(1);
         });
@@ -259,7 +260,7 @@ describe("Input Validation Pane component", () => {
                 target: { value: "some value" }
             });
             
-            const sendButton = screen.getByText("Send");
+            const sendButton = screen.getByText(Texts.SendButtonText);
             expect(sendButton).not.toBeDisabled();
         });
     });

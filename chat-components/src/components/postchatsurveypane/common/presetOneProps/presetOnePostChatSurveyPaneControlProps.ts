@@ -3,5 +3,5 @@ import { defaultPostChatSurveyPaneControlProps } from "../defaultProps/defaultPo
 
 export const presetOnePostChatSurveyPaneControlProps: IPostChatSurveyPaneControlProps = {
     ...defaultPostChatSurveyPaneControlProps,
-    id: "oc-lcw-postchatsurveypane-preset1"
+    id: "lcw-postchat-survey-pane-preset1"
 };

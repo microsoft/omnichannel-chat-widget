@@ -4,7 +4,7 @@ import { defaultLoadingPaneControlProps } from "../defaultProps/defaultLoadingPa
 
 export const presetTwoLoadingPaneControlProps: ILoadingPaneControlProps = {
     ...defaultLoadingPaneControlProps,
-    id: "oc-lcw-loadingpane-preset2",
+    id: "lcw-loading-pane-preset2",
     hideIcon: true,
     hideTitle: true,
     hideSubtitle: true,

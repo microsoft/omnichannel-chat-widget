@@ -1,5 +1,5 @@
 import React from "react";
-import { ElementType } from "../../../common/Constants";
+import { AriaLabels, ElementType, EventNames, IconNames, Texts } from "../../../common/Constants";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
 import CommandButton from "../../common/commandbutton/CommandButton";
 import { ICommandButtonProps } from "../../common/interfaces/ICommandButtonProps";
@@ -9,21 +9,21 @@ function MinimizeButton(props: ICommandButtonProps) {
     const customEvent: ICustomEvent = {
         elementType: ElementType.HeaderMinimizeButton,
         elementId: props?.id,
-        eventName: "OnClick"
+        eventName: EventNames.OnClick
     };
 
     return (
         <CommandButton
             id={props?.id}
             type={type}
-            text={props.text ?? "Minimize"}
+            text={props.text ?? Texts.MinimizeText}
             styles={props.styles}
             hoverStyles={props.hoverStyles}
             focusStyles={props.focusStyles}
-            iconName={props.iconName ?? "ChromeMinimize"}
+            iconName={props.iconName ?? IconNames.ChromeMinimize}
             imageIconProps={props.imageIconProps}
             onClick={props.onClick}
-            ariaLabel={props.ariaLabel ?? "Minimize"}
+            ariaLabel={props.ariaLabel ?? AriaLabels.Minimize}
             className={props.className}
             customEvent={customEvent} />
     );

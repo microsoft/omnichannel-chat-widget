@@ -9,6 +9,7 @@ import { IFooterProps } from "./interfaces/IFooterProps";
 import { decodeComponentString } from "../../common/decodeComponentString";
 import { defaultFooterProps } from "./common/defaultProps/defaultFooterProps";
 import { processCustomComponents } from "../../common/utils";
+import { Ids } from "../../common/Constants";
 
 initializeIcons();
 
@@ -55,7 +56,7 @@ function Footer(props: IFooterProps) {
         <Stack id={footerId} horizontal className={props.className} horizontalAlign="space-between"
             styles={stackStyles}
             dir={props.controlProps?.dir ?? "ltr"} role="region">
-            <Stack horizontal id="footerLeftGroup" verticalAlign="center">
+            <Stack horizontal id={Ids.FooterLeftGroupId} verticalAlign="center">
                 <Stack horizontal verticalAlign="center">
                     {!props.controlProps?.hideDownloadTranscriptButton && (decodeComponentString(props.componentOverrides?.DownloadTranscriptButton) ||
                         <DownloadTranscriptButton
@@ -76,14 +77,14 @@ function Footer(props: IFooterProps) {
                     {processCustomComponents(props.controlProps?.leftGroup?.children)}
                 </Stack>
             </Stack>
-            <Stack horizontal id="footerMiddleGroup">
+            <Stack horizontal id={Ids.FooterMiddleGroupId}>
                 <Stack horizontal verticalAlign="start">
                     <Stack.Item align="start">
                         {processCustomComponents(props.controlProps?.middleGroup?.children)}
                     </Stack.Item>
                 </Stack>
             </Stack>
-            <Stack horizontal id="footerRightGroup" verticalAlign="start">
+            <Stack horizontal id={Ids.FooterRightGroupId} verticalAlign="start">
                 <Stack horizontal verticalAlign="center">
                     {processCustomComponents(props.controlProps?.rightGroup?.children)}
                     {!props.controlProps?.hideAudioNotificationButton && (decodeComponentString(props.componentOverrides?.AudioNotificationButton) ||

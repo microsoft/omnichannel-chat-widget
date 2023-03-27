@@ -1,36 +1,36 @@
 import { IInputValidationPaneControlProps } from "../../../interfaces/IInputValidationPaneControlProps";
-import { Regex } from "../../../../../common/Constants";
+import { AriaLabels, Ids, Regex, Texts } from "../../../../../common/Constants";
 
 export const defaultInputValidationPaneControlProps: IInputValidationPaneControlProps = {
-    id: "oclcw-emailTranscriptDialogContainer",
+    id: Ids.DefaultInputValidationPaneId,
     dir: "ltr",
     hideInputValidationPane: false,
-    inputValidationPaneAriaLabel: "Email Chat Transcript Pane",
+    inputValidationPaneAriaLabel: AriaLabels.EmailChatTranscriptPane,
 
     hideTitle: false,
-    titleText: "Email this chat transcript",
+    titleText: Texts.InputValidationPaneTitleText,
 
     hideSubtitle: false,
-    subtitleText: "This will be sent after your chat ends.",
+    subtitleText: Texts.InputValidationPaneSubtitleText,
 
-    inputId: "oclcw-emailTranscriptDialogTextField",
+    inputId: Ids.DefaultInputValidationPaneInputId,
     inputInitialText: "",
     hideInput: false,
-    inputAriaLabel: "Email this chat transcript. This will be sent after your chat ends. Email address text area",
+    inputAriaLabel: AriaLabels.InputValidationPaneInput,
     inputWithErrorMessageBorderColor: "rgb(164, 38, 44)",
 
-    invalidInputErrorMessageText: "Enter a valid email address.",
+    invalidInputErrorMessageText: Texts.InvalidInputErrorMessageText,
 
     isButtonGroupHorizontal: true,
 
     hideSendButton: false,
     enableSendButton: false,
-    sendButtonText: "Send",
-    sendButtonAriaLabel: "Send",
+    sendButtonText: Texts.SendButtonText,
+    sendButtonAriaLabel: AriaLabels.Send,
 
     hideCancelButton: false,
-    cancelButtonText: "Cancel",
-    cancelButtonAriaLabel: "Cancel",
+    cancelButtonText: Texts.CancelButtonText,
+    cancelButtonAriaLabel: AriaLabels.Cancel,
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSend: function (input: string) {

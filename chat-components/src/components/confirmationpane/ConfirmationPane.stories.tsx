@@ -29,7 +29,7 @@ ConfirmationPaneDefault.args = defaultConfirmationPaneProps;
 
 const confirmationPanePreset1Props: IConfirmationPaneProps = {
     controlProps: {
-        id: "oc-lcw-confirmationpane-preset1",
+        id: "lcw-confirmation-pane-preset1",
         titleText: "Big Circle",
         subtitleText: "This is a big, big circle.",
         confirmButtonText: "Green",
@@ -106,7 +106,7 @@ ConfirmationPanePreset1.args = confirmationPanePreset1Props;
 
 const confirmationPanePreset2Props: IConfirmationPaneProps = {
     controlProps: {
-        id: "oc-lcw-confirmationpane-preset2",
+        id: "lcw-confirmation-pane-preset2",
         titleText: "Only One Option",
         hideSubtitle: true,
         hideCancelButton: true,
@@ -170,7 +170,7 @@ ConfirmationPanePreset2.args = confirmationPanePreset2Props;
 
 const confirmationPanePreset3Props: IConfirmationPaneProps = {
     controlProps: {
-        id: "oc-lcw-confirmationpane-preset3",
+        id: "lcw-confirmation-pane-preset3",
         titleText: "COLUMN LAYOUT",
         subtitleText: "Try the buttons below",
         confirmButtonText: "Row layout",

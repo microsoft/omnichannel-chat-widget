@@ -9,6 +9,7 @@ import { IConfirmationPaneProps } from "./interfaces/IConfirmationPaneProps";
 import React from "react";
 import { defaultConfirmationPaneProps } from "./common/defaultProps/defaultConfirmationPaneProps";
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import { Texts } from "../../common/Constants";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -58,14 +59,14 @@ describe("Confirmation Pane component", () => {
             render(<ConfirmationPane {...confirmationPanePropsHide}/>);
 
             try {
-                screen.getByText("Close chat");
+                screen.getByText(Texts.ConfirmationPaneTitle);
                 fail("Title should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Do you really want to close this chat?");
+                screen.getByText(Texts.ConfirmationPaneSubtitle);
             } catch (ex) {
                 fail("Subtitle should be in the document");
             }
@@ -84,14 +85,14 @@ describe("Confirmation Pane component", () => {
             render(<ConfirmationPane {...confirmationPanePropsHide}/>);
 
             try {
-                screen.getByText("Do you really want to close this chat?");
+                screen.getByText(Texts.ConfirmationPaneSubtitle);
                 fail("Subitle should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Close chat");
+                screen.getByText(Texts.ConfirmationPaneTitle);
             } catch (ex) {
                 fail("Title should be in the document");
             }
@@ -110,14 +111,14 @@ describe("Confirmation Pane component", () => {
             render(<ConfirmationPane {...confirmationPanePropsHide}/>);
 
             try {
-                screen.getByText("Close");
+                screen.getByText(Texts.ConfirmButtonText);
                 fail("Confirm Button should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Cancel");
+                screen.getByText(Texts.CancelButtonText);
             } catch (ex) {
                 fail("Cancel button should be in the document");
             }
@@ -136,14 +137,14 @@ describe("Confirmation Pane component", () => {
             render(<ConfirmationPane {...confirmationPanePropsHide}/>);
 
             try {
-                screen.getByText("Cancel");
+                screen.getByText(Texts.CancelButtonText);
                 fail("Cancel Button should not be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("Close");
+                screen.getByText(Texts.ConfirmButtonText);
             } catch (ex) {
                 fail("Confirm button should be in the document");
             }
@@ -166,11 +167,11 @@ describe("Confirmation Pane component", () => {
 
             render(<ConfirmationPane {...confirmationPaneProps}/>);
 
-            const confirmButton = screen.getByText("Close");
+            const confirmButton = screen.getByText(Texts.ConfirmButtonText);
             fireEvent.click(confirmButton);
             expect(handleConfirmClick).toHaveBeenCalledTimes(1);
 
-            const cancelButton = screen.getByText("Cancel");
+            const cancelButton = screen.getByText(Texts.CancelButtonText);
             fireEvent.click(cancelButton);
             expect(handleCancelClick).toHaveBeenCalledTimes(1);
         });

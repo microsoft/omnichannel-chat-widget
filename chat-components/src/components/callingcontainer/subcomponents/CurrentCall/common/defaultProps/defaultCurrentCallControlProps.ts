@@ -1,13 +1,14 @@
+import { AriaLabels, IconNames, ButtonTypes, Ids } from "../../../../../../common/Constants";
 import { ICurrentCallControlProps } from "../../interfaces/ICurrentCallControlProps";
 
 export const defaultCurrentCallControlProps: ICurrentCallControlProps = {
-    id: "currentCall-container",
+    id: Ids.DefaultCurrentCallId,
     nonActionIds: {
-        currentCallActionGroupId: "currentCall-actionicons",
-        currentCallFooterId: "currentCall-footer",
-        remoteVideoTileId: "remoteVideo",
-        selfVideoTileId: "selfVideo",
-        videoTileGroupId: "currentCall-body"
+        currentCallActionGroupId: Ids.CurrentCallActionGroupId,
+        currentCallFooterId: Ids.CurrentCallFooterId,
+        remoteVideoTileId: Ids.RemoteVideoTileId,
+        selfVideoTileId: Ids.SelfVideoTileId,
+        videoTileGroupId: Ids.VideoTileGroupId
     },
     hideMicButton: false,
     hideVideoButton: false,
@@ -22,32 +23,32 @@ export const defaultCurrentCallControlProps: ICurrentCallControlProps = {
     leftGroup: { gap: 1, children: [] },
     rightGroup: { gap: 1, children: [] },
     endCallButtonProps: {
-        id: "callRejectButton",
-        type: "icon",
-        ariaLabel: "End Call",
-        iconName: "DeclineCall",
+        id: Ids.EndCallButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.EndCall,
+        iconName: IconNames.DeclineCall,
         iconSize: 18
     },
     micButtonProps: {
-        id: "toggleAudio",
-        type: "icon",
-        ariaLabel: "Mute",
-        toggleAriaLabel: "Unmute",
-        iconName: "Microphone",
-        toggleIconName: "MicOff2",
+        id: Ids.MicButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.MicMute,
+        toggleAriaLabel: AriaLabels.MicUnmute,
+        iconName: IconNames.Microphone,
+        toggleIconName: IconNames.MicOff2,
         iconSize: 18
     },
     videoButtonProps: {
-        id: "toggleVideo",
-        type: "icon",
-        ariaLabel: "Turn on camera",
-        toggleAriaLabel: "Turn off camera",
-        iconName: "Video",
-        toggleIconName: "VideoOff",
+        id: Ids.VideoButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.VideoTurnCameraOn,
+        toggleAriaLabel: AriaLabels.VideoTurnCameraOff,
+        iconName: IconNames.Video,
+        toggleIconName: IconNames.VideoOff,
         iconSize: 18
     },
     callTimerProps: {
-        id: "oc-lcw-CurrentCall-timer",
+        id: Ids.CallTimerId,
         showHours: false,
         timerStyles: {
             color: "white",

@@ -1,7 +1,8 @@
+import { AriaLabels, ButtonTypes, IconNames, Ids } from "../../../../common/Constants";
 import { IFooterControlProps } from "../../interfaces/IFooterControlProps";
 
 export const defaultFooterControlProps: IFooterControlProps = {
-    id: "lcw-components-footer",
+    id: Ids.DefaultFooterId,
     hideDownloadTranscriptButton: false,
     hideEmailTranscriptButton: false,
     hideAudioNotificationButton: false,
@@ -12,23 +13,23 @@ export const defaultFooterControlProps: IFooterControlProps = {
     leftGroup: { children: [] },
     rightGroup: { children: [] },
     downloadTranscriptButtonProps: {
-        id: "oc-lcw-footer-downloadtranscript-button",
-        type: "icon",
-        iconName: "Download",
-        ariaLabel: "Download chat transcript",
+        id: Ids.DownloadTranscriptButtonId,
+        type: ButtonTypes.Icon,
+        iconName: IconNames.Download,
+        ariaLabel: AriaLabels.DownloadChatTranscript,
     },
     emailTranscriptButtonProps: {
-        id: "oc-lcw-footer-emailtranscript-button",
-        type: "icon",
-        iconName: "Mail",
-        ariaLabel: "Email Transcript",
+        id: Ids.EmailTranscriptButtonId,
+        type: ButtonTypes.Icon,
+        iconName: IconNames.Mail,
+        ariaLabel: AriaLabels.EmailTranscript,
     },
     audioNotificationButtonProps: {
-        id: "oc-lcw-footer-audionotification-button",
-        type: "icon",
-        ariaLabel: "Turn sound off",
-        toggleAriaLabel: "Turn sound on",
-        iconName: "Volume3",
-        toggleIconName: "Volume0"
+        id: Ids.AudioNotificationButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.TurnSoundOff,
+        toggleAriaLabel: AriaLabels.TurnSoundOn,
+        iconName: IconNames.Volume3,
+        toggleIconName: IconNames.Volume0
     }
 };

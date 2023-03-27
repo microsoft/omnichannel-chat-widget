@@ -1,13 +1,14 @@
+import { AriaLabels, Ids, Texts } from "../../../../common/Constants";
 import { IChatButtonControlProps } from "../../interfaces/IChatButtonControlProps";
 
 export const defaultChatButtonControlProps: IChatButtonControlProps = {
-    id: "lcw-components-chat-button",
+    id: Ids.DefaultChatButtonId,
     dir: "ltr",
     role: "button",
-    ariaLabel: "Let's chat We are online",
+    ariaLabel: AriaLabels.LetsChatWeAreOnline,
     unreadMessageCount: "0",
-    titleText: "Let's Chat!",
-    subtitleText: "We're online.",
+    titleText: Texts.ChatButtonTitle,
+    subtitleText: Texts.ChatButtonSubtitle,
     onClick: function () {
         console.log("initiate chat"); 
     },
@@ -17,7 +18,7 @@ export const defaultChatButtonControlProps: IChatButtonControlProps = {
     hideChatSubtitle: false,
     hideChatTitle: false,
     hideNotificationBubble: true,
-    unreadMessageString: "new messages",
-    largeUnreadMessageString: "99+",
-    ariaLabelUnreadMessageString: "you have new messages"
+    unreadMessageString: Texts.ChatButtonUnreadMessageString,
+    largeUnreadMessageString: Texts.ChatButtonLargeUnreadMessageString,
+    ariaLabelUnreadMessageString: AriaLabels.UnreadMessageString
 };

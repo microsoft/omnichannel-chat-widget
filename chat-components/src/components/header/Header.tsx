@@ -8,6 +8,7 @@ import MinimizeButton from "./subcomponents/MinimizeButton";
 import { decodeComponentString } from "../../common/decodeComponentString";
 import { defaultHeaderProps } from "./common/defaultProps/defaultHeaderProps";
 import { processCustomComponents } from "../../common/utils";
+import { Ids } from "../../common/Constants";
 
 initializeIcons();
 
@@ -62,7 +63,7 @@ function Header(props: IHeaderProps) {
         <Stack id={headerId} horizontal className={props.className} horizontalAlign="space-between"
             styles={stackStyles}
             dir={props.controlProps?.dir ?? "ltr"} role="region">
-            <Stack horizontal id="headerLeftGroup" verticalAlign="center">
+            <Stack horizontal id={Ids.HeaderLeftGroupId} verticalAlign="center">
                 <Stack horizontal verticalAlign="center">
                     {processCustomComponents(props.controlProps?.leftGroup?.children)}
                     {!props.controlProps?.hideIcon && (decodeComponentString(props.componentOverrides?.headerIcon) ||
@@ -83,14 +84,14 @@ function Header(props: IHeaderProps) {
                     }
                 </Stack>
             </Stack>
-            <Stack horizontal id="headerMiddleGroup">
+            <Stack horizontal id={Ids.HeaderMiddleGroupId}>
                 <Stack horizontal verticalAlign="start">
                     <Stack.Item align="start">
                         {processCustomComponents(props.controlProps?.middleGroup?.children)}
                     </Stack.Item>
                 </Stack>
             </Stack>
-            <Stack horizontal id="headerRightGroup" verticalAlign="start">
+            <Stack horizontal id={Ids.HeaderRightGroupId} verticalAlign="start">
                 <Stack horizontal verticalAlign="start">
                     <Stack.Item align="start">
                         {processCustomComponents(props.controlProps?.rightGroup?.children)}
