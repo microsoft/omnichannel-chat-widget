@@ -17,18 +17,21 @@ const createConversationEndMiddleware = (conversationEndCallback: any) => ({ dis
 
         const activity = action.payload.activity;
 
-        if (activity.from?.role === DirectLineSenderRole.Bot &&
-            activity.channelId === "ACS_CHANNEL") { // ACS
-            if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
-                && (activity.channelData?.tags?.includes(Constants.agentEndConversationMessageTag)
-                    || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
-                conversationEndCallback();
+        if (activity.channelId === "ACS_CHANNEL") {
+            if (activity.from?.role === DirectLineSenderRole.Bot) {
+                if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
+                    && (activity.channelData?.tags?.includes(Constants.agentEndConversationMessageTag)
+                        || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
+                    console.log(`activity0:${JSON.stringify(activity)}`);
+                    conversationEndCallback();
+                }
             }
         } else if (activity.from?.role === DirectLineSenderRole.Channel &&
             activity.channelData?.type === MessageTypes.Thread &&
             activity.channelData?.properties) { // IC3
             if (activity.channelData?.properties?.isdeleted === Constants.truePascal ||
                 !activity.channelData?.properties?.containsExternalEntitiesListeningAll) {
+                console.log(`activity1:${JSON.stringify(activity)}`);
                 conversationEndCallback();
             }
         }

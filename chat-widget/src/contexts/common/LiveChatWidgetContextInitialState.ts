@@ -14,9 +14,12 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
     const initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType).getData(widgetCacheId);
 
     if (!isNullOrUndefined(initialState)) {
-        return JSON.parse(initialState);
+        console.log("setting initial values from cache");
+        const initialStateFromCache: ILiveChatWidgetContext = JSON.parse(initialState);
+        return initialStateFromCache;
     }
 
+    console.log("setting initial values");
     const LiveChatWidgetContextInitialState: ILiveChatWidgetContext = {
         domainStates: {
             liveChatConfig: props.chatConfig,
@@ -56,7 +59,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             conversationEndedBy: undefined,
             postChatWorkflowInProgress: false,
             shouldUseBotSurvey: false,
-            chatDisconnectEventReceived: false
+            chatDisconnectEventReceived: false,
+            selectedSurveyMode: null
         },
         uiStates: {
             showConfirmationPane: false,

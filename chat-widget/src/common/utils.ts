@@ -282,7 +282,10 @@ export const getDomain = (hostValue: any): string => {
     return AriaTelemetryConstants.Public;
 };
 
-export const getWidgetCacheId = (orgId: string, widgetId: string, widgetInstanceId: string): string => {
+export const getWidgetCacheId = (orgId: string, widgetId: string, widgetInstanceId: string, popoutChat = false): string => {
+    if (popoutChat) {
+        widgetInstanceId = widgetInstanceId + Constants.PopoutCacheSuffix;
+    }
     const widgetCacheId = `${widgetInstanceId}_${orgId}_${widgetId}`;
     return Md5.init(widgetCacheId);
 };
@@ -336,7 +339,7 @@ export const getBroadcastChannelName = (widgetId: string, widgetInstanceId: stri
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getWidgetCacheIdfromProps = (props: any, popoutChats = false): string => {
+export const getWidgetCacheIdfromProps = (props: any, popoutChat = false): string => {
     const orgId = props?.chatSDK?.omnichannelConfig?.orgId;
     const widgetId = props?.chatSDK?.omnichannelConfig?.widgetId;
     let widgetInstanceId = props?.controlProps?.widgetInstanceId ?? "";
@@ -345,10 +348,10 @@ export const getWidgetCacheIdfromProps = (props: any, popoutChats = false): stri
         widgetInstanceId = widgetInstanceId + Constants.SessionCacheSuffix;
     }
 
-    if (props?.controlProps.hideStartChatButton || popoutChats === true) {
-        widgetInstanceId = widgetInstanceId + Constants.PopoutCacheSuffix;
+    if (props?.controlProps?.hideStartChatButton || popoutChat === true) {
+        popoutChat = true;
     }
-    const widgetCacheId = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
+    const widgetCacheId = getWidgetCacheId(orgId, widgetId, widgetInstanceId, popoutChat);
     return widgetCacheId;
 };
 

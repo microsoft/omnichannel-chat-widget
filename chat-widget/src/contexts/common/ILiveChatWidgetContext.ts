@@ -50,6 +50,7 @@ export interface ILiveChatWidgetContext {
         postChatWorkflowInProgress: boolean; // true when customer ends conversation and postChat workflow has initiated
         shouldUseBotSurvey: boolean; // true when bot configured survey needs to be used
         chatDisconnectEventReceived: boolean; // true when customer disconnect event is received
+        selectedSurveyMode: string | null; // selected survey mode
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

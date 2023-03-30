@@ -30,7 +30,7 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
 
     if (hasReconnectId(reconnectChatContext)) {
         //Redirect if enabled
-        if (reconnectChatContext.redirectURL && !isNullOrEmptyString(reconnectChatContext.redirectURL)) {
+        if (reconnectChatContext && reconnectChatContext.redirectURL && !isNullOrEmptyString(reconnectChatContext.redirectURL)) {
             redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow);
             return;
         }

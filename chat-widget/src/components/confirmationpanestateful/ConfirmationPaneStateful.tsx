@@ -13,6 +13,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ConversationEndEntity } from "../../contexts/common/ConversationEndEntity";
+import { prepareEndChat } from "../livechatwidget/common/endChat";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
@@ -23,7 +24,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
-
+    const { prepareEndChat } = props;
     const controlProps: IConfirmationPaneControlProps = {
         id: "oc-lcw-confirmation-pane",
         dir: state.domainStates.globalDir,
@@ -35,6 +36,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             setTabIndices(elements, initialTabIndexMap, true);
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
+            await prepareEndChat(adapter, state);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedByCustomer,
                 Description: "Conversation is ended by customer."

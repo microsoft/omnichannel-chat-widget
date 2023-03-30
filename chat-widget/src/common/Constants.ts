@@ -241,6 +241,11 @@ export enum StorageType {
     "sessionStorage"
 }
 
+export enum ParticipantType {
+    User = "User",
+    Bot = "Bot"
+}
+
 export class TranscriptConstants {
     public static readonly ChatTranscriptsBodyColor = "#F5F5F5";
     public static readonly TranscriptMessageEmojiMessageType = "http://schema.skype.com/emoji";

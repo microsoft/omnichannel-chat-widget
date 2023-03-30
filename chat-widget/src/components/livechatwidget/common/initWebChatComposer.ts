@@ -32,9 +32,12 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
+import { prepareEndChat } from "./endChat";
+import { disposeLoggers } from "../../../common/telemetry/TelemetryManager";
+import { getPostChatContext } from "./renderSurveyHelpers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, setWebChatStyles: any) => {
+export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, adapter: any, setWebChatStyles: any, uuid: string) => {
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
         ...props.webChatContainerProps?.localizedTexts
@@ -45,12 +48,17 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
     const markdown = createMarkdown((props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting)!, disableNewLineMarkdownSupport!);
     // Initialize Web Chat's redux store
     let webChatStore = WebChatStoreLoader.store;
+
     if (!webChatStore) {
+
         const conversationEndCallback = async () => {
+            console.log("conversationEndCallback");
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT_EVENT_RECEIVED, payload: true });
+            await getPostChatContext(chatSDK, state, dispatch);
+            
+            await prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uuid);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedThreadEventReceived,
                 Description: "Conversation end by agent side or by timeout event received."

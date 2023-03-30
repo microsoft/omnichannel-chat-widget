@@ -8,6 +8,7 @@ import { ILiveChatWidgetLocalizedTexts } from "./common/ILiveChatWidgetLocalized
 import { IRenderingMiddlewareProps } from "../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
 import { ConversationEndEntity } from "./common/ConversationEndEntity";
+import { PostChatSurveyMode } from "../components/postchatsurveypanestateful/enums/PostChatSurveyMode";
 
 export const createReducer = () => {
     const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): ILiveChatWidgetContext => {
@@ -370,6 +371,14 @@ export const createReducer = () => {
                     appStates: {
                         ...state.appStates,
                         chatDisconnectEventReceived: action.payload as boolean
+                    }
+                };
+            case LiveChatWidgetActionType.SET_SURVEY_MODE:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        selectedSurveyMode: action.payload as PostChatSurveyMode
                     }
                 };
 
