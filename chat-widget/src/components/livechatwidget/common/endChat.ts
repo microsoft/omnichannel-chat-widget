@@ -14,8 +14,6 @@ import { getWidgetEndChatEventName } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { checkPostChatEnabled, initiatePostChat, setWidgetStateToInactive, getPostChatContext } from "./renderSurveyHelpers";
 import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
-import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
-import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { ParticipantType } from "../../../common/Constants";
 
 let currentUUID = "";
@@ -58,13 +56,27 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         if (isPostChatEnabled) {
             await initiatePostChat(props, conversationDetails, postchatContext, state, dispatch);
         }
+
+        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.EndChatSucceeded,
+            Description: "End chat succeeded."
+        });
     }
     catch (error) {
-        throw new Error(`prepareEndChatError:${JSON.stringify(error)}`,);
+        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.EndChatFailed,
+            ExceptionDetails: {
+                exception: error
+            }
+        });
     }
     finally {
         //Chat token clean up
         await chatTokenCleanUp(dispatch, state);
+        //Close chat widget for any failure in embedded to allow to start new chat
+        if (props.controlProps?.hideStartChatButton === false) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+        }
     }
 };
 

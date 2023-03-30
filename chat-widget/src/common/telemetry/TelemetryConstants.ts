@@ -95,6 +95,8 @@ export enum TelemetryEvent {
     ClientDataStoreProviderFailed = "ClientDataStoreProviderFailed",
     InMemoryDataStoreFailed = "InMemoryDataStoreFailed",
     ChatVisibilityChanged = "ChatVisibilityChanged",
+    EndChatSucceeded = "EndChatSucceeded",
+    EndChatFailed = "EndChatFailed",
 
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClicked = "LCWChatButtonClicked",
