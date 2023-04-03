@@ -103,7 +103,7 @@ const getTypingIndicatorMessage = (activeTyping: any[], localizedTexts: ILiveCha
         return "";
     } else if (activeTyping.length === 1) {
         const message = localizedTexts.MIDDLEWARE_TYPING_INDICATOR_ONE;
-        return message ? (message.includes("{0}") ? message.replace("{0}", activeTyping[0].name) : message) : "";
+        return message ? (message.includes("{user}") ? message.replace("{user}", activeTyping[0].name) : message) : "";
     } else if (activeTyping.length === 2) {
         const firstMember = activeTyping[0].name;
         const lastMember = activeTyping[1].name;
@@ -111,15 +111,15 @@ const getTypingIndicatorMessage = (activeTyping: any[], localizedTexts: ILiveCha
         if (!message) {
             return "";
         }
-        if (message.includes("{0}")) {
-            message = message.replace("{0}", firstMember);
+        if (message.includes("{firstUser}")) {
+            message = message.replace("{firstUser}", firstMember);
         }
-        if (message.includes("{1}")) {
-            message = message.replace("{1}", lastMember);
+        if (message.includes("{lastUser}")) {
+            message = message.replace("{lastUser}", lastMember);
         }
         return message;
     } else {
         const message = localizedTexts.MIDDLEWARE_TYPING_INDICATOR_MULTIPLE;
-        return message ? (message.includes("{0}") ? message.replace("{0}", activeTyping.length.toString()) : message) : "";
+        return message ? (message.includes("{usersCount}") ? message.replace("{usersCount}", activeTyping.length.toString()) : message) : "";
     }
 };

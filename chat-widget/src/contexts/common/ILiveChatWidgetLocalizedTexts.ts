@@ -7,44 +7,54 @@ export interface ILiveChatWidgetLocalizedTexts {
 
     /*
      * Error message shown when the file uploaded exceeds size limit and has no extension.
-     * Variable replacement (This is optional. If {0} is not given, the whole string will be used and variable replacement will be skipped. Same below.):
-     * {0} - File size max limit
-     * e.g. "File exceeds the allowed limit of {0} MB and please upload the file with an appropriate file extension."
+     * Variable replacement (This is optional. If {fileName} or {fileExtension} or {fileName} is not given, the whole string will be used and variable replacement will be skipped. Same below.):
+     * {sizeLimit} - File size max limit
+     * {fileExtension} - The invalid extension
+     * {fileName} - File name
+     * e.g. "File exceeds the allowed limit of {sizeLimit} MB and please upload the file with an appropriate file extension."
      */
     MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR?: string;
 
     /*
      * Error message shown when the file uploaded exceeds size limit and has an invalid extension.
      * Variable replacement (optional):
-     * {0} - File size max limit
-     * {1} - The invalid extension
-     * e.g. "File exceeds the allowed limit of {0} MB and {1} files are not supported."
+     * {sizeLimit} - File size max limit
+     * {fileExtension} - The invalid extension
+     * {fileName} - File name
+     * e.g. "File {fileName} exceeds the allowed limit of {sizeLimit} MB and {fileExtension} files are not supported."
      */
     MIDDLEWARE_BANNER_FILE_SIZE_EXTENSION_ERROR?: string;
 
     /*
      * Error message shown when the file uploaded has no extension.
+     * Variable replacement (optional):
+     * {fileName} - File name
+     * e.g. "File upload error. Please upload the file {fileName} with an appropriate file extension."
      */
     MIDDLEWARE_BANNER_FILE_WITHOUT_EXTENSION?: string;
 
     /*
      * Error message shown when the file uploaded has an invalid extension.
      * Variable replacement (optional):
-     * {0} - The invalid extension
-     * e.g. "{0} files are not supported."
+     * {fileExtension} - The invalid extension
+     * e.g. "{fileExtension} files are not supported."
      */
     MIDDLEWARE_BANNER_FILE_EXTENSION_ERROR?: string;
 
     /*
      * Error message shown when the file uploaded exceeds size limit.
      * Variable replacement (optional):
-     * {0} - File size max limit
-     * e.g. "File exceeds the allowed limit of {0} MB."
+     * {fileName} - File name
+     * {sizeLimit} - File size max limit
+     * e.g. "File {fileName} exceeds the allowed limit of {sizeLimit} MB."
      */
     MIDDLEWARE_BANNER_FILE_SIZE_ERROR?: string;
 
     /*
      * Error message shown when the file uploaded is empty.
+     * Variable replacement (optional):
+     * {fileName} - File name
+     * e.g. "This file {fileName} can't be attached because it's empty. Please try again with a different file."
      */
     MIDDLEWARE_BANNER_FILE_IS_EMPTY_ERROR?: string;
 
@@ -73,25 +83,25 @@ export interface ILiveChatWidgetLocalizedTexts {
     /*
      * Typing indicator message when there's one person actively typing.
      * Variable replacement (optional):
-     * {0} - Actively typing participant name
-     * e.g. "{0} is typing ..."
+     * {user} - Actively typing participant name
+     * e.g. "{user} is typing ..."
      */
     MIDDLEWARE_TYPING_INDICATOR_ONE?: string;
 
     /*
      * Typing indicator message when there are two people actively typing.
      * Variable replacement (optional):
-     * {0} - Actively typing participant 1 name
-     * {1} - Actively typing participant 2 name
-     * e.g. "{0} and {1} are typing ..."
+     * {firstUser} - Actively typing participant 1 name
+     * {lastUser} - Actively typing participant 2 name
+     * e.g. "{firstUser} and {lastUser} are typing ..."
      */
     MIDDLEWARE_TYPING_INDICATOR_TWO?: string;
 
     /*
      * Typing indicator message when there are more than two people actively typing.
      * Variable replacement (optional):
-     * {0} - Number of actively typing participants
-     * e.g. "{0} agents are typing ..."
+     * {usersCount} - Number of actively typing participants
+     * e.g. "{usersCount} agents are typing ..."
      */
     MIDDLEWARE_TYPING_INDICATOR_MULTIPLE?: string;
 
@@ -118,8 +128,8 @@ export interface ILiveChatWidgetLocalizedTexts {
     /*
      * The alert text when a required field in the pre-chat survey is not filled.
      * Variable replacement (optional):
-     * {0} - The required field name that's missing
-     * e.g. "{0} field is required"
+     * {fieldName} - The required field name that's missing
+     * e.g. "{fieldName} field is required"
      */
     PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE?: string;
 

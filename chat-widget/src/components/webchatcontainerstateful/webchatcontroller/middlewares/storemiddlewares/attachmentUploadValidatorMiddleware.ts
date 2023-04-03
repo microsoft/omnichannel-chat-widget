@@ -106,7 +106,7 @@ const buildErrorMessage = (fileName: string, supportedFileExtension: boolean, su
             ExceptionDetails: { ErrorDetails: "File provided is empty" }
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_IS_EMPTY_ERROR || "";
-        if (errorMessage?.includes("{2}")) errorMessage = errorMessage.replace("{2}", textEllipsis(fileName));
+        if (errorMessage?.includes("{fileName}")) errorMessage = errorMessage.replace("{fileName}", textEllipsis(fileName));
     } else {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
@@ -127,7 +127,7 @@ const getFileSizeAndFileExtensionErrorMessage = (fileName: string, maxUploadFile
     } else {
         const fileExtension = fileName.substring(index);
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_SIZE_EXTENSION_ERROR;
-        if (errorMessage?.includes("{1}")) errorMessage = errorMessage.replace("{1}", fileExtension);
+        if (errorMessage?.includes("{fileExtension}")) errorMessage = errorMessage.replace("{fileExtension}", fileExtension);
         exceptionDetails = `File exceeds the allowed limit of ${maxUploadFileSize} MB and ${fileExtension} files are not supported`;
     }
     TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -135,8 +135,8 @@ const getFileSizeAndFileExtensionErrorMessage = (fileName: string, maxUploadFile
         Description: "Attachment validation failed",
         ExceptionDetails: { ErrorDetails: `${exceptionDetails} Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize} AMS file size limit=${AMSConstants.maxSupportedFileSize}` }
     });
-    if (errorMessage?.includes("{0}")) errorMessage = errorMessage.replace("{0}", maxUploadFileSize);
-    return errorMessage ? (errorMessage.includes("{2}") ? errorMessage.replace("{2}", textEllipsis(fileName)) : errorMessage) : "";
+    if (errorMessage?.includes("{sizeLimit}")) errorMessage = errorMessage.replace("{sizeLimit}", maxUploadFileSize);
+    return errorMessage ? (errorMessage.includes("{fileName}") ? errorMessage.replace("{fileName}", textEllipsis(fileName)) : errorMessage) : "";
 };
 
 const getFileExtensionErrorMessage = (fileName: string, localizedTexts: ILiveChatWidgetLocalizedTexts): string => {
@@ -149,7 +149,7 @@ const getFileExtensionErrorMessage = (fileName: string, localizedTexts: ILiveCha
             ExceptionDetails: { ErrorDetails: "File provided without file extension" }
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_WITHOUT_EXTENSION;
-        return errorMessage ? (errorMessage.includes("{2}") ? errorMessage.replace("{2}", textEllipsis(fileName)) : errorMessage) : "";
+        return errorMessage ? (errorMessage.includes("{fileName}") ? errorMessage.replace("{fileName}", textEllipsis(fileName)) : errorMessage) : "";
     } else {
         const fileExtension = fileName.substring(index);
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -158,8 +158,7 @@ const getFileExtensionErrorMessage = (fileName: string, localizedTexts: ILiveCha
             ExceptionDetails: { ErrorDetails: `${fileExtension} files extension is not supported.` }
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_EXTENSION_ERROR;
-        if(errorMessage?.includes("{0}")) errorMessage = errorMessage.replace("{0}", fileExtension); //keeping backwards compatibility for this localized string
-        if(errorMessage?.includes("{1}")) errorMessage = errorMessage.replace("{1}", fileExtension);
+        if(errorMessage?.includes("{fileExtension}")) errorMessage = errorMessage.replace("{fileExtension}", fileExtension);
         return errorMessage && errorMessage.length>0 ? errorMessage : "";
     }
 };
@@ -171,8 +170,8 @@ const getFileSizeErrorMessage = (fileName: string, maxUploadFileSize: string, ma
         ExceptionDetails: { ErrorDetails: `File exceeds the allowed limit of ${maxUploadFileSize}MB. Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize} AMS file size limit=${AMSConstants.maxSupportedFileSize}` }
     });
     let errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_SIZE_ERROR;
-    if (errorMessage?.includes("{0}")) errorMessage = errorMessage.replace("{0}", maxUploadFileSize);
-    return errorMessage ? (errorMessage.includes("{2}") ? errorMessage.replace("{2}", textEllipsis(fileName)) : errorMessage) : "";
+    if (errorMessage?.includes("{sizeLimit}")) errorMessage = errorMessage.replace("{sizeLimit}", maxUploadFileSize);
+    return errorMessage ? (errorMessage.includes("{fileName}") ? errorMessage.replace("{fileName}", textEllipsis(fileName)) : errorMessage) : "";
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars

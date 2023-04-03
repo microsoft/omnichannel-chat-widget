@@ -193,7 +193,7 @@ export const parseAdaptiveCardPayload = (payload: string, requiredFieldMissingMe
                         fields.id = parsedId.Id;
                         fields.isRequired = parsedId.IsRequired ?? false;
                         if (fields.isRequired) {
-                            fields.errorMessage = requiredFieldMissingMessage.replace("{0}", parsedId.Name ?? "");
+                            fields.errorMessage = requiredFieldMissingMessage.replace("{fieldName}", parsedId.Name ?? "");
                         }
                     }
                 }
