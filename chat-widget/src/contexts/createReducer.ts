@@ -7,7 +7,7 @@ import { ILiveChatWidgetContext } from "./common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "./common/ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
-import { ConversationEndEntity } from "./common/ConversationEndEntity";
+import { ConversationEndEntity } from "../common/Constants";
 import { PostChatSurveyMode } from "../components/postchatsurveypanestateful/enums/PostChatSurveyMode";
 
 export const createReducer = () => {
@@ -303,7 +303,7 @@ export const createReducer = () => {
                     ...state,
                     appStates: {
                         ...state.appStates,
-                        conversationEndedBy: action.payload as ConversationEndEntity | undefined
+                        conversationEndedBy: action.payload as ConversationEndEntity
                     }
                 };
 

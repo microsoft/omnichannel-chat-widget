@@ -13,8 +13,7 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { getWidgetEndChatEventName } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { checkPostChatEnabled, initiatePostChat, setWidgetStateToInactive, getPostChatContext } from "./renderSurveyHelpers";
-import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
-import { ParticipantType } from "../../../common/Constants";
+import { Constants, ParticipantType, ConversationEndEntity } from "../../../common/Constants";
 
 let currentUUID = "";
 
@@ -27,56 +26,73 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         // If post chat is already rendered
         if (state?.appStates?.conversationState === ConversationState.Postchat) {
             //skipEndChatSDK = true as endChat is already called, just proceed to close chat
+            console.log("Calling endChat position 4:");
             await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
             return;
         }
 
-        //Get the updated post chat context before end chat
+        const conversationDetails = await getConversationDetails(chatSDK);
+
+        // When post chat is not configured
+        if (conversationDetails.canRenderPostChat.toLowerCase() === Constants.false) {
+            // If ended by customer, just close chat
+            console.log("Executing conmversation ended by customer:", state?.appStates?.conversationEndedBy);
+            if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+                console.log("Executing conmversation ended by customer1");
+                console.log("Calling endChat position 5:");
+                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+                return;
+            }
+
+            console.log("Executing conmversation ended by Agent, stay on same page");
+            //If ended by Agent, stay chat in InActive state
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+            console.log("Calling endChat position 6:");
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
+            return;
+        }
+
+        console.log("Executing post chat render scenarios");
+        await getPostChatContext(chatSDK, state, dispatch);
+
+        // Can render post chat scenarios
         const postchatContext: any = state?.domainStates?.postChatContext;
         console.log("postchatContext:endChat:", JSON.stringify(postchatContext));
 
         await handleAuthenticationIfEnabled(props, chatSDK);
 
-        const isPostChatEnabled = (postchatContext && checkPostChatEnabled(props, state, dispatch));
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let conversationDetails: any;
-
-        //Keep conversation details and postchat context before end chat
-        if (isPostChatEnabled) {
-            conversationDetails = await getConversationDetails(chatSDK);
-
-            updateParticipantTypes(dispatch, conversationDetails);
-        }
-
-        //await setWidgetStateToInactive(props, dispatch, setWebChatStyles);
-        //skipEndChatSDK = false, skipCloseChat = true as we still need to render post chat
+        // End chat, but do not close the chat
+        console.log("Calling endChat position 7:");
         await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
 
-        if (isPostChatEnabled) {
+        updateParticipantTypes(dispatch, conversationDetails);
+
+        // If postchat context failed to load, allow to exit chat
+        if (postchatContext) {
             await initiatePostChat(props, conversationDetails, postchatContext, state, dispatch);
         }
 
-        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.EndChatSucceeded,
             Description: "End chat succeeded."
         });
     }
     catch (error) {
+        /*console.log("Error:", JSON.stringify(error));
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.EndChatFailed,
             ExceptionDetails: {
-                exception: error
+                exception: JSON.stringify(error)
             }
         });
+        //Close chat widget for any failure in embedded to allow to show start chat button
+        if (props.controlProps?.hideStartChatButton === false) {
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
+        }*/
     }
     finally {
         //Chat token clean up
         await chatTokenCleanUp(dispatch, state);
-        //Close chat widget for any failure in embedded to allow to start new chat
-        if (props.controlProps?.hideStartChatButton === false) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-        }
     }
 };
 
@@ -112,15 +128,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
 
             WebChatStoreLoader.store = null;
 
-            await closeChatStateCleanUp(dispatch);
-
-            if (postMessageToOtherTab) {
-                const endChatEventName = await getEndChatEventName(chatSDK, props);
-                BroadcastService.postMessage({
-                    eventName: endChatEventName,
-                    payload: currentUUID
-                });
-            }
+            closeChatStateCleanUp(dispatch);
 
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CloseChatCall,
@@ -138,6 +146,15 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             //Always allow to close the chat for embedded mode irrespective of end chat errors
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
         }
+    }
+
+    if (postMessageToOtherTab) {
+        console.log("send message to other tabs:", currentUUID);
+        const endChatEventName = await getEndChatEventName(chatSDK, props);
+        BroadcastService.postMessage({
+            eventName: endChatEventName,
+            payload: currentUUID
+        });
     }
 };
 
@@ -158,6 +175,7 @@ const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) 
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.NotSet });
 
     dispatch({
         type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {

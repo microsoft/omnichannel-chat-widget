@@ -246,6 +246,13 @@ export enum ParticipantType {
     Bot = "Bot"
 }
 
+export enum ConversationEndEntity {
+    Customer = "Customer",
+    Agent = "Agent", // Currently covers both for human agent and bot
+    Bot = "Bot",
+    NotSet = "NotSet"
+}
+
 export class TranscriptConstants {
     public static readonly ChatTranscriptsBodyColor = "#F5F5F5";
     public static readonly TranscriptMessageEmojiMessageType = "http://schema.skype.com/emoji";

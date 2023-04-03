@@ -14,7 +14,7 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
 import { IPostChatSurveyPaneStatefulProps } from "./interfaces/IPostChatSurveyPaneStatefulProps";
 import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
-import { ConversationEndEntity } from "../../contexts/common/ConversationEndEntity";
+import { ConversationEndEntity } from "../../common/Constants";
 
 const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, showMultiLingual = false) => {
     const surveyLink = `${surveyInviteLink}

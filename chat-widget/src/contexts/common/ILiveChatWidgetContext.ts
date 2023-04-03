@@ -3,7 +3,7 @@ import { ConversationState } from "./ConversationState";
 import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
-import { ConversationEndEntity } from "./ConversationEndEntity";
+import { ConversationEndEntity } from "../../common/Constants";
 
 export interface ILiveChatWidgetContext {
     domainStates: {
@@ -46,7 +46,7 @@ export interface ILiveChatWidgetContext {
         e2vvEnabled: boolean; // true if voice/video calling is enabled and callingSDK instance created
         unreadMessageCount: number; // keep count of unread messages
         conversationEndedByAgentEventReceived: boolean; // true when agent end conversation or timeout event is received
-        conversationEndedBy: ConversationEndEntity | undefined; // The entity that ends conversation
+        conversationEndedBy: ConversationEndEntity; // The entity that ends conversation
         postChatWorkflowInProgress: boolean; // true when customer ends conversation and postChat workflow has initiated
         shouldUseBotSurvey: boolean; // true when bot configured survey needs to be used
         chatDisconnectEventReceived: boolean; // true when customer disconnect event is received

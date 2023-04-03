@@ -4,7 +4,7 @@ import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
-import { Constants, StorageType } from "../../common/Constants";
+import { Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
@@ -14,12 +14,10 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
     const initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType).getData(widgetCacheId);
 
     if (!isNullOrUndefined(initialState)) {
-        console.log("setting initial values from cache");
         const initialStateFromCache: ILiveChatWidgetContext = JSON.parse(initialState);
         return initialStateFromCache;
     }
 
-    console.log("setting initial values");
     const LiveChatWidgetContextInitialState: ILiveChatWidgetContext = {
         domainStates: {
             liveChatConfig: props.chatConfig,
@@ -56,7 +54,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             e2vvEnabled: false,
             unreadMessageCount: 0,
             conversationEndedByAgentEventReceived: false,
-            conversationEndedBy: undefined,
+            conversationEndedBy: ConversationEndEntity.NotSet,
             postChatWorkflowInProgress: false,
             shouldUseBotSurvey: false,
             chatDisconnectEventReceived: false,

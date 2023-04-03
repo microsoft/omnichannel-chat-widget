@@ -43,7 +43,7 @@ const setSurveyMode = async (props: ILiveChatWidgetProps, participantType: strin
 
 const renderSurvey = async (state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     if (postChatSurveyMode === PostChatSurveyMode.Link) {
-        // TODO: There should be nothing to do in this case
+        setWidgetStateToInactive(dispatch);
         return;
     }
     if (postChatSurveyMode === PostChatSurveyMode.Embed) {
@@ -71,7 +71,7 @@ const embedModePostChatWorkflow = async (state: ILiveChatWidgetContext, dispatch
                 exception: error
             }
         });
-        throw new Error(error);
+        //throw new Error(error);
     }
 };
 
@@ -122,14 +122,8 @@ const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, d
 
 // Function for link mode postchat workflow which is essentially same for both customer and agent
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setWidgetStateToInactive = async (props: any, setWebChatStyles: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const setWidgetStateToInactive = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-
-    // Disable SendBox
-    if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setWebChatStyles((styles: any) => { return { ...styles, hideSendBox: true }; });
-    }
 };
 
 export { initiatePostChat, setWidgetStateToInactive, getPostChatContext, isPostChatEnabled as checkPostChatEnabled };

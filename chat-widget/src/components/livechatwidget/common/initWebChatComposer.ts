@@ -35,6 +35,7 @@ import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/web
 import { prepareEndChat } from "./endChat";
 import { disposeLoggers } from "../../../common/telemetry/TelemetryManager";
 import { getPostChatContext } from "./renderSurveyHelpers";
+import { ConversationEndEntity } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, adapter: any, setWebChatStyles: any, uuid: string) => {
@@ -56,9 +57,11 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            await getPostChatContext(chatSDK, state, dispatch);
+            //await getPostChatContext(chatSDK, state, dispatch);
             
-            await prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uuid);
+            //await prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uuid);
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
+
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedThreadEventReceived,
                 Description: "Conversation end by agent side or by timeout event received."

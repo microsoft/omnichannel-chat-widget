@@ -291,26 +291,26 @@ const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
-    const requestId = state.domainStates?.liveChatContext?.requestId;
+    const requestIdFromCache = state.domainStates?.liveChatContext?.requestId;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
 
-    //Preserve old requestId
-    const oldRequestId = chatSDK.requestId ?? "";
-    dispatch({ type: LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID, payload: oldRequestId });
+    //Preserve current requestId
+    const currentRequestId = chatSDK.requestId ?? "";
+    dispatch({ type: LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID, payload: currentRequestId });
 
     try {
-        chatSDK.requestId = requestId;
+        chatSDK.requestId = requestIdFromCache;
         conversationDetails = await chatSDK.getConversationDetails();
 
         if (Object.keys(conversationDetails).length === 0) {
-            chatSDK.requestId = oldRequestId;
+            chatSDK.requestId = currentRequestId;
             return false;
         }
 
         if (conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
-            chatSDK.requestId = oldRequestId;
+            chatSDK.requestId = currentRequestId;
             return false;
         }
 
@@ -323,7 +323,7 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
                 exception: `Conversation is not valid: ${erorr}`
             }
         });
-        chatSDK.requestId = oldRequestId;
+        chatSDK.requestId = currentRequestId;
         return false;
     }
 };

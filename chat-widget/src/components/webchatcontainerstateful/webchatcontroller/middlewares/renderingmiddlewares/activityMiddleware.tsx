@@ -18,6 +18,7 @@ import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
 import { escapeHtml } from "../../../../../common/utils";
+import { act } from "react-dom/test-utils";
 
 const loggedSystemMessages = new Array<string>();
 
@@ -75,6 +76,7 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
     if (card.activity) {
         if (card.activity.from?.role === DirectLineSenderRole.Channel) {
             if (card.activity.channelData?.type === MessageTypes.Thread) {
+                console.log("activity:", JSON.stringify(card.activity));
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.IC3ThreadUpdateEventReceived,
                     Description: "IC3 ThreadUpdateEvent Received"
@@ -86,7 +88,7 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
         if (isTagIncluded(card, Constants.hiddenTag)) {
             return () => false;
         }
-        
+
         if (isTagIncluded(card, Constants.systemMessageTag)) {
             return handleSystemMessage(next, args, card, systemMessageStyleProps);
         } else if (card.activity.text

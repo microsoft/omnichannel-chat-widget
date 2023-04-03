@@ -1,3 +1,5 @@
+import { Dispatch } from "react";
+import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { IConfirmationPaneStatefulProps } from "./IConfirmationPaneStatefulProps";
 
@@ -13,5 +15,5 @@ export interface IConfirmationPaneStatefulParams extends IConfirmationPaneStatef
     * @param state : The chat state where the conversation is currently in
     */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    prepareEndChat: (adapter: any, state: ILiveChatWidgetContext) => Promise<void>;
+    prepareEndChat: () => Promise<void>;
 }

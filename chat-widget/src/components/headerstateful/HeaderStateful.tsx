@@ -13,7 +13,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultOutOfOfficeHeaderStyleProps } from "./common/styleProps/defaultOutOfOfficeHeaderStyleProps";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { ConversationEndEntity } from "../../contexts/common/ConversationEndEntity";
+import { ConversationEndEntity } from "../../common/Constants";
 
 export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
@@ -25,8 +25,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
-    const conversationState = useRef(state.appStates.conversationState);
-    const conversationEndedBy = useRef(state.appStates.conversationEndedBy);
+
     const controlProps: IHeaderControlProps = {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
@@ -36,12 +35,14 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         },
         onCloseClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
-            if (conversationState.current === ConversationState.Active || conversationEndedBy.current === ConversationEndEntity.Agent) {
+
+            if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 const postMessageToOtherTabs = true;
+                console.log("Calling endChat position 3:");
                 await endChat(adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTabs);
             }
             const closeButtonId = props.headerProps?.controlProps?.closeButtonProps?.id ?? `${controlProps.id}-close-button`;
@@ -72,11 +73,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         if (state.appStates.outsideOperatingHours) {
             setOutOfOperatingHours(true);
         }
-        if (state.appStates.conversationState) {
-            conversationState.current = state.appStates.conversationState;
-        }
-        conversationEndedBy.current = state.appStates.conversationEndedBy;
-    }, [state.appStates]);
+    }, []);
 
 
     return (

@@ -6,13 +6,6 @@ import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/i
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
-import { Constants, ParticipantType } from "../../../common/Constants";
-import { endChat } from "./endChat";
-import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
-import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
-import { addDelayInMs } from "../../../common/utils";
-import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
 
 export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean, ) => {
     try {
