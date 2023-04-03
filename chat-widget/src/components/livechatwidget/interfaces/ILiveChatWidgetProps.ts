@@ -59,5 +59,7 @@ export interface ILiveChatWidgetProps {
     liveChatContextFromCache?: ILiveChatWidgetContext;
     contextDataStore?: IContextDataStore;
     getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    initialCustomContext?: any;
     scrollBarProps?: IScrollBarProps
 }

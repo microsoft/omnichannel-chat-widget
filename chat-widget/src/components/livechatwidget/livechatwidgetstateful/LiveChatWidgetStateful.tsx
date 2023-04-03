@@ -70,7 +70,6 @@ import { ConversationEndEntity } from "../../../contexts/common/ConversationEndE
 import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
 import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
 import { handleChatDisconnect } from "../common/chatDisconnectHelper";
-import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWorkItemDetails";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -185,6 +184,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 .then((sdkCreated: boolean) => {
                     sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
                 });
+        }
+
+        if(props.initialCustomContext) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: props.initialCustomContext });
         }
 
         // Initialize global dir
