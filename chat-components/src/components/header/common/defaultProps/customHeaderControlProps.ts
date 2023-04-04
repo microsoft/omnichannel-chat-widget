@@ -20,7 +20,8 @@ export const customHeaderControlProps: IHeaderControlProps = {
         imageIconProps: {
             src: MinimizeChatButtonIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
-        }
+        },
+        hideButtonTitle: true
 
     },
     closeButtonProps: {
@@ -29,7 +30,8 @@ export const customHeaderControlProps: IHeaderControlProps = {
         imageIconProps: {
             src: CloseChatButtonIconBase64,
             styles: { image: { height: "16px", width: "16px" } }
-        }
+        },
+        hideButtonTitle: true
     },
     headerIconProps: {
         id: Ids.HeaderIconId,
