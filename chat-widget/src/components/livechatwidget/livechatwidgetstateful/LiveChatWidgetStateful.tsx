@@ -186,7 +186,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
         }
 
-        if(props.initialCustomContext) {
+        if (props.initialCustomContext) {
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: props.initialCustomContext });
         }
 
