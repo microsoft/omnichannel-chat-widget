@@ -52,11 +52,10 @@ function Footer(props: IFooterProps) {
         props.styleProps?.footerItemFocusStyleProps);
 
     return (
-
         <Stack id={footerId} horizontal className={props.className} horizontalAlign="space-between"
-            styles={stackStyles}
+            verticalAlign="center" styles={stackStyles}
             dir={props.controlProps?.dir ?? "ltr"} role="region">
-            <Stack horizontal id={Ids.FooterLeftGroupId} verticalAlign="start">
+            <Stack horizontal id={Ids.FooterLeftGroupId} verticalAlign="center">
                 {!props.controlProps?.hideDownloadTranscriptButton && (decodeComponentString(props.componentOverrides?.DownloadTranscriptButton) ||
                     <DownloadTranscriptButton
                         {...downloadTranscriptButtonProps}
@@ -75,10 +74,10 @@ function Footer(props: IFooterProps) {
                 }
                 {processCustomComponents(props.controlProps?.leftGroup?.children)}
             </Stack>
-            <Stack horizontal id={Ids.FooterMiddleGroupId} verticalAlign="start">
+            <Stack horizontal id={Ids.FooterMiddleGroupId} verticalAlign="center">
                 {processCustomComponents(props.controlProps?.middleGroup?.children)}
             </Stack>
-            <Stack horizontal id={Ids.FooterRightGroupId} verticalAlign="start">
+            <Stack horizontal id={Ids.FooterRightGroupId} verticalAlign="center">
                 {processCustomComponents(props.controlProps?.rightGroup?.children)}
                 {!props.controlProps?.hideAudioNotificationButton && (decodeComponentString(props.componentOverrides?.AudioNotificationButton) ||
                     <AudioNotificationButton
