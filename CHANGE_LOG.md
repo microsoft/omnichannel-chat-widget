@@ -9,6 +9,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added MIDDLEWARE_BANNER_FILE parameter `{2}` to show the user the file name when an exception occurs, also implementing standard for parameter to keep backwards compatibility
+- Added initialCustomContext to ILiveChatWidgetProps
+
+### Fixed
+
+- Fixed custom context not showing for embed chat
 
 ## [1.0.1] - 2023-3-23
 
