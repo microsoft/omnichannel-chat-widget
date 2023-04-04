@@ -33,6 +33,7 @@ import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontro
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
 import { ConversationEndEntity } from "../../../common/Constants";
+import { ConversationState } from "../../../contexts/common/ConversationState";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, adapter: any, setWebChatStyles: any) => {
@@ -50,9 +51,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
     if (!webChatStore) {
 
         const conversationEndCallback = async () => {
-            if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
-                setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
-            }
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
 
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
 

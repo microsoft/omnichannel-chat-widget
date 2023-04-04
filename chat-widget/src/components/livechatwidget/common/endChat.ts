@@ -14,18 +14,13 @@ import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { initiatePostChat, getPostChatContext } from "./renderSurveyHelpers";
 import { Constants, ParticipantType, ConversationEndEntity } from "../../../common/Constants";
 
-let currentUUID = "";
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any, uuid: string) => {
+const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any, uwid: string) => {
     try {
-        //Handle post chat
-        currentUUID = uuid;
-
         // If post chat is already rendered
         if (state?.appStates?.conversationState === ConversationState.Postchat) {
             //skipEndChatSDK = true as endChat is already called, just proceed to close chat
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid);
             return;
         }
 
@@ -35,32 +30,29 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         if (conversationDetails.canRenderPostChat.toLowerCase() === Constants.false) {
             // If ended by customer, just close chat
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
-                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid);
                 return;
             }
 
             //If ended by Agent, stay chat in InActive state
-            /*dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
-            return;*/
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
         }
 
+        // Can render post chat scenarios
         await getPostChatContext(chatSDK, state, dispatch);
 
-        // Can render post chat scenarios
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const postchatContext: any = state?.domainStates?.postChatContext;
 
-        //Unable to load post chat, allow to download transcript
+        //Unable to load post chat, but allow to download transcript
         if (postchatContext === undefined) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-            //await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             return;
         }
+
         updateParticipantTypes(dispatch, conversationDetails);
 
-        // End chat, but do not close the chat
+        // Initiate post chat render
         await initiatePostChat(props, conversationDetails, state, dispatch);
     }
     catch (error) {
@@ -73,7 +65,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 
         //Close chat widget for any failure in embedded to allow to show start chat button
         if (props.controlProps?.hideStartChatButton === false) {
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid);
         }
     }
     finally {
@@ -84,7 +76,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
-    skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean, uuid = "") => {
+    skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean, uwid = "") => {
     if (!skipEndChatSDK) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
@@ -138,11 +130,11 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
         }
     }
 
-    if (postMessageToOtherTab && isNullOrEmptyString(uuid)) {
+    if (postMessageToOtherTab && isNullOrEmptyString(uwid)) {
         const endChatEventName = await getEndChatEventName(chatSDK, props);
         BroadcastService.postMessage({
             eventName: endChatEventName,
-            payload: currentUUID
+            payload: uwid
         });
     }
 };
