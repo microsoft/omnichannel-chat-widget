@@ -22,7 +22,6 @@ const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, lo
             &compact=${compact.toString() ?? "true"}
             &lang=${locale ?? "en-us"}
             &showmultilingual=${showMultiLingual.toString() ?? "false"}`;
-    console.log(surveyLink);
     return surveyLink;
 };
 
@@ -36,14 +35,12 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
     const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
 
     if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot && state.domainStates.postChatContext.botSurveyInviteLink) {
-        console.log("bot survey");
         surveyInviteLink = generateSurveyInviteLink(
             state.domainStates.postChatContext.botSurveyInviteLink,
             surveyMode,
             state.domainStates.postChatContext.botFormsProLocale,
             props.isCustomerVoiceSurveyCompact ?? true);
     } else {
-        console.log("user survey");
         surveyInviteLink = generateSurveyInviteLink(
             state.domainStates.postChatContext.surveyInviteLink,
             surveyMode,

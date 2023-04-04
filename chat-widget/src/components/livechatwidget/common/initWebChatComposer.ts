@@ -32,13 +32,10 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
-import { prepareEndChat } from "./endChat";
-import { disposeLoggers } from "../../../common/telemetry/TelemetryManager";
-import { getPostChatContext } from "./renderSurveyHelpers";
 import { ConversationEndEntity } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, adapter: any, setWebChatStyles: any, uuid: string) => {
+export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, adapter: any, setWebChatStyles: any) => {
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
         ...props.webChatContainerProps?.localizedTexts
@@ -53,13 +50,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
     if (!webChatStore) {
 
         const conversationEndCallback = async () => {
-            console.log("conversationEndCallback");
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
-            //await getPostChatContext(chatSDK, state, dispatch);
-            
-            //await prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uuid);
+
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
 
             TelemetryHelper.logActionEvent(LogLevel.INFO, {

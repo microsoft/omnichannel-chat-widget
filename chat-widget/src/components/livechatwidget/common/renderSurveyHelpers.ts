@@ -10,8 +10,9 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let conversationDetails: any = undefined;
-let postChatContext: any = undefined;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let postChatSurveyMode: any = undefined;
 
 const getBotSurveyMode = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
@@ -27,7 +28,6 @@ const getUserSurveyMode = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCo
 // Set Survey mode based on conversation ended by entity
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setSurveyMode = async (props: ILiveChatWidgetProps, participantType: string, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    // TODO: Check participant type when noone joined
     if (participantType === ParticipantType.User) {
         postChatSurveyMode = getUserSurveyMode(props, state);
         dispatch({ type: LiveChatWidgetActionType.SET_SURVEY_MODE, payload: postChatSurveyMode });
@@ -71,24 +71,12 @@ const embedModePostChatWorkflow = async (state: ILiveChatWidgetContext, dispatch
                 exception: error
             }
         });
-        //throw new Error(error);
     }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initiatePostChat = async (props: ILiveChatWidgetProps, conversationDetailsParam: any, postChatContextParam: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    console.log("starting postchat survey");
+const initiatePostChat = async (props: ILiveChatWidgetProps, conversationDetailsParam: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     conversationDetails = conversationDetailsParam;
-    postChatContext = postChatContextParam;
-
-    // Check if postchat can be rendered at first place - based on agent/bot joined conversation
-    // ChatSDK should know this already
-    if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
-        return;
-    }
-
-    // Start Postchat workflow: TODO:<DO I NEED THIS STATE>
-    //dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_WORKFLOW_IN_PROGRESS, payload: true });
 
     await setSurveyMode(props, conversationDetails?.participantType, state, dispatch);
 
@@ -96,20 +84,21 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, conversationDetails
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isPostChatEnabled = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const isPostChatEnabled = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
     const isPostChatEnabled = props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable ?? state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable;
     return isPostChatEnabled === Constants.true;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     try {
         if (state?.domainStates?.postChatContext === undefined) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const context: any = await chatSDK.getPostChatSurveyContext();
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PostChatContextCallSucceed,
                 Description: "Postchat context call succeed."
             });
-            console.log(`postchatcontext:${JSON.stringify(context)}`);
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
         }
     } catch (error) {

@@ -22,7 +22,6 @@ const createConversationEndMiddleware = (conversationEndCallback: any) => ({ dis
                 if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
                     && (activity.channelData?.tags?.includes(Constants.agentEndConversationMessageTag)
                         || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
-                    console.log(`activity0:${JSON.stringify(activity)}`);
                     conversationEndCallback();
                 }
             }
@@ -31,7 +30,6 @@ const createConversationEndMiddleware = (conversationEndCallback: any) => ({ dis
             activity.channelData?.properties) { // IC3
             if (activity.channelData?.properties?.isdeleted === Constants.truePascal ||
                 !activity.channelData?.properties?.containsExternalEntitiesListeningAll) {
-                console.log(`activity1:${JSON.stringify(activity)}`);
                 conversationEndCallback();
             }
         }

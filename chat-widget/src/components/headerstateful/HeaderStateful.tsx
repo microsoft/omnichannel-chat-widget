@@ -1,5 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { Header } from "@microsoft/omnichannel-chat-components";
@@ -42,7 +42,6 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 const postMessageToOtherTabs = true;
-                console.log("Calling endChat position 3:");
                 await endChat(adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTabs);
             }
             const closeButtonId = props.headerProps?.controlProps?.closeButtonProps?.id ?? `${controlProps.id}-close-button`;

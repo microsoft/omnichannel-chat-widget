@@ -1,6 +1,3 @@
-import { Dispatch } from "react";
-import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { IConfirmationPaneStatefulProps } from "./IConfirmationPaneStatefulProps";
 
 export interface IConfirmationPaneStatefulParams extends IConfirmationPaneStatefulProps {

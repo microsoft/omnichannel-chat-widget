@@ -188,7 +188,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
         uuid.current = newGuid();
-        console.log("regenerating uuid:", uuid.current);
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_BUTTON_DISPLAY, payload: props.controlProps?.hideStartChatButton || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
@@ -338,12 +337,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                 if (persistedState &&
                     persistedState.appStates.conversationState === ConversationState.Active) {
-                    console.log("Calling prepareEndChat position 3:");
                     prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uuid.current);
                 } else {
                     const skipEndChatSDK = true;
                     const skipCloseChat = false;
-                    console.log("Calling endChat position 8:");
                     endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
                 }
             }
@@ -365,20 +362,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             props.controlProps?.widgetInstanceId ?? "");
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
-            console.log("Received end chat:", msg.payload);
-            console.log("Executing end chat for multitab:", uuid.current);
             if (msg.payload !== uuid.current) {
-                console.log("Calling endchat position 1:");
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 return;
             }
         });
-
-        // When conversation ended by agent
-        /*if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
-            console.log("Starting end chat3");
-            endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter);
-        }*/
 
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
@@ -458,14 +446,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.NotSet) {
-            //uuid.current = newGuid();
             return;
         }
 
         if ((state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer ||
             state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent) &&
             state?.appStates?.conversationState === ConversationState.Active) {
-            console.log("Calling prepareEndChat position 1:");
             prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uuid.current);
             return;
         }
@@ -473,8 +459,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         //If conversation state is InActive, just close the chat widget
         if (state?.appStates?.conversationState === ConversationState.InActive ||
             state?.appStates?.conversationState === ConversationState.Postchat) {
-            console.log("Calling endChat position 2:");
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
+            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uuid.current);
             return;
         }
 
@@ -530,7 +515,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
             Description: "Browser unload event received."
         });
-        console.log("Calling endChat position 10:");
         endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, false);
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventId);
@@ -543,7 +527,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
-    const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setAdapter, adapter, setWebChatStyles, uuid.current);
+    const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setAdapter, adapter, setWebChatStyles);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);

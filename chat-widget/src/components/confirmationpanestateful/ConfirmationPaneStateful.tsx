@@ -10,10 +10,8 @@ import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetActi
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ConversationEndEntity } from "../../common/Constants";
-import { prepareEndChat } from "../livechatwidget/common/endChat";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
@@ -23,8 +21,6 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    //const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
-    const { prepareEndChat } = props;
     const controlProps: IConfirmationPaneControlProps = {
         id: "oc-lcw-confirmation-pane",
         dir: state.domainStates.globalDir,

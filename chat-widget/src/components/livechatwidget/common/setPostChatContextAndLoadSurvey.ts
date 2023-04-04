@@ -1,4 +1,4 @@
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
@@ -7,7 +7,8 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 
-export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean, ) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean,) => {
     try {
         if (!persistedChat) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +17,6 @@ export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Di
                 Event: TelemetryEvent.PostChatContextCallSucceed,
                 Description: "Postchat context call succeed."
             });
-            console.log(`postchatcontext:${JSON.stringify(context)}`);
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
         }
     } catch (ex) {
