@@ -56,46 +56,38 @@ function Footer(props: IFooterProps) {
         <Stack id={footerId} horizontal className={props.className} horizontalAlign="space-between"
             styles={stackStyles}
             dir={props.controlProps?.dir ?? "ltr"} role="region">
-            <Stack horizontal id={Ids.FooterLeftGroupId} verticalAlign="center">
-                <Stack horizontal verticalAlign="center">
-                    {!props.controlProps?.hideDownloadTranscriptButton && (decodeComponentString(props.componentOverrides?.DownloadTranscriptButton) ||
-                        <DownloadTranscriptButton
-                            {...downloadTranscriptButtonProps}
-                            onClick={props.controlProps?.onDownloadTranscriptClick}
-                            styles={downloadTranscriptButtonStyles}
-                            hoverStyles={downloadTranscriptButtonHoverStyles}
-                            focusStyles={footerItemFocusStyles} />)
-                    }
-                    {!props.controlProps?.hideEmailTranscriptButton && (decodeComponentString(props.componentOverrides?.EmailTranscriptButton) ||
-                        <EmailTranscriptButton
-                            {...emailTranscriptButtonProps}
-                            onClick={props.controlProps?.onEmailTranscriptClick}
-                            styles={emailTranscriptButtonStyles}
-                            hoverStyles={emailTranscriptButtonHoverStyles}
-                            focusStyles={footerItemFocusStyles} />)
-                    }
-                    {processCustomComponents(props.controlProps?.leftGroup?.children)}
-                </Stack>
+            <Stack horizontal id={Ids.FooterLeftGroupId} verticalAlign="start">
+                {!props.controlProps?.hideDownloadTranscriptButton && (decodeComponentString(props.componentOverrides?.DownloadTranscriptButton) ||
+                    <DownloadTranscriptButton
+                        {...downloadTranscriptButtonProps}
+                        onClick={props.controlProps?.onDownloadTranscriptClick}
+                        styles={downloadTranscriptButtonStyles}
+                        hoverStyles={downloadTranscriptButtonHoverStyles}
+                        focusStyles={footerItemFocusStyles} />)
+                }
+                {!props.controlProps?.hideEmailTranscriptButton && (decodeComponentString(props.componentOverrides?.EmailTranscriptButton) ||
+                    <EmailTranscriptButton
+                        {...emailTranscriptButtonProps}
+                        onClick={props.controlProps?.onEmailTranscriptClick}
+                        styles={emailTranscriptButtonStyles}
+                        hoverStyles={emailTranscriptButtonHoverStyles}
+                        focusStyles={footerItemFocusStyles} />)
+                }
+                {processCustomComponents(props.controlProps?.leftGroup?.children)}
             </Stack>
-            <Stack horizontal id={Ids.FooterMiddleGroupId}>
-                <Stack horizontal verticalAlign="start">
-                    <Stack.Item align="start">
-                        {processCustomComponents(props.controlProps?.middleGroup?.children)}
-                    </Stack.Item>
-                </Stack>
+            <Stack horizontal id={Ids.FooterMiddleGroupId} verticalAlign="start">
+                {processCustomComponents(props.controlProps?.middleGroup?.children)}
             </Stack>
             <Stack horizontal id={Ids.FooterRightGroupId} verticalAlign="start">
-                <Stack horizontal verticalAlign="center">
-                    {processCustomComponents(props.controlProps?.rightGroup?.children)}
-                    {!props.controlProps?.hideAudioNotificationButton && (decodeComponentString(props.componentOverrides?.AudioNotificationButton) ||
-                        <AudioNotificationButton
-                            {...audioNotificationButtonProps}
-                            onClick={props.controlProps?.onAudioNotificationClick}
-                            styles={audioNotificationButtonStyles}
-                            hoverStyles={audioNotificationButtonHoverStyles}
-                            focusStyles={footerItemFocusStyles} />)
-                    }
-                </Stack>
+                {processCustomComponents(props.controlProps?.rightGroup?.children)}
+                {!props.controlProps?.hideAudioNotificationButton && (decodeComponentString(props.componentOverrides?.AudioNotificationButton) ||
+                    <AudioNotificationButton
+                        {...audioNotificationButtonProps}
+                        onClick={props.controlProps?.onAudioNotificationClick}
+                        styles={audioNotificationButtonStyles}
+                        hoverStyles={audioNotificationButtonHoverStyles}
+                        focusStyles={footerItemFocusStyles} />)
+                }
             </Stack>
         </Stack>
     );
