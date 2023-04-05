@@ -70,10 +70,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
-import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
-import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
-import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
