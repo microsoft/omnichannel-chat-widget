@@ -3,6 +3,7 @@ import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcon
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -159,11 +160,11 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const downloadTranscript = async (chatSDK: any,
-    renderMarkDown?: (transcriptContent: string) => string,
-    bannerMessageOnError?: string,
-    attachmentMessage?: string) => {
+export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcriptContent: string) => string, bannerMessageOnError?: string, attachmentMessage?: string, state?: ILiveChatWidgetContext) => {
+    const existingRequestId = chatSDK.requestId;
+    chatSDK.requestId = state?.domainStates?.transcriptRequestId;
     let data = await chatSDK?.getLiveChatTranscript();
+    chatSDK.requestId = existingRequestId; // This is used tor allowing to start next chat
     if (typeof (data) === Constants.String) {
         data = JSON.parse(data);
     }

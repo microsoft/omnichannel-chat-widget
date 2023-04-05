@@ -261,4 +261,10 @@ export enum LiveChatWidgetActionType {
         any: Set selected survey mode
     */
     SET_SURVEY_MODE,
+
+    /*
+    Parameters:
+    any: Set request id for transcript download
+    */
+    SET_TRANSCRIPT_REQUEST_ID,
 }

@@ -382,6 +382,15 @@ export const createReducer = () => {
                     }
                 };
 
+            case LiveChatWidgetActionType.SET_TRANSCRIPT_REQUEST_ID:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        transcriptRequestId: action.payload as string
+                    }
+                };
+
             default:
                 return state;
         }

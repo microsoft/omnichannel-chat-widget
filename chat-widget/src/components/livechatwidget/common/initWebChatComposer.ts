@@ -1,5 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { StyleOptions, createStore } from "botframework-webchat";
+import { createStore } from "botframework-webchat";
 import { Dispatch } from "react";
 import { IDataMaskingInfo } from "../../webchatcontainerstateful/interfaces/IDataMaskingInfo";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -36,7 +36,7 @@ import { ConversationEndEntity } from "../../../common/Constants";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, adapter: any, setWebChatStyles: any) => {
+export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
         ...props.webChatContainerProps?.localizedTexts

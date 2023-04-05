@@ -26,7 +26,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 
         const conversationDetails = await getConversationDetails(chatSDK);
 
-        // When post chat is not configured
+        // Use Case : When post chat is not configured
         if (conversationDetails.canRenderPostChat.toLowerCase() === Constants.false) {
             // If ended by customer, just close chat
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
@@ -34,11 +34,19 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                 return;
             }
 
-            //If ended by Agent, stay chat in InActive state
+            //Use Case: If ended by Agent, stay chat in InActive state
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+            return;
         }
 
-        // Can render post chat scenarios
+        // Use Case : Customer ending the conversation and post chat is configured
+        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid);
+            return;
+        }
+
+        // Use Case : Can render post chat scenarios
         await getPostChatContext(chatSDK, state, dispatch);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,6 +59,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         }
 
         updateParticipantTypes(dispatch, conversationDetails);
+
+        endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true, uwid);
 
         // Initiate post chat render
         await initiatePostChat(props, conversationDetails, state, dispatch);
@@ -85,7 +95,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
 
             //get auth token again if chat continued for longer time, otherwise gets 401 error
             await handleAuthenticationIfEnabled(props, chatSDK);
-
+            dispatch({ type: LiveChatWidgetActionType.SET_TRANSCRIPT_REQUEST_ID, payload: chatSDK.requestId });
             await chatSDK?.endChat();
         } catch (ex) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {

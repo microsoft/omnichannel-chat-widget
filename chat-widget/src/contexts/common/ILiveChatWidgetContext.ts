@@ -26,6 +26,7 @@ export interface ILiveChatWidgetContext {
         widgetSize: any;
         widgetInstanceId: string;
         initialChatSdkRequestId: string;
+        transcriptRequestId: string; //Contains request id for downloading transcript
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in

@@ -465,7 +465,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         //If conversation state is InActive, just close the chat widget
         if (state?.appStates?.conversationState === ConversationState.InActive ||
             state?.appStates?.conversationState === ConversationState.Postchat) {
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid.current);
+            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid.current);
             return;
         }
 
@@ -533,7 +533,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
-    const webChatProps = initWebChatComposer(props, chatSDK, state, dispatch, setAdapter, adapter, setWebChatStyles);
+    const webChatProps = initWebChatComposer(props, state, dispatch);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
