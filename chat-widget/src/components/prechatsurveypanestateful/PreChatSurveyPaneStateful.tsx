@@ -1,6 +1,7 @@
 import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
+import MarkdownIt from "markdown-it";
 import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
@@ -20,6 +21,8 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParams) => {
+    // Set MarkDown global variable to be used for prechat adaptive cards
+    window["markdownit"] = MarkdownIt;
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { surveyProps, initStartChat } = props;
