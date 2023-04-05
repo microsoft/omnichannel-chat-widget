@@ -1,10 +1,12 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
+import { Constants, E2VVOptions, LiveWorkItemState } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
-import { createTimer, getBroadcastChannelName, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, getConversationDetailsCall } from "../../../common/utils";
+import { createTimer, getBroadcastChannelName, getConversationDetailsCall, getLocaleDirection, getStateFromCache, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { endChat, prepareEndChat } from "../common/endChat";
+import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -26,9 +28,9 @@ import CallingContainerStateful from "../../callingcontainerstateful/CallingCont
 import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
 import { Components } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
+import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
-import { Constants, E2VVOptions, LiveWorkItemState } from "../../../common/Constants";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
@@ -56,6 +58,8 @@ import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarPr
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
 import { getGeneralStylesForButton } from "../common/getGeneralStylesForButton";
+import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
+import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 import { initCallingSdk } from "../common/initCallingSdk";
 import { initConfirmationPropsComposer } from "../common/initConfirmationPropsComposer";
 import { initWebChatComposer } from "../common/initWebChatComposer";
@@ -66,10 +70,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
-import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
-import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
-import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -242,10 +242,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Toggle chat visibility
         BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event) => {
             if (event?.payload?.isChatHidden !== undefined) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.ChatVisibilityChanged,
-                    Description: "Chat visibility changed to " + event?.payload?.isChatHidden
-                });
                 if (props.controlProps?.hideStartChatButton) {
                     dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
                 }
