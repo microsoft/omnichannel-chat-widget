@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Added MIDDLEWARE_BANNER_FILE parameter `{2}` to show the user the file name when an exception occurs, also implementing standard for parameter to keep backwards compatibility
 - Added initialCustomContext to ILiveChatWidgetProps
+- Added `UpdateSessionDataForTelemetry` and `UpdateConversationDataForTelemetry` in `BroadcastEvents`
 
 ### Fixed
 
@@ -45,7 +46,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Moved ids and strings to Constants file
-- Changed Footer verticle alignment to "center", and changed footer padding
+- Changed Footer vertical alignment to "center", and changed footer padding
 
 ## [1.0.0] - 2023-3-15
 
