@@ -1,5 +1,3 @@
-import { BroadcastEvent } from "../../../common/telemetry/TelemetryConstants";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
@@ -14,7 +12,6 @@ export const updateSessionDataForTelemetry = async (chatSDK: any, dispatch: Disp
         const chatSession: any = await chatSDK.getCurrentLiveChatContext();
         const telemetryData = TelemetryHelper.addSessionDataToTelemetry(chatSession as LiveChatContext, TelemetryManager.InternalTelemetryData);
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
-        BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateSessionDataForTelemetry, payload: {chatSession}});
         await updateConversationDataForTelemetry(chatSDK, dispatch);
     }
 };
@@ -26,6 +23,5 @@ const updateConversationDataForTelemetry = async (chatSDK: any, dispatch: Dispat
         const liveWorkItem: any = await chatSDK.getConversationDetails();
         const telemetryData = TelemetryHelper.addConversationDataToTelemetry(liveWorkItem, TelemetryManager.InternalTelemetryData);
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
-        BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateConversationDataForTelemetry, payload: {liveWorkItem}});
     }
 };

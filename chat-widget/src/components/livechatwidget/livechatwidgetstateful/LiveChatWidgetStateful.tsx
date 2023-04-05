@@ -70,10 +70,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
-import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
-import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
-import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -246,6 +242,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Toggle chat visibility
         BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event) => {
             if (event?.payload?.isChatHidden !== undefined) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ChatVisibilityChanged,
+                    Description: "Chat visibility changed to " + event?.payload?.isChatHidden
+                });
                 if (props.controlProps?.hideStartChatButton) {
                     dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
                 }

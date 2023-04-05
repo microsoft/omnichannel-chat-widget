@@ -52,9 +52,7 @@ export enum BroadcastEvent {
     SigninCardReceived = "SignInCardReceived",
     BotAuthConfigRequest = "BotAuthConfigRequest",
     BotAuthConfigResponse = "BotAuthConfigResponse",
-    HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent",
-    UpdateSessionDataForTelemetry = "UpdateSessionDataForTelemetry",
-    UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry"
+    HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent"
 }
 
 // Events being logged
