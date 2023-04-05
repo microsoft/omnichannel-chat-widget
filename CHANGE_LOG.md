@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Moved ids and strings to Constants file
+- Changed Footer verticle alignment to "center", and changed footer padding
 
 ## [1.0.0] - 2023-3-15
 
