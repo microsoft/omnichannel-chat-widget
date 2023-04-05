@@ -39,7 +39,7 @@ import { Components, StyleOptions } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
-import { Constants, E2VVOptions, StorageType, LiveWorkItemState, ConversationEndEntity } from "../../../common/Constants";
+import { Constants, E2VVOptions, StorageType, LiveWorkItemState, ConversationEndEntity, ConfirmationState } from "../../../common/Constants";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
@@ -184,6 +184,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
+        state.domainStates.confirmationPaneConfirmedOptionClicked = false;
+        state.domainStates.confirmationState = ConfirmationState.NotSet;
         setupClientDataStore();
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
@@ -451,24 +453,32 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [props.webChatContainerProps?.webChatStyles]);
 
     useEffect(() => {
+        //Confirmation pane dismissing through OK option, so proceed with end chat
+        if (state.domainStates.confirmationState === ConfirmationState.Ok) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
+        }
+    }, [state.domainStates.confirmationState]);
+
+    useEffect(() => {
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.NotSet) {
             return;
         }
 
-        if ((state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer ||
-            state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent) &&
-            state?.appStates?.conversationState === ConversationState.Active) {
+        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent) {
+            //Directly go to PCS
             prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
             return;
         }
 
-        //If conversation state is InActive, just close the chat widget
-        if (state?.appStates?.conversationState === ConversationState.InActive ||
-            state?.appStates?.conversationState === ConversationState.Postchat) {
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid.current);
-            return;
+        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+            if (state?.appStates?.conversationState === ConversationState.InActive) {
+                // Do both end chat and close chat
+                endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid.current);
+            } else {
+                //Only end chat to load survey
+                prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
+            }
         }
-
     }, [state?.appStates?.conversationEndedBy]);
 
     // Publish chat widget state

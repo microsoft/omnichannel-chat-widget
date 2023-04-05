@@ -253,6 +253,12 @@ export enum ConversationEndEntity {
     NotSet = "NotSet"
 }
 
+export enum ConfirmationState {
+    Ok = "Ok",
+    Cancel = "Cancel",
+    NotSet = "NotSet"
+}
+
 export class TranscriptConstants {
     public static readonly ChatTranscriptsBodyColor = "#F5F5F5";
     public static readonly TranscriptMessageEmojiMessageType = "http://schema.skype.com/emoji";

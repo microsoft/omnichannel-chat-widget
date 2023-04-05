@@ -4,7 +4,7 @@ import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
-import { Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
@@ -34,7 +34,9 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             widgetSize: undefined,
             widgetInstanceId: "",
             initialChatSdkRequestId: "",
-            transcriptRequestId: ""
+            transcriptRequestId: "",
+            confirmationPaneConfirmedOptionClicked: false,
+            confirmationState: ConfirmationState.NotSet
         },
         appStates: {
             conversationState: ConversationState.Closed,

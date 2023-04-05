@@ -161,10 +161,13 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcriptContent: string) => string, bannerMessageOnError?: string, attachmentMessage?: string, state?: ILiveChatWidgetContext) => {
+    // need to keep existing request id for scenarios when trnascript is downloaded after endchat
     const existingRequestId = chatSDK.requestId;
-    chatSDK.requestId = state?.domainStates?.transcriptRequestId;
+    chatSDK.chatToken = state?.domainStates?.chatToken;
+    chatSDK.requestId = state?.domainStates?.chatToken?.requestId;
     let data = await chatSDK?.getLiveChatTranscript();
-    chatSDK.requestId = existingRequestId; // This is used tor allowing to start next chat
+    // This is used tor allowing to start next chat
+    chatSDK.requestId = existingRequestId;
     if (typeof (data) === Constants.String) {
         data = JSON.parse(data);
     }

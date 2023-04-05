@@ -3,7 +3,7 @@ import { ConversationState } from "./ConversationState";
 import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
-import { ConversationEndEntity } from "../../common/Constants";
+import { ConfirmationState, ConversationEndEntity } from "../../common/Constants";
 
 export interface ILiveChatWidgetContext {
     domainStates: {
@@ -27,6 +27,8 @@ export interface ILiveChatWidgetContext {
         widgetInstanceId: string;
         initialChatSdkRequestId: string;
         transcriptRequestId: string; //Contains request id for downloading transcript
+        confirmationPaneConfirmedOptionClicked: boolean; //shows if confirmation pane already displayed
+        confirmationState: ConfirmationState;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in

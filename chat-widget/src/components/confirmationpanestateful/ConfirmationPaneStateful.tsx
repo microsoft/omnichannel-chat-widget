@@ -11,7 +11,7 @@ import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetCon
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { ConversationEndEntity } from "../../common/Constants";
+import { ConfirmationState } from "../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
@@ -29,8 +29,8 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
                 Event: TelemetryEvent.ConfirmationConfirmButtonClicked,
                 Description: "Confirmation pane Confirm button clicked"
             });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
             setTabIndices(elements, initialTabIndexMap, true);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedByCustomer,
@@ -43,6 +43,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
                 Description: "Confirmation pane Cancel button clicked."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Cancel });
             const previousFocusedElementId = state.appStates.previousElementIdOnFocusBeforeModalOpen;
 
             if (previousFocusedElementId) {

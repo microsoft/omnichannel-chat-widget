@@ -13,7 +13,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultOutOfOfficeHeaderStyleProps } from "./common/styleProps/defaultOutOfOfficeHeaderStyleProps";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { ConversationEndEntity } from "../../common/Constants";
+import { ConfirmationState } from "../../common/Constants";
 
 export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
@@ -36,7 +36,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         onCloseClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
 
-            if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
+            if (state.domainStates.confirmationState !== ConfirmationState.Ok) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
             } else {
                 const skipEndChatSDK = true;
@@ -44,6 +44,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
                 const postMessageToOtherTabs = true;
                 await endChat(adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTabs);
             }
+
             const closeButtonId = props.headerProps?.controlProps?.closeButtonProps?.id ?? `${controlProps.id}-close-button`;
             if (closeButtonId) {
                 dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: closeButtonId });

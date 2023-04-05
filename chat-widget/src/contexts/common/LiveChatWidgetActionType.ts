@@ -267,4 +267,16 @@ export enum LiveChatWidgetActionType {
     any: Set request id for transcript download
     */
     SET_TRANSCRIPT_REQUEST_ID,
+
+    /*
+    Parameters:
+    any: Set true if confirmation pane already displayed
+    */
+    SET_CONFIRMATION_CONFIRMED_CLICKED,
+
+    /*
+    Parameters:
+    ConfirmationState: Set confirmation state(OK/Cancel/NotSet)
+    */
+    SET_CONFIRMATION_STATE
 }

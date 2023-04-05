@@ -7,7 +7,7 @@ import { ILiveChatWidgetContext } from "./common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "./common/ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
-import { ConversationEndEntity } from "../common/Constants";
+import { ConfirmationState, ConversationEndEntity } from "../common/Constants";
 import { PostChatSurveyMode } from "../components/postchatsurveypanestateful/enums/PostChatSurveyMode";
 
 export const createReducer = () => {
@@ -388,6 +388,24 @@ export const createReducer = () => {
                     domainStates: {
                         ...state.domainStates,
                         transcriptRequestId: action.payload as string
+                    }
+                };
+
+            case LiveChatWidgetActionType.SET_CONFIRMATION_CONFIRMED_CLICKED:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        confirmationPaneConfirmedOptionClicked: action.payload as boolean
+                    }
+                };
+
+            case LiveChatWidgetActionType.SET_CONFIRMATION_STATE:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        confirmationState: action.payload as ConfirmationState
                     }
                 };
 

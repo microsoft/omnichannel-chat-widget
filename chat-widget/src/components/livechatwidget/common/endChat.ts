@@ -12,17 +12,11 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { getWidgetEndChatEventName, isNullOrEmptyString } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { initiatePostChat, getPostChatContext } from "./renderSurveyHelpers";
-import { Constants, ParticipantType, ConversationEndEntity } from "../../../common/Constants";
+import { Constants, ParticipantType, ConversationEndEntity, ConfirmationState } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any, uwid: string) => {
     try {
-        // If post chat is already rendered
-        if (state?.appStates?.conversationState === ConversationState.Postchat) {
-            //skipEndChatSDK = true as endChat is already called, just proceed to close chat
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid);
-            return;
-        }
 
         const conversationDetails = await getConversationDetails(chatSDK);
 
@@ -39,12 +33,6 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             return;
         }
 
-        // Use Case : Customer ending the conversation and post chat is configured
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid);
-            return;
-        }
 
         // Use Case : Can render post chat scenarios
         await getPostChatContext(chatSDK, state, dispatch);
@@ -152,22 +140,18 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
 const endChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // Need to clear these states immediately when chat ended from OC.
     dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
-    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
 };
 
 const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-    dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_WORKFLOW_IN_PROGRESS, payload: false });
-    dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_USE_BOT_SURVEY, payload: false });
-    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT_EVENT_RECEIVED, payload: false });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
-    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.NotSet });
-
+    dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.NotSet });
     dispatch({
         type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
             proactiveChatBodyTitle: "",
