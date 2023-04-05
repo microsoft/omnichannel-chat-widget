@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed custom context not showing for embed chat
+- Fixed hyperlink not working in prechat pane
 
 ## [1.0.1] - 2023-3-23
 
