@@ -14,8 +14,12 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed custom context not showing for embed chat
-- Fixed hyperlink not working in prechat pane
+- Uptake [@microsoft/omnichannel-chat-components@1.0.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.1)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.3.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.3.0)
+
+### Changed
+
+
 
 ## [1.0.1] - 2023-3-23
 
