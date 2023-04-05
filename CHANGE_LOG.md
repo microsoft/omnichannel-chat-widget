@@ -40,6 +40,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.1] - 2023-4-4
+
 ### Changed
 
 - Moved ids and strings to Constants file
