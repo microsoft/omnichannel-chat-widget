@@ -13,15 +13,18 @@ export const defaultHeaderControlProps: IHeaderControlProps = {
     middleGroup: { children: [] },
     leftGroup: { children: [] },
     rightGroup: { children: [] },
+
     minimizeButtonProps: {
         id: Ids.MinimizeButtonId,
         type: ButtonTypes.Icon,
-        iconName: IconNames.ChromeMinimize
+        iconName: IconNames.ChromeMinimize,
+        hideButtonTitle: true
     },
     closeButtonProps: {
         id: Ids.CloseButtonId,
         type: ButtonTypes.Icon,
-        iconName: IconNames.ChromeClose
+        iconName: IconNames.ChromeClose,
+        hideButtonTitle: true
     },
     headerIconProps: {
         id: Ids.HeaderIconId,

@@ -25,8 +25,7 @@ function DownloadTranscriptButton(props: ICommandButtonProps) {
             onClick={props.onClick}
             ariaLabel={props.ariaLabel ?? AriaLabels.DownloadChatTranscript}
             className={props.className} 
-            customEvent={customEvent} />
-    );
+            customEvent={customEvent} />);
 }
 
 export default DownloadTranscriptButton;
