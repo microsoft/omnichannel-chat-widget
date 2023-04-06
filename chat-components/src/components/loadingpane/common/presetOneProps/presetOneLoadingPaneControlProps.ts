@@ -3,6 +3,6 @@ import { defaultLoadingPaneControlProps } from "../defaultProps/defaultLoadingPa
 
 export const presetOneLoadingPaneControlProps: ILoadingPaneControlProps = {
     ...defaultLoadingPaneControlProps,
-    id: "oc-lcw-loadingpane-preset1",
+    id: "lcw-loading-pane-preset1",
     dir: "rtl"
 };

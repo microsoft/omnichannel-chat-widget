@@ -1,9 +1,10 @@
 import { AudioNotificationOffIconBase64, AudioNotificationOnIconBase64, TranscriptDownloadIconBase64, TranscriptEmailIconBase64 } from "../../../../assets/Icons";
+import { AriaLabels, ButtonTypes, Ids } from "../../../../common/Constants";
 
 import { IFooterControlProps } from "../../interfaces/IFooterControlProps";
 
 export const customFooterControlProps: IFooterControlProps = {
-    id: "oc-lcw-footer",
+    id: Ids.CustomFooterId,
     hideDownloadTranscriptButton: false,
     hideEmailTranscriptButton: false,
     hideAudioNotificationButton: false,
@@ -14,21 +15,21 @@ export const customFooterControlProps: IFooterControlProps = {
     leftGroup: { children: [] },
     rightGroup: { children: [] },
     downloadTranscriptButtonProps: {
-        id: "oc-lcw-footer-downloadtranscript-button",
-        type: "icon",
+        id: Ids.DownloadTranscriptButtonId,
+        type: ButtonTypes.Icon,
         imageIconProps: { src: TranscriptDownloadIconBase64 },
-        ariaLabel: "Download chat transcript",
+        ariaLabel: AriaLabels.DownloadChatTranscript,
     },
     emailTranscriptButtonProps: {
-        id: "oc-lcw-footer-emailtranscript-button",
-        type: "icon",
+        id: Ids.EmailTranscriptButtonId,
+        type: ButtonTypes.Icon,
         imageIconProps: { src: TranscriptEmailIconBase64 },
-        ariaLabel: "Email Transcript",
+        ariaLabel: AriaLabels.EmailTranscript,
     },
     audioNotificationButtonProps: {
-        id: "oc-lcw-footer-audionotification-button",
-        ariaLabel: "Turn sound off",
-        toggleAriaLabel: "Turn sound on",
+        id: Ids.AudioNotificationButtonId,
+        ariaLabel: AriaLabels.TurnSoundOff,
+        toggleAriaLabel: AriaLabels.TurnSoundOn,
         imageIconProps: { src: AudioNotificationOnIconBase64 },
         imageToggleIconProps: { src: AudioNotificationOffIconBase64 }
     }

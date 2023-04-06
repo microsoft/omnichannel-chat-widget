@@ -56,10 +56,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             },
             e2vvEnabled: false,
             unreadMessageCount: 0,
-            conversationEndedByAgentEventReceived: false,
             conversationEndedBy: ConversationEndEntity.NotSet,
-            postChatWorkflowInProgress: false,
-            shouldUseBotSurvey: false,
             chatDisconnectEventReceived: false,
             selectedSurveyMode: null
         },

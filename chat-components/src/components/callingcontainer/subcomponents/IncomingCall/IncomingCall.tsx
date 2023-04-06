@@ -3,7 +3,7 @@ import * as React from "react";
 import { IStackStyles, IStackTokens, Label, Stack } from "@fluentui/react";
 
 import CommandButton from "../../../common/commandbutton/CommandButton";
-import { ElementType, KeyCodes } from "../../../../common/Constants";
+import { ElementType, EventNames, Ids, KeyCodes } from "../../../../common/Constants";
 import { ICustomEvent } from "../../../../interfaces/ICustomEvent";
 import { IIncomingCallProps } from "./interfaces/IIncomingCallProps";
 import { decodeComponentString } from "../../../../common/decodeComponentString";
@@ -67,7 +67,7 @@ function IncomingCall(props: IIncomingCallProps) {
     const declineCustomEvent: ICustomEvent = {
         elementType: ElementType.IncomingCallDeclineCallButton,
         elementId: declineCallButtonId,
-        eventName: "incomingCallEnded"
+        eventName: EventNames.IncomingCallEnded
     };
     const handleDeclineCallClick = useCallback(() => {
         if (props.controlProps?.onDeclineCallClick) {
@@ -77,7 +77,7 @@ function IncomingCall(props: IIncomingCallProps) {
     const videoCustomEvent: ICustomEvent = {
         elementType: ElementType.IncomingCallVideoCallButton,
         elementId: videoCallButtonId,
-        eventName: "OnClick"
+        eventName: EventNames.OnClick
     };
     const handleVideoCallClick = useCallback(() => {
         if (props.controlProps?.onVideoCallClick) {
@@ -87,7 +87,7 @@ function IncomingCall(props: IIncomingCallProps) {
     const audioCustomEvent: ICustomEvent = {
         elementType: ElementType.IncomingCallAudioCallButton,
         elementId: audioCallButtonId,
-        eventName: "OnClick"
+        eventName: EventNames.OnClick
     };
     const handleAudioCallClick = useCallback(() => {
         if (props.controlProps?.onAudioCallClick) {
@@ -142,7 +142,7 @@ function IncomingCall(props: IIncomingCallProps) {
             styles={stackStyles}
             dir={props.controlProps?.dir ?? defaultIncomingCallProps.controlProps?.dir} role="alert"
             aria-label={incomingCallTitleProps?.text}>
-            <Stack horizontal id="incomingCallLeftGroup" verticalAlign="center" tokens={leftGroupStackTokens}>
+            <Stack horizontal id={Ids.IncomingCallLeftGroupId} verticalAlign="center" tokens={leftGroupStackTokens}>
                 {!props.controlProps?.hideIncomingCallTitle && (decodeComponentString(props.componentOverrides?.incomingCallTitle) ||
                     <Label
                         {...incomingCallTitleProps}
@@ -154,10 +154,10 @@ function IncomingCall(props: IIncomingCallProps) {
                 }
                 {processCustomComponents(props.controlProps?.leftGroup?.children)}
             </Stack>
-            <Stack horizontal id="incomingCallMiddleGroup" verticalAlign="center" tokens={middleGroupStackTokens}>
+            <Stack horizontal id={Ids.IncomingCallMiddleGroupId} verticalAlign="center" tokens={middleGroupStackTokens}>
                 {processCustomComponents(props.controlProps?.middleGroup?.children)}
             </Stack>
-            <Stack horizontal id="incomingCallRightGroup" verticalAlign="center" tokens={rightGroupStackTokens}>
+            <Stack horizontal id={Ids.IncomingCallRightGroupId} verticalAlign="center" tokens={rightGroupStackTokens}>
                 {processCustomComponents(props.controlProps?.rightGroup?.children)}
                 {!props.controlProps?.hideDeclineCall &&
                     <CommandButton

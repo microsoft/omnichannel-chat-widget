@@ -1,7 +1,7 @@
 import { IPreChatSurveyPaneControlProps } from "../../interfaces/IPreChatSurveyPaneControlProps";
 
 export const presetThreePreChatSurveyPaneControlProps: IPreChatSurveyPaneControlProps = {
-    id: "oc-lcw-prechatsurveypane-preset3",
+    id: "lcw-prechat-survey-pane-preset3",
     dir: "auto",
     hidePreChatSurveyPane: false,
     adaptiveCardHostConfig: "{\"fontFamily\":\"Segoe UI, Helvetica Neue, sans-serif\",\"containerStyles\":{\"default\":{\"foregroundColors\":{\"default\":{\"default\":\"#C3F60F\"}},\"backgroundColor\":\"#6A1E7A\"}},\"actions\":{\"actionsOrientation\":\"Vertical\",\"actionAlignment\":\"stretch\"}}",

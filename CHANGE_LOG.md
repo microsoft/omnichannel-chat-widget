@@ -6,6 +6,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Added MIDDLEWARE_BANNER_FILE parameter `{2}` to show the user the file name when an exception occurs, also implementing standard for parameter to keep backwards compatibility
+- Added initialCustomContext to ILiveChatWidgetProps
+- Added `UpdateSessionDataForTelemetry` and `UpdateConversationDataForTelemetry` in `BroadcastEvents`
+
+### Fixed
+
+- Fixed custom context not showing for embed chat
+- Fixed hyperlink not working in prechat pane
+- Fixed multiple calls to EndChat when agent/bot ends conversation
+- Reducing the number of duplicate logs for webchat client telemetry
+- Fixed post chat survey is not rendering bot loading bot survey
+- Code refactored for post chat survey
+- Fixed popout chat  is not showing Out of office pane
+- Fixed popout chat is showing blank screen
+- Better handling of end chat in case of multitab scenarios
+- 
+
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.1)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.3.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.3.0)
+
 ## [1.0.1] - 2023-3-23
 
 ### Added
@@ -30,6 +55,13 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+## [1.0.1] - 2023-4-4
+
+### Changed
+
+- Moved ids and strings to Constants file
+- Changed Footer vertical alignment to "center", and changed footer padding
 
 ## [1.0.0] - 2023-3-15
 

@@ -1,19 +1,20 @@
+import { AriaLabels, Ids, Texts } from "../../../../common/Constants";
 import { IConfirmationPaneControlProps } from "../../interfaces/IConfirmationPaneControlProps";
 
 export const defaultConfirmationPaneControlProps: IConfirmationPaneControlProps = {
-    id: "lcw-components-confirmation-pane",
+    id: Ids.DefaultConfirmationPaneId,
     dir: "ltr",
     hideConfirmationPane: false,
     hideTitle: false,
-    titleText: "Close chat",
+    titleText: Texts.ConfirmationPaneTitle,
     hideSubtitle: false,
-    subtitleText: "Do you really want to close this chat?",
+    subtitleText: Texts.ConfirmationPaneSubtitle,
     hideConfirmButton: false,
-    confirmButtonText: "Close",
-    confirmButtonAriaLabel: "Close Chat",
+    confirmButtonText: Texts.ConfirmButtonText,
+    confirmButtonAriaLabel: AriaLabels.ConfirmationPaneConfirm,
     hideCancelButton: false,
-    cancelButtonText: "Cancel",
-    cancelButtonAriaLabel: "Cancel. Return to Chat",
+    cancelButtonText: Texts.CancelButtonText,
+    cancelButtonAriaLabel: AriaLabels.ConfirmationPaneCancel,
     onConfirm: function () {
         console.log("on confirm");
     },

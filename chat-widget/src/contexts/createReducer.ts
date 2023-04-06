@@ -289,15 +289,6 @@ export const createReducer = () => {
                     ...action.payload as ILiveChatWidgetContext
                 };
 
-            case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT_EVENT_RECEIVED:
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        conversationEndedByAgentEventReceived: action.payload as boolean
-                    }
-                };
-
             case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY:
                 return {
                     ...state,
@@ -337,16 +328,6 @@ export const createReducer = () => {
                     }
                 };
 
-            case LiveChatWidgetActionType.SET_POST_CHAT_WORKFLOW_IN_PROGRESS:
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        postChatWorkflowInProgress: action.payload as boolean
-                    }
-                };
-
             case LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID:
                 return {
                     ...state,
@@ -356,15 +337,6 @@ export const createReducer = () => {
                     }
                 };
 
-            case LiveChatWidgetActionType.SET_SHOULD_USE_BOT_SURVEY:
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        shouldUseBotSurvey: action.payload as boolean
-                    }
-                };
             case LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED:
                 return {
                     ...state,

@@ -7,7 +7,7 @@ export const defaultFooterStyleProps: IFooterStyleProps = {
         minHeight: "25px",
         width: "100%",
         minWidth: "250px",
-        padding: "0 10px 5px 10px"
+        padding: "5px"
     },
     downloadTranscriptButtonStyleProps: {
         icon: {

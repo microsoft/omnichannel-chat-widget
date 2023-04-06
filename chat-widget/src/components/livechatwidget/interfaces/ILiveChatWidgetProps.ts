@@ -62,4 +62,6 @@ export interface ILiveChatWidgetProps {
     scrollBarProps?: IScrollBarProps;
     useSessionStorage?: boolean;
     allowSdkChatSupport?: boolean; // to avoid any performance impact
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    initialCustomContext?: any;
 }

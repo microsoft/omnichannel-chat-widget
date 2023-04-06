@@ -1,11 +1,12 @@
+import { Ids, Texts } from "../../../../common/Constants";
 import { IOOOHPaneControlProps } from "../../interfaces/IOOOHPaneControlProps";
 
 export const defaultOOOHPaneControlProps: IOOOHPaneControlProps = {
-    id: "oc-lcw-outofofficehours-pane",
+    id: Ids.DefaultOOOHPaneId,
     dir: "auto",
     hideOOOHPane: false,
     hideTitle: false,
     role: "alert",
-    titleText: "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.",
+    titleText: Texts.OOOHPaneTitleText,
     openLinkInNewTab: false
 };

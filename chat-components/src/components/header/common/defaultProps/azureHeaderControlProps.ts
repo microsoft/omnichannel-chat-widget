@@ -1,8 +1,9 @@
 import { IHeaderControlProps } from "../../interfaces/IHeaderControlProps";
 import { LegacyChatIconBase64 } from "../../../../assets/Icons";
+import { ButtonTypes, Ids, Texts } from "../../../../common/Constants";
 
 export const azureHeaderControlProps: IHeaderControlProps = {
-    id: "oc-lcw-header",
+    id: Ids.DefaultHeaderId,
     hideIcon: false,
     hideTitle: true,
     hideCloseButton: false,
@@ -14,20 +15,20 @@ export const azureHeaderControlProps: IHeaderControlProps = {
     rightGroup: { children: [] },
     minimizeButtonProps: {
         id: "oc-lcw-header-minimizebutton",
-        type: "icon"
+        type: ButtonTypes.Icon
     },
     closeButtonProps: {
         id: "oc-lcw-header-closebutton",
-        type: "text",
+        type: ButtonTypes.Text,
         text: "End Chat"
     },
     headerIconProps: {
-        id: "oc-lcw-header-icon",
+        id: Ids.HeaderIconId,
         src: LegacyChatIconBase64,
-        alt: "Chat Icon"
+        alt: Texts.HeaderIcon
     },
     headerTitleProps: {
-        id: "oc-lcw-header-title",
+        id: Ids.HeaderTitleId,
         text: "Azure Chat Support"
     }
 };

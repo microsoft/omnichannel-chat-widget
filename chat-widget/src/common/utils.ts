@@ -1,8 +1,9 @@
 import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
+
 import { DataStoreManager } from "./contextDataStore/DataStoreManager";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
 import { Md5 } from "md5-typescript";
 import { TelemetryHelper } from "./telemetry/TelemetryHelper";
 
@@ -183,7 +184,7 @@ export const getTimestampHourMinute = (timestampStr: string) => {
 export const parseAdaptiveCardPayload = (payload: string, requiredFieldMissingMessage: string) => {
     if (payload && payload !== "{}") {
         try {
-            const parsedPayload = JSON.parse(payload.replace(/&#42;/g, "*"));
+            const parsedPayload = JSON.parse(payload.replace("*", "&#42;"));
             const body = parsedPayload.body;
             if (body) {
                 //Parse ID field into available options and add required error messages

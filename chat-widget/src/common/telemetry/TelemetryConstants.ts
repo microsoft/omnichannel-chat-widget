@@ -53,8 +53,10 @@ export enum BroadcastEvent {
     BotAuthConfigRequest = "BotAuthConfigRequest",
     BotAuthConfigResponse = "BotAuthConfigResponse",
     RemoveWidgetDataFromCache = "RemoveWidgetDataFromCache",
-    HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent",
     InitiateStartChatInPopoutMode = "InitiateStartChatInPopoutMode",
+    HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent",
+    UpdateSessionDataForTelemetry = "UpdateSessionDataForTelemetry",
+    UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry"
 }
 
 // Events being logged

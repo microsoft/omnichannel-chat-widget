@@ -9,6 +9,7 @@ import { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import { defaultChatButtonControlProps } from "./common/defaultProps/defaultChatButtonControlProps";
 import { defaultChatButtonStyleProps } from "./common/defaultStyles/defaultChatButtonStyleProps";
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import { Texts } from "../../common/Constants";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -42,15 +43,15 @@ describe("Chat Button component", () => {
             render(<ChatButton {...chatButtonPropsHide} />);
 
             try {
-                screen.getByText("Let's Chat!");
+                screen.getByText(Texts.ChatButtonTitle);
                 fail("Title should not be in the document");
                 // eslint-disable-next-line no-empty
             } catch (ex) {
             }
 
             try {
-                screen.getByText("We're online.");
-                fail("Title should not be in the document");
+                screen.getByText(Texts.ChatButtonSubtitle);
+                fail("Subtitle should not be in the document");
                 // eslint-disable-next-line no-empty
             } catch (ex) {
             }
@@ -109,7 +110,7 @@ describe("Chat Button component", () => {
         it("chat button key down", () => {
             render(<ChatButton {...defaultChatButtonProps} />);
             const handleKeyDown = jest.fn();
-            const startChatButton = screen.getByText("Let's Chat!");
+            const startChatButton = screen.getByText(Texts.ChatButtonTitle);
             startChatButton.onkeydown = handleKeyDown;
             fireEvent.keyDown(startChatButton);
             expect(handleKeyDown).toHaveBeenCalledTimes(1);
@@ -119,7 +120,7 @@ describe("Chat Button component", () => {
         it("chat button click", () => {
             render(<ChatButton {...defaultChatButtonProps} />);
             const handleClick = jest.fn();
-            const startChatButton = screen.getByText("Let's Chat!");
+            const startChatButton = screen.getByText(Texts.ChatButtonTitle);
             startChatButton.onclick = handleClick;
             fireEvent.click(startChatButton);
             expect(handleClick).toHaveBeenCalledTimes(1);

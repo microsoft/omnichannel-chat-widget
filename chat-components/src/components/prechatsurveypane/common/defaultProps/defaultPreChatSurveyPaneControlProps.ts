@@ -1,7 +1,8 @@
+import { Ids } from "../../../../common/Constants";
 import { IPreChatSurveyPaneControlProps } from "../../interfaces/IPreChatSurveyPaneControlProps";
 
 export const defaultPreChatSurveyPaneControlProps: IPreChatSurveyPaneControlProps = {
-    id: "oc-lcw-prechatsurveypane-default",
+    id: Ids.DefaultPreChatSurveyPaneId,
     dir: "auto",
     role: "alert",
     hidePreChatSurveyPane: false,

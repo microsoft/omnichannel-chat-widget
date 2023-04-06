@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 import { ICommandButtonProps } from "../interfaces/ICommandButtonProps";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
 import { BroadcastService } from "../../../services/BroadcastService";
-import { ElementType } from "../../../common/Constants";
+import { ElementType, EventNames, ButtonTypes } from "../../../common/Constants";
 
 function CommandButton(props: ICommandButtonProps) {
     //imageIconProps > iconName
@@ -12,7 +12,7 @@ function CommandButton(props: ICommandButtonProps) {
         { iconName: props.iconName };
 
     let iconStyles = {};
-    if (props.type === "icon") {
+    if (props.type === ButtonTypes.Icon) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         iconStyles = { ...((props?.styles as any)?.icon as any) };
     }
@@ -46,7 +46,7 @@ function CommandButton(props: ICommandButtonProps) {
         if (props?.onClick) {
             const customEvent: ICustomEvent = props.customEvent ??
             {
-                eventName: "onClick",
+                eventName: EventNames.OnClick,
                 elementType: ElementType.Custom,
                 elementId: props?.id
             };
@@ -57,7 +57,7 @@ function CommandButton(props: ICommandButtonProps) {
 
     return (
         <>
-            {props.type === "text" &&
+            {props.type === ButtonTypes.Text &&
                 <DefaultButton
                     id={props.id}
                     text={props.text}
@@ -69,7 +69,7 @@ function CommandButton(props: ICommandButtonProps) {
                 />
             }
 
-            {props.type === "icon" &&
+            {props.type === ButtonTypes.Icon &&
                 <IconButton
                     id={props.id}
                     iconProps={iconProp}

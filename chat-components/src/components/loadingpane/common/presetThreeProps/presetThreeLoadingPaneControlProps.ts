@@ -4,7 +4,7 @@ import { defaultLoadingPaneControlProps } from "../defaultProps/defaultLoadingPa
 
 export const presetThreeLoadingPaneControlProps: ILoadingPaneControlProps = {
     ...defaultLoadingPaneControlProps,
-    id: "oc-lcw-loadingpane-preset3",
+    id: "lcw-loading-pane-preset3",
     titleText: "Please Wait ...",
     subtitleText: "Loading Content",
     spinnerText: "Processing ...",

@@ -1,42 +1,43 @@
+import { AriaLabels, IconNames, ButtonTypes, Ids, Texts } from "../../../../../../common/Constants";
 import { IIncomingCallControlProps } from "../../interfaces/IIncomingCallControlProps";
 
 export const defaultIncomingCallControlProps: IIncomingCallControlProps = {
-    id: "oc-lcw-incomingcall",
+    id: Ids.DefaultIncomingCallId,
     dir: "ltr",
-    ariaLabel: "Incoming call area",
+    ariaLabel: AriaLabels.IncomingCallArea,
     hideAudioCall: false,
     hideVideoCall: false,
     hideDeclineCall: false,
     hideIncomingCallTitle: false,
-    onDeclineCallClick: function () { console.log("download transcript clicked"); },
-    onAudioCallClick: function () { console.log("email transcript clicked"); },
-    onVideoCallClick: function () { console.log("audio notification clicked"); },
+    onDeclineCallClick: function () { console.log("decline call clicked"); },
+    onAudioCallClick: function () { console.log("audio call clicked"); },
+    onVideoCallClick: function () { console.log("video call clicked"); },
     middleGroup: { gap: 5, children: [] },
     leftGroup: { gap: 5, children: [] },
     rightGroup: { gap: 5, children: [] },
     declineCallButtonProps: {
-        id: "callRejectButton",
-        type: "icon",
-        ariaLabel: "Reject call",
-        iconName: "DeclineCall",
+        id: Ids.DeclineCallButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.RejectCall,
+        iconName: IconNames.DeclineCall,
         iconSize: 20
     },
     audioCallButtonProps: {
-        id: "callAcceptButton",
-        type: "icon",
-        ariaLabel: "Accept voice call",
-        iconName: "IncomingCall",
+        id: Ids.AudioCallButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.AcceptVoiceCall,
+        iconName: IconNames.IncomingCall,
         iconSize: 20
     },
     videoCallButtonProps: {
-        id: "videoCallAcceptButton",
-        type: "icon",
-        ariaLabel: "Accept video Call",
-        iconName: "Video",
+        id: Ids.VideoCallButtonId,
+        type: ButtonTypes.Icon,
+        ariaLabel: AriaLabels.AcceptVideoCall,
+        iconName: IconNames.Video,
         iconSize: 20
     },
     incomingCallTitle: {
-        id: "incomingCallMessage",
-        text: "Incoming Call"
+        id: Ids.IncomingCallTitleId,
+        text: Texts.IncomingCallTitle
     }
 };

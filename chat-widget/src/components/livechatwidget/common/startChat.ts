@@ -170,8 +170,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
         });
 
-        // Set post chat context in state, fetching it during end chat is giving poor UX experience
-        await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+        // Set post chat context in state
+        // Commenting this for now as post chat context is fetched during end chat
+        //await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
 
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
