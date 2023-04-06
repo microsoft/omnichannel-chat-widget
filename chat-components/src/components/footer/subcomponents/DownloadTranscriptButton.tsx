@@ -1,5 +1,5 @@
 import React from "react";
-import { AriaLabels, ElementType, EventNames, IconNames, Texts } from "../../../common/Constants";
+import { AriaLabels, ElementType, EventNames, IconNames } from "../../../common/Constants";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
 import CommandButton from "../../common/commandbutton/CommandButton";
 import { ICommandButtonProps } from "../../common/interfaces/ICommandButtonProps";
@@ -16,7 +16,6 @@ function DownloadTranscriptButton(props: ICommandButtonProps) {
         <CommandButton
             id={props?.id}
             type={type}
-            text={props.text ?? Texts.DownloadChatTranscriptText}
             styles={props.styles}
             hoverStyles={props.hoverStyles}
             focusStyles={props.focusStyles}
@@ -25,7 +24,8 @@ function DownloadTranscriptButton(props: ICommandButtonProps) {
             onClick={props.onClick}
             ariaLabel={props.ariaLabel ?? AriaLabels.DownloadChatTranscript}
             className={props.className} 
-            customEvent={customEvent} />);
+            customEvent={customEvent}
+            hideButtonTitle ={props.hideButtonTitle}/>);
 }
 
 export default DownloadTranscriptButton;
