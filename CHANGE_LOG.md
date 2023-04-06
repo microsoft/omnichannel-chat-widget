@@ -18,13 +18,11 @@ All notable changes to this project will be documented in this file.
 - Fixed hyperlink not working in prechat pane
 - Fixed multiple calls to EndChat when agent/bot ends conversation
 - Reducing the number of duplicate logs for webchat client telemetry
-- Fixed post chat survey is not rendering bot loading bot survey
+- Fixed post chat survey is not rendering bot survey
 - Code refactored for post chat survey
-- Fixed popout chat  is not showing Out of office pane
+- Fixed popout chat is not showing Out of office pane
 - Fixed popout chat is showing blank screen
 - Better handling of end chat in case of multitab scenarios
-- 
-
 
 ### Changed
 
