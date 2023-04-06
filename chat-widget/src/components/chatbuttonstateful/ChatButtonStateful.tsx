@@ -1,7 +1,7 @@
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import React, { Dispatch, useEffect, useState } from "react";
 
-import { BroadcastService, ChatButton } from "@microsoft/omnichannel-chat-components";
+import { ChatButton } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../common/Constants";
 import { setFocusOnElement } from "../../common/utils";
 import { ConversationState } from "../../contexts/common/ConversationState";
@@ -15,7 +15,6 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
@@ -23,8 +22,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     const { buttonProps, outOfOfficeButtonProps, startChat } = props;
     //Setting OutOfOperatingHours Flag
     const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
-    const proactiveChatInNewWindow = useRef(state.appStates.proactiveChatStates.proactiveChatInNewWindow);
-
+    
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);
     const controlProps: IChatButtonControlProps = {
         id: "oc-lcw-chat-button",
@@ -37,12 +35,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWChatButtonClicked
             });
-            if (proactiveChatInNewWindow.current) {
-                const proactiveChatIsInPopoutModeEvent: ICustomEvent = {
-                    eventName: BroadcastEvent.ProactiveChatIsInPopoutMode,
-                };
-                BroadcastService.postMessage(proactiveChatIsInPopoutModeEvent);
-            } else if (state.appStates.isMinimized) {
+            
+            if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             } else {
                 await startChat();
@@ -86,10 +80,6 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             dispatch({ type: LiveChatWidgetActionType.SET_FOCUS_CHAT_BUTTON, payload: true });
         }
     }, []);
-
-    useEffect(() => {
-        proactiveChatInNewWindow.current = state.appStates.proactiveChatStates.proactiveChatInNewWindow;
-    }, [state.appStates.proactiveChatStates.proactiveChatInNewWindow]);
 
     return (
         <ChatButton
