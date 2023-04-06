@@ -116,7 +116,6 @@ Refer to the below table to understand different broadcast events raised during 
 | `StartProactiveChat`              |On starting proactive chat through sdk method |
 | `ProactiveChatStartChat`          |On `ProactiveChatPane` start chat |
 | `ProactiveChatStartPopoutChat`    |On `ProactiveChatPane` start chat in a new window |
-| `ProactiveChatIsInPopoutMode`     |On clicking on chat button, when a new window is open |
 | `ResetProactiveChatParams`        |On closing popout window for proactive chat |
 | `LoadPostChatSurvey`              |On loading post chat survey |
 | `ChatEnded`                       |On ending chat |
@@ -178,7 +177,6 @@ Refer to the below table to understand different critical telemetry events raise
 | `PreChatSurveyStartChatMethodFailed`|On Pre-Chat survey submit failed|
 | `LCWChatButtonClicked`  |On Start Chat button click |
 | `StartProactiveChatEventReceived`|On receiving start proactive chat event|
-| `ChatAlreadyTriggered`|On attempting to start proactive chat pane with chat already triggered|
 | `ProactiveChatAccepted` |On Proactive chat Start Chat button click |
 | `ProactiveChatRejected` |On Proactive chat invitation time out |
 | `ProactiveChatClosed`   |On Proactive chat closed |
