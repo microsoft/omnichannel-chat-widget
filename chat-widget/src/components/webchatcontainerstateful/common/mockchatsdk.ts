@@ -28,7 +28,9 @@ export class MockChatSDK {
     }
 
     public getConversationDetails() {
-        return {};
+        return {
+            State: "Active"
+        };
     }
 
     public getCurrentLiveChatContext() {
