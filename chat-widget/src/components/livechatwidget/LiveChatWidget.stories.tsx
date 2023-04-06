@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+import { BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ILiveChatWidgetProps } from "./interfaces/ILiveChatWidgetProps";
 import { IconButton } from "@fluentui/react/lib/Button";
@@ -8,7 +9,6 @@ import { Meta } from "@storybook/react/types-6-0";
 import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
 import { Story } from "@storybook/react";
 import { hooks } from "botframework-webchat";
-import { BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 
 export default {
     title: "Stateful Components/Live Chat Widget",
@@ -822,7 +822,7 @@ LiveChatWidgetReconnectChatPane.args = liveChatWidgetReconnectChatPaneProps;
 class MockChatSDKSurveyEnabled extends MockChatSDK {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public getPreChatSurvey(parseToJson: boolean) {
-        return "{\"type\":\"AdaptiveCard\",\"version\":\"1.1\",\"body\":[{\"type\":\"TextBlock\",\"weight\":\"bolder\",\"text\":\"Please answer below questions.\"},{\"type\":\"TextBlock\",\"text\":\"*Please Enter Name\",\"wrap\":true},{\"type\":\"Input.Text\",\"id\":\"{\\\"Id\\\":\\\"33828761-9e8b-ec11-93b0-00224824654f\\\",\\\"Name\\\":\\\"Name\\\",\\\"IsOption\\\":false,\\\"Order\\\":1,\\\"IsRequired\\\":true,\\\"QuestionText\\\":\\\"Please Enter Name\\\"}\",\"maxLength\":100},{\"type\":\"TextBlock\",\"text\":\"Comments\",\"wrap\":true},{\"type\":\"Input.Text\",\"id\":\"{\\\"Id\\\":\\\"5624f385-9e8b-ec11-93b0-00224824654f\\\",\\\"Name\\\":\\\"Comments\\\",\\\"IsOption\\\":false,\\\"Order\\\":2,\\\"IsRequired\\\":false,\\\"QuestionText\\\":\\\"Comments\\\"}\",\"isMultiline\":true,\"maxLength\":250},{\"type\":\"TextBlock\",\"text\":\"Options\",\"wrap\":true},{\"type\":\"Input.ChoiceSet\",\"id\":\"{\\\"Id\\\":\\\"0b5d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Name\\\":\\\"Options\\\",\\\"IsOption\\\":true,\\\"Order\\\":3,\\\"IsRequired\\\":false,\\\"QuestionText\\\":\\\"Options\\\"}\",\"value\":\"{\\\"Id\\\":\\\"135d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Value\\\":\\\"Option2\\\"}\",\"style\":\"compact\",\"isMultiSelect\":false,\"choices\":[{\"title\":\"Option2\",\"value\":\"{\\\"Id\\\":\\\"135d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Value\\\":\\\"Option2\\\"}\"},{\"title\":\"Option3\",\"value\":\"{\\\"Id\\\":\\\"145d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Value\\\":\\\"Option3\\\"}\"},{\"title\":\"Option1\",\"value\":\"{\\\"Id\\\":\\\"125d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Value\\\":\\\"Option1\\\"}\"}]},{\"type\":\"Input.Toggle\",\"id\":\"{\\\"Id\\\":\\\"63a42fb5-9e8b-ec11-93b0-00224824654f\\\",\\\"Name\\\":\\\"Consent\\\",\\\"IsOption\\\":false,\\\"Order\\\":4,\\\"IsRequired\\\":true,\\\"QuestionText\\\":\\\"Agree to Terms and Conditions\\\"}\",\"title\":\"*Agree to Terms and Conditions\",\"valueOn\":\"True\",\"valueOff\":\"False\",\"value\":\"false\"},{\"type\":\"TextBlock\",\"isSubtle\":true,\"text\":\"Fields marked with * are mandatory.\",\"wrap\":true}],\"actions\":[{\"type\":\"Action.Submit\",\"data\":{\"Type\":\"InputSubmit\"},\"title\":\"Submit\"}]}";
+        return "{\"type\":\"AdaptiveCard\",\"version\":\"1.1\",\"body\":[{\"type\":\"TextBlock\",\"weight\":\"bolder\",\"text\":\"Please answer below questions.\"},{\"type\":\"TextBlock\",\"text\":\"* Please Enter Name\",\"wrap\":true},{\"type\":\"Input.Text\",\"id\":\"{\\\"Id\\\":\\\"33828761-9e8b-ec11-93b0-00224824654f\\\",\\\"Name\\\":\\\"Name\\\",\\\"IsOption\\\":false,\\\"Order\\\":1,\\\"IsRequired\\\":true,\\\"QuestionText\\\":\\\"Please Enter Name\\\"}\",\"maxLength\":100},{\"type\":\"TextBlock\",\"text\":\"Comments\",\"wrap\":true},{\"type\":\"Input.Text\",\"id\":\"{\\\"Id\\\":\\\"5624f385-9e8b-ec11-93b0-00224824654f\\\",\\\"Name\\\":\\\"Comments\\\",\\\"IsOption\\\":false,\\\"Order\\\":2,\\\"IsRequired\\\":false,\\\"QuestionText\\\":\\\"Comments\\\"}\",\"isMultiline\":true,\"maxLength\":250},{\"type\":\"TextBlock\",\"text\":\"Options\",\"wrap\":true},{\"type\":\"Input.ChoiceSet\",\"id\":\"{\\\"Id\\\":\\\"0b5d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Name\\\":\\\"Options\\\",\\\"IsOption\\\":true,\\\"Order\\\":3,\\\"IsRequired\\\":false,\\\"QuestionText\\\":\\\"Options\\\"}\",\"value\":\"{\\\"Id\\\":\\\"135d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Value\\\":\\\"Option2\\\"}\",\"style\":\"compact\",\"isMultiSelect\":false,\"choices\":[{\"title\":\"Option2\",\"value\":\"{\\\"Id\\\":\\\"135d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Value\\\":\\\"Option2\\\"}\"},{\"title\":\"Option3\",\"value\":\"{\\\"Id\\\":\\\"145d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Value\\\":\\\"Option3\\\"}\"},{\"title\":\"Option1\",\"value\":\"{\\\"Id\\\":\\\"125d9408-10b1-ec11-983f-0022481e6d27\\\",\\\"Value\\\":\\\"Option1\\\"}\"}]},{\"type\":\"Input.Toggle\",\"id\":\"{\\\"Id\\\":\\\"63a42fb5-9e8b-ec11-93b0-00224824654f\\\",\\\"Name\\\":\\\"Consent\\\",\\\"IsOption\\\":false,\\\"Order\\\":4,\\\"IsRequired\\\":true,\\\"QuestionText\\\":\\\"Agree to Terms and Conditions\\\"}\",\"title\":\"*Agree to Terms and Conditions\",\"valueOn\":\"True\",\"valueOff\":\"False\",\"value\":\"false\"},{\"type\":\"TextBlock\",\"isSubtle\":true,\"text\":\"Fields marked with * are mandatory.\",\"wrap\":true}],\"actions\":[{\"type\":\"Action.Submit\",\"data\":{\"Type\":\"InputSubmit\"},\"title\":\"Submit\"}]}";
     }
 
     public async getPostChatSurveyContext() {
@@ -864,7 +864,8 @@ export const LiveChatWidgetFixedSizeSurveyEnabled = LiveChatWidgetTemplate.bind(
 // Using Storybook loader for states to be loaded correctly
 LiveChatWidgetFixedSizeSurveyEnabled.loaders = [() => {
     window.localStorage.setItem( 
-        "postChatContext",  "{participantJoined:false,canRenderPostchat:True,participantType:undefined,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\"}"
+        "postChatContext",  "{participantJoined:True,canRenderPostchat:True,participantType:Bot,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\""+
+            "botSurveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",botFormsProLocale:\"en-us\"}"
     );
 }];
 
@@ -910,7 +911,8 @@ export const LiveChatWidgetCustomizedSurveyEnabled = LiveChatWidgetTemplate.bind
 // Using Storybook loader for states to be loaded correctly
 LiveChatWidgetCustomizedSurveyEnabled.loaders = [() => {
     window.localStorage.setItem( 
-        "postChatContext",  "{participantJoined:false,canRenderPostchat:True,participantType:undefined,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\"}"
+        "postChatContext",  "{participantJoined:True,canRenderPostchat:True,participantType:Bot,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\""+
+            "botSurveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",botFormsProLocale:\"en-us\"}"
     );
 }];
 
