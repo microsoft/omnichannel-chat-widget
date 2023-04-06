@@ -382,24 +382,6 @@ export const createReducer = () => {
                     }
                 };
 
-            case LiveChatWidgetActionType.SET_TRANSCRIPT_REQUEST_ID:
-                return {
-                    ...state,
-                    domainStates: {
-                        ...state.domainStates,
-                        transcriptRequestId: action.payload as string
-                    }
-                };
-
-            case LiveChatWidgetActionType.SET_CONFIRMATION_CONFIRMED_CLICKED:
-                return {
-                    ...state,
-                    domainStates: {
-                        ...state.domainStates,
-                        confirmationPaneConfirmedOptionClicked: action.payload as boolean
-                    }
-                };
-
             case LiveChatWidgetActionType.SET_CONFIRMATION_STATE:
                 return {
                     ...state,

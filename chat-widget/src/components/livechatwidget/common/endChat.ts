@@ -75,7 +75,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
     skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean, uwid = "") => {
-    if (!skipEndChatSDK) {
+    if (!skipEndChatSDK && chatSDK.conversation) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatSDKCall
@@ -83,7 +83,6 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
 
             //get auth token again if chat continued for longer time, otherwise gets 401 error
             await handleAuthenticationIfEnabled(props, chatSDK);
-            dispatch({ type: LiveChatWidgetActionType.SET_TRANSCRIPT_REQUEST_ID, payload: chatSDK.requestId });
             await chatSDK?.endChat();
         } catch (ex) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -128,7 +127,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
         }
     }
 
-    if (postMessageToOtherTab && isNullOrEmptyString(uwid)) {
+    if (postMessageToOtherTab && !isNullOrEmptyString(uwid)) {
         const endChatEventName = await getEndChatEventName(chatSDK, props);
         BroadcastService.postMessage({
             eventName: endChatEventName,

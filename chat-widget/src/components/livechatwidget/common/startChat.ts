@@ -162,7 +162,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             // Update start chat failure app state if chat loads successfully
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
-            dispatch({ type: LiveChatWidgetActionType.SET_TRANSCRIPT_REQUEST_ID, payload: chatSDK.requestId });
         }
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {

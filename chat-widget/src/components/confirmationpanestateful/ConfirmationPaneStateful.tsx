@@ -2,7 +2,6 @@ import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConsta
 import { ConfirmationPane } from "@microsoft/omnichannel-chat-components";
 import React, { Dispatch, useEffect } from "react";
 import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
-
 import { DimLayer } from "../dimlayer/DimLayer";
 import { IConfirmationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/confirmationpane/interfaces/IConfirmationPaneControlProps";
 import { IConfirmationPaneStatefulParams } from "./interfaces/IConfirmationPaneStatefulParams";

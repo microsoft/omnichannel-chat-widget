@@ -1,5 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { Header } from "@microsoft/omnichannel-chat-components";
@@ -26,6 +26,9 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
 
+    // For some reason state object is not getting updated values in this component
+    const localConfirmationPaneState = useRef(state?.domainStates?.confirmationState);
+
     const controlProps: IHeaderControlProps = {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
@@ -36,7 +39,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         onCloseClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
 
-            if (state.domainStates.confirmationState !== ConfirmationState.Ok) {
+            if (localConfirmationPaneState.current !== ConfirmationState.Ok) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
             } else {
                 const skipEndChatSDK = true;
@@ -75,6 +78,9 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         }
     }, []);
 
+    useEffect(() => {
+        localConfirmationPaneState.current = state?.domainStates?.confirmationState;
+    }, [state?.domainStates?.confirmationState]);
 
     return (
         <Header

@@ -471,7 +471,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
-            if (state?.appStates?.conversationState === ConversationState.InActive) {
+            if (state?.appStates?.conversationState === ConversationState.InActive
+                || state?.appStates?.conversationState === ConversationState.Postchat) {
                 // Do both end chat and close chat
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid.current);
             } else {
@@ -511,13 +512,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         };
         BroadcastService.postMessage(chatWidgetStateChangeEvent);
     }, [state]);
-
-    // Handle Agent end conversation cases
-    /*useEffect(() => {
-        if (state.appStates.conversationEndedByAgentEventReceived === true) {
-            prepareEndChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state, uuid.current);
-        }
-    }, [state.appStates.conversationEndedByAgentEventReceived]);*/
 
     // Handle Chat disconnect cases
     useEffect(() => {
