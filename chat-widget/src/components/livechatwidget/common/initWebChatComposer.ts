@@ -32,6 +32,7 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
+import HyperlinkRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkRenderer";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, setWebChatStyles: any) => {
@@ -40,6 +41,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         ...props.webChatContainerProps?.localizedTexts
     };
 
+    const hyperlinkTextOverride = props.webChatContainerProps?.hyperlinkTextOverride ?? defaultWebChatContainerStatefulProps.hyperlinkTextOverride;
     const disableNewLineMarkdownSupport = props.webChatContainerProps?.disableNewLineMarkdownSupport ?? defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const markdown = createMarkdown((props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting)!, disableNewLineMarkdownSupport!);
@@ -81,6 +83,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         WebChatStoreLoader.store = webChatStore;
     }
 
+    const hyperlinkRenderer = new HyperlinkRenderer(hyperlinkTextOverride as boolean);
     const renderMarkdown = (text: string): string => {
         if (props.webChatContainerProps?.webChatProps?.renderMarkdown) {
             text = props.webChatContainerProps?.webChatProps.renderMarkdown(text);
@@ -88,6 +91,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             const render = disableNewLineMarkdownSupport ? markdown.renderInline.bind(markdown) : markdown.render.bind(markdown);
             text = render(text);
         }
+
+        text = hyperlinkRenderer.render(text);
 
         return text;
     };
