@@ -86,7 +86,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "#oc-lcw-footer-emailtranscript-button"
+                "selector": "#lcw-footer-email-transcript-button"
               }
             }
           ],
@@ -2430,7 +2430,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-footer-emailtranscript-button"
+                    "selector": "#lcw-footer-email-transcript-button"
                   }
                 }
               ],
@@ -2488,7 +2488,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-footer-emailtranscript-button"
+                    "selector": "#lcw-footer-email-transcript-button"
                   }
                 }
               ],
@@ -2546,7 +2546,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-footer-emailtranscript-button"
+                    "selector": "#lcw-footer-email-transcript-button"
                   }
                 }
               ],
@@ -3944,7 +3944,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
               }
             }
           ],
@@ -3956,7 +3956,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
               }
             },
             {
@@ -3968,7 +3968,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
               }
             }
           ],
@@ -3980,7 +3980,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
               }
             },
             {
@@ -3998,7 +3998,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
               }
             },
             {
@@ -4032,7 +4032,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 }
               ],
@@ -4043,7 +4043,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4055,7 +4055,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 }
               ],
@@ -4086,7 +4086,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 }
               ],
@@ -4097,7 +4097,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4109,7 +4109,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 }
               ],
@@ -4140,7 +4140,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 }
               ],
@@ -4151,7 +4151,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4163,7 +4163,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 }
               ],
@@ -4194,7 +4194,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 }
               ],
@@ -4205,7 +4205,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4217,7 +4217,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 }
               ],
@@ -4228,7 +4228,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4246,7 +4246,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 },
                 {
@@ -4283,7 +4283,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 }
               ],
@@ -4294,7 +4294,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4306,7 +4306,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 }
               ],
@@ -4317,7 +4317,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4335,7 +4335,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 },
                 {
@@ -4372,7 +4372,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 }
               ],
@@ -4383,7 +4383,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4395,7 +4395,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 }
               ],
@@ -4406,7 +4406,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>textarea"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
                   }
                 },
                 {
@@ -4424,7 +4424,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>div>form>input"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
                   }
                 },
                 {
