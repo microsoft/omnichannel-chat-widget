@@ -32,7 +32,7 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
-import HyperlinkRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkRenderer";
+import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, setWebChatStyles: any) => {
@@ -83,7 +83,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         WebChatStoreLoader.store = webChatStore;
     }
 
-    const hyperlinkRenderer = new HyperlinkRenderer(hyperlinkTextOverride as boolean);
+    const hyperlinkTextOverrideRenderer = new HyperlinkTextOverrideRenderer(hyperlinkTextOverride as boolean);
+    const markdownRenderers = [hyperlinkTextOverrideRenderer];
     const renderMarkdown = (text: string): string => {
         if (props.webChatContainerProps?.webChatProps?.renderMarkdown) {
             text = props.webChatContainerProps?.webChatProps.renderMarkdown(text);
@@ -92,7 +93,9 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
             text = render(text);
         }
 
-        text = hyperlinkRenderer.render(text);
+        markdownRenderers.forEach((renderer) => {
+            text = renderer.render(text);
+        });
 
         return text;
     };

@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 
-class HyperlinkRenderer {
+class HyperlinkTextOverrideRenderer {
     private hyperlinkTextOverride: boolean
     constructor(hyperlinkTextOverride: boolean) {
         this.hyperlinkTextOverride = hyperlinkTextOverride;
@@ -60,4 +60,4 @@ class HyperlinkRenderer {
     }
 }
 
-export default HyperlinkRenderer;
+export default HyperlinkTextOverrideRenderer;
