@@ -177,6 +177,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `PreChatSurveyStartChatMethodFailed`|On Pre-Chat survey submit failed|
 | `LCWChatButtonClicked`  |On Start Chat button click |
 | `StartProactiveChatEventReceived`|On receiving start proactive chat event|
+| `ChatAlreadyTriggered`|On attempting to start proactive chat pane with chat already triggered|
 | `ProactiveChatAccepted` |On Proactive chat Start Chat button click |
 | `ProactiveChatRejected` |On Proactive chat invitation time out |
 | `ProactiveChatClosed`   |On Proactive chat closed |
