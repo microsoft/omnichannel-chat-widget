@@ -81,6 +81,17 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         WebChatStoreLoader.store = webChatStore;
     }
 
+    const renderMarkdown = (text: string): string => {
+        if (props.webChatContainerProps?.webChatProps?.renderMarkdown) {
+            text = props.webChatContainerProps?.webChatProps.renderMarkdown(text);
+        } else {
+            const render = disableNewLineMarkdownSupport ? markdown.renderInline.bind(markdown) : markdown.render.bind(markdown);
+            text = render(text);
+        }
+
+        return text;
+    };
+
     // Initialize the remaining Web Chat props
     const webChatProps: IWebChatProps = {
         ...defaultWebChatContainerStatefulProps.webChatProps,
@@ -90,7 +101,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
         activityMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityMiddleware ? undefined : createActivityMiddleware(state.domainStates.renderingMiddlewareProps?.systemMessageStyleProps, state.domainStates.renderingMiddlewareProps?.userMessageStyleProps),
         attachmentMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAttachmentMiddleware ? undefined : createAttachmentMiddleware(state.domainStates.renderingMiddlewareProps?.attachmentProps?.enableInlinePlaying ?? defaultAttachmentProps.enableInlinePlaying),
         activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.activityStatusMiddleware,
-        renderMarkdown: props.webChatContainerProps?.webChatProps?.renderMarkdown ?? (disableNewLineMarkdownSupport ? markdown.renderInline.bind(markdown) : markdown.render.bind(markdown)),
+        renderMarkdown,
         avatarMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAvatarMiddleware ? undefined : createAvatarMiddleware(state.domainStates.renderingMiddlewareProps?.avatarStyleProps, state.domainStates.renderingMiddlewareProps?.avatarTextStyleProps),
         groupActivitiesMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableGroupActivitiesMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.groupActivitiesMiddleware,
         typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,
