@@ -62,3 +62,7 @@ All notable changes to this project will be documented in this file.
 - Added individual UI components like `Header`, `Footer`, and `ChatButton`, etc. with customizable `controlProps` and `styleProps`
 - Added `BroadcastService` to communicate with package consumer layer, and for telemetry purposes
 - Exposed `encodeComponentString` and `encodeComponentString`
+
+### Fixed
+
+- Prevent new chat creation failure after Proactive chat in Popout mode
