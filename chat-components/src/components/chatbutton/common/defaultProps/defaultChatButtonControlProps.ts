@@ -9,6 +9,8 @@ export const defaultChatButtonControlProps: IChatButtonControlProps = {
     onClick: function () {
         console.log("initiate chat"); 
     },
+    titleText: Texts.ChatButtonTitle,
+    subtitleText: Texts.ChatButtonSubtitle,
     hideChatButton: false,
     hideChatIcon:false, 
     hideChatTextContainer: false,

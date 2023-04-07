@@ -82,8 +82,7 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
                     styles={titleStyles}
                     dir={titleDir}
                     className={props.styleProps?.classNames?.titleClassName}
-                    id={parentId + "-title"}
-                    title={titleText}>
+                    id={parentId + "-title"}>
                     {titleText}
                 </Label> ) }
 
@@ -92,8 +91,7 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
                     styles={subtitleStyles}
                     dir={subtitleDir}
                     className={props.styleProps?.classNames?.subtitleClassName}
-                    id={parentId + "-subtitle"}
-                    title={subtitleText}>
+                    id={parentId + "-subtitle"}>
                     {subtitleText}
                 </Label> )}
         </Stack>
