@@ -170,6 +170,7 @@ export enum TelemetryEvent {
     WebChatEvent = "WebChatEvent",
 
     PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
+    ChatAlreadyTriggered = "ChatAlreadyTriggered",
     StartProactiveChatEventReceived = "StartProactiveChatEventReceived",
     StartProactiveChatMethodFailed = "StartProactiveChatMethodFailed",
     ProactiveChatAccepted = "ProactiveChatAccepted",

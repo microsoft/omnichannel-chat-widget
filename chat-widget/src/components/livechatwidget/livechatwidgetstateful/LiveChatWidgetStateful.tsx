@@ -81,6 +81,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;
+    const canStartProactiveChat = useRef(true);
 
     // Process general styles
     const generalStyles: IStackStyles = {
@@ -228,8 +229,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
                 Description: "Start proactive chat event received."
             });
-            
-            startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
+            if (canStartProactiveChat.current === true) {
+                startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
+            } else {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ChatAlreadyTriggered,
+                    Description: "Start proactive chat method called, when chat was already triggered."
+                });
+            }
         });
 
         // Toggle chat visibility
@@ -375,6 +382,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             });
         }
     }, [state.appStates.conversationState]);
+
+    useEffect(() => {
+        canStartProactiveChat.current = state.appStates.conversationState === ConversationState.Closed &&
+            !state.appStates.proactiveChatStates.proactiveChatInNewWindow;
+    }, [state.appStates.conversationState, state.appStates.proactiveChatStates.proactiveChatInNewWindow]);
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
