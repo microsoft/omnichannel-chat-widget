@@ -21,15 +21,12 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         const conversationDetails = await getConversationDetails(chatSDK);
 
         // Use Case : When post chat is not configured
-        if (conversationDetails.canRenderPostChat.toLowerCase() === Constants.false) {
+        if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
             // If ended by customer, just close chat
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
                 await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid);
-                return;
             }
-
             //Use Case: If ended by Agent, stay chat in InActive state
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
             return;
         }
 
@@ -201,6 +198,10 @@ const getConversationDetails = async (chatSDK: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
     try {
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.GetConversationDetailsCallStarted,
+            Description: "Conversation details call started"
+        });
         conversationDetails = await chatSDK.getConversationDetails();
     } catch (error) {
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {

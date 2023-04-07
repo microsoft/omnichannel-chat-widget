@@ -240,7 +240,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
         await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
         return true;
-    } 
+    }
 
     return false;
 };

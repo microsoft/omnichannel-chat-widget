@@ -168,7 +168,6 @@ Refer to the below table to understand different critical telemetry events raise
 | `CustomerVoiceResponsePageLoaded` | On survey page load complete|
 | `CustomerVoiceFormResponseSubmitted` | On survey submitted |
 | `CustomerVoiceFormResponseError` | On survey response error|
-| `ChatDisconnectThreadEventReceived` | On chat disconnected|
 
 #### Action Events
 
@@ -229,6 +228,9 @@ Refer to the below table to understand different critical telemetry events raise
 | `PostChatWorkflowFromAgent` | On postchat workflow from agent being triggered
 | `PostChatWorkflowFromBot` | On postchat workflow from bot being triggered
 | `CloseChatCall ` | On triggering closed chat state
+| `ChatDisconnectThreadEventReceived` | On chat disconnected|
+| `GetConversationDetailsCallStarted` | On conversation detail api call start |
+| `GetChatReconnectContextSDKCallStarted` | On chat reconnect context api call start |
 
 #### Calling Events
 

@@ -470,6 +470,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent) {
             //Directly go to PCS
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
             prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
             return;
         }
