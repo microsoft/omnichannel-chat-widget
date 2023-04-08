@@ -30,25 +30,31 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             return;
         }
 
-
         // Use Case : Can render post chat scenarios
         await getPostChatContext(chatSDK, state, dispatch);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const postchatContext: any = state?.domainStates?.postChatContext;
-
-        //Unable to load post chat, but allow to download transcript
+        
         if (postchatContext === undefined) {
+            // For Customer intiated conversations, just close chat widget
+            if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid);
+                return;
+            }
+
+            //For agent initiated end chat, allow to download transcript
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
             return;
         }
 
         updateParticipantTypes(dispatch, conversationDetails);
-
         endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true, uwid);
-
         // Initiate post chat render
-        await initiatePostChat(props, conversationDetails, state, dispatch);
+        if (state?.domainStates?.postChatContext) {
+            await initiatePostChat(props, conversationDetails, state, dispatch);
+            return;
+        }
     }
     catch (error) {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {

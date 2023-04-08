@@ -77,7 +77,6 @@ const embedModePostChatWorkflow = async (state: ILiveChatWidgetContext, dispatch
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initiatePostChat = async (props: ILiveChatWidgetProps, conversationDetailsParam: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     conversationDetails = conversationDetailsParam;
-
     await setSurveyMode(props, conversationDetails?.participantType, state, dispatch);
 
     await renderSurvey(state, dispatch);

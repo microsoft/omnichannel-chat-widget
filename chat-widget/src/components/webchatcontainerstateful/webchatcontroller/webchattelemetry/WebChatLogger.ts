@@ -26,7 +26,7 @@ export function createWebChatTelemetry() {
                 break;
         }
 
-        if (name.toLowerCase() === "init") {
+        if (name?.toLowerCase() === "init") {
             isInitEventLogged = true;
         }
     };

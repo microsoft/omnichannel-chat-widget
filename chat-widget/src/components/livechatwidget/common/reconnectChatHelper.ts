@@ -35,7 +35,6 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
     }
 
     if (hasReconnectId(reconnectChatContext)) {
-
         //if reconnect id is provided in props, don't show reconnect pane
         if (props.reconnectChatPaneProps?.reconnectId && !isNullOrEmptyString(props.reconnectChatPaneProps?.reconnectId)) {
             await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, props, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);

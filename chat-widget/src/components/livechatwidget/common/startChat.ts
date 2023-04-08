@@ -146,6 +146,14 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
         newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
 
+        // Set app state to Active
+        if (isStartChatSuccessful) {
+            ActivityStreamHandler.uncork();
+            // Update start chat failure app state if chat loads successfully
+            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
+        }
+
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
             await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
@@ -156,14 +164,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
         dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
 
-        // Set app state to Active
-        if (isStartChatSuccessful) {
-            ActivityStreamHandler.uncork();
-            // Update start chat failure app state if chat loads successfully
-            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
-        }
-
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.WidgetLoadComplete,
             Description: "Widget load complete",
@@ -172,7 +172,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         // Set post chat context in state
         // Commenting this for now as post chat context is fetched during end chat
-        //await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+        await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
 
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
