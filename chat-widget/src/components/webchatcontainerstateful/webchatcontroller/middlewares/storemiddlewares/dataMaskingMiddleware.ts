@@ -31,6 +31,8 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
     for (const ruleId of Object.keys(regexCollection)) {
         const item = regexCollection[ruleId];
         if (item) {
+            let ruleInfiniteException = false;
+            let ruleApplied = false;
             try {
                 const regex = new RegExp(item, "gi");
                 let match;
@@ -39,15 +41,13 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                     const replaceStr = match[0].replace(/./gi, maskedChar);
                     const modifiedText = text.replace(match[0], replaceStr);
                     if (modifiedText == text) {
+                        ruleInfiniteException = true;
                         console.warn(`The data masking rule ${item} is ignored because it matches empty strings. Please modify this rule.`);
                         break;
                     } 
                     
+                    ruleApplied = true;
                     text = modifiedText;
-                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                        Event: TelemetryEvent.DataMaskingRuleApplied,
-                        Description: `Data Masking Rule Id: ${ruleId} applied.`
-                    });
                     isRuleMatched = true;
                 }
             } catch (err) {
@@ -56,6 +56,23 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                     ExceptionDetails: {
                         RuleId: ruleId,
                         Exception: err
+                    }
+                });
+            }
+
+            if (ruleApplied) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.DataMaskingRuleApplied,
+                    Description: `Data Masking Rule Id: ${ruleId} applied.`
+                });
+            }
+
+            if (ruleInfiniteException) {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.DataMaskingRuleApplyFailed,
+                    ExceptionDetails: {
+                        RuleId: ruleId,
+                        Exception: "The data masking rule matches empty strings."
                     }
                 });
             }
