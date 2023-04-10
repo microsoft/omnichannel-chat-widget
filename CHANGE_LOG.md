@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Add `hyperlinkTextOverride` props to override anchor element's `innerText` with `href` if they don't match to prevent URL spoofing
+
 ## [1.0.2] - 2023-4-6
 
 ### Added
@@ -37,7 +41,7 @@ All notable changes to this project will be documented in this file.
 - Stitched all components in chat-components package with default Omnichannel chat flow
 - Exposed CSS style customizations on all UI components
 - Hooked up with BotFramework WebChat and exposed all WebChat styles
-- Included Omnichannel features by default, including pre chat, post chat, voice/video call, operating hours, etc. 
+- Included Omnichannel features by default, including pre chat, post chat, voice/video call, operating hours, etc.
 - Added various documentations on features and package usages
 
 ### Fixed
