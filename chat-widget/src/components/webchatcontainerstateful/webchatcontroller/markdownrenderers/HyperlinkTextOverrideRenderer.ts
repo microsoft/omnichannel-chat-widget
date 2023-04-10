@@ -1,4 +1,5 @@
 import DOMPurify from "dompurify";
+import {HtmlAttributeNames} from "../../../../common/Constants";
 
 class HyperlinkTextOverrideRenderer {
     private hyperlinkTextOverride: boolean
@@ -7,7 +8,7 @@ class HyperlinkTextOverrideRenderer {
     }
 
     private convertTextToHtmlNode(text: string) {
-        const htmlNode = document.createElement("div");
+        const htmlNode = document.createElement(HtmlAttributeNames.div);
 
         try {
             text = DOMPurify.sanitize(text); // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -20,13 +21,13 @@ class HyperlinkTextOverrideRenderer {
     }
 
     private processANode(htmlNode: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-        const aTags = htmlNode.getElementsByTagName("a");
+        const aTags = htmlNode.getElementsByTagName(HtmlAttributeNames.aTagName);
 
         for (let index = 0; index < aTags.length; index++) {
             const aNode = aTags[index];
 
             if (!aNode ||
-                !aNode.tagName || aNode.tagName.toLowerCase() !== "a" ||
+                !aNode.tagName || aNode.tagName.toLowerCase() !== HtmlAttributeNames.aTagName ||
                 !aNode.href) continue;
             if (aNode.href !== aNode.innerText.trim()) {
                 aNode.innerText = aNode.href;
@@ -41,7 +42,7 @@ class HyperlinkTextOverrideRenderer {
 
         try {
             const htmlNode = this.convertTextToHtmlNode(text);
-            const aNodes = htmlNode.getElementsByTagName("a");
+            const aNodes = htmlNode.getElementsByTagName(HtmlAttributeNames.aTagName);
             return !!aNodes && aNodes.length && aNodes.length > 0;
         } catch {
             return false;
