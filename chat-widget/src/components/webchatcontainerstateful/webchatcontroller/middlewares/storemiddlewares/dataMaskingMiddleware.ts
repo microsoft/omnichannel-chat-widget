@@ -37,7 +37,13 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                 // eslint-disable-next-line no-cond-assign
                 while (match = regex.exec(text)) {
                     const replaceStr = match[0].replace(/./gi, maskedChar);
-                    text = text.replace(match[0], replaceStr);
+                    const modifiedText = text.replace(match[0], replaceStr);
+                    if (modifiedText == text) {
+                        console.warn(`The data masking rule ${item} is ignored because it matches empty strings. Please modify this rule.`);
+                        break;
+                    } 
+                    
+                    text = modifiedText;
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.DataMaskingRuleApplied,
                         Description: `Data Masking Rule Id: ${ruleId} applied.`
