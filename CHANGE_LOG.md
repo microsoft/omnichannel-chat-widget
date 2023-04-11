@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.2] - 2023-4-6
+
 ### Added
 
 - Added MIDDLEWARE_BANNER_FILE parameter `{2}` to show the user the file name when an exception occurs, also implementing standard for parameter to keep backwards compatibility
