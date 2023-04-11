@@ -29,8 +29,9 @@ class HyperlinkTextOverrideRenderer {
             if (!aNode ||
                 !aNode.tagName || aNode.tagName.toLowerCase() !== HtmlAttributeNames.aTagName ||
                 !aNode.href) continue;
-            if (aNode.href !== aNode.innerText.trim()) {
-                aNode.innerText = aNode.href;
+
+            if (aNode.href !== aNode.text.trim()) {
+                aNode.text = aNode.href;
             }
         }
     }
