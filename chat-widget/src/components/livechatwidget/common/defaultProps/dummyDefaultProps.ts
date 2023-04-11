@@ -1571,7 +1571,7 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             },
             systemMessageBoxStyles: {
                 maxWidth: "90%"
-            }, 
+            },
             typingIndicatorStyleProps: {
                 marginLeft: "10px",
                 marginBottom: "5px",
@@ -1732,7 +1732,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         adaptiveCardStyles: {
             background: "white",
             color: "black"
-        }
+        },
+        hyperlinkTextOverride: false
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
     getAuthToken: undefined
