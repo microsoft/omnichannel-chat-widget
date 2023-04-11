@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Fixed
+
+- Fixed an issue where data masking rule matching empty strings will cause infitnite loop
+
 ## [1.0.2] - 2023-4-6
 
 ### Added
