@@ -12,8 +12,8 @@ describe("HyperlinkTextOverrideRenderer unit tests", () => {
     act(() => {
         it("HyperlinkTextOverrideRenderer() with hyperlinkTextOverride set to 'false' should not override the hyperlink text", () => {
             const data = {
-                href: 'https://microsoft.com/',
-                text: 'https://bing.com/'
+                href: "https://microsoft.com/",
+                text: "https://bing.com/"
             };
 
             const renderer = new HyperlinkTextOverrideRenderer(false);
@@ -26,8 +26,8 @@ describe("HyperlinkTextOverrideRenderer unit tests", () => {
 
         it("HyperlinkTextOverrideRenderer() with hyperlinkTextOverride set to 'true' should override the hyperlink text", () => {
             const data = {
-                href: 'https://microsoft.com/',
-                text: 'https://bing.com/'
+                href: "https://microsoft.com/",
+                text: "https://bing.com/"
             };
 
             const renderer = new HyperlinkTextOverrideRenderer(true);
