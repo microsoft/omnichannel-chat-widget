@@ -27,7 +27,6 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
         return action;
     }
 
-    let isRuleMatched = false;
     for (const ruleId of Object.keys(regexCollection)) {
         const item = regexCollection[ruleId];
         if (item) {
@@ -48,7 +47,6 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                     
                     ruleApplied = true;
                     text = modifiedText;
-                    isRuleMatched = true;
                 }
             } catch (err) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
