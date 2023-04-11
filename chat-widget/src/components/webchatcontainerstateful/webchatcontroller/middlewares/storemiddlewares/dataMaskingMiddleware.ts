@@ -27,22 +27,26 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
         return action;
     }
 
-    let isRuleMatched = false;
     for (const ruleId of Object.keys(regexCollection)) {
         const item = regexCollection[ruleId];
         if (item) {
+            let ruleInfiniteException = false;
+            let ruleApplied = false;
             try {
                 const regex = new RegExp(item, "gi");
                 let match;
                 // eslint-disable-next-line no-cond-assign
                 while (match = regex.exec(text)) {
                     const replaceStr = match[0].replace(/./gi, maskedChar);
-                    text = text.replace(match[0], replaceStr);
-                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                        Event: TelemetryEvent.DataMaskingRuleApplied,
-                        Description: `Data Masking Rule Id: ${ruleId} applied.`
-                    });
-                    isRuleMatched = true;
+                    const modifiedText = text.replace(match[0], replaceStr);
+                    if (modifiedText == text) {
+                        ruleInfiniteException = true;
+                        console.warn(`The data masking rule ${item} is ignored because it matches empty strings. Please modify this rule.`);
+                        break;
+                    } 
+                    
+                    ruleApplied = true;
+                    text = modifiedText;
                 }
             } catch (err) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -53,11 +57,23 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                     }
                 });
             }
-        }
 
-        // Exit if rule matched
-        if (isRuleMatched === true) {
-            break;
+            if (ruleApplied) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.DataMaskingRuleApplied,
+                    Description: `Data Masking Rule Id: ${ruleId} applied.`
+                });
+            }
+
+            if (ruleInfiniteException) {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.DataMaskingRuleApplyFailed,
+                    ExceptionDetails: {
+                        RuleId: ruleId,
+                        Exception: "The data masking rule matches empty strings."
+                    }
+                });
+            }
         }
     }
 

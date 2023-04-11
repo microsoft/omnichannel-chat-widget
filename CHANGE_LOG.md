@@ -10,6 +10,11 @@ All notable changes to this project will be documented in this file.
 
 - Add `hyperlinkTextOverride` props to override anchor element's `innerText` with `href` if they don't match to prevent URL spoofing
 
+## Fixed
+
+- Fixed an issue where data masking rule matching empty strings will cause infitnite loop
+
+
 ## [1.0.2] - 2023-4-6
 
 ### Added
