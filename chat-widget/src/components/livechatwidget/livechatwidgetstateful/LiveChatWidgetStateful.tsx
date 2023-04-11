@@ -368,6 +368,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             props.controlProps?.widgetInstanceId ?? "");
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
+            console.log("Receiving end chat event", JSON.stringify(msg.payload));
             if (msg.payload !== uwid.current) {
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 return;
@@ -469,21 +470,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent) {
-            //Directly go to PCS
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-            prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
-            return;
         }
 
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
-            if (state?.appStates?.conversationState === ConversationState.InActive
-                || state?.appStates?.conversationState === ConversationState.Postchat) {
-                // Do both end chat and close chat
-                endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid.current);
-            } else {
-                //Only end chat to load survey
-                prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
-            }
+        if (state?.appStates?.conversationState === ConversationState.InActive
+            || state?.appStates?.conversationState === ConversationState.Postchat) {
+            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid.current);
+        } else {
+            prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
+            return;
         }
     }, [state?.appStates?.conversationEndedBy]);
 

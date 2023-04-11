@@ -103,15 +103,10 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
     if (!skipCloseChat) {
         try {
             adapter?.end();
-
             setAdapter(undefined);
-
             setWebChatStyles({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
-
             WebChatStoreLoader.store = null;
-
             closeChatStateCleanUp(dispatch);
-
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CloseChatCall,
                 Description: "Chat was closed succesfully"
