@@ -168,7 +168,6 @@ Refer to the below table to understand different critical telemetry events raise
 | `CustomerVoiceResponsePageLoaded` | On survey page load complete|
 | `CustomerVoiceFormResponseSubmitted` | On survey submitted |
 | `CustomerVoiceFormResponseError` | On survey response error|
-| `ChatDisconnectThreadEventReceived` | On chat disconnected|
 
 #### Action Events
 
@@ -217,16 +216,21 @@ Refer to the below table to understand different critical telemetry events raise
 | `GetAuthTokenFailed` | On getting auth token failed |
 | `ReceivedNullOrEmptyToken` | On receiving null or empty auth token |
 | `SystemMessageReceived` | On system message received |
-| `HistoryMessageReceived` | On history message received |
+| `HistoryMessageReceived` | On history message received (called only once) |
+| `ChatVisibilityChanged` | On minimizing the chat window |
 | `SigninCardReceived` | On sign-in adaptive card received from bot |
 | `BotAuthActivityEmptySasUrl` | On detecting a sign-in adaptive card with no SAS Url |
 | `BotAuthConfigRequest` | On triggering the execution of the BotAuthTokenProvider function |
+| `RemoveWidgetDataFromCache` | On triggering `browserunload` on popout mode |
 | `LinkModePostChatWorkflowStarted` | On link mode post chat workflow being triggered
 | `EmbedModePostChatWorkflowStarted` | On embed mode post chat workflow being triggered
 | `PostChatWorkflowFromCustomer` | On postchat workflow from customer being triggered
 | `PostChatWorkflowFromAgent` | On postchat workflow from agent being triggered
 | `PostChatWorkflowFromBot` | On postchat workflow from bot being triggered
 | `CloseChatCall ` | On triggering closed chat state
+| `ChatDisconnectThreadEventReceived` | On chat disconnected|
+| `GetConversationDetailsCallStarted` | On conversation detail api call start |
+| `GetChatReconnectContextSDKCallStarted` | On chat reconnect context api call start |
 
 #### Calling Events
 

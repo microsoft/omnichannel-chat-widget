@@ -2,7 +2,6 @@ import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConsta
 import { ConfirmationPane } from "@microsoft/omnichannel-chat-components";
 import React, { Dispatch, useEffect } from "react";
 import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
-
 import { DimLayer } from "../dimlayer/DimLayer";
 import { IConfirmationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/confirmationpane/interfaces/IConfirmationPaneControlProps";
 import { IConfirmationPaneStatefulParams } from "./interfaces/IConfirmationPaneStatefulParams";
@@ -10,9 +9,8 @@ import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetActi
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { ConversationEndEntity } from "../../contexts/common/ConversationEndEntity";
+import { ConfirmationState } from "../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
@@ -22,8 +20,6 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
-
     const controlProps: IConfirmationPaneControlProps = {
         id: "oc-lcw-confirmation-pane",
         dir: state.domainStates.globalDir,
@@ -33,8 +29,8 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
                 Description: "Confirmation pane Confirm button clicked"
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
             setTabIndices(elements, initialTabIndexMap, true);
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedByCustomer,
                 Description: "Conversation is ended by customer."
@@ -46,6 +42,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
                 Description: "Confirmation pane Cancel button clicked."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Cancel });
             const previousFocusedElementId = state.appStates.previousElementIdOnFocusBeforeModalOpen;
 
             if (previousFocusedElementId) {

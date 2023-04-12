@@ -254,5 +254,17 @@ export enum LiveChatWidgetActionType {
         Parameters:
         any: Set customer disconnect
     */
-    SET_CHAT_DISCONNECT_EVENT_RECEIVED
+    SET_CHAT_DISCONNECT_EVENT_RECEIVED,
+
+    /*
+        Parameters:
+        any: Set selected survey mode
+    */
+    SET_SURVEY_MODE,
+
+    /*
+    Parameters:
+    ConfirmationState: Set confirmation state(OK/Cancel/NotSet)
+    */
+    SET_CONFIRMATION_STATE
 }

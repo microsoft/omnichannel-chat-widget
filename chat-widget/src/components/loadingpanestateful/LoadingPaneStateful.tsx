@@ -59,8 +59,8 @@ export const LoadingPaneStateful = (props: any) => {
     return (
         <LoadingPane
             componentOverrides={loadingPaneProps?.componentOverrides}
-            controlProps={state.appStates.isStartChatFailing ? errorUIControlProps : loadingPaneControlProps}
-            styleProps={state.appStates.isStartChatFailing ? errorUIStyleProps : loadingPaneStyleProps}
+            controlProps={state.appStates.startChatFailed ? errorUIControlProps : loadingPaneControlProps}
+            styleProps={state.appStates.startChatFailed ? errorUIStyleProps : loadingPaneStyleProps}
             windowWidth={width}
             windowHeight={height}
         />

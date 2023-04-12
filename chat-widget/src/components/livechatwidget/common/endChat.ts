@@ -1,5 +1,4 @@
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
@@ -10,55 +9,82 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
-import { getWidgetEndChatEventName } from "../../../common/utils";
+import { getWidgetEndChatEventName, isNullOrEmptyString } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
-import { checkPostChatEnabled, initiatePostChat } from "./setPostChatContextAndLoadSurvey";
-import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
+import { initiatePostChat, getPostChatContext } from "./renderSurveyHelpers";
+import { Constants, ConversationEndEntity, ConfirmationState } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, state: ILiveChatWidgetContext) => {
-    //Unable to end chat if token has expired
-    if (props.getAuthToken) {
-        const authClientFunction = getAuthClientFunction(props.chatConfig);
-        if (props.getAuthToken && authClientFunction) {
-            // set auth token to chat sdk before end chat
-            const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
-            if (!authSuccess) {
-                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.GetAuthTokenFailed,
-                    ExceptionDetails: {
-                        exception: "Unable to get auth token during end chat"
-                    }
-                });
+const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any, uwid: string) => {
+    try {
+
+        const conversationDetails = await getConversationDetails(chatSDK);
+
+        // Use Case : When post chat is not configured
+        if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
+            // If ended by customer, just close chat
+            if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid);
             }
+            //Use Case: If ended by Agent, stay chat in InActive state
+            return;
+        }
+
+        // Use Case : Can render post chat scenarios
+        await getPostChatContext(chatSDK, state, dispatch);
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const postchatContext: any = state?.domainStates?.postChatContext;
+
+        if (postchatContext === undefined) {
+            // For Customer intiated conversations, just close chat widget
+            if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid);
+                return;
+            }
+
+            //For agent initiated end chat, allow to download transcript
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+            return;
+        }
+
+        endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true, uwid);
+
+        // Initiate post chat render
+        if (state?.domainStates?.postChatContext) {
+            await initiatePostChat(props, conversationDetails, state, dispatch);
+            return;
         }
     }
-    const isPostChatEnabled = checkPostChatEnabled(props, state);
-    if (isPostChatEnabled) {
-        try {
-            await initiatePostChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, state);
-        } catch (error) {
-            // Ending chat because something went wrong
-            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
+    catch (error) {
+        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.EndChatFailed,
+            ExceptionDetails: {
+                exception: JSON.stringify(error)
+            }
+        });
+
+        //Close chat widget for any failure in embedded to allow to show start chat button
+        if (props.controlProps?.hideStartChatButton === false) {
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid);
         }
-    } else {
-        if (state.appStates.conversationEndedBy === ConversationEndEntity.Agent) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
-        } else {
-            await endChat(props, chatSDK, setAdapter, setWebChatStyles, dispatch, adapter, false, false, true);
-        }
+    }
+    finally {
+        //Chat token clean up
+        await chatTokenCleanUp(dispatch);
     }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, setWebChatStyles: any, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any,
-    skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
-    if (!skipEndChatSDK) {
+const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
+    skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean, uwid = "") => {
+    if (!skipEndChatSDK && chatSDK.conversation) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatSDKCall
             });
+            //Get auth token again if chat continued for longer time, otherwise gets 401 error
+            await handleAuthenticationIfEnabled(props, chatSDK);
             await chatSDK?.endChat();
         } catch (ex) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -68,13 +94,10 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
                 }
             });
             postMessageToOtherTab = false;
+        } finally {
+            await endChatStateCleanUp(dispatch);
         }
     }
-    // Need to clear these states immediately when chat ended from OC.
-    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-    dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
-    dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
-    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
 
     if (!skipCloseChat) {
         try {
@@ -82,29 +105,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             setAdapter(undefined);
             setWebChatStyles({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
             WebChatStoreLoader.store = null;
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-            dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_WORKFLOW_IN_PROGRESS, payload: false });
-            dispatch({ type: LiveChatWidgetActionType.SET_SHOULD_USE_BOT_SURVEY, payload: false });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT_EVENT_RECEIVED, payload: false });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: undefined });
-            dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
-            dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
-            dispatch({
-                type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
-                    proactiveChatBodyTitle: "",
-                    proactiveChatEnablePrechat: false,
-                    proactiveChatInNewWindow: false
-                }
-            });
-            if (postMessageToOtherTab) {
-                const endChatEventName = getWidgetEndChatEventName(
-                    chatSDK?.omnichannelConfig?.orgId,
-                    chatSDK?.omnichannelConfig?.widgetId,
-                    props?.controlProps?.widgetInstanceId ?? "");
-                BroadcastService.postMessage({
-                    eventName: endChatEventName
-                });
-            }
+            closeChatStateCleanUp(dispatch);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CloseChatCall,
                 Description: "Chat was closed succesfully"
@@ -118,8 +119,103 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: an
             });
         } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
+            //Always allow to close the chat for embedded mode irrespective of end chat errors
+            if (!state?.appStates?.hideStartChatButton) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+            }
+        }
+    }
+
+    if (postMessageToOtherTab && !isNullOrEmptyString(uwid)) {
+        const endChatEventName = await getEndChatEventName(chatSDK, props);
+        BroadcastService.postMessage({
+            eventName: endChatEventName,
+            payload: uwid
+        });
+    }
+};
+
+const endChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    // Need to clear these states immediately when chat ended from OC.
+    dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
+};
+
+const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+    // dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+    dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
+    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.NotSet });
+    dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.NotSet });
+    dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
+    dispatch({
+        type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
+            proactiveChatBodyTitle: "",
+            proactiveChatEnablePrechat: false,
+            proactiveChatInNewWindow: false
+        }
+    });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleAuthenticationIfEnabled = async (props: ILiveChatWidgetProps, chatSDK: any) => {
+    //Unable to end chat if token has expired
+    if (props.getAuthToken) {
+        const authClientFunction = getAuthClientFunction(props.chatConfig);
+        if (props.getAuthToken && authClientFunction) {
+            // set auth token to chat sdk before end chat
+            const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
+            if (!authSuccess) {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.GetAuthTokenFailed,
+                    ExceptionDetails: {
+                        exception: "Unable to get auth token during end chat"
+                    }
+                });
+                throw new Error("handleAuthenticationIfEnabled:Failed to get authentication token");
+            }
         }
     }
 };
 
-export { prepareEndChat, endChat };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const chatTokenCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    //Just do cleanup here
+    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
+    dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getEndChatEventName = async (chatSDK: any, props: ILiveChatWidgetProps) => {
+    return getWidgetEndChatEventName(
+        chatSDK?.omnichannelConfig?.orgId,
+        chatSDK?.omnichannelConfig?.widgetId,
+        props?.controlProps?.widgetInstanceId ?? "");
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getConversationDetails = async (chatSDK: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let conversationDetails: any = undefined;
+    try {
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.GetConversationDetailsCallStarted,
+            Description: "Conversation details call started"
+        });
+        conversationDetails = await chatSDK.getConversationDetails();
+    } catch (error) {
+        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.GetConversationDetailsCallFailed,
+            ExceptionDetails: {
+                exception: `Get Conversation Details Call Failed : ${error}`
+            }
+        });
+    }
+
+    return conversationDetails;
+};
+
+export { prepareEndChat, endChat, getConversationDetails };

@@ -17,12 +17,13 @@ const createConversationEndMiddleware = (conversationEndCallback: any) => ({ dis
 
         const activity = action.payload.activity;
 
-        if (activity.from?.role === DirectLineSenderRole.Bot &&
-            activity.channelId === "ACS_CHANNEL") { // ACS
-            if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
-                && (activity.channelData?.tags?.includes(Constants.agentEndConversationMessageTag)
-                    || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
-                conversationEndCallback();
+        if (activity.channelId === "ACS_CHANNEL") {
+            if (activity.from?.role === DirectLineSenderRole.Bot) {
+                if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
+                    && (activity.channelData?.tags?.includes(Constants.agentEndConversationMessageTag)
+                        || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
+                    conversationEndCallback();
+                }
             }
         } else if (activity.from?.role === DirectLineSenderRole.Channel &&
             activity.channelData?.type === MessageTypes.Thread &&

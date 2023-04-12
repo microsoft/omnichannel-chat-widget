@@ -1736,5 +1736,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         hyperlinkTextOverride: false
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
-    getAuthToken: undefined
+    getAuthToken: undefined,
+    initialCustomContext: undefined
 };

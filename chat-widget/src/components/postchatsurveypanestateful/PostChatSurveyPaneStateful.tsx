@@ -14,19 +14,38 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
 import { IPostChatSurveyPaneStatefulProps } from "./interfaces/IPostChatSurveyPaneStatefulProps";
 import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
+import { ConversationEndEntity } from "../../common/Constants";
+
+const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, showMultiLingual = false) => {
+    const surveyLink = `${surveyInviteLink}
+            &embed=${isEmbed.toString()}
+            &compact=${compact.toString() ?? "true"}
+            &lang=${locale ?? "en-us"}
+            &showmultilingual=${showMultiLingual.toString() ?? "false"}`;
+    return surveyLink;
+};
 
 export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulProps) => {
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const postChatSurveyMode = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
+
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPostChatSurveyPaneStyleProps, props.styleProps?.generalStyleProps,
-        {display: state.appStates.isMinimized ? "none" : ""});
+        { display: state.appStates.isMinimized ? "none" : "" });
+
     let surveyInviteLink = "";
-    if (state.appStates.shouldUseBotSurvey && state.domainStates.postChatContext.botSurveyInviteLink) {
-        surveyInviteLink = state.domainStates.postChatContext.botSurveyInviteLink + "&embed=" + (postChatSurveyMode === PostChatSurveyMode.Embed).toString() + 
-        "&compact=" + (props.isCustomerVoiceSurveyCompact ?? true).toString() + "&lang=" + (state.domainStates.postChatContext.formsProLocale ?? "en") + "&showmultilingual=false";
+    const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
+
+    if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot && state.domainStates.postChatContext.botSurveyInviteLink) {
+        surveyInviteLink = generateSurveyInviteLink(
+            state.domainStates.postChatContext.botSurveyInviteLink,
+            surveyMode,
+            state.domainStates.postChatContext.botFormsProLocale,
+            props.isCustomerVoiceSurveyCompact ?? true);
     } else {
-        surveyInviteLink = state.domainStates.postChatContext.surveyInviteLink + "&embed=" + (postChatSurveyMode === PostChatSurveyMode.Embed).toString() + 
-        "&compact=" + (props.isCustomerVoiceSurveyCompact ?? true).toString() + "&lang=" + (state.domainStates.postChatContext.formsProLocale ?? "en") + "&showmultilingual=false";
+        surveyInviteLink = generateSurveyInviteLink(
+            state.domainStates.postChatContext.surveyInviteLink,
+            surveyMode,
+            state.domainStates.postChatContext.formsProLocale,
+            props.isCustomerVoiceSurveyCompact ?? true);
     }
 
     const styleProps: IPostChatSurveyPaneStyleProps = {
@@ -51,7 +70,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         //Customer Voice Telemetry Events
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         window.addEventListener("message", (message: any) => {
-            const {data} = message;
+            const { data } = message;
 
             if (!data) return;
             if (data === CustomerVoiceEvents.ResponsePageLoaded) {
@@ -63,7 +82,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             }
         });
     }, []);
-    
+
     return (
         <PostChatSurveyPane
             controlProps={controlProps}

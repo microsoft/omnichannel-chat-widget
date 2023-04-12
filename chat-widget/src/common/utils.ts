@@ -283,7 +283,10 @@ export const getDomain = (hostValue: any): string => {
     return AriaTelemetryConstants.Public;
 };
 
-export const getWidgetCacheId = (orgId: string, widgetId: string, widgetInstanceId: string): string => {
+export const getWidgetCacheId = (orgId: string, widgetId: string, widgetInstanceId: string, popoutChat = false): string => {
+    if (popoutChat) {
+        widgetInstanceId = widgetInstanceId + Constants.PopoutCacheSuffix;
+    }
     const widgetCacheId = `${widgetInstanceId}_${orgId}_${widgetId}`;
     return Md5.init(widgetCacheId);
 };
@@ -296,12 +299,12 @@ export const getWidgetEndChatEventName = (orgId: string, widgetId: string, widge
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getStateFromCache = (orgId: string, widgetId: string, widgetInstanceId: string): any => {
+export const getStateFromCache = (widgetCacheId: string): any => {
     // Getting updated state from cache
     try {
         if (DataStoreManager.clientDataStore) {
-            const widgetStateEventName = getWidgetCacheId(orgId, widgetId, widgetInstanceId);
-            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName, "localStorage");
+            const widgetStateEventName = widgetCacheId;
+            const widgetStateFromCache = DataStoreManager.clientDataStore?.getData(widgetStateEventName);
             const persistedState = widgetStateFromCache ? JSON.parse(widgetStateFromCache) : undefined;
             return persistedState;
         } else {
@@ -337,6 +340,23 @@ export const getBroadcastChannelName = (widgetId: string, widgetInstanceId: stri
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getWidgetCacheIdfromProps = (props: any, popoutChat = false): string => {
+    const orgId = props?.chatSDK?.omnichannelConfig?.orgId;
+    const widgetId = props?.chatSDK?.omnichannelConfig?.widgetId;
+    let widgetInstanceId = props?.controlProps?.widgetInstanceId ?? "";
+
+    if (props.useSessionStorage) {
+        widgetInstanceId = widgetInstanceId + Constants.SessionCacheSuffix;
+    }
+
+    if (props?.controlProps?.hideStartChatButton || popoutChat === true) {
+        popoutChat = true;
+    }
+    const widgetCacheId = getWidgetCacheId(orgId, widgetId, widgetInstanceId, popoutChat);
+    return widgetCacheId;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const debounceLeading = (fn: any, ms = 3000) => {
     let timeoutId: ReturnType<typeof setTimeout> | null;
     return (...args: any[]) => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -345,7 +365,7 @@ export const debounceLeading = (fn: any, ms = 3000) => {
             fn.apply(this, args);
         }
 
-        timeoutId = setTimeout(() => {timeoutId = null;}, ms);
+        timeoutId = setTimeout(() => { timeoutId = null; }, ms);
     };
 };
 

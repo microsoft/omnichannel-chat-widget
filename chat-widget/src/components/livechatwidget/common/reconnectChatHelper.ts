@@ -28,16 +28,15 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
     // Get chat reconnect context
     const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig, props, isAuthenticatedChat);
 
-    if (hasReconnectId(reconnectChatContext)) {
-        //Redirect if enabled
-        if (reconnectChatContext.redirectURL && !isNullOrEmptyString(reconnectChatContext.redirectURL)) {
-            redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow);
-            return;
-        }
+    //Redirect if enabled
+    if (reconnectChatContext?.redirectURL) {
+        redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow);
+        return;
+    }
 
+    if (hasReconnectId(reconnectChatContext)) {
         //if reconnect id is provided in props, don't show reconnect pane
         if (props.reconnectChatPaneProps?.reconnectId && !isNullOrEmptyString(props.reconnectChatPaneProps?.reconnectId)) {
-            const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig, props, isAuthenticatedChat);
             await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, props, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);
             return;
         }
@@ -53,6 +52,11 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, props: any, isAuthenticatedChat: boolean) => {
     try {
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.GetChatReconnectContextSDKCallStarted,
+            Description: "Reconnect context SDK call started"
+        });
+
         const chatReconnectOptionalParams: IReconnectChatOptionalParams = {
             reconnectId: props.reconnectChatPaneProps?.reconnectId
         };

@@ -7,7 +7,8 @@ import { ILiveChatWidgetContext } from "./common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "./common/ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
-import { ConversationEndEntity } from "./common/ConversationEndEntity";
+import { ConfirmationState, ConversationEndEntity } from "../common/Constants";
+import { PostChatSurveyMode } from "../components/postchatsurveypanestateful/enums/PostChatSurveyMode";
 
 export const createReducer = () => {
     const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): ILiveChatWidgetContext => {
@@ -71,7 +72,7 @@ export const createReducer = () => {
                     ...state,
                     appStates: {
                         ...state.appStates,
-                        isStartChatFailing: action.payload as boolean
+                        startChatFailed: action.payload as boolean
                     }
                 };
 
@@ -288,21 +289,12 @@ export const createReducer = () => {
                     ...action.payload as ILiveChatWidgetContext
                 };
 
-            case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT_EVENT_RECEIVED:
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        conversationEndedByAgentEventReceived: action.payload as boolean
-                    }
-                };
-
             case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY:
                 return {
                     ...state,
                     appStates: {
                         ...state.appStates,
-                        conversationEndedBy: action.payload as ConversationEndEntity | undefined
+                        conversationEndedBy: action.payload as ConversationEndEntity
                     }
                 };
 
@@ -336,16 +328,6 @@ export const createReducer = () => {
                     }
                 };
 
-            case LiveChatWidgetActionType.SET_POST_CHAT_WORKFLOW_IN_PROGRESS:
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        postChatWorkflowInProgress: action.payload as boolean
-                    }
-                };
-
             case LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID:
                 return {
                     ...state,
@@ -355,21 +337,29 @@ export const createReducer = () => {
                     }
                 };
 
-            case LiveChatWidgetActionType.SET_SHOULD_USE_BOT_SURVEY:
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        shouldUseBotSurvey: action.payload as boolean
-                    }
-                };
             case LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED:
                 return {
                     ...state,
                     appStates: {
                         ...state.appStates,
                         chatDisconnectEventReceived: action.payload as boolean
+                    }
+                };
+            case LiveChatWidgetActionType.SET_SURVEY_MODE:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        selectedSurveyMode: action.payload as PostChatSurveyMode
+                    }
+                };
+
+            case LiveChatWidgetActionType.SET_CONFIRMATION_STATE:
+                return {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        confirmationState: action.payload as ConfirmationState
                     }
                 };
 

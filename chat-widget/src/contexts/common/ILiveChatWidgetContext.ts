@@ -3,7 +3,7 @@ import { ConversationState } from "./ConversationState";
 import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
-import { ConversationEndEntity } from "./ConversationEndEntity";
+import { ConfirmationState, ConversationEndEntity } from "../../common/Constants";
 
 export interface ILiveChatWidgetContext {
     domainStates: {
@@ -26,12 +26,15 @@ export interface ILiveChatWidgetContext {
         widgetSize: any;
         widgetInstanceId: string;
         initialChatSdkRequestId: string;
+        transcriptRequestId: string; //Contains request id for downloading transcript
+        confirmationPaneConfirmedOptionClicked: boolean; //shows if confirmation pane already displayed
+        confirmationState: ConfirmationState;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
-        isMinimized: boolean; // true when chat button is visible & chat widget is hidden & chat is ongoing
+        isMinimized?: boolean; // true when chat button is visible & chat widget is hidden & chat is ongoing
         previousElementIdOnFocusBeforeModalOpen: string | null; // The previous element id on focus before a modal opened. Focus will return to this element after the modal is closed by default
-        isStartChatFailing: boolean; // true when start chat is failing
+        startChatFailed: boolean; // true when start chat is failing
         outsideOperatingHours: boolean; // true when chat session is out of office hours
         preChatResponseEmail: string; // The email from preChat survey response
         isAudioMuted: boolean | null; // true/false if the sound notification is on/off. Initial value is null, in such case it gets set to true if audio notification icon is set, otherwise it gets set to false
@@ -45,11 +48,9 @@ export interface ILiveChatWidgetContext {
         };
         e2vvEnabled: boolean; // true if voice/video calling is enabled and callingSDK instance created
         unreadMessageCount: number; // keep count of unread messages
-        conversationEndedByAgentEventReceived: boolean; // true when agent end conversation or timeout event is received
-        conversationEndedBy: ConversationEndEntity | undefined; // The entity that ends conversation
-        postChatWorkflowInProgress: boolean; // true when customer ends conversation and postChat workflow has initiated
-        shouldUseBotSurvey: boolean; // true when bot configured survey needs to be used
+        conversationEndedBy: ConversationEndEntity; // The entity that ends conversation
         chatDisconnectEventReceived: boolean; // true when customer disconnect event is received
+        selectedSurveyMode: string | null; // selected survey mode
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

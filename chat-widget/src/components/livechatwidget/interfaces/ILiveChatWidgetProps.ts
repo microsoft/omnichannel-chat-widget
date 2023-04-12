@@ -59,7 +59,9 @@ export interface ILiveChatWidgetProps {
     liveChatContextFromCache?: ILiveChatWidgetContext;
     contextDataStore?: IContextDataStore;
     getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
+    scrollBarProps?: IScrollBarProps;
+    useSessionStorage?: boolean;
+    allowSdkChatSupport?: boolean; // to avoid any performance impact
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     initialCustomContext?: any;
-    scrollBarProps?: IScrollBarProps
 }

@@ -1,5 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { StyleOptions, createStore } from "botframework-webchat";
+import { createStore } from "botframework-webchat";
 import { Dispatch } from "react";
 import { IDataMaskingInfo } from "../../webchatcontainerstateful/interfaces/IDataMaskingInfo";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -32,10 +32,12 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
+import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
+import { getConversationDetails } from "./endChat";
 import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, setAdapter: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, adapter: any, setWebChatStyles: any) => {
+export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any) => {
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
         ...props.webChatContainerProps?.localizedTexts
@@ -47,12 +49,18 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, chatSDK: any, s
     const markdown = createMarkdown((props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting)!, disableNewLineMarkdownSupport!);
     // Initialize Web Chat's redux store
     let webChatStore = WebChatStoreLoader.store;
+
     if (!webChatStore) {
+
         const conversationEndCallback = async () => {
-            if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
-                setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const conversationDetails: any = await getConversationDetails(chatSDK);
+            if (conversationDetails?.participantType === ParticipantType.Bot) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Bot });
+            } else {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
             }
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY_AGENT_EVENT_RECEIVED, payload: true });
+
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedThreadEventReceived,
                 Description: "Conversation end by agent side or by timeout event received."

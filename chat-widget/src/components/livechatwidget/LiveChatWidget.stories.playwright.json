@@ -5037,18 +5037,6 @@
         {
           "actions": [
             {
-              "name": "click",
-              "args": {
-                "selector": "#oc-lcw-confirmation-pane-confirmbutton"
-              }
-            }
-          ],
-          "id": "f1cQ-UHU0pOZ",
-          "title": "Confirm Close Chat"
-        },
-        {
-          "actions": [
-            {
               "name": "waitForTimeout",
               "args": {
                 "timeout": 10000
@@ -5057,6 +5045,24 @@
           ],
           "id": "R1zGOdrhKBnV",
           "title": "Wait For Post Chat Loading"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            }
+          ],
+          "id": "f1cQ-UHU0pOZ",
+          "title": "Confirm Close Chat"
         }
       ],
       "screenshots": [
@@ -5952,18 +5958,6 @@
         {
           "actions": [
             {
-              "name": "click",
-              "args": {
-                "selector": "#oc-lcw-confirmation-pane-confirmbutton"
-              }
-            }
-          ],
-          "id": "dX4OAfCTvIFR",
-          "title": "Click Confirm Close"
-        },
-        {
-          "actions": [
-            {
               "name": "waitForTimeout",
               "args": {
                 "timeout": 10000
@@ -5972,6 +5966,24 @@
           ],
           "id": "XiV4xoiCKc4V",
           "title": "Wait For PostChat Loading"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            }
+          ],
+          "id": "dX4OAfCTvIFR",
+          "title": "Click Confirm Close"
         }
       ],
       "screenshots": [
