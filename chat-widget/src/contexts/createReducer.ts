@@ -72,7 +72,7 @@ export const createReducer = () => {
                     ...state,
                     appStates: {
                         ...state.appStates,
-                        isStartChatFailing: action.payload as boolean
+                        startChatFailed: action.payload as boolean
                     }
                 };
 

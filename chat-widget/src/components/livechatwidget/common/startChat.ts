@@ -190,9 +190,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             return;
         }
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
         if (!hideErrorUIPane) {
             // Set app state to failing start chat if hideErrorUI is not turned on
-            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ErrorUIPaneLoaded,
                 Description: "Error UI Pane Loaded"

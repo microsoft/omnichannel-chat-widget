@@ -21,8 +21,10 @@ const getBotSurveyMode = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCon
 };
 
 const getUserSurveyMode = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
-    return (props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ??
-        state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode);
+    if (!props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode) {
+        return state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode ?? PostChatSurveyMode.Embed;
+    }
+    return props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode;
 };
 
 // Set Survey mode based on conversation ended by entity

@@ -32,10 +32,11 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
-import { ConversationEndEntity } from "../../../common/Constants";
+import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
+import { getConversationDetails } from "./endChat";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any) => {
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
         ...props.webChatContainerProps?.localizedTexts
@@ -50,8 +51,13 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
     if (!webChatStore) {
 
         const conversationEndCallback = async () => {
-
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const conversationDetails: any = await getConversationDetails(chatSDK);
+            if (conversationDetails?.participantType === ParticipantType.Bot) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Bot });
+            } else {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
+            }
 
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedThreadEventReceived,

@@ -12,7 +12,7 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { getWidgetEndChatEventName, isNullOrEmptyString } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { initiatePostChat, getPostChatContext } from "./renderSurveyHelpers";
-import { Constants, ParticipantType, ConversationEndEntity, ConfirmationState } from "../../../common/Constants";
+import { Constants, ConversationEndEntity, ConfirmationState } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any, uwid: string) => {
@@ -35,7 +35,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const postchatContext: any = state?.domainStates?.postChatContext;
-        
+
         if (postchatContext === undefined) {
             // For Customer intiated conversations, just close chat widget
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
@@ -48,8 +48,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             return;
         }
 
-        updateParticipantTypes(dispatch, conversationDetails);
         endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true, uwid);
+
         // Initiate post chat render
         if (state?.domainStates?.postChatContext) {
             await initiatePostChat(props, conversationDetails, state, dispatch);
@@ -83,8 +83,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatSDKCall
             });
-
-            //get auth token again if chat continued for longer time, otherwise gets 401 error
+            //Get auth token again if chat continued for longer time, otherwise gets 401 error
             await handleAuthenticationIfEnabled(props, chatSDK);
             await chatSDK?.endChat();
         } catch (ex) {
@@ -121,7 +120,9 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
         } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             //Always allow to close the chat for embedded mode irrespective of end chat errors
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+            if (!state?.appStates?.hideStartChatButton) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+            }
         }
     }
 
@@ -144,11 +145,12 @@ const endChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) =>
 
 const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+    // dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.NotSet });
     dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.NotSet });
+    dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
     dispatch({
         type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
             proactiveChatBodyTitle: "",
@@ -216,12 +218,4 @@ const getConversationDetails = async (chatSDK: any) => {
     return conversationDetails;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateParticipantTypes = async (dispatch: Dispatch<ILiveChatWidgetAction>, conversationDetails: any) => {
-    if (conversationDetails?.participantType === ParticipantType.User) {
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
-    } else if (conversationDetails?.participantType === ParticipantType.Bot)
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Bot });
-};
-
-export { prepareEndChat, endChat };
+export { prepareEndChat, endChat, getConversationDetails };

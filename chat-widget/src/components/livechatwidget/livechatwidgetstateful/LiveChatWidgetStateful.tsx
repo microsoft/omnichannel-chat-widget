@@ -1,6 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
-//import { Constants, E2VVOptions, LiveWorkItemState } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
@@ -17,7 +16,6 @@ import {
     newGuid
 } from "../../../common/utils";
 import { endChat, prepareEndChat } from "../common/endChat";
-//import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -39,7 +37,6 @@ import CallingContainerStateful from "../../callingcontainerstateful/CallingCont
 import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
 import { Components, StyleOptions } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
-//import { ConversationEndEntity } from "../../../contexts/common/ConversationEndEntity";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { Constants, E2VVOptions, StorageType, LiveWorkItemState, ConversationEndEntity, ConfirmationState } from "../../../common/Constants";
@@ -70,7 +67,6 @@ import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarPr
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
 import { getGeneralStylesForButton } from "../common/getGeneralStylesForButton";
-//import { handleAgentEndConversation } from "../common/agentEndConversationHelper";
 import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 import { initCallingSdk } from "../common/initCallingSdk";
 import { initConfirmationPropsComposer } from "../common/initConfirmationPropsComposer";
@@ -337,18 +333,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
-            if (state?.appStates?.hideStartChatButton === false) {
-                // This is to ensure to get latest state from cache in multitab
-                const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
+            // This is to ensure to get latest state from cache in multitab
+            const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
-                if (persistedState &&
-                    persistedState.appStates.conversationState === ConversationState.Active) {
-                    prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
-                } else {
-                    const skipEndChatSDK = true;
-                    const skipCloseChat = false;
-                    endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
-                }
+            if (persistedState &&
+                persistedState.appStates.conversationState === ConversationState.Active) {
+                prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
+            } else {
+                const skipEndChatSDK = true;
+                const skipCloseChat = false;
+                endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
             }
 
             BroadcastService.postMessage({
@@ -465,21 +459,34 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [state.domainStates.confirmationState]);
 
     useEffect(() => {
+        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
+            state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+        }
+    }, [state?.appStates?.conversationEndedBy]);
+
+    useEffect(() => {
+        // Do not process anything during initialization
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.NotSet) {
             return;
         }
 
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-        }
-
-        if (state?.appStates?.conversationState === ConversationState.InActive
-            || state?.appStates?.conversationState === ConversationState.Postchat) {
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid.current);
-        } else {
-            prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
+        // If start chat failed, and C2 is trying to close chat widget
+        if (state?.appStates?.startChatFailed) {
+            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid.current);
             return;
         }
+
+        // Scenario -> Chat was InActive and closing the chat (Refresh scenario on post chat)
+        if (state?.appStates?.conversationState === ConversationState.Postchat ||
+            state?.appStates?.conversationState === ConversationState.InActive) {
+            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid.current);
+            return;
+        }
+
+        //All other cases
+        prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
+
     }, [state?.appStates?.conversationEndedBy]);
 
     // Publish chat widget state
@@ -537,10 +544,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
-    const webChatProps = initWebChatComposer(props, state, dispatch);
+    const webChatProps = initWebChatComposer(props, state, dispatch, chatSDK);
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
+    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab, uwid.current);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
