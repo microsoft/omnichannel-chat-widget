@@ -34,6 +34,7 @@ import { createCardActionMiddleware } from "../../webchatcontainerstateful/webch
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
 import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { getConversationDetails } from "./endChat";
+import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any) => {
@@ -42,6 +43,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         ...props.webChatContainerProps?.localizedTexts
     };
 
+    const hyperlinkTextOverride = props.webChatContainerProps?.hyperlinkTextOverride ?? defaultWebChatContainerStatefulProps.hyperlinkTextOverride;
     const disableNewLineMarkdownSupport = props.webChatContainerProps?.disableNewLineMarkdownSupport ?? defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const markdown = createMarkdown((props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting)!, disableNewLineMarkdownSupport!);
@@ -89,6 +91,23 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         WebChatStoreLoader.store = webChatStore;
     }
 
+    const hyperlinkTextOverrideRenderer = new HyperlinkTextOverrideRenderer(hyperlinkTextOverride as boolean);
+    const markdownRenderers = [hyperlinkTextOverrideRenderer];
+    const renderMarkdown = (text: string): string => {
+        if (props.webChatContainerProps?.webChatProps?.renderMarkdown) {
+            text = props.webChatContainerProps?.webChatProps.renderMarkdown(text);
+        } else {
+            const render = disableNewLineMarkdownSupport ? markdown.renderInline.bind(markdown) : markdown.render.bind(markdown);
+            text = render(text);
+        }
+
+        markdownRenderers.forEach((renderer) => {
+            text = renderer.render(text);
+        });
+
+        return text;
+    };
+
     // Initialize the remaining Web Chat props
     const webChatProps: IWebChatProps = {
         ...defaultWebChatContainerStatefulProps.webChatProps,
@@ -98,7 +117,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         activityMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityMiddleware ? undefined : createActivityMiddleware(state.domainStates.renderingMiddlewareProps?.systemMessageStyleProps, state.domainStates.renderingMiddlewareProps?.userMessageStyleProps),
         attachmentMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAttachmentMiddleware ? undefined : createAttachmentMiddleware(state.domainStates.renderingMiddlewareProps?.attachmentProps?.enableInlinePlaying ?? defaultAttachmentProps.enableInlinePlaying),
         activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.activityStatusMiddleware,
-        renderMarkdown: props.webChatContainerProps?.webChatProps?.renderMarkdown ?? (disableNewLineMarkdownSupport ? markdown.renderInline.bind(markdown) : markdown.render.bind(markdown)),
+        renderMarkdown,
         avatarMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAvatarMiddleware ? undefined : createAvatarMiddleware(state.domainStates.renderingMiddlewareProps?.avatarStyleProps, state.domainStates.renderingMiddlewareProps?.avatarTextStyleProps),
         groupActivitiesMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableGroupActivitiesMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.groupActivitiesMiddleware,
         typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,

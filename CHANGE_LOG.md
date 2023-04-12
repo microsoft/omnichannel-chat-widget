@@ -6,6 +6,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Add `hyperlinkTextOverride` props to override anchor element's `innerText` with `href` if they don't match to prevent URL spoofing
+
+## Fixed
+
+- Fixed an issue where data masking rule matching empty strings will cause infitnite loop
+- Fixed custom context not showing for embed chat
+- Fixed hyperlink not working in prechat pane
+- Fixed multiple calls to EndChat when agent/bot ends conversation
+- Reducing the number of duplicate logs for webchat client telemetry
+- Fixed post chat survey is not rendering bot survey
+- Code refactored for post chat survey
+- Fixed popout chat is not showing Out of office pane
+- Fixed popout chat is showing blank screen
+- Better handling of end chat in case of multitab scenarios
+
 ## [1.0.2] - 2023-4-6
 
 ### Added
@@ -18,13 +35,6 @@ All notable changes to this project will be documented in this file.
 
 - Fixed custom context not showing for embed chat
 - Fixed hyperlink not working in prechat pane
-- Fixed multiple calls to EndChat when agent/bot ends conversation
-- Reducing the number of duplicate logs for webchat client telemetry
-- Fixed post chat survey is not rendering bot survey
-- Code refactored for post chat survey
-- Fixed popout chat is not showing Out of office pane
-- Fixed popout chat is showing blank screen
-- Better handling of end chat in case of multitab scenarios
 
 ### Changed
 
@@ -36,7 +46,6 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added WebChat banner on chat disconnect depending on visibility events
-- Added `sessionStorage` support to chat widget, exposing a broadcast event `RemoveWidgetDataFromCache` to help removing cache data
 
 ## [1.0.0] - 2023-3-22
 
@@ -45,7 +54,7 @@ All notable changes to this project will be documented in this file.
 - Stitched all components in chat-components package with default Omnichannel chat flow
 - Exposed CSS style customizations on all UI components
 - Hooked up with BotFramework WebChat and exposed all WebChat styles
-- Included Omnichannel features by default, including pre chat, post chat, voice/video call, operating hours, etc. 
+- Included Omnichannel features by default, including pre chat, post chat, voice/video call, operating hours, etc.
 - Added various documentations on features and package usages
 
 ### Fixed
