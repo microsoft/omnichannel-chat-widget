@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Prevent new chat creation failure after Proactive chat in Popout mode
+
 ## [1.0.2] - 2023-4-6
 
 ### Added
@@ -63,6 +67,3 @@ All notable changes to this project will be documented in this file.
 - Added `BroadcastService` to communicate with package consumer layer, and for telemetry purposes
 - Exposed `encodeComponentString` and `encodeComponentString`
 
-### Fixed
-
-- Prevent new chat creation failure after Proactive chat in Popout mode
