@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Fixed popout chat is not showing Out of office pane
 - Fixed popout chat is showing blank screen
 - Better handling of end chat in case of multitab scenarios
+- Fixed post chat having gap in popout mode
 
 ## [1.0.2] - 2023-4-6
 
