@@ -7,6 +7,5 @@ export const defaultGeneralPostChatSurveyPaneStyleProps: IStyle = {
     left: "0%",
     top: "0%",
     borderRadius: "0 0 4px 4px",
-    borderWidth: "0px",
-    display: "contents"
+    borderWidth: "0px"
 };
