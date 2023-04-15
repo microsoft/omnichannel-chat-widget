@@ -9,6 +9,7 @@ import { Meta } from "@storybook/react/types-6-0";
 import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
 import { Story } from "@storybook/react";
 import { hooks } from "botframework-webchat";
+import { ParticipantType } from "../../common/Constants";
 
 export default {
     title: "Stateful Components/Live Chat Widget",
@@ -16,6 +17,12 @@ export default {
 } as Meta;
 
 BroadcastServiceInitialize("testChannel");
+
+const dummyTelemetryConfig = {
+    chatComponentVersion: "1.0.0",
+    chatWidgetVersion: "1.0.0",
+    OCChatSDKVersion: "1.0.1"
+};
 
 const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatWidget {...args}></LiveChatWidget>;
 
@@ -35,7 +42,8 @@ const liveChatWidgetFixedSizeProps: ILiveChatWidgetProps = {
             top: "20px",
             left: "20px"
         }
-    }
+    },
+    telemetryConfig: dummyTelemetryConfig
 };
 
 LiveChatWidgetFixedSize.args = liveChatWidgetFixedSizeProps;
@@ -58,10 +66,10 @@ const sampleActivityMiddleware = () => (next: any) => (card: any) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const sampleAvatarMiddleware = () => (_next: any) => (args: any) => {
     const color = args.fromUser ? "grey" : "#315FA2";
-    const output = 
-    () => (
-        <div style={{ fontSize: "10px", width: 0, height: 0, borderLeft: "20px solid transparent", borderRight: "20px solid transparent", borderTop: `40px solid ${color}`}}/>
-    );
+    const output =
+        () => (
+            <div style={{ fontSize: "10px", width: 0, height: 0, borderLeft: "20px solid transparent", borderRight: "20px solid transparent", borderTop: `40px solid ${color}` }} />
+        );
 
     return output;
 };
@@ -79,8 +87,8 @@ const sampleActivityStatusMiddleware = () => (_next: any) => (args: any) => {
         sendState
     } = args;
 
-    const output = 
-        <div style={{ fontSize: "10px"}} >
+    const output =
+        <div style={{ fontSize: "10px" }} >
             This message from {role}: {name ?? "you"} is {sendState} at {timestamp}
         </div>;
 
@@ -91,7 +99,7 @@ const sampleActivityStatusMiddleware = () => (_next: any) => (args: any) => {
 const sampleAttachmentMiddleware = () => (next: any) => (card: any) => {
     const output = (
         <div>
-            <div style={{ fontSize: "12px", borderRadius: "50%", background: "grey"}}>
+            <div style={{ fontSize: "12px", borderRadius: "50%", background: "grey" }}>
                 {next(card)}
             </div>
         </div>
@@ -103,7 +111,7 @@ const sampleAttachmentMiddleware = () => (next: any) => (card: any) => {
 const sampleTypingIndicatorMiddleware = () => (_next: any) => (args: any) => {
     const foundKey = Object.keys(args.activeTyping).find((key) => (args.activeTyping[key].role === "bot"));
     const output = (
-        <div style={{marginLeft: "10px", marginBottom: "5px"}}>
+        <div style={{ marginLeft: "10px", marginBottom: "5px" }}>
             {args.visible && foundKey
                 && `${args.activeTyping[foundKey].name} is currently typing...`}
         </div>
@@ -114,6 +122,7 @@ const sampleTypingIndicatorMiddleware = () => (_next: any) => (args: any) => {
 const liveChatWidgetCustom1Props: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
+    telemetryConfig: dummyTelemetryConfig,
     styleProps: {
         generalStyles: {
             width: "400px",
@@ -384,6 +393,7 @@ export const LiveChatWidgetCustom2 = LiveChatWidgetTemplate.bind({});
 const liveChatWidgetCustom2Props: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
+    telemetryConfig: dummyTelemetryConfig,
     styleProps: {
         generalStyles: {
             width: "585px",
@@ -613,9 +623,9 @@ const DemoSendBox = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "row",marginLeft: "20px",padding: "5px", borderRadius: "15px", height: "50px", justifyContent: "center", alignItems: "center",background: "white",width:"500px",borderLeft:""}}>
-            <textarea value={text} onChange={onTextChange} style={{flexGrow: 2, border: "none", borderRadius: "inherit",width: "308px",height: "inherit",resize: "none",outline: "none",fontSize: "14px",fontFamily: "Tahoma"}} placeholder="Type your message here"/>
-            <input type="submit" value="Send" style={{height: "30px",marginRight: "15px",background: "rgb(4, 142, 209)",color: "white",borderRadius: "5px", border: "none",fontFamily: "Tahoma",width: "60px",fontSize: "14px"}}/>
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "row", marginLeft: "20px", padding: "5px", borderRadius: "15px", height: "50px", justifyContent: "center", alignItems: "center", background: "white", width: "500px", borderLeft: "" }}>
+            <textarea value={text} onChange={onTextChange} style={{ flexGrow: 2, border: "none", borderRadius: "inherit", width: "308px", height: "inherit", resize: "none", outline: "none", fontSize: "14px", fontFamily: "Tahoma" }} placeholder="Type your message here" />
+            <input type="submit" value="Send" style={{ height: "30px", marginRight: "15px", background: "rgb(4, 142, 209)", color: "white", borderRadius: "5px", border: "none", fontFamily: "Tahoma", width: "60px", fontSize: "14px" }} />
         </form>
     );
 };
@@ -623,6 +633,7 @@ const DemoSendBox = () => {
 const liveChatWidgetCustom3Props: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
+    telemetryConfig: dummyTelemetryConfig,
     styleProps: {
         generalStyles: {
             width: "700px",
@@ -707,14 +718,14 @@ const liveChatWidgetCustom3Props: ILiveChatWidgetProps = {
             hideAudioNotificationButton: true,
             leftGroup: {
                 children: [
-                    <DemoSendBox key={0}/>
+                    <DemoSendBox key={0} />
                 ]
             },
             rightGroup: {
                 children: [
-                    <IconButton key={0} iconProps={{ iconName: "Save" }} style={{marginTop: "30px", color: "white"}} styles={{root: {color: "white"}, rootHovered: {color: "#048ed1"}}}/>,
-                    <IconButton key={1} iconProps={{ iconName: "Attach" }} style={{marginTop: "30px", color: "white"}} styles={{root: {color: "white"}, rootHovered: {color: "#048ed1"}}}/>,
-                    <IconButton key={2} iconProps={{ iconName: "Print" }} style={{marginTop: "30px", marginRight: "30px", color: "white"}} styles={{root: {color: "white"}, rootHovered: {color: "#048ed1"}}}/>
+                    <IconButton key={0} iconProps={{ iconName: "Save" }} style={{ marginTop: "30px", color: "white" }} styles={{ root: { color: "white" }, rootHovered: { color: "#048ed1" } }} />,
+                    <IconButton key={1} iconProps={{ iconName: "Attach" }} style={{ marginTop: "30px", color: "white" }} styles={{ root: { color: "white" }, rootHovered: { color: "#048ed1" } }} />,
+                    <IconButton key={2} iconProps={{ iconName: "Print" }} style={{ marginTop: "30px", marginRight: "30px", color: "white" }} styles={{ root: { color: "white" }, rootHovered: { color: "#048ed1" } }} />
                 ]
             }
         },
@@ -769,6 +780,7 @@ export const LiveChatWidgetPopoutStyle = LiveChatWidgetTemplate.bind({});
 const liveChatWidgetPopoutStyleProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
+    telemetryConfig: dummyTelemetryConfig,
     controlProps: {
         hideStartChatButton: true,
         hideHeader: true
@@ -795,6 +807,7 @@ export const LiveChatWidgetReconnectChatPane = LiveChatWidgetTemplate.bind({});
 const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
+    telemetryConfig: dummyTelemetryConfig,
     chatConfig: {
         LiveChatConfigAuthSettings: {
             msdyn_javascriptclientfunction: "testAuth"
@@ -828,9 +841,9 @@ class MockChatSDKSurveyEnabled extends MockChatSDK {
     public async getPostChatSurveyContext() {
         await this.sleep(500);
         return {
-            participantJoined: false, 
-            participantType: undefined, 
-            surveyInviteLink: "https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false", 
+            participantJoined: true,
+            participantType: ParticipantType.User,
+            surveyInviteLink: "https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false",
             formsProLocale: "en-us"
         };
     }
@@ -838,8 +851,10 @@ class MockChatSDKSurveyEnabled extends MockChatSDK {
     // Keeping agent Accepted on true to simulate agent joining conversation and triggering post chat survey
     public getConversationDetails() {
         return {
+            State: "Active",
             conversationId: "3ef7f16f-7d34-46f4-b5d3-fa7ce1b95def",
-            canRenderPostChat: "True"
+            canRenderPostChat: "True",
+            participantType: ParticipantType.User
         };
     }
 }
@@ -863,15 +878,16 @@ const MockChatConfig: ChatConfig = {
 export const LiveChatWidgetFixedSizeSurveyEnabled = LiveChatWidgetTemplate.bind({});
 // Using Storybook loader for states to be loaded correctly
 LiveChatWidgetFixedSizeSurveyEnabled.loaders = [() => {
-    window.localStorage.setItem( 
-        "postChatContext",  "{participantJoined:True,canRenderPostchat:True,participantType:Bot,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\""+
-            "botSurveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",botFormsProLocale:\"en-us\"}"
+    window.localStorage.setItem(
+        "postChatContext", "{participantJoined:True,canRenderPostchat:True,participantType:Bot,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\"" +
+    "botSurveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",botFormsProLocale:\"en-us\"}"
     );
 }];
 
 const liveChatWidgetFixedSizeSurveyEnabledProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDKSurveyEnabled() as any,
+    telemetryConfig: dummyTelemetryConfig,
     chatConfig: MockChatConfig,
     styleProps: {
         generalStyles: {
@@ -896,7 +912,7 @@ const liveChatWidgetFixedSizeSurveyEnabledProps: ILiveChatWidgetProps = {
                 width: "360px",
                 borderRadius: "0 0 4px 4px",
                 overflow: "auto"
-            }            
+            }
         }
     }
 };
@@ -910,15 +926,16 @@ LiveChatWidgetFixedSizeSurveyEnabled.args = liveChatWidgetFixedSizeSurveyEnabled
 export const LiveChatWidgetCustomizedSurveyEnabled = LiveChatWidgetTemplate.bind({});
 // Using Storybook loader for states to be loaded correctly
 LiveChatWidgetCustomizedSurveyEnabled.loaders = [() => {
-    window.localStorage.setItem( 
-        "postChatContext",  "{participantJoined:True,canRenderPostchat:True,participantType:Bot,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\""+
-            "botSurveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",botFormsProLocale:\"en-us\"}"
+    window.localStorage.setItem(
+        "postChatContext", "{participantJoined:True,canRenderPostchat:True,participantType:Bot,surveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",formsProLocale:\"en-us\"" +
+    "botSurveyInviteLink:\"https://customervoice.microsoft.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRzBkKrakuj1CvYYDsfs8hTBUMUE4WUJHMEZEMjVPRTBTVUYzSzREN1Q1Ry4u&vt=72f988bf-86f1-41af-91ab-2d7cd011db47_33743ab6-750a-4598-b3d1-902bef8e51fd_637847096240000000_MSIT_Hash_j1mV7GqRPNf7lNpsWeFBAL46SoaB0vDccn8TMRuYnZ0%3d&lang=en-us&showmultilingual=false\",botFormsProLocale:\"en-us\"}"
     );
 }];
 
 const liveChatWidgetCustomizedSurveyEnabledProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDKSurveyEnabled() as any,
+    telemetryConfig: dummyTelemetryConfig,
     chatConfig: MockChatConfig,
     styleProps: {
         generalStyles: {
@@ -960,7 +977,7 @@ const liveChatWidgetCustomizedSurveyEnabledProps: ILiveChatWidgetProps = {
         styleProps: {
             customButtonStyleProps: {
                 backgroundColor: "#B22222",
-                color: "#FFFFFF"              
+                color: "#FFFFFF"
             }
         }
     },
@@ -1204,7 +1221,7 @@ const liveChatWidgetCustomizedSurveyEnabledProps: ILiveChatWidgetProps = {
                 fontFamily: "Helvetica",
                 marginTop: "10px"
             }
-        }        
+        }
     }
 };
 

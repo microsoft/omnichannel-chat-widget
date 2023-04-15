@@ -1,3 +1,4 @@
+import { ParticipantType } from "../../../common/Constants";
 import MockAdapter from "./mockadapter";
 
 export class MockChatSDK {
@@ -29,7 +30,10 @@ export class MockChatSDK {
 
     public getConversationDetails() {
         return {
-            State: "Active"
+            State: "Active",
+            conversationId:"",
+            canRenderPostChat:"",
+            participantType: ParticipantType.User
         };
     }
 

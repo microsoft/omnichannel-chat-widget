@@ -1,6 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ChatSDKError, LiveWorkItemState } from "../../../common/Constants";
-import { createTimer, getStateFromCache, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
@@ -26,17 +26,23 @@ import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 let optionalParams: StartChatOptionalParams = {};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let widgetInstanceId: any | "";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let popoutWidgetInstanceId: any | "";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
-    widgetInstanceId = props?.controlProps?.widgetInstanceId;
+    widgetInstanceId = getWidgetCacheIdfromProps(props);
 
     // reconnect > chat from cache
     await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
-
     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
     if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+        return;
+    }
+
+    // Check if there is any active popout chats in cache
+    if (await canStartPopoutChat(props)) {
         return;
     }
 
@@ -50,19 +56,12 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
 
     //Setting PreChat and intiate chat
-    setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, undefined, props);
+    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, undefined, props);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
     //Handle reconnect scenario
-    if (state) {
-        await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
-        // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-        if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
-            return;
-        }
-    }
 
     // Getting prechat Survey Context
     const parseToJson = false;
@@ -101,8 +100,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             // set auth token to chat sdk before start chat
             const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
             if (!authSuccess) {
-                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-                return;
+                // Replacing with error ui
+                throw new Error("Authentication was not successful");
             }
         }
 
@@ -119,7 +118,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         try {
             // Set custom context params
-            setCustomContextParams(chatSDK);
+            setCustomContextParams();
             const defaultOptionalParams: StartChatOptionalParams = {
                 sendDefaultInitContext: true,
                 isProactiveChat: !!params?.isProactiveChat,
@@ -147,16 +146,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
         newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
 
-        if (persistedState) {
-            dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
-            setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
-            return;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
-        dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
-
         // Set app state to Active
         if (isStartChatSuccessful) {
             ActivityStreamHandler.uncork();
@@ -165,14 +154,25 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
 
+        if (persistedState) {
+            dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
+            await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+            return;
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
+        dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
+
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.WidgetLoadComplete,
             Description: "Widget load complete",
             ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
         });
 
-        // Set post chat context in state, no survey load
-        setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+        // Set post chat context in state
+        // Commenting this for now as post chat context is fetched during end chat
+        await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
 
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
@@ -190,9 +190,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             return;
         }
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
         if (!hideErrorUIPane) {
             // Set app state to failing start chat if hideErrorUI is not turned on
-            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ErrorUIPaneLoaded,
                 Description: "Error UI Pane Loaded"
@@ -226,29 +226,29 @@ const forceEndChat = async (chatSDK: any) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     // By pass this function in case of popout chat
-    if (state.appStates.hideStartChatButton === true) {
+    if (state?.appStates?.hideStartChatButton === true) {
         return false;
     }
 
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId,
-        chatSDK?.omnichannelConfig?.widgetId, props?.controlProps?.widgetInstanceId ?? "");
+    const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
     //Connect to only active chat session
     if (persistedState &&
-        !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext)) {
+        !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
+        persistedState?.appStates?.conversationState === ConversationState.Active) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
         await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = (chatSDK: any) => {
+const setCustomContextParams = () => {
     // Add custom context only for unauthenticated chat
-    const persistedState = getStateFromCache(chatSDK?.omnichannelConfig?.orgId, chatSDK?.omnichannelConfig?.widgetId, widgetInstanceId ?? "");
+    const persistedState = getStateFromCache(widgetInstanceId);
 
     if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
         if (persistedState?.domainStates.liveChatConfig?.LiveChatConfigAuthSettings) {
@@ -267,29 +267,51 @@ const setCustomContextParams = (chatSDK: any) => {
     }
 };
 
+const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
+    if (props.allowSdkChatSupport === false) {
+        return false;
+    }
+
+    popoutWidgetInstanceId = getWidgetCacheIdfromProps(props, true);
+
+    if (!isNullOrEmptyString(popoutWidgetInstanceId)) {
+        const persistedState = getStateFromCache(popoutWidgetInstanceId);
+
+        if (persistedState &&
+            !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
+            persistedState?.appStates?.conversationState === ConversationState.Active) {
+            // Initiate popout chat
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.InitiateStartChatInPopoutMode
+            });
+            return true;
+        }
+    }
+    return false;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
-    const requestId = state.domainStates?.liveChatContext?.requestId;
+    const requestIdFromCache = state.domainStates?.liveChatContext?.requestId;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
 
-    //Preserve old requestId
-    const oldRequestId = chatSDK.requestId ?? "";
-    dispatch({ type: LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID, payload: oldRequestId });
+    //Preserve current requestId
+    const currentRequestId = chatSDK.requestId ?? "";
+    dispatch({ type: LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID, payload: currentRequestId });
 
     try {
-        chatSDK.requestId = requestId;
+        chatSDK.requestId = requestIdFromCache;
         conversationDetails = await chatSDK.getConversationDetails();
 
         if (Object.keys(conversationDetails).length === 0) {
-            chatSDK.requestId = oldRequestId;
+            chatSDK.requestId = currentRequestId;
             return false;
         }
 
         if (conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
-            chatSDK.requestId = oldRequestId;
+            chatSDK.requestId = currentRequestId;
             return false;
         }
 
@@ -302,7 +324,7 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
                 exception: `Conversation is not valid: ${erorr}`
             }
         });
-        chatSDK.requestId = oldRequestId;
+        chatSDK.requestId = currentRequestId;
         return false;
     }
 };

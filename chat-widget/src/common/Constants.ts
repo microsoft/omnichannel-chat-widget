@@ -124,6 +124,8 @@ export class Constants {
     public static readonly PostChatLoadingDurationInMs = 2000;
     public static readonly BrowserUnloadConfirmationMessage = "Do you want to leave chat?";
     public static readonly CacheTtlInMinutes = 15;
+    public static readonly SessionCacheSuffix = "session";
+    public static readonly PopoutCacheSuffix = "popout";
 
     // Visibility timeout for conversation details
     public static readonly LWICheckOnVisibilityTimeout = 3 * 60 * 1000; // 3 minute
@@ -232,6 +234,29 @@ export enum LiveWorkItemState {
     Open = "Open",
     Waiting = "Waiting",
     WrapUp = "WrapUp"
+}
+
+export enum StorageType {
+    "localStorage",
+    "sessionStorage"
+}
+
+export enum ParticipantType {
+    User = "User",
+    Bot = "Bot"
+}
+
+export enum ConversationEndEntity {
+    Customer = "Customer",
+    Agent = "Agent", // Currently covers both for human agent and bot
+    Bot = "Bot",
+    NotSet = "NotSet"
+}
+
+export enum ConfirmationState {
+    Ok = "Ok",
+    Cancel = "Cancel",
+    NotSet = "NotSet"
 }
 
 export class TranscriptConstants {

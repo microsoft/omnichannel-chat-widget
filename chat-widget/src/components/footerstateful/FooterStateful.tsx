@@ -31,7 +31,7 @@ export const FooterStateful = (props: any) => {
         onDownloadTranscriptClick: async () => {
             try {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.DownloadTranscriptButtonClicked, Description: "Download Transcript button clicked." });
-                await downloadTranscript(chatSDK, downloadTranscriptProps?.renderMarkDown, downloadTranscriptProps?.bannerMessageOnError, downloadTranscriptProps?.attachmentMessage);
+                await downloadTranscript(chatSDK, downloadTranscriptProps?.renderMarkDown, downloadTranscriptProps?.bannerMessageOnError, downloadTranscriptProps?.attachmentMessage, state);
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.DownloadTranscriptFailed,
@@ -46,7 +46,7 @@ export const FooterStateful = (props: any) => {
         },
         onEmailTranscriptClick: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptButtonClicked, Description: "Email Transcript button clicked." });
-            const emailTranscriptButtonId = footerProps?.controlProps?.emailTranscriptButtonProps?.id ??  `${controlProps.id}-emailtranscript-button`;
+            const emailTranscriptButtonId = footerProps?.controlProps?.emailTranscriptButtonProps?.id ?? `${controlProps.id}-emailtranscript-button`;
             if (emailTranscriptButtonId) {
                 dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: emailTranscriptButtonId });
             }
@@ -74,7 +74,7 @@ export const FooterStateful = (props: any) => {
             }
             <AudioNotificationStateful
                 audioSrc={audioNotificationProps?.audioSrc ?? NewMessageNotificationSoundBase64}
-                isAudioMuted={state.appStates.isAudioMuted === null ? 
+                isAudioMuted={state.appStates.isAudioMuted === null ?
                     footerProps?.controlProps?.hideAudioNotificationButton ?? false :
                     state.appStates.isAudioMuted ?? false}
             />

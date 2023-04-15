@@ -86,7 +86,7 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
         if (isTagIncluded(card, Constants.hiddenTag)) {
             return () => false;
         }
-        
+
         if (isTagIncluded(card, Constants.systemMessageTag)) {
             return handleSystemMessage(next, args, card, systemMessageStyleProps);
         } else if (card.activity.text

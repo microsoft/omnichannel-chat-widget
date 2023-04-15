@@ -5,9 +5,11 @@ import { LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
 import { IContextDataStore } from "../../interfaces/IContextDataStore";
 import { TelemetryHelper } from "../../telemetry/TelemetryHelper";
 import { inMemoryDataStore } from "./defaultInMemoryDataStore";
+import { StorageType } from "../../Constants";
 
-export const defaultClientDataStoreProvider = (cacheTtlinMins = 0): IContextDataStore => {
+export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage): IContextDataStore => {
     let ttlInMs = 0;
+
     const isCookieAllowed = () => {
         try {
             localStorage;
@@ -25,10 +27,10 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0): IContextData
     if (ttlInMs == 0) {
         ttlInMs = cacheTtlinMins * 60 * 1000;
     }
-    
+
     const dataStoreProvider = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setData: (key: any, data: any, type: any) => {
+        setData: (key: any, data: any) => {
             if (isCookieAllowed()) {
                 try {
                     if (key) {
@@ -39,7 +41,7 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0): IContextData
                         };
                         const strItem = JSON.stringify(item);
 
-                        if (type === "localStorage") {
+                        if (storageType === StorageType.localStorage) {
                             localStorage.setItem(key, strItem);
                         } else {
                             sessionStorage.setItem(key, strItem);
@@ -56,16 +58,16 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0): IContextData
                 const dataToCache = {
                     key: key,
                     data: data,
-                    type: type
+                    type: (storageType == StorageType.localStorage ? "localStorage" : "sessionStorage")
                 };
                 parent.postMessage(dataToCache, "*");
             }
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getData: (key: any, type: any) => {
+        getData: (key: any) => {
             if (isCookieAllowed()) {
                 let item;
-                if (type === "localStorage") {
+                if (storageType === StorageType.localStorage) {
                     item = localStorage.getItem(key);
                 } else {
                     item = sessionStorage.getItem(key);
@@ -90,10 +92,10 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0): IContextData
             }
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        removeData: (key: any, type: any) => {
+        removeData: (key: any) => {
             if (isCookieAllowed()) {
                 if (key) {
-                    if (type === "localStorage") {
+                    if (storageType === StorageType.localStorage) {
                         return localStorage.removeItem(key);
                     } else {
                         return sessionStorage.removeItem(key);
