@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Fixed popout chat is not showing Out of office pane
 - Fixed popout chat is showing blank screen
 - Better handling of end chat in case of multitab scenarios
+- Prevent new chat creation failure after Proactive chat in Popout mode
 
 ## [1.0.2] - 2023-4-6
 
@@ -79,3 +80,4 @@ All notable changes to this project will be documented in this file.
 - Added individual UI components like `Header`, `Footer`, and `ChatButton`, etc. with customizable `controlProps` and `styleProps`
 - Added `BroadcastService` to communicate with package consumer layer, and for telemetry purposes
 - Exposed `encodeComponentString` and `encodeComponentString`
+
