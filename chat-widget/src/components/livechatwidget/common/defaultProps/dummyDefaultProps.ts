@@ -1143,7 +1143,13 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 borderRadius: "0 0 4px 4px",
                 borderWidth: "3px",
                 backgroundColor: "#FFFFFF",
-                borderColor: "#F1F1F1"
+                borderColor: "#F1F1F1",
+                position: "initial",
+                height: "100%",
+                width: "100%",
+                left: "0%",
+                top: "0%",
+                display: "contents"
             }
         },
         isCustomerVoiceSurveyCompact: undefined

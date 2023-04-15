@@ -1,20 +1,20 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 
+import { ConversationEndEntity } from "../../common/Constants";
+import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IPostChatSurveyPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/postchatsurveypane/interfaces/IPostChatSurveyPaneControlProps";
+import { IPostChatSurveyPaneStatefulProps } from "./interfaces/IPostChatSurveyPaneStatefulProps";
 import { IPostChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/postchatsurveypane/interfaces/IPostChatSurveyPaneStyleProps";
 import { IStyle } from "@fluentui/react";
+import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
 import { PostChatSurveyPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPostChatSurveyPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralPostChatSurveyPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
-import { IPostChatSurveyPaneStatefulProps } from "./interfaces/IPostChatSurveyPaneStatefulProps";
-import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
-import { ConversationEndEntity } from "../../common/Constants";
 
 const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, showMultiLingual = false) => {
     const surveyLink = `${surveyInviteLink}
@@ -29,7 +29,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
 
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPostChatSurveyPaneStyleProps, props.styleProps?.generalStyleProps,
-        { display: state.appStates.isMinimized ? "none" : "" });
+        { display: state.appStates.isMinimized ? "none" : "contents" });
 
     let surveyInviteLink = "";
     const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
