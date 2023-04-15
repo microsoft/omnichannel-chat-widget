@@ -29,7 +29,6 @@ export enum BroadcastEvent {
     StartProactiveChat = "StartProactiveChat",
     ProactiveChatStartChat = "ProactiveChatStartChat",
     ProactiveChatStartPopoutChat = "ProactiveChatStartPopoutChat",
-    ProactiveChatIsInPopoutMode = "ProactiveChatIsInPopoutMode",
     ResetProactiveChatParams = "ResetProactiveChatParams",
     InvalidAdaptiveCardFormat = "InvalidAdaptiveCardFormat",
     NewMessageSent = "NewMessageSent",
