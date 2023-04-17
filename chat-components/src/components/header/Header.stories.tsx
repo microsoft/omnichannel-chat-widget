@@ -62,12 +62,6 @@ const azureCustomHeaderProps: IHeaderProps = {
         },
         closeButtonHoverStyleProps: {
             color: "blue"
-        },
-        closeButtonLabelStyleProps: {
-            overflow: "hidden",
-            textOverflow: "ellipsis !important",
-            whiteSpace: "nowrap",
-            maxWidth: "110px"
         }
     }
 };
