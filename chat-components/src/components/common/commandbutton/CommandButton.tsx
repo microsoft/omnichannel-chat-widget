@@ -32,6 +32,10 @@ function CommandButton(props: ICommandButtonProps) {
                 ":focus .ms-Button-icon": {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...((props?.focusStyles as any)?.icon as any)
+                },
+                ".ms-Button-label": {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    ...(props?.labelStyles as any)
                 }
             },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,6 +65,7 @@ function CommandButton(props: ICommandButtonProps) {
                 <DefaultButton
                     id={props.id}
                     text={props.text}
+                    title={props.text}
                     ariaLabel={props.ariaLabel}
                     onClick={handleOnClick}
                     disabled={props.disabled}

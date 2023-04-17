@@ -49,6 +49,9 @@ function Header(props: IHeaderProps) {
     const closeButtonHoverStyles = Object.assign({}, defaultHeaderProps.styleProps?.closeButtonHoverStyleProps,
         props.styleProps?.closeButtonHoverStyleProps);
 
+    const closeButtonLabelStyles = Object.assign({}, defaultHeaderProps.styleProps?.closeButtonLabelStyleProps,
+        props.styleProps?.closeButtonLabelStyleProps);
+
     const minimizeButtonStyles = Object.assign({}, defaultHeaderProps.styleProps?.minimizeButtonStyleProps,
         props.styleProps?.minimizeButtonStyleProps);
 
@@ -109,6 +112,7 @@ function Header(props: IHeaderProps) {
                                 onClick={props.controlProps?.onCloseClick}
                                 styles={closeButtonStyles}
                                 hoverStyles={closeButtonHoverStyles}
+                                labelStyles={closeButtonLabelStyles}
                                 focusStyles={headerItemFocusStyles} />)
                         }
                     </Stack.Item>

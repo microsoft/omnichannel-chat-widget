@@ -31,6 +31,12 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
         margin: "5px 0",
         fontSize: "12px"
     },
+    closeButtonLabelStyleProps: {
+        overflow: "hidden",
+        textOverflow: "ellipsis !important",
+        whiteSpace: "nowrap",
+        maxWidth: "110px"
+    },
     closeButtonHoverStyleProps: {
         filter: "brightness(0.8)"
     },

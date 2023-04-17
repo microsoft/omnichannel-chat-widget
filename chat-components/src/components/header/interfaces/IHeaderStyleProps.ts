@@ -27,6 +27,10 @@ export interface IHeaderStyleProps {
      */
     closeButtonHoverStyleProps?: IStyle;
     /**
+     * header close button label style props
+     */
+    closeButtonLabelStyleProps?: IStyle;
+    /**
      * header minimize button style props
      */
     minimizeButtonStyleProps?: IStyle;

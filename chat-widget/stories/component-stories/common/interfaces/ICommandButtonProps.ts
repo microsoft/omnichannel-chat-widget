@@ -16,6 +16,7 @@ export interface ICommandButtonProps {
     styles?: IStyle;
     hoverStyles?: IStyle;
     focusStyles?: IStyle;
+    labelStyles?: IStyle;
     className?: string;
     disabled?: boolean;
     customEvent?: ICustomEvent;

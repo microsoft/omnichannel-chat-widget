@@ -86,6 +86,9 @@ function ProactiveChatPane(props: IProactiveChatPaneProps) {
     const closeButtonStyles = Object.assign({}, defaultProactiveChatPaneProps.styleProps?.closeButtonStyleProps,
         props.styleProps?.closeButtonStyleProps);
 
+    const closeButtonLabelStyles = Object.assign({}, defaultProactiveChatPaneProps.styleProps?.closeButtonLabelStyleProps,
+        props.styleProps?.closeButtonLabelStyleProps);
+
     const closeButtonHoverStyles = Object.assign({}, defaultProactiveChatPaneProps.styleProps?.closeButtonHoveredStyleProps,
         props.styleProps?.closeButtonHoveredStyleProps);
 
@@ -151,6 +154,7 @@ function ProactiveChatPane(props: IProactiveChatPaneProps) {
                             onClick={handleCloseClick}
                             styles={closeButtonStyles}
                             hoverStyles={closeButtonHoverStyles}
+                            labelStyles={closeButtonLabelStyles}
                             id={elementId + "-closebutton"}/>) }
                     </Stack>
                     <Stack horizontal={props.controlProps?.isBodyContainerHorizantal || defaultProactiveChatPaneControlProps.isBodyContainerHorizantal}

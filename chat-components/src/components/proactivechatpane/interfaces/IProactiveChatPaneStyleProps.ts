@@ -9,6 +9,7 @@ export interface IProactiveChatPaneStyleProps {
     subtitleStyleProps?: IStyle;
     closeButtonStyleProps?: IStyle;
     closeButtonHoveredStyleProps?: IStyle;
+    closeButtonLabelStyleProps?: IStyle;
     bodyContainerStyleProps?: IStyle;
     bodyTitleStyleProps?: IStyle;
     startButtonStyleProps?: IStyle;

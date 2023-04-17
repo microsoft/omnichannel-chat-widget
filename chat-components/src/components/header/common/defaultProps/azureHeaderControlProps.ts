@@ -20,7 +20,7 @@ export const azureHeaderControlProps: IHeaderControlProps = {
     closeButtonProps: {
         id: "oc-lcw-header-closebutton",
         type: ButtonTypes.Text,
-        text: "End Chat"
+        text: "Close this Chat Widget"
     },
     headerIconProps: {
         id: Ids.HeaderIconId,

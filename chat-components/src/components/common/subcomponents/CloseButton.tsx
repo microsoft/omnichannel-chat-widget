@@ -20,6 +20,7 @@ function CloseButton(props: ICommandButtonProps) {
             styles={props.styles}
             hoverStyles={props.hoverStyles}
             focusStyles={props.focusStyles}
+            labelStyles={props.labelStyles}
             iconName={props.iconName ?? IconNames.ChromeClose}
             imageIconProps={props.imageIconProps}
             onClick={props.onClick}
