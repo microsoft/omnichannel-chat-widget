@@ -67,6 +67,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Added customizable `styleProp` labelStyles to Close button component to style the button text
+
 ## [1.0.1] - 2023-4-4
 
 ### Changed
