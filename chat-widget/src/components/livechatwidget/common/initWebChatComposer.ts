@@ -104,7 +104,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         markdownRenderers.forEach((renderer) => {
             text = renderer.render(text);
         });
-
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        text = (window as any).DOMPurify.sanitize(text);
         return text;
     };
 
