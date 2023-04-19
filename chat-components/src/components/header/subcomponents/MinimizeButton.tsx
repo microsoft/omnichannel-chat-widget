@@ -25,7 +25,8 @@ function MinimizeButton(props: ICommandButtonProps) {
             onClick={props.onClick}
             ariaLabel={props.ariaLabel ?? AriaLabels.Minimize}
             className={props.className}
-            customEvent={customEvent} />
+            customEvent={customEvent}
+            hideButtonTitle = {props.hideButtonTitle}/>
     );
 }
 

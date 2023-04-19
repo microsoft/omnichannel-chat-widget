@@ -107,20 +107,20 @@ describe("Chat Button component", () => {
         });
     });
     act(() => {
-        it("chat button key down", () => {
+        it("chat button key down", async () => {
             render(<ChatButton {...defaultChatButtonProps} />);
             const handleKeyDown = jest.fn();
-            const startChatButton = screen.getByText(Texts.ChatButtonTitle);
+            const startChatButton =  await screen.findByRole("button");
             startChatButton.onkeydown = handleKeyDown;
             fireEvent.keyDown(startChatButton);
             expect(handleKeyDown).toHaveBeenCalledTimes(1);
         });
     });
     act(() => {
-        it("chat button click", () => {
+        it("chat button click", async () => {
             render(<ChatButton {...defaultChatButtonProps} />);
             const handleClick = jest.fn();
-            const startChatButton = screen.getByText(Texts.ChatButtonTitle);
+            const startChatButton = await screen.findByRole("button");
             startChatButton.onclick = handleClick;
             fireEvent.click(startChatButton);
             expect(handleClick).toHaveBeenCalledTimes(1);

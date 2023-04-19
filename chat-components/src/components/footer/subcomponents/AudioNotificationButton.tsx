@@ -72,7 +72,8 @@ function AudioNotificationButton(props: ICommandButtonProps) {
             disabled={disabled}
             styles={iconButtonStyles}
             className={props.className}
-            title={muted ?
+            title= {undefined}
+            ariaLabel={muted ?
                 props.toggleAriaLabel ?? AriaLabels.TurnSoundOn :
                 props.ariaLabel ?? AriaLabels.TurnSoundOff}
         />

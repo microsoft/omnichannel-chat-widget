@@ -66,6 +66,7 @@ function CommandButton(props: ICommandButtonProps) {
                     disabled={props.disabled}
                     className={props.className}
                     styles={buttonStyles}
+                    title={props.hideButtonTitle ? undefined : props.ariaLabel}
                 />
             }
 
