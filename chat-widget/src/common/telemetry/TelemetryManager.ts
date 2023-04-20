@@ -77,7 +77,10 @@ export const RegisterLoggers = () => {
             const scenarioType = (telemetryEvent as ITelemetryEvent).payload?.scenarioType ?? ScenarioType.UNDEFINED;
             const telemetryInput = parseInput(telemetryEvent?.payload, scenarioType);
             telemetryInput.telemetryInfo = { telemetryInfo: TelemetryHelper.buildTelemetryEvent(logLevel, telemetryInput) };
-            logger.log(logLevel, telemetryInput);
+            //Do not log empty events without an Event Name
+            if (telemetryInput?.payload?.Event) {
+                logger.log(logLevel, telemetryInput);
+            }
         });
     };
     return registerLoggers();
