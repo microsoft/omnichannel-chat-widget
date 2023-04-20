@@ -118,7 +118,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         try {
             // Set custom context params
-            setCustomContextParams();
+            setCustomContextParams(props);
             const defaultOptionalParams: StartChatOptionalParams = {
                 sendDefaultInitContext: true,
                 isProactiveChat: !!params?.isProactiveChat,
@@ -246,7 +246,17 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = () => {
+const setCustomContextParams = (props?: ILiveChatWidgetProps) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isAuthenticatedChat = (props?.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
+    //Should not set custom context for auth chat
+    if (isAuthenticatedChat) {
+        return;
+    }
+
+    if (isNullOrEmptyString(widgetInstanceId)) {
+        widgetInstanceId = getWidgetCacheIdfromProps(props);
+    }
     // Add custom context only for unauthenticated chat
     const persistedState = getStateFromCache(widgetInstanceId);
 
