@@ -119,10 +119,10 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             });
         } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
-            //Always allow to close the chat for embedded mode irrespective of end chat errors
-            if (!state?.appStates?.hideStartChatButton) {
-                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-            }
+            // Always allow to close the chat for embedded mode irrespective of end chat errors
+            // Removed the hideStartChatButton check here as it leaves to webchat container open and poll messages, impacting reconnect
+            // There should be a confirmation screen for popout chat like a thank you page instead of just showing blank page, which could confuse customer
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
         }
     }
 

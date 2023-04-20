@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Better handling of end chat in case of multitab scenarios
 - Prevent new chat creation failure after Proactive chat in Popout mode
 - Fixed post chat having gap in popout mode
+- Fixing reconnect message is appearing even after end chat
 
 ## [1.0.2] - 2023-4-6
 
