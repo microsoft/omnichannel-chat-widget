@@ -1,4 +1,9 @@
 class TranscriptHTMLBuilder {
+    private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
+        this.options = options;
+    }
+
     createHeadElement() {
         const htmlData = `
             <head>
@@ -48,6 +53,9 @@ class TranscriptHTMLBuilder {
                     ];
                 <\/script>
                 <script>
+                    const messages = ${JSON.stringify(this.options.messages)};
+                <\/script>
+                <script>
                     class TranscriptAdapter {
                         constructor() {
                             this.connectionStatus$ = new window.rxjs.BehaviorSubject(0); // Unitialized
@@ -69,6 +77,12 @@ class TranscriptHTMLBuilder {
                                                 type: 'message',
                                             });
                                         });
+                                    }, 1);
+                                }
+
+                                if (messages) {
+                                    setTimeout(() => { // setTimeout is needed due to some WebChat issues
+                                        console.log(messages);
                                     }, 1);
                                 }
                             }));
@@ -132,10 +146,14 @@ const download = (fileName: string, htmlData: string) => {
 
 const createChatTranscript = (transcript: string) => {
     console.log("[createChatTranscript]");
-    const data = JSON.parse(transcript);
-    console.log(data);
+    const messages = JSON.parse(transcript);
+    console.log(messages);
 
-    const htmlBuilder = new TranscriptHTMLBuilder();
+    const options = {
+        messages
+    };
+
+    const htmlBuilder = new TranscriptHTMLBuilder(options);
     const text = htmlBuilder.createHTML();
     download("transcript.html", text);
 };
