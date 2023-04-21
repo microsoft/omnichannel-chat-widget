@@ -261,6 +261,11 @@ const setCustomContextParams = (props?: ILiveChatWidgetProps) => {
     const persistedState = getStateFromCache(widgetInstanceId);
 
     if (!isUndefinedOrEmpty(persistedState?.domainStates?.customContext)) {
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.SetCustomContext,
+            Description: "Setting custom context for unauthenicated chat"
+        });
+
         optionalParams = Object.assign({}, optionalParams, {
             customContext: persistedState?.domainStates?.customContext
         });

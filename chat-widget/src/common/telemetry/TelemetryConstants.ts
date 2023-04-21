@@ -100,7 +100,7 @@ export enum TelemetryEvent {
     ChatVisibilityChanged = "ChatVisibilityChanged",
     EndChatSucceeded = "EndChatSucceeded",
     EndChatFailed = "EndChatFailed",
-
+    SetCustomContext = "SetCustomContext",
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
