@@ -1,21 +1,24 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
+import { Components, StyleOptions } from "botframework-webchat";
+import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     createTimer,
     getBroadcastChannelName,
+    getConversationDetailsCall,
     getLocaleDirection,
     getStateFromCache,
+    getWidgetCacheIdfromProps,
     getWidgetEndChatEventName,
     isNullOrEmptyString,
     isUndefinedOrEmpty,
-    getWidgetCacheIdfromProps,
-    getConversationDetailsCall,
     newGuid
 } from "../../../common/utils";
 import { endChat, prepareEndChat } from "../common/endChat";
+import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -35,11 +38,9 @@ import {
 import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
 import CallingContainerStateful from "../../callingcontainerstateful/CallingContainerStateful";
 import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
-import { Components, StyleOptions } from "botframework-webchat";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
-import { Constants, E2VVOptions, StorageType, LiveWorkItemState, ConversationEndEntity, ConfirmationState } from "../../../common/Constants";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
@@ -78,7 +79,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -338,6 +338,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             if (persistedState &&
                 persistedState.appStates.conversationState === ConversationState.Active) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
                 prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
             } else {
                 const skipEndChatSDK = true;
