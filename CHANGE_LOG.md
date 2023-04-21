@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file.
 - Better handling of end chat in case of multitab scenarios
 - Prevent new chat creation failure after Proactive chat in Popout mode
 - Fixed post chat having gap in popout mode
+- Fixed initial custom context not being passed to OC
+- Adding additional check for auth chats not to set custom context
 
 ## [1.0.2] - 2023-4-6
 
