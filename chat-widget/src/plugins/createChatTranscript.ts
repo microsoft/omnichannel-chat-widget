@@ -56,6 +56,64 @@ class TranscriptHTMLBuilder {
                     const messages = ${JSON.stringify(this.options.messages)};
                 <\/script>
                 <script>
+                    class Translator {
+                        static convertTranscriptMessageToActivity(message) {
+                            const {created, isControlMessage, content, tags, from, attachments, amsMetadata, amsReferences} = message;
+                            const activity = {
+                                from: {
+                                    role: 'bot'
+                                },
+                                type: 'message'
+                            };
+
+                            // Ignore control messages
+                            if (isControlMessage) {
+                                return false;
+                            }
+
+                            if (tags) {
+                                const formattedTags = tags.split(',');
+
+                                // Ignore system message
+                                if (formattedTags.includes('system')) {
+                                    return false;
+                                }
+                            }
+
+                            // Ignore File Attachments
+                            if (amsReferences && amsMetadata) {
+                                return false;
+                            }
+
+                            // Message
+                            if (content) {
+                                // Customer message
+                                if (from && from.application && from.application.displayName && from.application.displayName === 'Customer') {
+                                    activity.from = {
+                                        role: 'user'
+                                    };
+                                }
+
+                                // Adaptive card formatting
+                                if (content.includes('"text":null') && content.includes('attachments')) {
+                                    const partialActivity = JSON.parse(content);
+                                    return {
+                                        ...activity,
+                                        ...partialActivity,
+                                        timestamp: created
+                                    };
+                                }
+                            }
+
+                            return {
+                                ...activity,
+                                text: content,
+                                timestamp: created
+                            };
+                        }
+                    }
+                <\/script>
+                <script>
                     class TranscriptAdapter {
                         constructor() {
                             this.connectionStatus$ = new window.rxjs.BehaviorSubject(0); // Unitialized
@@ -82,7 +140,12 @@ class TranscriptHTMLBuilder {
 
                                 if (messages) {
                                     setTimeout(() => { // setTimeout is needed due to some WebChat issues
-                                        console.log(messages);
+                                        messages.map((message) => {
+                                            this.activityObserver.next({
+                                                ...Translator.convertTranscriptMessageToActivity(message),
+                                                type: 'message'
+                                            });
+                                        });
                                     }, 1);
                                 }
                             }));
