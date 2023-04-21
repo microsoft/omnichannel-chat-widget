@@ -339,7 +339,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (persistedState &&
                 persistedState.appStates.conversationState === ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
-                prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
@@ -460,13 +459,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [state.domainStates.confirmationState]);
 
     useEffect(() => {
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
-            state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
-        }
-    }, [state?.appStates?.conversationEndedBy]);
-
-    useEffect(() => {
         // Do not process anything during initialization
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.NotSet) {
             return;
@@ -485,7 +477,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
-        //All other cases
+        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
+            state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+        }
+
+        // All other cases
         prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
     }, [state?.appStates?.conversationEndedBy]);
