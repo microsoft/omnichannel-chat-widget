@@ -4,6 +4,7 @@ import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontr
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
+import createChatTranscript from "../../../plugins/createChatTranscript";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -172,6 +173,12 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
         data = JSON.parse(data);
     }
     if (data[Constants.ChatMessagesJson] !== null && data[Constants.ChatMessagesJson] !== undefined) {
+
+        if ((window as any).useWebChatTranscript) {
+            createChatTranscript(data[Constants.ChatMessagesJson]);
+            return;
+        }
+
         const chatTranscripts = window.btoa(encodeURIComponent(beautifyChatTranscripts(data[Constants.ChatMessagesJson], renderMarkDown, attachmentMessage)));
         const byteCharacters = decodeURIComponent(window.atob(chatTranscripts));
 
