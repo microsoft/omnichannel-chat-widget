@@ -165,7 +165,14 @@ class TranscriptHTMLBuilder {
                 <script>
                     const adapter = new TranscriptAdapter();
                     const styleOptions = {
-                        hideSendBox: true
+                        hideSendBox: true,
+                        bubbleBackground: '#E8E8E8',
+                        bubbleBorderRadius: 12,
+                        bubbleNubSize: 1,
+                        bubbleFromUserBackground: '#2266E3',
+                        bubbleFromUserTextColor: '#FFF',
+                        bubbleFromUserBorderRadius: 12,
+                        bubbleFromUserNubSize: 1
                     };
 
                     window.WebChat.renderWebChat({
