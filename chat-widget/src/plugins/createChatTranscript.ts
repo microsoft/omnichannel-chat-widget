@@ -159,6 +159,11 @@ class TranscriptHTMLBuilder {
     }
 
     createBodyElement() {
+        const AgentDialogColor = "#E8E8E8";
+        const AgentFontColor = "#000";
+        const CustomerDialogColor = "#2266E3";
+        const CustomerFontColor = "#FFF";
+
         const htmlData = `
             <body>
                 <div id="transcript"></div>
@@ -166,11 +171,12 @@ class TranscriptHTMLBuilder {
                     const adapter = new TranscriptAdapter();
                     const styleOptions = {
                         hideSendBox: true,
-                        bubbleBackground: '#E8E8E8',
+                        bubbleBackground: '${AgentDialogColor}',
+                        bubbleTextColor: '${AgentFontColor}',
                         bubbleBorderRadius: 12,
                         bubbleNubSize: 1,
-                        bubbleFromUserBackground: '#2266E3',
-                        bubbleFromUserTextColor: '#FFF',
+                        bubbleFromUserBackground: '${CustomerDialogColor}',
+                        bubbleFromUserTextColor: '${CustomerFontColor}',
                         bubbleFromUserBorderRadius: 12,
                         bubbleFromUserNubSize: 1
                     };
