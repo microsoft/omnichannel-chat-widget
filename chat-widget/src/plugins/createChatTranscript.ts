@@ -10,6 +10,8 @@ class TranscriptHTMLBuilder {
                 <title> Chat Transcript </title>
                 <script src="https://cdn.botframework.com/botframework-webchat/4.15.7/webchat.js"><\/script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.8.0/rxjs.umd.min.js" integrity="sha512-v0/YVjBcbjLN6scjmmJN+h86koeB7JhY4/2YeyA5l+rTdtKLv0VbDBNJ32rxJpsaW1QGMd1Z16lsLOSGI38Rbg==" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>
+                <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"><\/script>
+                <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"><\/script>
                 <script>
                     function shareObservable(observable) {
                         let observers = [];
@@ -44,15 +46,6 @@ class TranscriptHTMLBuilder {
                     }
                 <\/script>
                 <script>
-                    const sampleMessages = [
-                        'one',
-                        'two',
-                        'three',
-                        'four',
-                        'five'
-                    ];
-                <\/script>
-                <script>
                     const messages = ${JSON.stringify(this.options.messages)};
                 <\/script>
                 <script>
@@ -80,6 +73,11 @@ class TranscriptHTMLBuilder {
                                 }
                             }
 
+                            // Add display name
+                            if (message.from.user && message.from.user.displayName) {
+                                activity.from.name = message.from.user.displayName;
+                            }
+
                             // Ignore File Attachments
                             if (amsReferences && amsMetadata) {
                                 return false;
@@ -90,7 +88,8 @@ class TranscriptHTMLBuilder {
                                 // Customer message
                                 if (from && from.application && from.application.displayName && from.application.displayName === 'Customer') {
                                     activity.from = {
-                                        role: 'user'
+                                        role: 'user',
+                                        name: from.application.displayName
                                     };
                                 }
 
@@ -124,20 +123,6 @@ class TranscriptHTMLBuilder {
                                 this.connectionStatus$.next(2); // Online
 
                                 // Retrieve messages
-                                if (sampleMessages) {
-                                    setTimeout(() => { // setTimeout is needed due to some WebChat issues
-                                        sampleMessages.map((message) => {
-                                            this.activityObserver.next({
-                                                from: {
-                                                    role: 'user'
-                                                },
-                                                text: message,
-                                                type: 'message',
-                                            });
-                                        });
-                                    }, 1);
-                                }
-
                                 if (messages) {
                                     setTimeout(() => { // setTimeout is needed due to some WebChat issues
                                         messages.map((message) => {
@@ -152,6 +137,19 @@ class TranscriptHTMLBuilder {
                         }
                     }
                 <\/script>
+                <style>
+                    .message-name {
+                        font-family: Segoe UI,SegoeUI,Helvetica Neue,Helvetica,Arial,sans-serif;
+                        font-weight: 700;
+                        font-size: 10px;
+                    }
+
+                    .message-timestamp {
+                        font-family: Segoe UI,SegoeUI,Helvetica Neue,Helvetica,Arial,sans-serif;
+                        font-weight: 500;
+                        font-size: 10px;
+                    }
+                <\/style>
             </head>
         `;
 
@@ -168,6 +166,35 @@ class TranscriptHTMLBuilder {
             <body>
                 <div id="transcript"></div>
                 <script>
+                    const activityStatusMiddleware = () => (next) => (...args) => {
+                        console.log("[activityStatusMiddleware]");
+                        const [card] = args;
+                        const {activity} = card;
+
+                        if (activity) {
+                            const {from, timestamp} = activity;
+
+                            const nameElement = React.createElement(
+                                'span',
+                                {className: 'message-name'},
+                                from.name
+                            );
+
+                            const formattedDate = new Date(timestamp);
+                            const formattedTimeString = formattedDate.toLocaleTimeString("en-us", { year: "numeric", month:"numeric", day:"numeric", hour: "2-digit", minute: "2-digit"});
+
+                            const timestampElement = React.createElement(
+                                'span',
+                                {className: 'message-timestamp'},
+                                formattedTimeString
+                            );
+
+                            return from.name && timestamp && React.createElement('span', null, nameElement, ' - ', timestampElement)
+                        }
+
+                        return next(...args);
+                    };
+
                     const adapter = new TranscriptAdapter();
                     const styleOptions = {
                         hideSendBox: true,
@@ -183,7 +210,8 @@ class TranscriptHTMLBuilder {
 
                     window.WebChat.renderWebChat({
                         directLine: adapter,
-                        styleOptions
+                        styleOptions,
+                        activityStatusMiddleware
                     },
                     document.getElementById('transcript'));
                 <\/script>
