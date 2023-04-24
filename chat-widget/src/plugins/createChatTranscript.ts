@@ -105,6 +105,12 @@ class TranscriptHTMLBuilder {
                                 const { fileName } = metadata[0];
                                 const text = \`The following attachment was uploaded during the conversation: \${fileName}\`;
 
+                                if (message.attachments) {
+                                    activity.attachments = message.attachments;
+                                    activity.attachments[0].contentUrl = message.contentUrl;
+                                    activity.attachments[0].thumbnailUrl =  message.contentUrl;
+                                };
+
                                 return {
                                     ...activity,
                                     text,
@@ -188,7 +194,6 @@ class TranscriptHTMLBuilder {
                 <div id="transcript"></div>
                 <script>
                     const activityStatusMiddleware = () => (next) => (...args) => {
-                        console.log("[activityStatusMiddleware]");
                         const [card] = args;
                         const {activity} = card;
 
@@ -269,10 +274,38 @@ const download = (fileName: string, htmlData: string) => {
     document.body.removeChild(aElement);
 };
 
-const createChatTranscript = (transcript: string) => {
-    console.log("[createChatTranscript]");
-    const messages = JSON.parse(transcript);
-    console.log(messages);
+const createChatTranscript = async (transcript: string, chatSDK: any, downloadAttachments = false) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const transcriptMessages = JSON.parse(transcript);
+
+    const convertBlobToBase64 = async (blob: Blob) => {
+        return new Promise((resolve, _) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+        });
+    };
+
+    let messages = transcriptMessages;
+
+    if (downloadAttachments) {
+        messages = await Promise.all(transcriptMessages.map(async (message: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+            const {amsReferences, amsMetadata } = message;
+            if (amsReferences && amsMetadata) {
+                const references = JSON.parse(amsReferences);
+                const metadata = JSON.parse(amsMetadata);
+                const fileMetadata = {
+                    id: references[0],
+                    type: metadata[0].contentType
+                };
+
+                const blob = await chatSDK.downloadFileAttachment(fileMetadata);
+                const base64 = await convertBlobToBase64(blob);
+                message.contentUrl = base64;
+            }
+
+            return message;
+        }));
+    }
 
     const options = {
         messages

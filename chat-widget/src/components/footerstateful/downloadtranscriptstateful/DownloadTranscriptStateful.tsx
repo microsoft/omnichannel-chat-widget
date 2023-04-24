@@ -175,7 +175,7 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
     if (data[Constants.ChatMessagesJson] !== null && data[Constants.ChatMessagesJson] !== undefined) {
 
         if ((window as any).useWebChatTranscript) {
-            createChatTranscript(data[Constants.ChatMessagesJson]);
+            await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK);
             return;
         }
 
