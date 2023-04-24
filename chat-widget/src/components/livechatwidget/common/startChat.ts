@@ -269,8 +269,7 @@ const setCustomContextParams = async (props?: ILiveChatWidgetProps) => {
         optionalParams = Object.assign({}, optionalParams, {
             customContext: persistedState?.domainStates?.customContext
         });
-    } else
-    {
+    } else {
         const customContextFromParent = await getInitContextParamsForPopout();
         if (!isUndefinedOrEmpty(customContextFromParent?.contextVariables)) {
             optionalParams = Object.assign({}, optionalParams, {
