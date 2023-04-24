@@ -73,26 +73,34 @@ class TranscriptHTMLBuilder {
                                 }
                             }
 
-                            // Add display name
+                            // Add C1 user display name
                             if (message.from.user && message.from.user.displayName) {
                                 activity.from.name = message.from.user.displayName;
                             }
 
-                            // Ignore File Attachments
+                            // Add C2 user display name
+                            if (from && from.application && from.application.displayName && from.application.displayName === 'Customer') {
+                                activity.from = {
+                                    role: 'user',
+                                    name: from.application.displayName
+                                };
+                            }
+
+                            // Attachments
                             if (amsReferences && amsMetadata) {
-                                return false;
+                                const metadata = JSON.parse(amsMetadata);
+                                const { fileName } = metadata[0];
+                                const text = \`The following attachment was uploaded during the conversation: \${fileName}\`;
+
+                                return {
+                                    ...activity,
+                                    text,
+                                    timestamp: created
+                                }
                             }
 
                             // Message
                             if (content) {
-                                // Customer message
-                                if (from && from.application && from.application.displayName && from.application.displayName === 'Customer') {
-                                    activity.from = {
-                                        role: 'user',
-                                        name: from.application.displayName
-                                    };
-                                }
-
                                 // Adaptive card formatting
                                 if (content.includes('"text":null') && content.includes('attachments')) {
                                     const partialActivity = JSON.parse(content);
