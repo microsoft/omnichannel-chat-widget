@@ -120,9 +120,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
         } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
-            // Removed the hideStartChatButton check here as it leaves to webchat container open and poll messages, impacting reconnect
-            // There should be a confirmation screen for popout chat like a thank you page instead of just showing blank page, which could confuse customer
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+            await closeChatWidget(dispatch, props, state);
         }
     }
 
@@ -158,6 +156,20 @@ const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) 
             proactiveChatInNewWindow: false
         }
     });
+};
+
+const closeChatWidget = async (dispatch: Dispatch<ILiveChatWidgetAction>, props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
+    if (state?.appStates?.hideStartChatButton) {
+        // Only close chat if header is enabled for popout
+        // TODO : This condition needs to be removed eventually when the filler UX is ready for popout, removing this condition would show a blank screen for OOB Widget
+        if (props?.controlProps?.hideHeader === undefined || props?.controlProps?.hideHeader === false) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+        }
+        return;
+    }
+
+    // Embedded chat
+    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
