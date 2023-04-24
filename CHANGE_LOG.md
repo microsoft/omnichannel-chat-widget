@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Fixed post chat having gap in popout mode
 - Fixed initial custom context not being passed to OC
 - Adding additional check for auth chats not to set custom context
+- Fixed logging empty events
 
 ## [1.0.2] - 2023-4-6
 

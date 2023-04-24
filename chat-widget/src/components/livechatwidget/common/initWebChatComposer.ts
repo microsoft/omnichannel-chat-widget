@@ -35,6 +35,7 @@ import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/web
 import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { getConversationDetails } from "./endChat";
 import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
+import DOMPurify from "dompurify";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any) => {
@@ -104,7 +105,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         markdownRenderers.forEach((renderer) => {
             text = renderer.render(text);
         });
-
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        text = DOMPurify.sanitize(text);
         return text;
     };
 
