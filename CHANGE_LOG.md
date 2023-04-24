@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Fixed initial custom context not being passed to OC
 - Adding additional check for auth chats not to set custom context
 - Fixed an issue where sending "InitiateEndChat" event doesn't end chat when no post chat is configured
+- Fixed logging empty events
 
 ## [1.0.2] - 2023-4-6
 
