@@ -338,7 +338,7 @@ const download = (fileName: string, htmlData: string) => {
     document.body.removeChild(aElement);
 };
 
-const createChatTranscript = async (transcript: string, chatSDK: any, downloadAttachments = false) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+const createChatTranscript = async (transcript: string, chatSDK: any, renderAttachments = false) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const transcriptMessages = JSON.parse(transcript);
 
     const convertBlobToBase64 = async (blob: Blob) => {
@@ -351,7 +351,7 @@ const createChatTranscript = async (transcript: string, chatSDK: any, downloadAt
 
     let messages = transcriptMessages;
 
-    if (downloadAttachments) {
+    if (renderAttachments || (window as any).renderAttachments) {
         messages = await Promise.all(transcriptMessages.map(async (message: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             const {amsReferences, amsMetadata } = message;
             if (amsReferences && amsMetadata) {
