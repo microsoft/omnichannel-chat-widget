@@ -4,14 +4,27 @@ class TranscriptHTMLBuilder {
         this.options = options;
     }
 
+    createTitleElement() {
+        const htmlData = `<title> ${this.options.title || "Chat Transcripts"} </title>`;
+        return htmlData;
+    }
+
+    createExternalScriptElements() {
+        const htmlData = `
+            <script src="https://cdn.botframework.com/botframework-webchat/4.15.7/webchat.js"><\/script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.8.0/rxjs.umd.min.js" integrity="sha512-v0/YVjBcbjLN6scjmmJN+h86koeB7JhY4/2YeyA5l+rTdtKLv0VbDBNJ32rxJpsaW1QGMd1Z16lsLOSGI38Rbg==" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>
+            <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"><\/script>
+            <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"><\/script>
+        `;
+
+        return htmlData;
+    }
+
     createHeadElement() {
         const htmlData = `
             <head>
-                <title> Chat Transcript </title>
-                <script src="https://cdn.botframework.com/botframework-webchat/4.15.7/webchat.js"><\/script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.8.0/rxjs.umd.min.js" integrity="sha512-v0/YVjBcbjLN6scjmmJN+h86koeB7JhY4/2YeyA5l+rTdtKLv0VbDBNJ32rxJpsaW1QGMd1Z16lsLOSGI38Rbg==" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>
-                <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"><\/script>
-                <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"><\/script>
+                ${this.createTitleElement()}
+                ${this.createExternalScriptElements()}
                 <script>
                     function shareObservable(observable) {
                         let observers = [];
