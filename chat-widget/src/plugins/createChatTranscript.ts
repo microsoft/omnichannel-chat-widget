@@ -105,7 +105,7 @@ class TranscriptHTMLBuilder {
                                 const { fileName } = metadata[0];
                                 const text = \`The following attachment was uploaded during the conversation: \${fileName}\`;
 
-                                if (message.attachments) {
+                                if (message.attachments && message.contentUrl) {
                                     activity.attachments = message.attachments;
                                     activity.attachments[0].contentUrl = message.contentUrl;
                                     activity.attachments[0].thumbnailUrl =  message.contentUrl;
@@ -176,6 +176,36 @@ class TranscriptHTMLBuilder {
                         font-weight: 500;
                         font-size: 10px;
                     }
+
+                    .avatar {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        text-align: center;
+                    }
+
+                    .avatar--bot {
+                        background-color: #E8E8E8;
+                    }
+
+                    .avatar--user {
+                        background-color: #2266E3;
+                    }
+
+                    .avatar > p {
+                        font-weight: 600;
+                        text-align: center;
+                        line-height: 0.5;
+                        font-family: "Segoe UI", Arial, sans-serif;
+                    }
+
+                    .avatar--bot > p {
+                        color: #000;
+                    }
+
+                    .avatar--user > p {
+                        color: #FFF;
+                    }
                 <\/style>
             </head>
         `;
@@ -193,6 +223,19 @@ class TranscriptHTMLBuilder {
             <body>
                 <div id="transcript"></div>
                 <script>
+                    const getIconText = (text) => {
+                        if (text) {
+                            const initials = text.split(/\\s/).reduce((response, word) => response += word.slice(0, 1), '');
+                            if (initials.length > 1) {
+                                return initials.substring(0, 2).toUpperCase();
+                            } else {
+                                return text.substring(0, 2).toUpperCase();
+                            }
+                        }
+
+                        return "";
+                    }
+
                     const activityStatusMiddleware = () => (next) => (...args) => {
                         const [card] = args;
                         const {activity} = card;
@@ -221,6 +264,24 @@ class TranscriptHTMLBuilder {
                         return next(...args);
                     };
 
+                    const avatarMiddleware = () => (next) => (...args) => {
+                        const [card] = args;
+                        const {fromUser, activity} = card;
+                        const initials = getIconText(activity.from.name);
+
+                        const avatarElement = React.createElement(
+                            "div",
+                            {className: fromUser? "avatar avatar--user": "avatar avatar--bot"},
+                            React.createElement(
+                                "p",
+                                null,
+                                \`\${initials}\`
+                            )
+                        );
+
+                        return avatarElement;
+                    }
+
                     const adapter = new TranscriptAdapter();
                     const styleOptions = {
                         hideSendBox: true,
@@ -231,13 +292,16 @@ class TranscriptHTMLBuilder {
                         bubbleFromUserBackground: '${CustomerDialogColor}',
                         bubbleFromUserTextColor: '${CustomerFontColor}',
                         bubbleFromUserBorderRadius: 12,
-                        bubbleFromUserNubSize: 1
+                        bubbleFromUserNubSize: 1,
+                        botAvatarInitials: 'C1',
+                        userAvatarInitials: 'C2'
                     };
 
                     window.WebChat.renderWebChat({
                         directLine: adapter,
                         styleOptions,
-                        activityStatusMiddleware
+                        activityStatusMiddleware,
+                        avatarMiddleware
                     },
                     document.getElementById('transcript'));
                 <\/script>
