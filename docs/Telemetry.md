@@ -230,6 +230,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ChatDisconnectThreadEventReceived` | On chat disconnected|
 | `GetConversationDetailsCallStarted` | On conversation detail api call start |
 | `GetChatReconnectContextSDKCallStarted` | On chat reconnect context api call start |
+| `SettingCustomContext` | Setting custom context |
 
 #### Calling Events
 

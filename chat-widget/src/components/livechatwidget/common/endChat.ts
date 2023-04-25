@@ -120,7 +120,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
         } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
-            await closeChatWidget(dispatch, props, state);
+            closeChatWidget(dispatch, props, state);
         }
     }
 
@@ -135,7 +135,6 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
 
 const endChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // Need to clear these states immediately when chat ended from OC.
-    dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
@@ -158,7 +157,7 @@ const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) 
     });
 };
 
-const closeChatWidget = async (dispatch: Dispatch<ILiveChatWidgetAction>, props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
+const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>, props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
     if (state?.appStates?.hideStartChatButton) {
         // Only close chat if header is enabled for popout
         // TODO : This condition needs to be removed eventually when the filler UX is ready for popout, removing this condition would show a blank screen for OOB Widget
