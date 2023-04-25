@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Fixed
+
+- Fixed custom context not showing for popout chat
+
 ## [1.0.3] - 2023-4-24
 
 ### Added
