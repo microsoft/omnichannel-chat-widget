@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { ChatSDKError, LiveWorkItemState } from "../../../common/Constants";
+import { ChatSDKError, Constants, LiveWorkItemState } from "../../../common/Constants";
 import { createTimer, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
@@ -118,7 +118,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         try {
             // Set custom context params
-            setCustomContextParams(props);
+            await setCustomContextParams(props);
             const defaultOptionalParams: StartChatOptionalParams = {
                 sendDefaultInitContext: true,
                 isProactiveChat: !!params?.isProactiveChat,
@@ -246,7 +246,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = (props?: ILiveChatWidgetProps) => {
+const setCustomContextParams = async (props?: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = (props?.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
     //Should not set custom context for auth chat
@@ -263,12 +263,19 @@ const setCustomContextParams = (props?: ILiveChatWidgetProps) => {
     if (customContextLocal) {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.SettingCustomContext,
-            Description: "Setting custom context for unauthenicated chat"
+            Description: "Setting custom context for unauthenticated chat"
         });
 
         optionalParams = Object.assign({}, optionalParams, {
             customContext: customContextLocal
         });
+    } else {
+        const customContextFromParent = await getInitContextParamsForPopout();
+        if (!isUndefinedOrEmpty(customContextFromParent?.contextVariables)) {
+            optionalParams = Object.assign({}, optionalParams, {
+                customContext: customContextFromParent.contextVariables
+            });
+        }
     }
 };
 
@@ -332,5 +339,34 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
         chatSDK.requestId = currentRequestId;
         return false;
     }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getInitContextParamsForPopout = async (): Promise<any> => {
+    return window.opener ? await getInitContextParamForPopoutFromOuterScope(window.opener) : null;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getInitContextParamForPopoutFromOuterScope = async (scope: any): Promise<any> =>  {
+    let payload;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let waitPromiseResolve: any;
+    const waitPromise = new Promise((res, rej) => {
+        waitPromiseResolve = res;
+        setTimeout(() => rej("Failed to find method in outer scope"), 5000);
+    }).catch((rej) => console.warn(rej));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const getInitContextParamsFromParent = (e: any) => {
+        if (e.data && e.data.messageName == Constants.InitContextParamsResponse) {
+            payload = e.data.payload;
+            waitPromiseResolve();
+        }
+    };
+
+    window.addEventListener("message", getInitContextParamsFromParent, false);
+    scope.postMessage({ messageName: Constants.InitContextParamsResponse }, "*");
+    await waitPromise;
+    window.removeEventListener("message", getInitContextParamsFromParent, false);
+    return payload;
 };
 export { prepareStartChat, initStartChat, setPreChatAndInitiateChat, checkIfConversationStillValid };
