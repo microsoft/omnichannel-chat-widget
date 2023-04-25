@@ -129,6 +129,9 @@ export class Constants {
 
     // Visibility timeout for conversation details
     public static readonly LWICheckOnVisibilityTimeout = 3 * 60 * 1000; // 3 minute
+
+    // Popup mode custom context response event message name
+    public static readonly InitContextParamsResponse = "initContextParamsResponse";
 }
 
 export const Regex = class {
