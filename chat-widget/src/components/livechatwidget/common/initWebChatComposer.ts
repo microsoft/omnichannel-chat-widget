@@ -35,9 +35,16 @@ import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/web
 import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { getConversationDetails } from "./endChat";
 import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
+import DOMPurify from "dompurify";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any) => {
+
+
+    // Add a hook to make all links open a new window
+    postDomPurifyActivities();
+
+
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
         ...props.webChatContainerProps?.localizedTexts
@@ -104,9 +111,16 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         markdownRenderers.forEach((renderer) => {
             text = renderer.render(text);
         });
-
+        text = DOMPurify.sanitize(text);
         return text;
     };
+
+    function postDomPurifyActivities() {
+        DOMPurify.addHook("afterSanitizeAttributes", function (node) {
+            // set all elements owning target to target=_blank
+            if ("target" in node) { node.setAttribute("target", "_blank"); }
+        });
+    }
 
     // Initialize the remaining Web Chat props
     const webChatProps: IWebChatProps = {
