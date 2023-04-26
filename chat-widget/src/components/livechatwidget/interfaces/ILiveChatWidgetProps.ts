@@ -64,4 +64,5 @@ export interface ILiveChatWidgetProps {
     allowSdkChatSupport?: boolean; // to avoid any performance impact
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     initialCustomContext?: any;
+    allowStartNewChatIfExpired?: boolean;
 }

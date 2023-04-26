@@ -139,6 +139,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `RaiseErrorEvent`                 | On raising error events |
 | `UpdateSessionDataForTelemetry`         | On Chat Id and Request Id being populated for telemetry|
 | `UpdateConversationDataForTelemetry`    | On Conversation (LiveWorkItem) Id being populated for telemetry |
+| `ReconnectChatExpired`    | On reconnect chat expired |
 
 ### Telemetry Events
 
