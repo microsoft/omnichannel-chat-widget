@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Fixed
+
+- Fixed custom context not showing for popout chat
+
+## [1.0.3] - 2023-4-24
+
 ### Added
 
 - Add `hyperlinkTextOverride` props to override anchor element's `innerText` with `href` if they don't match to prevent URL spoofing
@@ -28,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - Adding additional check for auth chats not to set custom context
 - Fixed an issue where sending "InitiateEndChat" event doesn't end chat when no post chat is configured
 - Fixed logging empty events
+- Fixing reconnect message is appearing even after end chat
 
 ## [1.0.2] - 2023-4-6
 
