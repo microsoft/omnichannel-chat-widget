@@ -155,6 +155,20 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         if (isChatValid === false) {
             if (localState) {
+                // adding the reconnect logic for the case when they try to reconnect from a new browser or InPrivate browser
+                if (isReconnectEnabled(props.chatConfig) === true) {
+                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+                    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+                        return;
+                    }
+                }
+                if (props?.allowStartNewChatIfExpired === false) {
+                    BroadcastService.postMessage({
+                        eventName: BroadcastEvent.ReconnectChatExpired
+                    });
+                    return;
+                }
                 await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 return;
             } else {
