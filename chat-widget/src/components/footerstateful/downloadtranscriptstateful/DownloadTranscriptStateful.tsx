@@ -63,10 +63,7 @@ const processContent = (transcriptContent: string, isAgentChat: boolean, renderM
     }
     if (renderMarkDown) {
         transcriptContent = renderMarkDown(transcriptContent);
-    } else {
-        transcriptContent = DOMPurify.sanitize(transcriptContent);
     }
-
     return transcriptContent;
 };
 
