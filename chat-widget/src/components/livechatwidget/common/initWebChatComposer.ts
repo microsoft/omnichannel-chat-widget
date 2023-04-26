@@ -39,12 +39,8 @@ import DOMPurify from "dompurify";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any) => {
-
-
     // Add a hook to make all links open a new window
     postDomPurifyActivities();
-
-
     const localizedTexts = {
         ...defaultMiddlewareLocalizedTexts,
         ...props.webChatContainerProps?.localizedTexts
@@ -121,7 +117,6 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             if ("target" in node) { node.setAttribute("target", "_blank"); }
         });
     }
-
     // Initialize the remaining Web Chat props
     const webChatProps: IWebChatProps = {
         ...defaultWebChatContainerStatefulProps.webChatProps,
