@@ -555,6 +555,28 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
+    const draggableElementBoundaryCheck = (id: string) => {
+        const draggableElement: any = document.getElementById(widgetElementId);
+        const positionRelativeToViewport = draggableElement.getBoundingClientRect();
+
+        // Restrict widget being within viewport
+        if (positionRelativeToViewport.x < 0) {
+            draggableElement.style.left = `${0 - delta.left}px`;
+        }
+
+        if (positionRelativeToViewport.y < 0) {
+            draggableElement.style.top = `${0 - delta.top}px`;
+        }
+
+        if (positionRelativeToViewport.x + positionRelativeToViewport.width > window.innerWidth) {
+            draggableElement.style.left = `${window.innerWidth - positionRelativeToViewport.width - delta.left}px`;
+        }
+
+        if (positionRelativeToViewport.y + positionRelativeToViewport.height > window.innerHeight) {
+            draggableElement.style.top = `${window.innerHeight - positionRelativeToViewport.height - delta.top}px`;
+        }
+    };
+
     const position = {offsetLeft: 0, offsetTop: 0};
     const delta = {left: 0, top: 0};
     useEffect(() => {
@@ -566,6 +588,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             const positionRelativeToViewport = draggableElement.getBoundingClientRect();
             delta.left = positionRelativeToViewport.left - position.offsetLeft;
             delta.top = positionRelativeToViewport.top - position.offsetTop;
+
+            draggableElementBoundaryCheck(widgetElementId);
         }
 
         calculateOffsets();
@@ -590,24 +614,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             draggableElement.style.left = `${position.offsetLeft}px`;
             draggableElement.style.top = `${position.offsetTop}px`;
 
-            const positionRelativeToViewport = draggableElement.getBoundingClientRect();
-
-            // Restrict widget being within viewport
-            if (positionRelativeToViewport.x < 0) {
-                draggableElement.style.left = `${0 - delta.left}px`;
-            }
-
-            if (positionRelativeToViewport.y < 0) {
-                draggableElement.style.top = `${0 - delta.top}px`;
-            }
-
-            if (positionRelativeToViewport.x + positionRelativeToViewport.width > window.innerWidth) {
-                draggableElement.style.left = `${window.innerWidth - positionRelativeToViewport.width - delta.left}px`;
-            }
-
-            if (positionRelativeToViewport.y + positionRelativeToViewport.height > window.innerHeight) {
-                draggableElement.style.top = `${window.innerHeight - positionRelativeToViewport.height - delta.top}px`;
-            }
+            draggableElementBoundaryCheck(widgetElementId);
         }
     }, []);
 
