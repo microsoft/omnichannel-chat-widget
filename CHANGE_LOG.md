@@ -6,9 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- allowStartNewChatIfExpired to ILiveChatWidgetProps
+
 ## Fixed
 
 - Fixed custom context not showing for popout chat
+- Fixed reconnect chat pane not showing, when hideStartChatButton is true
 
 ## [1.0.3] - 2023-4-24
 
