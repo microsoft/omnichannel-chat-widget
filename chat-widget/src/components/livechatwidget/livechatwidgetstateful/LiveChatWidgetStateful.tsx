@@ -556,10 +556,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
     const position = {offsetLeft: 0, offsetTop: 0};
+    const delta = {left: 0, top: 0};
     useEffect(() => {
-        const draggableElement = document.getElementById(widgetElementId);
+        const draggableElement: any = document.getElementById(widgetElementId);
         position.offsetLeft = draggableElement?.offsetLeft as number;
         position.offsetTop = draggableElement?.offsetTop as number;
+
+        const positionRelativeToViewport = draggableElement.getBoundingClientRect();
+        delta.left = positionRelativeToViewport.left - position.offsetLeft;
+        delta.top = positionRelativeToViewport.top - position.offsetTop;
     }, []);
 
     const onEvent = useCallback((event: DraggableEvent) => {
@@ -574,6 +579,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             const draggableElement: any = document.getElementById(widgetElementId);
             draggableElement.style.left = `${position.offsetLeft}px`;
             draggableElement.style.top = `${position.offsetTop}px`;
+
+            const positionRelativeToViewport = draggableElement.getBoundingClientRect();
+            console.log(`[positionRelativeToViewport]`);
+            console.log(positionRelativeToViewport);
+            if (positionRelativeToViewport.x < 0) {
+                draggableElement.style.left = `${0 - delta.left}px`;
+            }
+
+            if (positionRelativeToViewport.y < 0) {
+                draggableElement.style.top = `${0 - delta.top}px`;
+            }
         }
     }, []);
 
