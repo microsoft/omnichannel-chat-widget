@@ -581,8 +581,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             draggableElement.style.top = `${position.offsetTop}px`;
 
             const positionRelativeToViewport = draggableElement.getBoundingClientRect();
-            console.log(`[positionRelativeToViewport]`);
-            console.log(positionRelativeToViewport);
 
             // Restrict widget being within viewport
             if (positionRelativeToViewport.x < 0) {
