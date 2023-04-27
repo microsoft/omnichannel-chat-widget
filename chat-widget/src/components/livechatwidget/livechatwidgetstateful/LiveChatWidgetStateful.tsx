@@ -558,13 +558,23 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const position = {offsetLeft: 0, offsetTop: 0};
     const delta = {left: 0, top: 0};
     useEffect(() => {
-        const draggableElement: any = document.getElementById(widgetElementId);
-        position.offsetLeft = draggableElement?.offsetLeft as number;
-        position.offsetTop = draggableElement?.offsetTop as number;
+        const calculateOffsets = () => {
+            const draggableElement: any = document.getElementById(widgetElementId);
+            position.offsetLeft = draggableElement?.offsetLeft as number;
+            position.offsetTop = draggableElement?.offsetTop as number;
 
-        const positionRelativeToViewport = draggableElement.getBoundingClientRect();
-        delta.left = positionRelativeToViewport.left - position.offsetLeft;
-        delta.top = positionRelativeToViewport.top - position.offsetTop;
+            const positionRelativeToViewport = draggableElement.getBoundingClientRect();
+            delta.left = positionRelativeToViewport.left - position.offsetLeft;
+            delta.top = positionRelativeToViewport.top - position.offsetTop;
+        }
+
+        calculateOffsets();
+
+        window.addEventListener("resize", calculateOffsets);
+
+        return () => {
+            window.removeEventListener("resize", calculateOffsets);
+        }
     }, []);
 
     const onEvent = useCallback((event: DraggableEvent) => {
