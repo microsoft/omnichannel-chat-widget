@@ -572,12 +572,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 left: `${position.offsetLeft}px`,
                 top: `${position.offsetTop}px`
             })
+
+            // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
+            const draggableElement: any = document.getElementById(widgetElementId);
+            draggableElement.style.left = `${position.offsetLeft}px`;
+            draggableElement.style.top = `${position.offsetTop}px`;
         }
     }, []);
 
     // Process general styles
     const generalStyles: IStackStyles = {
-        root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles, draggableWidgetStyle)
+        root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles)
     };
 
     return (
