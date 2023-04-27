@@ -243,7 +243,6 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
     if (persistedState &&
         !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
         persistedState?.appStates?.conversationState === ConversationState.Active) {
-        console.log("test-refresh");
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
         await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
