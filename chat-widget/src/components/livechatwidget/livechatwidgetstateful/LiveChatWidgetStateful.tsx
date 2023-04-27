@@ -3,7 +3,7 @@ import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } f
 import { Components, StyleOptions } from "botframework-webchat";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     createTimer,
@@ -79,6 +79,8 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import DraggableEventReceiver from "../../draggable/DraggableEventReceiver";
+import DraggableEvent from "../../draggable/DraggableEvent";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -92,10 +94,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
 
-    // Process general styles
-    const generalStyles: IStackStyles = {
-        root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles)
-    };
+
 
     //Scrollbar styles
     const scrollbarProps: IScrollBarProps = Object.assign({}, defaultScrollBarProps, props?.scrollBarProps);
@@ -495,12 +494,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state.appStates.conversationState === ConversationState.Active &&
             props.controlProps?.hideStartChatButton === true) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            
+
             window.onbeforeunload = function () {
                 const prompt = Constants.BrowserUnloadConfirmationMessage;
                 return prompt;
             };
-    
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             window.onunload = function () {
                 initiateEndChatOnBrowserUnload();
@@ -553,63 +552,93 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
+    const [position, setPosition] = useState({ offsetLeft: 0, offsetTop: 0 });
+    const [draggableWidgetStyle, setDraggableWidgetStyle] = useState({left: `inherit`, top: `inherit`});
+    useEffect(() => {
+        const draggableElement = document.getElementById(widgetElementId);
+        setPosition({
+            offsetLeft: draggableElement?.offsetLeft as number,
+            offsetTop: draggableElement?.offsetTop as number
+          });
+    }, []);
+    const onEvent = useCallback((event: DraggableEvent) => {
+        if (event.eventName === "Dragging") {
+            console.log("[Dragging]");
+            console.log(event.offset);
+            position.offsetLeft += event.offset!.x;
+            position.offsetTop += event.offset!.y;
+            console.log(position);
+            setDraggableWidgetStyle({
+                left: `${position.offsetLeft}px`,
+                top: `${position.offsetTop}px`
+            })
+        }
+    }, []);
+
+    // Process general styles
+    const generalStyles: IStackStyles = {
+        root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles, draggableWidgetStyle)
+    };
+
     return (
         <>
             <style>{`
             ::-webkit-scrollbar {
                 width: ${scrollbarProps.width};
             }
-            
+
             ::-webkit-scrollbar-track {
                 background: ${scrollbarProps.trackBackgroundColor};
             }
-            
+
             ::-webkit-scrollbar-thumb {
                 background: ${scrollbarProps.thumbBackgroundColor};
                 border-radius: ${scrollbarProps.thumbBorderRadius};
             }
-            
+
             ::-webkit-scrollbar-thumb:hover {
                 background: ${scrollbarProps.thumbHoverColor};
-            } 
+            }
             `}</style>
             <Composer
                 {...webChatProps}
                 styleOptions={webChatStyles}
                 directLine={props.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine}>
-                <Stack
-                    id={widgetElementId}
-                    styles={generalStyles}
-                    className={props.styleProps?.className}>
+                <DraggableEventReceiver channel="lcw" onEvent={onEvent}>
+                    <Stack
+                        id={widgetElementId}
+                        styles={generalStyles}
+                        className={props.styleProps?.className}>
 
-                    {!props.controlProps?.hideChatButton && !props.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(props.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={props.chatButtonProps} outOfOfficeButtonProps={props.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
+                        {!props.controlProps?.hideChatButton && !props.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(props.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={props.chatButtonProps} outOfOfficeButtonProps={props.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
 
-                    {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
+                        {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
-                    {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} />)}
+                        {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} />)}
 
-                    {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful loadingPaneProps={props.loadingPaneProps} startChatErrorPaneProps={props.startChatErrorPaneProps} />)}
+                        {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful loadingPaneProps={props.loadingPaneProps} startChatErrorPaneProps={props.startChatErrorPaneProps} />)}
 
-                    {!props.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(props.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...props.outOfOfficeHoursPaneProps} />)}
+                        {!props.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(props.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...props.outOfOfficeHoursPaneProps} />)}
 
-                    {!props.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(props.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful reconnectChatProps={props.reconnectChatPaneProps} initStartChat={initStartChatRelay} />)}
+                        {!props.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(props.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful reconnectChatProps={props.reconnectChatPaneProps} initStartChat={initStartChatRelay} />)}
 
-                    {!props.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful surveyProps={props.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />)}
+                        {!props.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful surveyProps={props.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />)}
 
-                    {!props.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...props.callingContainerProps} />}
+                        {!props.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...props.callingContainerProps} />}
 
-                    {!props.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(props.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...props.webChatContainerProps} />)}
+                        {!props.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(props.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...props.webChatContainerProps} />)}
 
-                    {!props.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(props.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
+                        {!props.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(props.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 
-                    {!props.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(props.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...props.postChatLoadingPaneProps} />)}
+                        {!props.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(props.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...props.postChatLoadingPaneProps} />)}
 
-                    {shouldShowPostChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...props.postChatSurveyPaneProps} {...props.chatSDK} />)}
+                        {shouldShowPostChatSurveyPane(state) && (decodeComponentString(props.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...props.postChatSurveyPaneProps} {...props.chatSDK} />)}
 
-                    {createFooter(props, state)}
+                        {createFooter(props, state)}
 
-                    {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
-                </Stack>
+                        {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
+                    </Stack>
+                </DraggableEventReceiver>
             </Composer>
         </>
     );

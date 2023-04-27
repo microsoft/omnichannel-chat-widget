@@ -14,6 +14,7 @@ import { defaultOutOfOfficeHeaderStyleProps } from "./common/styleProps/defaultO
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ConfirmationState } from "../../common/Constants";
+import DraggableEventEmitter from "../draggable/DraggableEventEmitter";
 
 export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
@@ -83,11 +84,13 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     }, [state?.domainStates?.confirmationState]);
 
     return (
-        <Header
-            componentOverrides={headerProps?.componentOverrides}
-            controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}
-            styleProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps}
-        />
+        <DraggableEventEmitter channel="lcw">
+            <Header
+                componentOverrides={headerProps?.componentOverrides}
+                controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}
+                styleProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps}
+            />
+        </DraggableEventEmitter>
     );
 };
 
