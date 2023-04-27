@@ -583,12 +583,22 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             const positionRelativeToViewport = draggableElement.getBoundingClientRect();
             console.log(`[positionRelativeToViewport]`);
             console.log(positionRelativeToViewport);
+
+            // Restrict widget being within viewport
             if (positionRelativeToViewport.x < 0) {
                 draggableElement.style.left = `${0 - delta.left}px`;
             }
 
             if (positionRelativeToViewport.y < 0) {
                 draggableElement.style.top = `${0 - delta.top}px`;
+            }
+
+            if (positionRelativeToViewport.x + positionRelativeToViewport.width > window.innerWidth) {
+                draggableElement.style.left = `${window.innerWidth - positionRelativeToViewport.width - delta.left}px`;
+            }
+
+            if (positionRelativeToViewport.y + positionRelativeToViewport.height > window.innerHeight) {
+                draggableElement.style.top = `${window.innerHeight - positionRelativeToViewport.height - delta.top}px`;
             }
         }
     }, []);
