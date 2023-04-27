@@ -1743,5 +1743,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
     },
     telemetryConfig: undefined as unknown as ITelemetryConfig,
     getAuthToken: undefined,
-    initialCustomContext: undefined
+    initialCustomContext: undefined,
+    allowStartNewChatIfExpired: true
 };
