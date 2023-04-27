@@ -94,7 +94,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
 
-
+    // Process general styles
+    const generalStyles: IStackStyles = {
+        root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles)
+    };
 
     //Scrollbar styles
     const scrollbarProps: IScrollBarProps = Object.assign({}, defaultScrollBarProps, props?.scrollBarProps);
@@ -552,15 +555,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
-    const [position, setPosition] = useState({ offsetLeft: 0, offsetTop: 0 });
-    const [draggableWidgetStyle, setDraggableWidgetStyle] = useState({left: `inherit`, top: `inherit`});
+    const position = {offsetLeft: 0, offsetTop: 0};
     useEffect(() => {
         const draggableElement = document.getElementById(widgetElementId);
-        setPosition({
-            offsetLeft: draggableElement?.offsetLeft as number,
-            offsetTop: draggableElement?.offsetTop as number
-          });
+        position.offsetLeft = draggableElement?.offsetLeft as number;
+        position.offsetTop = draggableElement?.offsetTop as number;
     }, []);
+
     const onEvent = useCallback((event: DraggableEvent) => {
         if (event.eventName === "Dragging") {
             console.log("[Dragging]");
@@ -568,10 +569,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             position.offsetLeft += event.offset!.x;
             position.offsetTop += event.offset!.y;
             console.log(position);
-            setDraggableWidgetStyle({
-                left: `${position.offsetLeft}px`,
-                top: `${position.offsetTop}px`
-            })
 
             // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
             const draggableElement: any = document.getElementById(widgetElementId);
@@ -579,11 +576,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             draggableElement.style.top = `${position.offsetTop}px`;
         }
     }, []);
-
-    // Process general styles
-    const generalStyles: IStackStyles = {
-        root: Object.assign({}, getGeneralStylesForButton(state), props.styleProps?.generalStyles)
-    };
 
     return (
         <>
