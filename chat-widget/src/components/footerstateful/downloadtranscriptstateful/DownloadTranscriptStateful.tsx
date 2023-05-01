@@ -163,7 +163,6 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcriptContent: string) => string, bannerMessageOnError?: string, attachmentMessage?: string, state?: ILiveChatWidgetContext) => {
 
-    const useWebChatTranscript = true;
     // Need to keep existing request id for scenarios when trnascript is downloaded after endchat
     const existingRequestId = chatSDK.requestId;
     chatSDK.chatToken = state?.domainStates?.chatToken;
@@ -176,8 +175,8 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
     }
 
     if (data[Constants.ChatMessagesJson] !== null && data[Constants.ChatMessagesJson] !== undefined) {
-
-        if ((window as any).useWebChatTranscript || useWebChatTranscript) {
+        const useWebChatTranscript = true;
+        if (useWebChatTranscript) {
             await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK);
             return;
         }

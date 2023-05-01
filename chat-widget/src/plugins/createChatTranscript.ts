@@ -7,7 +7,7 @@ class TranscriptHTMLBuilder {
     }
 
     createTitleElement() {
-        const htmlData = `<title> ${this.options.title || "Chat Transcripts"} </title>`;
+        const htmlData = `<title> ${this.options.title || "Customer Transcript"} </title>`;
         return htmlData;
     }
 
@@ -363,7 +363,7 @@ const createChatTranscript = async (transcript: string, chatSDK: any, renderAtta
 
     let messages = transcriptMessages;
 
-    if ((window as any).renderAttachments || renderAttachments) {
+    if (renderAttachments) {
         messages = await Promise.all(transcriptMessages.map(async (message: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             const {amsReferences, amsMetadata } = message;
             if (amsReferences && amsMetadata) {
@@ -389,7 +389,7 @@ const createChatTranscript = async (transcript: string, chatSDK: any, renderAtta
 
     const htmlBuilder = new TranscriptHTMLBuilder(options);
     const text = htmlBuilder.createHTML();
-    download("transcript.html", text);
+    download("ChatTranscripts.html", text);
 };
 
 export default createChatTranscript;
