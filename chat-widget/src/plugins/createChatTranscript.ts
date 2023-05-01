@@ -1,3 +1,5 @@
+// eslint-disable no-useless-escape
+
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
