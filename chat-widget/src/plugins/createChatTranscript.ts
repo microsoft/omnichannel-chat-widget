@@ -353,7 +353,7 @@ const createChatTranscript = async (transcript: string, chatSDK: any, renderAtta
 
     let messages = transcriptMessages;
 
-    if (renderAttachments || (window as any).renderAttachments) {
+    if ((window as any).renderAttachments || renderAttachments) {
         messages = await Promise.all(transcriptMessages.map(async (message: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             const {amsReferences, amsMetadata } = message;
             if (amsReferences && amsMetadata) {
