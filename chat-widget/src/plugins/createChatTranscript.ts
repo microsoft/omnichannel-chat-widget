@@ -223,6 +223,16 @@ class TranscriptHTMLBuilder {
 
         const htmlData = `
             <body>
+                <script>
+                    if (!navigator.onLine) {
+                        const offlineText = "Network Error. Please make sure you are connected to the internet.";
+                        document.body.innerHTML = offlineText;
+                    }
+
+                    window.addEventListener("online", () => {
+                        document.body.innerHTML = 'Connection restored. Please refresh the page <button onclick="window.location.reload()"> Refresh </button>';
+                    });
+                <\/script>
                 <div id="transcript"></div>
                 <script>
                     const getIconText = (text) => {
