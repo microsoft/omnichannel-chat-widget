@@ -4,6 +4,10 @@ class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
         this.options = options;
+
+        if (!this.options.messages) {
+            this.options.messages = [];
+        }
     }
 
     createTitleElement() {
