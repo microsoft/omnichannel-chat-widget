@@ -215,7 +215,8 @@ export enum ElementType {
 }
 
 export enum ChatSDKError {
-    WidgetUseOutsideOperatingHour = "WidgetUseOutsideOperatingHour"
+    WidgetUseOutsideOperatingHour = "WidgetUseOutsideOperatingHour",
+    AuthContactIdNotFoundFailure = "AuthContactIdNotFoundFailure"
 }
 
 export enum EnvironmentVersion {

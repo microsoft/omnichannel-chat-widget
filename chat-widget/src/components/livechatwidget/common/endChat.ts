@@ -1,24 +1,25 @@
+import { ConfirmationState, Constants, ConversationEndEntity } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { getAuthClientFunction, handleAuthentication } from "./authHelper";
+import { getConversationDetailsCall, getWidgetEndChatEventName, isNullOrEmptyString } from "../../../common/utils";
+import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
+
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
+import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
-import { getWidgetEndChatEventName, isNullOrEmptyString } from "../../../common/utils";
-import { getAuthClientFunction, handleAuthentication } from "./authHelper";
-import { initiatePostChat, getPostChatContext } from "./renderSurveyHelpers";
-import { Constants, ConversationEndEntity, ConfirmationState } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any, uwid: string) => {
     try {
 
-        const conversationDetails = await getConversationDetails(chatSDK);
+        const conversationDetails = await getConversationDetailsCall(chatSDK);
 
         // Use Case : When post chat is not configured
         if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
@@ -207,26 +208,4 @@ const getEndChatEventName = async (chatSDK: any, props: ILiveChatWidgetProps) =>
         props?.controlProps?.widgetInstanceId ?? "");
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getConversationDetails = async (chatSDK: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let conversationDetails: any = undefined;
-    try {
-        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.GetConversationDetailsCallStarted,
-            Description: "Conversation details call started"
-        });
-        conversationDetails = await chatSDK.getConversationDetails();
-    } catch (error) {
-        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
-            Event: TelemetryEvent.GetConversationDetailsCallFailed,
-            ExceptionDetails: {
-                exception: `Get Conversation Details Call Failed : ${error}`
-            }
-        });
-    }
-
-    return conversationDetails;
-};
-
-export { prepareEndChat, endChat, getConversationDetails };
+export { prepareEndChat, endChat };
