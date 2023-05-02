@@ -1,6 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ChatSDKError, Constants, LiveWorkItemState } from "../../../common/Constants";
-import { createTimer, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
+import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
@@ -128,6 +128,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             await chatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
+            checkContactIdError(error);
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.StartChatMethodException,
                 ExceptionDetails: {
@@ -314,7 +315,7 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
 
     try {
         chatSDK.requestId = requestIdFromCache;
-        conversationDetails = await chatSDK.getConversationDetails();
+        conversationDetails = await getConversationDetailsCall(chatSDK);
 
         if (Object.keys(conversationDetails).length === 0) {
             chatSDK.requestId = currentRequestId;

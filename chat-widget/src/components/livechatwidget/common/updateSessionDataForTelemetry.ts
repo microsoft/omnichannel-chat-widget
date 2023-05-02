@@ -6,6 +6,7 @@ import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatCo
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
+import { getConversationDetailsCall } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateSessionDataForTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
@@ -23,7 +24,7 @@ export const updateSessionDataForTelemetry = async (chatSDK: any, dispatch: Disp
 const updateConversationDataForTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     if (chatSDK) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const liveWorkItem: any = await chatSDK.getConversationDetails();
+        const liveWorkItem: any = await getConversationDetailsCall(chatSDK);
         const telemetryData = TelemetryHelper.addConversationDataToTelemetry(liveWorkItem, TelemetryManager.InternalTelemetryData);
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
         BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateConversationDataForTelemetry, payload: {liveWorkItem}});

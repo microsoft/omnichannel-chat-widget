@@ -139,6 +139,7 @@ Refer to the below table to understand different broadcast events raised during 
 | `RaiseErrorEvent`                 | On raising error events |
 | `UpdateSessionDataForTelemetry`         | On Chat Id and Request Id being populated for telemetry|
 | `UpdateConversationDataForTelemetry`    | On Conversation (LiveWorkItem) Id being populated for telemetry |
+| `ContactIdNotFound`    | On using OAuth 2.0 auth code grant and no CRM contact record is found with given auth code |
 
 ### Telemetry Events
 
