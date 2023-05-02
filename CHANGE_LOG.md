@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## Added
+
+- Added Broadcast event `ContactIdNotFound` when using OAuth 2.0 auth code grant
+
 ## Fixed
 
 - Fixed custom context not showing for popout chat
