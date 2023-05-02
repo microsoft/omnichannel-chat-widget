@@ -1,8 +1,8 @@
 import "regenerator-runtime/runtime";
 
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { checkContactIdError, isNullOrEmptyString, isNullOrUndefined } from "../../../common/utils";
 import { handleAuthentication, removeAuthTokenProvider } from "./authHelper";
-import { isNullOrEmptyString, isNullOrUndefined } from "../../../common/utils";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
@@ -73,6 +73,7 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
         return reconnectChatContext;
     }
     catch (error) {
+        checkContactIdError(error);
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.GetChatReconnectContextSDKCallFailed,
             ExceptionDetails: {
