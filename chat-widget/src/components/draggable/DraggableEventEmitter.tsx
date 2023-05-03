@@ -3,6 +3,7 @@ import DraggableEvent from "./DraggableEvent";
 
 interface DraggableEventEmitterProps {
     channel: string;
+    useIframe?: boolean;
     children: ReactNode;
 }
 
@@ -17,8 +18,8 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
     let offset = { x: 0, y: 0 };
 
     const postMessage = (data: DraggableEvent) => {
-        window.postMessage(data, "*");
-        window.parent.postMessage(data, "*");
+        const targetWindow = props.useIframe ? window.parent : window;
+        targetWindow.postMessage(data, "*");
     };
 
     const dragStart = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
