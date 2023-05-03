@@ -4,7 +4,7 @@ import DraggableEvent from "./DraggableEvent";
 interface DraggableEventEmitterProps {
     channel: string;
     children: ReactNode;
-};
+}
 
 /**
  * Trigger component which would send DraggableEvent to the receiver to update the draggable component position

@@ -590,7 +590,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             delta.top = positionRelativeToViewport.top - position.offsetTop;
 
             draggableElementBoundaryCheck(widgetElementId);
-        }
+        };
 
         calculateOffsets();
 
@@ -598,7 +598,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         return () => {
             window.removeEventListener("resize", calculateOffsets);
-        }
+        };
     }, []);
 
     const onEvent = useCallback((event: DraggableEvent) => {
