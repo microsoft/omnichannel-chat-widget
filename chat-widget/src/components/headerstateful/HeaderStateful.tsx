@@ -84,7 +84,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     }, [state?.domainStates?.confirmationState]);
 
     return (
-        <DraggableEventEmitter channel="lcw">
+        <DraggableEventEmitter channel="lcw" elementId={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps.id as string : controlProps.id as string}>
             <Header
                 componentOverrides={headerProps?.componentOverrides}
                 controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}

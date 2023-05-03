@@ -1,8 +1,9 @@
-import React, { ReactNode, useCallback } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import DraggableEvent from "./DraggableEvent";
 
 interface DraggableEventEmitterProps {
     channel: string;
+    elementId: string;
     useIframe?: boolean;
     children: ReactNode;
 }
@@ -16,13 +17,14 @@ interface DraggableEventEmitterProps {
 const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
     let cursor = { x: 0, y: 0 };
     let offset = { x: 0, y: 0 };
+    const [initialized, setInitialized] = useState(false);
 
-    const postMessage = (data: DraggableEvent) => {
+    const postMessage = useCallback((data: DraggableEvent) => {
         const targetWindow = props.useIframe ? window.parent : window;
         targetWindow.postMessage(data, "*");
-    };
+    }, [props.useIframe]);
 
-    const dragStart = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const dragStart = useCallback((event: MouseEvent) => {
         postMessage({ channel: props.channel, eventName: "DragStart" });
 
         cursor = { ...cursor, x: event.screenX, y: event.screenY };
@@ -52,7 +54,15 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
         document.addEventListener("mouseup", dragEnd);
     }, [props.channel, cursor, offset]);
 
-    return <div onMouseDown={dragStart} style={{width: "inherit"}}> {props.children} </div>;
+    useEffect(() => {
+        if (!initialized && props.elementId) {
+            console.log(`[DraggableEventEmitter][Initialize] ${props.elementId}`);
+            const element = document.getElementById(props.elementId);
+            element?.addEventListener("mousedown", dragStart);
+            setInitialized(true);
+        }
+    }, [dragStart, props.elementId, initialized]);
+    return <> {props.children} </>;
 };
 
 export default DraggableEventEmitter;
