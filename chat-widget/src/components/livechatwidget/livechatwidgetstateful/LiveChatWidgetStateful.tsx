@@ -556,24 +556,28 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
     const draggableElementBoundaryCheck = (id: string) => {
-        const draggableElement: any = document.getElementById(widgetElementId);
+        const draggableElement: any = document.getElementById(id);
         const positionRelativeToViewport = draggableElement.getBoundingClientRect();
 
         // Restrict widget being within viewport
         if (positionRelativeToViewport.x < 0) {
-            draggableElement.style.left = `${0 - delta.left}px`;
+            position.offsetLeft = 0 - delta.left;
+            draggableElement.style.left = `${position.offsetLeft}px`;
         }
 
         if (positionRelativeToViewport.y < 0) {
-            draggableElement.style.top = `${0 - delta.top}px`;
+            position.offsetTop = 0 - delta.top;
+            draggableElement.style.top = `${position.offsetTop}px`;
         }
 
         if (positionRelativeToViewport.x + positionRelativeToViewport.width > window.innerWidth) {
-            draggableElement.style.left = `${window.innerWidth - positionRelativeToViewport.width - delta.left}px`;
+            position.offsetLeft = window.innerWidth - positionRelativeToViewport.width - delta.left;
+            draggableElement.style.left = `${position.offsetLeft}px`;
         }
 
         if (positionRelativeToViewport.y + positionRelativeToViewport.height > window.innerHeight) {
-            draggableElement.style.top = `${window.innerHeight - positionRelativeToViewport.height - delta.top}px`;
+            position.offsetTop = window.innerHeight - positionRelativeToViewport.height - delta.top;
+            draggableElement.style.top = `${position.offsetTop}px`;
         }
     };
 
@@ -584,6 +588,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             const draggableElement: any = document.getElementById(widgetElementId);
             position.offsetLeft = draggableElement?.offsetLeft as number;
             position.offsetTop = draggableElement?.offsetTop as number;
+
+            console.log("[calculateOffsets]");
+            console.log(draggableElement);
 
             const positionRelativeToViewport = draggableElement.getBoundingClientRect();
             delta.left = positionRelativeToViewport.left - position.offsetLeft;
