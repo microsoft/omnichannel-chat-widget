@@ -646,11 +646,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 background: ${scrollbarProps.thumbHoverColor};
             }
             `}</style>
-            <Composer
-                {...webChatProps}
-                styleOptions={webChatStyles}
-                directLine={props.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine}>
-                <DraggableEventReceiver channel="lcw" onEvent={onEvent}>
+            <DraggableEventReceiver channel="lcw" onEvent={onEvent}>
+                <Composer
+                    {...webChatProps}
+                    styleOptions={webChatStyles}
+                    directLine={props.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine}>
                     <Stack
                         id={widgetElementId}
                         styles={generalStyles}
@@ -684,8 +684,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
                     </Stack>
-                </DraggableEventReceiver>
-            </Composer>
+                </Composer>
+            </DraggableEventReceiver>
         </>
     );
 };
