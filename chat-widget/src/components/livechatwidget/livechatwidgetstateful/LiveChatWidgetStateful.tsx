@@ -555,29 +555,29 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
-    const draggableElementBoundaryCheck = (id: string) => {
-        const draggableElement: any = document.getElementById(id);
-        const positionRelativeToViewport = draggableElement.getBoundingClientRect();
+    const calculateOffsetsWithinViewport = (id: string) => {
+        const draggableElement: HTMLElement | null = document.getElementById(id);
+        const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
 
         // Restrict widget being within viewport
         if (positionRelativeToViewport.x < 0) {
             position.offsetLeft = 0 - delta.left;
-            draggableElement.style.left = `${position.offsetLeft}px`;
+            (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
         }
 
         if (positionRelativeToViewport.y < 0) {
             position.offsetTop = 0 - delta.top;
-            draggableElement.style.top = `${position.offsetTop}px`;
+            (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
         }
 
         if (positionRelativeToViewport.x + positionRelativeToViewport.width > window.innerWidth) {
             position.offsetLeft = window.innerWidth - positionRelativeToViewport.width - delta.left;
-            draggableElement.style.left = `${position.offsetLeft}px`;
+            (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
         }
 
         if (positionRelativeToViewport.y + positionRelativeToViewport.height > window.innerHeight) {
             position.offsetTop = window.innerHeight - positionRelativeToViewport.height - delta.top;
-            draggableElement.style.top = `${position.offsetTop}px`;
+            (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
         }
     };
 
@@ -585,18 +585,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const delta = {left: 0, top: 0};
     useEffect(() => {
         const calculateOffsets = () => {
-            const draggableElement: any = document.getElementById(widgetElementId);
-            position.offsetLeft = draggableElement?.offsetLeft as number;
-            position.offsetTop = draggableElement?.offsetTop as number;
+            const draggableElement: HTMLElement | null = document.getElementById(widgetElementId);
+            position.offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
+            position.offsetTop = (draggableElement as HTMLElement).offsetTop as number;
 
             console.log("[calculateOffsets]");
             console.log(draggableElement);
 
-            const positionRelativeToViewport = draggableElement.getBoundingClientRect();
+            const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
             delta.left = positionRelativeToViewport.left - position.offsetLeft;
             delta.top = positionRelativeToViewport.top - position.offsetTop;
 
-            draggableElementBoundaryCheck(widgetElementId);
+            calculateOffsetsWithinViewport(widgetElementId);
         };
 
         calculateOffsets();
@@ -617,11 +617,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             console.log(position);
 
             // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
-            const draggableElement: any = document.getElementById(widgetElementId);
-            draggableElement.style.left = `${position.offsetLeft}px`;
-            draggableElement.style.top = `${position.offsetTop}px`;
+            const draggableElement: HTMLElement | null = document.getElementById(widgetElementId);
+            (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
+            (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
 
-            draggableElementBoundaryCheck(widgetElementId);
+            calculateOffsetsWithinViewport(widgetElementId);
         }
     }, []);
 
