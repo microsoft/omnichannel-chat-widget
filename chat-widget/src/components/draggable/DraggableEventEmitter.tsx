@@ -2,9 +2,18 @@ import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import DraggableEvent from "./DraggableEvent";
 
 interface DraggableEventEmitterProps {
+    /**
+     * Unique channel name to send/receive draggable events to prevent event collisions
+     */
     channel: string;
+    /**
+     * HTML element ID of the trigger element to send DraggableEvent to update the draggable element position
+     */
     elementId: string;
     useIframe?: boolean;
+    /**
+     * React nodes children
+     */
     children: ReactNode;
 }
 
