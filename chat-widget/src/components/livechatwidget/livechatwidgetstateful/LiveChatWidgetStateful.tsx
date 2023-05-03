@@ -81,6 +81,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import DraggableEventReceiver from "../../draggable/DraggableEventReceiver";
 import DraggableEvent from "../../draggable/DraggableEvent";
+import DraggableElementPosition from "../../draggable/DraggableElementPosition";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -555,6 +556,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
+    const position: DraggableElementPosition = {offsetLeft: 0, offsetTop: 0};
+    const delta = {left: 0, top: 0};
+
     const calculateOffsetsWithinViewport = (id: string) => {
         const draggableElement: HTMLElement | null = document.getElementById(id);
         const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
@@ -580,8 +584,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
     };
 
-    const position = {offsetLeft: 0, offsetTop: 0};
-    const delta = {left: 0, top: 0};
     useEffect(() => {
         const calculateOffsets = () => {
             const draggableElement: HTMLElement | null = document.getElementById(widgetElementId);
