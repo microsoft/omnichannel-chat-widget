@@ -82,6 +82,7 @@ import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import DraggableEventReceiver from "../../draggable/DraggableEventReceiver";
 import DraggableEvent from "../../draggable/DraggableEvent";
 import DraggableElementPosition from "../../draggable/DraggableElementPosition";
+import DraggableComponent from "../../draggable/DraggableComponent";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -556,76 +557,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
-    const position: DraggableElementPosition = {offsetLeft: 0, offsetTop: 0};
-    const delta = {left: 0, top: 0};
-
-    const calculateOffsetsWithinViewport = (id: string) => {
-        const draggableElement: HTMLElement | null = document.getElementById(id);
-        const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
-
-        // Restrict widget being within viewport
-        if (positionRelativeToViewport.x < 0) {
-            position.offsetLeft = 0 - delta.left;
-        }
-
-        if (positionRelativeToViewport.y < 0) {
-            position.offsetTop = 0 - delta.top;
-        }
-
-        if (positionRelativeToViewport.x + positionRelativeToViewport.width > window.innerWidth) {
-            position.offsetLeft = window.innerWidth - positionRelativeToViewport.width - delta.left;
-        }
-
-        if (positionRelativeToViewport.y + positionRelativeToViewport.height > window.innerHeight) {
-            position.offsetTop = window.innerHeight - positionRelativeToViewport.height - delta.top;
-        }
-
-        (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
-        (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
-    };
-
-    useEffect(() => {
-        const calculateOffsets = () => {
-            const draggableElement: HTMLElement | null = document.getElementById(widgetElementId);
-            position.offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
-            position.offsetTop = (draggableElement as HTMLElement).offsetTop as number;
-
-            console.log("[calculateOffsets]");
-            console.log(draggableElement);
-
-            const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
-            delta.left = positionRelativeToViewport.left - position.offsetLeft;
-            delta.top = positionRelativeToViewport.top - position.offsetTop;
-
-            calculateOffsetsWithinViewport(widgetElementId);
-        };
-
-        calculateOffsets();
-
-        window.addEventListener("resize", calculateOffsets);
-
-        return () => {
-            window.removeEventListener("resize", calculateOffsets);
-        };
-    }, []);
-
-    const onEvent = useCallback((event: DraggableEvent) => {
-        if (event.eventName === "Dragging") {
-            console.log("[Dragging]");
-            console.log(event.offset);
-            position.offsetLeft += event.offset!.x;
-            position.offsetTop += event.offset!.y;
-            console.log(position);
-
-            // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
-            const draggableElement: HTMLElement | null = document.getElementById(widgetElementId);
-            (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
-            (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
-
-            calculateOffsetsWithinViewport(widgetElementId);
-        }
-    }, []);
-
     return (
         <>
             <style>{`
@@ -646,7 +577,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 background: ${scrollbarProps.thumbHoverColor};
             }
             `}</style>
-            <DraggableEventReceiver channel="lcw" onEvent={onEvent}>
+            <DraggableComponent elementId={widgetElementId}>
                 <Composer
                     {...webChatProps}
                     styleOptions={webChatStyles}
@@ -685,7 +616,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
                     </Stack>
                 </Composer>
-            </DraggableEventReceiver>
+            </DraggableComponent>
         </>
     );
 };
