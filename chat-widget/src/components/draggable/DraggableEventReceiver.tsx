@@ -19,6 +19,12 @@ interface DraggableEventReceiverProps {
     onEvent: (event: DraggableEvent) => void;
 }
 
+/**
+ * Component which would listen to DraggableEvent, update the component position or react accordingly.
+ *
+ * @param props DraggableEventReceiverProps
+ * @returns
+ */
 const DraggableEventReceiver = (props: DraggableEventReceiverProps) => {
     useEffect(() => {
         const listener = (event: MessageEvent) => {

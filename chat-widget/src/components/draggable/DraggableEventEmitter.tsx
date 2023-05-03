@@ -7,14 +7,14 @@ interface DraggableEventEmitterProps {
      */
     channel: string;
     /**
+     * React nodes children
+     */
+    children: ReactNode;
+    /**
      * HTML element ID of the trigger element to send DraggableEvent to update the draggable element position
      */
     elementId: string;
     useIframe?: boolean;
-    /**
-     * React nodes children
-     */
-    children: ReactNode;
 }
 
 /**
@@ -36,15 +36,15 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
     const dragStart = useCallback((event: MouseEvent) => {
         postMessage({ channel: props.channel, eventName: "DragStart" });
 
-        cursor = { ...cursor, x: event.screenX, y: event.screenY };
+        cursor = { ...cursor, x: event.screenX, y: event.screenY }; // Cursor init position
         const dragging = (event: MouseEvent) => {
             event.preventDefault();
 
             const newX = event.screenX;
             const newY = event.screenY;
 
-            offset = { ...offset, x: newX - cursor.x, y: newY - cursor.y };
-            cursor = { ...cursor, x: newX, y: newY };
+            offset = { ...offset, x: newX - cursor.x, y: newY - cursor.y }; // Calculate cursor position diff
+            cursor = { ...cursor, x: newX, y: newY }; // Update cursor new position
 
             postMessage({
                 channel: props.channel,
