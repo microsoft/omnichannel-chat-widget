@@ -2,8 +2,20 @@ import React, { ReactNode, useEffect } from "react";
 import DraggableEvent from "./DraggableEvent";
 
 interface DraggableEventReceiverProps {
+    /**
+     * Unique channel name to send/receive draggable events to prevent event collisions
+     */
     channel: string;
+    /**
+     * React nodes children
+     */
     children: ReactNode;
+    /**
+     * Event handler on receiving draggable events
+     *
+     * @param event Draggable events
+     * @returns
+     */
     onEvent: (event: DraggableEvent) => void;
 }
 
