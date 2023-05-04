@@ -1,7 +1,10 @@
-import React, { ReactNode, useCallback, useEffect } from "react";
+import React, { Dispatch, ReactNode, useCallback, useEffect, useState } from "react";
 import DraggableEventReceiver from "./DraggableEventReceiver";
 import DraggableElementPosition from "./DraggableElementPosition";
 import DraggableEvent from "./DraggableEvent";
+import useChatContextStore from "../../hooks/useChatContextStore";
+import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 
 interface DraggableComponentProps {
     elementId: string;
@@ -9,6 +12,8 @@ interface DraggableComponentProps {
 }
 
 const DraggableComponent = (props: DraggableComponentProps) => {
+    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const [initialPosition, setInitializePosition] = useState({offsetLeft: 0, offsetTop: 0});
     const position: DraggableElementPosition = {offsetLeft: 0, offsetTop: 0};
     const delta = {left: 0, top: 0};
 
@@ -39,13 +44,19 @@ const DraggableComponent = (props: DraggableComponentProps) => {
 
     useEffect(() => {
         console.log("[DraggableComponent]");
+        const setInitialPosition = () => {
+            console.log("[setInitialPosition]");
+            const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+            const initialPosition = {offsetLeft: 0, offsetTop: 0};
+            initialPosition.offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
+            initialPosition.offsetTop = (draggableElement as HTMLElement).offsetTop as number;
+            setInitializePosition(initialPosition);
+        };
+
         const calculateOffsets = () => {
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
             position.offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
             position.offsetTop = (draggableElement as HTMLElement).offsetTop as number;
-
-            console.log("[calculateOffsets]");
-            console.log(draggableElement);
 
             const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
             delta.left = positionRelativeToViewport.left - position.offsetLeft;
@@ -54,6 +65,7 @@ const DraggableComponent = (props: DraggableComponentProps) => {
             calculateOffsetsWithinViewport(props.elementId);
         };
 
+        setInitialPosition();
         calculateOffsets();
 
         window.addEventListener("resize", calculateOffsets);
@@ -63,13 +75,41 @@ const DraggableComponent = (props: DraggableComponentProps) => {
         };
     }, []);
 
+    const postMessage = useCallback((data: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+        const targetWindow = window;
+        targetWindow.postMessage(data, "*");
+    }, []);
+
+    useEffect(() => {
+        if (state.appStates.isMinimized) {
+            console.log("[ChatButton][minimize]");
+
+            // Resets to initial position
+            position.offsetLeft = initialPosition.offsetLeft;
+            position.offsetTop = initialPosition.offsetTop;
+
+            postMessage({
+                channel: "lcw",
+                eventName: "PositionReset",
+                position
+            });
+
+            const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+            (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
+            (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
+        }
+    }, [state.appStates.isMinimized, initialPosition]);
+
     const onEvent = useCallback((event: DraggableEvent) => {
-        if (event.eventName === "Dragging") {
+        if (event.eventName === "PositionReset") {
+            console.log("[PositionReset]");
+            position.offsetLeft = (event as any).position.offsetLeft; // eslint-disable-line @typescript-eslint/no-explicit-any
+            position.offsetTop = (event as any).position.offsetTop; // eslint-disable-line @typescript-eslint/no-explicit-any
+        } else if (event.eventName === "Dragging") {
             console.log("[Dragging]");
             console.log(event.offset);
             position.offsetLeft += event.offset!.x;
             position.offsetTop += event.offset!.y;
-            console.log(position);
 
             // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
