@@ -5,6 +5,7 @@ import DraggableEvent from "./DraggableEvent";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
+import { ConversationState } from "../../contexts/common/ConversationState";
 
 interface DraggableComponentProps {
     elementId: string;
@@ -80,25 +81,31 @@ const DraggableComponent = (props: DraggableComponentProps) => {
         targetWindow.postMessage(data, "*");
     }, []);
 
+    const resetPosition = () => {
+        // Resets to initial position
+        position.offsetLeft = initialPosition.offsetLeft;
+        position.offsetTop = initialPosition.offsetTop;
+
+        postMessage({
+            channel: "lcw",
+            eventName: "PositionReset",
+            position
+        });
+
+        const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+        (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
+        (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
+    };
+
     useEffect(() => {
         if (state.appStates.isMinimized) {
             console.log("[ChatButton][minimize]");
-
-            // Resets to initial position
-            position.offsetLeft = initialPosition.offsetLeft;
-            position.offsetTop = initialPosition.offsetTop;
-
-            postMessage({
-                channel: "lcw",
-                eventName: "PositionReset",
-                position
-            });
-
-            const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
-            (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
-            (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
+            resetPosition();
+        } else if (state.appStates.conversationState == ConversationState.Closed) {
+            console.log("[ChatButton][close]");
+            resetPosition();
         }
-    }, [state.appStates.isMinimized, initialPosition]);
+    }, [state.appStates.isMinimized, state.appStates.conversationState, initialPosition]);
 
     const onEvent = useCallback((event: DraggableEvent) => {
         if (event.eventName === "PositionReset") {
