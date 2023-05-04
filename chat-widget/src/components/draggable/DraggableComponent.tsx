@@ -82,7 +82,6 @@ const DraggableComponent = (props: DraggableComponentProps) => {
     }, []);
 
     const resetPosition = () => {
-        // Resets to initial position
         position.offsetLeft = initialPosition.offsetLeft;
         position.offsetTop = initialPosition.offsetTop;
 
@@ -98,6 +97,7 @@ const DraggableComponent = (props: DraggableComponentProps) => {
     };
 
     useEffect(() => {
+        // Resets widget to original position on widget minimized and closed
         if (state.appStates.isMinimized) {
             console.log("[ChatButton][minimize]");
             resetPosition();
