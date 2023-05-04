@@ -79,10 +79,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import DraggableEventReceiver from "../../draggable/DraggableEventReceiver";
-import DraggableEvent from "../../draggable/DraggableEvent";
-import DraggableElementPosition from "../../draggable/DraggableElementPosition";
-import DraggableComponent from "../../draggable/DraggableComponent";
+import DraggableChatWidget from "../../draggable/DraggableChatWidget";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -577,7 +574,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 background: ${scrollbarProps.thumbHoverColor};
             }
             `}</style>
-            <DraggableComponent elementId={widgetElementId}>
+            <DraggableChatWidget elementId={widgetElementId}>
                 <Composer
                     {...webChatProps}
                     styleOptions={webChatStyles}
@@ -616,7 +613,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {shouldShowEmailTranscriptPane(state) && (decodeComponentString(props.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...props.emailTranscriptPane} />)}
                     </Stack>
                 </Composer>
-            </DraggableComponent>
+            </DraggableChatWidget>
         </>
     );
 };
