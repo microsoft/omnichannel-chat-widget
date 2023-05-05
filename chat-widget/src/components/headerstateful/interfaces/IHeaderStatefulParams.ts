@@ -22,4 +22,9 @@ export interface IHeaderStatefulParams {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     endChat: (adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => Promise<void>;
+
+    /**
+     * draggableEventEmitterTargetWindow: Target window to post DraggableEvent messages
+     */
+    draggableEventEmitterTargetWindow?: Window;
 }

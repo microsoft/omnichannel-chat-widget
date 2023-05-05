@@ -1,6 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { Header } from "@microsoft/omnichannel-chat-components";
 import { IHeaderControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderControlProps";
@@ -83,8 +82,14 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         localConfirmationPaneState.current = state?.domainStates?.confirmationState;
     }, [state?.domainStates?.confirmationState]);
 
+    const draggableEventEmitterProps = {
+        channel: "lcw",
+        elementId: (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps.id as string : controlProps.id as string,
+        targetWindow: props.draggableEventEmitterTargetWindow ?? window
+    };
+
     return (
-        <DraggableEventEmitter channel="lcw" elementId={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps.id as string : controlProps.id as string}>
+        <DraggableEventEmitter {...draggableEventEmitterProps}>
             <Header
                 componentOverrides={headerProps?.componentOverrides}
                 controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}
