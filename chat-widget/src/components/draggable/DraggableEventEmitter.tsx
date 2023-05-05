@@ -14,7 +14,10 @@ interface DraggableEventEmitterProps {
      * HTML element ID of the trigger element to send DraggableEvent to update the draggable element position
      */
     elementId: string;
-    useIframe?: boolean;
+    /**
+     * Target window to post DraggableEvent messages
+     */
+    targetWindow?: Window;
 }
 
 /**
@@ -29,9 +32,9 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
     const [initialized, setInitialized] = useState(false);
 
     const postMessage = useCallback((data: DraggableEvent) => {
-        const targetWindow = props.useIframe ? window.parent : window;
+        const targetWindow = props.targetWindow ?? window;
         targetWindow.postMessage(data, "*");
-    }, [props.useIframe]);
+    }, [props.targetWindow]);
 
     const dragStart = useCallback((event: MouseEvent) => {
         postMessage({ channel: props.channel, eventName: "DragStart" });
