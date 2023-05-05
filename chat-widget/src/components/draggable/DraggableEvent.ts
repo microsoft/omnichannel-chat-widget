@@ -5,4 +5,4 @@ export default interface DraggableEvent {
     eventName: DraggableEventNames | string;
     offset?: { x: number; y: number };
     position?: {offsetLeft: number, offsetTop: number};
-};
+}
