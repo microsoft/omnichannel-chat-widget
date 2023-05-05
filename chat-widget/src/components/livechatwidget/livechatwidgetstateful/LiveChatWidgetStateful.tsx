@@ -554,6 +554,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
+    const draggableEventEmitterTargetWindow = window;
+
     return (
         <>
             <style>{`
@@ -588,7 +590,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
-                        {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} />)}
+                        {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} draggableEventEmitterTargetWindow={draggableEventEmitterTargetWindow} />)}
 
                         {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful loadingPaneProps={props.loadingPaneProps} startChatErrorPaneProps={props.startChatErrorPaneProps} />)}
 
