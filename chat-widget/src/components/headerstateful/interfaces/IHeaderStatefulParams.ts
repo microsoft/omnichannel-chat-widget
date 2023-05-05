@@ -27,4 +27,9 @@ export interface IHeaderStatefulParams {
      * draggableEventEmitterTargetWindow: Target window to post DraggableEvent messages
      */
     draggableEventEmitterTargetWindow?: Window;
+
+    /**
+     * draggable: Whether the header is draggable
+     */
+    draggable?: boolean;
 }

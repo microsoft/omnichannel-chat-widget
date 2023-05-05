@@ -88,14 +88,26 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         targetWindow: props.draggableEventEmitterTargetWindow ?? window
     };
 
+    console.log(`[Header][Draggable] ${props.draggable}`);
+
+    if (props.draggable) {
+        return (
+            <DraggableEventEmitter {...draggableEventEmitterProps}>
+                <Header
+                    componentOverrides={headerProps?.componentOverrides}
+                    controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}
+                    styleProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps}
+                />
+            </DraggableEventEmitter>
+        );
+    }
+
     return (
-        <DraggableEventEmitter {...draggableEventEmitterProps}>
-            <Header
-                componentOverrides={headerProps?.componentOverrides}
-                controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}
-                styleProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps}
-            />
-        </DraggableEventEmitter>
+        <Header
+            componentOverrides={headerProps?.componentOverrides}
+            controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}
+            styleProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps}
+        />
     );
 };
 
