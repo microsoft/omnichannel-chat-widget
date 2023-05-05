@@ -2,6 +2,7 @@ import React, { Dispatch, ReactNode, useCallback, useEffect, useState } from "re
 import DraggableEventReceiver from "./DraggableEventReceiver";
 import DraggableElementPosition from "./DraggableElementPosition";
 import DraggableEvent from "./DraggableEvent";
+import DraggableEventNames from "./DraggableEventNames";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -110,13 +111,17 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     const onEvent = useCallback((event: DraggableEvent) => {
         if (event.eventName === "PositionReset") {
             console.log("[PositionReset]");
-            position.offsetLeft = (event as any).position.offsetLeft; // eslint-disable-line @typescript-eslint/no-explicit-any
-            position.offsetTop = (event as any).position.offsetTop; // eslint-disable-line @typescript-eslint/no-explicit-any
-        } else if (event.eventName === "Dragging") {
+            if (event.position) {
+                position.offsetLeft = event.position.offsetLeft; // eslint-disable-line @typescript-eslint/no-explicit-any
+                position.offsetTop = event.position.offsetTop; // eslint-disable-line @typescript-eslint/no-explicit-any
+            }
+        } else if (event.eventName === DraggableEventNames.Dragging) {
             console.log("[Dragging]");
             console.log(event.offset);
-            position.offsetLeft += event.offset!.x;
-            position.offsetTop += event.offset!.y;
+            if (event.offset) {
+                position.offsetLeft += event.offset.x;
+                position.offsetTop += event.offset.y;
+            }
 
             // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);

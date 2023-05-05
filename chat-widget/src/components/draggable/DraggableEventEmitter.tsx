@@ -1,5 +1,6 @@
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import DraggableEvent from "./DraggableEvent";
+import DraggableEventNames from "./DraggableEventNames";
 
 interface DraggableEventEmitterProps {
     /**
@@ -37,7 +38,7 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
     }, [props.targetWindow]);
 
     const dragStart = useCallback((event: MouseEvent) => {
-        postMessage({ channel: props.channel, eventName: "DragStart" });
+        postMessage({ channel: props.channel, eventName: DraggableEventNames.DragStart });
 
         cursor = { ...cursor, x: event.screenX, y: event.screenY }; // Cursor init position
         const dragging = (event: MouseEvent) => {
@@ -51,13 +52,13 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
 
             postMessage({
                 channel: props.channel,
-                eventName: "Dragging",
+                eventName: DraggableEventNames.Dragging,
                 offset
             });
         };
 
         const dragEnd = () => {
-            postMessage({ channel: props.channel, eventName: "DragEnd" });
+            postMessage({ channel: props.channel, eventName: DraggableEventNames.DragEnd });
             document.removeEventListener("mousemove", dragging);
             document.removeEventListener("mouseup", dragEnd);
         };
