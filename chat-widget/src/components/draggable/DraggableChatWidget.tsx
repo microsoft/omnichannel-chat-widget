@@ -143,6 +143,14 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         }
     }, []);
 
+    if (props.disable) {
+        return (
+            <>
+                {props.children}
+            </>
+        );
+    }
+
     return (
         <>
             <DraggableEventReceiver channel="lcw" onEvent={onEvent}>

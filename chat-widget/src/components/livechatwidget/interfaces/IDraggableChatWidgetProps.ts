@@ -1,3 +1,4 @@
 export interface IDraggableChatWidgetProps {
-    disable: boolean;
+    disable?: boolean;
+    targetIframe?: boolean;
 }

@@ -559,8 +559,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         disable: props.draggableChatWidgetProps?.disable
     };
 
+    // Disable receiving DraggableEvent in current window
+    if (props.draggableChatWidgetProps?.disable === false && props.draggableChatWidgetProps?.targetIframe) {
+        chatWidgetDraggableConfig.disable = true;
+    }
+
     const headerDraggableConfig = {
-        draggableEventEmitterTargetWindow: window,
+        draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe? window.parent: window,
         draggable: props.draggableChatWidgetProps?.disable === false // Draggable only explicitly setting disable flag to false
     };
 
