@@ -9,6 +9,7 @@ import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetActi
 import { ConversationState } from "../../contexts/common/ConversationState";
 
 interface DraggableChatWidgetProps {
+    disable?: boolean;
     elementId: string;
     children: ReactNode;
 }
@@ -44,8 +45,34 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
     };
 
+    const postMessage = useCallback((data: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+        const targetWindow = window;
+        targetWindow.postMessage(data, "*");
+    }, []);
+
+    const resetPosition = () => {
+        position.offsetLeft = initialPosition.offsetLeft;
+        position.offsetTop = initialPosition.offsetTop;
+
+        postMessage({
+            channel: "lcw",
+            eventName: "PositionReset",
+            position
+        });
+
+        const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+        (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
+        (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
+    };
+
     useEffect(() => {
         console.log("[DraggableChatWidget]");
+        console.log(`[DraggableChatWidget][Disable] ${props.disable}`);
+
+        if (props.disable !== false) {
+            return;
+        }
+
         const setInitialPosition = () => {
             console.log("[setInitialPosition]");
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
@@ -75,29 +102,13 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         return () => {
             window.removeEventListener("resize", calculateOffsets);
         };
-    }, []);
-
-    const postMessage = useCallback((data: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-        const targetWindow = window;
-        targetWindow.postMessage(data, "*");
-    }, []);
-
-    const resetPosition = () => {
-        position.offsetLeft = initialPosition.offsetLeft;
-        position.offsetTop = initialPosition.offsetTop;
-
-        postMessage({
-            channel: "lcw",
-            eventName: "PositionReset",
-            position
-        });
-
-        const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
-        (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
-        (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
-    };
+    }, [props.disable]);
 
     useEffect(() => {
+        if (props.disable !== false) {
+            return;
+        }
+
         // Resets widget to original position on widget minimized and closed
         if (state.appStates.isMinimized) {
             console.log("[ChatButton][minimize]");
@@ -106,7 +117,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
             console.log("[ChatButton][close]");
             resetPosition();
         }
-    }, [state.appStates.isMinimized, state.appStates.conversationState, initialPosition]);
+    }, [props.disable, state.appStates.isMinimized, state.appStates.conversationState, initialPosition]);
 
     const onEvent = useCallback((event: DraggableEvent) => {
         if (event.eventName === "PositionReset") {

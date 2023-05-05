@@ -554,7 +554,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
-    const draggableEventEmitterTargetWindow = window;
+    const chatWidgetDraggableConfig = {
+        elementId: widgetElementId,
+        disable: props.draggableChatWidgetProps?.disable
+    };
+
+    const headerDraggableConfig = {
+        draggableEventEmitterTargetWindow: window,
+        draggable: props.draggableChatWidgetProps?.disable === false // Draggable only explicitly setting disable flag to false
+    };
 
     return (
         <>
@@ -576,7 +584,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 background: ${scrollbarProps.thumbHoverColor};
             }
             `}</style>
-            <DraggableChatWidget elementId={widgetElementId}>
+            <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer
                     {...webChatProps}
                     styleOptions={webChatStyles}
@@ -590,7 +598,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!props.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(props.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={props.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
-                        {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} draggableEventEmitterTargetWindow={draggableEventEmitterTargetWindow} />)}
+                        {!props.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(props.componentOverrides?.header) || <HeaderStateful headerProps={props.headerProps} outOfOfficeHeaderProps={props.outOfOfficeHeaderProps} endChat={endChatRelay} {...headerDraggableConfig} />)}
 
                         {!props.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(props.componentOverrides?.loadingPane) || <LoadingPaneStateful loadingPaneProps={props.loadingPaneProps} startChatErrorPaneProps={props.startChatErrorPaneProps} />)}
 
