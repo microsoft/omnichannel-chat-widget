@@ -90,6 +90,11 @@ class TranscriptHTMLBuilder {
                                 if (formattedTags.includes('system')) {
                                     return false;
                                 }
+
+                                // Ignore hidden message
+                                if (formattedTags.includes('Hidden')) {
+                                    return false;
+                                }
                             }
 
                             // Add C1 user display name
