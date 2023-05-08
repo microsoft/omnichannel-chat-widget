@@ -4,11 +4,8 @@ import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontr
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
-<<<<<<< HEAD
 import createChatTranscript from "../../../plugins/createChatTranscript";
-=======
 import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
->>>>>>> b53b5ba36cc0ccd6e7076e53ac7843da36e5fc7c
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
