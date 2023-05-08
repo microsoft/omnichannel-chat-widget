@@ -4,7 +4,11 @@ import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontr
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
+<<<<<<< HEAD
 import createChatTranscript from "../../../plugins/createChatTranscript";
+=======
+import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
+>>>>>>> b53b5ba36cc0ccd6e7076e53ac7843da36e5fc7c
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -164,12 +168,11 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcriptContent: string) => string, bannerMessageOnError?: string, attachmentMessage?: string, state?: ILiveChatWidgetContext) => {
 
     // Need to keep existing request id for scenarios when trnascript is downloaded after endchat
-    const existingRequestId = chatSDK.requestId;
-    chatSDK.chatToken = state?.domainStates?.chatToken;
-    chatSDK.requestId = state?.domainStates?.chatToken?.requestId;
-    let data = await chatSDK?.getLiveChatTranscript();
-    // This is used for allowing to start next chat
-    chatSDK.requestId = existingRequestId;
+    const liveChatContext: LiveChatContext = {
+        chatToken: state?.domainStates?.chatToken,
+        requestId: state?.domainStates?.chatToken?.requestId
+    };
+    let data = await chatSDK?.getLiveChatTranscript({liveChatContext});
     if (typeof (data) === Constants.String) {
         data = JSON.parse(data);
     }

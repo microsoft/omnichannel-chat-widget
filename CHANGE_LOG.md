@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ## Fixed
 
 - Fixed custom context not showing for popout chat
+- Fixed an issue where after ending chat and downloading transcript, a new chat cannot be started
 
 ## [1.0.3] - 2023-4-24
 
