@@ -1,6 +1,9 @@
+import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { createStore } from "botframework-webchat";
+import { changeLanguageCodeFormatForWebChat, getConversationDetailsCall } from "../../../common/utils";
+
 import { Dispatch } from "react";
+import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
 import { IDataMaskingInfo } from "../../webchatcontainerstateful/interfaces/IDataMaskingInfo";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
@@ -10,16 +13,18 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import attachmentProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentProcessingMiddleware";
-import { changeLanguageCodeFormatForWebChat } from "../../../common/utils";
 import channelDataMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/channelDataMiddleware";
 import { createActivityMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware";
 import createAttachmentMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
 import createAttachmentUploadValidatorMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentUploadValidatorMiddleware";
 import { createAvatarMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware";
+import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
 import createConversationEndMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/conversationEndMiddleware";
 import createDataMaskingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/dataMaskingMiddleware";
 import { createMarkdown } from "./createMarkdown";
 import createMaxMessageSizeValidator from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/maxMessageSizeValidator";
+import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
+import { createStore } from "botframework-webchat";
 import { createWebChatTelemetry } from "../../webchatcontainerstateful/webchatcontroller/webchattelemetry/WebChatLogger";
 import { defaultAttachmentProps } from "../../webchatcontainerstateful/common/defaultProps/defaultAttachmentProps";
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
@@ -30,11 +35,6 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
-import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
-import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
-import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
-import { getConversationDetails } from "./endChat";
-import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
 import DOMPurify from "dompurify";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,7 +57,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
         const conversationEndCallback = async () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const conversationDetails: any = await getConversationDetails(chatSDK);
+            const conversationDetails: any = await getConversationDetailsCall(chatSDK);
             if (conversationDetails?.participantType === ParticipantType.Bot) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Bot });
             } else {

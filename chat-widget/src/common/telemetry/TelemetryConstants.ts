@@ -55,7 +55,8 @@ export enum BroadcastEvent {
     InitiateStartChatInPopoutMode = "InitiateStartChatInPopoutMode",
     HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent",
     UpdateSessionDataForTelemetry = "UpdateSessionDataForTelemetry",
-    UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry"
+    UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry",
+    ContactIdNotFound = "ContactIdNotFound"
 }
 
 // Events being logged

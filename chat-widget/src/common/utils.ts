@@ -1,7 +1,9 @@
-import { AriaTelemetryConstants, Constants, LocaleConstants } from "./Constants";
+import { AriaTelemetryConstants, ChatSDKError, Constants, LocaleConstants } from "./Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
 
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { DataStoreManager } from "./contextDataStore/DataStoreManager";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { Md5 } from "md5-typescript";
@@ -374,8 +376,13 @@ export const getConversationDetailsCall = async (chatSDK: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
     try {
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.GetConversationDetailsCallStarted,
+            Description: "Conversation details call started"
+        });
         conversationDetails = await chatSDK.getConversationDetails();
     } catch (error) {
+        checkContactIdError(error);
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.GetConversationDetailsCallFailed,
             ExceptionDetails: {
@@ -385,4 +392,17 @@ export const getConversationDetailsCall = async (chatSDK: any) => {
     }
 
     return conversationDetails;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const checkContactIdError = (e: any) => {
+    if (e?.message === ChatSDKError.AuthContactIdNotFoundFailure) {
+        const contactIdNotFoundErrorEvent: ICustomEvent = {
+            eventName: BroadcastEvent.ContactIdNotFound,
+            payload: {
+                error: e
+            }
+        };
+        BroadcastService.postMessage(contactIdNotFoundErrorEvent);
+    }
 };
