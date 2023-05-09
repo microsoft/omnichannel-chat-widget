@@ -5,6 +5,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
+import DOMPurify from "dompurify";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -62,6 +63,8 @@ const processContent = (transcriptContent: string, isAgentChat: boolean, renderM
     }
     if (renderMarkDown) {
         transcriptContent = renderMarkDown(transcriptContent);
+    } else {
+        transcriptContent = DOMPurify.sanitize(transcriptContent);
     }
     return transcriptContent;
 };
