@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added Broadcast event `ContactIdNotFound` when using OAuth 2.0 auth code grant
+- Add ability for widget to be draggable
 
 ### Fixed
 
