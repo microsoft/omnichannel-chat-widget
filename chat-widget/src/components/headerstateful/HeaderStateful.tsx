@@ -88,8 +88,6 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         targetWindow: props.draggableEventEmitterTargetWindow ?? window
     };
 
-    console.log(`[Header][Draggable] ${props.draggable}`);
-
     if (props.draggable) {
         return (
             <DraggableEventEmitter {...draggableEventEmitterProps}>

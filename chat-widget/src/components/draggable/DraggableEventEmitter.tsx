@@ -69,7 +69,6 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
 
     useEffect(() => {
         if (!initialized && props.elementId) {
-            console.log(`[DraggableEventEmitter][Initialize] ${props.elementId}`);
             const element = document.getElementById(props.elementId);
             element?.addEventListener("mousedown", dragStart);
             setInitialized(true);

@@ -67,15 +67,11 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     };
 
     useEffect(() => {
-        console.log("[DraggableChatWidget]");
-        console.log(`[DraggableChatWidget][Disable] ${props.disable}`);
-
         if (props.disable !== false) {
             return;
         }
 
         const setInitialPosition = () => {
-            console.log("[setInitialPosition]");
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
             const initialPosition = {offsetLeft: 0, offsetTop: 0};
             initialPosition.offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
@@ -112,24 +108,19 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
 
         // Resets widget to original position on widget minimized and closed
         if (state.appStates.isMinimized) {
-            console.log("[ChatButton][minimize]");
             resetPosition();
         } else if (state.appStates.conversationState == ConversationState.Closed) {
-            console.log("[ChatButton][close]");
             resetPosition();
         }
     }, [props.disable, state.appStates.isMinimized, state.appStates.conversationState, initialPosition]);
 
     const onEvent = useCallback((event: DraggableEvent) => {
         if (event.eventName === "PositionReset") {
-            console.log("[PositionReset]");
             if (event.position) {
                 position.offsetLeft = event.position.offsetLeft; // eslint-disable-line @typescript-eslint/no-explicit-any
                 position.offsetTop = event.position.offsetTop; // eslint-disable-line @typescript-eslint/no-explicit-any
             }
         } else if (event.eventName === DraggableEventNames.Dragging) {
-            console.log("[Dragging]");
-            console.log(event.offset);
             if (event.offset) {
                 position.offsetLeft += event.offset.x;
                 position.offsetTop += event.offset.y;

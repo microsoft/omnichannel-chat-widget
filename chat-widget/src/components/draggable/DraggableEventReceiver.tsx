@@ -30,7 +30,6 @@ const DraggableEventReceiver = (props: DraggableEventReceiverProps) => {
         const listener = (event: MessageEvent) => {
             const { data } = event;
             if (data.channel === props.channel) {
-                console.log(data.eventName);
                 props.onEvent(data);
             }
         };
