@@ -24,6 +24,11 @@ export interface IHeaderStatefulParams {
     endChat: (adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => Promise<void>;
 
     /**
+     * draggableEventChannel: Channel to send/receive draggable events
+     */
+    draggableEventChannel?: string;
+
+    /**
      * draggableEventEmitterTargetWindow: Target window to post DraggableEvent messages
      */
     draggableEventEmitterTargetWindow?: Window;

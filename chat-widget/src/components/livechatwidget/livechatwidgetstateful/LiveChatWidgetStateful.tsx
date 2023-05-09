@@ -556,6 +556,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     const chatWidgetDraggableConfig = {
         elementId: widgetElementId,
+        channel: props.controlProps?.widgetInstanceId ?? "lcw",
         disable: props.draggableChatWidgetProps?.disable
     };
 
@@ -565,6 +566,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }
 
     const headerDraggableConfig = {
+        draggableEventChannel: chatWidgetDraggableConfig.channel ?? "lcw",
         draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe? window.parent: window,
         draggable: props.draggableChatWidgetProps?.disable === false // Draggable only explicitly setting disable flag to false
     };

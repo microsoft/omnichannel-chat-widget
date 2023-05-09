@@ -83,7 +83,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     }, [state?.domainStates?.confirmationState]);
 
     const draggableEventEmitterProps = {
-        channel: "lcw",
+        channel: props.draggableEventChannel?? "lcw",
         elementId: (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps.id as string : controlProps.id as string,
         targetWindow: props.draggableEventEmitterTargetWindow ?? window
     };

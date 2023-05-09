@@ -10,6 +10,7 @@ import { ConversationState } from "../../contexts/common/ConversationState";
 
 interface DraggableChatWidgetProps {
     disable?: boolean;
+    channel?: string;
     elementId: string;
     children: ReactNode;
 }
@@ -55,7 +56,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         position.offsetTop = initialPosition.offsetTop;
 
         postMessage({
-            channel: "lcw",
+            channel: props.channel?? "lcw",
             eventName: "PositionReset",
             position
         });
@@ -153,7 +154,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
 
     return (
         <>
-            <DraggableEventReceiver channel="lcw" onEvent={onEvent}>
+            <DraggableEventReceiver channel={props.channel?? "lcw"} onEvent={onEvent}>
                 {props.children}
             </DraggableEventReceiver>
         </>
