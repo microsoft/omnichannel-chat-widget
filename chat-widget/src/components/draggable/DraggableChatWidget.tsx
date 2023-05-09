@@ -18,53 +18,50 @@ interface DraggableChatWidgetProps {
 const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const [initialPosition, setInitializePosition] = useState({offsetLeft: 0, offsetTop: 0});
-    const position: DraggableElementPosition = {offsetLeft: 0, offsetTop: 0};
-    const delta = {left: 0, top: 0};
+    const [position, setPosition] = useState({offsetLeft: 0, offsetTop: 0});
+    const [delta, setDelta] = useState({left: 0, top: 0});
 
-    const calculateOffsetsWithinViewport = (id: string) => {
+    const calculateOffsetsWithinViewport = useCallback((id: string, offset) => {
         const draggableElement: HTMLElement | null = document.getElementById(id);
         const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
 
+        let offsetLeft = offset.offsetLeft;
+        let offsetTop = offset.offsetTop;
+
         // Restrict widget being within viewport
         if (positionRelativeToViewport.x < 0) {
-            position.offsetLeft = 0 - delta.left;
+            offsetLeft = 0 - delta.left;
         }
 
         if (positionRelativeToViewport.y < 0) {
-            position.offsetTop = 0 - delta.top;
+            offsetTop = 0 - delta.top;
         }
 
         if (positionRelativeToViewport.x + positionRelativeToViewport.width > window.innerWidth) {
-            position.offsetLeft = window.innerWidth - positionRelativeToViewport.width - delta.left;
+            offsetLeft = window.innerWidth - positionRelativeToViewport.width - delta.left;
         }
 
         if (positionRelativeToViewport.y + positionRelativeToViewport.height > window.innerHeight) {
-            position.offsetTop = window.innerHeight - positionRelativeToViewport.height - delta.top;
+            offsetTop = window.innerHeight - positionRelativeToViewport.height - delta.top;
         }
 
-        (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
-        (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
-    };
+        (draggableElement as HTMLElement).style.left = `${offsetLeft}px`;
+        (draggableElement as HTMLElement).style.top = `${offsetTop}px`;
 
-    const postMessage = useCallback((data: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-        const targetWindow = window;
-        targetWindow.postMessage(data, "*");
-    }, []);
+        setPosition({offsetLeft, offsetTop});
+    }, [delta]);
 
-    const resetPosition = () => {
-        position.offsetLeft = initialPosition.offsetLeft;
-        position.offsetTop = initialPosition.offsetTop;
+    const resetPosition = useCallback(() => {
+        const offsetLeft = initialPosition.offsetLeft;
+        const offsetTop = initialPosition.offsetTop;
 
-        postMessage({
-            channel: props.channel?? "lcw",
-            eventName: "PositionReset",
-            position
-        });
-
+        const position = {offsetLeft, offsetTop};
         const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
         (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
         (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
-    };
+
+        setPosition(position);
+    }, [initialPosition]);
 
     useEffect(() => {
         if (props.disable !== false) {
@@ -73,22 +70,23 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
 
         const setInitialPosition = () => {
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
-            const initialPosition = {offsetLeft: 0, offsetTop: 0};
-            initialPosition.offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
-            initialPosition.offsetTop = (draggableElement as HTMLElement).offsetTop as number;
-            setInitializePosition(initialPosition);
+            const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
+            const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
+            setInitializePosition({offsetLeft, offsetTop});
         };
 
         const calculateOffsets = () => {
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
-            position.offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
-            position.offsetTop = (draggableElement as HTMLElement).offsetTop as number;
+            const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
+            const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
+            setPosition({offsetLeft, offsetTop});
 
             const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
-            delta.left = positionRelativeToViewport.left - position.offsetLeft;
-            delta.top = positionRelativeToViewport.top - position.offsetTop;
+            const left = positionRelativeToViewport.left - offsetLeft;
+            const top = positionRelativeToViewport.top - offsetTop;
+            setDelta({left, top});
 
-            calculateOffsetsWithinViewport(props.elementId);
+            calculateOffsetsWithinViewport(props.elementId, {offsetLeft, offsetTop});
         };
 
         setInitialPosition();
@@ -115,25 +113,21 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     }, [props.disable, state.appStates.isMinimized, state.appStates.conversationState, initialPosition]);
 
     const onEvent = useCallback((event: DraggableEvent) => {
-        if (event.eventName === "PositionReset") {
-            if (event.position) {
-                position.offsetLeft = event.position.offsetLeft; // eslint-disable-line @typescript-eslint/no-explicit-any
-                position.offsetTop = event.position.offsetTop; // eslint-disable-line @typescript-eslint/no-explicit-any
-            }
-        } else if (event.eventName === DraggableEventNames.Dragging) {
+        if (event.eventName === DraggableEventNames.Dragging) {
             if (event.offset) {
-                position.offsetLeft += event.offset.x;
-                position.offsetTop += event.offset.y;
+                const offsetLeft = position.offsetLeft + event.offset.x;
+                const offsetTop = position.offsetTop + event.offset.y;
+
+                // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
+                const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+                (draggableElement as HTMLElement).style.left = `${offsetLeft}px`;
+                (draggableElement as HTMLElement).style.top = `${offsetTop}px`;
+
+                setPosition({offsetLeft, offsetTop});
+                calculateOffsetsWithinViewport(props.elementId, {offsetLeft, offsetTop});
             }
-
-            // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
-            const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
-            (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
-            (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
-
-            calculateOffsetsWithinViewport(props.elementId);
         }
-    }, []);
+    }, [position]);
 
     if (props.disable) {
         return (
