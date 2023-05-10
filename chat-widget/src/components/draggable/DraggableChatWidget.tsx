@@ -23,6 +23,11 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     const [position, setPosition] = useState({offsetLeft: 0, offsetTop: 0});
     const [delta, setDelta] = useState({left: 0, top: 0});
 
+    const repositionElement = (draggableElement: HTMLElement, offsetLeft: number, offsetTop: number) => {
+        draggableElement.style.left = `${offsetLeft}px`;
+        draggableElement.style.top = `${offsetTop}px`;
+    };
+
     const calculateOffsetsWithinViewport = useCallback((id: string, offset, delta) => {
         const draggableElement: HTMLElement | null = document.getElementById(id);
         const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
@@ -30,7 +35,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         let offsetLeft = offset.offsetLeft;
         let offsetTop = offset.offsetTop;
 
-        // Restrict widget being within viewport
+        // Ensures widget is within viewport
         if (positionRelativeToViewport.x < 0) {
             offsetLeft = 0 - delta.left;
         }
@@ -47,9 +52,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
             offsetTop = window.innerHeight - positionRelativeToViewport.height - delta.top;
         }
 
-        (draggableElement as HTMLElement).style.left = `${offsetLeft}px`;
-        (draggableElement as HTMLElement).style.top = `${offsetTop}px`;
-
+        repositionElement(draggableElement as HTMLElement, offsetLeft, offsetTop);
         setPosition({offsetLeft, offsetTop});
     }, []);
 
@@ -82,6 +85,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
             const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
             const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
 
+            // Calculates the delta between the position of the widget and the position of the widget relative to the viewport which will be used for repositioning
             const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
             const left = positionRelativeToViewport.left - offsetLeft;
             const top = positionRelativeToViewport.top - offsetTop;
@@ -133,8 +137,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
 
                 // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
                 const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
-                (draggableElement as HTMLElement).style.left = `${offsetLeft}px`;
-                (draggableElement as HTMLElement).style.top = `${offsetTop}px`;
+                repositionElement(draggableElement as HTMLElement, offsetLeft, offsetTop);
 
                 setPosition({offsetLeft, offsetTop});
                 calculateOffsetsWithinViewport(props.elementId, {offsetLeft, offsetTop}, delta);
