@@ -21,7 +21,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     const [position, setPosition] = useState({offsetLeft: 0, offsetTop: 0});
     const [delta, setDelta] = useState({left: 0, top: 0});
 
-    const calculateOffsetsWithinViewport = useCallback((id: string, offset) => {
+    const calculateOffsetsWithinViewport = useCallback((id: string, offset, delta) => {
         const draggableElement: HTMLElement | null = document.getElementById(id);
         const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
 
@@ -49,7 +49,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         (draggableElement as HTMLElement).style.top = `${offsetTop}px`;
 
         setPosition({offsetLeft, offsetTop});
-    }, [delta]);
+    }, []);
 
     const resetPosition = useCallback(() => {
         const offsetLeft = initialPosition.offsetLeft;
@@ -79,18 +79,17 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
             const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
             const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
-            setPosition({offsetLeft, offsetTop});
 
             const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
             const left = positionRelativeToViewport.left - offsetLeft;
             const top = positionRelativeToViewport.top - offsetTop;
             setDelta({left, top});
 
-            calculateOffsetsWithinViewport(props.elementId, {offsetLeft, offsetTop});
+            calculateOffsetsWithinViewport(props.elementId, {offsetLeft, offsetTop}, {left, top});
         };
 
-        setInitialPosition();
         calculateOffsets();
+        setInitialPosition();
 
         window.addEventListener("resize", calculateOffsets);
 
@@ -124,10 +123,10 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
                 (draggableElement as HTMLElement).style.top = `${offsetTop}px`;
 
                 setPosition({offsetLeft, offsetTop});
-                calculateOffsetsWithinViewport(props.elementId, {offsetLeft, offsetTop});
+                calculateOffsetsWithinViewport(props.elementId, {offsetLeft, offsetTop}, delta);
             }
         }
-    }, [position]);
+    }, [position, delta]);
 
     if (props.disable) {
         return (
