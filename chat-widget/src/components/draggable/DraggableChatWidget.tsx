@@ -19,6 +19,7 @@ interface DraggableChatWidgetProps {
 const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const [initialPosition, setInitializePosition] = useState({offsetLeft: 0, offsetTop: 0});
+    const [cachedPosition, setCachedPosition] = useState<undefined|DraggableElementPosition>(undefined);
     const [position, setPosition] = useState({offsetLeft: 0, offsetTop: 0});
     const [delta, setDelta] = useState({left: 0, top: 0});
 
@@ -104,13 +105,25 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
             return;
         }
 
-        // Resets widget to original position on widget minimized and closed
-        if (state.appStates.isMinimized) {
+        if (state.appStates.conversationState == ConversationState.Closed) {
             resetPosition(initialPosition);
-        } else if (state.appStates.conversationState == ConversationState.Closed) {
+        } else if (state.appStates.isMinimized) {
+            const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+            const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
+            const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
+
+            if (!cachedPosition) {
+                setCachedPosition({offsetLeft, offsetTop});
+            }
+
             resetPosition(initialPosition);
+        } else if (!isNullOrUndefined(state.appStates.isMinimized) && !state.appStates.isMinimized) {
+            if (cachedPosition) {
+                resetPosition(cachedPosition as DraggableElementPosition);
+                setCachedPosition(undefined);
+            }
         }
-    }, [props.disable, state.appStates.isMinimized, state.appStates.conversationState, initialPosition]);
+    }, [props.disable, state.appStates.isMinimized, state.appStates.conversationState, initialPosition, cachedPosition]);
 
     const onEvent = useCallback((event: DraggableEvent) => {
         if (event.eventName === DraggableEventNames.Dragging) {
