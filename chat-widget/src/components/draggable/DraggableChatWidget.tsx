@@ -18,7 +18,7 @@ interface DraggableChatWidgetProps {
 
 const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const [initialPosition, setInitializePosition] = useState({offsetLeft: 0, offsetTop: 0});
+    const [initialPosition, setInitialPosition] = useState({offsetLeft: 0, offsetTop: 0});
     const [cachedPosition, setCachedPosition] = useState<undefined|DraggableElementPosition>(undefined);
     const [position, setPosition] = useState({offsetLeft: 0, offsetTop: 0});
     const [delta, setDelta] = useState({left: 0, top: 0});
@@ -70,11 +70,11 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
             return;
         }
 
-        const setInitialPosition = () => {
+        const cacheInitialPosition = () => {
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
             const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
             const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
-            setInitializePosition({offsetLeft, offsetTop});
+            setInitialPosition({offsetLeft, offsetTop});
         };
 
         const calculateOffsets = () => {
@@ -91,7 +91,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         };
 
         calculateOffsets();
-        setInitialPosition();
+        cacheInitialPosition();
 
         window.addEventListener("resize", calculateOffsets);
 
