@@ -35,6 +35,15 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         let offsetLeft = offset.offsetLeft;
         let offsetTop = offset.offsetTop;
 
+        // Widget size larger than viewport would not have any restriction
+        if (positionRelativeToViewport.width > window.innerWidth) {
+            return;
+        }
+
+        if (positionRelativeToViewport.height > window.innerHeight) {
+            return;
+        }
+
         // Ensures widget is within viewport
         if (positionRelativeToViewport.x < 0) {
             offsetLeft = 0 - delta.left;
