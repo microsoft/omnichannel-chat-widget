@@ -7,6 +7,7 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ConversationState } from "../../contexts/common/ConversationState";
+import { isNullOrUndefined } from "../../common/utils";
 
 interface DraggableChatWidgetProps {
     disable?: boolean;
@@ -51,9 +52,9 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         setPosition({offsetLeft, offsetTop});
     }, []);
 
-    const resetPosition = useCallback(() => {
-        const offsetLeft = initialPosition.offsetLeft;
-        const offsetTop = initialPosition.offsetTop;
+    const resetPosition = useCallback((targetPosition: DraggableElementPosition) => {
+        const offsetLeft = targetPosition.offsetLeft;
+        const offsetTop = targetPosition.offsetTop;
 
         const position = {offsetLeft, offsetTop};
         const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
@@ -61,7 +62,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
 
         setPosition(position);
-    }, [initialPosition]);
+    }, []);
 
     useEffect(() => {
         if (props.disable !== false) {
@@ -105,9 +106,9 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
 
         // Resets widget to original position on widget minimized and closed
         if (state.appStates.isMinimized) {
-            resetPosition();
+            resetPosition(initialPosition);
         } else if (state.appStates.conversationState == ConversationState.Closed) {
-            resetPosition();
+            resetPosition(initialPosition);
         }
     }, [props.disable, state.appStates.isMinimized, state.appStates.conversationState, initialPosition]);
 
