@@ -1,6 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ChatSDKError, Constants, LiveWorkItemState } from "../../../common/Constants";
-import { createTimer, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
+import { createTimer, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isNullOrUndefined, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
@@ -303,10 +303,20 @@ const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
-    const requestIdFromCache = state.domainStates?.liveChatContext?.requestId;
+const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext, props: ILiveChatWidgetProps): Promise<boolean> => {
+    let requestIdFromCache = state.domainStates?.liveChatContext?.requestId ?? undefined;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
+
+    // localStorage has more precedence, if its null check if requestid passed in props
+    if (isNullOrUndefined(requestIdFromCache)) {
+        requestIdFromCache = props?.liveChatContextFromCache?.requestId ?? undefined;
+    }
+
+    // There is no cached request id, so no existing conversation to check
+    if (isNullOrUndefined(requestIdFromCache)) {
+        return false;
+    }
 
     //Preserve current requestId
     const currentRequestId = chatSDK.requestId ?? "";
@@ -347,7 +357,7 @@ const getInitContextParamsForPopout = async (): Promise<any> => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getInitContextParamForPopoutFromOuterScope = async (scope: any): Promise<any> =>  {
+const getInitContextParamForPopoutFromOuterScope = async (scope: any): Promise<any> => {
     let payload;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let waitPromiseResolve: any;

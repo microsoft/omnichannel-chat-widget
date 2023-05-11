@@ -141,7 +141,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
 
             //Check if conversation state is not in wrapup or closed state
-            isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
+            isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state, props);
             if (isChatValid === true) {
                 //Check if reconnect enabled
                 if (isReconnectEnabled(props.chatConfig) === true) {
