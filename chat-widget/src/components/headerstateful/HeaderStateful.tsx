@@ -89,12 +89,23 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     };
 
     if (props.draggable) {
+        const styleProps = (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps;
+        const draggableSelectors = {
+            "&:hover": {
+                cursor: "move"
+            }
+        };
+
+        const selectors = Object.assign({}, (styleProps as any)?.generalStyleProps?.selectors || {}, draggableSelectors); // eslint-disable-line @typescript-eslint/no-explicit-any
+        const generalStyleProps = Object.assign({}, styleProps?.generalStyleProps, {selectors});
+        const draggableStyleProps = Object.assign({}, styleProps, {generalStyleProps});
+
         return (
             <DraggableEventEmitter {...draggableEventEmitterProps}>
                 <Header
                     componentOverrides={headerProps?.componentOverrides}
                     controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}
-                    styleProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps}
+                    styleProps={draggableStyleProps}
                 />
             </DraggableEventEmitter>
         );
