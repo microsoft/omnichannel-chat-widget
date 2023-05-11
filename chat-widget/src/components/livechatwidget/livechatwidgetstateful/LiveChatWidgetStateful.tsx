@@ -120,6 +120,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             state?.appStates?.conversationState === ConversationState.Active) {
             activeCachedChatExist = true;
             optionalParams = { liveChatContext: state?.domainStates?.liveChatContext };
+        } else if (!isUndefinedOrEmpty(props?.liveChatContextFromCache)) {
+            activeCachedChatExist = true;
+            optionalParams = { liveChatContext: props?.liveChatContextFromCache };
         } else {
             activeCachedChatExist = false;
             optionalParams = {};

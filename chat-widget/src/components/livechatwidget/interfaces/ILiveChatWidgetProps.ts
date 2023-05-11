@@ -23,6 +23,7 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
 import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestateful/interfaces/IPostChatSurveyPaneStatefulProps";
 import { IScrollBarProps } from "./IScrollBarProps";
+import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -56,7 +57,7 @@ export interface ILiveChatWidgetProps {
     styleProps?: ILiveChatWidgetStyleProps;
     telemetryConfig: ITelemetryConfig;
     webChatContainerProps?: IWebChatContainerStatefulProps;
-    liveChatContextFromCache?: ILiveChatWidgetContext;
+    liveChatContextFromCache?: LiveChatContext;
     contextDataStore?: IContextDataStore;
     getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
     scrollBarProps?: IScrollBarProps;
