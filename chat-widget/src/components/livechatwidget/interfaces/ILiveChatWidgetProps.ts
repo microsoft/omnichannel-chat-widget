@@ -19,7 +19,6 @@ import { IStartChatErrorPaneProps } from "../../loadingpanestateful/interfaces/I
 import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetryConfig";
 import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
 import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestateful/interfaces/IPostChatSurveyPaneStatefulProps";
 import { IScrollBarProps } from "./IScrollBarProps";
