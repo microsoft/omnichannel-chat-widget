@@ -304,13 +304,13 @@ const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext, props: ILiveChatWidgetProps): Promise<boolean> => {
-    let requestIdFromCache = state.domainStates?.liveChatContext?.requestId ?? undefined;
+    let requestIdFromCache = props?.liveChatContextFromCache?.requestId ?? undefined;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
 
-    // localStorage has more precedence, if its null check if requestid passed in props
     if (isNullOrUndefined(requestIdFromCache)) {
-        requestIdFromCache = props?.liveChatContextFromCache?.requestId ?? undefined;
+        requestIdFromCache = state.domainStates?.liveChatContext?.requestId ?? undefined;
     }
 
     // There is no cached request id, so no existing conversation to check
