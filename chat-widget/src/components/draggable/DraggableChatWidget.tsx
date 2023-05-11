@@ -66,16 +66,8 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     }, []);
 
     const resetPosition = useCallback((targetPosition: DraggableElementPosition) => {
-        const offsetLeft = targetPosition.offsetLeft;
-        const offsetTop = targetPosition.offsetTop;
-
-        const position = {offsetLeft, offsetTop};
-        const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
-        (draggableElement as HTMLElement).style.left = `${position.offsetLeft}px`;
-        (draggableElement as HTMLElement).style.top = `${position.offsetTop}px`;
-
-        setPosition(position);
-    }, []);
+        calculateOffsetsWithinViewport(props.elementId, targetPosition, delta); // Ensure viewport restriction
+    }, [delta]);
 
     useEffect(() => {
         if (props.disable !== false) {
