@@ -28,8 +28,6 @@ interface DraggableEventEmitterProps {
  * @returns
  */
 const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
-    let cursor = { x: 0, y: 0 };
-    let offset = { x: 0, y: 0 };
     const [initialized, setInitialized] = useState(false);
 
     const postMessage = useCallback((data: DraggableEvent) => {
@@ -40,14 +38,14 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
     const dragStart = useCallback((event: MouseEvent) => {
         postMessage({ channel: props.channel, eventName: DraggableEventNames.DragStart });
 
-        cursor = { ...cursor, x: event.screenX, y: event.screenY }; // Cursor init position
+        let cursor = { x: event.screenX, y: event.screenY }; // Cursor init position
         const dragging = (event: MouseEvent) => {
             event.preventDefault();
 
             const newX = event.screenX;
             const newY = event.screenY;
 
-            offset = { ...offset, x: newX - cursor.x, y: newY - cursor.y }; // Calculate cursor position diff
+            const offset = { x: newX - cursor.x, y: newY - cursor.y }; // Calculate cursor position diff
             cursor = { ...cursor, x: newX, y: newY }; // Update cursor new position
 
             postMessage({
@@ -65,7 +63,7 @@ const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
 
         document.addEventListener("mousemove", dragging);
         document.addEventListener("mouseup", dragEnd);
-    }, [props.channel, cursor, offset]);
+    }, [props.channel]);
 
     useEffect(() => {
         if (!initialized && props.elementId) {
