@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed an issue where hideStartChatButton is true, and customer tries to reconnect from a new browser or InPrivate browser
+- Do not log error when starting chat during OOOH
 
 ## [1.0.4] - 2023-5-8
 
