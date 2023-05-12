@@ -88,7 +88,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         targetWindow: props.draggableEventEmitterTargetWindow ?? window
     };
 
-    if (props.draggable) {
+    if (props.draggable === true) {
         const styleProps = (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps;
         const draggableSelectors = {
             "&:hover": {

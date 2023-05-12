@@ -3,7 +3,7 @@ import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } f
 import { Components, StyleOptions } from "botframework-webchat";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
-import React, { Dispatch, useCallback, useEffect, useRef, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     createTimer,
@@ -557,7 +557,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const chatWidgetDraggableConfig = {
         elementId: widgetElementId,
         channel: props.controlProps?.widgetInstanceId ?? "lcw",
-        disable: props.draggableChatWidgetProps?.disable
+        disable: props.draggableChatWidgetProps?.disable === true?? false // Draggable by default, unless explicitly disabled
     };
 
     // Disable receiving DraggableEvent in current window
@@ -568,7 +568,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const headerDraggableConfig = {
         draggableEventChannel: chatWidgetDraggableConfig.channel ?? "lcw",
         draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe? window.parent: window,
-        draggable: props.draggableChatWidgetProps?.disable === false // Draggable only explicitly setting disable flag to false
+        draggable: props.draggableChatWidgetProps?.disable !== true // Draggable by default, unless explicitly disabled
     };
 
     return (

@@ -70,7 +70,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     }, [delta]);
 
     useEffect(() => {
-        if (props.disable !== false) {
+        if (props.disable === true) {
             return;
         }
 
@@ -106,7 +106,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     }, [props.disable]);
 
     useEffect(() => {
-        if (props.disable !== false) {
+        if (props.disable === true) {
             return;
         }
 
@@ -146,7 +146,7 @@ const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
         }
     }, [position, delta]);
 
-    if (props.disable) {
+    if (props.disable === true) {
         return (
             <>
                 {props.children}
