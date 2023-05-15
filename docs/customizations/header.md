@@ -1,5 +1,19 @@
 # Header
 
+## Table of contents
+- [Interfaces](#interfaces)
+    - [IHeaderProps](#iheaderprops)
+    - [IHeaderComponentOverrides](#iheadercomponentoverrides)
+    - [IHeaderControlProps](#iheadercontrolprops)
+    - [IHeaderStyleProps](#iheaderstyleprops)
+- [Sample Scenarios](#sample-scenarios)
+    - [Changing header title and icon](#changing-header-title-and-icon)
+    - [Changing button icons](#changing-button-icons)
+    - [Hiding sub-components](#hiding-sub-components)
+    - [Adding a custom button](#adding-a-custom-button)
+    - [Adding a custom image](#adding-a-custom-image)
+    - [Changing element styles](#changing-element-styles)
+
 ## Interfaces
 
 ### [IHeaderProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderProps.ts)
@@ -128,7 +142,7 @@ liveChatWidgetProps = {
 <img src="../.attachments/customizations-header-hide-elements.png" width="600">
 
 --------------------------------
-### Adding a custom element
+### Adding a custom button
 ```tsx
 const CustomButton = () => {
     const onClick = () => {
@@ -155,6 +169,8 @@ liveChatWidgetProps = {
 
 <img src="../.attachments/customizations-header-add-custom-button.gif" width="600">
 
+--------------------------------
+### Adding a custom image
 ```tsx
 const CustomImage = () => {
     return (
