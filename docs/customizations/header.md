@@ -81,6 +81,9 @@ Below samples are build upon the base sample, which can be found [here](https://
 
 --------------------------------
 ### Changing header title and icon
+<details>
+    <summary>Show code</summary>
+
 ```tsx
 ...
 liveChatWidgetProps = {
@@ -98,11 +101,15 @@ liveChatWidgetProps = {
 };
 ...
 ```
+</details>
 
 <img src="../.attachments/customizations-header-change-title-icon.png" width="450">
 
 --------------------------------
 ### Changing button icons
+<details>
+    <summary>Show code</summary>
+
 ```tsx
 ...
 liveChatWidgetProps = {
@@ -120,11 +127,15 @@ liveChatWidgetProps = {
 };
 ...
 ```
+</details>
 
 <img src="../.attachments/customizations-header-change-button-icons.png" width="450">
 
 --------------------------------
 ### Hiding sub-components
+<details>
+    <summary>Show code</summary>
+
 ```tsx
 ...
 liveChatWidgetProps = {
@@ -138,12 +149,17 @@ liveChatWidgetProps = {
 };
 ...
 ```
+</details>
 
 <img src="../.attachments/customizations-header-hide-elements.png" width="450">
 
 --------------------------------
 ### Adding a custom button
+<details>
+    <summary>Show code</summary>
+
 ```tsx
+...
 const CustomButton = () => {
     const onClick = () => {
         alert("Clicked custom button!");
@@ -165,13 +181,19 @@ liveChatWidgetProps = {
         }
     }
 };
+...
 ```
+</details>
 
 <img src="../.attachments/customizations-header-add-custom-button.gif" width="450">
 
 --------------------------------
 ### Adding a custom image
+<details>
+    <summary>Show code</summary>
+
 ```tsx
+...
 const CustomImage = () => {
     return (
         <img style={{width: "35px", height:"35px", margin:"3px"}}
@@ -195,14 +217,19 @@ liveChatWidgetProps = {
         }
     }
 };
+...
 ```
+</details>
 
 <img src="../.attachments/customizations-header-add-custom-image.png" width="450">
 
 --------------------------------
 ### Changing element styles
+<details>
+    <summary>Show code</summary>
 
 ```tsx
+...
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
     styleProps: {
@@ -247,6 +274,8 @@ liveChatWidgetProps = {
         }
     }
 };
+...
 ```
+</details>
 
 <img src="../.attachments/customizations-header-change-styles.png" width="450">
