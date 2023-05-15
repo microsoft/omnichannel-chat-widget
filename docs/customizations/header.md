@@ -99,7 +99,7 @@ liveChatWidgetProps = {
 ...
 ```
 
-<img src="../.attachments/customizations-header-change-title-icon.png" width="600">
+<img src="../.attachments/customizations-header-change-title-icon.png" width="450">
 
 --------------------------------
 ### Changing button icons
@@ -121,7 +121,7 @@ liveChatWidgetProps = {
 ...
 ```
 
-<img src="../.attachments/customizations-header-change-button-icons.png" width="600">
+<img src="../.attachments/customizations-header-change-button-icons.png" width="450">
 
 --------------------------------
 ### Hiding sub-components
@@ -139,7 +139,7 @@ liveChatWidgetProps = {
 ...
 ```
 
-<img src="../.attachments/customizations-header-hide-elements.png" width="600">
+<img src="../.attachments/customizations-header-hide-elements.png" width="450">
 
 --------------------------------
 ### Adding a custom button
@@ -167,7 +167,7 @@ liveChatWidgetProps = {
 };
 ```
 
-<img src="../.attachments/customizations-header-add-custom-button.gif" width="600">
+<img src="../.attachments/customizations-header-add-custom-button.gif" width="450">
 
 --------------------------------
 ### Adding a custom image
@@ -197,7 +197,7 @@ liveChatWidgetProps = {
 };
 ```
 
-<img src="../.attachments/customizations-header-add-custom-image.png" width="600">
+<img src="../.attachments/customizations-header-add-custom-image.png" width="450">
 
 --------------------------------
 ### Changing element styles
@@ -249,4 +249,4 @@ liveChatWidgetProps = {
 };
 ```
 
-<img src="../.attachments/customizations-header-change-styles.png" width="600">
+<img src="../.attachments/customizations-header-change-styles.png" width="450">
