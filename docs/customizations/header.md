@@ -42,10 +42,10 @@ Custom React components can be passed as input to override the default sub-compo
 | Attribute | Type | Required | Description | Default |	
 | - | - | - | - | - |
 | `id`     | `string`     | No | The top-level element id for the header | `"oc-lcw-header"`
-`hideIcon` | `boolean` | No | Whether to hide the icon on the header | false
-`hideTitle` | `boolean` | No | Whether to hide the title string on the header | false
-`hideMinimizeButton` | `boolean` | No | Whether to hide the minimize button on the header | false
-`hideCloseButton` | `ReactNode\|string` | No | Whether to hide the close button on the header | false
+`hideIcon` | `boolean` | No | Whether to hide the icon on the header | `false`
+`hideTitle` | `boolean` | No | Whether to hide the title string on the header | `false`
+`hideMinimizeButton` | `boolean` | No | Whether to hide the minimize button on the header | `false`
+`hideCloseButton` | `ReactNode\|string` | No | Whether to hide the close button on the header | `false`
 `onMinimizeClick` | `() => void` | No | The callback function that will be triggered when the minimize button is clicked | [Minimizes the chat widget]
 `onCloseClick` | `() => void` | No | The callback function that will be triggered when the close button is clicked | [Closes the chat widget]
 `minimizeButtonProps` | [`ICommandButtonControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default minimize button | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
@@ -56,6 +56,7 @@ Custom React components can be passed as input to override the default sub-compo
 `leftGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the left side of the header (right of the default sub-components)| -
 `middleGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the middle section of the header | -
 `rightGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the right side of the header (left of the default sub-components) | -
+
 > :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
 
 > :pushpin: `leftGroup`, `middleGroup`, and `rightGroup` take in the same kind of input types as with `componentOverrides` inputs.
