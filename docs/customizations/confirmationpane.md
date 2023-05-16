@@ -262,4 +262,4 @@ liveChatWidgetProps = {
 ```
 </details>
 
-<img src="../.attachments/customization-confirmation-pane-customize-overall.png" width="450">
+<img src="../.attachments/customization-confirmation-pane-customize-overall.gif" width="450">
