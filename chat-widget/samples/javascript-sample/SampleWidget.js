@@ -49,6 +49,30 @@ const main = async () => {
             }
         };
 
+        const Copyright = () => {
+            return (
+                <div style={{"fontSize":"12px", "fontFamily":"Segoe UI, Arial", "margin":"10px", "padding":"2px"}}>© Microsoft 2023</div>
+            );
+        };
+
+        liveChatWidgetProps = {
+            ...liveChatWidgetProps,
+            footerProps: {
+                controlProps: {
+                    hideEmailTranscriptButton: true,
+                    hideAudioNotificationButton: true,
+                    rightGroup: {
+                        children: [
+                            // eslint-disable-next-line react/jsx-key
+                            <Copyright/>
+                            // Since this is a static elelenmt, alternatively we can use the string format: 
+                            // '{"$$typeof":"$$Symbol:react.element","type":"div","key":"1","ref":null,"props":{"style":{"fontSize":"12px","fontFamily":"Bradley Hand,cursive","margin":"10px","padding":"2px"},"children":"© Microsoft 2023"},"_owner":null,"_store":{}}',
+                        ]
+                    }
+                },
+            }
+        };
+
         ReactDOM.render(
             <LiveChatWidget {...liveChatWidgetProps} />,
             document.getElementById("oc-lcw-container")

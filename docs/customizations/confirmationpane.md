@@ -24,7 +24,7 @@ The top-level interface for customizing `ChatButton`.
 | - | - | - | - | - |
 | `componentOverrides`     | [`IConfirmationPaneComponentOverrides`](#iconfirmationpanecomponentoverrides)     | No | Used for overriding default `ConfirmationPane` components, e.g., title, subtitle, confirm button, cancel button, etc. | -
 `controlProps` | [`IConfirmationPaneControlProps`](#iconfirmationpanecontrolprops) | No | Properties that control the element behariors | -
-`styleProps` | [`IConfirmationPaneStyleProps`](iconfirmationpanestyleprops) | No | Properties that control the element styles | -
+`styleProps` | [`IConfirmationPaneStyleProps`](#iconfirmationpanestyleprops) | No | Properties that control the element styles | -
 
 ### [IConfirmationPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneComponentOverrides.ts)
 
@@ -118,7 +118,7 @@ liveChatWidgetProps = {
 ```
 </details>
 
-<img src="../.attachments/customization-confirmation-pane-hide-subtitle.png" width="450">
+<img src="../.attachments/customizations-confirmation-pane-hide-subtitle.png" width="450">
 
 --------------------------------
 ### Changing button group flow
@@ -147,7 +147,7 @@ liveChatWidgetProps = {
 ```
 </details>
 
-<img src="../.attachments/customization-confirmation-pane-change-button-flow.png" width="450">
+<img src="../.attachments/customizations-confirmation-pane-change-button-flow.png" width="450">
 
 --------------------------------
 ### Changing background chat brightness
@@ -168,7 +168,7 @@ liveChatWidgetProps = {
 ```
 </details>
 
-<img src="../.attachments/customization-confirmation-pane-change-chat-brightness.png" width="450">
+<img src="../.attachments/customizations-confirmation-pane-change-chat-brightness.png" width="450">
 
 --------------------------------
 ### Changing position and size
@@ -196,7 +196,7 @@ liveChatWidgetProps = {
 
 </details>
 
-<img src="../.attachments/customization-confirmation-pane-change-position-size.png" width="450">
+<img src="../.attachments/customizations-confirmation-pane-change-position-size.png" width="450">
 
 --------------------------------
 ### Customizing overall styles
@@ -262,4 +262,4 @@ liveChatWidgetProps = {
 ```
 </details>
 
-<img src="../.attachments/customization-confirmation-pane-customize-overall.gif" width="450">
+<img src="../.attachments/customizations-confirmation-pane-customize-overall.gif" width="450">
