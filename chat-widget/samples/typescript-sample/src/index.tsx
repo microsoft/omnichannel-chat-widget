@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 import * as OcChatSdkPackageinfo from "@microsoft/omnichannel-chat-sdk/package.json";
 import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/package.json";
 import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
+import { defaultProps } from "../src/common/defaultProps";
 
 const getOmnichannelChatConfig = () => {
     // add your own OC setting, hard-coded just for sample, should be replaced with a better handling
@@ -33,7 +34,17 @@ const App = () => {
             const chatConfig = await chatSDK.getLiveChatConfig();
 
             const liveChatWidgetProps = {
-                styleProps: {
+                ...defaultProps,
+                headerProps: { // example: default header is being overriden with a new background color style
+                    ...defaultProps.headerProps,
+                    styleProps: {
+                        generalStyleProps: {
+                            background: "#339e38"
+                        }
+                    }
+                },
+                styleProps: { // example: adjusting sizing and placement of the chat widget
+                    ...defaultProps.styleProps,
                     generalStyles: {
                         width: "400px",
                         height: "600px",
@@ -44,9 +55,10 @@ const App = () => {
                 chatSDK,
                 chatConfig,
                 webChatContainerProps: {
-                    disableMarkdownMessageFormatting: true, //setting the default to true for a known issue with markdown
+                    ...defaultProps.webChatContainerProps,
+                    disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
                 },
-                telemetryConfig: { //mandatory for telemetry
+                telemetryConfig: { // mandatory for telemetry
                     chatWidgetVersion: OcChatWidgetPkgInfo.version,
                     chatComponentVersion: OcChatComponentPkgInfo.version,
                     OCChatSDKVersion: OcSdkPkginfo.version
