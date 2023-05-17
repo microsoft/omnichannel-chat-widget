@@ -52,8 +52,8 @@ const App = () => {
                         right: "30px"
                     }
                 },
-                chatSDK,
-                chatConfig,
+                chatSDK, // mandatory
+                chatConfig, // mandatory
                 webChatContainerProps: {
                     ...defaultProps.webChatContainerProps,
                     disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
