@@ -7,12 +7,9 @@
     - [IFooterControlProps](#ifootercontrolprops)
     - [IFooterStyleProps](#ifooterstyleprops)
 - [Sample Scenarios](#sample-scenarios)
-    - [Changing footer title and icon](#changing-footer-title-and-icon)
-    - [Changing button icons](#changing-button-icons)
-    - [Hiding sub-components](#hiding-sub-components)
-    - [Adding a custom button](#adding-a-custom-button)
-    - [Adding a custom image](#adding-a-custom-image)
-    - [Changing element styles](#changing-element-styles)
+    - [Replacing default sub-components with custom components](#replacing-default-sub-components-with-custom-components)
+    - [Using a custom send box in the footer](#using-a-custom-send-box-in-the-footer)
+    - [Overriding default button behaviors](#overriding-default-button-behaviors)
 
 ## Interfaces
 
@@ -79,92 +76,15 @@ Custom React components can be passed as input to override the default sub-compo
 Below samples are build upon the base sample, which can be found [here](https://github.com/microsoft/omnichannel-chat-widget#example-usage). The code snippets below will only show the changes needed to be added before `ReactDOM.render`.
 
 --------------------------------
-### Replacing default sub-components with copyright disclaimer
+### Replacing default sub-components with custom components
 <details>
     <summary>Show code</summary>
 
 ```tsx
 ...
-liveChatWidgetProps = {
-    ...liveChatWidgetProps,
-    footerProps: {
-        controlProps: {
-            footerIconProps: {
-                src: "https://msft-lcw-trial.azureedge.net/public/resources/microsoft.jpg"
-            },
-            footerTitleProps: {
-                text: "Contoso Coffee"
-            },
-        }
-    }
-};
-...
-```
-</details>
-
-<img src="../.attachments/customizations-footer-change-title-icon.png" width="450">
-
---------------------------------
-### Changing button icons
-<details>
-    <summary>Show code</summary>
-
-```tsx
-...
-liveChatWidgetProps = {
-    ...liveChatWidgetProps,
-    footerProps: {
-        controlProps: {
-            minimizeButtonProps: {
-                iconName: "MiniContract"
-            },
-            closeButtonProps: {
-                iconName: "Leave"
-            },
-        }
-    }
-};
-...
-```
-</details>
-
-<img src="../.attachments/customizations-footer-change-button-icons.png" width="450">
-
---------------------------------
-### Hiding sub-components
-<details>
-    <summary>Show code</summary>
-
-```tsx
-...
-liveChatWidgetProps = {
-    ...liveChatWidgetProps,
-    footerProps: {
-        controlProps: {
-            hideMinimizeButton: true,
-            hideIcon: true
-        }
-    }
-};
-...
-```
-</details>
-
-<img src="../.attachments/customizations-footer-hide-elements.png" width="450">
-
---------------------------------
-### Adding a custom button
-<details>
-    <summary>Show code</summary>
-
-```tsx
-...
-const CustomButton = () => {
-    const onClick = () => {
-        alert("Clicked custom button!");
-    };
+const Copyright = () => {
     return (
-        <button onClick={onClick}>Custom Button</button>
+        <div style={{"fontSize":"12px", "fontFamily":"Segoe UI, Arial", "padding":"2px"}}>© Microsoft 2023</div>
     );
 };
 
@@ -172,103 +92,82 @@ liveChatWidgetProps = {
     ...liveChatWidgetProps,
     footerProps: {
         controlProps: {
+            hideEmailTranscriptButton: true,
+            hideAudioNotificationButton: true,
             rightGroup: {
                 children: [
-                    <CustomButton/>
+                    <Copyright/>
+                    // Since this is a static elelenmt, alternatively we can use the string format: 
+                    // '{"$$typeof":"$$Symbol:react.element","type":"div","key":"1","ref":null,"props":{"style":{"fontSize":"12px","fontFamily":"Bradley Hand,cursive","padding":"2px"},"children":"© Microsoft 2023"},"_owner":null,"_store":{}}',
                 ]
             }
-        }
+        },
     }
 };
 ...
 ```
 </details>
 
-<img src="../.attachments/customizations-footer-add-custom-button.gif" width="450">
+<img src="../.attachments/customizations-footer-custom-component.png" width="450">
 
 --------------------------------
-### Adding a custom image
+### Using a custom send box in the footer
 <details>
     <summary>Show code</summary>
 
 ```tsx
+import { hooks } from "botframework-webchat";
 ...
-const CustomImage = () => {
+const SendBox = () => {
+    const { useSendMessage } = hooks;
+    const sendMessage = useSendMessage();
+    
+    let message = "";
+    const onSend = () => {
+        sendMessage(message);
+        message = "";
+        document.getElementById("sendbox").value = "";
+    };
+    const onMessageChange = (input) => {
+        message = input.target.value;
+    };
+
     return (
-        <img style={{width: "35px", height:"35px", margin:"3px"}}
-            src="https://msft-lcw-trial.azureedge.net/public/resources/microsoft.jpg"></img>
+        <>
+            <textarea id="sendbox" type="text"
+                placeholder="Type your message here"
+                style={{ padding:"5px", paddingRight:"70px", width:"230px", height:"70px", borderStyle:"solid", borderWidth:"2px", borderRadius:"4px", fontFamily:"'Segoe UI', Arial"}}
+                onChange={onMessageChange}>
+            </textarea>
+            <button onClick={onSend} style={{ position:"absolute", fontFamily:"'Segoe UI', Arial", right:"40px", bottom:"45px"}}>
+                Send
+            </button>
+        </>
     );
 };
 
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-    footerProps: {
-        controlProps: {
-            hideIcon: true,
-            hideTitle: true,
-            hideMinimizeButton: true,
-            hideCloseButton: true,
-            middleGroup: {
-                children: [
-                    <CustomImage/>
-                ]
-            }
-        }
-    }
-};
-...
-```
-</details>
-
-<img src="../.attachments/customizations-footer-add-custom-image.png" width="450">
-
---------------------------------
-### Changing element styles
-<details>
-    <summary>Show code</summary>
-
-```tsx
-...
-liveChatWidgetProps = {
-    ...liveChatWidgetProps,
-    styleProps: {
-        ...liveChatWidgetProps.styleProps,
-        generalStyles: {
-            ...liveChatWidgetProps.styleProps.generalStyles,
-            borderRadius: "10px 10px 0 0",
+    webChatContainerProps: {
+        webChatStyles: {
+            hideSendBox: true
         }
     },
     footerProps: {
+        controlProps: {
+            hideDownloadTranscriptButton: true,
+            hideEmailTranscriptButton: true,
+            hideAudioNotificationButton: true,
+            middleGroup: {
+                children: [
+                    <SendBox/>
+                ]
+            }
+        },
         styleProps: {
             generalStyleProps: {
-                borderRadius: "10px 10px 0 0",
-                backgroundColor: "#ffdae9",
-            },
-            iconStyleProps: {
-                width: "50px",
-                height: "50px"
-            },
-            titleStyleProps: {
-                color: "black",
-                fontWeight: 600
-            },
-            closeButtonStyleProps: {
-                margin: "10px 5px 5px 5px",
-                color: "black"
-            },
-            closeButtonHoverStyleProps: {
-                backgroundColor: "rgb(200, 200, 200, 0.2)",
-                margin: "10px 5px 5px 5px",
-                color: "black"
-            },
-            minimizeButtonStyleProps: {
-                margin: "10px 5px 5px 5px",
-                color: "black"
-            },
-            minimizeButtonHoverStyleProps: {
-                backgroundColor: "rgb(200, 200, 200, 0.2)",
-                margin: "10px 5px 5px 5px",
-                color: "black"
+                backgroundColor: "#315FA2",
+                height: "150px"
             }
         }
     }
@@ -277,4 +176,33 @@ liveChatWidgetProps = {
 ```
 </details>
 
-<img src="../.attachments/customizations-footer-change-styles.png" width="450">
+<img src="../.attachments/customizations-footer-custom-send-box.gif" width="450">
+
+--------------------------------
+### Overriding default button behaviors
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+const onPrintPageClick = () => {
+    window.print();
+};
+
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    footerProps: {
+        controlProps: {
+            hideEmailTranscriptButton: true,
+            onDownloadTranscriptClick: onPrintPageClick,
+            downloadTranscriptButtonProps: {
+                iconName: "Print"
+            }
+        }
+    }
+};
+...
+```
+</details>
+
+<img src="../.attachments/customizations-footer-custom-button.gif" width="600">
