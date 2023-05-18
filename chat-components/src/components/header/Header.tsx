@@ -60,9 +60,9 @@ function Header(props: IHeaderProps) {
 
     return (
 
-        <Stack id={headerId} horizontal className={props.className} horizontalAlign="space-between"
+        <Stack as="article" id={headerId} horizontal className={props.className} horizontalAlign="space-between"
             styles={stackStyles}
-            dir={props.controlProps?.dir ?? "ltr"} role="region">
+            dir={props.controlProps?.dir ?? "ltr"}>
             <Stack horizontal id={Ids.HeaderLeftGroupId} verticalAlign="center">
                 <Stack horizontal verticalAlign="center">
                     {processCustomComponents(props.controlProps?.leftGroup?.children)}
