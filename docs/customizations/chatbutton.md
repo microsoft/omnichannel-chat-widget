@@ -1,4 +1,4 @@
-# Confirmation Pane
+# Chat Button
 
 ## Table of contents
 - [Interfaces](#interfaces)
