@@ -178,12 +178,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
     } catch (ex) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
-            dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
-            return;
-        }
         TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.WidgetLoadFailed,
             ExceptionDetails: {
@@ -191,8 +185,13 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             }
         });
         NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);
-        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
-        
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
+            dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
+            return;
+        }
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true }); 
         if (!hideErrorUIPane) {
             // Set app state to failing start chat if hideErrorUI is not turned on
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
