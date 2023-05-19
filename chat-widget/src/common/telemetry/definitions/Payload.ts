@@ -25,6 +25,7 @@ export interface LoadTelemetryData extends BaseTelemetryData {
     OCChatSDKVersion?: string;
     OCChatWidgetVersion?: string;
     OCChatComponentsVersion?: string;
+    Description?: string;
 }
 
 export interface MessageProcessingErrorData extends BaseTelemetryData {
