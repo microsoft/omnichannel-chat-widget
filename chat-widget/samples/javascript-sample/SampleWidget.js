@@ -1,3 +1,5 @@
+/* eslint @typescript-eslint/no-explicit-any: "off" */
+
 import * as React from "react";
 
 import { getUnreadMessageCount, registerVisibilityListener } from "./getUnreadMessageCount";
@@ -11,13 +13,6 @@ import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/packa
 import { version as chatWidgetVersion } from "../../package.json";
 import { getCustomizationJson } from "./getCustomizationJson";
 import { memoryDataStore } from "./Common/MemoryDataStore";
-
-/* eslint @typescript-eslint/no-explicit-any: "off" */
-
-// Below version numbers will help us to troubleshoot issues with specific package
-
-
-
 
 let liveChatWidgetProps;
 
