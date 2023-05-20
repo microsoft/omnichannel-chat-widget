@@ -53,7 +53,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 
         // Initiate post chat render
         if (state?.domainStates?.postChatContext) {
-            await initiatePostChat(props, conversationDetails, state, dispatch);
+            await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
             return;
         }
     }
