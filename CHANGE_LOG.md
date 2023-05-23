@@ -6,15 +6,27 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## Added
+### Fixed
+
+- Fixed an issue where hideStartChatButton is true, and customer tries to reconnect from a new browser or InPrivate browser
+- Fixed post chat survey not rendered for reconnect scnearios
+- Fix `ariaTelemetryLogger` not updating `collectorUri`
+- Update `environmentVersion` to be `prod` by default in `defaultInternalTelemetryData`
+
+## [1.0.4] - 2023-5-8
+
+### Added
 
 - Added Broadcast event `ContactIdNotFound` when using OAuth 2.0 auth code grant
 
-## Fixed
+### Fixed
 
 - Fixed custom context not showing for popout chat
-- Fix `ariaTelemetryLogger` not updating `collectorUri`
-- Update `environmentVersion` to be `prod` by default in `defaultInternalTelemetryData`
+- Fixed an issue where after ending chat and downloading transcript, a new chat cannot be started
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.4.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.1)
 
 ## [1.0.3] - 2023-4-24
 
@@ -22,7 +34,7 @@ All notable changes to this project will be documented in this file.
 
 - Add `hyperlinkTextOverride` props to override anchor element's `innerText` with `href` if they don't match to prevent URL spoofing
 
-## Fixed
+### Fixed
 
 - Fixed an issue where data masking rule matching empty strings will cause infitnite loop
 - Fixed custom context not showing for embed chat
@@ -98,4 +110,3 @@ All notable changes to this project will be documented in this file.
 - Added individual UI components like `Header`, `Footer`, and `ChatButton`, etc. with customizable `controlProps` and `styleProps`
 - Added `BroadcastService` to communicate with package consumer layer, and for telemetry purposes
 - Exposed `encodeComponentString` and `encodeComponentString`
-
