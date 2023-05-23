@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ## Fixed
 
 - Fixed custom context not showing for popout chat
+- Fix `ariaTelemetryLogger` not updating `collectorUri`
 
 ## [1.0.3] - 2023-4-24
 
