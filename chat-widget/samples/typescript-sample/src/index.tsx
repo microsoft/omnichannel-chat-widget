@@ -6,6 +6,7 @@ import * as OcChatSdkPackageinfo from "@microsoft/omnichannel-chat-sdk/package.j
 import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/package.json";
 import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
 import { defaultProps } from "../src/common/defaultProps";
+import { CoffeeChatIconBase64 } from "../src/common/assets";
 
 const getOmnichannelChatConfig = () => {
     // add your own OC setting, hard-coded just for sample, should be replaced with a better handling
@@ -35,29 +36,68 @@ const App = () => {
 
             const liveChatWidgetProps = {
                 ...defaultProps,
-                headerProps: { // example: default header is being overriden with a new background color style
-                    ...defaultProps.headerProps,
+                chatButtonProps: { // example: chat button customization overrides
+                    controlProps: {
+                        titleText: "",
+                        subtitleText: "",
+                        hideChatTextContainer: true,
+                    },
                     styleProps: {
                         generalStyleProps: {
-                            background: "#339e38"
+                            height: "56px",
+                            width: "56px",
+                            borderRadius: "50%",
+                        },
+                        iconStyleProps: {
+                            backgroundColor: "#c5ecc5",
+                            backgroundImage: `url(${CoffeeChatIconBase64})`,
+                        }
+                    },
+                },
+                headerProps: { // example: default header is being overriden with a new background color style
+                    styleProps: {
+                        generalStyleProps: {
+                            background: "#c5ecc5"
                         }
                     }
+                },
+                loadingPaneProps: { // example: loading pane customization overrides
+                    styleProps: {
+                        generalStyleProps: {
+                            backgroundColor: "#c5ecc5"
+                        }
+                    },
+                    titleStyleProps: {
+                        fontFamily: "Garamond"
+                    },
+                    subtitleStyleProps: {
+                        fontFamily: "Garamond"
+                    },
+                    spinnerTextStyleProps: {
+                        fontFamily: "Garamond"
+                    }
+                },
+                webChatContainerProps: { // example: web chat customization overrides
+                    webChatStyles: {
+                        bubbleBackground: "white",
+                        bubbleFromUserBackground: "#c5ecc5",
+                        bubbleFromUserTextColor: "#051005",
+                        bubbleTextColor: "#051005",
+                        primaryFont: "Garamond"
+                    },
+                    disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
                 },
                 styleProps: { // example: adjusting sizing and placement of the chat widget
                     ...defaultProps.styleProps,
                     generalStyles: {
-                        width: "400px",
-                        height: "600px",
+                        width: "50%",
+                        height: "800px",
                         bottom: "30px",
                         right: "30px"
                     }
                 },
                 chatSDK, // mandatory
                 chatConfig, // mandatory
-                webChatContainerProps: {
-                    ...defaultProps.webChatContainerProps,
-                    disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
-                },
                 telemetryConfig: { // mandatory for telemetry
                     chatWidgetVersion: OcChatWidgetPkgInfo.version,
                     chatComponentVersion: OcChatComponentPkgInfo.version,
