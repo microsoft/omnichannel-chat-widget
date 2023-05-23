@@ -88,7 +88,6 @@ const App = () => {
                     disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
                 },
                 styleProps: { // example: adjusting sizing and placement of the chat widget
-                    ...defaultProps.styleProps,
                     generalStyles: {
                         width: "50%",
                         height: "800px",
