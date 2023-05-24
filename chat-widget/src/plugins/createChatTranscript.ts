@@ -153,7 +153,7 @@ class TranscriptHTMLBuilder {
                 <script>
                     class TranscriptAdapter {
                         constructor() {
-                            this.connectionStatus$ = new window.rxjs.BehaviorSubject(0); // Unitialized
+                            this.connectionStatus$ = new window.rxjs.BehaviorSubject(0); // Uninitialized
                             this.activity$ = shareObservable(new Observable((observer) => {
                                 this.activityObserver = observer;
 
