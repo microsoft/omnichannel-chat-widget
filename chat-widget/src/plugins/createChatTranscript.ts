@@ -116,7 +116,7 @@ class TranscriptHTMLBuilder {
                                 const { fileName } = metadata[0];
                                 const text = \`The following attachment was uploaded during the conversation: \${fileName}\`;
 
-                                if (message.attachments && message.contentUrl) {
+                                if (message.attachments && message.attachments.length > 0 && message.contentUrl) {
                                     activity.attachments = message.attachments;
                                     activity.attachments[0].contentUrl = message.contentUrl;
                                     activity.attachments[0].thumbnailUrl =  message.contentUrl;
