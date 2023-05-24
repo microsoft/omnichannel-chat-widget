@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed an issue where hideStartChatButton is true, and customer tries to reconnect from a new browser or InPrivate browser
+- Fixed post chat survey not rendered for reconnect scnearios
+- Fix `ariaTelemetryLogger` not updating `collectorUri`
+- Update `environmentVersion` to be `prod` by default in `defaultInternalTelemetryData`
 
 ## [1.0.4] - 2023-5-8
 
