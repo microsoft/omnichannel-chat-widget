@@ -98,8 +98,8 @@ class TranscriptHTMLBuilder {
                             }
 
                             // Add C1 user display name
-                            if (message.from.user && message.from.user.displayName) {
-                                activity.from.name = message.from.user.displayName;
+                            if (from && from.user && from.user.displayName) {
+                                activity.from.name = from.user.displayName;
                             }
 
                             // Add C2 user display name
