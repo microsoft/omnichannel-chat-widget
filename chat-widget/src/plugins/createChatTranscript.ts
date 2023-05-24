@@ -5,7 +5,7 @@ class TranscriptHTMLBuilder {
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
         this.options = options;
 
-        if (!this.options.messages) {
+        if (!this.options || !this.options.messages) {
             this.options.messages = [];
         }
     }
