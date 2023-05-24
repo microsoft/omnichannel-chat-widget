@@ -133,12 +133,16 @@ class TranscriptHTMLBuilder {
                             if (content) {
                                 // Adaptive card formatting
                                 if (content.includes('"text"') && content.includes('"attachments"') && content.includes('"suggestedActions"')) {
-                                    const partialActivity = JSON.parse(content);
-                                    return {
-                                        ...activity,
-                                        ...partialActivity,
-                                        timestamp: created
-                                    };
+                                    try {
+                                        const partialActivity = JSON.parse(content);
+                                        return {
+                                            ...activity,
+                                            ...partialActivity,
+                                            timestamp: created
+                                        };
+                                    } catch {
+
+                                    }
                                 }
                             }
 
