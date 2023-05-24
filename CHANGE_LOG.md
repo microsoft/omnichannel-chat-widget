@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Add ability to render transcript using `WebChat`
+
 ### Fixed
 
 - Fixed an issue where hideStartChatButton is true, and customer tries to reconnect from a new browser or InPrivate browser
