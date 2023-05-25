@@ -367,7 +367,7 @@ const createChatTranscript = async (transcript: string, chatSDK: any, renderAtta
     const transcriptMessages = JSON.parse(transcript);
 
     const convertBlobToBase64 = async (blob: Blob) => {
-        return new Promise((resolve, _) => {
+        return new Promise((resolve) => {
             const reader = new FileReader();
             reader.onloadend = () => resolve(reader.result);
             reader.readAsDataURL(blob);
