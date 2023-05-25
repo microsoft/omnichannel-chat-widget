@@ -4,9 +4,11 @@ import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontr
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
+import { IWebChatTranscriptConfig } from "./interfaces/IWebChatTranscriptConfig";
 import createChatTranscript from "../../../plugins/createChatTranscript";
 import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
 import DOMPurify from "dompurify";
+import { isNullOrUndefined } from "../../../common/utils";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -165,8 +167,7 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcriptContent: string) => string, bannerMessageOnError?: string, attachmentMessage?: string, state?: ILiveChatWidgetContext) => {
-
+export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcriptContent: string) => string, bannerMessageOnError?: string, attachmentMessage?: string, webChatTranscript?: IWebChatTranscriptConfig, state?: ILiveChatWidgetContext) => {
     // Need to keep existing request id for scenarios when trnascript is downloaded after endchat
     const liveChatContext: LiveChatContext = {
         chatToken: state?.domainStates?.chatToken,
@@ -178,7 +179,7 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
     }
 
     if (data[Constants.ChatMessagesJson] !== null && data[Constants.ChatMessagesJson] !== undefined) {
-        const useWebChatTranscript = true;
+        const useWebChatTranscript = isNullOrUndefined(webChatTranscript?.disabled) || webChatTranscript?.disabled === false;
         if (useWebChatTranscript) {
             await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK);
             return;

@@ -571,7 +571,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
     downloadTranscriptProps: {
         bannerMessageOnError: "Download transcript failed.",
         renderMarkDown: undefined,
-        attachmentMessage: "The following attachment was uploaded during the conversation:"
+        attachmentMessage: "The following attachment was uploaded during the conversation:",
+        webChatTranscript: {
+            disabled: false
+        }
     },
     emailTranscriptPane: {
         componentOverrides: {
