@@ -2,7 +2,7 @@
 
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-    private attachmentMessage = "The following attachment was uploaded during the conversation";
+    private attachmentMessage = "The following attachment was uploaded during the conversation: ";
 
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
         this.options = options;
@@ -120,7 +120,7 @@ class TranscriptHTMLBuilder {
                             if (amsReferences && amsMetadata) {
                                 const metadata = JSON.parse(amsMetadata);
                                 const { fileName } = metadata[0];
-                                const text = \`${this.attachmentMessage}: \${fileName}\`;
+                                const text = \`${this.attachmentMessage}\${fileName}\`;
 
                                 if (message.attachments && message.attachments.length > 0 && message.contentUrl) {
                                     activity.attachments = message.attachments;
