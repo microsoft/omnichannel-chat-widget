@@ -2,6 +2,7 @@
 
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    private title = "Customer Transcript";
     private attachmentMessage = "The following attachment was uploaded during the conversation: ";
 
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -11,13 +12,17 @@ class TranscriptHTMLBuilder {
             this.options.messages = [];
         }
 
+        if (this.options.title) {
+            this.title = this.options.title;
+        }
+
         if (this.options.attachmentMessage) {
             this.attachmentMessage = this.options.attachmentMessage;
         }
     }
 
     createTitleElement() {
-        const htmlData = `<title> ${this.options.title || "Customer Transcript"} </title>`;
+        const htmlData = `<title> ${this.title} </title>`;
         return htmlData;
     }
 

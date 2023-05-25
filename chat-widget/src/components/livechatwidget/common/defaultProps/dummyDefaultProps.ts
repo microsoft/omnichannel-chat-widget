@@ -573,7 +573,9 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         renderMarkDown: undefined,
         attachmentMessage: "The following attachment was uploaded during the conversation:",
         webChatTranscript: {
-            disabled: false
+            disabled: false,
+            title: "Customer Transcript",
+            attachmentMessage: "The following attachment was uploaded during the conversation: ",
         }
     },
     emailTranscriptPane: {
