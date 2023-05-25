@@ -2,11 +2,17 @@
 
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    private attachmentMessage = "The following attachment was uploaded during the conversation";
+
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
         this.options = options;
 
         if (!this.options || !this.options.messages) {
             this.options.messages = [];
+        }
+
+        if (this.options.attachmentMessage) {
+            this.attachmentMessage = this.options.attachmentMessage;
         }
     }
 
@@ -114,7 +120,7 @@ class TranscriptHTMLBuilder {
                             if (amsReferences && amsMetadata) {
                                 const metadata = JSON.parse(amsMetadata);
                                 const { fileName } = metadata[0];
-                                const text = \`The following attachment was uploaded during the conversation: \${fileName}\`;
+                                const text = \`${this.attachmentMessage}: \${fileName}\`;
 
                                 if (message.attachments && message.attachments.length > 0 && message.contentUrl) {
                                     activity.attachments = message.attachments;
@@ -363,7 +369,7 @@ const download = (fileName: string, htmlData: string) => {
     document.body.removeChild(aElement);
 };
 
-const createChatTranscript = async (transcript: string, chatSDK: any, renderAttachments = false) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+const createChatTranscript = async (transcript: string, chatSDK: any, renderAttachments = false, transcriptOptions: any = {}) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const transcriptMessages = JSON.parse(transcript);
 
     const convertBlobToBase64 = async (blob: Blob) => {
@@ -397,6 +403,7 @@ const createChatTranscript = async (transcript: string, chatSDK: any, renderAtta
     }
 
     const options = {
+        ...transcriptOptions,
         messages
     };
 

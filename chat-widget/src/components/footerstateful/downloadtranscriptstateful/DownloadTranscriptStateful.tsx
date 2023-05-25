@@ -181,7 +181,10 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
     if (data[Constants.ChatMessagesJson] !== null && data[Constants.ChatMessagesJson] !== undefined) {
         const useWebChatTranscript = isNullOrUndefined(webChatTranscript?.disabled) || webChatTranscript?.disabled === false;
         if (useWebChatTranscript) {
-            await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK);
+            const transcriptOptions = {
+                attachmentMessage: webChatTranscript?.attachmentMessage,
+            };
+            await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK, false, transcriptOptions);
             return;
         }
 
