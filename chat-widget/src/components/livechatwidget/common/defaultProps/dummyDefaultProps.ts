@@ -576,6 +576,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
             disabled: false,
             title: "Customer Transcript",
             attachmentMessage: "The following attachment was uploaded during the conversation: ",
+            networkOnlineMessage: "Connection restored. Please refresh the page",
+            networkOfflineMessage: "Network Error. Please make sure you are connected to the internet.",
         }
     },
     emailTranscriptPane: {

@@ -4,6 +4,8 @@ class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
     private title = "Customer Transcript";
     private attachmentMessage = "The following attachment was uploaded during the conversation: ";
+    private networkOnlineMessage = "Connection restored. Please refresh the page";
+    private networkOfflineMessage = "Network Error. Please make sure you are connected to the internet.";
 
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
         this.options = options;
@@ -18,6 +20,14 @@ class TranscriptHTMLBuilder {
 
         if (this.options.attachmentMessage) {
             this.attachmentMessage = this.options.attachmentMessage;
+        }
+
+        if (this.options.networkOnlineMessage) {
+            this.networkOnlineMessage = this.options.networkOnlineMessage;
+        }
+
+        if (this.options.networkOfflineMessage) {
+            this.networkOfflineMessage = this.options.networkOfflineMessage;
         }
     }
 
@@ -249,12 +259,12 @@ class TranscriptHTMLBuilder {
             <body>
                 <script>
                     if (!navigator.onLine) {
-                        const offlineText = "Network Error. Please make sure you are connected to the internet.";
+                        const offlineText = \`${this.networkOfflineMessage}\`;
                         document.body.innerHTML = offlineText;
                     }
 
                     window.addEventListener("online", () => {
-                        document.body.innerHTML = 'Connection restored. Please refresh the page <button onclick="window.location.reload()"> Refresh </button>';
+                        document.body.innerHTML = \`${this.networkOnlineMessage} <button onclick="window.location.reload()"> Refresh </button>\`;
                     });
                 <\/script>
                 <div id="transcript"></div>

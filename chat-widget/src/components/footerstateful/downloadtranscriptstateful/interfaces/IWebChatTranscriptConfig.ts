@@ -8,4 +8,12 @@ export interface IWebChatTranscriptConfig {
     * Attachment message prefix for file attachment
     */
     attachmentMessage?: string;
+    /**
+     * Message on network connecting back online
+     */
+    networkOnlineMessage?: string;
+    /**
+     * Message on network disconnection
+     */
+    networkOfflineMessage?: string;
 }

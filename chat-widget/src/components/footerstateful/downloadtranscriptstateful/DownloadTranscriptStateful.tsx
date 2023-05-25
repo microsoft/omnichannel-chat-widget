@@ -184,6 +184,8 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
             const transcriptOptions = {
                 title: webChatTranscript?.title,
                 attachmentMessage: webChatTranscript?.attachmentMessage,
+                networkOnlineMessage: webChatTranscript?.networkOnlineMessage,
+                networkOfflineMessage: webChatTranscript?.networkOfflineMessage
             };
             await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK, false, transcriptOptions);
             return;
