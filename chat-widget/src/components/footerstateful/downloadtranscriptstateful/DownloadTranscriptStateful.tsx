@@ -182,25 +182,15 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
         const useWebChatTranscript = isNullOrUndefined(webChatTranscript?.disabled) || webChatTranscript?.disabled === false;
         if (useWebChatTranscript) {
             const transcriptOptions = {
-                fileName: webChatTranscript?.fileName,
-                pageTitle: webChatTranscript?.pageTitle,
-                attachmentMessage: webChatTranscript?.attachmentMessage,
-                networkOnlineMessage: webChatTranscript?.networkOnlineMessage,
-                networkOfflineMessage: webChatTranscript?.networkOfflineMessage,
-                transcriptBackgroundColor: webChatTranscript?.transcriptBackgroundColor,
-                agentAvatarBackgroundColor: webChatTranscript?.agentAvatarBackgroundColor,
-                agentAvatarFontColor: webChatTranscript?.agentAvatarFontColor,
-                customerAvatarBackgroundColor: webChatTranscript?.customerAvatarBackgroundColor,
-                customerAvatarFontColor: webChatTranscript?.customerAvatarFontColor
+                ...webChatTranscript
             };
             await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK, false, transcriptOptions);
-            return;
+        } else {
+            // Legacy Transcript
+            const chatTranscripts = window.btoa(encodeURIComponent(beautifyChatTranscripts(data[Constants.ChatMessagesJson], renderMarkDown, attachmentMessage)));
+            const byteCharacters = decodeURIComponent(window.atob(chatTranscripts));
+            createFileAndDownload(TranscriptConstants.ChatTranscriptDownloadFile, byteCharacters, "text/html;charset=utf-8");
         }
-
-        // Legacy Transcript
-        const chatTranscripts = window.btoa(encodeURIComponent(beautifyChatTranscripts(data[Constants.ChatMessagesJson], renderMarkDown, attachmentMessage)));
-        const byteCharacters = decodeURIComponent(window.atob(chatTranscripts));
-        createFileAndDownload(TranscriptConstants.ChatTranscriptDownloadFile, byteCharacters, "text/html;charset=utf-8");
     } else {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.DownloadTranscriptResponseNullOrUndefined,
