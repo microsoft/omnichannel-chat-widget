@@ -1,5 +1,7 @@
 /* eslint-disable no-useless-escape */
 
+import { createFileAndDownload } from "../common/utils";
+
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
     private pageTitle = "Customer Transcript";
@@ -432,21 +434,6 @@ class TranscriptHTMLBuilder {
     }
 }
 
-const download = (fileName: string, htmlData: string) => {
-    const aElement = document.createElement("a");
-
-    const blob = new Blob([htmlData], {type: "text/html"});
-    const objectUrl = URL.createObjectURL(blob);
-
-    aElement.setAttribute("href", objectUrl);
-    aElement.setAttribute("download", fileName);
-    aElement.style.display = "none";
-
-    document.body.appendChild(aElement);
-    aElement.click();
-    document.body.removeChild(aElement);
-};
-
 const createChatTranscript = async (transcript: string, chatSDK: any, renderAttachments = false, transcriptOptions: any = {}) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const transcriptMessages = JSON.parse(transcript);
 
@@ -489,7 +476,7 @@ const createChatTranscript = async (transcript: string, chatSDK: any, renderAtta
     const text = htmlBuilder.createHTML();
 
     const fileName = `${transcriptOptions.fileName || "transcript"}.html`;
-    download(fileName, text);
+    createFileAndDownload(fileName, text, "text/html");
 };
 
 export default createChatTranscript;
