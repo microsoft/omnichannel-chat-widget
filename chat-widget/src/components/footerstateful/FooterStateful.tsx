@@ -31,7 +31,7 @@ export const FooterStateful = (props: any) => {
         onDownloadTranscriptClick: async () => {
             try {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.DownloadTranscriptButtonClicked, Description: "Download Transcript button clicked." });
-                await downloadTranscript(chatSDK, downloadTranscriptProps?.renderMarkDown, downloadTranscriptProps?.bannerMessageOnError, downloadTranscriptProps?.attachmentMessage, downloadTranscriptProps?.webChatTranscript, state);
+                await downloadTranscript(chatSDK, downloadTranscriptProps, state);
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.DownloadTranscriptFailed,
