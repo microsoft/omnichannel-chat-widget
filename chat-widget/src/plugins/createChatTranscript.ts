@@ -226,6 +226,10 @@ class TranscriptHTMLBuilder {
                     }
                 <\/script>
                 <style>
+                    body {
+                        margin: 0;
+                    }
+
                     .message-name {
                         font-family: Segoe UI,SegoeUI,Helvetica Neue,Helvetica,Arial,sans-serif;
                         font-weight: 700;
