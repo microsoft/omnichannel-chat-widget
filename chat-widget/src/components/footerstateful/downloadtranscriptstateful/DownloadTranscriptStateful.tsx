@@ -8,7 +8,7 @@ import { IWebChatTranscriptConfig } from "./interfaces/IWebChatTranscriptConfig"
 import createChatTranscript from "../../../plugins/createChatTranscript";
 import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
 import DOMPurify from "dompurify";
-import { isNullOrUndefined } from "../../../common/utils";
+import { createFileAndDownload, isNullOrUndefined } from "../../../common/utils";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -200,13 +200,7 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
         // Legacy Transcript
         const chatTranscripts = window.btoa(encodeURIComponent(beautifyChatTranscripts(data[Constants.ChatMessagesJson], renderMarkDown, attachmentMessage)));
         const byteCharacters = decodeURIComponent(window.atob(chatTranscripts));
-        const blob = new Blob([byteCharacters], { "type": "text/html;charset=utf-8" });
-        const link = document.createElement("a");
-        document.body.appendChild(link);
-        link.setAttribute(HtmlAttributeNames.download, TranscriptConstants.ChatTranscriptDownloadFile);
-        link.setAttribute(HtmlAttributeNames.href, URL.createObjectURL(blob));
-        link.setAttribute(HtmlAttributeNames.ariaHidden, "true");
-        link.click();
+        createFileAndDownload(TranscriptConstants.ChatTranscriptDownloadFile, byteCharacters, "text/html;charset=utf-8");
     } else {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.DownloadTranscriptResponseNullOrUndefined,
