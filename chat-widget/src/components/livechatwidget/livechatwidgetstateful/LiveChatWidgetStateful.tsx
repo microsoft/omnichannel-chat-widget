@@ -40,6 +40,7 @@ import CallingContainerStateful from "../../callingcontainerstateful/CallingCont
 import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
+import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
@@ -79,6 +80,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -561,17 +563,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
-    props.downloadTranscriptProps = {
-        ...props.downloadTranscriptProps,
-        webChatTranscript: {
-            ...props.downloadTranscriptProps?.webChatTranscript,
-            transcriptBackgroundColor: webChatStyles?.backgroundColor,
-            agentAvatarBackgroundColor: webChatStyles?.bubbleBackground,
-            agentAvatarFontColor: webChatStyles?.bubbleTextColor,
-            customerAvatarBackgroundColor: webChatStyles?.bubbleFromUserBackground,
-            customerAvatarFontColor: webChatStyles?.bubbleFromUserTextColor,
-        }
-    };
+    props.downloadTranscriptProps = createDownloadTranscriptProps(props.downloadTranscriptProps as IDownloadTranscriptProps, webChatStyles);
 
     return (
         <>
