@@ -16,4 +16,14 @@ export interface IWebChatTranscriptConfig {
      * Message on network disconnection
      */
     networkOfflineMessage?: string;
+
+    transcriptBackgroundColor?: string;
+
+    agentAvatarBackgroundColor?: string;
+
+    agentAvatarFontColor?: string;
+
+    customerAvatarBackgroundColor?: string;
+
+    customerAvatarFontColor?: string;
 }

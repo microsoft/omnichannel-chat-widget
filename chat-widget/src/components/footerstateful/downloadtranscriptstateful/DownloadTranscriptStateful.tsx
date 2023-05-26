@@ -185,7 +185,12 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
                 title: webChatTranscript?.title,
                 attachmentMessage: webChatTranscript?.attachmentMessage,
                 networkOnlineMessage: webChatTranscript?.networkOnlineMessage,
-                networkOfflineMessage: webChatTranscript?.networkOfflineMessage
+                networkOfflineMessage: webChatTranscript?.networkOfflineMessage,
+                transcriptBackgroundColor: webChatTranscript?.transcriptBackgroundColor,
+                agentAvatarBackgroundColor: webChatTranscript?.agentAvatarBackgroundColor,
+                agentAvatarFontColor: webChatTranscript?.agentAvatarFontColor,
+                customerAvatarBackgroundColor: webChatTranscript?.customerAvatarBackgroundColor,
+                customerAvatarFontColor: webChatTranscript?.customerAvatarFontColor
             };
             await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK, false, transcriptOptions);
             return;

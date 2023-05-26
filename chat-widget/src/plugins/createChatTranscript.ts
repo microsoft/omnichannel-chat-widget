@@ -19,20 +19,40 @@ class TranscriptHTMLBuilder {
             this.options.messages = [];
         }
 
-        if (this.options.title) {
+        if (this.options?.title) {
             this.title = this.options.title;
         }
 
-        if (this.options.attachmentMessage) {
+        if (this.options?.attachmentMessage) {
             this.attachmentMessage = this.options.attachmentMessage;
         }
 
-        if (this.options.networkOnlineMessage) {
+        if (this.options?.networkOnlineMessage) {
             this.networkOnlineMessage = this.options.networkOnlineMessage;
         }
 
-        if (this.options.networkOfflineMessage) {
+        if (this.options?.networkOfflineMessage) {
             this.networkOfflineMessage = this.options.networkOfflineMessage;
+        }
+
+        if (this.options?.transcriptBackgroundColor) {
+            this.transcriptBackgroundColor = this.options.transcriptBackgroundColor;
+        }
+
+        if (this.options?.agentAvatarBackgroundColor) {
+            this.agentAvatarBackgroundColor = this.options.agentAvatarBackgroundColor;
+        }
+
+        if (this.options?.agentAvatarFontColor) {
+            this.agentAvatarFontColor = this.options.agentAvatarFontColor;
+        }
+
+        if (this.options?.customerAvatarBackgroundColor) {
+            this.customerAvatarBackgroundColor = this.options.customerAvatarBackgroundColor;
+        }
+
+        if (this.options?.customerAvatarFontColor) {
+            this.customerAvatarFontColor = this.options.customerAvatarFontColor;
         }
     }
 
@@ -247,6 +267,14 @@ class TranscriptHTMLBuilder {
                     .avatar--user > p {
                         color: ${this.customerAvatarFontColor};
                     }
+
+                    .webchat__bubble__content>div.ms_lcw_webchat_adaptive_card {
+                        background-color: #FFF;
+                    }
+
+                    div[class="ac-textBlock"]>p {
+                        color: #000;
+                    }
                 <\/style>
             </head>
         `;
@@ -328,6 +356,35 @@ class TranscriptHTMLBuilder {
                         return avatarElement;
                     }
 
+                    const attachmentMiddleware = () => (next) => (...args) => {
+                        const [card] = args;
+                        const {activity} = card;
+
+                        if (activity) {
+                            const { activity: { attachments }, attachment } = card;
+
+                            // No attachment
+                            if (!attachments || !attachments.length || !attachment) {
+                                return next(...args);
+                            }
+
+                            let { content, contentType } = attachment || { content: "", contentType: "" };
+
+                            // Adaptive card
+                            if (contentType.startsWith("application/vnd.microsoft.card")) {
+                                const adaptiveCardElement = React.createElement(
+                                    "div",
+                                    {className: 'ms_lcw_webchat_adaptive_card'},
+                                    next(...args)
+                                );
+
+                                return adaptiveCardElement;
+                            }
+                        }
+
+                        return next(...args);
+                    }
+
                     const adapter = new TranscriptAdapter();
                     const styleOptions = {
                         hideSendBox: true,
@@ -348,7 +405,8 @@ class TranscriptHTMLBuilder {
                         directLine: adapter,
                         styleOptions,
                         activityStatusMiddleware,
-                        avatarMiddleware
+                        avatarMiddleware,
+                        attachmentMiddleware
                     },
                     document.getElementById('transcript'));
                 <\/script>

@@ -503,12 +503,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state.appStates.conversationState === ConversationState.Active &&
             props.controlProps?.hideStartChatButton === true) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            
+
             window.onbeforeunload = function () {
                 const prompt = Constants.BrowserUnloadConfirmationMessage;
                 return prompt;
             };
-    
+
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             window.onunload = function () {
                 initiateEndChatOnBrowserUnload();
@@ -561,25 +561,37 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
 
+    props.downloadTranscriptProps = {
+        ...props.downloadTranscriptProps,
+        webChatTranscript: {
+            ...props.downloadTranscriptProps?.webChatTranscript,
+            transcriptBackgroundColor: webChatStyles?.backgroundColor,
+            agentAvatarBackgroundColor: webChatStyles?.bubbleBackground,
+            agentAvatarFontColor: webChatStyles?.bubbleTextColor,
+            customerAvatarBackgroundColor: webChatStyles?.bubbleFromUserBackground,
+            customerAvatarFontColor: webChatStyles?.bubbleFromUserTextColor,
+        }
+    };
+
     return (
         <>
             <style>{`
             ::-webkit-scrollbar {
                 width: ${scrollbarProps.width};
             }
-            
+
             ::-webkit-scrollbar-track {
                 background: ${scrollbarProps.trackBackgroundColor};
             }
-            
+
             ::-webkit-scrollbar-thumb {
                 background: ${scrollbarProps.thumbBackgroundColor};
                 border-radius: ${scrollbarProps.thumbBorderRadius};
             }
-            
+
             ::-webkit-scrollbar-thumb:hover {
                 background: ${scrollbarProps.thumbHoverColor};
-            } 
+            }
             `}</style>
             <Composer
                 {...webChatProps}
