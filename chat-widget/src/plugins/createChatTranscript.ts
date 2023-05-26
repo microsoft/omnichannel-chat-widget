@@ -6,6 +6,11 @@ class TranscriptHTMLBuilder {
     private attachmentMessage = "The following attachment was uploaded during the conversation: ";
     private networkOnlineMessage = "Connection restored. Please refresh the page";
     private networkOfflineMessage = "Network Error. Please make sure you are connected to the internet.";
+    private transcriptBackgroundColor = "#FFF";
+    private agentAvatarBackgroundColor = "#E8E8E8";
+    private agentAvatarFontColor = "#000";
+    private customerAvatarBackgroundColor = "#2266E3";
+    private customerAvatarFontColor = "#FFF";
 
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
         this.options = options;
@@ -221,11 +226,11 @@ class TranscriptHTMLBuilder {
                     }
 
                     .avatar--bot {
-                        background-color: #E8E8E8;
+                        background-color: ${this.agentAvatarBackgroundColor};
                     }
 
                     .avatar--user {
-                        background-color: #2266E3;
+                        background-color: ${this.customerAvatarBackgroundColor};
                     }
 
                     .avatar > p {
@@ -236,11 +241,11 @@ class TranscriptHTMLBuilder {
                     }
 
                     .avatar--bot > p {
-                        color: #000;
+                        color: ${this.agentAvatarFontColor};
                     }
 
                     .avatar--user > p {
-                        color: #FFF;
+                        color: ${this.customerAvatarFontColor};
                     }
                 <\/style>
             </head>
@@ -250,11 +255,6 @@ class TranscriptHTMLBuilder {
     }
 
     createBodyElement() {
-        const AgentDialogColor = "#E8E8E8";
-        const AgentFontColor = "#000";
-        const CustomerDialogColor = "#2266E3";
-        const CustomerFontColor = "#FFF";
-
         const htmlData = `
             <body>
                 <script>
@@ -331,12 +331,13 @@ class TranscriptHTMLBuilder {
                     const adapter = new TranscriptAdapter();
                     const styleOptions = {
                         hideSendBox: true,
-                        bubbleBackground: '${AgentDialogColor}',
-                        bubbleTextColor: '${AgentFontColor}',
+                        backgroundColor: '${this.transcriptBackgroundColor}',
+                        bubbleBackground: '${this.agentAvatarBackgroundColor}',
+                        bubbleTextColor: '${this.agentAvatarFontColor}',
                         bubbleBorderRadius: 12,
                         bubbleNubSize: 1,
-                        bubbleFromUserBackground: '${CustomerDialogColor}',
-                        bubbleFromUserTextColor: '${CustomerFontColor}',
+                        bubbleFromUserBackground: '${this.customerAvatarBackgroundColor}',
+                        bubbleFromUserTextColor: '${this.customerAvatarFontColor}',
                         bubbleFromUserBorderRadius: 12,
                         bubbleFromUserNubSize: 1,
                         botAvatarInitials: 'C1',
