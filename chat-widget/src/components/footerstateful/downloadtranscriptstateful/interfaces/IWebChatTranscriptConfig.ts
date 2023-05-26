@@ -3,6 +3,12 @@ export interface IWebChatTranscriptConfig {
      * Whether to disable the feature
      */
     disabled?: boolean;
+
+    /**
+     * File name of the transcript to be downloaded
+     */
+    fileName?: string;
+
     /**
      * Transcript page title
      */

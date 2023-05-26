@@ -487,7 +487,9 @@ const createChatTranscript = async (transcript: string, chatSDK: any, renderAtta
 
     const htmlBuilder = new TranscriptHTMLBuilder(options);
     const text = htmlBuilder.createHTML();
-    download("transcript.html", text);
+
+    const fileName = `${transcriptOptions.fileName || "transcript"}.html`;
+    download(fileName, text);
 };
 
 export default createChatTranscript;
