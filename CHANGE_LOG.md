@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Added `enablePrechat` in `ProactiveChatStartPopoutChat` broadcast event
+- If `hidePreChatSurveyPane` is set, skip rendering prechat
+
 ### Fixed
 
 - Fixed an issue where hideStartChatButton is true, and customer tries to reconnect from a new browser or InPrivate browser
