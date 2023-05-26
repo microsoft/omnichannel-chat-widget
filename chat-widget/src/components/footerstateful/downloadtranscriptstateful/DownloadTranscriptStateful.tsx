@@ -183,7 +183,7 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
         if (useWebChatTranscript) {
             const transcriptOptions = {
                 fileName: webChatTranscript?.fileName,
-                title: webChatTranscript?.title,
+                pageTitle: webChatTranscript?.pageTitle,
                 attachmentMessage: webChatTranscript?.attachmentMessage,
                 networkOnlineMessage: webChatTranscript?.networkOnlineMessage,
                 networkOfflineMessage: webChatTranscript?.networkOfflineMessage,

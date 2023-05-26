@@ -2,7 +2,7 @@
 
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-    private title = "Customer Transcript";
+    private pageTitle = "Customer Transcript";
     private attachmentMessage = "The following attachment was uploaded during the conversation: ";
     private networkOnlineMessage = "Connection restored. Please refresh the page";
     private networkOfflineMessage = "Network Error. Please make sure you are connected to the internet.";
@@ -19,8 +19,8 @@ class TranscriptHTMLBuilder {
             this.options.messages = [];
         }
 
-        if (this.options?.title) {
-            this.title = this.options.title;
+        if (this.options?.pageTitle) {
+            this.pageTitle = this.options.pageTitle;
         }
 
         if (this.options?.attachmentMessage) {
@@ -57,7 +57,7 @@ class TranscriptHTMLBuilder {
     }
 
     createTitleElement() {
-        const htmlData = `<title> ${this.title} </title>`;
+        const htmlData = `<title> ${this.pageTitle} </title>`;
         return htmlData;
     }
 
