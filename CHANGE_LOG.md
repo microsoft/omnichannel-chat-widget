@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.5] - 2023-5-26
+
 ### Added
 
 - Added `enablePrechat` in `ProactiveChatStartPopoutChat` broadcast event
