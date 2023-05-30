@@ -66,7 +66,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
     // Getting prechat Survey Context
     const parseToJson = false;
     const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
-    const showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : preChatSurveyResponse;
+    const showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
 
     if (showPrechat) {
         dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
@@ -157,6 +157,11 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.WidgetLoadComplete,
+                Description: "Widget load complete. Persisted state retrieved",
+                ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+            });
             await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
             return;
         }
@@ -178,19 +183,26 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
     } catch (ex) {
-        TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-            Event: TelemetryEvent.WidgetLoadFailed,
-            ExceptionDetails: {
-                Exception: `Widget load Failed: ${ex}`
-            }
-        });
-        NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.WidgetLoadComplete,
+                Description: "Widget load complete. Widget is OOOH.",
+                ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+            });
             return;
         }
+
+        TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.WidgetLoadFailed,
+            ExceptionDetails: {
+                Exception: `Widget load Failed: ${ex}`
+            },
+            ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+        });
+        NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
         if (!hideErrorUIPane) {
             // Set app state to failing start chat if hideErrorUI is not turned on

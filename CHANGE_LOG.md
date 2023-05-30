@@ -6,10 +6,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.5] - 2023-5-26
+
+### Added
+
+- Added `enablePrechat` in `ProactiveChatStartPopoutChat` broadcast event
+- If `hidePreChatSurveyPane` is set, skip rendering prechat
+
 ### Fixed
 
 - Fixed an issue where hideStartChatButton is true, and customer tries to reconnect from a new browser or InPrivate browser
-- Do not log error when starting chat during OOOH
+- Fixed post chat survey not rendered for reconnect scnearios
+- Fixed `ariaTelemetryLogger` not updating `collectorUri`
+- Update `environmentVersion` to be `prod` by default in `defaultInternalTelemetryData`
+- Do not log OOOH errors as WidgetLoadFailure
 
 ## [1.0.4] - 2023-5-8
 

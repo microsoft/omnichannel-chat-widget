@@ -23,5 +23,5 @@ export const defaultChatButtonGeneralStyles: IStyle = {
             outline: "dotted 2px #000"
         }
     },
-    width: "180px"
+    minWidth: "180px"
 };

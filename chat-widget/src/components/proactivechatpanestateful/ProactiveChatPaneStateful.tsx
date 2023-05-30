@@ -54,6 +54,9 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 // TODO: BroadcastService: replace with the sdk broadcast service, when in place
                 const startPopoutChatEvent: ICustomEvent = {
                     eventName: BroadcastEvent.ProactiveChatStartPopoutChat,
+                    payload: {
+                        enablePrechat: state?.appStates?.proactiveChatStates?.proactiveChatEnablePrechat === true
+                    }
                 };
                 BroadcastService.postMessage(startPopoutChatEvent);
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
