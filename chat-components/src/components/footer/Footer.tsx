@@ -52,9 +52,9 @@ function Footer(props: IFooterProps) {
         props.styleProps?.footerItemFocusStyleProps);
 
     return (
-        <Stack id={footerId} horizontal className={props.className} horizontalAlign="space-between"
+        <Stack as="article" id={footerId} horizontal className={props.className} horizontalAlign="space-between"
             verticalAlign="center" styles={stackStyles}
-            dir={props.controlProps?.dir ?? "ltr"} role="region">
+            dir={props.controlProps?.dir ?? "ltr"}>
             <Stack horizontal id={Ids.FooterLeftGroupId} verticalAlign="center">
                 {!props.controlProps?.hideDownloadTranscriptButton && (decodeComponentString(props.componentOverrides?.DownloadTranscriptButton) ||
                     <DownloadTranscriptButton
