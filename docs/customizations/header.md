@@ -23,40 +23,40 @@ The top-level interface for customizing `Header`.
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `componentOverrides`     | [`IHeaderComponentOverrides`](#iheadercomponentoverrides)     | No | Used for overriding default `Header` components, e.g., icon, title, minimize button, and close button | -
-`controlProps` | [`IHeaderControlProps`](#iheadercontrolprops) | No | Properties that control the element behariors | -
-`styleProps` | [`IHeaderStyleProps`](iheaderstyleprops) | No | Properties that control the element styles | -
+| componentOverrides     | [IHeaderComponentOverrides](#iheadercomponentoverrides)     | No | Used for overriding default `Header` components, e.g., icon, title, minimize button, and close button | -
+controlProps | [IHeaderControlProps](#iheadercontrolprops) | No | Properties that control the element behariors | -
+styleProps | [IHeaderStyleProps](iheaderstyleprops) | No | Properties that control the element styles | -
 
 ### [IHeaderComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderComponentOverrides.ts)
 
-Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [`encodeComponentString`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
+Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
 | Attribute | Type | Required | Description | Default | 
 | - | - | - | - | - |
-| `headerIcon`     | `ReactNode\|string`     | No | Used for overriding default header icon | -
-`headerTitle` | `ReactNode\|string` | No | Used for overriding default header title | -
-`headerMinimizeButton` | `ReactNode\|string` | No | Used for overriding default minimize button | -
-`headerCloseButton` | `ReactNode\|string` | No | Used for overriding default close button | -
+| headerIcon     | ReactNode\|string     | No | Used for overriding default header icon | -
+headerTitle | ReactNode\|string | No | Used for overriding default header title | -
+headerMinimizeButton | ReactNode\|string | No | Used for overriding default minimize button | -
+headerCloseButton | ReactNode\|string | No | Used for overriding default close button | -
 
 ### [IHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderControlProps.ts)
 
 | Attribute | Type | Required | Description | Default | 
 | - | - | - | - | - |
-| `id`     | `string`     | No | The top-level element id for the header | `"oc-lcw-header"`
-`hideIcon` | `boolean` | No | Whether to hide the icon on the header | `false`
-`hideTitle` | `boolean` | No | Whether to hide the title string on the header | `false`
-`hideMinimizeButton` | `boolean` | No | Whether to hide the minimize button on the header | `false`
-`hideCloseButton` | `ReactNode\|string` | No | Whether to hide the close button on the header | `false`
-`onMinimizeClick` | `() => void` | No | The callback function that will be triggered when the minimize button is clicked | [Minimizes the chat widget]
-`onCloseClick` | `() => void` | No | The callback function that will be triggered when the close button is clicked | [Closes the chat widget]
-`minimizeButtonProps` | [`ICommandButtonControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default minimize button | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
-`closeButtonProps` | [`ICommandButtonControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default close button | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
-`headerIconProps` | [`IImageControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/IImageControlProps.ts) | No | Properties to further customize the default header icon | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
-`headerTitleProps` | [`ILabelControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ILabelControlProps.ts) | No | Properties to further customize the default header title | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
-`dir` | `"rtl"\|"ltr"\|"auto"` | No | The locale direction under the `Header` component | `"ltr"`
-`leftGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the left side of the header (right of the default sub-components)| -
-`middleGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the middle section of the header | -
-`rightGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the right side of the header (left of the default sub-components) | -
+| id     | string     | No | The top-level element id for the header | "oc-lcw-header"
+hideIcon | boolean | No | Whether to hide the icon on the header | false
+hideTitle | boolean | No | Whether to hide the title string on the header | false
+hideMinimizeButton | boolean | No | Whether to hide the minimize button on the header | false
+hideCloseButton | ReactNode\|string | No | Whether to hide the close button on the header | false
+onMinimizeClick | () => void | No | The callback function that will be triggered when the minimize button is clicked | [Minimizes the chat widget]
+onCloseClick | () => void | No | The callback function that will be triggered when the close button is clicked | [Closes the chat widget]
+minimizeButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default minimize button | [defaultHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
+closeButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default close button | [defaultHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
+headerIconProps | [IImageControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/IImageControlProps.ts) | No | Properties to further customize the default header icon | [defaultHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
+headerTitleProps | [ILabelControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ILabelControlProps.ts) | No | Properties to further customize the default header title | [defaultHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
+dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `Header` component | "ltr"
+leftGroup | {children: ReactNode[]\|string[]} | No | Additional custom components to be added on the left side of the header (right of the default sub-components)| -
+middleGroup | {children: ReactNode[]\|string[]} | No | Additional custom components to be added on the middle section of the header | -
+rightGroup | {children: ReactNode[]\|string[]} | No | Additional custom components to be added on the right side of the header (left of the default sub-components) | -
 
 > :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
 
@@ -64,18 +64,18 @@ Custom React components can be passed as input to override the default sub-compo
 
 ### [IHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderStyleProps.ts)
 
-[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
+[IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
 | Attribute | Type | Required | Description | Default | 
 | - | - | - | - | - |
-| `generalStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `Header` component, including the container | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `iconStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header icon | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `titleStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header title | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `closeButtonStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `closeButtonHoverStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button while hovered | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `minimizeButtonStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header minimize button | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `minimizeButtonHoverStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button while hovered | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `headerItemFocusStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header sub-components while focused | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+| generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `Header` component, including the container | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+| iconStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header icon | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+| titleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header title | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+| closeButtonStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+| closeButtonHoverStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button while hovered | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+| minimizeButtonStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header minimize button | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+| minimizeButtonHoverStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button while hovered | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+| headerItemFocusStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header sub-components while focused | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
 
 ## Sample Scenarios
 

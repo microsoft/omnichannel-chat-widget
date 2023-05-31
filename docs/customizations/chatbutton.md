@@ -24,69 +24,69 @@ The top-level interface for customizing `ChatButton`.
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `componentOverrides`     | [`IChatButtonComponentOverrides`](#ichatbuttoncomponentoverrides)     | No | Used for overriding default `ChatButton` components, e.g., title, subtitle, notification bubble, etc. | -
-`controlProps` | [`IChatButtonControlProps`](#ichatbuttoncontrolprops) | No | Properties that control the element behariors | -
-`styleProps` | [`IChatButtonStyleProps`](#ichatbuttonstyleprops) | No | Properties that control the element styles | -
+| componentOverrides     | [IChatButtonComponentOverrides](#ichatbuttoncomponentoverrides)     | No | Used for overriding default `ChatButton` components, e.g., title, subtitle, notification bubble, etc. | -
+controlProps | [IChatButtonControlProps](#ichatbuttoncontrolprops) | No | Properties that control the element behariors | -
+styleProps | [IChatButtonStyleProps](#ichatbuttonstyleprops) | No | Properties that control the element styles | -
 
 ### [IChatButtonComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonComponentOverrides.ts)
 
-Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [`encodeComponentString`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
+Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `title`     | `ReactNode\|string`     | No | Used for overriding default chat button title | -
-`subtitle` | `ReactNode\|string` | No | Used for overriding default chat button subtitle | -
-`notificationBubble` | `ReactNode\|string` | No | Used for overriding default notification bubble on unread message count | -
-`iconContainer` | `ReactNode\|string` | No | Used for overriding default icon element | -
-`textContainer` | `ReactNode\|string` | No | Used for overriding default text container (container of title and subtitle) | -
+| title | ReactNode\|string | No | Used for overriding default chat button title | -
+subtitle | ReactNode\|string | No | Used for overriding default chat button subtitle | -
+notificationBubble | ReactNode\|string | No | Used for overriding default notification bubble on unread message count | -
+iconContainer | ReactNode\|string | No | Used for overriding default icon element | -
+textContainer | ReactNode\|string | No | Used for overriding default text container (container of title and subtitle) | -
 
 ### [IChatButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonControlProps.ts)
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `id`     | `string`     | No | The top-level element id for the chat button | `"oc-lcw-chat-button"`
-`hideChatButton` | `boolean` | No | Whether to hide the chat button completely | `false`
-`hideChatIcon` | `boolean` | No | Whether to hide the icon on the chat button | `false`
-`hideChatTextContainer` | `boolean` | No | Whether to hide the text container (containing title and subtitle) on the chat button | `false`
-`hideChatTitle` | `boolean` | No | Whether to hide the chat title on the chat button | `false`
-`hideChatSubtitle` | `boolean` | No | Whether to hide the chat subtitle on the chat button | `false`
-`hideNotificationBubble` | `boolean` | No | Whether to hide the notification bubbble (container unread message count) on the chat button | `true`
-`role` | `string` | No | Sets the `role` attribute at the top level element of the chat button | `"button"`
-`titleText` | `string` | No | The chat button title | `"Let's Chat!"`
-`subtitleText` | `string` | No | The chat button subtitle | `"We're online."`
-`unreadMessageCount` | `string` | No | Sets the content inside the notification bubble | `"0"`
-`unreadMessageString` | `string` | No | This text (appending after `unreadMessageCount` or `largeUnreadMessageString`) will be announced by screen readers | `"new messages"`
-`largeUnreadMessageString` | `string` | No | This text (appended by `unreadMessageString`) will be announced by screen readers when there are more than 99 unread messages | `"99+"`
-`ariaLabelUnreadMessageString` | `string` | No | Sets the `aria-label` attribute on the notification bubble | `"you have new messages"`
-`dir` | `"rtl"\|"ltr"\|"auto"` | No | The locale direction under the `ChatButton` component | `"ltr"`
-`onClick` | `() => void` | No | Sets the behavior after the chat button is clicked | [Starts the chat flow]
+| id     | string     | No | The top-level element id for the chat button | "oc-lcw-chat-button"
+hideChatButton | boolean | No | Whether to hide the chat button completely | false
+hideChatIcon | boolean | No | Whether to hide the icon on the chat button | false
+hideChatTextContainer | boolean | No | Whether to hide the text container (containing title and subtitle) on the chat button | false
+hideChatTitle | boolean | No | Whether to hide the chat title on the chat button | false
+hideChatSubtitle | boolean | No | Whether to hide the chat subtitle on the chat button | false
+hideNotificationBubble | boolean | No | Whether to hide the notification bubbble (container unread message count) on the chat button | true
+role | string | No | Sets the `role` attribute at the top level element of the chat button | "button"
+titleText | string | No | The chat button title | "Let's Chat!"
+subtitleText | string | No | The chat button subtitle | "We're online."
+unreadMessageCount | string | No | Sets the content inside the notification bubble | "0"
+unreadMessageString | string | No | This text (appending after `unreadMessageCount` or `largeUnreadMessageString`) will be announced by screen readers | "new messages"
+largeUnreadMessageString | string | No | This text (appended by `unreadMessageString`) will be announced by screen readers when there are more than 99 unread messages | "99+"
+ariaLabelUnreadMessageString | string | No | Sets the `aria-label` attribute on the notification bubble | "you have new messages"
+dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `ChatButton` component | "ltr"
+onClick | () => void | No | Sets the behavior after the chat button is clicked | [Starts the chat flow]
 
-> :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
+> :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. hide-` options take higher priority.
 
 ### [IChatButtonStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonStyleProps.ts)
 
-[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
+[IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `generalStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `ChatButton` component, including the container | [`defaultChatButtonGeneralStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonGeneralStyles.ts) |
-| `iconStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button icon | [`defaultChatButtonIconContainerStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonIconContainerStyles.ts) |
-| `titleStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button title | [`defaultChatButtonTitleStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonTitleStyles.ts) |
-| `subtitleStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button subtitle | [`defaultChatButtonSubTitleStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonSubTitleStyles.ts) |
-| `textContainerStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the container for title and subtitle | [`defaultChatButtonTextContainerStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonTextContainerStyles.ts) |
-| `notificationBubbleStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the unread message notification bubble | [`defaultChatButtonNotificationBubbleStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonNotificationBubbleStyles.ts) |
-| `chatButtonHoveredStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button while hovered | - |
-| `classNames` | [`IChatButtonClassNames`](#ichatbuttonclassnames) | No | Sets custom class names for sub-components | - |
+| generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `ChatButton` component, including the container | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonGeneralStyles.ts) |
+| iconStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button icon | [defaultChatButtonIconContainerStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonIconContainerStyles.ts) |
+| titleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button title | [defaultChatButtonTitleStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonTitleStyles.ts) |
+| subtitleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button subtitle | [defaultChatButtonSubTitleStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonSubTitleStyles.ts) |
+| textContainerStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the container for title and subtitle | [defaultChatButtonTextContainerStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonTextContainerStyles.ts) |
+| notificationBubbleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the unread message notification bubble | [defaultChatButtonNotificationBubbleStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonNotificationBubbleStyles.ts) |
+| chatButtonHoveredStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button while hovered | - |
+| classNames | [IChatButtonClassNames](#ichatbuttonclassnames) | No | Sets custom class names for sub-components | - |
 
 ### [IChatButtonClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonClassNames.ts)
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `titleClassName` | `string` | No | Custom class name for title | -
-| `subtitleClassName` | `string` | No | Custom class name for subtitle | -
-| `textContainerClassName` | `string` | No | Custom class name for text container | -
-| `notificationBubbleClassName` | `string` | No | Custom class name for notification bubble | -
-| `iconContainerClassName` | `string` | No | Custom class name for icon container | -
+| titleClassName | string | No | Custom class name for title | -
+| subtitleClassName | string | No | Custom class name for subtitle | -
+| textContainerClassName | string | No | Custom class name for text container | -
+| notificationBubbleClassName | string | No | Custom class name for notification bubble | -
+| iconContainerClassName | string | No | Custom class name for icon container | -
 
 ## Sample Scenarios
 

@@ -6,19 +6,27 @@
 
 - [Interfaces](#interfaces)
 
-  - [IFooterProps](#ifooterprops)
+  - [ILiveChatWidgetProps](#ilivechatwidgetprops)
 
-  - [IFooterComponentOverrides](#ifootercomponentoverrides)
+  - [IAudioNotificationProps](#iaudionotificationprops)
 
-  - [IFooterControlProps](#ifootercontrolprops)
+  - [IDownloadTranscriptProps](#idownloadtranscriptprops)
+  
+  - [ILiveChatWidgetComponentOverrides](#ilivechatwidgetcomponentoverrides)
+  
+  - [ILiveChatWidgetControlProps](#ilivechatwidgetcontrolprops)
+  
+  - [ILiveChatWidgetStyleProps](#ilivechatwidgetstyleprops)
 
   - [IScrollBarProps](#iscrollbarprops)
 
 - [Sample Scenarios](#sample-scenarios)
 
-  - [Replacing default sub-components with custom components](#replacing-default-sub-components-with-custom-components)
-  - [Using a custom send box in the footer](#using-a-custom-send-box-in-the-footer)
-  - [Overriding default button behaviors](#overriding-default-button-behaviors)
+  - [Changing overall widget size](#changing-overall-widget-size)
+
+  - [Changing widget position on the page](#changing-widget-position-on-the-page)
+
+  - [Sample popout chat experience](#sample-popout-chat-experience)
 
 ## Introduction
 
@@ -40,7 +48,7 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 | componentOverrides | [ILiveChatWidgetComponentOverrides](#ilivechatwidgetcomponentoverrides) | No | Used for overriding default sub-components | -
 | confirmationPaneProps | [IConfirmationPaneStatefulProps](./confirmationpane.md) | No | Controls the properties of the confirmation pane, shown when a users trys to close the widget | [defaultConfirmationPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/common/defaultProps/defaultConfirmationPaneProps.ts)
 | controlProps | [ILiveChatWidgetControlProps](#ilivechatwidgetcontrolprops) | No | Controls whether to hide a certain sub-component, and setting cache config | -
-| directLine | any | No | **Important:** This is the same property as `webChatContainerProps.directLine` and you should use the latter at all times. This property is included here only to keep parity with our storybook testing, which has a conflict if we directly modify `webChatContainerProps.directLine` | -
+| directLine | any | No | **Important:** This is the same property as `webChatContainerProps.directLine` and you should use the latter at all times. This property is included here only to keep parity with our storybook testing, which has a conflict if we directly modify `webChatContainerProps.directLine | -
 | downloadTranscriptProps | [IDownloadTranscriptProps](#idownloadtranscriptprops) | No | Controls the properties of the downloaded transcript | -
 | emailTranscriptPane | [IEmailTranscriptPaneProps](./emailtranscript.md) | No | Controls the properties of the email transcript pane, after the email transcript button is clicked | -
 | footerProps | [IFooterProps](./footer.md) | No | Controls the properties of the footer | [defaultFooterProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/common/defaultProps/defaultFooterProps.ts)
@@ -58,27 +66,27 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 | styleProps | [ILiveChatWidgetStyleProps](#ilivechatwidgetstyleprops) | No | Controls the styles of the top layer container | [defaultLiveChatWidgetGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultStyles/defaultLiveChatWidgetGeneralStyles.ts)
 | telemetryConfig | [ITelemetryConfig](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/common/telemetry/interfaces/ITelemetryConfig.ts) | Yes | Sets the config for telemetry, whether to enable telemetry, any custom loggers, etc. For details, turn to the [Telemetry](../Telemetry.md) documentation | [defaultTelemetryConfiguration](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/common/telemetry/defaultConfigs/defaultTelemetryConfiguration.ts)
 | webChatContainerProps | [IWebChatContainerStatefulProps](./webchatcontainer.md) | No | Controls the properties of the web chat container, the main package to host the messages and send box | [defaultWebChatContainerStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps.ts)
-| liveChatContextFromCache | [ILiveChatWidgetContext](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/contexts/common/ILiveChatWidgetContext.ts) | No | This prop will be used first for telemetry context, instead of creating new ones | -
+| liveChatContextFromCache | [ILiveChatWidgetContext](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/contexts/common/ILiveChatWidgetContext.ts) | No | If set, this prop will be used for telemetry context, instead of creating new ones | -
 | contextDataStore | [IContextDataStore](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/common/interfaces/IContextDataStore.ts) | No | Sets the custom data store. For details, see [Telemetry](../Telemetry.md) documentation | localStorage
 | getAuthToken | (authClientFunction?: string) => Promise<string | null> | No | For auth chat, sets this attribute to the callback that will return the auth token/auth code. This will later be passed to Chat SDK to authenticate conversations | -
 | scrollBarProps | [IScrollBarProps](#iscrollbarprops) | No | This prop will be used first for telemetry context, instead of creating new ones | [defaultScrollBarProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultProps/defaultScrollBarProps.ts)
 | useSessionStorage | boolean | No | TWhether to use sessionStorage or localStorage for the default data storage | false
-| `scrollBarProps` | [`IScrollBarProps`](#iscrollbarprops) | No | This prop will be used first for telemetry context, instead of creating new ones | -
-| `scrollBarProps` | [`IScrollBarProps`](#iscrollbarprops) | No | This prop will be used first for telemetry context, instead of creating new ones | -
+| allowSdkChatSupport | boolean | No | Whether to support these [SDK methods](https://learn.microsoft.com/en-us/dynamics365/customer-service/developer/omnichannel-reference#methods) for the out of box widget. If you're using this npm package directly, setting this to false is recommended  | true
+| initialCustomContext | any | No | The custom context that will be sent to the Omnichannel backend on first started chat | -
 
 ### [IAudioNotificationProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/footerstateful/audionotificationstateful/interfaces/IAudioNotificationProps.ts)
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `audioSrc`     | `string`  | No | Changes the sound source played when a new message arrives while focus is not on the chat widget | -
+| audioSrc     | string  | No | Changes the sound source played when a new message arrives while focus is not on the chat widget | -
 
 ### [IDownloadTranscriptProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps.ts)
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `attachmentMessage`     | `string`  | No | The message that will show up in the transcript as a placeholder where an attachment was uploaded. The real attachment will not be included in the transcript | `"The following attachment was uploaded during the conversation:"`
-| `bannerMessageOnError`     | `string`  | No |  rror message shown on the chat container error banner when failed to download chat transcript | `"Download transcript failed."`
-| `renderMarkDown`     | `(transcriptContent: string) => string;`  | No | Callback function for markdown render for chat transcript | -
+| attachmentMessage     | string  | No | The message that will show up in the transcript as a placeholder where an attachment was uploaded. The real attachment will not be included in the transcript | "The following attachment was uploaded during the conversation:"
+| bannerMessageOnError     | string  | No | The error message shown on the chat container error banner when failed to download chat transcript | "Download transcript failed."
+| renderMarkDown    | (transcriptContent: string) => string;  | No | Callback function for markdown render for chat transcript | -
 
 ### [ILiveChatWidgetComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetComponentOverrides.ts)
 
@@ -86,42 +94,42 @@ Custom React components can be passed as input to override the default sub-compo
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `chatButton`     | `ReactNode|string`     | No | Used for overriding default chat button | -
-| `confirmationPane` | `ReactNode|string` | No | Used for overriding default confirmation pane | -
-| `footer` | `ReactNode|string` | No | Used for overriding default footer | -
-| `emailTranscriptPane` | `ReactNode|string` | No | Used for overriding default email transcript pane, after the email transcript button is clicked | -
-| `header` | `ReactNode|string` | No | Used for overriding default header | -
-| `loadingPane` | `ReactNode|string` | No | Used for overriding default loading screen | -
-| `outOfOfficeHoursPane` | `ReactNode|string` | No | Used for overriding default OOOH Pane when the chat widget is outside operating hours | -
-| `postChatLoadingPane` | `ReactNode|string` | No | Used for overriding default loading pane before rendering post chat survey | -
-| `postChatSurveyPane` | `ReactNode|string` | No | Used for overriding default post chat survey pane | -
-| `preChatSurveyPane` | `ReactNode|string` | No | Used for overriding default pre chat survey pane | -
-| `proactiveChatPane` | `ReactNode|string` | No | Used for overriding default proactive chat pane | -
-| `reconnectChatPane` | `ReactNode|string` | No | Used for overriding default reconnect pane, when an auth user returns | -
-| `webChatContainer` | `ReactNode|string` | No | Used for overriding default chat container and message bubbles | -
+| chatButton     | ReactNode|string     | No | Used for overriding default chat button | -
+| confirmationPane | ReactNode|string | No | Used for overriding default confirmation pane | -
+| footer | ReactNode|string | No | Used for overriding default footer | -
+| emailTranscriptPane | ReactNode|string | No | Used for overriding default email transcript pane, after the email transcript button is clicked | -
+| header | ReactNode|string | No | Used for overriding default header | -
+| loadingPane | ReactNode|string | No | Used for overriding default loading screen | -
+| outOfOfficeHoursPane | ReactNode|string | No | Used for overriding default OOOH Pane when the chat widget is outside operating hours | -
+| postChatLoadingPane | ReactNode|string | No | Used for overriding default loading pane before rendering post chat survey | -
+| postChatSurveyPane | ReactNode|string | No | Used for overriding default post chat survey pane | -
+| preChatSurveyPane | ReactNode|string | No | Used for overriding default pre chat survey pane | -
+| proactiveChatPane | ReactNode|string | No | Used for overriding default proactive chat pane | -
+| reconnectChatPane | ReactNode|string | No | Used for overriding default reconnect pane, when an auth user returns | -
+| webChatContainer | ReactNode|string | No | Used for overriding default chat container and message bubbles | -
 
 ### [ILiveChatWidgetControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetControlProps.ts)
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `id`     | `string`     | No | The top-level element id for `LiveChatWidget` | `"oc-lcw"` |
-| `dir` | `"rtl"|"ltr"|"auto"` | No | The locale direction under the `LiveChatWidget` component | `"ltr"`
-| `hideCallingContainer` | `boolean` | No | Whether to hide the default calling container | `false`
-| `hideChatButton` | `boolean` | No | Whether to hide the default chat button | `false`
-| `hideConfirmationPane` | `boolean` | No | Whether to hide the default confirmation pane | `false`
-| `hideErrorUIPane` | `boolean` | No | Whether to hide the default error pane when start chat fails | `false`
-| `hideFooter` | `boolean` | No | Whether to hide the default footer | `false`
-| `hideHeader` | `boolean` | No | Whether to hide the default header | `false`
-| `hideLoadingPane` | `boolean` | No | Whether to hide the default loading screen | `false`
-| `hideOutOfOfficeHoursPane` | `boolean` | No | Whether to hide the default OOOH screen | `false`
-| `hidePostChatLoadingPane` | `boolean` | No | Whether to hide the default post chat loading screen | `false`
-| `hidePreChatSurveyPane` | `boolean` | No | Whether to hide the default pre chat pane. **If this is set to true, prechat survey rendering will be skipped and chat will directly start** | `false`
-| `hideProactiveChatPane` | `boolean` | No | Whether to hide the default proactive chat screen | `false`
-| `hideReconnectChatPane` | `boolean` | No | Whether to hide the default reconnect pane | `false`
-| `hideWebChatContainer` | `boolean` | No | Whether to hide the default chat container | `false`
-| `hideStartChatButton` | `boolean` | No | **If this is set to true, the chat will directly start, without showing the chat button first** | `false`
-| `widgetInstanceId` | `string|undefined` | No | This id will be used to identify unique widgets. Widgets with different `widgetInstanceId` will not share the same local storage thus will not persist each other's chat history on page refresh | -
-| `cacheTtlInMins` | `number` | No | The callback function that will be triggered when the audio notification button is clicked | `15`
+| id  | string    | No | The top-level element id for `LiveChatWidget | "oc-lcw" |
+| dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `LiveChatWidget` component | "ltr"`
+| hideCallingContainer | boolean | No | Whether to hide the default calling container | false
+| hideChatButton | boolean | No | Whether to hide the default chat button | false
+| hideConfirmationPane | boolean | No | Whether to hide the default confirmation pane | false
+| hideErrorUIPane | boolean | No | Whether to hide the default error pane when start chat fails | false
+| hideFooter | boolean | No | Whether to hide the default footer | false
+| hideHeader | boolean | No | Whether to hide the default header | false
+| hideLoadingPane | boolean | No | Whether to hide the default loading screen | false
+| hideOutOfOfficeHoursPane | boolean | No | Whether to hide the default OOOH screen | false
+| hidePostChatLoadingPane | boolean | No | Whether to hide the default post chat loading screen | false
+| hidePreChatSurveyPane | boolean | No | Whether to hide the default pre chat pane. **If this is set to true, prechat survey rendering will be skipped and chat will directly start** | false
+| hideProactiveChatPane | boolean | No | Whether to hide the default proactive chat screen | false
+| hideReconnectChatPane | boolean | No | Whether to hide the default reconnect pane | false
+| hideWebChatContainer | boolean | No | Whether to hide the default chat container | false
+| hideStartChatButton | boolean | No | **If this is set to true, the chat will directly start, without showing the chat button first** | false
+| widgetInstanceId | string\|undefined | No | This id will be used to identify unique widgets. Widgets with different `widgetInstanceId` will not share the same local storage thus will not persist each other's chat history on page refresh | -
+| cacheTtlInMins | number | No | The callback function that will be triggered when the audio notification button is clicked | 15`
 
 > :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
 
@@ -129,18 +137,18 @@ Custom React components can be passed as input to override the default sub-compo
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `generalStyles`     | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts)     | No | The general css styles for the top layer container | [defaultLiveChatWidgetGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultStyles/defaultLiveChatWidgetGeneralStyles.ts) |
-| `className`     | `string` | No | The class name for the top layer container | - |
+| generalStyles     | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts)     | No | The general css styles for the top layer container | [defaultLiveChatWidgetGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultStyles/defaultLiveChatWidgetGeneralStyles.ts) |
+| className     | string | No | The class name for the top layer container | - |
 
 ### [IScrollBarProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/IScrollBarProps.ts)
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `width` | `string` | No | Scrollbar width in px | `"7px"` |
-| `trackBackgroundColor` | `string` | No | Scrollbar track background color | `"#f1f1f1"` |
-| `thumbBackgroundColor` | `string` | No | Scrollbar thumb background color | `"#888"` |
-| `thumbBorderRadius` | `string` | No | Scrollbar thumb border radius in px | `"10px"` |
-| `thumbHoverColor` | `string` | No | Scrollbar thumb hover color | `"#555"` |
+| width | string | No | Scrollbar width in px | "7px" |
+| trackBackgroundColor | string | No | Scrollbar track background color | "#f1f1f1" |
+| thumbBackgroundColor | string | No | Scrollbar thumb background color | "#888" |
+| thumbBorderRadius | string | No | Scrollbar thumb border radius in px | "10px" |
+| thumbHoverColor | string | No | Scrollbar thumb hover color | "#555" |
 
 ## Sample Scenarios
 
@@ -148,33 +156,20 @@ Below samples are build upon the base sample, which can be found [here](https://
 
 --------------------------------
 
-### Replacing default sub-components with custom components
+### Changing overall widget size
 
 <details>
     <summary>Show code</summary>
 
 ```tsx
 ...
-const Copyright = () => {
-    return (
-        <div style={{"fontSize":"12px", "fontFamily":"Segoe UI, Arial", "padding":"2px"}}>© Microsoft 2023</div>
-    );
-};
-
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-    footerProps: {
-        controlProps: {
-            hideEmailTranscriptButton: true,
-            hideAudioNotificationButton: true,
-            rightGroup: {
-                children: [
-                    <Copyright/>
-                    // Since this is a static elelenmt, alternatively we can use the string format: 
-                    // '{"$$typeof":"$$Symbol:react.element","type":"div","key":"1","ref":null,"props":{"style":{"fontSize":"12px","fontFamily":"Bradley Hand,cursive","padding":"2px"},"children":"© Microsoft 2023"},"_owner":null,"_store":{}}',
-                ]
-            }
-        },
+    styleProps: {
+        generalStyles: {
+            width: "500px",
+            height: "500px"
+        }
     }
 };
 ...
@@ -182,4 +177,79 @@ liveChatWidgetProps = {
 
 </details>
 
-<img src="../.attachments/customizations-footer-custom-component.png" width="450">
+<img src="../.attachments/customizations-general-change-size.png" width="500">
+
+--------------------------------
+
+### Changing widget position on the page
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    styleProps: {
+        generalStyles: {
+            width: "360px",
+            height: "560px",
+            top: "20px",
+            left: "20px",
+            bottom: "unset",
+            right: "unset"
+        }
+    },
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                top: "0px",
+                left: "0px",
+                bottom: "unset",
+                right: "unset"
+            }
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-general-change-position.gif" width="450">
+
+> :pushpin: Since the widget needs a container element to hold it, make sure the container itself is at the correct position.
+
+--------------------------------
+
+### Sample popout chat experience
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    controlProps: {
+        hideHeader: true,
+        hideFooter: true,
+        hideStartChatButton: true
+    },
+    styleProps: {
+        generalStyles: {
+            width: "100%",
+            height: "100%",
+            bottom: "0px",
+            right: "0px"
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-general-hide-components.png" width="450">
+
+> :pushpin: This sample might be useful if you want to render the chat in a popout window. Combining with the `hideStartChatButton: true` option, the chat will automatically start when the page loads.
