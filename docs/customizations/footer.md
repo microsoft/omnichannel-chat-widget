@@ -1,15 +1,16 @@
 # Footer
 
 ## Table of contents
+
 - [Interfaces](#interfaces)
-    - [IFooterProps](#ifooterprops)
-    - [IFooterComponentOverrides](#ifootercomponentoverrides)
-    - [IFooterControlProps](#ifootercontrolprops)
-    - [IFooterStyleProps](#ifooterstyleprops)
+  - [IFooterProps](#ifooterprops)
+  - [IFooterComponentOverrides](#ifootercomponentoverrides)
+  - [IFooterControlProps](#ifootercontrolprops)
+  - [IFooterStyleProps](#ifooterstyleprops)
 - [Sample Scenarios](#sample-scenarios)
-    - [Replacing default sub-components with custom components](#replacing-default-sub-components-with-custom-components)
-    - [Using a custom send box in the footer](#using-a-custom-send-box-in-the-footer)
-    - [Overriding default button behaviors](#overriding-default-button-behaviors)
+  - [Replacing default sub-components with custom components](#replacing-default-sub-components-with-custom-components)
+  - [Using a custom send box in the footer](#using-a-custom-send-box-in-the-footer)
+  - [Overriding default button behaviors](#overriding-default-button-behaviors)
 
 ## Interfaces
 
@@ -27,7 +28,7 @@ The top-level interface for customizing `Footer`.
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [`encodeComponentString`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description	| Default |	
+| Attribute | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | `DownloadTranscriptButton`     | `ReactNode\|string`     | No | Used for overriding default download transcript button | -
 `EmailTranscriptButton` | `ReactNode\|string` | No | Used for overriding default email transcript button | -
@@ -35,7 +36,7 @@ Custom React components can be passed as input to override the default sub-compo
 
 ### [IFooterControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/interfaces/IFooterControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |	
+| Attribute | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | `id`     | `string`     | No | The top-level element id for the footer | `"oc-lcw-footer"`
 `hideDownloadTranscriptButton` | `boolean` | No | Whether to hide the download transcript button on the footer | `false`
@@ -58,9 +59,9 @@ Custom React components can be passed as input to override the default sub-compo
 
 ### [IFooterStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/interfaces/IFooterStyleProps.ts)
 
-[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/). 
+[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |	
+| Attribute | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | `generalStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `Footer` component, including the container | [`defaultFooterStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/common/defaultStyles/defaultFooterStyleProps.ts) |
 | `downloadTranscriptButtonStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the download transcript button | [`defaultFooterStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/common/defaultStyles/defaultFooterStyleProps.ts) |
@@ -76,7 +77,9 @@ Custom React components can be passed as input to override the default sub-compo
 Below samples are build upon the base sample, which can be found [here](https://github.com/microsoft/omnichannel-chat-widget#example-usage). The code snippets below will only show the changes needed to be added before `ReactDOM.render`.
 
 --------------------------------
+
 ### Replacing default sub-components with custom components
+
 <details>
     <summary>Show code</summary>
 
@@ -106,12 +109,15 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-footer-custom-component.png" width="450">
 
 --------------------------------
+
 ### Using a custom send box in the footer
+
 <details>
     <summary>Show code</summary>
 
@@ -174,12 +180,15 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-footer-custom-send-box.gif" width="450">
 
 --------------------------------
+
 ### Overriding default button behaviors
+
 <details>
     <summary>Show code</summary>
 
@@ -203,6 +212,7 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-footer-custom-button.gif" width="600">

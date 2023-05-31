@@ -1,19 +1,18 @@
 # Header
 
 ## Table of contents
-
 - [Interfaces](#interfaces)
-  - [IHeaderProps](#iheaderprops)
-  - [IHeaderComponentOverrides](#iheadercomponentoverrides)
-  - [IHeaderControlProps](#iheadercontrolprops)
-  - [IHeaderStyleProps](#iheaderstyleprops)
+    - [IHeaderProps](#iheaderprops)
+    - [IHeaderComponentOverrides](#iheadercomponentoverrides)
+    - [IHeaderControlProps](#iheadercontrolprops)
+    - [IHeaderStyleProps](#iheaderstyleprops)
 - [Sample Scenarios](#sample-scenarios)
-  - [Changing header title and icon](#changing-header-title-and-icon)
-  - [Changing button icons](#changing-button-icons)
-  - [Hiding sub-components](#hiding-sub-components)
-  - [Adding a custom button](#adding-a-custom-button)
-  - [Adding a custom image](#adding-a-custom-image)
-  - [Changing element styles](#changing-element-styles)
+    - [Changing header title and icon](#changing-header-title-and-icon)
+    - [Changing button icons](#changing-button-icons)
+    - [Hiding sub-components](#hiding-sub-components)
+    - [Adding a custom button](#adding-a-custom-button)
+    - [Adding a custom image](#adding-a-custom-image)
+    - [Changing element styles](#changing-element-styles)
 
 ## Interfaces
 
@@ -31,7 +30,7 @@ The top-level interface for customizing `Header`.
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [`encodeComponentString`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description | Default | 
+| Attribute | Type | Required | Description	| Default |	
 | - | - | - | - | - |
 | `headerIcon`     | `ReactNode\|string`     | No | Used for overriding default header icon | -
 `headerTitle` | `ReactNode\|string` | No | Used for overriding default header title | -
@@ -40,7 +39,7 @@ Custom React components can be passed as input to override the default sub-compo
 
 ### [IHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderControlProps.ts)
 
-| Attribute | Type | Required | Description | Default | 
+| Attribute | Type | Required | Description | Default |	
 | - | - | - | - | - |
 | `id`     | `string`     | No | The top-level element id for the header | `"oc-lcw-header"`
 `hideIcon` | `boolean` | No | Whether to hide the icon on the header | `false`
@@ -64,9 +63,9 @@ Custom React components can be passed as input to override the default sub-compo
 
 ### [IHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderStyleProps.ts)
 
-[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
+[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/). 
 
-| Attribute | Type | Required | Description | Default | 
+| Attribute | Type | Required | Description | Default |	
 | - | - | - | - | - |
 | `generalStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `Header` component, including the container | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
 | `iconStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header icon | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
@@ -82,9 +81,7 @@ Custom React components can be passed as input to override the default sub-compo
 Below samples are build upon the base sample, which can be found [here](https://github.com/microsoft/omnichannel-chat-widget#example-usage). The code snippets below will only show the changes needed to be added before `ReactDOM.render`.
 
 --------------------------------
-
 ### Changing header title and icon
-
 <details>
     <summary>Show code</summary>
 
@@ -105,15 +102,12 @@ liveChatWidgetProps = {
 };
 ...
 ```
-
 </details>
 
 <img src="../.attachments/customizations-header-change-title-icon.png" width="450">
 
 --------------------------------
-
 ### Changing button icons
-
 <details>
     <summary>Show code</summary>
 
@@ -134,15 +128,12 @@ liveChatWidgetProps = {
 };
 ...
 ```
-
 </details>
 
 <img src="../.attachments/customizations-header-change-button-icons.png" width="450">
 
 --------------------------------
-
 ### Hiding sub-components
-
 <details>
     <summary>Show code</summary>
 
@@ -159,15 +150,12 @@ liveChatWidgetProps = {
 };
 ...
 ```
-
 </details>
 
 <img src="../.attachments/customizations-header-hide-elements.png" width="450">
 
 --------------------------------
-
 ### Adding a custom button
-
 <details>
     <summary>Show code</summary>
 
@@ -196,15 +184,12 @@ liveChatWidgetProps = {
 };
 ...
 ```
-
 </details>
 
 <img src="../.attachments/customizations-header-add-custom-button.gif" width="450">
 
 --------------------------------
-
 ### Adding a custom image
-
 <details>
     <summary>Show code</summary>
 
@@ -235,15 +220,12 @@ liveChatWidgetProps = {
 };
 ...
 ```
-
 </details>
 
 <img src="../.attachments/customizations-header-add-custom-image.png" width="450">
 
 --------------------------------
-
 ### Changing element styles
-
 <details>
     <summary>Show code</summary>
 
@@ -295,7 +277,6 @@ liveChatWidgetProps = {
 };
 ...
 ```
-
 </details>
 
 <img src="../.attachments/customizations-header-change-styles.png" width="450">

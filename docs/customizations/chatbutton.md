@@ -1,19 +1,20 @@
 # Chat Button
 
 ## Table of contents
+
 - [Interfaces](#interfaces)
-    - [IChatButtonProps](#ichatbuttonprops)
-    - [IChatButtonComponentOverrides](#ichatbuttoncomponentoverrides)
-    - [IChatButtonControlProps](#ichatbuttoncontrolprops)
-    - [IChatButtonStyleProps](#ichatbuttonstyleprops)
-    - [IChatButtonClassNames](#ichatbuttonclassnames)
+  - [IChatButtonProps](#ichatbuttonprops)
+  - [IChatButtonComponentOverrides](#ichatbuttoncomponentoverrides)
+  - [IChatButtonControlProps](#ichatbuttoncontrolprops)
+  - [IChatButtonStyleProps](#ichatbuttonstyleprops)
+  - [IChatButtonClassNames](#ichatbuttonclassnames)
 - [Sample Scenarios](#sample-scenarios)
-    - [Extending button width](#extending-button-width)
-    - [Hiding chat button subtitle](#hiding-chat-button-subtitle)
-    - [Hiding text container](#hiding-text-container)
-    - [Customizing icon and overall styles](#customizing-icon-and-overall-styles)
-    - [Customizing the notification bubble](#customizing-the-notification-bubble)
-    - [Overriding default sub-components for ad-hoc needs](#overriding-default-sub-components-for-ad-hoc-needs)
+  - [Extending button width](#extending-button-width)
+  - [Hiding chat button subtitle](#hiding-chat-button-subtitle)
+  - [Hiding text container](#hiding-text-container)
+  - [Customizing icon and overall styles](#customizing-icon-and-overall-styles)
+  - [Customizing the notification bubble](#customizing-the-notification-bubble)
+  - [Overriding default sub-components for ad-hoc needs](#overriding-default-sub-components-for-ad-hoc-needs)
 
 ## Interfaces
 
@@ -31,7 +32,7 @@ The top-level interface for customizing `ChatButton`.
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [`encodeComponentString`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description	| Default |	
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | `title`     | `ReactNode\|string`     | No | Used for overriding default chat button title | -
 `subtitle` | `ReactNode\|string` | No | Used for overriding default chat button subtitle | -
@@ -41,7 +42,7 @@ Custom React components can be passed as input to override the default sub-compo
 
 ### [IChatButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |	
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | `id`     | `string`     | No | The top-level element id for the chat button | `"oc-lcw-chat-button"`
 `hideChatButton` | `boolean` | No | Whether to hide the chat button completely | `false`
@@ -60,14 +61,13 @@ Custom React components can be passed as input to override the default sub-compo
 `dir` | `"rtl"\|"ltr"\|"auto"` | No | The locale direction under the `ChatButton` component | `"ltr"`
 `onClick` | `() => void` | No | Sets the behavior after the chat button is clicked | [Starts the chat flow]
 
-
 > :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
 
 ### [IChatButtonStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonStyleProps.ts)
 
-[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/). 
+[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |	
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | `generalStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `ChatButton` component, including the container | [`defaultChatButtonGeneralStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonGeneralStyles.ts) |
 | `iconStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button icon | [`defaultChatButtonIconContainerStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonIconContainerStyles.ts) |
@@ -76,11 +76,11 @@ Custom React components can be passed as input to override the default sub-compo
 | `textContainerStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the container for title and subtitle | [`defaultChatButtonTextContainerStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonTextContainerStyles.ts) |
 | `notificationBubbleStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the unread message notification bubble | [`defaultChatButtonNotificationBubbleStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonNotificationBubbleStyles.ts) |
 | `chatButtonHoveredStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button while hovered | - |
-| `classNames` | [`IChatButtonClassNames`](#ichatbuttonclassNames) | No | Sets custom class names for sub-components | - |
+| `classNames` | [`IChatButtonClassNames`](#ichatbuttonclassnames) | No | Sets custom class names for sub-components | - |
 
 ### [IChatButtonClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonClassNames.ts)
 
-| Attribute | Type | Required | Description | Default |	
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | `titleClassName` | `string` | No | Custom class name for title | -
 | `subtitleClassName` | `string` | No | Custom class name for subtitle | -
@@ -93,7 +93,9 @@ Custom React components can be passed as input to override the default sub-compo
 Below samples are build upon the base sample, which can be found [here](https://github.com/microsoft/omnichannel-chat-widget#example-usage). The code snippets below will only show the changes needed to be added before `ReactDOM.render`.
 
 --------------------------------
+
 ### Extending button width
+
 <details>
     <summary>Show code</summary>
 
@@ -123,12 +125,15 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-chat-button-extend-width.png" height="100">
 
 --------------------------------
+
 ### Hiding chat button subtitle
+
 <details>
     <summary>Show code</summary>
 
@@ -144,12 +149,15 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-chat-button-hide-subtitle.png" height="100">
 
 --------------------------------
+
 ### Hiding text container
+
 <details>
     <summary>Show code</summary>
 
@@ -171,12 +179,15 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-chat-button-hide-text-container.png" height="100">
 
 --------------------------------
+
 ### Customizing icon and overall styles
+
 <details>
     <summary>Show code</summary>
 
@@ -220,7 +231,9 @@ liveChatWidgetProps = {
 <img src="../.attachments/customizations-chat-button-custom-icon.png" height="150">
 
 --------------------------------
+
 ### Customizing the notification bubble
+
 <details>
     <summary>Show code</summary>
 
@@ -249,14 +262,17 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-chat-button-custom-notification-bubble.png" height="100">
 
-> :pushpin: If `unreadMessageCount` is `"0"` or empty, then the notification bubble will be hidden. 
+> :pushpin: If `unreadMessageCount` is `"0"` or empty, then the notification bubble will be hidden.
 
 --------------------------------
+
 ### Overriding default sub-components for ad-hoc needs
+
 <details>
     <summary>Show code</summary>
 
@@ -283,6 +299,7 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-chat-button-override-component.png" height="100">
