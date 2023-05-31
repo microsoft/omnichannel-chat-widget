@@ -1,15 +1,16 @@
-import { LogLevel, ScenarioType, TelemetryEvent, TelemetryInput } from "./TelemetryConstants";
 import { ACSAdapterContract, ActionsContract, BaseContract, CallingContract, ConfigValidationContract, IC3ClientContract, LoadContract, OCChatSDKContract, TelemetryContract, WebChatContract } from "./definitions/Contracts";
 import { ACSAdapterTelemetryData, ActionTelemetryData, CallingTelemetryData, ConfigValidationTelemetryData, IC3ClientTelemetryData, LoadTelemetryData, OCChatSDKTelemetryData, TelemetryData, WebChatTelemetryData } from "./definitions/Payload";
-import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
-import { newGuid } from "../utils";
-import { TelemetryManager } from "./TelemetryManager";
-import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
-import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWorkItemDetails";
-import { ITelemetryEvent } from "./interfaces/ITelemetryEvents";
+import { LogLevel, ScenarioType, TelemetryEvent, TelemetryInput } from "./TelemetryConstants";
+
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { IInternalTelemetryData } from "./interfaces/IInternalTelemetryData";
 import { ITelemetryConfig } from "./interfaces/ITelemetryConfig";
+import { ITelemetryEvent } from "./interfaces/ITelemetryEvents";
+import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
+import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWorkItemDetails";
+import { TelemetryManager } from "./TelemetryManager";
+import { newGuid } from "../utils";
 
 export interface TelemetryEventWrapper {
     Event: TelemetryEvent;
@@ -121,6 +122,7 @@ export class TelemetryHelper {
         return TelemetryHelper.populate<LoadContract>(level, payload,
             event => {
                 event.Event = payload.Event;
+                event.Description = payload.Description;
                 event.ResourcePath = payload.ResourcePath;
                 event.WidgetState = payload.WidgetState;
                 event.ChatState = payload.ChatState;
