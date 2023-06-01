@@ -14,64 +14,115 @@
     - [Adding a custom image](#adding-a-custom-image)
     - [Changing element styles](#changing-element-styles)
 
+## Introduction
+
+By enabling calling options from admin center when creatiing a chat channel, the agent can initiate a voice/video call with the customer for better service. For more details of this feature, see this [public documentation](https://learn.microsoft.com/en-us/dynamics365/customer-service/call-options-visual-engagement).
+
+### Term definitions
+
+IncomingCall:
+
+<img src="../.attachments/customizations-calling-incoming-call.png" width="450">
+
+CurrentCall:
+
+<img src="../.attachments/customizations-intro-callingcontainer.png" width="450">
+
 ## Interfaces
 
-### [IHeaderProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderProps.ts)
+### [ICallingContainerProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/interfaces/ICallingContainerProps.ts)
 
-The top-level interface for customizing `Header`.
+The top-level interface for customizing `CallingContainer`.
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `componentOverrides`     | [`IHeaderComponentOverrides`](#iheadercomponentoverrides)     | No | Used for overriding default `Header` components, e.g., icon, title, minimize button, and close button | -
-`controlProps` | [`IHeaderControlProps`](#iheadercontrolprops) | No | Properties that control the element behariors | -
-`styleProps` | [`IHeaderStyleProps`](iheaderstyleprops) | No | Properties that control the element styles | -
+controlProps | [ICallingContainerControlProps](#icallingcontainercontrolprops) | No | Properties that control the element behariors | -
+styleProps | [ICallingContainerStyleProps](#icallingcontainerstyleprops) | No | Properties that control the element styles | -
 
-### [IHeaderComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderComponentOverrides.ts)
+### [ICallingContainerControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/interfaces/ICallingContainerControlProps.ts)
 
-Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [`encodeComponentString`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
-
-| Attribute | Type | Required | Description	| Default |	
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `headerIcon`     | `ReactNode\|string`     | No | Used for overriding default header icon | -
-`headerTitle` | `ReactNode\|string` | No | Used for overriding default header title | -
-`headerMinimizeButton` | `ReactNode\|string` | No | Used for overriding default minimize button | -
-`headerCloseButton` | `ReactNode\|string` | No | Used for overriding default close button | -
+id    | string     | No | The top-level element id for the calling container | "lcw-calling-container"
+isIncomingCall | boolean | No | Whether to show the incoming call screen, or the current call screen. The currentCall screen will appear after an incoming call request is accepted | false
+dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `CallingContainer` component | "ltr"
+incomingCallControlProps | [IIncomingCallControlProps](#iincomingcallcontrolprops) | No | The control props for the incoming call screen | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+currentCallControlProps | [ICurrentCallControlProps](#icurrentcallcontrolprops) | No | The control props for the current call screen |  [defaultCurrentCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/CurrentCall/common/defaultProps/defaultCurrentCallControlProps.ts)
+hideCallingContainer | boolean | No | Whether to hide the calling container. This is mostly for internal use in case  of minimize scenarios | false
 
-### [IHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderControlProps.ts)
+### [ICallingContainerStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/interfaces/ICallingContainerStyleProps.ts)
 
-| Attribute | Type | Required | Description | Default |	
+[IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/). 
+
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `id`     | `string`     | No | The top-level element id for the header | `"oc-lcw-header"`
-`hideIcon` | `boolean` | No | Whether to hide the icon on the header | `false`
-`hideTitle` | `boolean` | No | Whether to hide the title string on the header | `false`
-`hideMinimizeButton` | `boolean` | No | Whether to hide the minimize button on the header | `false`
-`hideCloseButton` | `ReactNode\|string` | No | Whether to hide the close button on the header | `false`
-`onMinimizeClick` | `() => void` | No | The callback function that will be triggered when the minimize button is clicked | [Minimizes the chat widget]
-`onCloseClick` | `() => void` | No | The callback function that will be triggered when the close button is clicked | [Closes the chat widget]
-`minimizeButtonProps` | [`ICommandButtonControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default minimize button | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
-`closeButtonProps` | [`ICommandButtonControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default close button | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
-`headerIconProps` | [`IImageControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/IImageControlProps.ts) | No | Properties to further customize the default header icon | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
-`headerTitleProps` | [`ILabelControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ILabelControlProps.ts) | No | Properties to further customize the default header title | [`defaultHeaderControlProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
-`dir` | `"rtl"\|"ltr"\|"auto"` | No | The locale direction under the `Header` component | `"ltr"`
-`leftGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the left side of the header (right of the default sub-components)| -
-`middleGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the middle section of the header | -
-`rightGroup` | `{children: ReactNode[]\|string[]}` | No | Additional custom components to be added on the right side of the header (left of the default sub-components) | -
+| generalStyleProps | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `CallingContainer` component, including the top level container | [`defaultCallingContainerStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/common/defaultStyles/defaultCallingContainerStyles.ts) |
+| className | string | No | Calling container's class name | -
+| incomingCallStyleProps | [IIncomingCallStyleProps](#iincomingcallstyleprops) | No | Styles of the incoming call container | -
+| currentCallStyleProps | [ICurrentCallStyleProps](#icurrentcallstyleprops) | No | Styles of the current call container | -
 
-> :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
+### [IIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/interfaces/IIncomingCallControlProps.ts)
 
-> :pushpin: `leftGroup`, `middleGroup`, and `rightGroup` take in the same kind of input types as with `componentOverrides` inputs.
-
-### [IHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderStyleProps.ts)
-
-[`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/). 
-
-| Attribute | Type | Required | Description | Default |	
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `generalStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `Header` component, including the container | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `iconStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header icon | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `titleStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header title | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `closeButtonStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `closeButtonHoverStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button while hovered | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `minimizeButtonStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header minimize button | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `minimizeButtonHoverStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header close button while hovered | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
-| `headerItemFocusStyleProps` | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header sub-components while focused | [`defaultHeaderStyleProps`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
+id    | string     | No | The top-level element id for the calling container | "lcw-incoming-call"
+dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `IncomingCall` component | "ltr"
+ariaLabel | string | No | The aria label of the `IncomingCall` component | "Incoming call area"
+className | string | No | The class name of the `IncomingCall` component | -
+hideAudioCall | boolean | No | Whether to hide the "Accept audio call" button | false
+hideVideoCall | boolean | No | Whether to hide the "Accept video call" button | false
+hideDeclineCall | boolean | No | Whether to hide the "Decline call" button | false
+hideIncomingCallTitle | boolean | No | Whether to hide the title text of the incoming call screen | false
+incomingCallTitle | [ILabelControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ILabelControlProps.ts) | No | The title text props | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+onAudioCallClick | () => void | No | Defines the behavior when the "Accept audio call" button is clicked | [Starts the audio call and shows current call screen]
+onVideoCallClick | () => void | No | Defines the behavior when the "Accept video call" button is clicked | [Starts the video call and shows current call screen]
+onDeclineCallClick | () => void | No | Defines the behavior when the "Decline call" button is clicked | [Hide the incoming call screen and returns to chat]
+audioCallButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Define more properties of the "Accept audio call" button | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+videoCallButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Define more properties of the "Accept video call" button | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+declineCallButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Define more properties of the "Decline call" button | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+leftGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more custom components on the left side of the control | -
+middleGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more custom components on the middle section of the control | -
+rightGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more custom components on the right side of the control | -
+
+### [IIncomingCallStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/interfaces/IIncomingCallStyleProps.ts)
+
+[IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
+
+| Attribute | Type | Required | Description | Default |
+| - | - | - | - | - |
+| generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `IncomingCall` component, including the container | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| audioCallButtonStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the "Accept audio call" button | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| audioCallButtonHoverStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the "Accept audio call" button while hovered | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| videoCallButtonStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the "Accept video call" button | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| videoCallButtonHoverStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the "Accept video call" button while hovered | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| declineCallButtonStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the "Decline call" button | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| declineCallButtonHoverStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the "Decline call" button while hovered | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| incomingCallTitleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the title text | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| itemFocusStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the buttons while on focus | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+| className | string | No | The class name of the incoming call container | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
+
+### [ICurrentCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/CurrentCall/interfaces/ICurrentCallControlProps.ts)
+
+| Attribute | Type | Required | Description | Default |
+| - | - | - | - | - |
+id    | string     | No | The top-level element id for the calling container | "lcw-incoming-call"
+dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `IncomingCall` component | "ltr"
+ariaLabel | string | No | The aria label of the `IncomingCall` component | "Incoming call area"
+className | string | No | The class name of the `IncomingCall` component | -
+hideAudioCall | boolean | No | Whether to hide the "Accept audio call" button | false
+hideVideoCall | boolean | No | Whether to hide the "Accept video call" button | false
+hideDeclineCall | boolean | No | Whether to hide the "Decline call" button | false
+hideIncomingCallTitle | boolean | No | Whether to hide the title text of the incoming call screen | false
+incomingCallTitle | [ILabelControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ILabelControlProps.ts) | No | The title text props | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+onAudioCallClick | () => void | No | Defines the behavior when the "Accept audio call" button is clicked | [Starts the audio call and shows current call screen]
+onVideoCallClick | () => void | No | Defines the behavior when the "Accept video call" button is clicked | [Starts the video call and shows current call screen]
+onDeclineCallClick | () => void | No | Defines the behavior when the "Decline call" button is clicked | [Hide the incoming call screen and returns to chat]
+audioCallButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Define more properties of the "Accept audio call" button | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+videoCallButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Define more properties of the "Accept video call" button | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+declineCallButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Define more properties of the "Decline call" button | [defaultIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultProps/defaultIncomingCallControlProps.ts)
+leftGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more custom components on the left side of the control | -
+middleGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more custom components on the middle section of the control | -
+rightGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more custom components on the right side of the control | -
+
+### [ICurrentCallStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderStyleProps.ts)
+
