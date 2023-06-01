@@ -13,6 +13,8 @@ class TranscriptHTMLBuilder {
     private agentAvatarFontColor = "#000";
     private customerAvatarBackgroundColor = "#2266E3";
     private customerAvatarFontColor = "#FFF";
+    private disableMarkdownMessageFormatting = false;
+    private disableNewLineMarkdownSupport = false;
 
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
         this.options = options;
@@ -56,6 +58,14 @@ class TranscriptHTMLBuilder {
         if (this.options?.customerAvatarFontColor) {
             this.customerAvatarFontColor = this.options.customerAvatarFontColor;
         }
+
+        if (this.options?.disableMarkdownMessageFormatting) {
+            this.disableMarkdownMessageFormatting = this.options.disableMarkdownMessageFormatting;
+        }
+
+        if (this.options?.disableNewLineMarkdownSupport) {
+            this.disableNewLineMarkdownSupport = this.options.disableNewLineMarkdownSupport;
+        }
     }
 
     createTitleElement() {
@@ -69,6 +79,7 @@ class TranscriptHTMLBuilder {
             <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.8.0/rxjs.umd.min.js" integrity="sha512-v0/YVjBcbjLN6scjmmJN+h86koeB7JhY4/2YeyA5l+rTdtKLv0VbDBNJ32rxJpsaW1QGMd1Z16lsLOSGI38Rbg==" crossorigin="anonymous" referrerpolicy="no-referrer"><\/script>
             <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"><\/script>
             <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"><\/script>
+            <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js" integrity="sha256-hNyljag6giCsjv/yKmxK8/VeHzvMDvc5u8AzmRvm1BI=" crossorigin="anonymous"><\/script>
         `;
 
         return htmlData;
@@ -114,6 +125,8 @@ class TranscriptHTMLBuilder {
                 <\/script>
                 <script>
                     const messages = ${JSON.stringify(this.options.messages)};
+                    const disableMarkdownMessageFormatting = ${this.disableMarkdownMessageFormatting};
+                    const disableNewLineMarkdownSupport = ${this.disableNewLineMarkdownSupport};
                 <\/script>
                 <script>
                     class Translator {
@@ -391,6 +404,46 @@ class TranscriptHTMLBuilder {
                         return next(...args);
                     }
 
+                    const createMarkdown = (disableMarkdownMessageFormatting, disableNewLineMarkdownSupport) => {
+                        let markdown;
+                        if (!disableMarkdownMessageFormatting) {
+                            markdown = new window.markdownit(
+                                "default",
+                                {
+                                    html: true,
+                                    linkify: true,
+                                    breaks: (!disableNewLineMarkdownSupport)
+                                }
+                            );
+                        } else {
+                            markdown = new window.markdownit(
+                                "zero",
+                                {
+                                    html: true,
+                                    linkify: true,
+                                    breaks: (!disableNewLineMarkdownSupport)
+                                }
+                            );
+
+                            markdown.enable([
+                                "entity",
+                                "linkify",
+                                "html_block",
+                                "html_inline",
+                                "newline"
+                            ]);
+                        }
+
+                        return markdown;
+                    };
+
+                    const markdown = createMarkdown(disableMarkdownMessageFormatting, disableNewLineMarkdownSupport);
+                    const renderMarkdown = (text) => {
+                        const render = disableNewLineMarkdownSupport? markdown.renderInline.bind(markdown): markdown.render.bind(markdown);
+                        text = render(text);
+                        return text;
+                    };
+
                     const adapter = new TranscriptAdapter();
                     const styleOptions = {
                         hideSendBox: true,
@@ -412,7 +465,8 @@ class TranscriptHTMLBuilder {
                         styleOptions,
                         activityStatusMiddleware,
                         avatarMiddleware,
-                        attachmentMiddleware
+                        attachmentMiddleware,
+                        renderMarkdown
                     },
                     document.getElementById('transcript'));
                 <\/script>
