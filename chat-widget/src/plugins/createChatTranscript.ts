@@ -291,8 +291,8 @@ class TranscriptHTMLBuilder {
                         background-color: #FFF;
                     }
 
-                    div[class="ac-textBlock"]>p {
-                        color: #000;
+                    div[class="ac-textBlock"] {
+                        color: #000 !important;
                     }
                 <\/style>
             </head>
