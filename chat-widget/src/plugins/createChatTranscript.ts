@@ -294,6 +294,10 @@ class TranscriptHTMLBuilder {
                     div[class="ac-textBlock"] {
                         color: #000 !important;
                     }
+
+                    .ms_lcw_webchat_received_message a:link, .ms_lcw_webchat_received_message a:visited, .ms_lcw_webchat_received_message a:hover, .ms_lcw_webchat_received_message a:active {
+                        color: #FFF;
+                    }
                 <\/style>
             </head>
         `;
@@ -328,6 +332,27 @@ class TranscriptHTMLBuilder {
 
                         return "";
                     }
+
+                    const activityMiddleware = () => (next) => (...args) => {
+                        const [card] = args;
+
+                        if (card.activity) {
+                            if (card.activity.from && card.activity.from.role === "channel") {
+                                return () => false;
+                            }
+
+                            // Incoming text message
+                            if (card.activity.text && card.activity.from && card.activity.from.role !== "user") {
+                                return (...renderArgs) => (React.createElement(
+                                    'div',
+                                    {className: 'ms_lcw_webchat_received_message'},
+                                    next(...args)(...renderArgs)
+                                ))
+                            }
+                        }
+
+                        return next(...args);
+                    };
 
                     const activityStatusMiddleware = () => (next) => (...args) => {
                         const [card] = args;
@@ -463,6 +488,7 @@ class TranscriptHTMLBuilder {
                     window.WebChat.renderWebChat({
                         directLine: adapter,
                         styleOptions,
+                        activityMiddleware,
                         activityStatusMiddleware,
                         avatarMiddleware,
                         attachmentMiddleware,
