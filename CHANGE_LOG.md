@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Exposed `adaptiveCardsHostConfig` from webchat and force button text wrap
 - Add ability to render transcript using `WebChat`
 
 ## [1.0.5] - 2023-5-26
