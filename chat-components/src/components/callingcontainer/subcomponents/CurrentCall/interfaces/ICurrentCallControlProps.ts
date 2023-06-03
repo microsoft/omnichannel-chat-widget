@@ -63,11 +63,6 @@ export interface ICurrentCallControlProps {
     hideEndCallButton?: boolean,
 
     /**
-    * hide incoming call label
-    */
-    hideCurrentCallTitle?: boolean,
-
-    /**
     * Hide call timer
     */
     hideCallTimer?: boolean,
@@ -121,11 +116,6 @@ export interface ICurrentCallControlProps {
     * Incoming call timer props
     */
     callTimerProps?: ITimer,
-
-    /**
-    * Incoming call label props
-    */
-    videoCallTileProps?: ILabelControlProps,
 
     /**
     * Incoming call toast component to align right to left.

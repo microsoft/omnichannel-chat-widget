@@ -15,7 +15,6 @@ export const defaultCurrentCallControlPropsRtl: ICurrentCallControlProps = {
     hideMicButton: false,
     hideVideoButton: false,
     hideEndCallButton: false,
-    hideCurrentCallTitle: false,
     videoCallDisabled: false,
     hideCallTimer: false,
     onEndCallClick: function () { console.log("end call clicked"); },

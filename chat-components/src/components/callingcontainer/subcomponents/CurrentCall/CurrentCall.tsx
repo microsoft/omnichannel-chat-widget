@@ -90,6 +90,9 @@ function CurrentCall(props: ICurrentCallProps) {
     const endCallButtonHoverStyles = Object.assign({}, defaultCurrentCallProps.styleProps?.endCallButtonHoverStyleProps,
         props.styleProps?.endCallButtonHoverStyleProps);
 
+    const remoteVideoStyles: Partial<IStackStyles> =
+        { root: Object.assign({}, defaultCurrentCallProps.styleProps?.remoteVideoStyleProps, props.styleProps?.remoteVideoStyleProps) };
+
     let selfVideoStyles: Partial<IStackStyles> =
         { root: Object.assign({}, defaultCurrentCallProps.styleProps?.selfVideoStyleProps, props.styleProps?.selfVideoStyleProps) };
 
@@ -199,7 +202,7 @@ function CurrentCall(props: ICurrentCallProps) {
             <Stack styles={videoTileStackStyles}
                 id={videoTileId}
                 className={props.styleProps?.classNames?.videoTileGroupClassName}>
-                <Stack
+                <Stack styles={remoteVideoStyles}
                     id={remoteVideoTileId}
                     className={props.styleProps?.classNames?.remoteVideoTileClassName} />
 

@@ -79,7 +79,6 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 hideMicButton: false,
                 hideVideoButton: false,
                 hideEndCallButton: false,
-                hideCurrentCallTitle: false,
                 videoCallDisabled: false,
                 hideCallTimer: false,
                 onEndCallClick: () => { }, // Detailed implementation omitted
