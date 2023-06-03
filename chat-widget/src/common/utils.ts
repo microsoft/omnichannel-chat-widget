@@ -1,4 +1,4 @@
-import { AriaTelemetryConstants, ChatSDKError, Constants, LocaleConstants } from "./Constants";
+import { AriaTelemetryConstants, ChatSDKError, Constants, HtmlAttributeNames, LocaleConstants } from "./Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -405,4 +405,20 @@ export const checkContactIdError = (e: any) => {
         };
         BroadcastService.postMessage(contactIdNotFoundErrorEvent);
     }
+};
+
+export const createFileAndDownload = (fileName: string, blobData: string, mimeType: string) => {
+    const aElement = document.createElement("a");
+
+    const blob = new Blob([blobData], {type: mimeType});
+    const objectUrl = URL.createObjectURL(blob);
+
+    aElement.setAttribute(HtmlAttributeNames.href, objectUrl);
+    aElement.setAttribute(HtmlAttributeNames.download, fileName);
+    aElement.setAttribute(HtmlAttributeNames.ariaHidden, "true");
+    aElement.style.display = "none";
+
+    document.body.appendChild(aElement);
+    aElement.click();
+    document.body.removeChild(aElement);
 };
