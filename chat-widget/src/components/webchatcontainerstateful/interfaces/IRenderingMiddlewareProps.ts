@@ -33,4 +33,5 @@ export interface IRenderingMiddlewareProps {
     attachmentContentStyles?: React.CSSProperties;
     attachmentSizeStyles?: React.CSSProperties;
     receivedMessageAnchorStyles?: React.CSSProperties;
+    sentMessageAnchorStyles?: React.CSSProperties;
 }
