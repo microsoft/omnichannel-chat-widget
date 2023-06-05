@@ -1,3 +1,3 @@
 export const defaultSentMessageAnchorStyles: React.CSSProperties = {
-    color: "white"
+    color: "blue"
 };
