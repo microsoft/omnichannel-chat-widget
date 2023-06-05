@@ -97,7 +97,6 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [1.0.2]
 ### Added
 - [A11Y] Support text spacing for chat button.
 
