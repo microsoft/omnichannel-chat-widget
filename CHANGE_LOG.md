@@ -62,10 +62,12 @@ All notable changes to this project will be documented in this file.
 - Added MIDDLEWARE_BANNER_FILE parameter `{2}` to show the user the file name when an exception occurs, also implementing standard for parameter to keep backwards compatibility
 - Added initialCustomContext to ILiveChatWidgetProps
 - Added `UpdateSessionDataForTelemetry` and `UpdateConversationDataForTelemetry` in `BroadcastEvents`
+
 ### Fixed
 
 - Fixed custom context not showing for embed chat
 - Fixed hyperlink not working in prechat pane
+
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-components@1.0.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.1)
