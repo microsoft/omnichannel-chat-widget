@@ -13,7 +13,6 @@ All notable changes to this project will be documented in this file.
 - Fixed `ariaTelemetryLogger` not updating `collectorUri`
 - Update `environmentVersion` to be `prod` by default in `defaultInternalTelemetryData`
 - Do not log OOOH errors as WidgetLoadFailure
-- Fix issue with markdown render which exposed the chat for XSS attacks.
 
 ## [1.0.4] - 2023-5-8
 
@@ -63,15 +62,10 @@ All notable changes to this project will be documented in this file.
 - Added MIDDLEWARE_BANNER_FILE parameter `{2}` to show the user the file name when an exception occurs, also implementing standard for parameter to keep backwards compatibility
 - Added initialCustomContext to ILiveChatWidgetProps
 - Added `UpdateSessionDataForTelemetry` and `UpdateConversationDataForTelemetry` in `BroadcastEvents`
-- [A11Y] Support text spacing for chat button.
-
 ### Fixed
 
 - Fixed custom context not showing for embed chat
 - Fixed hyperlink not working in prechat pane
-- [A11Y] Remove region unnecessary region landmarks from header and footer.
-- [A11Y] Several fixes from ford list.
-
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-components@1.0.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.1)
@@ -100,6 +94,16 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+## [1.0.2]
+### Added
+- [A11Y] Support text spacing for chat button.
+
+
+### Fixed
+- [A11Y] Remove unnecessary region landmarks from header and footer.
+- [A11Y] Several fixes from ford list.
+- Fix issue with markdown render which exposed the chat for XSS attacks.
 
 ## [1.0.1] - 2023-4-4
 
