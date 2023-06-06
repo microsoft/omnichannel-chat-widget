@@ -13,6 +13,9 @@ All notable changes to this project will be documented in this file.
 - Added `OrganizationUrl` as a column in default logger
 - Adding `sentMessageAnchorStyles` customization for anchors
 
+### Fix
+- [A11Y] Fix `aria-labels` on PreChatSurvey
+
 ## [1.0.5] - 2023-5-26
 
 ### Added
