@@ -111,6 +111,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- [A11Y] Support text spacing for chat button.
+
+
+### Fixed
+- [A11Y] Remove unnecessary region landmarks from header and footer.
+- [A11Y] Several fixes from ford list.
+- Fix issue with markdown render which exposed the chat for XSS attacks.
+
 ## [1.0.1] - 2023-4-4
 
 ### Changed
