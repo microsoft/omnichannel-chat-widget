@@ -109,16 +109,16 @@ All notable changes to this project will be documented in this file.
 
 # Chat Components
 
-## [Unreleased]
+## [1.0.2] - 2023-6-6
 
 ### Added
+
 - [A11Y] Support text spacing for chat button.
 
-
 ### Fixed
+
 - [A11Y] Remove unnecessary region landmarks from header and footer.
-- [A11Y] Several fixes from ford list.
-- Fix issue with markdown render which exposed the chat for XSS attacks.
+- Fixed issue with markdown render which exposed the chat for XSS attacks.
 
 ## [1.0.1] - 2023-4-4
 
