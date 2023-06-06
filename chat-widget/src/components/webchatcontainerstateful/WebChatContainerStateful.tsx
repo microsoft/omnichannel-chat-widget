@@ -21,6 +21,7 @@ import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/ren
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
+import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSentMessageAnchorStyles";
 
 const broadcastChannelMessageEvent = "message";
 const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -146,7 +147,14 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
         .ms_lcw_webchat_received_message a:hover,
         .ms_lcw_webchat_received_message a:active {
             color: ${props?.renderingMiddlewareProps?.receivedMessageAnchorStyles?.color ?? defaultReceivedMessageAnchorStyles?.color};
-        } `}</style>
+        } 
+        .ms_lcw_webchat_sent_message a:link,
+        .ms_lcw_webchat_sent_message a:visited,
+        .ms_lcw_webchat_sent_message a:hover,
+        .ms_lcw_webchat_sent_message a:active {
+            color: ${props?.renderingMiddlewareProps?.sentMessageAnchorStyles?.color ?? defaultSentMessageAnchorStyles?.color};
+        }
+        `}</style>
         <Stack styles={containerStyles}>
             <BasicWebChat></BasicWebChat>
         </Stack>

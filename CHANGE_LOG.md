@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Exposed `adaptiveCardsHostConfig` from webchat and force button text wrap
 - Add ability to render transcript using `WebChat`
 - Added `OrganizationUrl` as a column in default logger
+- Adding `sentMessageAnchorStyles` customization for anchors
 
 ## [1.0.5] - 2023-5-26
 
