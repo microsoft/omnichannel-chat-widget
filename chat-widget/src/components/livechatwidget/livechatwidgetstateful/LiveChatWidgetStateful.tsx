@@ -80,11 +80,8 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-<<<<<<< HEAD
-import DraggableChatWidget from "../../draggable/DraggableChatWidget";
-=======
 import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
->>>>>>> 886ccec257c3ecfc81e39f2837e036773e8e02ee
+import DraggableChatWidget from "../../draggable/DraggableChatWidget";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
