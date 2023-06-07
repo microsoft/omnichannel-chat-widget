@@ -178,6 +178,7 @@ export class HtmlAttributeNames {
     public static readonly unorderedList = "UL";
     public static readonly div = "div";
     public static readonly aTagName = "a";
+    public static readonly pTagName = "p";
     public static readonly noopenerTag = "noopener";
     public static readonly noreferrerTag = "noreferrer";
     public static readonly adaptiveCardClassName = "ac-adaptiveCard";

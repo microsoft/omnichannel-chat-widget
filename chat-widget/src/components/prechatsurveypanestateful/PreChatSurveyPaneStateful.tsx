@@ -117,7 +117,14 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 const current = children[index];
                 if (current && current.className == HtmlAttributeNames.adaptiveCardTextBlockClassName) {
                     value = current.innerHTML;
+                    if (current.childElementCount > 0) {
+                        const paragraph = current.children[0];
+                        if (paragraph.tagName.toLowerCase() == HtmlAttributeNames.pTagName) {
+                            value = paragraph.innerHTML;
+                        }
+                    }
                 }
+
                 if (current && current.tagName.toLowerCase() == HtmlAttributeNames.div && current.childElementCount > 0) {
                     const input = current.children[0].children;
                     if (input?.length > 0

@@ -19,7 +19,7 @@ import useChatSDKStore from "../../hooks/useChatSDKStore";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FooterStateful = (props: any) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    // hideFooterDisplay - the purpose of this is to keep the footer always "active", 
+    // hideFooterDisplay - the purpose of this is to keep the footer always "active",
     // but hide it visually in certain states (e.g., loading state) and show in some other states (e.g. active state).
     // The reason for this approach is to make sure that state variables for audio notification work correctly after minimizing
     const { footerProps, downloadTranscriptProps, audioNotificationProps, hideFooterDisplay } = props;
@@ -31,7 +31,7 @@ export const FooterStateful = (props: any) => {
         onDownloadTranscriptClick: async () => {
             try {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.DownloadTranscriptButtonClicked, Description: "Download Transcript button clicked." });
-                await downloadTranscript(chatSDK, downloadTranscriptProps?.renderMarkDown, downloadTranscriptProps?.bannerMessageOnError, downloadTranscriptProps?.attachmentMessage, state);
+                await downloadTranscript(chatSDK, downloadTranscriptProps, state);
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.DownloadTranscriptFailed,
