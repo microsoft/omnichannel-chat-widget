@@ -12,7 +12,6 @@ All notable changes to this project will be documented in this file.
 - Add ability to render transcript using `WebChat`
 - Added `OrganizationUrl` as a column in default logger
 - Adding `sentMessageAnchorStyles` customization for anchors
-- Uptake for chat-components 3.0
 
 ### Fix
 - [A11Y] Fix `aria-labels` on PreChatSurvey
@@ -33,6 +32,9 @@ All notable changes to this project will be documented in this file.
 - Fixed `ariaTelemetryLogger` not updating `collectorUri`
 - Update `environmentVersion` to be `prod` by default in `defaultInternalTelemetryData`
 - Do not log OOOH errors as WidgetLoadFailure
+
+### Changed
+- Uptake for chat-components 3.0
 
 ## [1.0.4] - 2023-5-8
 
