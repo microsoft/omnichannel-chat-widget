@@ -4481,7 +4481,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(2)"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
               }
             },
             {
@@ -4491,8 +4491,8 @@
               }
             }
           ],
-          "id": "N3ydKB4XN0tR",
-          "title": "StartNewConversation"
+          "id": "5MaiV0l26Voo",
+          "title": "ContinueConversation"
         },
         {
           "actions": [
@@ -4511,7 +4511,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(2)"
               }
             },
             {
@@ -4521,8 +4521,8 @@
               }
             }
           ],
-          "id": "5MaiV0l26Voo",
-          "title": "ContinueConversation"
+          "id": "N3ydKB4XN0tR",
+          "title": "StartNewConversation"
         },
         {
           "actions": [
@@ -4737,7 +4737,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
                   }
                 },
                 {
@@ -4774,7 +4774,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
                   }
                 },
                 {
@@ -4811,7 +4811,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
                   }
                 },
                 {
@@ -4848,7 +4848,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(2)"
                   }
                 },
                 {
@@ -4885,7 +4885,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(2)"
                   }
                 },
                 {
@@ -4922,7 +4922,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(2)"
                   }
                 },
                 {
