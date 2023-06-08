@@ -34,7 +34,7 @@ All notable changes to this project will be documented in this file.
 - Do not log OOOH errors as WidgetLoadFailure
 
 ### Changed
-- Uptake for chat-components 3.0
+- Uptake for chat-components 1.0.3
 
 ## [1.0.4] - 2023-5-8
 
