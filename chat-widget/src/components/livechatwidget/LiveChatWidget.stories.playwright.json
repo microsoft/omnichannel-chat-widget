@@ -3932,31 +3932,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div"
-              }
-            },
-            {
-              "name": "waitForTimeout",
-              "args": {
-                "timeout": 3000
-              }
-            },
-            {
-              "name": "click",
-              "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
-              }
-            }
-          ],
-          "id": "wWaFhxthFk3q",
-          "title": "go to chat screen"
-        },
-        {
-          "actions": [
-            {
-              "name": "click",
-              "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                "selector": "#lcw-footer-left-group>form>textarea"
               }
             },
             {
@@ -3968,7 +3944,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                "selector": "#lcw-footer-left-group>form>input"
               }
             }
           ],
@@ -3980,7 +3956,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                "selector": "#lcw-footer-left-group>form>textarea"
               }
             },
             {
@@ -3998,7 +3974,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                "selector": "#lcw-footer-left-group>form>input"
               }
             },
             {
@@ -4010,6 +3986,30 @@
           ],
           "id": "SVaGZ1lKUlJd",
           "title": "receive message"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 3000
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-footer-left-group>form>textarea"
+              }
+            }
+          ],
+          "id": "wWaFhxthFk3q",
+          "title": "go to chat screen"
         }
       ],
       "screenshots": [
@@ -4032,7 +4032,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 }
               ],
@@ -4043,7 +4043,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4055,7 +4055,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 }
               ],
@@ -4086,7 +4086,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 }
               ],
@@ -4097,7 +4097,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4109,7 +4109,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 }
               ],
@@ -4140,7 +4140,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 }
               ],
@@ -4151,7 +4151,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4163,7 +4163,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 }
               ],
@@ -4194,7 +4194,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 }
               ],
@@ -4205,7 +4205,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4217,7 +4217,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 }
               ],
@@ -4228,7 +4228,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4246,7 +4246,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 },
                 {
@@ -4283,7 +4283,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 }
               ],
@@ -4294,7 +4294,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4306,7 +4306,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 }
               ],
@@ -4317,7 +4317,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4335,7 +4335,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 },
                 {
@@ -4372,7 +4372,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 }
               ],
@@ -4383,7 +4383,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4395,7 +4395,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 }
               ],
@@ -4406,7 +4406,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>textarea"
+                    "selector": "#lcw-footer-left-group>form>textarea"
                   }
                 },
                 {
@@ -4424,7 +4424,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(4)>div:nth-child(1)>form>input"
+                    "selector": "#lcw-footer-left-group>form>input"
                   }
                 },
                 {
@@ -4644,7 +4644,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button"
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
                   }
                 }
               ],
@@ -4675,7 +4675,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button"
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
                   }
                 }
               ],
@@ -4706,7 +4706,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button"
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
                   }
                 }
               ],
