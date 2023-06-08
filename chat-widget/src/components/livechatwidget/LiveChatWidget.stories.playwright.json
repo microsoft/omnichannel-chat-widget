@@ -4481,18 +4481,12 @@
             {
               "name": "click",
               "args": {
-                "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
-              }
-            },
-            {
-              "name": "waitForTimeout",
-              "args": {
-                "timeout": 2000
+                "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
               }
             }
           ],
-          "id": "5MaiV0l26Voo",
-          "title": "ContinueConversation"
+          "id": "SmLoSGg-hTv3",
+          "title": "Minimize"
         },
         {
           "actions": [
@@ -4511,7 +4505,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(2)"
               }
             },
             {
@@ -4541,12 +4535,18 @@
             {
               "name": "click",
               "args": {
-                "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 2000
               }
             }
           ],
-          "id": "SmLoSGg-hTv3",
-          "title": "Minimize"
+          "id": "5MaiV0l26Voo",
+          "title": "ContinueConversation"
         }
       ],
       "screenshots": [
