@@ -20,24 +20,6 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button:nth-child(2)"
-              }
-            },
-            {
-              "name": "waitForTimeout",
-              "args": {
-                "timeout": 100
-              }
-            }
-          ],
-          "id": "jU8T_bpar3RW",
-          "title": "click close button"
-        },
-        {
-          "actions": [
-            {
-              "name": "click",
-              "args": {
                 "selector": "#oc-lcw-confirmation-pane-confirmbutton"
               }
             },
@@ -50,18 +32,6 @@
           ],
           "id": "8EV7u6Umgr39",
           "title": "confirm close chat"
-        },
-        {
-          "actions": [
-            {
-              "name": "click",
-              "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button:nth-child(1)>span"
-              }
-            }
-          ],
-          "id": "ck6M4AVhWqB4",
-          "title": "Click minimize button"
         },
         {
           "actions": [
@@ -224,6 +194,36 @@
           ],
           "id": "8LC8YS6pFfhr",
           "title": "Send Markdown Message"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(2)>div>article>div:nth-child(3)>div>div>button:nth-child(2)"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "jU8T_bpar3RW",
+          "title": "click close button"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(2)>div>article>div:nth-child(3)>div>div>button:nth-child(1)>span"
+              }
+            }
+          ],
+          "id": "ck6M4AVhWqB4",
+          "title": "Click minimize button"
         }
       ],
       "screenshots": [
@@ -913,7 +913,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 1500
+                    "timeout": 10000
                   }
                 }
               ],
@@ -964,7 +964,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button:nth-child(2)"
+                    "selector": "html>body>div:nth-child(2)>div:nth-child(2)>#oc-lcw-header>div:nth-child(3)>div>div>button:nth-child(2)"
                   }
                 },
                 {
@@ -2817,18 +2817,6 @@
         {
           "actions": [
             {
-              "name": "click",
-              "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button:nth-child(2)>span"
-              }
-            }
-          ],
-          "id": "Q3KV_SxUk-qL",
-          "title": "Click close button"
-        },
-        {
-          "actions": [
-            {
               "name": "keyboard.press",
               "args": {
                 "key": "s"
@@ -2867,6 +2855,18 @@
           ],
           "id": "n3g3j9Bw9WjA",
           "title": "Receive message"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(2)>div>article>div:nth-child(3)>div>div>button:nth-child(2)>span"
+              }
+            }
+          ],
+          "id": "Q3KV_SxUk-qL",
+          "title": "Click close button"
         }
       ],
       "screenshots": [
@@ -4481,30 +4481,6 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button"
-              }
-            }
-          ],
-          "id": "SmLoSGg-hTv3",
-          "title": "Minimize"
-        },
-        {
-          "actions": [
-            {
-              "name": "click",
-              "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)"
-              }
-            },
-            {
-              "name": "waitForTimeout",
-              "args": {
-                "timeout": 1000
-              }
-            },
-            {
-              "name": "click",
-              "args": {
                 "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
               }
             },
@@ -4547,6 +4523,30 @@
           ],
           "id": "N3ydKB4XN0tR",
           "title": "StartNewConversation"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(2)>div>article>div:nth-child(3)>div>div>button:nth-child(1)>span"
+              }
+            }
+          ],
+          "id": "SmLoSGg-hTv3",
+          "title": "Minimize"
         }
       ],
       "screenshots": [
@@ -4973,24 +4973,6 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button:nth-child(2)"
-              }
-            },
-            {
-              "name": "waitForTimeout",
-              "args": {
-                "timeout": 100
-              }
-            }
-          ],
-          "id": "uvNSZOsZ08PN",
-          "title": "Click Close Chat"
-        },
-        {
-          "actions": [
-            {
-              "name": "click",
-              "args": {
                 "selector": ".ac-input-required"
               }
             },
@@ -5063,6 +5045,24 @@
           ],
           "id": "f1cQ-UHU0pOZ",
           "title": "Confirm Close Chat"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(2)>div>article>div:nth-child(3)>div>div>button:nth-child(2)"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "uvNSZOsZ08PN",
+          "title": "Click Close Chat"
         }
       ],
       "screenshots": [
@@ -5900,18 +5900,6 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)>div:nth-child(3)>div>div>button:nth-child(2)>span"
-              }
-            }
-          ],
-          "id": "r4pMVqEcicma",
-          "title": "Click Close Chat"
-        },
-        {
-          "actions": [
-            {
-              "name": "click",
-              "args": {
                 "selector": ".ac-input-required"
               }
             },
@@ -5984,6 +5972,18 @@
           ],
           "id": "dX4OAfCTvIFR",
           "title": "Click Confirm Close"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(2)>div>article>div:nth-child(3)>div>div>button:nth-child(2)>span"
+              }
+            }
+          ],
+          "id": "r4pMVqEcicma",
+          "title": "Click Close Chat"
         }
       ],
       "screenshots": [
