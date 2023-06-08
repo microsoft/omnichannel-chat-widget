@@ -12,9 +12,12 @@ All notable changes to this project will be documented in this file.
 - Add ability to render transcript using `WebChat`
 - Added `OrganizationUrl` as a column in default logger
 - Adding `sentMessageAnchorStyles` customization for anchors
+- Uptake for chat-components 3.0
 
 ### Fix
 - [A11Y] Fix `aria-labels` on PreChatSurvey
+- Fix for storybooks issue with transcript properties
+- Fix for visual tests
 
 ## [1.0.5] - 2023-5-26
 
