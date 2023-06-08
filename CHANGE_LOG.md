@@ -112,7 +112,11 @@ All notable changes to this project will be documented in this file.
 
 # Chat Components
 
-## [Unreleased]
+## [1.0.3] - 2023-6-8
+
+### Changed
+
+- Uptake [botframework-webchat@4.15.8](https://www.npmjs.com/package/botframework-webchat/v/4.15.8)
 
 ## [1.0.2] - 2023-6-6
 
