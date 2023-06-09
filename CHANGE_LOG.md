@@ -51,6 +51,10 @@ All notable changes to this project will be documented in this file.
 - Fixed custom context not showing for popout chat
 - Fixed an issue where after ending chat and downloading transcript, a new chat cannot be started
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.4.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.1)
+
 ## [1.0.3] - 2023-4-24
 
 ### Added
