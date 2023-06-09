@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.0] - 2023-6-8
+
 ### Added
 
 - Exposed `adaptiveCardsHostConfig` from webchat and force button text wrap
@@ -13,10 +15,15 @@ All notable changes to this project will be documented in this file.
 - Added `OrganizationUrl` as a column in default logger
 - Adding `sentMessageAnchorStyles` customization for anchors
 
-### Fix
+### Fixed
+
 - [A11Y] Fix `aria-labels` on PreChatSurvey
 - Fix for storybooks issue with transcript properties
 - Fix for visual tests
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.3)
 
 ## [1.0.5] - 2023-5-26
 
@@ -32,9 +39,6 @@ All notable changes to this project will be documented in this file.
 - Fixed `ariaTelemetryLogger` not updating `collectorUri`
 - Update `environmentVersion` to be `prod` by default in `defaultInternalTelemetryData`
 - Do not log OOOH errors as WidgetLoadFailure
-
-### Changed
-- Uptake for chat-components 1.0.3
 
 ## [1.0.4] - 2023-5-8
 
