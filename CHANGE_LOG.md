@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fix
 - [A11Y] Fix `aria-labels` on PreChatSurvey
+- Fix for storybooks issue with transcript properties
+- Fix for visual tests
 
 ## [1.0.5] - 2023-5-26
 
@@ -30,6 +32,9 @@ All notable changes to this project will be documented in this file.
 - Fixed `ariaTelemetryLogger` not updating `collectorUri`
 - Update `environmentVersion` to be `prod` by default in `defaultInternalTelemetryData`
 - Do not log OOOH errors as WidgetLoadFailure
+
+### Changed
+- Uptake for chat-components 1.0.3
 
 ## [1.0.4] - 2023-5-8
 
