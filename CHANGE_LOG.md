@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 # Chat Widget
 
+## [Unreleased]
+
 ## [1.1.0] - 2023-6-8
 
 ### Added
