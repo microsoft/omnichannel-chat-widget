@@ -1,6 +1,7 @@
 import React, { Dispatch, ReactNode, useCallback, useEffect, useState } from "react";
 import DraggableEventReceiver from "./DraggableEventReceiver";
 import IDraggableElementPosition from "./IDraggableElementPosition";
+import IDraggableElementPositionDelta from "./IDraggableElementPositionDelta";
 import IDraggableEvent from "./IDraggableEvent";
 import DraggableEventNames from "./DraggableEventNames";
 import useChatContextStore from "../../hooks/useChatContextStore";
@@ -21,7 +22,7 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
     const [initialPosition, setInitialPosition] = useState<IDraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
     const [cachedPosition, setCachedPosition] = useState<undefined|IDraggableElementPosition>(undefined);
     const [position, setPosition] = useState<IDraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
-    const [delta, setDelta] = useState({left: 0, top: 0});
+    const [delta, setDelta] = useState<IDraggableElementPositionDelta>({left: 0, top: 0});
 
     const repositionElement = (draggableElement: HTMLElement, offsetLeft: number, offsetTop: number) => {
         draggableElement.style.left = `${offsetLeft}px`;
