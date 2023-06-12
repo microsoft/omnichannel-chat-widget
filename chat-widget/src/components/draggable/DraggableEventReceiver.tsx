@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from "react";
-import DraggableEvent from "./DraggableEvent";
+import IDraggableEvent from "./IDraggableEvent";
 
-interface DraggableEventReceiverProps {
+interface IDraggableEventReceiverProps {
     /**
      * Unique channel name to send/receive draggable events to prevent event collisions
      */
@@ -16,16 +16,16 @@ interface DraggableEventReceiverProps {
      * @param event Draggable events
      * @returns
      */
-    onEvent: (event: DraggableEvent) => void;
+    onEvent: (event: IDraggableEvent) => void;
 }
 
 /**
  * Component which would listen to DraggableEvent, update the component position or react accordingly.
  *
- * @param props DraggableEventReceiverProps
+ * @param props IDraggableEventReceiverProps
  * @returns
  */
-const DraggableEventReceiver = (props: DraggableEventReceiverProps) => {
+const DraggableEventReceiver = (props: IDraggableEventReceiverProps) => {
     useEffect(() => {
         const listener = (event: MessageEvent) => {
             const { data } = event;

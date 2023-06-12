@@ -1,8 +1,8 @@
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import DraggableEvent from "./DraggableEvent";
+import IDraggableEvent from "./IDraggableEvent";
 import DraggableEventNames from "./DraggableEventNames";
 
-interface DraggableEventEmitterProps {
+interface IDraggableEventEmitterProps {
     /**
      * Unique channel name to send/receive draggable events to prevent event collisions
      */
@@ -12,25 +12,25 @@ interface DraggableEventEmitterProps {
      */
     children: ReactNode;
     /**
-     * HTML element ID of the trigger element to send DraggableEvent to update the draggable element position
+     * HTML element ID of the trigger element to send IDraggableEvent to update the draggable element position
      */
     elementId: string;
     /**
-     * Target window to post DraggableEvent messages
+     * Target window to post IDraggableEvent messages
      */
     targetWindow?: Window;
 }
 
 /**
- * Trigger component which would send DraggableEvent to the receiver to update the draggable component position
+ * Trigger component which would send IDraggableEvent to the receiver to update the draggable component position
  *
- * @param props DraggableEventEmitterProps
+ * @param props IDraggableEventEmitterProps
  * @returns
  */
-const DraggableEventEmitter = (props: DraggableEventEmitterProps) => {
+const DraggableEventEmitter = (props: IDraggableEventEmitterProps) => {
     const [initialized, setInitialized] = useState(false);
 
-    const postMessage = useCallback((data: DraggableEvent) => {
+    const postMessage = useCallback((data: IDraggableEvent) => {
         const targetWindow = props.targetWindow ?? window;
         targetWindow.postMessage(data, "*");
     }, [props.targetWindow]);

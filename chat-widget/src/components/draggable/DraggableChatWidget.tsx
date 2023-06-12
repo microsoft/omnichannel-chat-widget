@@ -1,7 +1,7 @@
 import React, { Dispatch, ReactNode, useCallback, useEffect, useState } from "react";
 import DraggableEventReceiver from "./DraggableEventReceiver";
-import DraggableElementPosition from "./DraggableElementPosition";
-import DraggableEvent from "./DraggableEvent";
+import IDraggableElementPosition from "./IDraggableElementPosition";
+import IDraggableEvent from "./IDraggableEvent";
 import DraggableEventNames from "./DraggableEventNames";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -18,9 +18,9 @@ interface IDraggableChatWidgetProps {
 
 const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const [initialPosition, setInitialPosition] = useState<DraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
-    const [cachedPosition, setCachedPosition] = useState<undefined|DraggableElementPosition>(undefined);
-    const [position, setPosition] = useState<DraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
+    const [initialPosition, setInitialPosition] = useState<IDraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
+    const [cachedPosition, setCachedPosition] = useState<undefined|IDraggableElementPosition>(undefined);
+    const [position, setPosition] = useState<IDraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
     const [delta, setDelta] = useState({left: 0, top: 0});
 
     const repositionElement = (draggableElement: HTMLElement, offsetLeft: number, offsetTop: number) => {
@@ -65,7 +65,7 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
         setPosition({offsetLeft, offsetTop});
     }, []);
 
-    const resetPosition = useCallback((targetPosition: DraggableElementPosition) => {
+    const resetPosition = useCallback((targetPosition: IDraggableElementPosition) => {
         calculateOffsetsWithinViewport(props.elementId, targetPosition, delta); // Ensure viewport restriction
     }, [delta]);
 
@@ -124,13 +124,13 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
             resetPosition(initialPosition);
         } else if (!isNullOrUndefined(state.appStates.isMinimized) && !state.appStates.isMinimized) {
             if (cachedPosition) {
-                resetPosition(cachedPosition as DraggableElementPosition);
+                resetPosition(cachedPosition as IDraggableElementPosition);
                 setCachedPosition(undefined);
             }
         }
     }, [props.disable, state.appStates.isMinimized, state.appStates.conversationState, initialPosition, cachedPosition]);
 
-    const onEvent = useCallback((event: DraggableEvent) => {
+    const onEvent = useCallback((event: IDraggableEvent) => {
         if (event.eventName === DraggableEventNames.Dragging) {
             if (event.offset) {
                 const offsetLeft = position.offsetLeft + event.offset.x;

@@ -29,7 +29,7 @@ export interface IHeaderStatefulParams {
     draggableEventChannel?: string;
 
     /**
-     * draggableEventEmitterTargetWindow: Target window to post DraggableEvent messages
+     * draggableEventEmitterTargetWindow: Target window to post IDraggableEvent messages
      */
     draggableEventEmitterTargetWindow?: Window;
 
