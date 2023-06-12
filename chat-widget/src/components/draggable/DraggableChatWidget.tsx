@@ -18,9 +18,9 @@ interface DraggableChatWidgetProps {
 
 const DraggableChatWidget = (props: DraggableChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const [initialPosition, setInitialPosition] = useState({offsetLeft: 0, offsetTop: 0});
+    const [initialPosition, setInitialPosition] = useState<DraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
     const [cachedPosition, setCachedPosition] = useState<undefined|DraggableElementPosition>(undefined);
-    const [position, setPosition] = useState({offsetLeft: 0, offsetTop: 0});
+    const [position, setPosition] = useState<DraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
     const [delta, setDelta] = useState({left: 0, top: 0});
 
     const repositionElement = (draggableElement: HTMLElement, offsetLeft: number, offsetTop: number) => {
