@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.0] - 2023-6-8
+
 ### Added
 
 - Exposed `adaptiveCardsHostConfig` from webchat and force button text wrap
@@ -13,8 +15,15 @@ All notable changes to this project will be documented in this file.
 - Added `OrganizationUrl` as a column in default logger
 - Adding `sentMessageAnchorStyles` customization for anchors
 
-### Fix
+### Fixed
+
 - [A11Y] Fix `aria-labels` on PreChatSurvey
+- Fix for storybooks issue with transcript properties
+- Fix for visual tests
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.3)
 
 ## [1.0.5] - 2023-5-26
 
@@ -114,6 +123,12 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+## [1.0.3] - 2023-6-8
+
+### Changed
+
+- Uptake [botframework-webchat@4.15.8](https://www.npmjs.com/package/botframework-webchat/v/4.15.8)
 
 ## [1.0.2] - 2023-6-6
 
