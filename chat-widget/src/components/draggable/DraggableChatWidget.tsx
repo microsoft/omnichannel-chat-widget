@@ -29,7 +29,7 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
         draggableElement.style.top = `${offsetTop}px`;
     };
 
-    const calculateOffsetsWithinViewport = useCallback((id: string, offset, delta) => {
+    const calculateOffsetsWithinViewport = useCallback((id: string, offset: IDraggableElementPosition, delta: IDraggableElementPositionDelta) => {
         const draggableElement: HTMLElement | null = document.getElementById(id);
         const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
 
