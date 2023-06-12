@@ -157,7 +157,7 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
 
     return (
         <>
-            <DraggableEventReceiver channel={props.channel?? "lcw"} onEvent={onEvent}>
+            <DraggableEventReceiver channel={props.channel ?? "lcw"} onEvent={onEvent}>
                 {props.children}
             </DraggableEventReceiver>
         </>
