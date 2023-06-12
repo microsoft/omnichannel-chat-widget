@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Add ability for widget to be draggable on desktop browser
+
 ## [1.1.0] - 2023-6-8
 
 ### Added
@@ -45,7 +48,6 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added Broadcast event `ContactIdNotFound` when using OAuth 2.0 auth code grant
-- Add ability for widget to be draggable
 
 ### Fixed
 
