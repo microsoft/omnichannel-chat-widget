@@ -576,7 +576,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const chatWidgetDraggableConfig = {
         elementId: widgetElementId,
         channel: props.controlProps?.widgetInstanceId ?? "lcw",
-        disabled: props.draggableChatWidgetProps?.disabled === true?? false // Draggable by default, unless explicitly disabled
+        disabled: props.draggableChatWidgetProps?.disabled === true ?? false // Draggable by default, unless explicitly disabled
     };
 
     // Disable receiving IDraggableEvent in current window
