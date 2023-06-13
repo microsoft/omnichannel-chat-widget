@@ -10,14 +10,14 @@ import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetActi
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { isNullOrUndefined } from "../../common/utils";
 
-interface IDraggableChatWidgetProps {
+interface IDraggableChatWidgetInternalProps {
     disabled?: boolean;
     channel?: string;
     elementId: string;
     children: ReactNode;
 }
 
-const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
+const DraggableChatWidget = (props: IDraggableChatWidgetInternalProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const [initialPosition, setInitialPosition] = useState<IDraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
     const [cachedPosition, setCachedPosition] = useState<undefined|IDraggableElementPosition>(undefined);
