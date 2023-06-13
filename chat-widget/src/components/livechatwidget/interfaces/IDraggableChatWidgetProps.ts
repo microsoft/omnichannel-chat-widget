@@ -2,7 +2,7 @@ export interface IDraggableChatWidgetProps {
     /**
      * Whether to enable Draggable Chat Widget.
      */
-    disable?: boolean;
+    disabled?: boolean;
     /**
      * To specify whether the iframe is used to drag. The IDraggableEvent would be posted to the parent window if set to true.
      */

@@ -11,7 +11,7 @@ import { ConversationState } from "../../contexts/common/ConversationState";
 import { isNullOrUndefined } from "../../common/utils";
 
 interface IDraggableChatWidgetProps {
-    disable?: boolean;
+    disabled?: boolean;
     channel?: string;
     elementId: string;
     children: ReactNode;
@@ -75,7 +75,7 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
     }, [delta]);
 
     useEffect(() => {
-        if (props.disable === true) {
+        if (props.disabled === true) {
             return;
         }
 
@@ -108,10 +108,10 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
         return () => {
             window.removeEventListener("resize", calculateOffsets);
         };
-    }, [props.disable]);
+    }, [props.disabled]);
 
     useEffect(() => {
-        if (props.disable === true) {
+        if (props.disabled === true) {
             return;
         }
 
@@ -133,7 +133,7 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
                 setCachedPosition(undefined);
             }
         }
-    }, [props.disable, state.appStates.isMinimized, state.appStates.conversationState, initialPosition, cachedPosition]);
+    }, [props.disabled, state.appStates.isMinimized, state.appStates.conversationState, initialPosition, cachedPosition]);
 
     const onEvent = useCallback((event: IDraggableEvent) => {
         if (event.eventName === DraggableEventNames.Dragging) {
@@ -151,7 +151,7 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
         }
     }, [position, delta]);
 
-    if (props.disable === true) {
+    if (props.disabled === true) {
         return (
             <>
                 {props.children}
