@@ -33,6 +33,10 @@ const DraggableChatWidget = (props: IDraggableChatWidgetProps) => {
         const draggableElement: HTMLElement | null = document.getElementById(id);
         const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
 
+        if (!offset.offsetLeft || !offset.offsetTop) {
+            return;
+        }
+
         let offsetLeft = offset.offsetLeft;
         let offsetTop = offset.offsetTop;
 
