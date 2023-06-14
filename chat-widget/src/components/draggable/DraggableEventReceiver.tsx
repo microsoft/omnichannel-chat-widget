@@ -29,7 +29,7 @@ const DraggableEventReceiver = (props: IDraggableEventReceiverProps) => {
     useEffect(() => {
         const listener = (event: MessageEvent) => {
             const { data } = event;
-            if (data.channel === props.channel) {
+            if (data.channel && props.channel && data.channel === props.channel) {
                 props.onEvent(data);
             }
         };
