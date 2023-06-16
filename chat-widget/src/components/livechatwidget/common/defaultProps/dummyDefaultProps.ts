@@ -1195,15 +1195,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 margin: "3%"
             },
             customTextInputStyleProps: {
-                height: "20px",
-                fontFamily: "Segoe UI, Helvetica Neue, sans-serif"
+                height: "20px"
             },
             customMultilineTextInputStyleProps: {
-                height: "52px",
-                fontFamily: "Segoe UI, Helvetica Neue, sans-serif"
-            },
-            customMultichoiceInputStyleProps: {
-                fontFamily: "Segoe UI, Helvetica Neue, sans-serif"
+                height: "52px"
             }
         }
     },
