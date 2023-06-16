@@ -2,9 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-# Chat Widget
+# Chat Components
 
-## [Unreleased]
+## [1.0.4] - 2023-6-16
 
 ### Fixed
 
