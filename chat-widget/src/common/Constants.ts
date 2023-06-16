@@ -131,6 +131,7 @@ export class Constants {
     public static readonly LWICheckOnVisibilityTimeout = 3 * 60 * 1000; // 3 minute
 
     // Popup mode custom context response event message name
+    public static readonly InitContextParamsRequest = "initContextParamsRequest";
     public static readonly InitContextParamsResponse = "initContextParamsResponse";
 }
 
