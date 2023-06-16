@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Code refactor for event listening for custom context in pop-out mode
 - Fixed font family issue with pre-chat survey pane
 
 ## [1.1.0] - 2023-6-8
