@@ -1,10 +1,9 @@
-import { Constants, HtmlAttributeNames, TranscriptConstants } from "../../../common/Constants";
+import { Constants, TranscriptConstants } from "../../../common/Constants";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
-import { IWebChatTranscriptConfig } from "./interfaces/IWebChatTranscriptConfig";
 import createChatTranscript from "../../../plugins/createChatTranscript";
 import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
 import DOMPurify from "dompurify";
