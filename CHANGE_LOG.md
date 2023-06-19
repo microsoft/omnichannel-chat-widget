@@ -11,6 +11,10 @@ All notable changes to this project will be documented in this file.
 - Code refactor for event listening for custom context in pop-out mode
 - Fixed font family issue with pre-chat survey pane
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.4.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.3)
+
 ## [1.1.0] - 2023-6-8
 
 ### Added
