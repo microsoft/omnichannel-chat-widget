@@ -356,7 +356,15 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getInitContextParamsForPopout = async (): Promise<any> => {
-    return await getInitContextParamForPopoutFromOuterScope(window.opener ? window.opener : window);
+    try {
+        return await getInitContextParamForPopoutFromOuterScope(window.opener ? window.opener : window);
+    } catch (ex) {
+        TelemetryHelper.logLoadingEvent(LogLevel.WARN, {
+            Event: TelemetryEvent.SettingCustomContext,
+            Description: "Retrieving custom context from outer scope failed.",
+            ExceptionDetails: ex
+        });
+    }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
