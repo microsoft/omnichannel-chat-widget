@@ -129,6 +129,8 @@ All notable changes to this project will be documented in this file.
 
 # Chat Components
 
+## [Unreleased]
+
 ## [1.0.4] - 2023-6-20
 
 ### Fixed
