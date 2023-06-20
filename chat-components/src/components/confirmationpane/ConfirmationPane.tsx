@@ -94,7 +94,7 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
                     dir={props.controlProps?.dir || defaultConfirmationPaneControlProps.dir}
                     styles={containerStyles}
                     role="dialog"
-                    aria-describedby={elementId + "-title" +" " +elementId + "-subtitle"}
+                    aria-labelledby={elementId + "-title" +" " +elementId + "-subtitle"}
                 >
 
                     {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.title) ||
