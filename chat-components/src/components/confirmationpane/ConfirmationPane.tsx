@@ -94,15 +94,17 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
                     dir={props.controlProps?.dir || defaultConfirmationPaneControlProps.dir}
                     styles={containerStyles}
                     role="dialog"
-                    aria-labelledby={elementId + "-title"}
-                    aria-describedby={elementId + "-subtitle"}>
+                    aria-describedby={elementId + "-title" +" " +elementId + "-subtitle"}
+                >
 
                     {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.title) ||
                         <Label
                             className={props.styleProps?.classNames?.titleClassName}
-                            styles={titleStyles}
+                            styles= {titleStyles}
                             tabIndex={-1}
-                            id={elementId + "-title"}>
+                            id={elementId +"-title"} 
+                            aria-hidden="true"
+                        >
                             {props.controlProps?.titleText || defaultConfirmationPaneControlProps.titleText}
                         </Label>)}
 
@@ -111,7 +113,9 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
                             className={props.styleProps?.classNames?.subtitleClassName}
                             styles={subtitleStyles}
                             tabIndex={-1}
-                            id={elementId + "-subtitle"}>
+                            id={elementId + "-subtitle"}
+                            aria-hidden="true"
+                        >
                             {props.controlProps?.subtitleText || defaultConfirmationPaneControlProps.subtitleText}
                         </Label>)}
 
