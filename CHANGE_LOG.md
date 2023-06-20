@@ -9,7 +9,6 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Code refactor for event listening for custom context in pop-out mode
-- Fixed font family issue with pre-chat survey pane
 
 ### Changed
 
@@ -130,7 +129,11 @@ All notable changes to this project will be documented in this file.
 
 # Chat Components
 
-## [Unreleased]
+## [1.0.4] - 2023-6-20
+
+### Fixed
+
+- Fixed font family issue with pre-chat survey pane
 
 ## [1.0.3] - 2023-6-8
 
