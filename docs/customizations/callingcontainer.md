@@ -1,7 +1,9 @@
-# Header
+# CallingContainer
 
 ## Table of contents
 
+- [Introduction](#introduction)
+  - [Term definitions](#term-definitions)
 - [Interfaces](#interfaces)
   - [ICallingContainerProps](#icallingcontainerprops)
   - [ICallingContainerControlProps](#icallingcontainercontrolprops)
@@ -13,6 +15,8 @@
   - [ITimer](#itimer)
   - [ICurrentCallClassNames](#icurrentcallclassnames)
 - [Sample Scenarios](#sample-scenarios)
+  - [Customizing IncomingCall container](#customizing-incomingcall-container)
+  - [Customizing CurrentCall container](#customizing-currentcall-container)
 
 ## Introduction
 
@@ -168,3 +172,69 @@ selfVideoTileClassName    | string     | No | The class name for the video scree
 currentCallfooterClassName    | string     | No | The class name for the control button group | -
 
 ## Sample Scenarios
+
+### Customizing IncomingCall container
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    callingContainerProps: {
+        controlProps: {
+            incomingCallControlProps: {
+                hideVideoCall: true
+            }
+        },
+        styleProps: {
+            incomingCallStyleProps: {
+                audioCallButtonStyleProps: {
+                    color: "black",
+                    backgroundColor: "yellow"
+                }
+            }
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-calling-incoming-call-customization.png" width="450">
+
+---------------------------------
+
+### Customizing CurrentCall container
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    callingContainerProps: {
+        controlProps: {
+            currentCallControlProps: {
+                hideVideoButton: true
+            }
+        },
+        styleProps: {
+            currentCallStyleProps: {
+                endCallButtonStyleProps: {
+                    color: "black",
+                    backgroundColor: "white"
+                }
+            }
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-calling-current-call-customization.png" width="450">
