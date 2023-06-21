@@ -131,6 +131,7 @@ export class Constants {
     public static readonly LWICheckOnVisibilityTimeout = 3 * 60 * 1000; // 3 minute
 
     // Popup mode custom context response event message name
+    public static readonly InitContextParamsRequest = "initContextParamsRequest";
     public static readonly InitContextParamsResponse = "initContextParamsResponse";
 }
 
@@ -178,6 +179,7 @@ export class HtmlAttributeNames {
     public static readonly unorderedList = "UL";
     public static readonly div = "div";
     public static readonly aTagName = "a";
+    public static readonly pTagName = "p";
     public static readonly noopenerTag = "noopener";
     public static readonly noreferrerTag = "noreferrer";
     public static readonly adaptiveCardClassName = "ac-adaptiveCard";

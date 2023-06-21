@@ -6,6 +6,33 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Code refactor for event listening for custom context in pop-out mode
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.4.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.3)
+
+## [1.1.0] - 2023-6-8
+
+### Added
+
+- Exposed `adaptiveCardsHostConfig` from webchat and force button text wrap
+- Add ability to render transcript using `WebChat`
+- Added `OrganizationUrl` as a column in default logger
+- Adding `sentMessageAnchorStyles` customization for anchors
+
+### Fixed
+
+- [A11Y] Fix `aria-labels` on PreChatSurvey
+- Fix for storybooks issue with transcript properties
+- Fix for visual tests
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.3)
+
 ## [1.0.5] - 2023-5-26
 
 ### Added
@@ -103,6 +130,29 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+## [1.0.4] - 2023-6-20
+
+### Fixed
+
+- Fixed font family issue with pre-chat survey pane
+
+## [1.0.3] - 2023-6-8
+
+### Changed
+
+- Uptake [botframework-webchat@4.15.8](https://www.npmjs.com/package/botframework-webchat/v/4.15.8)
+
+## [1.0.2] - 2023-6-6
+
+### Added
+
+- [A11Y] Support text spacing for chat button.
+
+### Fixed
+
+- [A11Y] Remove unnecessary region landmarks from header and footer.
+- Fixed issue with markdown render which exposed the chat for XSS attacks.
 
 ## [1.0.1] - 2023-4-4
 

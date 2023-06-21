@@ -50,6 +50,7 @@ export class TelemetryHelper {
             ChannelId: TelemetryManager.InternalTelemetryData?.channelId ?? "lcw2.0",
             ConversationId: TelemetryManager.InternalTelemetryData?.conversationId ?? "",
             OrganizationId: TelemetryManager.InternalTelemetryData?.orgId ?? "",
+            OrganizationUrl: TelemetryManager.InternalTelemetryData?.orgUrl ?? "",
             LCWRuntimeId: TelemetryManager.InternalTelemetryData?.lcwRuntimeId ?? "",
             CurrentRequestId: TelemetryManager.InternalTelemetryData?.currentRequestId ?? "",
             LogLevel: level

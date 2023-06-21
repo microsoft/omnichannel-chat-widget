@@ -5,6 +5,7 @@ export interface BaseContract {
     ConversationId: string;
     ElapsedTimeInMilliseconds?: number;
     OrganizationId: string;
+    OrganizationUrl: string;
     LCWRuntimeId: string;
     CurrentRequestId: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

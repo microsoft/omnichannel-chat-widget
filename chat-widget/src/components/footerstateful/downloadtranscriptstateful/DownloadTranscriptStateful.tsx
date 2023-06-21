@@ -1,11 +1,14 @@
-import { Constants, HtmlAttributeNames, TranscriptConstants } from "../../../common/Constants";
+import { Constants, TranscriptConstants } from "../../../common/Constants";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
+import createChatTranscript from "../../../plugins/createChatTranscript";
 import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
 import DOMPurify from "dompurify";
+import { createFileAndDownload, isNullOrUndefined } from "../../../common/utils";
+import { IDownloadTranscriptProps } from "./interfaces/IDownloadTranscriptProps";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -164,7 +167,7 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcriptContent: string) => string, bannerMessageOnError?: string, attachmentMessage?: string, state?: ILiveChatWidgetContext) => {
+export const downloadTranscript = async (chatSDK: any, downloadTranscriptProps: IDownloadTranscriptProps, state?: ILiveChatWidgetContext) => {
     // Need to keep existing request id for scenarios when trnascript is downloaded after endchat
     const liveChatContext: LiveChatContext = {
         chatToken: state?.domainStates?.chatToken,
@@ -174,17 +177,22 @@ export const downloadTranscript = async (chatSDK: any, renderMarkDown?: (transcr
     if (typeof (data) === Constants.String) {
         data = JSON.parse(data);
     }
-    if (data[Constants.ChatMessagesJson] !== null && data[Constants.ChatMessagesJson] !== undefined) {
-        const chatTranscripts = window.btoa(encodeURIComponent(beautifyChatTranscripts(data[Constants.ChatMessagesJson], renderMarkDown, attachmentMessage)));
-        const byteCharacters = decodeURIComponent(window.atob(chatTranscripts));
 
-        const blob = new Blob([byteCharacters], { "type": "text/html;charset=utf-8" });
-        const link = document.createElement("a");
-        document.body.appendChild(link);
-        link.setAttribute(HtmlAttributeNames.download, TranscriptConstants.ChatTranscriptDownloadFile);
-        link.setAttribute(HtmlAttributeNames.href, URL.createObjectURL(blob));
-        link.setAttribute(HtmlAttributeNames.ariaHidden, "true");
-        link.click();
+    const { bannerMessageOnError, renderMarkDown, attachmentMessage, webChatTranscript } = downloadTranscriptProps;
+
+    if (data[Constants.ChatMessagesJson] !== null && data[Constants.ChatMessagesJson] !== undefined) {
+        const useWebChatTranscript = isNullOrUndefined(webChatTranscript?.disabled) || webChatTranscript?.disabled === false;
+        if (useWebChatTranscript) {
+            const transcriptOptions = {
+                ...webChatTranscript
+            };
+            await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK, false, transcriptOptions);
+        } else {
+            // Legacy Transcript
+            const chatTranscripts = window.btoa(encodeURIComponent(beautifyChatTranscripts(data[Constants.ChatMessagesJson], renderMarkDown, attachmentMessage)));
+            const byteCharacters = decodeURIComponent(window.atob(chatTranscripts));
+            createFileAndDownload(TranscriptConstants.ChatTranscriptDownloadFile, byteCharacters, "text/html;charset=utf-8");
+        }
     } else {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.DownloadTranscriptResponseNullOrUndefined,

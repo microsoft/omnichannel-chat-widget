@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/omnichannel-chat-widget",
-  "version": "1.0.6-0",
+  "version": "1.1.1-0",
   "description": "Microsoft Omnichannel Chat Widget",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",
@@ -74,8 +74,8 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "@microsoft/omnichannel-chat-components": "^1.0.1",
-    "@microsoft/omnichannel-chat-sdk": "1.4.2",
+    "@microsoft/omnichannel-chat-components": "^1.0.3",
+    "@microsoft/omnichannel-chat-sdk": "1.4.3",
     "abort-controller-es5": "^2.0.1",
     "dompurify": "^2.3.4",
     "markdown-it": "^12.3.2",
@@ -102,7 +102,7 @@
     "build-sample": "yarn build && webpack --config ./webpack.config.cjs",
     "build-sample:dev": "yarn build && webpack --config ./webpack.dev.config.cjs",
     "test:visual:build": "yarn build-storybook && yarn test:visual",
-    "lint": "yarn eslint ."
+    "lint": "yarn eslint . --max-warnings=0"
   },
   "resolutions": {
     "**/url-parse": "1.5.9",

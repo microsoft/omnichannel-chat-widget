@@ -377,7 +377,7 @@ const getInitContextParamForPopoutFromOuterScope = async (scope: any): Promise<a
     };
 
     window.addEventListener("message", getInitContextParamsFromParent, false);
-    scope.postMessage({ messageName: Constants.InitContextParamsResponse }, "*");
+    scope.postMessage({ messageName: Constants.InitContextParamsRequest }, "*");
     await waitPromise;
     window.removeEventListener("message", getInitContextParamsFromParent, false);
     return payload;
