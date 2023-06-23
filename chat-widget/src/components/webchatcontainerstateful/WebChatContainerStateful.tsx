@@ -125,8 +125,15 @@ export const WebChatContainerStateful = (props: IWebChatContainerStatefulProps) 
             max-width: ${props?.renderingMiddlewareProps?.systemMessageBoxStyles?.maxWidth ?? defaultSystemMessageBoxStyles?.maxWidth}
         }
 
-        div[class="ac-textBlock"]>p{color:${props?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color}; white-space:${props?.adaptiveCardStyles?.textWhiteSpace ?? defaultAdaptiveCardStyles.textWhiteSpace}}
-        
+        div[class="ac-textBlock"] *,
+        div[class="ac-input-container"] * {color:${props?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color}; white-space:${props?.adaptiveCardStyles?.textWhiteSpace ?? defaultAdaptiveCardStyles.textWhiteSpace}}
+        div[class="ac-textBlock"] a:link,
+        div[class="ac-textBlock"] a:visited,
+        div[class="ac-textBlock"] a:hover,
+        div[class="ac-textBlock"] a:active {
+            color: ${props?.adaptiveCardStyles?.anchorColor ?? defaultAdaptiveCardStyles.anchorColor};
+        } 
+
         .webchat__stacked-layout__content .ac-actionSet > .ac-pushButton > div {white-space: ${props?.adaptiveCardStyles?.buttonWhiteSpace ?? defaultAdaptiveCardStyles.buttonWhiteSpace} !important;}
 
         .ms_lcw_webchat_received_message img.webchat__markdown__external-link-icon { 
