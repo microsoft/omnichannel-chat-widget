@@ -2,11 +2,11 @@ import { IWebChatContainerStatefulProps } from "../../interfaces/IWebChatContain
 import MockAdapter from "../mockadapter";
 import { defaultWebChatStatefulContainerStyles } from "../defaultStyles/defaultWebChatStatefulContainerStyles";
 import { defaultWebChatStatefulProps } from "./defaultWebChatStatefulProps";
-import { defaultWebChatStatefulStyles } from "../defaultStyles/defaultWebChatContainerStatefulStyles";
+import { defaultWebChatStyles } from "../defaultStyles/defaultWebChatStyles";
 import { defaultAdaptiveCardStyles } from "../defaultStyles/defaultAdaptiveCardStyles";
 
 export const defaultWebChatContainerStatefulProps: IWebChatContainerStatefulProps = {
-    webChatStyles: defaultWebChatStatefulStyles,
+    webChatStyles: defaultWebChatStyles,
     webChatProps: defaultWebChatStatefulProps,
     containerStyles: defaultWebChatStatefulContainerStyles,
     disableNewLineMarkdownSupport: false,

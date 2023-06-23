@@ -1,8 +1,9 @@
 # Header
 
 ## Table of contents
+- [Introduction](#intr)
 - [Interfaces](#interfaces)
-    - [IHeaderProps](#iheaderprops)
+    - [IWebChatContainerStatefulProps](#iwebchatcontainerstatefulprops)
     - [IHeaderComponentOverrides](#iheadercomponentoverrides)
     - [IHeaderControlProps](#iheadercontrolprops)
     - [IHeaderStyleProps](#iheaderstyleprops)
@@ -14,15 +15,34 @@
     - [Adding a custom image](#adding-a-custom-image)
     - [Changing element styles](#changing-element-styles)
 
+## Introduction
+
+[WebChat](https://github.com/microsoft/BotFramework-WebChat) is a customizable chat widget owned by Microsoft BotFramework, that the LiveChatWidget uses as the chat container. Instead of exposing css style customizations for components, WebChat has it's own set of customizabilities. 
+
+Instead of static styles, WebChat exposes middlewares that you can use to inject your custom logic and styles for components like message bubbles, attachments, timestamps, typing indicators, etc. Other middlewares let you change certain behaviors on state change like "Send Button Click", or "WebChat Connected". LiveChatWidget has some default middlewares implemented, and you can choose to completely disable them, overwrite them with your own middlewares, or tweak our default middlewares using props defined in LiveChatWidget. More details on that in below sections.
+
+For more information on WebChat customization, please go to WebChat's official [GitHub page](https://github.com/microsoft/BotFramework-WebChat).
+
 ## Interfaces
 
-### [IHeaderProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderProps.ts)
+### [IWebChatContainerStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps.ts)
 
-The top-level interface for customizing `Header`.
+> The top-level interface for customizing `WebChatContainer`.
+
+> [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| `componentOverrides`     | [`IHeaderComponentOverrides`](#iheadercomponentoverrides)     | No | Used for overriding default `Header` components, e.g., icon, title, minimize button, and close button | -
+| containerStyles    | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts)     | No | Overall styles of the `WebChatContainer` component, specifically on the container | [defaultWebChatStatefulContainerStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultWebChatStatefulContainerStyles.ts)
+| webChatStyles  | [StyleOptions](https://github.com/microsoft/BotFramework-WebChat/blob/main/packages/api/src/StyleOptions.ts)     | No | The set of styles exposed by the `WebChat` component | [defaultWebChatStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultWebChatStyles.ts)
+| webChatProps  | [IWebChatProps](#iwebchatprops)  | No | The props of the `WebChat` component, minus the "styleOptions", which is separated out above  | [defaultWebChatStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultProps/defaultWebChatStatefulProps.ts). **This file is not the complete list. Please see the "Middlewares" section below**
+| directLine  | any  | No | WebChat by default uses DirectLine services as the communication service. In LiveChatWidget case, we are overwriting this prop with ACS Adapter to connect to ACS, which is the chat service used in Omnichannel. Most likely you do not want to touch this | see below
+| storeMiddlewares  | any[]  | No | A list of middlewares that you want to run alongside the default WebChat behaviors. LiveChatWidget has implemented several by default. More samples below | see below
+| renderingMiddlewareProps  | IRenderingMiddlewareProps(#irenderingmiddlewareprops) | No | For the default rendering middlewares See the "Middlewares" section below | [defaultStyles](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles). This is the folder that holds all the default rendering middleware styles
+
+
+
+
 `controlProps` | [`IHeaderControlProps`](#iheadercontrolprops) | No | Properties that control the element behariors | -
 `styleProps` | [`IHeaderStyleProps`](iheaderstyleprops) | No | Properties that control the element styles | -
 
@@ -131,152 +151,3 @@ liveChatWidgetProps = {
 </details>
 
 <img src="../.attachments/customizations-header-change-button-icons.png" width="450">
-
---------------------------------
-### Hiding sub-components
-<details>
-    <summary>Show code</summary>
-
-```tsx
-...
-liveChatWidgetProps = {
-    ...liveChatWidgetProps,
-    headerProps: {
-        controlProps: {
-            hideMinimizeButton: true,
-            hideIcon: true
-        }
-    }
-};
-...
-```
-</details>
-
-<img src="../.attachments/customizations-header-hide-elements.png" width="450">
-
---------------------------------
-### Adding a custom button
-<details>
-    <summary>Show code</summary>
-
-```tsx
-...
-const CustomButton = () => {
-    const onClick = () => {
-        alert("Clicked custom button!");
-    };
-    return (
-        <button onClick={onClick}>Custom Button</button>
-    );
-};
-
-liveChatWidgetProps = {
-    ...liveChatWidgetProps,
-    headerProps: {
-        controlProps: {
-            rightGroup: {
-                children: [
-                    <CustomButton/>
-                ]
-            }
-        }
-    }
-};
-...
-```
-</details>
-
-<img src="../.attachments/customizations-header-add-custom-button.gif" width="450">
-
---------------------------------
-### Adding a custom image
-<details>
-    <summary>Show code</summary>
-
-```tsx
-...
-const CustomImage = () => {
-    return (
-        <img style={{width: "35px", height:"35px", margin:"3px"}}
-            src="https://msft-lcw-trial.azureedge.net/public/resources/microsoft.jpg"></img>
-    );
-};
-
-liveChatWidgetProps = {
-    ...liveChatWidgetProps,
-    headerProps: {
-        controlProps: {
-            hideIcon: true,
-            hideTitle: true,
-            hideMinimizeButton: true,
-            hideCloseButton: true,
-            middleGroup: {
-                children: [
-                    <CustomImage/>
-                ]
-            }
-        }
-    }
-};
-...
-```
-</details>
-
-<img src="../.attachments/customizations-header-add-custom-image.png" width="450">
-
---------------------------------
-### Changing element styles
-<details>
-    <summary>Show code</summary>
-
-```tsx
-...
-liveChatWidgetProps = {
-    ...liveChatWidgetProps,
-    styleProps: {
-        ...liveChatWidgetProps.styleProps,
-        generalStyles: {
-            ...liveChatWidgetProps.styleProps.generalStyles,
-            borderRadius: "10px 10px 0 0",
-        }
-    },
-    headerProps: {
-        styleProps: {
-            generalStyleProps: {
-                borderRadius: "10px 10px 0 0",
-                backgroundColor: "#ffdae9",
-            },
-            iconStyleProps: {
-                width: "50px",
-                height: "50px"
-            },
-            titleStyleProps: {
-                color: "black",
-                fontWeight: 600
-            },
-            closeButtonStyleProps: {
-                margin: "10px 5px 5px 5px",
-                color: "black"
-            },
-            closeButtonHoverStyleProps: {
-                backgroundColor: "rgb(200, 200, 200, 0.2)",
-                margin: "10px 5px 5px 5px",
-                color: "black"
-            },
-            minimizeButtonStyleProps: {
-                margin: "10px 5px 5px 5px",
-                color: "black"
-            },
-            minimizeButtonHoverStyleProps: {
-                backgroundColor: "rgb(200, 200, 200, 0.2)",
-                margin: "10px 5px 5px 5px",
-                color: "black"
-            }
-        }
-    }
-};
-...
-```
-</details>
-
-<img src="../.attachments/customizations-header-change-styles.png" width="450">
