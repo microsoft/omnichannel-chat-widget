@@ -1744,7 +1744,10 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
         },
         adaptiveCardStyles: {
             background: "white",
-            color: "black"
+            color: "black",
+            anchorColor: "blue",
+            textWhiteSpace: "normal",
+            buttonWhiteSpace: "normal"
         },
         hyperlinkTextOverride: false
     },
