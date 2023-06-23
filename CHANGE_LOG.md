@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Code refactor for event listening for custom context in pop-out mode
+- Fixed texts in adaptive cards having same color with background
 
 ### Changed
 
