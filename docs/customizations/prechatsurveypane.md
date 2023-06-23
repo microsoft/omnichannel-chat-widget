@@ -26,11 +26,11 @@
 
 | Attribute | Type | Required | Description | Default |
 | --- | --- | --- | --- | --- |
-| id | string | No | The top-level element id for the header | - |
-| role | string | No | Sets the `role` attribute at the top level element of the `PreChatSurveyPane` component | - |
-| dir | string | No | The locale direction under the `PreChatSurveyPane` component | - |
+| id | string | No | The top-level element id for the header | "lcw-prechat-survey-pane-default" |
+| role | string | No | Sets the `role` attribute at the top level element of the `PreChatSurveyPane` component | "alert" |
+| dir | string | No | The locale direction under the `PreChatSurveyPane` component | "auto" |
 | payload | string | No | Adaptive Card payload of `PreChatSurvey` | - |
-| adaptiveCardHostConfig | string | No | Sets how an Adaptive Card Renderer generates UI | - |
+| adaptiveCardHostConfig | string | No | Sets how an Adaptive Card Renderer generates UI | "{\"fontFamily\":\"Segoe UI, Helvetica Neue, sans-serif\",\"containerStyles\":{\"default\":{\"foregroundColors\":{\"default\":{\"default\":\"#000000\"}},\"backgroundColor\":\"#FFFFFF\"}},\"actions\":{\"actionsOrientation\":\"Vertical\",\"actionAlignment\":\"stretch\"}}" |
 | requiredFieldMissingMessage | string | No | Error message on validating inputs | "{0} field is required" |
 | onSubmit | () => void) | No | Sets the behavior after the `PreChatSurveyPane` is submitted | [Starts the chat flow] |
 
