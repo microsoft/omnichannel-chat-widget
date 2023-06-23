@@ -18,7 +18,7 @@ interface IDraggableChatWidgetInternalProps {
 }
 
 const DraggableChatWidget = (props: IDraggableChatWidgetInternalProps) => {
-    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const [initialPosition, setInitialPosition] = useState<IDraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
     const [cachedPosition, setCachedPosition] = useState<undefined|IDraggableElementPosition>(undefined);
     const [position, setPosition] = useState<IDraggableElementPosition>({offsetLeft: 0, offsetTop: 0});
