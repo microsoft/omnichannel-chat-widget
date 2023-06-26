@@ -224,6 +224,21 @@
           ],
           "id": "ck6M4AVhWqB4",
           "title": "Click minimize button"
+        },
+        {
+          "actions": [
+            {
+              "name": "dragDropSelector",
+              "args": {
+                "selector": "#oc-lcw-header",
+                "to": {
+                  "x": 500
+                }
+              }
+            }
+          ],
+          "id": "XTm_IQOBluoN",
+          "title": "Drag chat widget right"
         }
       ],
       "screenshots": [
@@ -2767,6 +2782,108 @@
           "id": "-Esmr55b0-d6",
           "index": 32,
           "title": "send markdown message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "dragDropSelector",
+                  "args": {
+                    "selector": "#oc-lcw-header",
+                    "to": {
+                      "x": 500
+                    }
+                  }
+                }
+              ],
+              "title": "Drag chat widget right"
+            }
+          ],
+          "browserOptionsId": "9xghwRMzYZbk",
+          "browserType": "chromium",
+          "id": "5NRLEW2Uu7Ry",
+          "index": 33,
+          "title": "Drag chat widget right"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(1)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "dragDropSelector",
+                  "args": {
+                    "selector": "#oc-lcw-header",
+                    "to": {
+                      "x": 500
+                    }
+                  }
+                }
+              ],
+              "title": "Drag chat widget right"
+            }
+          ],
+          "browserOptionsId": "9xghwRMzYZbk",
+          "browserType": "firefox",
+          "id": "7mLRu9-jWdzO",
+          "index": 34,
+          "title": "Drag chat widget right"
         }
       ]
     },
@@ -6753,6 +6870,11 @@
           "title": "poschat survey custom"
         }
       ]
+    }
+  },
+  "browserOptions": {
+    "9xghwRMzYZbk": {
+      "cursor": true
     }
   }
 }

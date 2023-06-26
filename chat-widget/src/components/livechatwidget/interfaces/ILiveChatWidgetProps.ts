@@ -23,6 +23,7 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
 import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestateful/interfaces/IPostChatSurveyPaneStatefulProps";
 import { IScrollBarProps } from "./IScrollBarProps";
+import { IDraggableChatWidgetProps } from "./IDraggableChatWidgetProps";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -64,4 +65,5 @@ export interface ILiveChatWidgetProps {
     allowSdkChatSupport?: boolean; // to avoid any performance impact
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     initialCustomContext?: any;
+    draggableChatWidgetProps?: IDraggableChatWidgetProps;
 }
