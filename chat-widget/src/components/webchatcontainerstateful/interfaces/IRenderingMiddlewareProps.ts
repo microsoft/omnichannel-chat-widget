@@ -1,5 +1,5 @@
-import React from "react";
 import { IAttachmentProps } from "./IAttachmentProps";
+import React from "react";
 
 export interface IRenderingMiddlewareProps {
     timestampDir?: "ltr" | "rtl" | "auto";
@@ -9,6 +9,7 @@ export interface IRenderingMiddlewareProps {
     disableAvatarMiddleware?: boolean;
     disableGroupActivitiesMiddleware?: boolean;
     disableTypingIndicatorMiddleware?: boolean;
+    disableThirdPartyCookiesAlert?: boolean;
     hideSendboxOnConversationEnd?: boolean;
 
     userMessageStyleProps?: React.CSSProperties;

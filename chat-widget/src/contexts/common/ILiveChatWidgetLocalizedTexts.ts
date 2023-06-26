@@ -132,4 +132,9 @@ export interface ILiveChatWidgetLocalizedTexts {
      * Chat disconnect message.
      */
     MIDDLEWARE_BANNER_CHAT_DISCONNECT?: string;
+
+    /*
+     * Warning message when third party cookies are blocked.
+     */
+    THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE?: string;
 }

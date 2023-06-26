@@ -168,6 +168,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `CustomerVoiceResponsePageLoaded` | On survey page load complete|
 | `CustomerVoiceFormResponseSubmitted` | On survey submitted |
 | `CustomerVoiceFormResponseError` | On survey response error|
+| `ThirdPartyCookiesBlocked` | On third party cookies being blocked by the browser |
 
 #### Action Events
 
