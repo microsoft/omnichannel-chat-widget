@@ -10,6 +10,8 @@
     - [IPostChatSurveyPaneStyleProps](#ipostchatsurveypanestyleprops)
     - [IPostChatSurveyPaneClassNames](#ipostchatsurveypaneclassnames)
   - [Sample Scenarios](#sample-scenarios)
+    - [Extending post chat survey pane survey URL](#extending-post-chat-survey-pane-survey-url)
+    - [Extending post chat survey pane container title](#extending-post-chat-survey-pane-container-title)
 
 ## Interfaces
 
@@ -48,5 +50,55 @@ role | string | No | Sets the `role` attribute at the top level element of the p
 ## Sample Scenarios
 
 Below samples are build upon the base sample, which can be found [here](https://github.com/microsoft/omnichannel-chat-widget#example-usage). The code snippets below will only show the changes needed to be added before `ReactDOM.render`.
+
+--------------------------------
+
+### Extending post chat survey pane survey URL
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    postChatSurveyPaneProps: {
+					controlProps: {
+						surveyURL: "https://tip.dcv.ms/CouM7itE1c"
+					}
+				}
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/post-chat-survey-pane-oob-survey.png" height="100">
+
+<img src="../.attachments/customizations-post-chat-survey-pane-survey-url.png" height="100">
+
+--------------------------------
+
+### Extending post chat survey pane container title
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    postChatSurveyPaneProps: {
+					controlProps: {
+						title: "This is custom title"
+					}
+				}
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-post-chat-survey-pane-container-title.png" height="100">
 
 --------------------------------
