@@ -1,6 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { Header } from "@microsoft/omnichannel-chat-components";
 import { IHeaderControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderControlProps";
@@ -14,6 +13,7 @@ import { defaultOutOfOfficeHeaderStyleProps } from "./common/styleProps/defaultO
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ConfirmationState } from "../../common/Constants";
+import DraggableEventEmitter from "../draggable/DraggableEventEmitter";
 
 export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
@@ -81,6 +81,35 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     useEffect(() => {
         localConfirmationPaneState.current = state?.domainStates?.confirmationState;
     }, [state?.domainStates?.confirmationState]);
+
+    const draggableEventEmitterProps = {
+        channel: props.draggableEventChannel ?? "lcw",
+        elementId: (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps.id as string : controlProps.id as string,
+        targetWindow: props.draggableEventEmitterTargetWindow ?? window
+    };
+
+    if (props.draggable === true) {
+        const styleProps = (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps;
+        const draggableSelectors = {
+            "&:hover": {
+                cursor: "move"
+            }
+        };
+
+        const selectors = Object.assign({}, (styleProps as any)?.generalStyleProps?.selectors || {}, draggableSelectors); // eslint-disable-line @typescript-eslint/no-explicit-any
+        const generalStyleProps = Object.assign({}, styleProps?.generalStyleProps, {selectors});
+        const draggableStyleProps = Object.assign({}, styleProps, {generalStyleProps});
+
+        return (
+            <DraggableEventEmitter {...draggableEventEmitterProps}>
+                <Header
+                    componentOverrides={headerProps?.componentOverrides}
+                    controlProps={(outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps : controlProps}
+                    styleProps={draggableStyleProps}
+                />
+            </DraggableEventEmitter>
+        );
+    }
 
     return (
         <Header
