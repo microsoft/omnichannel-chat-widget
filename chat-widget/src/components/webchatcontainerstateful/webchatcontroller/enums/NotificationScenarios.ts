@@ -5,5 +5,6 @@ export enum NotificationScenarios {
     AttachmentError = "attachment",
     InternetConnection = "internet connection",
     MaxSizeError = "max size",
-    ChatDisconnect = "chat disconnect"
+    ChatDisconnect = "chat disconnect",
+    TPC = "tpc blocked"
 }

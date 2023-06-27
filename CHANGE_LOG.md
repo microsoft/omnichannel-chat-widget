@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Add ability for widget to be draggable on desktop browser
+- Added warning banner for third party cookies blocked alert
+
 ### Fixed
 
 - Code refactor for event listening for custom context in pop-out mode
