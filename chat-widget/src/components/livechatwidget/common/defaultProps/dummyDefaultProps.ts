@@ -1707,7 +1707,8 @@ export const dummyDefaultProps: ILiveChatWidgetProps = {
                 display: "none"
             },
             receivedMessageAnchorStyles: {
-                color: "white"
+                color: "white",
+                filter: "none"
             }
         },
         localizedTexts: {
