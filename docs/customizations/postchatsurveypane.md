@@ -10,8 +10,8 @@
     - [IPostChatSurveyPaneStyleProps](#ipostchatsurveypanestyleprops)
     - [IPostChatSurveyPaneClassNames](#ipostchatsurveypaneclassnames)
   - [Sample Scenarios](#sample-scenarios)
-    - [Extending post chat survey pane survey URL](#extending-post-chat-survey-pane-survey-url)
-    - [Extending post chat survey pane container title](#extending-post-chat-survey-pane-container-title)
+    - [Changing post chat survey pane survey URL](#changing-post-chat-survey-pane-survey-url)
+    - [Changing post chat survey pane container title](#changing-post-chat-survey-pane-container-title)
 
 ## Interfaces
 
@@ -31,6 +31,7 @@ styleProps | [IPostChatSurveyPaneStyleProps](#ipostchatsurveypanestyleprops) | N
 | id     | string     | No | The top-level element id for the post chat survey pane | "lcw-postchat-survey-pane"
 title | string | No | The post chat survey pane title | "Post chat survey pane"
 role | string | No | Sets the `role` attribute at the top level element of the post chat survey pane | -
+surveyURL | string | No | Sets the Customer Voice Survey URL that will show up in the container iframe| -
 
 ### [IPostChatSurveyPaneStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/postchatsurveypane/interfaces/IPostChatSurveyPaneStyleProps.ts)
 
@@ -45,7 +46,7 @@ role | string | No | Sets the `role` attribute at the top level element of the p
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| iframeClassName | string | No | Custom class name for `PostChatSurveyPane` | -
+| iframeClassName | string | No | Custom class name for `PostChatSurveyPane` iframe | -
 
 ## Sample Scenarios
 
@@ -53,7 +54,7 @@ Below samples are build upon the base sample, which can be found [here](https://
 
 --------------------------------
 
-### Extending post chat survey pane survey URL
+### Changing post chat survey pane survey URL
 
 <details>
     <summary>Show code</summary>
@@ -63,23 +64,25 @@ Below samples are build upon the base sample, which can be found [here](https://
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
     postChatSurveyPaneProps: {
-					controlProps: {
-						surveyURL: "https://tip.dcv.ms/CouM7itE1c"
-					}
-				}
+        controlProps: {
+            surveyURL: "https://tip.dcv.ms/CouM7itE1c"
+        }
+    }
 };
 ...
 ```
 
 </details>
 
-<img src="../.attachments/post-chat-survey-pane-oob-survey.png" height="100">
+Default:
+<img src="../.attachments/customizations-post-chat-survey-pane-oob-survey.png" width="450">
 
-<img src="../.attachments/customizations-post-chat-survey-pane-survey-url.png" height="100">
+Custom:
+<img src="../.attachments/customizations-post-chat-survey-pane-survey-url.png" width="450">
 
 --------------------------------
 
-### Extending post chat survey pane container title
+### Changing post chat survey pane container title
 
 <details>
     <summary>Show code</summary>
@@ -89,10 +92,10 @@ liveChatWidgetProps = {
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
     postChatSurveyPaneProps: {
-					controlProps: {
-						title: "This is custom title"
-					}
-				}
+        controlProps: {
+            title: "This is custom title"
+        }
+    }
 };
 ...
 ```
@@ -100,5 +103,3 @@ liveChatWidgetProps = {
 </details>
 
 <img src="../.attachments/customizations-post-chat-survey-pane-container-title.png" height="100">
-
---------------------------------
