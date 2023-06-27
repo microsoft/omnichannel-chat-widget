@@ -26,5 +26,6 @@ export const defaultMiddlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts = {
     MIDDLEWARE_MESSAGE_DELIVERED: "Sent",
     MIDDLEWARE_MESSAGE_NOT_DELIVERED: "Not Delivered",
     MIDDLEWARE_MESSAGE_RETRY: "Retry",
-    MIDDLEWARE_BANNER_CHAT_DISCONNECT: "Your conversation has been disconnected. For additional assistance, please start a new chat."
+    MIDDLEWARE_BANNER_CHAT_DISCONNECT: "Your conversation has been disconnected. For additional assistance, please start a new chat.",
+    THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE: "Third party cookies are blocked. Reloading this page will start a new conversation."
 };

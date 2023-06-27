@@ -3,26 +3,30 @@
 import { LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
 
 import { IContextDataStore } from "../../interfaces/IContextDataStore";
+import { StorageType } from "../../Constants";
 import { TelemetryHelper } from "../../telemetry/TelemetryHelper";
 import { inMemoryDataStore } from "./defaultInMemoryDataStore";
-import { StorageType } from "../../Constants";
+
+export const isCookieAllowed = () => {
+    try {
+        localStorage;
+        sessionStorage;
+        return true;
+    } catch (error) {
+        if (!(window as any).TPCWarningLogged) {
+            console.warn("Third party cookies blocked.");
+            TelemetryHelper.logActionEvent(LogLevel.WARN, {
+                Event: TelemetryEvent.ThirdPartyCookiesBlocked,
+                Description: "Third party cookies are blocked. Cannot access local storage or session storage."
+            });
+            (window as any).TPCWarningLogged = true;
+        }
+        return false;
+    }
+};
 
 export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage): IContextDataStore => {
     let ttlInMs = 0;
-
-    const isCookieAllowed = () => {
-        try {
-            localStorage;
-            sessionStorage;
-            return true;
-        } catch (error) {
-            if (!(window as any).TPCWarningShown) {
-                console.warn("Third party cookies blocked.");
-                (window as any).TPCWarningShown = true;
-            }
-            return false;
-        }
-    };
 
     if (ttlInMs == 0) {
         ttlInMs = cacheTtlinMins * 60 * 1000;

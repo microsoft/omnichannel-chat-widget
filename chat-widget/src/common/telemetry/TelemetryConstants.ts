@@ -157,6 +157,7 @@ export enum TelemetryEvent {
     SetBotAuthProviderHideCard = "SetBotAuthProviderHideCard",
     SetBotAuthProviderDisplayCard = "SetBotAuthProviderDisplayCard",
     SetBotAuthProviderNotFound = "SetBotAuthProviderNotFound",
+    ThirdPartyCookiesBlocked = "ThirdPartyCookiesBlocked",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
@@ -244,6 +245,7 @@ export class TelemetryConstants {
             case TelemetryEvent.OutOfOfficePaneLoaded:
             case TelemetryEvent.ConfirmationPaneLoaded:
             case TelemetryEvent.ProactiveChatPaneLoaded:
+            case TelemetryEvent.ThirdPartyCookiesBlocked:
                 return ScenarioType.LOAD;
 
             case TelemetryEvent.PrechatSubmitted:
