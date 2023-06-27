@@ -3,7 +3,7 @@
 Welcome to this developer's guide on Chat Widget customizations. You just started you first step to make your chat widget more aligned with your business needs and website themes.
 
 **IMPORTANT!!!**
-**If you are using the Omnichannel out-of-box chat widget (script offering), please read [this]() first before you go through this dev guide. Although the script offering uptakes the `<LiveChatWidget/>` React component and shares the same interfaces, it does offer less customizabilities than the React counterpart. In addition, some implementation details might differ as well.**
+**If you are using the Omnichannel out-of-box chat widget (script offering), please read [this](./MustReadForScriptLayerUsers.md) first before you go through this dev guide. Although the script offering uptakes the `<LiveChatWidget/>` React component and shares the same interfaces, it does offer less customizabilities than the React counterpart. In addition, some implementation details might differ as well.**
 
 ## UI Components
 
@@ -124,7 +124,7 @@ The loading screen that will show up after the chat ends, if embedded mode post 
 
 --------------------------------
 
-### [PostChatSurveyPane]()
+### [PostChatSurveyPane](./postchatsurveypane.md)
 
 The container that will load the Customer Voice survey configured in the Customer Service admin center.
 
@@ -136,7 +136,7 @@ The container for voice and video controls when the agent initiates a voice/vide
 
 <img src="../.attachments/customizations-intro-proactivechat.png" width="300">
 
-### [ReconnectChatPane]()
+### [ReconnectChatPane](./reconnectchatpane.md)
 
 The container that shows up for auth chat users who, after disconnected from the conversation, return to the chat before the reconnect timer expires.
 

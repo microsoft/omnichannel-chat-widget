@@ -1,12 +1,21 @@
 # Reconnect Chat Pane
+
 ## Table of contents
+
 - [Interfaces](#interfaces)
+  - [IReconnectChatPaneProps](#ireconnectchatpaneprops)
+  - [IReconnectChatPaneControlProps](#ireconnectchatpanecontrolprops)
+  - [IReconnectChatPaneStyleProps](#ireconnectchatpanestyleprops)
+  - [IReconnectChatPaneComponentOverrides](#ireconnectchatpanecomponentoverrides)
+  - [IReconnectChatPaneClassNames](#ireconnectchatpaneclassnames)
 - [Sample scenarios](#sample-scenarios)
+  - [Changing background color of the reconnect pane](#changing-background-color-of-the-reconnect-pane)
+  - [Changing button styles of the reconnect pane](#changing-button-styles-of-the-reconnect-pane)
+  - [Override of existing components in the UI](#override-of-existing-components-in-the-ui)
 
 ## Interfaces
 
 ### [IReconnectChatPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneProps.ts)
-
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
@@ -15,7 +24,8 @@
 | styleProps | [IReconnectChatPaneStyleProps](#ireconnectchatpanestyleprops) | No | Properties that control the element styles | - |
 
 ### [IReconnectChatPaneControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneControlProps.ts)
- | Attribute | Type | Required | Description | Default |
+
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 |id | string | No | Id of the reconnect pane | "lcw-reconnect-chat-pane" |
 |dir| string | No | Specifies text direction ("ltr", "rtl", "auto")  | "ltr" |
@@ -37,8 +47,8 @@
 | onStartNewChat | () => void | No | Callback function for start new chat button click | Starts a new conversation |
 | onMinimize| () => void | No | Callback function for minimize button click | Minimize the pane |
 
-
 ### [IReconnectChatPaneStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneStyleProps.ts)
+
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 |generalStyleProps|IStyle | No | General style props of the reconnect pane | [defaultReconnectChatPaneGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/common/default/defaultStyles/defaultReconnectChatPaneGeneralStyles.ts) |
@@ -53,9 +63,6 @@
 |startNewChatButtonHoveredStyleProps|IStyle | No | Start new chat button hovered style props of the reconnect pane | [defaultReconnectChatPaneStartNewChatButtonHoveredStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/common/default/defaultStyles/defaultReconnectChatPaneStartNewChatButtonHoveredStyles.ts) |
 |classNames|[IReconnectChatPaneClassNames](#ireconnectchatpaneclassnames) | No | Class names of the reconnect pane | - |
 
-
-
-
 ### [IReconnectChatPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneComponentOverrides.ts)
 
 | Attribute | Type | Required | Description | Default |
@@ -67,6 +74,7 @@
 | startNewChatButton | ReactNode\|String | No | Component to override the start new chat button | - |
 
 ### [IReconnectChatPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneClassNames.ts)
+
  | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | containerClassName | string | No | Container class name of the reconnect pane | - |
@@ -79,9 +87,9 @@
 | startNewChatButtonClassName | string | No | Start new chat button class name of the reconnect pane | - |
 
 ## Sample scenarios
+
 ### Changing background color of the reconnect pane
 
-<br/>
 <details>
     <summary>Show code</summary>
 
@@ -89,23 +97,23 @@
 ...
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-                reconnectChatPaneProps:{
-                    styleProps:{
-                        generalStyleProps:{
-                            backgroundColor:"red"
-                        }
-                    }
-                },
+    reconnectChatPaneProps:{
+        styleProps:{
+            generalStyleProps:{
+                backgroundColor: "red"
+            }
+        }
+    }
 };
 ...
 ```
+
 </details>
-</br>
-<img src="../.attachments/customizations-reconnect-pane-background-color.png" width="450">
+
+<img src="../.attachments/customizations-reconnect-pane-background-color.png" width="350">
 
 ### Changing button styles of the reconnect pane
 
-<br/>
 <details>
     <summary>Show code</summary>
 
@@ -113,37 +121,33 @@ liveChatWidgetProps = {
 ...
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-                reconnectChatPaneProps:{
-                    styleProps:{
-
-                        buttonGroupStyleProps:{
-                            alignItems:"center"
-                        },
-                        
-                        startNewChatButtonStyleProps:{
-                            backgroundColor:"#FF5733",
-                            color:"#D7BDE2",
-                        },
-                        continueChatButtonStyleProps:{
-                            backgroundColor:"#F1C40F",
-                            color:"#E59866",
-                        }
-                    }
-                },
+    reconnectChatPaneProps:{
+        styleProps:{
+            buttonGroupStyleProps:{
+                alignItems:"center"
+            },
+            startNewChatButtonStyleProps:{
+                backgroundColor:"#FF5733",
+                color:"#D7BDE2",
+            },
+            continueChatButtonStyleProps:{
+                backgroundColor:"#F1C40F",
+                color:"#E59866",
+            }
+        }
+    }
 };
 ...
 ```
-</details>
-</br>
-<img src="../.attachments/customizations-reconnect-pane-buttons-customization.png" width="450">
 
+</details>
+
+<img src="../.attachments/customizations-reconnect-pane-buttons-customization.png" width="350">
 
 --------------------------------
 
-
 ### Override of existing components in the UI
 
-<br/>
 <details>
     <summary>Show code</summary>
 
@@ -158,15 +162,15 @@ const customReactNode = (
 
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-                reconnectChatPaneProps:{
-                    componentOverrides:{
-                        icon: customReactNode
-                    }
-                },
-                },
+    reconnectChatPaneProps:{
+        componentOverrides:{
+            icon: customReactNode
+        }
+    }
 };
 ...
 ```
+
 </details>
 </br>
-<img src="../.attachments/customization-reconnect-pane-passing-custom-node-icon.png" width="450">
+<img src="../.attachments/customizations-reconnect-pane-passing-custom-node-icon.png" width="650">

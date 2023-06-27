@@ -56,7 +56,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | activityMiddleware | OneOrMany\<ActivityMiddleware\>  | No | Changes what goes into each "activity". Activities can be viewed as the section where message goes, but also includes the timestamp, avatar, etc. that are related to that message. A sent/received attachment is also an activity | [activityMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware.tsx)
-| activityStatusMiddleware | OneOrMany\<ActivityStatusMiddleware\>  | No | Control the behaviors of the section that typically holds timestamps | [activityStatusMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware.tsx)
+| activityStatusMiddleware | OneOrMany\<ActivityStatusMiddleware\>  | No | Control the behaviors of the section that typically holds timestamps and send status | [activityStatusMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware.tsx)
 | adaptiveCardsHostConfig | any  | No | Sets the Adaptive Crads' HostConfig for WebChat. For more information on Adaptive Card HostConfig, see [here](https://learn.microsoft.com/en-us/adaptive-cards/rendering-cards/host-config) | -
 | attachmentForScreenReaderMiddleware | OneOrMany\<AttachmentForScreenReaderMiddleware\>  | No | Not used in this package by default. For more information, please go to WebChat's official documenetation page. | -
 | attachmentMiddleware | OneOrMany\<AttachmentMiddleware\>  | No | Control the behaviors of the section that contains the actual message or attachment |[attachmentMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware.tsx)
@@ -127,6 +127,57 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | sentMessageAnchorStyles | React.CSSProperties | No | Styles for the hyperlinks for sent messages | [defaultSentMessageAnchorStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSentMessageAnchorStyles.ts) |
 
 > If any `disable[]Middleware` is set to true, re-assigning that middleware in `webChatProps` with your custom middleware will not work either. If you want to use your custom `ActivityMiddleware` for example, directly inject your middleware in `webChatProps` while not setting `disableActivityMiddleware`, as the default one will already be overwritten.
+
+### [ILiveChatWidgetLocalizedTexts](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/contexts/common/ILiveChatWidgetLocalizedTexts.ts)
+
+| Attribute | Type | Required | Description | Default |
+| - | - | - | - | - |
+| MIDDLEWARE_BANNER_FILE_NULL_ERROR | string | No | Error message shown when the file uploaded is null | "There was an error uploading the file, please try again." |
+| MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR | string | No | Error message shown when the file uploaded exceeds size limit and has no extension. Variable replacement: {0} - File size max limit, {2} - File name | "File {2} exceeds the allowed limit of {0} MB and please upload the file with an appropriate file extension." |
+| MIDDLEWARE_BANNER_FILE_SIZE_EXTENSION_ERROR | string | No | Error message shown when the file uploaded exceeds size limit and has an invalid extension. Variable replacement: {0} - File size max limit, {1} - The invalid extension, {2} - File name | "File {2} exceeds the allowed limit of {0} MB and {1} files are not supported." |
+| MIDDLEWARE_BANNER_FILE_WITHOUT_EXTENSION | string | No | Error message shown when the file uploaded has no extension. Variable replacement: {2} - File name | "File upload error. Please upload the file {2} with an appropriate file extension." |
+| MIDDLEWARE_BANNER_FILE_EXTENSION_ERROR | string | No | Error message shown when the file uploaded has an invalid extension. Variable replacement: {0} - The invalid extension | "{1} files are not supported." |
+| MIDDLEWARE_BANNER_FILE_SIZE_ERROR | string | No | Error message shown when the file uploaded exceeds size limit. Variable replacement: {0} - File size max limit, {2} - File name | "File {2} exceeds the allowed limit of {0} MB." |
+| MIDDLEWARE_BANNER_FILE_IS_EMPTY_ERROR | string | No | Error message shown when the file uploaded is empty. Variable replacement: {2} - File name | "This file {2} can't be attached because it's empty. Please try again with a different file." |
+| MIDDLEWARE_BANNER_ERROR_MESSAGE | string | No | Error message shown on general file upload errors | "Upload failed, please try again." |
+| MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE | string | No | Internet connection back online message | "You’re back online." |
+| MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION | string | No | Error message shown when internet connection is offline | "Unable to connect—please check your internet connection." |
+| MIDDLEWARE_MAX_CHARACTER_COUNT_EXCEEDED | string | No | Error message shown when the send box text length exceeds the limit | "This message is too long. Please shorten your message to avoid sending failure." |
+| MIDDLEWARE_TYPING_INDICATOR_ONE | string | No | Typing indicator message when there's one person actively typing. Variable replacement (optional): {0} - Actively typing participant name | "{0} is typing ..." |
+| MIDDLEWARE_TYPING_INDICATOR_TWO | string | No | Typing indicator message when there are two people actively typing. Variable replacement (optional): {0} - Actively typing participant 1 name, {1} - Actively typing participant 2 name | "{0} and {1} are typing ..." |
+| MIDDLEWARE_TYPING_INDICATOR_MULTIPLE | string | No | Typing indicator message when there are more than two people actively typing. Variable replacement (optional): {0} - Number of actively typing participants | "{0} agents are typing ..." |
+| MIDDLEWARE_MESSAGE_SENDING | string | No | Send status message for sending messages | "Sending ..." |
+| MIDDLEWARE_MESSAGE_DELIVERED | string | No | Send status message for sent messages | "Sent" |
+| MIDDLEWARE_MESSAGE_NOT_DELIVERED | string | No | Send status message for messages that fail to send | "Not Delivered" |
+| MIDDLEWARE_MESSAGE_RETRY | string | No | Send status message action for retrying failed-to-send messages | "Retry" |
+| PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE | string | No | The alert text when a required field in the pre-chat survey is not filled. Variable replacement (optional): {0} - The required field name that's missing | "{0} field is required" |
+| MARKDOWN_EXTERNAL_LINK_ALT | string | No | Markdown Text for URL opening in a new window | "Opens in a new window; external." |
+| MIDDLEWARE_BANNER_CHAT_DISCONNECT | string | No | Warning message on chat disconnect | "Your conversation has been disconnected. For additional assistance, please start a new chat." |
+| THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE | string | No | Warning message when third party cookies are blocked | "Third party cookies are blocked. Reloading this page will start a new conversation." |
+
+### [IBotMagicCodeConfig](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IBotMagicCodeConfig.ts)
+
+| Attribute | Type | Required | Description | Default |
+| - | - | - | - | - |
+| disabled | boolean | No | Whether to use the default WebChat sign in url. Set this to true to enable Bot SSO feature | false |
+| fwdUrl | string | No | The signin url to override | - |
+
+### [IAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAdaptiveCardStyles.ts)
+
+| Attribute | Type | Required | Description | Default |
+| - | - | - | - | - |
+| background | string | No | Adaptive Card background color | "white" |
+| color | string | No | Adaptive Card text color | "black" |
+| anchorColor | string | No | Adaptive Card hyperlink text color | "blue" |
+| buttonWhiteSpace | string | No | Sets the `white-space` css property on buttons | "normal" |
+| textWhiteSpace | string | No | Sets the `white-space` css property on text bloxks | "normal" |
+
+### [IAttachmentProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAttachmentProps.ts)
+| Attribute | Type | Required | Description | Default |
+| - | - | - | - | - |
+| webChatAttachmentId | string | No | Id of attachment elements | "oc-lcw-webchat-attachment" |
+| adaptiveCardAttachmentId | string | No | Id of Adaptive Cards elements | "ms_lcw_webchat_adaptive_card" |
+| enableInlinePlaying | boolean | No | Whether to enable inline playing for video and audio atttachments | true |
 
 ## Sample Scenarios
 
