@@ -16,7 +16,7 @@
 
 | Attribute | Type | Required | Description | Default |
 | --- | --- | --- | --- | --- |
-| surveyProps | [IPreChatSurveyPaneProps](#iprechatsurveypaneprops) | No | Used for overriding default `Header` components | - |
+| surveyProps | [IPreChatSurveyPaneProps](#iprechatsurveypaneprops) | No | Used for overriding default `PreChatSurveyPane` components | - |
 
 ### IPreChatSurveyPaneProps
 
