@@ -26,15 +26,15 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
             telemetryData = TelemetryHelper.addChatConfigDataToTelemetry(props?.chatConfig, telemetryData);
         }
 
-        if (!props.chatSDK?.omnichannelConfig?.orgId) {
+        if (!props.chatSDK?.omnichannelConfig?.orgId || props.chatSDK?.omnichannelConfig?.orgId.trim().length === 0 ) {
             throw new Error("orgId is undefined");
         }
 
-        if (!props.chatSDK?.omnichannelConfig?.widgetId) {
+        if (!props.chatSDK?.omnichannelConfig?.widgetId || props.chatSDK?.omnichannelConfig?.widgetId.trim().length === 0 ) {
             throw new Error("widgetId is undefined");
         }
 
-        if (!props.chatSDK?.omnichannelConfig?.orgUrl) {
+        if (!props.chatSDK?.omnichannelConfig?.orgUrl || props.chatSDK?.omnichannelConfig?.orgUrl.trim().length === 0  ) {
             throw new Error("orgUrl is undefined");
         }
 
