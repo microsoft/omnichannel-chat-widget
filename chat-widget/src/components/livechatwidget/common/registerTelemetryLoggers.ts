@@ -25,6 +25,19 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
         if (props.chatConfig) {
             telemetryData = TelemetryHelper.addChatConfigDataToTelemetry(props?.chatConfig, telemetryData);
         }
+
+        if (!props.chatSDK?.omnichannelConfig?.orgId) {
+            throw new Error("orgId is undefined");
+        }
+
+        if (!props.chatSDK?.omnichannelConfig?.widgetId) {
+            throw new Error("widgetId is undefined");
+        }
+
+        if (!props.chatSDK?.omnichannelConfig?.orgUrl) {
+            throw new Error("orgUrl is undefined");
+        }
+
         telemetryData = TelemetryHelper.addWidgetDataToTelemetry(telemetryConfig, telemetryData);
         telemetryData.OCChatSDKVersion = telemetryConfig.OCChatSDKVersion ?? "0.0.0-0";
         telemetryData.chatComponentVersion = telemetryConfig.chatComponentVersion ?? "0.0.0-0";
