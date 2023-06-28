@@ -22,7 +22,7 @@
 | Attribute | Type | Required | Description | Default |
 | --- | --- | --- | --- | --- |
 | controlProps | [IPreChatSurveyPaneControlProps](#iprechatsurveypanecontrolprops) | No | Properties that control the element behaviors | [defaultPreChatSurveyPaneControlProps](../../chat-components//src/components/prechatsurveypane/common/defaultProps/defaultPreChatSurveyPaneControlProps.ts) |
-| styleProps | [IPreChatSurveyPaneStyleProps](#iprechatsurveypanecontrolprops) | No | Properties that control the element styles | - |
+| styleProps | [IPreChatSurveyPaneStyleProps](#iprechatsurveypanecontrolprops) | No | Properties that control the element styles | [defaultPreChatSurveyPaneStyles.ts](../../chat-components/src/components/prechatsurveypane/common/defaultProps/defaultStyles/defaultPreChatSurveyPaneStyles.ts) |
 
 ### IPreChatSurveyPaneControlProps
 
