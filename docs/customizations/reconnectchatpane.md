@@ -110,7 +110,7 @@ liveChatWidgetProps = {
 
 </details>
 
-<img src="../.attachments/customizations-reconnect-pane-background-color.png" width="350">
+<img src="../.attachments/customizations-reconnect-pane-background-color.png" width="450">
 
 ### Changing button styles of the reconnect pane
 
@@ -142,7 +142,7 @@ liveChatWidgetProps = {
 
 </details>
 
-<img src="../.attachments/customizations-reconnect-pane-buttons-customization.png" width="350">
+<img src="../.attachments/customizations-reconnect-pane-buttons-customization.png" width="450">
 
 --------------------------------
 

@@ -8,7 +8,21 @@
   - [StyleOptions](#styleoptions)
   - [IWebChatProps](#iwebchatprops)
   - [IRenderingMiddlewareProps](#irenderingmiddlewareprops)
-- [Sample Scenarios](#sample-scenarios)
+  - [ILiveChatWidgetLocalizedTexts](#ilivechatwidgetlocalizedtexts)
+  - [IBotMagicCodeConfig](#ibotmagiccodeconfig)
+  - [IAdaptiveCardStyles](#iadaptivecardstyles)
+  - [IAttachmentProps](#iattachmentprops)
+- [WebChat Middlewares](#webchat-middlewares)
+  - [ActivityMiddleware](#activitymiddleware)
+    - [Changing max bubble width](#changing-max-bubble-width)
+    - [Changing message font sizes](#changing-message-font-sizes)
+  - [ActivityStatusMiddleware](#activitystatusmiddleware)
+    - [Changing default timestamp texts and styles](#changing-default-timestamp-texts-and-styles)
+  - [AttachmentMiddleware](#attachmentmiddleware)
+    - [Enable file attachment button and change file name styles](#enable-file-attachment-button-and-change-file-name-styles)
+    - [Enable/Disable inline playing](#enabledisable-inline-playing)
+    - [Changing default timestamp texts and styles](#changing-default-timestamp-texts-and-styles)
+- [More Samples](#more-samples)
   - [Changing header title and icon](#changing-header-title-and-icon)
   - [Changing button icons](#changing-button-icons)
   - [Hiding sub-components](#hiding-sub-components)
@@ -114,7 +128,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | timestampContentStyleProps | React.CSSProperties | No | Styles for the timestamp text | [defaultTimestampContentStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultTimestampContentStyles.ts) |
 | timestampFailedTextStyleProps | React.CSSProperties | No | Styles for the timestamp "Failed" text | [defaultTimestampFailedStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultTimestampFailedStyles.ts) |
 | timestampRetryTextStyleProps | React.CSSProperties | No | Styles for the timestamp "Retry" text | [defaultTimestampRetryStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultTimestampRetryStyles.ts) |
-| attachmentProps | [IAttachmentProps](#iattachmentprops) | No | Styles for the user message containeres | []() |
+| attachmentProps | [IAttachmentProps](#iattachmentprops) | No | Config props for file attachments | [defaultAttachmentProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultProps/defaultAttachmentProps.ts) |
 | attachmentDividerStyles | React.CSSProperties | No | Styles for the divider between the attachment and its title | [defaultAttachmentDividerStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAttachmentDividerStyles.ts) |
 | attachmentStyles | React.CSSProperties | No | Styles for the attachment containeres | [defaultAtttachmentStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAtttachmentStyles.ts) |
 | attachmentIconStyles | React.CSSProperties | No | Styles for the attachment icon as part of the title | [defaultAtttachmentIconStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAtttachmentIconStyles.ts) |
@@ -173,18 +187,52 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | textWhiteSpace | string | No | Sets the `white-space` css property on text bloxks | "normal" |
 
 ### [IAttachmentProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAttachmentProps.ts)
+
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | webChatAttachmentId | string | No | Id of attachment elements | "oc-lcw-webchat-attachment" |
 | adaptiveCardAttachmentId | string | No | Id of Adaptive Cards elements | "ms_lcw_webchat_adaptive_card" |
 | enableInlinePlaying | boolean | No | Whether to enable inline playing for video and audio atttachments | true |
 
-## Sample Scenarios
+## WebChat Middlewares
 
-Below samples are build upon the base sample, which can be found [here](https://github.com/microsoft/omnichannel-chat-widget#example-usage). The code snippets below will only show the changes needed to be added before `ReactDOM.render`.
+The `<LiveChatWidget/>` component utilizes multiple WebChat's built-in middlewares. If these are overwritten completely, some of the default behaviors might break. If you decide to do this, please read the source code carefully on what the current middlewares do.
 
---------------------------------
-### Changing header title and icon
+The sections below will list out each default rendering middleware and sample usages that require `renderingMiddlewareProps` changes (overwriting certain middleware code). If a common usage is not included here, it most likely doesn't need any modifications in the `renderingMiddlewareProps` prop, but in `webChatProps` or `webChatStyles` props. They will be included in [More Samples](#more-samples) section
+
+### ActivityMiddleware
+
+This middleware controls what goes into a message bubble and its surrounding elements. The default ActivityMiddleware renders system messages and user messages differently and decodes HTML strings, among other things.
+
+#### Changing max bubble width
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        renderingMiddlewareProps: {
+            userMessageBoxStyles: {
+                maxWidth: "40%"
+            },
+            systemMessageBoxStyles: {
+                maxWidth: "40%"
+            }
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-webchatcontainer-custom-bubble-width.png" width="450">
+
+#### Changing message font sizes
+
 <details>
     <summary>Show code</summary>
 
@@ -205,12 +253,19 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
-<img src="../.attachments/customizations-header-change-title-icon.png" width="450">
+<img src="../.attachments/customizations-webchatcontainer-custom-message-font-size.png" width="450">
 
 --------------------------------
-### Changing button icons
+
+### ActivityStatusMiddleware
+
+This middlewares contains timestamp, sender name and send status that appear under the message bubbles.
+
+#### Changing default timestamp texts and styles
+
 <details>
     <summary>Show code</summary>
 
@@ -218,14 +273,111 @@ liveChatWidgetProps = {
 ...
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-    headerProps: {
-        controlProps: {
-            minimizeButtonProps: {
-                iconName: "MiniContract"
+    webChatContainerProps: {
+        renderingMiddlewareProps: {
+            timestampFailedTextStyleProps: {
+                color: "orange"
             },
-            closeButtonProps: {
-                iconName: "Leave"
-            },
+            timestampRetryTextStyleProps: {
+                color: "purple"
+            }
+        },
+        localizedTexts: {
+            MIDDLEWARE_MESSAGE_NOT_DELIVERED: "Message failed to send!"
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-webchatcontainer-custom-activity-status.png" width="450">
+
+--------------------------------
+
+### AttachmentMiddleware
+
+This middleware controls what goes into the message bubble, excluding surrounding elements like timestamp and avatar. It also defines the behavior of attachments.
+
+#### Enable file attachment button and change file name styles
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        webChatStyles: {
+            hideUploadButton: false
+        },
+        renderingMiddlewareProps: {
+            attachmentFileNameStyles: {
+                color: "red !important"
+            }
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-webchatcontainer-custom-attachment-title.png" width="450">
+
+#### Enable/Disable inline playing
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        webChatStyles: {
+            hideUploadButton: false
+        },
+        renderingMiddlewareProps: {
+            attachmentProps: {
+                enableInlinePlaying: false
+            }
+        }
+    }
+};
+...
+```
+
+</details>
+
+<span>
+<img src="../.attachments/customizations-webchatcontainer-enable-inline-playing.png" width="450">
+<img src="../.attachments/customizations-webchatcontainer-disable-inline-playing.png" width="450">
+</span>
+
+## More Samples
+
+### Changing message bubble and adaptive card colors
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        adaptiveCardStyles: {
+            background: "black",
+            color: "white"
+        },
+        webChatStyles: {
+            bubbleBackground: "lightblue",
+            bubbleTextColor: "black",
+            bubbleFromUserBackground: "#ff0000",
+            bubbleFromUserTextColor: "yellow"
         }
     }
 };
@@ -233,4 +385,51 @@ liveChatWidgetProps = {
 ```
 </details>
 
-<img src="../.attachments/customizations-header-change-button-icons.png" width="450">
+<img src="../.attachments/customizations-webchatcontainer-custom-message-color.png" width="450">
+
+### Changing suggested action styles
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        webChatStyles: {
+            suggestedActionBackgroundColor: "blue",
+            suggestedActionBorderColor: "green",
+            suggestedActionTextColor: "red",
+            suggestedActionLayout: "flow" // "stacked"
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-webchatcontainer-custom-suggested-actions.png" width="450">
+
+### Disable send box
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        webChatStyles: {
+            hideSendBox: true
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-webchatcontainer-disable-sendbox.png" width="450">
