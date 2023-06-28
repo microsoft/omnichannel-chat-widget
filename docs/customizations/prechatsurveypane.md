@@ -4,7 +4,8 @@
 - [Interfaces](#interfaces)
     - [IPreChatSurveyPaneStatefulParams](#iprechatsurveypanestatefulparams)
     - [IPreChatSurveyPaneProps](#iprechatsurveypaneprops)
-    - [IPreChatSurveyPaneStyleProps](#iprechatsurveypanecontrolprops)
+    - [IPreChatSurveyPaneControlProps](#iprechatsurveypanecontrolprops)
+    - [IPreChatSurveyPaneStyleProps](#iprechatsurveypanestyleprops)
 - [Sample Scenarios](#sample-scenarios)
     - [Changing adaptive card host config background color](#changing-adaptive-card-host-config-background-color)
     - [Changing adaptive card payload](#changing-adaptive-card-payload)
@@ -22,7 +23,7 @@
 | Attribute | Type | Required | Description | Default |
 | --- | --- | --- | --- | --- |
 | controlProps | [IPreChatSurveyPaneControlProps](#iprechatsurveypanecontrolprops) | No | Properties that control the element behaviors | [defaultPreChatSurveyPaneControlProps](../../chat-components//src/components/prechatsurveypane/common/defaultProps/defaultPreChatSurveyPaneControlProps.ts) |
-| styleProps | [IPreChatSurveyPaneStyleProps](#iprechatsurveypanecontrolprops) | No | Properties that control the element styles | [defaultPreChatSurveyPaneStyles.ts](../../chat-components/src/components/prechatsurveypane/common/defaultProps/defaultStyles/defaultPreChatSurveyPaneStyles.ts) |
+| styleProps | [IPreChatSurveyPaneStyleProps](#iprechatsurveypanestyleprops) | No | Properties that control the element styles | [defaultPreChatSurveyPaneStyles.ts](../../chat-components/src/components/prechatsurveypane/common/defaultProps/defaultStyles/defaultPreChatSurveyPaneStyles.ts) |
 
 ### IPreChatSurveyPaneControlProps
 
