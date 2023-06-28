@@ -47,3 +47,155 @@
 | customMultichoiceInputStyleProps | [IPreChatSurveyPaneElementStyles](../../chat-components/src/components/prechatsurveypane/interfaces/IPreChatSurveyPaneElementStyles.ts) | No | Styles of the `PreChatSurveyPane` multiple choice inputs | [defaultPreChatSurveyPaneMultichoiceInputStyles.ts](../../chat-components/src/components/prechatsurveypane/common/defaultProps/defaultStyles/defaultPreChatSurveyPaneMultichoiceInputStyles.ts) |
 
 ## Sample Scenarios
+
+### Changing survey background color
+<details>
+    <summary> Show code</summary>
+
+```tsx
+...
+const adaptiveCardHostConfig = {
+    fontFamily: "arial, serif", // font family
+    actions: {
+        actionAlignment: "stretch",
+        actionsOrientation: "Vertical"
+    },
+    containerStyles: {
+        default: {
+            backgroundColor: "#f1f1f1", // background color
+            foregroundColors: {
+                default: {
+                    default: "#000" // font color
+                }
+            }
+        }
+    }
+};
+
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    preChatSurveyPaneProps: {
+        controlProps: {
+            adaptiveCardHostConfig: JSON.stringify(adaptiveCardHostConfig),
+        }
+    }
+};
+...
+```
+</details>
+
+<img src="../.attachments/customizations-prechat-adaptive-card-host-config-change-background-color.png" width="450">
+
+----------
+
+### Changing adaptive card payload
+<details>
+    <summary> Show code</summary>
+
+```tsx
+...
+const payload = {
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.1",
+    "body": [
+        {
+            "type": "TextBlock",
+            "weight": "bolder",
+            "text": "Hi! Let's start with a couple of questions."
+        },
+        {
+            "type": "Input.Text",
+            "id": "1e5e4e7a-8f0b-ec11-b6e6-000d3a305d38",
+            "label": "Your Name",
+            "maxLength": 100,
+            "isRequired": true,
+            "errorMessage": "Name is required"
+        },
+        {
+            "type": "Input.Text",
+            "id": "487eee2b-41df-4548-bdfa-d27e8f123502",
+            "label": "Email",
+            "maxLength": 100,
+            "isRequired": true,
+            "errorMessage": "Email is required"
+        },
+        {
+            "type": "Input.ChoiceSet",
+            "id": "e4bdf7cb-995e-ec11-8f8f-000d3a31376e",
+            "label": "What brings you here today?",
+            "isMultiSelect": false,
+            "value": "1",
+            "style": "compact",
+            "choices": [
+                {
+                    "title": "--- select an option ---",
+                    "value": "1"
+                },
+                {
+                    "title": "Product Question",
+                    "value": "2"
+                },
+                {
+                    "title": "Billing Question",
+                    "value": "3"
+                },
+                {
+                    "title": "Support Question",
+                    "value": "4"
+                },
+                {
+                    "title": "Others",
+                    "value": "5"
+                }
+            ]
+        },
+        {
+            "type": "Input.Text",
+            "id": "7f8f5d6d-995e-ec11-8f8f-000d3a31376e",
+            "label": "Anything else you would like us to know?",
+            "style": "text",
+            "isMultiline": true,
+            "maxLength": 250
+        },
+        {
+            "type": "Input.Toggle",
+            "id": "b26011d2-995e-ec11-8f8f-000d3a31376e",
+            "title": "I agree to the [Privacy policy](https://privacy.microsoft.com/en-us/privacystatement)",
+            "valueOn": "True",
+            "valueOff": "False",
+            "value": "false"
+        },
+        {
+            "type": "TextBlock",
+            "isSubtle": true,
+            "text": "Fields marked with * are mandatory.",
+            "wrap": true
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.Submit",
+            "title": "Start Chatting",
+            "data": {
+                "Type": "InputSubmit"
+            }
+        }
+    ]
+}
+
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    preChatSurveyPaneProps: {
+        controlProps: {
+            payload: JSON.stringify(payload),
+        }
+    }
+};
+...
+```
+</details>
+
+<img src="../.attachments/customizations-prechat-custom-adaptive-card-payload.png" width="450">
+
+----------
