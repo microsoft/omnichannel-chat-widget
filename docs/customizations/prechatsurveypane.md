@@ -6,6 +6,8 @@
     - [IPreChatSurveyPaneProps](#iprechatsurveypaneprops)
     - [IPreChatSurveyPaneStyleProps](#iprechatsurveypanecontrolprops)
 - [Sample Scenarios](#sample-scenarios)
+    - [Changing adaptive card host config background color](#changing-adaptive-card-host-config-background-color)
+    - [Changing adaptive card payload](#changing-adaptive-card-payload)
 
 ## Interfaces
 
@@ -48,7 +50,7 @@
 
 ## Sample Scenarios
 
-### Changing survey background color
+### Changing adaptive card host config background color
 <details>
     <summary> Show code</summary>
 
