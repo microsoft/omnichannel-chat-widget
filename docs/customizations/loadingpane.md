@@ -50,10 +50,10 @@ hideIcon | boolean | No | Whether to hide the icon on the loading pane | false
 hideTitle | boolean | No | Whether to hide the title string on the loading pane | false
 titleText | string | No | The title text of the loading pane | "Welcome to"
 hideSubtitle | boolean | No | Whether to hide the subtitle on the loading pane | false
-subtitleText | boolean | No | The subtitle text of the loading pane | "live chat support..."
+subtitleText | string | No | The subtitle text of the loading pane | "live chat support..."
 hideSpinner | boolean | No | Whether to hide the spinner on the loading pane | false
 spinnerSize | SpinnerSize | No | The size of the spinner on the loading pane | -
-spinnerText | boolean | No | The spinner text of the loading pane | "Loading..."
+spinnerText | string | No | The spinner text of the loading pane | "Loading..."
 hideSpinnerText | boolean | No | Whether to hide the spinner text on the loading pane | false
 
 > :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
