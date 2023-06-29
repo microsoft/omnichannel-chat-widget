@@ -10,13 +10,13 @@
   - [ILoadingPaneClassNames](#iloadingpaneclassnames)
 - [Sample Scenarios](#sample-scenarios)
   - [Changing order of components TODO](#changing-header-title-and-icon)
-  - [Changing element styles TODO](#changing-button-icons)
+  - [Changing element styles TODO customize a bunch of stuff](#changing-button-icons)
 
 ## Interfaces
 
 ### [ILoadingPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/loadingpane/interfaces/ILoadingPaneProps.ts)
 
-The top-level interface for customizing `Header`.
+The top-level interface for customizing `LoadingPane`.
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
@@ -89,7 +89,7 @@ Below samples are build upon the base sample, which can be found [here](https://
 
 --------------------------------
 
-### Changing order of components TODO
+### Changing loading pane title, subtitle, spinner, icon, and hiding spinner text
 
 <details>
     <summary>Show code</summary>
@@ -98,14 +98,24 @@ Below samples are build upon the base sample, which can be found [here](https://
 ...
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-    headerProps: {
+    loadingPaneProps: {
         controlProps: {
-            headerIconProps: {
-                src: "https://msft-lcw-trial.azureedge.net/public/resources/microsoft.jpg"
+            titleText: "Hello there!",
+            subtitleText: "Please wait for Microsoft support...",
+            hideSpinnerText: true,
+            spinnerSize: 3
+        },
+        styleProps: {
+            titleStyleProps: {
+                fontFamily: "Impact",
+                fontSize: "44px"
             },
-            headerTitleProps: {
-                text: "Contoso Coffee"
+            subtitleStyleProps: {
+                fontSize: "28px"
             },
+            iconImageProps: {
+                src: "https://msft-lcw-trial.azureedge.net/public/resources/microsoft.jpg",
+            }
         }
     }
 };
@@ -114,11 +124,11 @@ liveChatWidgetProps = {
 
 </details>
 
-<img src="../.attachments/customizations-header-change-title-icon.png" width="450">
+<img src="../.attachments/customizations-loading-pane-change-texts-icon-spinner.png" width="450">
 
 --------------------------------
 
-### Changing element styles TODO
+### Changing loading pane element ordering
 
 <details>
     <summary>Show code</summary>
@@ -127,15 +137,24 @@ liveChatWidgetProps = {
 ...
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-    headerProps: {
-        controlProps: {
-            minimizeButtonProps: {
-                iconName: "MiniContract"
+    loadingPaneProps: {
+        styleProps: {
+            titleStyleProps: {
+                order: 5
             },
-            closeButtonProps: {
-                iconName: "Leave"
+            subtitleStyleProps: {
+                order: 2
             },
-        }
+            iconStyleProps: {
+                order: 1
+            },
+            spinnerStyleProps: {
+                order: 4
+            },
+            spinnerTextStyleProps: {
+                order: 3
+            }
+        },
     }
 };
 ...
@@ -143,5 +162,5 @@ liveChatWidgetProps = {
 
 </details>
 
-<img src="../.attachments/customizations-header-change-button-icons.png" width="450">
+<img src="../.attachments/customizations-loading-pane-change-element-ordering.png" width="450">
 
