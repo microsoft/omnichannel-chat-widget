@@ -383,6 +383,7 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-webchatcontainer-custom-message-color.png" width="450">
