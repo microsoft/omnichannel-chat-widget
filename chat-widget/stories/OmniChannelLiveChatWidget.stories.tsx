@@ -21,14 +21,13 @@ const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatW
 export const Default = LiveChatWidgetTemplate.bind({});
 
 const telemetryConfigGlobal = {
-
     appId: "00000000-0000-0000-0000-000000000000",
     orgId: "00000000-0000-0000-0000-000000000000",
     orgUrl: "https://contoso.crm.dynamics.com",
-    telemetryDisabled:true,
-    chatComponentVersion : "111111",
-    OCChatSDKVersion : "222222",
-    chatWidgetVersion : "333333",
+    telemetryDisabled: true,
+    chatComponentVersion: "111111",
+    OCChatSDKVersion: "222222",
+    chatWidgetVersion: "333333",
 };
 
 const liveChatWidgetDefaultProps: ILiveChatWidgetProps = {

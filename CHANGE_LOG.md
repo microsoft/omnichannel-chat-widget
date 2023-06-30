@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 - Code refactor for event listening for custom context in pop-out mode
 - Fixed texts in adaptive cards having same color with background
+- Validations to avoid empty telemetry data.
 
 ### Changed
 
