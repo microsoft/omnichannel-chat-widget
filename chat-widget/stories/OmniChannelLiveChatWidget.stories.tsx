@@ -20,6 +20,17 @@ const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatW
 
 export const Default = LiveChatWidgetTemplate.bind({});
 
+const telemetryConfigGlobal = {
+
+    appId: "00000000-0000-0000-0000-000000000000",
+    orgId: "00000000-0000-0000-0000-000000000000",
+    orgUrl: "https://contoso.crm.dynamics.com",
+    telemetryDisabled:true,
+    chatComponentVersion : "111111",
+    OCChatSDKVersion : "222222",
+    chatWidgetVersion : "333333",
+};
+
 const liveChatWidgetDefaultProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
@@ -31,7 +42,7 @@ const liveChatWidgetDefaultProps: ILiveChatWidgetProps = {
             left: "20px"
         }
     },
-    telemetryConfig: undefined
+    telemetryConfig: telemetryConfigGlobal
 };
 
 Default.args = liveChatWidgetDefaultProps;
@@ -110,7 +121,7 @@ const liveChatWidgetDefaultWithSurveyProps: ILiveChatWidgetProps = {
             }
         }
     },
-    telemetryConfig: undefined
+    telemetryConfig: telemetryConfigGlobal
 };
 
 DefaultWithSurvey.args = liveChatWidgetDefaultWithSurveyProps;
@@ -348,7 +359,7 @@ const liveChatWidgetCustom: ILiveChatWidgetProps = {
             }
         }
     },
-    telemetryConfig: undefined
+    telemetryConfig: telemetryConfigGlobal
 };
 
 Custom.args = liveChatWidgetCustom;

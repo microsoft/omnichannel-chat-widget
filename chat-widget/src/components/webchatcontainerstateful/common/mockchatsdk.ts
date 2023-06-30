@@ -7,6 +7,11 @@ export class MockChatSDK {
 
     public isMockModeOn = true;
 
+    public omnichannelConfig = {
+        widgetId: "00000000-0000-0000-0000-000000000000",
+        orgId: "00000000-0000-0000-0000-000000000000",
+        orgUrl: "https://contoso.crm.dynamics.com",
+    }
     public async startChat() {
         await this.sleep(1000);
     }
