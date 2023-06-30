@@ -23,13 +23,9 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
             ariaConfig: Object.assign({}, defaultAriaConfig, telemetryConfig?.ariaConfigurations)
         };
 
-
-
         if (props.chatConfig) {
             telemetryData = TelemetryHelper.addChatConfigDataToTelemetry(props?.chatConfig, telemetryData);
         }
-
-        console.log("ELOPEZANAYA : telemetryConfig", JSON.stringify(telemetryConfig));
 
         if (!props.chatSDK?.omnichannelConfig?.orgId || props.chatSDK?.omnichannelConfig?.orgId.trim().length === 0 ) {
             throw new Error("orgId is undefined in ChatSDK");
