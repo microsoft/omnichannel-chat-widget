@@ -203,6 +203,19 @@ export class TelemetryHelper {
 
     public static addWidgetDataToTelemetry(telemetryConfig: ITelemetryConfig, telemetryInternalData: IInternalTelemetryData): IInternalTelemetryData {
         const telemetryDataLocal: IInternalTelemetryData = telemetryInternalData;
+
+        if (!telemetryConfig?.appId || telemetryConfig?.appId.trim() === "") {
+            throw new Error("TelemetryConfig.appId is not set");
+        }
+
+        if (!telemetryConfig?.orgId || telemetryConfig?.orgId.trim() === "") {
+            throw new Error("TelemetryConfig.orgId is not set");
+        }
+
+        if (!telemetryConfig?.orgUrl || telemetryConfig?.orgUrl.trim() === "") {
+            throw new Error("TelemetryConfig.orgUrl is not set");
+        }
+        
         telemetryDataLocal.widgetId = telemetryConfig?.appId;
         telemetryDataLocal.orgId = telemetryConfig?.orgId;
         telemetryDataLocal.orgUrl = telemetryConfig?.orgUrl;
