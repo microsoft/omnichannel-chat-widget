@@ -44,7 +44,7 @@ The default landing UI component when the widget loads.
 
 --------------------------------
 
-### [PreChatSurveyPane]()
+### [PreChatSurveyPane](./prechatsurveypane.md)
 
 If configured, will show up once chat button is clicked.
 
@@ -52,7 +52,7 @@ If configured, will show up once chat button is clicked.
 
 --------------------------------
 
-### [LoadingPane]()
+### [LoadingPane](./loadingpane.md)
 
 The loading screen that will show up after chat button is clicked or prechat is submitted.
 
@@ -68,7 +68,7 @@ The header bar on top of the chat widget.
 
 --------------------------------
 
-### [WebChatContriner]()
+### [WebChatContriner](./webchatcontainer.md)
 
 The container that holds the messages between the agent and the customer.
 
@@ -100,7 +100,7 @@ The popup that shows up asking for more information when the customer clicks the
 
 --------------------------------
 
-### [OOOHPane]()
+### [OOOHPane](./ooohpane.md)
 
 The screen that alerts the customer that the widget id currently out of operating hours.
 
