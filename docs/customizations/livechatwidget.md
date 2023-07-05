@@ -73,7 +73,7 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 | useSessionStorage | boolean | No | TWhether to use sessionStorage or localStorage for the default data storage | false
 | allowSdkChatSupport | boolean | No | Whether to support these [SDK methods](https://learn.microsoft.com/en-us/dynamics365/customer-service/developer/omnichannel-reference#methods) for the out of box widget. If you're using this npm package directly, setting this to false is recommended  | true
 | initialCustomContext | any | No | The custom context that will be sent to the Omnichannel backend on first started chat | -
-| draggableChatWidgetProps | [IDraggableChatWidgetProps.ts](./draggablechatwidget) | No | Controls the properties of draggable chat widget | - |
+| draggableChatWidgetProps | [IDraggableChatWidgetProps.ts](#idraggablechatwidgetprops) | No | Controls the properties of draggable chat widget | - |
 
 ### [IAudioNotificationProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/footerstateful/audionotificationstateful/interfaces/IAudioNotificationProps.ts)
 
@@ -150,6 +150,15 @@ Custom React components can be passed as input to override the default sub-compo
 | thumbBackgroundColor | string | No | Scrollbar thumb background color | "#888" |
 | thumbBorderRadius | string | No | Scrollbar thumb border radius in px | "10px" |
 | thumbHoverColor | string | No | Scrollbar thumb hover color | "#555" |
+
+### [IDraggableChatWidgetProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/IDraggableChatWidgetProps.ts)
+
+The top-level interface for customizing `DraggableChatWidget`
+
+| Attribute | Type | Required | Description | Default |
+| - | - | - | - | - |
+| disabled | boolean | No | Whether to disable the feature | False |
+| targetIframe | boolean | No | Specify whether the chat widget is being used within an iframe or not | False |
 
 ## Sample Scenarios
 
