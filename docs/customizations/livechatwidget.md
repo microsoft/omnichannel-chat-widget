@@ -73,6 +73,7 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 | useSessionStorage | boolean | No | TWhether to use sessionStorage or localStorage for the default data storage | false
 | allowSdkChatSupport | boolean | No | Whether to support these [SDK methods](https://learn.microsoft.com/en-us/dynamics365/customer-service/developer/omnichannel-reference#methods) for the out of box widget. If you're using this npm package directly, setting this to false is recommended  | true
 | initialCustomContext | any | No | The custom context that will be sent to the Omnichannel backend on first started chat | -
+| draggableChatWidgetProps | [IDraggableChatWidgetProps.ts](./draggablechatwidget) | No | Controls the properties of draggable chat widget | - |
 
 ### [IAudioNotificationProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/footerstateful/audionotificationstateful/interfaces/IAudioNotificationProps.ts)
 
