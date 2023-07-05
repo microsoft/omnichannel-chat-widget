@@ -11,11 +11,11 @@
   - [IAudioNotificationProps](#iaudionotificationprops)
 
   - [IDownloadTranscriptProps](#idownloadtranscriptprops)
-  
+
   - [ILiveChatWidgetComponentOverrides](#ilivechatwidgetcomponentoverrides)
-  
+
   - [ILiveChatWidgetControlProps](#ilivechatwidgetcontrolprops)
-  
+
   - [ILiveChatWidgetStyleProps](#ilivechatwidgetstyleprops)
 
   - [IScrollBarProps](#iscrollbarprops)
@@ -59,7 +59,7 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 | outOfOfficeHoursPaneProps | [IOOOHPaneProps](./ooohpane.md) | No | Controls the properties of the out of operating hours pane, when chat button is clicked outside of operating hours | [defaultOOOHPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/outofofficehourspane/common/defaultProps/defaultOOOHPaneProps.ts)
 | postChatLoadingPaneProps | [ILoadingPaneProps](./loadingpane.md) | No | Controls the properties of the loading pane before showing post chat survey | See [PostChatLoadingPane](./postchatloadingpane.md)
 | postChatSurveyPaneProps | [IPostChatSurveyPaneStatefulProps](./postchat.md) | No | Controls the properties of the post chat survey pane, after the chat ends | See [PostChatSurvey](./postchatsurvey.md)
-| preChatSurveyPaneProps | [IPreChatSurveyPaneProps](./prechat.md) | No | Controls the properties of the post chat survey pane, before the chat starts | [defaultPreChatSurveyPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/prechatsurveypane/common/defaultProps/defaultPreChatSurveyPaneProps.ts)
+| preChatSurveyPaneProps | [IPreChatSurveyPaneProps](./prechatsurveypane.md) | No | Controls the properties of the post chat survey pane, before the chat starts | [defaultPreChatSurveyPaneProps](../../chat-components/src/components/prechatsurveypane/common/defaultProps/defaultPreChatSurveyPaneProps.ts)
 | proactiveChatPaneProps | [IProactiveChatPaneStatefulProps](./proactivechat.md) | No | Controls the properties of the proactive chat pane | [defaultProactiveChatPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/proactivechatpane/common/default/defaultProps/defaultProactiveChatPaneProps.ts)
 | reconnectChatPaneProps | [IReconnectChatPaneStatefulProps](./reconnectchat.md) | No | Controls the properties of the reconnect pane, when an auth chat user returns to the chat before the Reconnect timer expires | [defaultReconnectChatPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/common/default/defaultProps/defaultReconnectChatPaneProps.ts)
 | startChatErrorPaneProps | [IStartChatErrorPaneProps](./startchaterrorpane.md) | No | Controls the properties of the pane that shows up when start chat process has an error and is unble to proceed to conversation | -
