@@ -22,17 +22,17 @@
     - [Enable file attachment button and change file name styles](#enable-file-attachment-button-and-change-file-name-styles)
     - [Enable/Disable inline playing](#enabledisable-inline-playing)
     - [Changing default timestamp texts and styles](#changing-default-timestamp-texts-and-styles)
+  - [AvatarMiddleware](#avatarmiddleware)
+    - [Replacing avatar initials with image](#replacing-avatar-initials-with-image)
+    - [Hideing agent avatar](#hiding-agent-avatars)
 - [More Samples](#more-samples)
-  - [Changing header title and icon](#changing-header-title-and-icon)
-  - [Changing button icons](#changing-button-icons)
-  - [Hiding sub-components](#hiding-sub-components)
-  - [Adding a custom button](#adding-a-custom-button)
-  - [Adding a custom image](#adding-a-custom-image)
-  - [Changing element styles](#changing-element-styles)
+  - [Changing message bubble and adaptive card colors](#changing-message-bubble-and-adaptive-card-colors)
+  - [Changing suggested action styles](#changing-suggested-action-styles)
+  - [Disable send box](#disable-send-box)
 
 ## Introduction
 
-[WebChat](https://github.com/microsoft/BotFramework-WebChat) is a customizable chat widget owned by Microsoft BotFramework, that the LiveChatWidget uses as the chat container. Instead of exposing css style customizations for components, WebChat has it's own set of customizabilities. 
+[WebChat](https://github.com/microsoft/BotFramework-WebChat) is a customizable chat widget owned by Microsoft BotFramework, that the LiveChatWidget uses as the chat container. Instead of exposing css style customizations for components, WebChat has it's own set of customizabilities.
 
 Instead of static styles, WebChat exposes middlewares that you can use to inject your custom logic and styles for components like message bubbles, attachments, timestamps, typing indicators, etc. Other middlewares let you change certain behaviors on state change like "Send Button Click", or "WebChat Connected". LiveChatWidget has some default middlewares implemented, and you can choose to completely disable them, overwrite them with your own middlewares, or tweak our default middlewares using props defined in LiveChatWidget. More details on that in below sections.
 
@@ -198,7 +198,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 The `<LiveChatWidget/>` component utilizes multiple WebChat's built-in middlewares. If these are overwritten completely, some of the default behaviors might break. If you decide to do this, please read the source code carefully on what the current middlewares do.
 
-The sections below will list out each default rendering middleware and sample usages that require `renderingMiddlewareProps` changes (overwriting certain middleware code). If a common usage is not included here, it most likely doesn't need any modifications in the `renderingMiddlewareProps` prop, but in `webChatProps` or `webChatStyles` props. They will be included in [More Samples](#more-samples) section
+The sections below will list out some of the most used default rendering middlewares and sample usages that require `renderingMiddlewareProps` changes (overwriting certain middleware code). If a common usage is not included here, it most likely doesn't need any modifications in the `renderingMiddlewareProps` prop, but in `webChatProps` or `webChatStyles` props. They will be included in [More Samples](#more-samples) section.
 
 ### ActivityMiddleware
 
@@ -355,6 +355,71 @@ liveChatWidgetProps = {
 <span>
 <img src="../.attachments/customizations-webchatcontainer-enable-inline-playing.png" width="450">
 <img src="../.attachments/customizations-webchatcontainer-disable-inline-playing.png" width="450">
+</span>
+
+### AvatarMiddleware
+
+This middleware controls the avatar element. The default AvatarMiddleware uses agent's initials (2 letters), but it can be easily changed to show an image. Note that it is currently not possible to distinguish whether the agent is a human agent or bot agent.
+
+The default AvatarMiddleware currently doesn't show sender avatar. To enable it, try to disable AvatarMiddleware or inject your own custom middleware.
+
+#### Replacing avatar initials with image
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        renderingMiddlewareProps: {
+            avatarStyleProps: {
+                backgroundImage: "url('../.attachments/customizations-webchatcontainer-bot-avatar.png')",
+                backgroundSize: "cover"
+            },
+            avatarTextStyleProps: {
+                display: "none"
+            }
+        }
+    }
+};
+...
+```
+
+</details>
+
+<span>
+<img src="../.attachments/customizations-webchatcontainer-changing-avatar.png" width="450">
+</span>
+
+> Alternatively, if you want to use the default props offered by WebChat, you can do so after setting `disableAvatarMiddleware` to false.
+
+#### Hiding agent avatars
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        webChatStyles: {
+            avatarSize: 0
+        },
+        renderingMiddlewareProps: {
+            disableAvatarMiddleware: true
+        }
+    }
+};
+...
+```
+
+</details>
+
+<span>
+<img src="../.attachments/customizations-webchatcontainer-hide-avatar.png" width="450">
 </span>
 
 ## More Samples
