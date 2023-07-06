@@ -86,7 +86,7 @@ liveChatWidgetProps = {
 
 </details>
 
-<img src="../.attachments/customizations-oooh-pane-hide-subtitle.png" width="450">
+<img src="../.attachments/customizations-oooh-pane-change-title.png" width="450">
 
 --------------------------------
 

@@ -1,3 +1,4 @@
 export const defaultReceivedMessageAnchorStyles: React.CSSProperties = {
-    color: "white"
+    color: "white",
+    filter: "none"
 };
