@@ -1,7 +1,8 @@
+import { Constants } from "../../../common/Constants";
 import MarkdownIt from "markdown-it";
 import MarkdownItForInline from "markdown-it-for-inline";
+import MarkdownSlack from "slack-markdown-it";
 import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMarkdownLocalizedTexts";
-import { Constants } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean) => {
@@ -16,8 +17,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                 breaks: (!disableNewLineMarkdownSupport)
             }
         );
-        // ToDo: Commenting below usage of plugin until deferred bug is resolved: https://github.com/mayashavin/markdown-it-slack/issues/1
-        // markdown.use(MarkdownSlack);
+        markdown.use(MarkdownSlack);
     } else {
         markdown = new MarkdownIt(
             Constants.Zero,
