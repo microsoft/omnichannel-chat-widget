@@ -116,9 +116,11 @@ The container for voice and video controls when the agent initiates a voice/vide
 
 --------------------------------
 
-### [PostChatLoadingPane]()
+### [PostChatLoadingPane](./loadingpane.md)
 
-The loading screen that will show up after the chat ends, if embedded mode post chat survey is configured.
+The loading screen that will show up after the chat ends, if embedded mode post chat survey is configured. The props is the same as Loading Pane. Default styles can be found here:
+[styleProps -> generalStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/postchatloadingpanestateful/common/defaultgeneralPostChatLoadingPaneStyleProps.ts)
+[controlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/postchatloadingpanestateful/PostChatLoadingPaneStateful.tsx#L26)
 
 <img src="../.attachments/customizations-intro-postchatloading.png" width="450">
 
