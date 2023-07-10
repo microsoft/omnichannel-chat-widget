@@ -38,14 +38,14 @@ CurrentCall:
 
 The top-level interface for customizing `CallingContainer`.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 controlProps | [ICallingContainerControlProps](#icallingcontainercontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [ICallingContainerStyleProps](#icallingcontainerstyleprops) | No | Properties that control the element styles | -
 
 ### [ICallingContainerControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/interfaces/ICallingContainerControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 id    | string     | No | The top-level element id for the calling container | "lcw-calling-container"
 isIncomingCall | boolean | No | Whether to show the `IncomingCall` screen, or the `CurrentCall` screen. The currentCall screen will appear after an `IncomingCall` request is accepted | false
@@ -58,7 +58,7 @@ hideCallingContainer | boolean | No | Whether to hide the calling container. Thi
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | generalStyleProps | [`IStyle`](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `CallingContainer` component, including the top level container | [`defaultCallingContainerStyles`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/common/defaultStyles/defaultCallingContainerStyles.ts) |
 | className | string | No | Calling container's class name | -
@@ -67,7 +67,7 @@ hideCallingContainer | boolean | No | Whether to hide the calling container. Thi
 
 ### [IIncomingCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/interfaces/IIncomingCallControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 id    | string     | No | The top-level element id for the `IncomingCall` container | "lcw-incoming-call"
 dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `IncomingCall` component | "ltr"
@@ -92,7 +92,7 @@ rightGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more c
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `IncomingCall` component, including the container | [defaultIncomingCallStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
 | audioCallButtonStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the "Accept audio call" button | [defaultIncomingCallStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultIncomingCallStyleProps.ts) |
@@ -107,7 +107,7 @@ rightGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more c
 
 ### [ICurrentCallControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/CurrentCall/interfaces/ICurrentCallControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 id    | string     | No | The top-level element id for the `CurrentCall` container | "lcw-current-call"
 dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `CurrentCall` component | "ltr"
@@ -134,7 +134,7 @@ rightGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more c
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `CurrentCall` component, including the container | [defaultCurrentCallStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultCurrentCallStyleProps.ts) |
 | micButtonStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the "Enable/Disable Microphone" button | [defaultCurrentCallStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultCurrentCallStyleProps.ts) |
@@ -155,7 +155,7 @@ rightGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more c
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 id    | string     | No | The top-level element id for the `Timer` component | "lcw-current-call-timer"
 showHours | boolean | No | Whether to show the Hour section of the timer | false
@@ -163,7 +163,7 @@ timerStyles | [IStyle](https://github.com/microsoft/fluentui/blob/master/package
 
 ### [ICurrentCallClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/CurrentCall/interfaces/ICurrentCallClassNames.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 currentCallComponentClassName    | string     | No | The class name for the `CurrentCall` component | -
 videoTileGroupClassName    | string     | No | The class name for the video tile section | -

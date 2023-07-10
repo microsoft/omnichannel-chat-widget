@@ -18,7 +18,7 @@
 
 The top-level interface for customizing `LoadingPane`.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [ILoadingPaneComponentOverrides](#iloadingpanecomponentoverrides)     | No | Used for overriding default `LoadingPane` components, e.g., icon, title, subtitle, spinner, and spinner text | -
 controlProps | [ILoadingPaneControlProps](#iloadingpanecontrolprops) | No | Properties that control the element behaviors | -
@@ -30,7 +30,7 @@ windowHeight | number | No | Property is used internally to set height such that
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | icon     | ReactNode\|string     | No | Used for overriding default loading pane icon | -
 title | ReactNode\|string | No | Used for overriding default loading pane title | -
@@ -40,7 +40,7 @@ spinnerText | ReactNode\|string | No | Used for overriding default loading pane 
 
 ### [ILoadingPaneControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/loadingpane/interfaces/ILoadingPaneControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | id     | string     | No | The top-level element id for the loading pane | "oc-lcw-loadingpane"
 role | string | No | Sets the `role` attribute at the top level element of the loading pane | "undefined"
@@ -62,7 +62,7 @@ hideSpinnerText | boolean | No | Whether to hide the spinner text on the loading
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `LoadingPane` component, including the container | [defaultLoadingPaneGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/loadingpane/common/defaultProps/defaultStyles/defaultLoadingPaneGeneralStyles.ts) |
 | titleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the loading pane title | [defaultLoadingPaneTitleStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/loadingpane/common/defaultProps/defaultStyles/defaultLoadingPaneTitleStyles.ts) |
@@ -75,7 +75,7 @@ hideSpinnerText | boolean | No | Whether to hide the spinner text on the loading
 
 ### [ILoadingPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/loadingpane/interfaces/ILoadingPaneClassNames.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | iconClassName | string | No | Custom class name for icon | -
 | titleClassName | string | No | Custom class name for title | -

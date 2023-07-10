@@ -46,7 +46,7 @@ For more information on WebChat customization, please go to WebChat's official [
 
 > [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | containerStyles    | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts)     | No | Overall styles of the `WebChatContainer` component, specifically on the container | [defaultWebChatStatefulContainerStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultWebChatStatefulContainerStyles.ts)
 | webChatStyles  | [StyleOptions](#styleoptions)     | No | The set of styles exposed by the `WebChat` component | [defaultWebChatStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultWebChatStyles.ts)
@@ -67,7 +67,7 @@ See the open source type definition in [WebChat](https://github.com/microsoft/Bo
 
 This interface was manually aggregated from WebChat's repo, since WebChat doesn't officially have an interface exposed for all the props to pass into its `<ReactWebChat/>` component. For this reason, this interface might be updated upon future WebChat updates. For more details, please redirect to WebChat official documentation  page.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | activityMiddleware | OneOrMany\<ActivityMiddleware\>  | No | Changes what goes into each "activity". Activities can be viewed as the section where message goes, but also includes the timestamp, avatar, etc. that are related to that message. A sent/received attachment is also an activity | [activityMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware.tsx)
 | activityStatusMiddleware | OneOrMany\<ActivityStatusMiddleware\>  | No | Control the behaviors of the section that typically holds timestamps and send status | [activityStatusMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware.tsx)
@@ -105,7 +105,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 ### [IRenderingMiddlewareProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | timestampDir | "ltr" \| "rtl" \| "auto" | No | Sets the direction of the timestamp string | "ltr" |
 | disableActivityMiddleware | boolean | No | Whether to disable the use of `ActivityMiddleware` | false |
@@ -144,7 +144,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 ### [ILiveChatWidgetLocalizedTexts](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/contexts/common/ILiveChatWidgetLocalizedTexts.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | MIDDLEWARE_BANNER_FILE_NULL_ERROR | string | No | Error message shown when the file uploaded is null | "There was an error uploading the file, please try again." |
 | MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR | string | No | Error message shown when the file uploaded exceeds size limit and has no extension. Variable replacement: {0} - File size max limit, {2} - File name | "File {2} exceeds the allowed limit of {0} MB and please upload the file with an appropriate file extension." |
@@ -171,14 +171,14 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 ### [IBotMagicCodeConfig](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IBotMagicCodeConfig.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | disabled | boolean | No | Whether to use the default WebChat sign in url. Set this to true to enable Bot SSO feature | false |
 | fwdUrl | string | No | The signin url to override | - |
 
 ### [IAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAdaptiveCardStyles.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | background | string | No | Adaptive Card background color | "white" |
 | color | string | No | Adaptive Card text color | "black" |
@@ -188,7 +188,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 ### [IAttachmentProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAttachmentProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | webChatAttachmentId | string | No | Id of attachment elements | "oc-lcw-webchat-attachment" |
 | adaptiveCardAttachmentId | string | No | Id of Adaptive Cards elements | "ms_lcw_webchat_adaptive_card" |
