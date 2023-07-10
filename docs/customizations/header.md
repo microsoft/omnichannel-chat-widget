@@ -24,7 +24,7 @@ The top-level interface for customizing `Header`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IHeaderComponentOverrides](#iheadercomponentoverrides)     | No | Used for overriding default `Header` components, e.g., icon, title, minimize button, and close button | -
-controlProps | [IHeaderControlProps](#iheadercontrolprops) | No | Properties that control the element behariors | -
+controlProps | [IHeaderControlProps](#iheadercontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IHeaderStyleProps](iheaderstyleprops) | No | Properties that control the element styles | -
 
 ### [IHeaderComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderComponentOverrides.ts)

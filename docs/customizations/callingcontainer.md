@@ -40,7 +40,7 @@ The top-level interface for customizing `CallingContainer`.
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-controlProps | [ICallingContainerControlProps](#icallingcontainercontrolprops) | No | Properties that control the element behariors | -
+controlProps | [ICallingContainerControlProps](#icallingcontainercontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [ICallingContainerStyleProps](#icallingcontainerstyleprops) | No | Properties that control the element styles | -
 
 ### [ICallingContainerControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/interfaces/ICallingContainerControlProps.ts)

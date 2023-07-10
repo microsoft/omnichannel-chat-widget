@@ -21,7 +21,7 @@ The top-level interface for customizing the `Out of Office Hours (OOOH) Pane`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IOOOHPaneComponentOverrides](#iooohpanecomponentoverrides)     | No | Used for overriding default `OOOHPane` components | -
-controlProps | [IOOOHPaneControlProps](#iooohpanecontrolprops) | No | Properties that control the element behariors | -
+controlProps | [IOOOHPaneControlProps](#iooohpanecontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IOOOHPaneStyleProps](#iooohpanestyleprops) | No | Properties that control the element styles | -
 
 ### [IOOOHPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/outofofficehourspane/interfaces/IOOOHPaneComponentOverrides.ts)

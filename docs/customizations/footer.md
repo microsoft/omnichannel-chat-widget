@@ -21,7 +21,7 @@ The top-level interface for customizing `Footer`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IFooterComponentOverrides](#ifootercomponentoverrides)     | No | Used for overriding default `Footer` components, including all the default buttons | -
-controlProps | [IFooterControlProps](#ifootercontrolprops) | No | Properties that control the element behariors | -
+controlProps | [IFooterControlProps](#ifootercontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IFooterStyleProps](#ifooterstyleprops) | No | Properties that control the element styles | -
 
 ### [IFooterComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/interfaces/IFooterComponentOverrides.ts)
@@ -100,7 +100,7 @@ liveChatWidgetProps = {
             rightGroup: {
                 children: [
                     <Copyright/>
-                    // Since this is a static elelenmt, alternatively we can use the string format: 
+                    // Since this is a static element, alternatively we can use the string format: 
                     // '{"$$typeof":"$$Symbol:react.element","type":"div","key":"1","ref":null,"props":{"style":{"fontSize":"12px","fontFamily":"Bradley Hand,cursive","padding":"2px"},"children":"© Microsoft 2023"},"_owner":null,"_store":{}}',
                 ]
             }

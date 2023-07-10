@@ -24,7 +24,7 @@ The top-level interface for customizing `ChatButton`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IConfirmationPaneComponentOverrides](#iconfirmationpanecomponentoverrides)     | No | Used for overriding default `ConfirmationPane` components, e.g., title, subtitle, confirm button, cancel button, etc. | -
-controlProps | [IConfirmationPaneControlProps](#iconfirmationpanecontrolprops) | No | Properties that control the element behariors | -
+controlProps | [IConfirmationPaneControlProps](#iconfirmationpanecontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IConfirmationPaneStyleProps](#iconfirmationpanestyleprops) | No | Properties that control the element styles | -
 
 ### [IConfirmationPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneComponentOverrides.ts)
