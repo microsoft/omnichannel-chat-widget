@@ -16,7 +16,7 @@ Each single page of this guide will mainly focus on two parts - Interfaces and S
 - [PreChatSurveyPane](#prechatsurveypane)
 - [LoadingPane](#loadingpane)
 - [Header](#header)
-- [WebChatContriner](#webchatcontriner)
+- [WebChatContriner](#webchatcontainer)
 - [Footer](#footer)
 - [ConfirmationPane](#confirmationpane)
 - [EmailTranscriptPane](#emailtranscriptpane)
