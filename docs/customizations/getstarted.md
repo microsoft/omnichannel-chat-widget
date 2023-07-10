@@ -92,7 +92,7 @@ The popup that shows up when the customer clicks the "X" button to try to close 
 
 --------------------------------
 
-### [EmailTranscriptPane]()
+### [EmailTranscriptPane](./emailtranscriptpane.md)
 
 The popup that shows up asking for more information when the customer clicks the "Email Transcript" button.
 
@@ -132,7 +132,7 @@ The container that will load the Customer Voice survey configured in the Custome
 
 <img src="../.attachments/customizations-intro-postchat.png" width="450">
 
-### [ProactiveChatPane]()
+### [ProactiveChatPane](./proactivechatpane.md)
 
 The container for voice and video controls when the agent initiates a voice/video call request.
 
@@ -144,7 +144,7 @@ The container that shows up for auth chat users who, after disconnected from the
 
 <img src="../.attachments/customizations-intro-reconnectchat.png" width="450">
 
-### [StartChatErrorPane]()
+### [StartChatErrorPane](./loadingpane.md)
 
 The screen that shows up when the start chat process encounters an error.
 
