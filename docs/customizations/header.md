@@ -21,7 +21,7 @@
 
 The top-level interface for customizing `Header`.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IHeaderComponentOverrides](#iheadercomponentoverrides)     | No | Used for overriding default `Header` components, e.g., icon, title, minimize button, and close button | -
 controlProps | [IHeaderControlProps](#iheadercontrolprops) | No | Properties that control the element behaviors | -
@@ -31,7 +31,7 @@ styleProps | [IHeaderStyleProps](iheaderstyleprops) | No | Properties that contr
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | headerIcon     | ReactNode\|string     | No | Used for overriding default header icon | -
 headerTitle | ReactNode\|string | No | Used for overriding default header title | -
@@ -40,7 +40,7 @@ headerCloseButton | ReactNode\|string | No | Used for overriding default close b
 
 ### [IHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | id     | string     | No | The top-level element id for the header | "lcw-header"
 hideIcon | boolean | No | Whether to hide the icon on the header | false
@@ -66,7 +66,7 @@ rightGroup | {children: ReactNode[]\|string[]} | No | Additional custom componen
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `Header` component, including the container | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |
 | iconStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the header icon | [defaultHeaderStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultStyles/defaultHeaderStyleProps.ts) |

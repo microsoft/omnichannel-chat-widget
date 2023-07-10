@@ -14,20 +14,20 @@
 
 ### IPreChatSurveyPaneStatefulParams
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | --- | --- | --- | --- | --- |
 | surveyProps | [IPreChatSurveyPaneProps](#iprechatsurveypaneprops) | No | Used for overriding default `PreChatSurveyPane` components | - |
 
 ### IPreChatSurveyPaneProps
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | --- | --- | --- | --- | --- |
 | controlProps | [IPreChatSurveyPaneControlProps](#iprechatsurveypanecontrolprops) | No | Properties that control the element behaviors | [defaultPreChatSurveyPaneControlProps](../../chat-components//src/components/prechatsurveypane/common/defaultProps/defaultPreChatSurveyPaneControlProps.ts) |
 | styleProps | [IPreChatSurveyPaneStyleProps](#iprechatsurveypanestyleprops) | No | Properties that control the element styles | [defaultPreChatSurveyPaneStyles.ts](../../chat-components/src/components/prechatsurveypane/common/defaultProps/defaultStyles/defaultPreChatSurveyPaneStyles.ts) |
 
 ### IPreChatSurveyPaneControlProps
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | --- | --- | --- | --- | --- |
 | id | string | No | The top-level element id for the header | "lcw-prechat-survey-pane-default" |
 | role | string | No | Sets the `role` attribute at the top level element of the `PreChatSurveyPane` component | "alert" |
@@ -39,7 +39,7 @@
 
 ### IPreChatSurveyPaneStyleProps
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | --- | --- | --- | --- | --- |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of `PreChatSurveyPane` | [defaultGeneralPreChatSurveyPaneStyleProps](./../../chat-widget/src/components/prechatsurveypanestateful/common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps.ts)
 | adaptiveCardContainerStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the adaptive card container | [defaultPreChatSurveyPaneACContainerStyles.ts](../../chat-components/src/components/prechatsurveypane/common/defaultProps/defaultStyles/defaultPreChatSurveyPaneACContainerStyles.ts) |

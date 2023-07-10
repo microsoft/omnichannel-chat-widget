@@ -18,7 +18,7 @@
 
 The top-level interface for customizing `Footer`.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IFooterComponentOverrides](#ifootercomponentoverrides)     | No | Used for overriding default `Footer` components, including all the default buttons | -
 controlProps | [IFooterControlProps](#ifootercontrolprops) | No | Properties that control the element behaviors | -
@@ -28,7 +28,7 @@ styleProps | [IFooterStyleProps](#ifooterstyleprops) | No | Properties that cont
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | DownloadTranscriptButton     | ReactNode\|string     | No | Used for overriding default download transcript button | -
 EmailTranscriptButton | ReactNode\|string | No | Used for overriding default email transcript button | -
@@ -36,7 +36,7 @@ AudioNotificationButton | ReactNode\|string | No | Used for overriding default a
 
 ### [IFooterControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/interfaces/IFooterControlProps.ts)
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | id     | string     | No | The top-level element id for the footer | "oc-lcw-footer"
 hideDownloadTranscriptButton | boolean | No | Whether to hide the download transcript button on the footer | false
@@ -61,7 +61,7 @@ rightGroup | {children: ReactNode[]\|string[]} | No | Additional custom componen
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `Footer` component, including the container | [defaultFooterStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/common/defaultStyles/defaultFooterStyleProps.ts) |
 | downloadTranscriptButtonStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the download transcript button | [defaultFooterStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/common/defaultStyles/defaultFooterStyleProps.ts) |
@@ -100,7 +100,7 @@ liveChatWidgetProps = {
             rightGroup: {
                 children: [
                     <Copyright/>
-                    // Since this is a static elelenmt, alternatively we can use the string format: 
+                    // Since this is a static element, alternatively we can use the string format: 
                     // '{"$$typeof":"$$Symbol:react.element","type":"div","key":"1","ref":null,"props":{"style":{"fontSize":"12px","fontFamily":"Bradley Hand,cursive","padding":"2px"},"children":"© Microsoft 2023"},"_owner":null,"_store":{}}',
                 ]
             }

@@ -18,7 +18,7 @@
 
 The top-level interface for customizing the `Out of Office Hours (OOOH) Pane`.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IOOOHPaneComponentOverrides](#iooohpanecomponentoverrides)     | No | Used for overriding default `OOOHPane` components | -
 controlProps | [IOOOHPaneControlProps](#iooohpanecontrolprops) | No | Properties that control the element behaviors | -
@@ -28,13 +28,13 @@ styleProps | [IOOOHPaneStyleProps](#iooohpanestyleprops) | No | Properties that 
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | title     | ReactNode\|string     | No | Used for overriding default title | -
 
 ### [IOOOHPaneControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/outofofficehourspane/interfaces/IOOOHPaneControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | id     | string     | No | The top-level element id for the OOOH Pane | "lcw-out-of-office-hours-pane"
 hideOOOHPane | boolean | No | Whether to hide the OOOH Pane completely | false
@@ -48,7 +48,7 @@ openLinkInNewTab | boolean | No | Whether to open any hyperlinks in OOOH pane te
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `OOOHPane` component, including the container | [defaultOOOHPaneGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/outofofficehourspane/common/defaultProps/defaultStyles/defaultOOOHPaneGeneralStyles.ts) |
 | titleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the OOOH Pane title | [defaultOOOHPaneTitleStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/outofofficehourspane/common/defaultProps/defaultStyles/defaultOOOHPaneTitleStyles.ts) |
@@ -56,7 +56,7 @@ openLinkInNewTab | boolean | No | Whether to open any hyperlinks in OOOH pane te
 
 ### [IOOOHPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/outofofficehourspane/interfaces/IOOOHPaneClassNames.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | titleClassName | string | No | Custom class name for title | -
 

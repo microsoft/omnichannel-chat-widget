@@ -38,7 +38,7 @@
 
 The top-level interface for customizing `LiveChatWidget`. For more details for each of the attribute, click into the interface related to it. It will redirect you to the corresponding page dedicated to introduce that particular component. The samples on this page will only contain customizations for the overall styles. For samples on how to modify each of the component individually, go to their dedicated dev page.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | audioNotificationProps     | [IAudioNotificationProps](#iaudionotificationprops)     | No | Controls the properties of the sound notification on new messages | -
 | callingContainerProps | [ICallingContainerProps](./callingcontainer.md) | No | Controls the properties of the voice/video container when a voice/video call request is initiated from the agent side | [defaultCallingContainerProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/common/defaultProps/defaultCallingContainerProps.ts)
@@ -77,13 +77,13 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 
 ### [IAudioNotificationProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/footerstateful/audionotificationstateful/interfaces/IAudioNotificationProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | audioSrc     | string  | No | Changes the sound source played when a new message arrives while focus is not on the chat widget | -
 
 ### [IDownloadTranscriptProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | attachmentMessage     | string  | No | The message that will show up in the transcript as a placeholder where an attachment was uploaded. The real attachment will not be included in the transcript | "The following attachment was uploaded during the conversation:"
 | bannerMessageOnError     | string  | No | The error message shown on the chat container error banner when failed to download chat transcript | "Download transcript failed."
@@ -93,7 +93,7 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [`encodeComponentString`](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | chatButton     | ReactNode|string     | No | Used for overriding default chat button | -
 | confirmationPane | ReactNode|string | No | Used for overriding default confirmation pane | -
@@ -111,7 +111,7 @@ Custom React components can be passed as input to override the default sub-compo
 
 ### [ILiveChatWidgetControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | id  | string    | No | The top-level element id for `LiveChatWidget | "oc-lcw" |
 | dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `LiveChatWidget` component | "ltr"`
@@ -136,14 +136,14 @@ Custom React components can be passed as input to override the default sub-compo
 
 ### [ILiveChatWidgetStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetStyleProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | generalStyles     | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts)     | No | The general css styles for the top layer container | [defaultLiveChatWidgetGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultStyles/defaultLiveChatWidgetGeneralStyles.ts) |
 | className     | string | No | The class name for the top layer container | - |
 
 ### [IScrollBarProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/IScrollBarProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | width | string | No | Scrollbar width in px | "7px" |
 | trackBackgroundColor | string | No | Scrollbar track background color | "#f1f1f1" |
@@ -155,7 +155,7 @@ Custom React components can be passed as input to override the default sub-compo
 
 The top-level interface for customizing `DraggableChatWidget`
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | disabled | boolean | No | Whether to disable the feature | False |
 | targetIframe | boolean | No | Specify whether the chat widget is being used within an iframe or not | False |

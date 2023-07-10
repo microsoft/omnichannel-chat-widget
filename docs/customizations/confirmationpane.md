@@ -21,7 +21,7 @@
 
 The top-level interface for customizing `ChatButton`.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IConfirmationPaneComponentOverrides](#iconfirmationpanecomponentoverrides)     | No | Used for overriding default `ConfirmationPane` components, e.g., title, subtitle, confirm button, cancel button, etc. | -
 controlProps | [IConfirmationPaneControlProps](#iconfirmationpanecontrolprops) | No | Properties that control the element behaviors | -
@@ -31,7 +31,7 @@ styleProps | [IConfirmationPaneStyleProps](#iconfirmationpanestyleprops) | No | 
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | title     | ReactNode\|string     | No | Used for overriding default title | -
 subtitle | ReactNode\|string | No | Used for overriding default subtitle | -
@@ -40,7 +40,7 @@ cancelButton | ReactNode\|string | No | Used for overriding default cancel butto
 
 ### [IConfirmationPaneControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneControlProps.ts)
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | id     | string     | No | The top-level element id for the confirmation pane | "lcw-components-confirmation-pane"
 hideConfirmationPane | boolean | No | Whether to hide the confirmation pane completely | false
@@ -65,7 +65,7 @@ onCancel | () => void | No | Sets the behavior after the calcen button is clicke
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `ConfirmationPane` component, including the container | [defaultConfirmationPaneGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/common/defaultStyles/defaultConfirmationPaneGeneralStyles.ts) |
 | titleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the confirmation pane title | [defaultConfirmationPaneTitleStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/common/defaultStyles/defaultConfirmationPaneTitleStyles.ts) |
@@ -81,7 +81,7 @@ onCancel | () => void | No | Sets the behavior after the calcen button is clicke
 
 ### [IConfirmationPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneClassNames.ts)
 
-| Attribute | Type | Required | Description | Default | 
+| Property | Type | Required | Description | Default | 
 | - | - | - | - | - |
 | titleClassName | string | No | Custom class name for title | -
 | subtitleClassName | string | No | Custom class name for subtitle | -

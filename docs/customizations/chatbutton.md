@@ -22,7 +22,7 @@
 
 The top-level interface for customizing `ChatButton`.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IChatButtonComponentOverrides](#ichatbuttoncomponentoverrides)     | No | Used for overriding default `ChatButton` components, e.g., title, subtitle, notification bubble, etc. | -
 controlProps | [IChatButtonControlProps](#ichatbuttoncontrolprops) | No | Properties that control the element behaviors | -
@@ -32,7 +32,7 @@ styleProps | [IChatButtonStyleProps](#ichatbuttonstyleprops) | No | Properties t
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | title | ReactNode\|string | No | Used for overriding default chat button title | -
 subtitle | ReactNode\|string | No | Used for overriding default chat button subtitle | -
@@ -42,7 +42,7 @@ textContainer | ReactNode\|string | No | Used for overriding default text contai
 
 ### [IChatButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | id     | string     | No | The top-level element id for the chat button | "oc-lcw-chat-button"
 hideChatButton | boolean | No | Whether to hide the chat button completely | false
@@ -67,7 +67,7 @@ onClick | () => void | No | Sets the behavior after the chat button is clicked |
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `ChatButton` component, including the container | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonGeneralStyles.ts) |
 | iconStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the chat button icon | [defaultChatButtonIconContainerStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/common/defaultStyles/defaultChatButtonIconContainerStyles.ts) |
@@ -80,7 +80,7 @@ onClick | () => void | No | Sets the behavior after the chat button is clicked |
 
 ### [IChatButtonClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonClassNames.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | titleClassName | string | No | Custom class name for title | -
 | subtitleClassName | string | No | Custom class name for subtitle | -

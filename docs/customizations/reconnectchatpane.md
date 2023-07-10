@@ -17,7 +17,7 @@
 
 ### [IReconnectChatPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 |componentOverrides | [IReconnectChatPaneComponentOverrides](#ireconnectchatpanecomponentoverrides) | No | Used to override default `ReconnectChatPane` components| - |
 | controlProps | [IReconnectChatPaneControlProps](#ireconnectchatpanecontrolprops) | No | Properties that control the element behavior | - |
@@ -25,7 +25,7 @@
 
 ### [IReconnectChatPaneControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneControlProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 |id | string | No | Id of the reconnect pane | "lcw-reconnect-chat-pane" |
 |dir| string | No | Specifies text direction ("ltr", "rtl", "auto")  | "ltr" |
@@ -49,7 +49,7 @@
 
 ### [IReconnectChatPaneStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneStyleProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 |generalStyleProps|IStyle | No | General style props of the reconnect pane | [defaultReconnectChatPaneGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/common/default/defaultStyles/defaultReconnectChatPaneGeneralStyles.ts) |
 |wrapperStyleProps|IStyle | No | Wrapper style props of the reconnect pane | [defaultReconnectChatPaneWrapperStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/common/default/defaultStyles/defaultReconnectChatPaneWrapperStyles.ts) |
@@ -65,7 +65,7 @@
 
 ### [IReconnectChatPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneComponentOverrides.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 |title | ReactNode\|String  | No | Title of the reconnect pane | - |
 |subtitle | ReactNode\|String  | No | Subtitle of the reconnect pane | - |
@@ -75,7 +75,7 @@
 
 ### [IReconnectChatPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/interfaces/IReconnectChatPaneClassNames.ts)
 
- | Attribute | Type | Required | Description | Default |
+ | Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | containerClassName | string | No | Container class name of the reconnect pane | - |
 |wrapperClassName | string | No | Wrapper class name of the reconnect pane | - |

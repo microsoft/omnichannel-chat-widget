@@ -16,7 +16,7 @@ Each single page of this guide will mainly focus on two parts - Interfaces and S
 - [PreChatSurveyPane](#prechatsurveypane)
 - [LoadingPane](#loadingpane)
 - [Header](#header)
-- [WebChatContriner](#webchatcontriner)
+- [WebChatContainer](#webchatcontainer)
 - [Footer](#footer)
 - [ConfirmationPane](#confirmationpane)
 - [EmailTranscriptPane](#emailtranscriptpane)
@@ -68,7 +68,7 @@ The header bar on top of the chat widget.
 
 --------------------------------
 
-### [WebChatContriner](./webchatcontainer.md)
+### [WebChatContainer](./webchatcontainer.md)
 
 The container that holds the messages between the agent and the customer.
 

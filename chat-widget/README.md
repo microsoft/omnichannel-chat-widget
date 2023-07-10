@@ -5,6 +5,8 @@
 
 [@microsoft/omnichannel-chat-widget](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget) is a React-based UI component library which allows you to build your own live chat widget experience using [@microsoft/omnichannel-chat-sdk](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk).
 
+> NEW! Check out our new [Developer Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md), which has detailed explanations of all component interfaces accompanied with sample code.
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
@@ -58,7 +60,7 @@ import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
 //Below version numbers will help us to troubleshoot issues with specific package
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
-import { version as chatWidgetVersion } from "../package.json";
+import { version as chatWidgetVersion } from "@microsoft/omnichannel-chat-widget/package.json";
 import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 
 const render = async () => {
@@ -95,11 +97,13 @@ const render = async () => {
 render();
 ```
 
-A javascript sample widget can be found in this repo [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/javascript-sample). To build it, do ```yarn build-sample``` or ```yarn build-sample:dev``` from project root. 
+A javascript sample widget can be found in this repo [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/javascript-sample). To build it, do ```yarn build-sample``` or ```yarn build-sample:dev``` from chat-widget project root.
 
-A typescript sample widget can be found [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample)
+A typescript sample widget can be found [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample). To build it, do ```yarn install``` then ```yarn build``` then ```yarn start``` from typescript sample project root. See [Create LiveChatWidget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md) for additional typescript sample project resources.
 
 ## Components
+
+For a detailed guide on how to customize each component with sample usages, please see our new [Developer Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md).
 
 ### Stateless UI Components
 
@@ -132,10 +136,6 @@ These are components that are included in the ```@microsoft/omnichannel-chat-com
 | PostChatLoadingPane | The default loading pane used after the chat is ended and before the post chat pane loads completely | [ILoadingPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/loadingpane/interfaces/ILoadingPaneProps.ts) |
 
 Some of the interfaces listed in the Stateless table have Stateful counterparts defined in the ```@microsoft/omnichannel-chat-widget``` package. For example, [IConfirmationPaneStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps.ts) extends [IConfirmationPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/interfaces/IConfirmationPaneProps.ts) with additional attributes that only makes sense in the stateful context.
-
-### Default Props
-
-For a list of all default props used in the default stateful widget, please see [here](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultProps/dummyDefaultProps.ts). If you want to change a default prop, you need to explicitly set it and parse the object as the argument to ```<LiveChatWidget/>```
 
 ### Custom Components
 
@@ -223,8 +223,9 @@ const customizedFooterProp: IFooterProps = {
 
 ## See Also
 
+[Customizations Dev Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md)\
 [Telemetry](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Telemetry.md)\
-[Create LCW widget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md)\
+[Create LiveChatWidget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md)\
 [Omnichannel Features](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Features.md)\
 [How to Add Visual Regression Tests](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/VisualRegressionTestingGuide.md)\
 [Security](https://github.com/microsoft/omnichannel-chat-widget/blob/main/SECURITY.md)\

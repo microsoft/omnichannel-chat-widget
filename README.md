@@ -103,7 +103,7 @@ A typescript sample widget can be found [here](https://github.com/microsoft/omni
 
 ## Components
 
-For a detailed guide on how to customize each component with sample usages, please see out new [Developer Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md).
+For a detailed guide on how to customize each component with sample usages, please see our new [Developer Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md).
 
 ### Stateless UI Components
 

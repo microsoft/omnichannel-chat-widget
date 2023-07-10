@@ -24,7 +24,7 @@
     - [Changing default timestamp texts and styles](#changing-default-timestamp-texts-and-styles)
   - [AvatarMiddleware](#avatarmiddleware)
     - [Replacing avatar initials with image](#replacing-avatar-initials-with-image)
-    - [Hideing agent avatar](#hiding-agent-avatars)
+    - [Hiding agent avatar](#hiding-agent-avatars)
 - [More Samples](#more-samples)
   - [Changing message bubble and adaptive card colors](#changing-message-bubble-and-adaptive-card-colors)
   - [Changing suggested action styles](#changing-suggested-action-styles)
@@ -46,16 +46,16 @@ For more information on WebChat customization, please go to WebChat's official [
 
 > [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | containerStyles    | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts)     | No | Overall styles of the `WebChatContainer` component, specifically on the container | [defaultWebChatStatefulContainerStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultWebChatStatefulContainerStyles.ts)
 | webChatStyles  | [StyleOptions](#styleoptions)     | No | The set of styles exposed by the `WebChat` component | [defaultWebChatStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultWebChatStyles.ts)
 | webChatProps  | [IWebChatProps](#iwebchatprops)  | No | The props of the `WebChat` component, minus the "styleOptions", which is separated out above  | [defaultWebChatStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultProps/defaultWebChatStatefulProps.ts). **This file is not the complete list. Please see the "Middlewares" section below**
 | directLine  | any  | No | WebChat by default uses DirectLine services as the communication service. In LiveChatWidget case, we are overwriting this prop with ACS Adapter to connect to ACS, which is the chat service used in Omnichannel. Most likely you do not want to touch this | see below
 | storeMiddlewares  | any[]  | No | A list of middlewares that you want to run alongside the default WebChat behaviors. LiveChatWidget has implemented several by default. More samples below | see below
-| renderingMiddlewareProps  | IRenderingMiddlewareProps(#irenderingmiddlewareprops) | No | Sets the variables used in the various default rendering middlewares. For the default rendering middlewares See the "Middlewares" section below | [defaultStyles](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles). This is the folder that holds all the default rendering middleware style files
-| localizedTexts  | ILiveChatWidgetLocalizedTexts(#ilivechatwidgetlocalizedtexts) | No | Sets the strings used in the rendering middlewares (e.g. places where default WebChat strings are overwritten). For the default rendering middlewares See the "Middlewares" section below | [defaultMiddlewareLocalizedTexts](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts.ts)
-| botMagicCode  | IBotMagicCodeConfig(#ibotmagiccodeconfig) | No | Sets the necessary config needed to bypass extra login adaptive card for the built-in SSO experience. For more details of this feature, see [here](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Features.md#disable-bot-magic-code) | -
+| renderingMiddlewareProps  | [IRenderingMiddlewareProps](#irenderingmiddlewareprops) | No | Sets the variables used in the various default rendering middlewares. For the default rendering middlewares See the "Middlewares" section below | [defaultStyles](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles). This is the folder that holds all the default rendering middleware style files
+| localizedTexts  | [ILiveChatWidgetLocalizedTexts](#ilivechatwidgetlocalizedtexts) | No | Sets the strings used in the rendering middlewares (e.g. places where default WebChat strings are overwritten). For the default rendering middlewares See the "Middlewares" section below | [defaultMiddlewareLocalizedTexts](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts.ts)
+| botMagicCode  | [IBotMagicCodeConfig](#ibotmagiccodeconfig) | No | Sets the necessary config needed to bypass extra login adaptive card for the built-in SSO experience. For more details of this feature, see [here](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Features.md#disable-bot-magic-code) | -
 | hyperlinkTextOverride  | boolean | No | By default, this being enabled prevents possible XSS attacks using hyper links. The hyper link will always be set to the text that shows on DOM, no matter what its original value is. Setting this to true disables this behaviors | false
 | adaptiveCardStyles  | [IAdaptiveCardStyles](#iadaptivecardstyles) | No | Sets certain style options of adaptive cards rendered inside WebChat. If your desired effect cannot be achieved by props offered in this interface, try modifying `adaptiveCardsHostConfig` in [IWebChatProps](#iwebchatprops) | [defaultAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles.ts)
 
@@ -65,31 +65,31 @@ See the open source type definition in [WebChat](https://github.com/microsoft/Bo
 
 ### [IWebChatProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IWebChatProps.ts)
 
-This interface was manually aggregated from WebChat's repo, since WebChat doesn't officially have an interface exposed for all the props to pass into its `<ReactWebChat/>` component. For this reason, this interface might be updated upon future WebChat updates. For more details, please redirect to WebChat official documenetation page.
+This interface was manually aggregated from WebChat's repo, since WebChat doesn't officially have an interface exposed for all the props to pass into its `<ReactWebChat/>` component. For this reason, this interface might be updated upon future WebChat updates. For more details, please redirect to WebChat official documentation  page.
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | activityMiddleware | OneOrMany\<ActivityMiddleware\>  | No | Changes what goes into each "activity". Activities can be viewed as the section where message goes, but also includes the timestamp, avatar, etc. that are related to that message. A sent/received attachment is also an activity | [activityMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware.tsx)
 | activityStatusMiddleware | OneOrMany\<ActivityStatusMiddleware\>  | No | Control the behaviors of the section that typically holds timestamps and send status | [activityStatusMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware.tsx)
 | adaptiveCardsHostConfig | any  | No | Sets the Adaptive Crads' HostConfig for WebChat. For more information on Adaptive Card HostConfig, see [here](https://learn.microsoft.com/en-us/adaptive-cards/rendering-cards/host-config) | -
-| attachmentForScreenReaderMiddleware | OneOrMany\<AttachmentForScreenReaderMiddleware\>  | No | Not used in this package by default. For more information, please go to WebChat's official documenetation page. | -
+| attachmentForScreenReaderMiddleware | OneOrMany\<AttachmentForScreenReaderMiddleware\>  | No | Not used in this package by default. For more information, please go to WebChat's official documentation  page. | -
 | attachmentMiddleware | OneOrMany\<AttachmentMiddleware\>  | No | Control the behaviors of the section that contains the actual message or attachment |[attachmentMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware.tsx)
 | avatarMiddleware | OneOrMany\<AvatarMiddleware\>  | No | Control the behaviors of the section that contains avatar or participant initials | [avatarMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware.tsx)
 | cardActionMiddleware | OneOrMany\<CardActionMiddleware\>  | No | Control the behaviors of certain adaptive cards | [cardActionMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware.ts)
-| children | ReactNode  | No | The children components of WebChat. Not used in this package by default. For more information, please go to WebChat's official documenetation page.| -
+| children | ReactNode  | No | The children components of WebChat. Not used in this package by default. For more information, please go to WebChat's official documentation  page.| -
 | dir | string  | No | The general locale direction | "ltr"
 | disabled | boolean  | No | Disables the typing and sending area | false
-| downscaleImageToDataURL | (blob: Blob, maxWidth: number, maxHeight: number, type: string, quality: number) => string  | No | Not used in this package by default. For more information, please go to WebChat's official documenetation page. | -
-| grammars | any  | No | Not used in this package by default. For more information, please go to WebChat's official documenetation page. | -
+| downscaleImageToDataURL | (blob: Blob, maxWidth: number, maxHeight: number, type: string, quality: number) => string  | No | Not used in this package by default. For more information, please go to WebChat's official documentation  page. | -
+| grammars | any  | No | Not used in this package by default. For more information, please go to WebChat's official documentation  page. | -
 | groupActivitiesMiddleware | OneOrMany<GroupActivitiesMiddleware> | No | Controls how the activities are grouped together regarding to avatar and timestamp grouping | [groupActivitiesMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/groupActivitiesMiddleware.tsx)
-| internalErrorBoxClass | React.Component \| Function | No | Not used in this package by default. For more information, please go to WebChat's official documenetation page. | -
+| internalErrorBoxClass | React.Component \| Function | No | Not used in this package by default. For more information, please go to WebChat's official documentation  page. | -
 | locale | string | No | Sets the locale code for WebChat | "en-US"
 | onTelemetry | any | No | Sets pluggable telemetry logger for WebChat telemetry events | [WebChatLogger](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/webchattelemetry/WebChatLogger.ts)
 | overrideLocalizedStrings | any | No | Overrides default strings in webchat. This is not used by default since we modify the strings in the various middlewares themselves | -
 | renderMarkdown | any | No | Sets the callback function for markdown renderer | [renderMarkdown](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/initWebChatComposer.ts#L99)
 | scrollToEndButtonMiddleware | OneOrMany<ScrollToEndButtonMiddleware> | No | Controls the behaviors of the "scroll to end" button. This is not used by default | -
-| selectVoice | (voices: typeof window.SpeechSynthesisVoice[], activity: DirectLineActivity) => void | No | Not used in this package by default. For more information, please go to WebChat's official documenetation page. | -
-| sendTypingIndicator | boolean | No | Whether to send typing indicator the message recipient | true
+| selectVoice | (voices: typeof window.SpeechSynthesisVoice[], activity: DirectLineActivity) => void | No | Not used in this package by default. For more information, please go to WebChat's official documentation  page. | -
+| sendTypingIndicator | boolean | No | Whether to send typing indicator to the message recipient | true
 | store | any | No | Sets any number of store middlewares to adjust webchat functional behaviors. See more details in below section | [storemiddlewares](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares)
 | toastMiddleware | OneOrMany<ToastMiddleware> | No | Controls the behaviors of the webchat toast banner | -
 | typingIndicatorMiddleware | OneOrMany<TypingIndicatorMiddleware> | No | Controls the behaviors of the typing indicator above the send box | [typingIndicatorMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/typingIndicatorMiddleware.tsx)
@@ -101,11 +101,11 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | suggestedActionsAccessKey | boolean \| string | No | Not used with this repo | -
 | webSpeechPonyfillFactory | WebSpeechPonyfillFactory | No | Inject libraries to enable text-to-speech and speech-to-text functionalities | -
 | className | string | No | Class name for WebChat | -
-| role | "complementary" \| "contentinfo" \| "form" \| "main" \| "region" | No | Sets the `role1 attribute of the WebChat component | -
+| role | "complementary" \| "contentinfo" \| "form" \| "main" \| "region" | No | Sets the `role` attribute of the WebChat component | -
 
 ### [IRenderingMiddlewareProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | timestampDir | "ltr" \| "rtl" \| "auto" | No | Sets the direction of the timestamp string | "ltr" |
 | disableActivityMiddleware | boolean | No | Whether to disable the use of `ActivityMiddleware` | false |
@@ -130,7 +130,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | timestampRetryTextStyleProps | React.CSSProperties | No | Styles for the timestamp "Retry" text | [defaultTimestampRetryStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultTimestampRetryStyles.ts) |
 | attachmentProps | [IAttachmentProps](#iattachmentprops) | No | Config props for file attachments | [defaultAttachmentProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultProps/defaultAttachmentProps.ts) |
 | attachmentDividerStyles | React.CSSProperties | No | Styles for the divider between the attachment and its title | [defaultAttachmentDividerStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAttachmentDividerStyles.ts) |
-| attachmentStyles | React.CSSProperties | No | Styles for the attachment containeres | [defaultAtttachmentStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAtttachmentStyles.ts) |
+| attachmentStyles | React.CSSProperties | No | Styles for the attachment containers | [defaultAtttachmentStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAtttachmentStyles.ts) |
 | attachmentIconStyles | React.CSSProperties | No | Styles for the attachment icon as part of the title | [defaultAtttachmentIconStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAtttachmentIconStyles.ts) |
 | attachmentAdaptiveCardStyles | React.CSSProperties | No | Styles for the adaptive card containers | [defaultAtttachmentAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAtttachmentAdaptiveCardStyles.ts) |
 | attachmentFileNameStyles | React.CSSProperties | No | Styles for the attachment file name (title text) | [defaultAttachmentFileNameStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultAttachmentFileNameStyles.ts) |
@@ -144,7 +144,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 ### [ILiveChatWidgetLocalizedTexts](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/contexts/common/ILiveChatWidgetLocalizedTexts.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | MIDDLEWARE_BANNER_FILE_NULL_ERROR | string | No | Error message shown when the file uploaded is null | "There was an error uploading the file, please try again." |
 | MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR | string | No | Error message shown when the file uploaded exceeds size limit and has no extension. Variable replacement: {0} - File size max limit, {2} - File name | "File {2} exceeds the allowed limit of {0} MB and please upload the file with an appropriate file extension." |
@@ -171,14 +171,14 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 ### [IBotMagicCodeConfig](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IBotMagicCodeConfig.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | disabled | boolean | No | Whether to use the default WebChat sign in url. Set this to true to enable Bot SSO feature | false |
 | fwdUrl | string | No | The signin url to override | - |
 
 ### [IAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAdaptiveCardStyles.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | background | string | No | Adaptive Card background color | "white" |
 | color | string | No | Adaptive Card text color | "black" |
@@ -188,7 +188,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 ### [IAttachmentProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAttachmentProps.ts)
 
-| Attribute | Type | Required | Description | Default |
+| Property | Type | Required | Description | Default |
 | - | - | - | - | - |
 | webChatAttachmentId | string | No | Id of attachment elements | "oc-lcw-webchat-attachment" |
 | adaptiveCardAttachmentId | string | No | Id of Adaptive Cards elements | "ms_lcw_webchat_adaptive_card" |
