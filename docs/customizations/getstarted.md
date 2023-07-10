@@ -68,7 +68,7 @@ The header bar on top of the chat widget.
 
 --------------------------------
 
-### [WebChatContriner](./webchatcontainer.md)
+### [WebChatContainer](./webchatcontainer.md)
 
 The container that holds the messages between the agent and the customer.
 
