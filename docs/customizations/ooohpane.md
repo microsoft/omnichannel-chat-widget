@@ -21,7 +21,7 @@ The top-level interface for customizing the `Out of Office Hours (OOOH) Pane`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IOOOHPaneComponentOverrides](#iooohpanecomponentoverrides)     | No | Used for overriding default `OOOHPane` components | -
-controlProps | [IOOOHPaneControlProps](#iooohpanecontrolprops) | No | Properties that control the element behariors | -
+controlProps | [IOOOHPaneControlProps](#iooohpanecontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IOOOHPaneStyleProps](#iooohpanestyleprops) | No | Properties that control the element styles | -
 
 ### [IOOOHPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/outofofficehourspane/interfaces/IOOOHPaneComponentOverrides.ts)
@@ -41,7 +41,7 @@ hideOOOHPane | boolean | No | Whether to hide the OOOH Pane completely | false
 hideTitle | boolean | No | The oooh title text | false
 dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the OOOH Pane | "auto"
 role | string | No | Sets the `role` attribute of the OOOH Pane | "alert"
-titleText | string | No | The oooh title text | "Close chat"
+titleText | string | No | The oooh title text | "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open."
 openLinkInNewTab | boolean | No | Whether to open any hyperlinks in OOOH pane text in a new tab | false
 
 ### [IOOOHPaneStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/outofofficehourspane/interfaces/IOOOHPaneStyleProps.ts)
@@ -110,4 +110,4 @@ liveChatWidgetProps = {
 
 </details>
 
-<img src="../.attachments/customizations-oooh-pane-customize-overall.gif" width="450">
+<img src="../.attachments/customizations-oooh-pane-change-background.gif" width="450">

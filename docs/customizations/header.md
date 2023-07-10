@@ -24,7 +24,7 @@ The top-level interface for customizing `Header`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IHeaderComponentOverrides](#iheadercomponentoverrides)     | No | Used for overriding default `Header` components, e.g., icon, title, minimize button, and close button | -
-controlProps | [IHeaderControlProps](#iheadercontrolprops) | No | Properties that control the element behariors | -
+controlProps | [IHeaderControlProps](#iheadercontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IHeaderStyleProps](iheaderstyleprops) | No | Properties that control the element styles | -
 
 ### [IHeaderComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderComponentOverrides.ts)
@@ -40,15 +40,15 @@ headerCloseButton | ReactNode\|string | No | Used for overriding default close b
 
 ### [IHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/interfaces/IHeaderControlProps.ts)
 
-| Attribute | Type | Required | Description | Default | 
+| Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| id     | string     | No | The top-level element id for the header | "oc-lcw-header"
+| id     | string     | No | The top-level element id for the header | "lcw-header"
 hideIcon | boolean | No | Whether to hide the icon on the header | false
 hideTitle | boolean | No | Whether to hide the title string on the header | false
 hideMinimizeButton | boolean | No | Whether to hide the minimize button on the header | false
 hideCloseButton | ReactNode\|string | No | Whether to hide the close button on the header | false
-onMinimizeClick | () => void | No | The callback function that will be triggered when the minimize button is clicked | [Minimizes the chat widget]
-onCloseClick | () => void | No | The callback function that will be triggered when the close button is clicked | [Closes the chat widget]
+onMinimizeClick | () => void | No | The callback function that will be triggered when the minimize button is clicked | [Minimizes the chat widget](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/headerstateful/HeaderStateful.tsx#L35-L38)
+onCloseClick | () => void | No | The callback function that will be triggered when the close button is clicked | [Closes the chat widget](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/headerstateful/HeaderStateful.tsx#L39)
 minimizeButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default minimize button | [defaultHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
 closeButtonProps | [ICommandButtonControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/ICommandButtonControlProps.ts) | No | Properties to further customize the default close button | [defaultHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)
 headerIconProps | [IImageControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/common/interfaces/IImageControlProps.ts) | No | Properties to further customize the default header icon | [defaultHeaderControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/header/common/defaultProps/defaultHeaderControlProps.ts)

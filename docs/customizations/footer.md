@@ -21,7 +21,7 @@ The top-level interface for customizing `Footer`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IFooterComponentOverrides](#ifootercomponentoverrides)     | No | Used for overriding default `Footer` components, including all the default buttons | -
-controlProps | [IFooterControlProps](#ifootercontrolprops) | No | Properties that control the element behariors | -
+controlProps | [IFooterControlProps](#ifootercontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IFooterStyleProps](#ifooterstyleprops) | No | Properties that control the element styles | -
 
 ### [IFooterComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/interfaces/IFooterComponentOverrides.ts)

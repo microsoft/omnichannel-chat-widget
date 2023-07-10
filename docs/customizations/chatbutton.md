@@ -25,7 +25,7 @@ The top-level interface for customizing `ChatButton`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [IChatButtonComponentOverrides](#ichatbuttoncomponentoverrides)     | No | Used for overriding default `ChatButton` components, e.g., title, subtitle, notification bubble, etc. | -
-controlProps | [IChatButtonControlProps](#ichatbuttoncontrolprops) | No | Properties that control the element behariors | -
+controlProps | [IChatButtonControlProps](#ichatbuttoncontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IChatButtonStyleProps](#ichatbuttonstyleprops) | No | Properties that control the element styles | -
 
 ### [IChatButtonComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/chatbutton/interfaces/IChatButtonComponentOverrides.ts)

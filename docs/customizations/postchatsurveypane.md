@@ -21,7 +21,7 @@ The top-level interface for customizing `PostChatSurveyPane`.
 
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
-| controlProps | [IPostChatSurveyPaneControlProps](#ipostchatsurveypanecontrolprops) | No | Properties that control the element behariors | -
+| controlProps | [IPostChatSurveyPaneControlProps](#ipostchatsurveypanecontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IPostChatSurveyPaneStyleProps](#ipostchatsurveypanestyleprops) | No | Properties that control the element styles | -
 
 ### [IPostChatSurveyPaneControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/postchatsurveypane/interfaces/IPostChatSurveyPaneControlProps.ts)

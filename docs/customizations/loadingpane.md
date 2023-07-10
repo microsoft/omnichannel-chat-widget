@@ -21,7 +21,7 @@ The top-level interface for customizing `LoadingPane`.
 | Attribute | Type | Required | Description | Default |
 | - | - | - | - | - |
 | componentOverrides     | [ILoadingPaneComponentOverrides](#iloadingpanecomponentoverrides)     | No | Used for overriding default `LoadingPane` components, e.g., icon, title, subtitle, spinner, and spinner text | -
-controlProps | [ILoadingPaneControlProps](#iloadingpanecontrolprops) | No | Properties that control the element behariors | -
+controlProps | [ILoadingPaneControlProps](#iloadingpanecontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [ILoadingPaneStyleProps](#iloadingpanestyleprops) | No | Properties that control the element styles | -
 windowWidth | number | No | Property is used internally to set width such that icon does not show when there is not enough room to render it, please do not modify without good reason | -
 windowHeight | number | No | Property is used internally to set height such that icon does not show when there is not enough room to render it, please do not modify without good reason  | -

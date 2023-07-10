@@ -90,7 +90,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | scrollToEndButtonMiddleware | OneOrMany<ScrollToEndButtonMiddleware> | No | Controls the behaviors of the "scroll to end" button. This is not used by default | -
 | selectVoice | (voices: typeof window.SpeechSynthesisVoice[], activity: DirectLineActivity) => void | No | Not used in this package by default. For more information, please go to WebChat's official documenetation page. | -
 | sendTypingIndicator | boolean | No | Whether to send typing indicator the message recipient | true
-| store | any | No | Sets any number of store middlewares to adjust webchat functional behariors. See more details in below section | [storemiddlewares](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares)
+| store | any | No | Sets any number of store middlewares to adjust webchat functional behaviors. See more details in below section | [storemiddlewares](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares)
 | toastMiddleware | OneOrMany<ToastMiddleware> | No | Controls the behaviors of the webchat toast banner | -
 | typingIndicatorMiddleware | OneOrMany<TypingIndicatorMiddleware> | No | Controls the behaviors of the typing indicator above the send box | [typingIndicatorMiddleware](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/typingIndicatorMiddleware.tsx)
 | userID | string | No | Sets the customer's user id. Not used with this repo | -
