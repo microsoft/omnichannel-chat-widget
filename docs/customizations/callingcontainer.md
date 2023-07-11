@@ -112,6 +112,7 @@ rightGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more c
 id    | string     | No | The top-level element id for the `CurrentCall` container | "lcw-current-call"
 dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `CurrentCall` component | "ltr"
 ariaLabel | string | No | The aria label of the `CurrentCall` component | "`CurrentCall` area"
+nonActionIds | [ICurrentCallNonActionControlIds](#icurrentcallnonactioncontrolids) | No | Sets the ids of several sub-components | see [ICurrentCallNonActionControlIds](#icurrentcallnonactioncontrolids)
 hideMicButton | boolean | No | Whether to hide the "Enable/Disable Microphone" button | false
 hideVideoButton | boolean | No | Whether to hide the "Enable/Disable Video" button | false
 hideEndCallButton | boolean | No | Whether to hide the "End call" button | false
@@ -150,6 +151,16 @@ rightGroup | {gap?: number, children: ReactNode[] \| string[]} | No | Add more c
 | selfVideoStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the video screen of the customer | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultCurrentCallStyleProps.ts) |
 | itemFocusStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the buttons while on focus | [defaultChatButtonGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/IncomingCall/common/defaultStyles/defaultCurrentCallStyleProps.ts) |
 | classNames | [ICurrentCallClassNames](#icurrentcallclassnames) | No | The class names of the `CurrentCall` sub-components | - |
+
+### [ICurrentCallNonActionControlIds](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/CurrentCall/interfaces/ICurrentCallNonActionControlIds.ts)
+
+| Property | Type | Required | Description | Default |
+| - | - | - | - | - |
+videoTileGroupId    | string     | No | Video tiles container id | "lcw-current-call-body"
+remoteVideoTileId    | string     | No | agent video component id | "lcw-remote-video"
+selfVideoTileId    | string     | No | Self video component id | "lcw-self-video"
+currentCallActionGroupId    | string     | No | Current call action group id | "lcw-current-call-action-icons"
+currentCallFooterId    | string     | No | Current call footer component id | "lcw-current-call-footer"
 
 ### [ITimer](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/callingcontainer/subcomponents/Timer/ITimer.ts)
 

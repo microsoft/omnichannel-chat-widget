@@ -3,29 +3,18 @@
 ## Table of contents
 
 - [Introduction](#introduction)
-
 - [Interfaces](#interfaces)
-
   - [ILiveChatWidgetProps](#ilivechatwidgetprops)
-
   - [IAudioNotificationProps](#iaudionotificationprops)
-
   - [IDownloadTranscriptProps](#idownloadtranscriptprops)
-
   - [ILiveChatWidgetComponentOverrides](#ilivechatwidgetcomponentoverrides)
-
   - [ILiveChatWidgetControlProps](#ilivechatwidgetcontrolprops)
-
   - [ILiveChatWidgetStyleProps](#ilivechatwidgetstyleprops)
-
   - [IScrollBarProps](#iscrollbarprops)
-
+  - [IDraggableChatWidgetProps](#idraggablechatwidgetprops)
 - [Sample Scenarios](#sample-scenarios)
-
   - [Changing overall widget size](#changing-overall-widget-size)
-
   - [Changing widget position on the page](#changing-widget-position-on-the-page)
-
   - [Sample popout chat experience](#sample-popout-chat-experience)
 
 ## Introduction
@@ -48,7 +37,7 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 | componentOverrides | [ILiveChatWidgetComponentOverrides](#ilivechatwidgetcomponentoverrides) | No | Used for overriding default sub-components | -
 | confirmationPaneProps | [IConfirmationPaneStatefulProps](./confirmationpane.md) | No | Controls the properties of the confirmation pane, shown when a users trys to close the widget | [defaultConfirmationPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/confirmationpane/common/defaultProps/defaultConfirmationPaneProps.ts)
 | controlProps | [ILiveChatWidgetControlProps](#ilivechatwidgetcontrolprops) | No | Controls whether to hide a certain sub-component, and setting cache config | -
-| directLine | any | No | **Important:** This is the same property as `webChatContainerProps.directLine` and you should use the latter at all times. This property is included here only to keep parity with our storybook testing, which has a conflict if we directly modify `webChatContainerProps.directLine | -
+| directLine | any | No | **Important:** This is the same property as `webChatContainerProps.directLine` and you should use the latter at all times. This property is included here only to keep parity with our storybook testing, which has a conflict if we directly modify `webChatContainerProps.directLine` | -
 | downloadTranscriptProps | [IDownloadTranscriptProps](#idownloadtranscriptprops) | No | Controls the properties of the downloaded transcript | -
 | emailTranscriptPane | [IEmailTranscriptPaneProps](./emailtranscriptpane.md) | No | Controls the properties of the email transcript pane, after the email transcript button is clicked | -
 | footerProps | [IFooterProps](./footer.md) | No | Controls the properties of the footer | [defaultFooterProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/footer/common/defaultProps/defaultFooterProps.ts)
@@ -60,17 +49,17 @@ The top-level interface for customizing `LiveChatWidget`. For more details for e
 | postChatLoadingPaneProps | [ILoadingPaneProps](./loadingpane.md) | No | Controls the properties of the loading pane before showing post chat survey | See [PostChatLoadingPane](./postchatloadingpane.md)
 | postChatSurveyPaneProps | [IPostChatSurveyPaneStatefulProps](./postchatsurveypane.md) | No | Controls the properties of the post chat survey pane, after the chat ends | See [PostChatSurvey](./postchatsurvey.md)
 | preChatSurveyPaneProps | [IPreChatSurveyPaneProps](./prechatsurveypane.md) | No | Controls the properties of the post chat survey pane, before the chat starts | [defaultPreChatSurveyPaneProps](../../chat-components/src/components/prechatsurveypane/common/defaultProps/defaultPreChatSurveyPaneProps.ts)
-| proactiveChatPaneProps | [IProactiveChatPaneStatefulProps](./proactivechat.md) | No | Controls the properties of the proactive chat pane | [defaultProactiveChatPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/proactivechatpane/common/default/defaultProps/defaultProactiveChatPaneProps.ts)
+| proactiveChatPaneProps | [IProactiveChatPaneStatefulProps](./proactivechatpane.md) | No | Controls the properties of the proactive chat pane | [defaultProactiveChatPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/proactivechatpane/common/default/defaultProps/defaultProactiveChatPaneProps.ts)
 | reconnectChatPaneProps | [IReconnectChatPaneStatefulProps](./reconnectchatpane.md) | No | Controls the properties of the reconnect pane, when an auth chat user returns to the chat before the Reconnect timer expires | [defaultReconnectChatPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/reconnectchatpane/common/default/defaultProps/defaultReconnectChatPaneProps.ts)
-| startChatErrorPaneProps | [IStartChatErrorPaneProps](./startchaterrorpane.md) | No | Controls the properties of the pane that shows up when start chat process has an error and is unble to proceed to conversation | -
+| startChatErrorPaneProps | IStartChatErrorPaneProps | No | Controls the properties of the pane that shows up when start chat process has an error and is unble to proceed to conversation | -
 | styleProps | [ILiveChatWidgetStyleProps](#ilivechatwidgetstyleprops) | No | Controls the styles of the top layer container | [defaultLiveChatWidgetGeneralStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultStyles/defaultLiveChatWidgetGeneralStyles.ts)
 | telemetryConfig | [ITelemetryConfig](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/common/telemetry/interfaces/ITelemetryConfig.ts) | Yes | Sets the config for telemetry, whether to enable telemetry, any custom loggers, etc. For details, turn to the [Telemetry](../Telemetry.md) documentation | [defaultTelemetryConfiguration](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/common/telemetry/defaultConfigs/defaultTelemetryConfiguration.ts)
 | webChatContainerProps | [IWebChatContainerStatefulProps](./webchatcontainer.md) | No | Controls the properties of the web chat container, the main package to host the messages and send box | [defaultWebChatContainerStatefulProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps.ts)
 | liveChatContextFromCache | [ILiveChatWidgetContext](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/contexts/common/ILiveChatWidgetContext.ts) | No | If set, this prop will be used for telemetry context, instead of creating new ones | -
 | contextDataStore | [IContextDataStore](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/common/interfaces/IContextDataStore.ts) | No | Sets the custom data store. For details, see [Telemetry](../Telemetry.md) documentation | localStorage
-| getAuthToken | (authClientFunction?: string) => Promise<string | null> | No | For auth chat, sets this attribute to the callback that will return the auth token/auth code. This will later be passed to Chat SDK to authenticate conversations | -
-| scrollBarProps | [IScrollBarProps](#iscrollbarprops) | No | This prop will be used first for telemetry context, instead of creating new ones | [defaultScrollBarProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultProps/defaultScrollBarProps.ts)
-| useSessionStorage | boolean | No | TWhether to use sessionStorage or localStorage for the default data storage | false
+| getAuthToken | (authClientFunction?: string) => Promise<string \| null> | No | For auth chat, sets this attribute to the callback that will return the auth token/auth code. This will later be passed to Chat SDK to authenticate conversations | -
+| scrollBarProps | [IScrollBarProps](#iscrollbarprops) | No | Modifies the overall scroll bar styles | [defaultScrollBarProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/common/defaultProps/defaultScrollBarProps.ts)
+| useSessionStorage | boolean | No | Whether to use sessionStorage or localStorage for the default data storage | false
 | allowSdkChatSupport | boolean | No | Whether to support these [SDK methods](https://learn.microsoft.com/en-us/dynamics365/customer-service/developer/omnichannel-reference#methods) for the out of box widget. If you're using this npm package directly, setting this to false is recommended  | true
 | initialCustomContext | any | No | The custom context that will be sent to the Omnichannel backend on first started chat | -
 | draggableChatWidgetProps | [IDraggableChatWidgetProps.ts](#idraggablechatwidgetprops) | No | Controls the properties of draggable chat widget | - |
@@ -113,7 +102,7 @@ Custom React components can be passed as input to override the default sub-compo
 
 | Property | Type | Required | Description | Default |
 | - | - | - | - | - |
-| id  | string    | No | The top-level element id for `LiveChatWidget | "oc-lcw" |
+| id  | string    | No | The top-level element id for `LiveChatWidget` | "oc-lcw" |
 | dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `LiveChatWidget` component | "ltr"`
 | hideCallingContainer | boolean | No | Whether to hide the default calling container | false
 | hideChatButton | boolean | No | Whether to hide the default chat button | false

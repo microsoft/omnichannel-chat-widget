@@ -1,17 +1,15 @@
-# Post chat survey pane
+# PostChatSurvey Pane
 
 ## Table of contents
 
-- [Post chat survey pane](#post-chat-survey-pane)
-  - [Table of contents](#table-of-contents)
-  - [Interfaces](#interfaces)
-    - [IPostChatSurveyPaneProps](#ipostchatsurveypaneprops)
-    - [IPostChatSurveyPaneControlProps](#ipostchatsurveypanecontrolprops)
-    - [IPostChatSurveyPaneStyleProps](#ipostchatsurveypanestyleprops)
-    - [IPostChatSurveyPaneClassNames](#ipostchatsurveypaneclassnames)
-  - [Sample Scenarios](#sample-scenarios)
-    - [Changing post chat survey pane survey URL](#changing-post-chat-survey-pane-survey-url)
-    - [Changing post chat survey pane container title](#changing-post-chat-survey-pane-container-title)
+- [Interfaces](#interfaces)
+  - [IPostChatSurveyPaneProps](#ipostchatsurveypaneprops)
+  - [IPostChatSurveyPaneControlProps](#ipostchatsurveypanecontrolprops)
+  - [IPostChatSurveyPaneStyleProps](#ipostchatsurveypanestyleprops)
+  - [IPostChatSurveyPaneClassNames](#ipostchatsurveypaneclassnames)
+- [Sample Scenarios](#sample-scenarios)
+  - [Changing post chat survey pane survey URL](#changing-post-chat-survey-pane-survey-url)
+  - [Changing post chat survey pane container title](#changing-post-chat-survey-pane-container-title)
 
 ## Interfaces
 
