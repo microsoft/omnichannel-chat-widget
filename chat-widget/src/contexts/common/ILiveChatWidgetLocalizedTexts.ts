@@ -7,9 +7,10 @@ export interface ILiveChatWidgetLocalizedTexts {
 
     /*
      * Error message shown when the file uploaded exceeds size limit and has no extension.
-     * Variable replacement (This is optional. If {0} is not given, the whole string will be used and variable replacement will be skipped. Same below.):
+     * Variable replacement:
      * {0} - File size max limit
-     * e.g. "File exceeds the allowed limit of {0} MB and please upload the file with an appropriate file extension."
+     * {2} - File name
+     * e.g. "File {2} exceeds the allowed limit of {0} MB and please upload the file with an appropriate file extension."
      */
     MIDDLEWARE_BANNER_FILE_SIZE_WITHOUT_EXTENSION_ERROR?: string;
 
@@ -18,33 +19,41 @@ export interface ILiveChatWidgetLocalizedTexts {
      * Variable replacement (optional):
      * {0} - File size max limit
      * {1} - The invalid extension
-     * e.g. "File exceeds the allowed limit of {0} MB and {1} files are not supported."
+     * {2} - File name
+     * e.g. "File {2} exceeds the allowed limit of {0} MB and {1} files are not supported."
      */
     MIDDLEWARE_BANNER_FILE_SIZE_EXTENSION_ERROR?: string;
 
     /*
      * Error message shown when the file uploaded has no extension.
+     * Variable replacement:
+     * {2} - File name
+     * e.g. "File upload error. Please upload the file {2} with an appropriate file extension."
      */
     MIDDLEWARE_BANNER_FILE_WITHOUT_EXTENSION?: string;
 
     /*
      * Error message shown when the file uploaded has an invalid extension.
-     * Variable replacement (optional):
-     * {0} - The invalid extension
-     * e.g. "{0} files are not supported."
+     * Variable replacement:
+     * {1} - The invalid extension
+     * e.g. "{1} files are not supported."
      */
     MIDDLEWARE_BANNER_FILE_EXTENSION_ERROR?: string;
 
     /*
      * Error message shown when the file uploaded exceeds size limit.
-     * Variable replacement (optional):
+     * Variable replacement:
      * {0} - File size max limit
-     * e.g. "File exceeds the allowed limit of {0} MB."
+     * {2} - File name
+     * e.g. "File {2} exceeds the allowed limit of {0} MB."
      */
     MIDDLEWARE_BANNER_FILE_SIZE_ERROR?: string;
 
     /*
      * Error message shown when the file uploaded is empty.
+     * Variable replacement:
+     * {2} - File name
+     * e.g. "This file {2} can't be attached because it's empty. Please try again with a different file."
      */
     MIDDLEWARE_BANNER_FILE_IS_EMPTY_ERROR?: string;
 

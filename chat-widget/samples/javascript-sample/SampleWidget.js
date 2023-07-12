@@ -1,18 +1,18 @@
+/* eslint @typescript-eslint/no-explicit-any: "off" */
+
 import * as React from "react";
+
+import { getUnreadMessageCount, registerVisibilityListener } from "./getUnreadMessageCount";
 
 import { BroadcastService } from "../../lib/esm/index.js";
 import LiveChatWidget from "../../lib/esm/components/livechatwidget/LiveChatWidget.js";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
-import { getCustomizationJson } from "./getCustomizationJson";
-import { getUnreadMessageCount, registerVisibilityListener } from "./getUnreadMessageCount";
-import { memoryDataStore } from "./Common/MemoryDataStore";
-/* eslint @typescript-eslint/no-explicit-any: "off" */
-
-// Below version numbers will help us to troubleshoot issues with specific package
+import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
 import { version as chatWidgetVersion } from "../../package.json";
-import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
+import { getCustomizationJson } from "./getCustomizationJson";
+import { memoryDataStore } from "./Common/MemoryDataStore";
 
 let liveChatWidgetProps;
 

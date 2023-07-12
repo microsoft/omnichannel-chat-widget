@@ -1,16 +1,11 @@
 export interface ICurrentCallNonActionControlIds {
     /**
-    * Current call component id
-    */
-    currentCallComponentId?: string,
-
-    /**
     * Video tiles container id
     */
     videoTileGroupId?: string,
 
     /**
-    * Remove video component id
+    * Remote video component id
     */
     remoteVideoTileId?: string,
 
