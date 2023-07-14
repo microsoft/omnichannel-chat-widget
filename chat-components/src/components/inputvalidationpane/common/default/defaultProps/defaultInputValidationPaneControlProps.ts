@@ -15,7 +15,7 @@ export const defaultInputValidationPaneControlProps: IInputValidationPaneControl
 
     inputId: Ids.DefaultInputValidationPaneInputId,
     inputInitialText: "",
-    InputPlaceholder: Texts.EmailPlaceHolderText,
+    inputPlaceHolder: Texts.EmailPlaceHolderText,
     hideInput: false,
     inputAriaLabel: AriaLabels.InputValidationPaneInput,
     inputWithErrorMessageBorderColor: "rgb(164, 38, 44)",
