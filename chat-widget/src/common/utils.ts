@@ -237,7 +237,7 @@ export const isNullOrUndefined = (obj: any) => {
     return (obj === null || obj === undefined);
 };
 
-export const isNullOrEmptyString = (s: string | null) => {
+export const isNullOrEmptyString = (s: string | null | undefined) => {
     return isNullOrUndefined(s) || s === "";
 };
 

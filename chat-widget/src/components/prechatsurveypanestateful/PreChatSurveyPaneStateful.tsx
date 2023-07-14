@@ -2,30 +2,34 @@ import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
-import MarkdownIt from "markdown-it";
+
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
 import { IPreChatSurveyPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneControlProps";
-import { IPreChatSurveyPaneStatefulParams } from "./interfaces/IPreChatSurveyPaneStatefulParams";
 import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneStyleProps";
 import { IStyle } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
+import MarkdownIt from "markdown-it";
 import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps";
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import useStartChat from "../../hooks/useStartChat";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParams) => {
+export const PreChatSurveyPaneStateful = (props: ILiveChatWidgetProps) => {
+    const { preChatSurveyPaneProps } = props;
+    const startChat = useStartChat(props);
+    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+
     // Set MarkDown global variable to be used for prechat adaptive cards
     window["markdownit"] = MarkdownIt;
 
-    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const { surveyProps, initStartChat } = props;
-    const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPreChatSurveyPaneStyleProps, surveyProps?.styleProps?.generalStyleProps,
+    const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPreChatSurveyPaneStyleProps, preChatSurveyPaneProps?.styleProps?.generalStyleProps,
         { display: state.appStates.isMinimized ? "none" : "" });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,7 +57,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         }
     };
 
-    const requiredFieldMissingMessage = props.surveyProps?.controlProps?.requiredFieldMissingMessage ?? defaultPreChatSurveyLocalizedTexts.PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE;
+    const requiredFieldMissingMessage = preChatSurveyPaneProps?.controlProps?.requiredFieldMissingMessage ?? defaultPreChatSurveyLocalizedTexts.PRECHAT_REQUIRED_FIELD_MISSING_MESSAGE;
     const controlProps: IPreChatSurveyPaneControlProps = {
         id: "oc-lcw-prechatsurvey-pane",
         dir: state.domainStates.globalDir,
@@ -77,7 +81,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                     state?.appStates?.hideStartChatButton === false) {
                     optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
 
-                    await initStartChat(optionalParams, persistedState);
+                    await startChat(optionalParams, persistedState);
                 } else {
                     const prechatResponseValues = extractPreChatSurveyResponseValues(state.domainStates.preChatSurveyResponse, values);
 
@@ -87,7 +91,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
 
                     setPreChatResponseEmail(values);
 
-                    await initStartChat(optionalParams);
+                    await startChat(optionalParams);
                 }
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -99,11 +103,11 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 });
             }
         },
-        ...surveyProps?.controlProps
+        ...preChatSurveyPaneProps?.controlProps
     };
 
     const styleProps: IPreChatSurveyPaneStyleProps = {
-        ...surveyProps?.styleProps,
+        ...preChatSurveyPaneProps?.styleProps,
         generalStyleProps: generalStyleProps
     };
 

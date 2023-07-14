@@ -12,9 +12,4 @@ export interface IChatButtonStatefulParams {
      * These props are used for styling and control of chat Button during Out Of Office actions
      */
     outOfOfficeButtonProps?: IChatButtonProps;
-
-    /**
-     * startChat: Internal Prop injected for triggering start of a chat using chatSDK
-     */
-    startChat: () => Promise<void>;
 }

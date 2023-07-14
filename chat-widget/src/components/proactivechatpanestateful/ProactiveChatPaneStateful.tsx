@@ -14,13 +14,15 @@ import { ProactiveChatPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import usePrepareStartChat from "../../hooks/usePrepareStartChat";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ProactiveChatPaneStateful = (props: any) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const { proactiveChatProps, startChat } = props;
+    const { proactiveChatProps } = props;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [timeoutRemoved, setTimeoutRemoved] = useState(false);
+    const prepareStartChat = usePrepareStartChat(props);
 
     const handleProactiveChatInviteTimeout = () => {
         if (!timeoutRemoved) {
@@ -68,7 +70,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
                     eventName: BroadcastEvent.ProactiveChatStartChat,
                 };
                 BroadcastService.postMessage(proactiveChatStarted);
-                await startChat();
+                await prepareStartChat();
             }
         },
         onClose: () => {

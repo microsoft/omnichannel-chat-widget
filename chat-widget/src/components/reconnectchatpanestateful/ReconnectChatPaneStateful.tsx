@@ -4,8 +4,8 @@ import React, { Dispatch, useEffect } from "react";
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
 import { IReconnectChatPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/reconnectchatpane/interfaces/IReconnectChatPaneControlProps";
-import { IReconnectChatPaneStatefulParams } from "./interfaces/IReconnectChatPaneStatefulParams";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { ReconnectChatPane } from "@microsoft/omnichannel-chat-components";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
@@ -13,18 +13,20 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { setFocusOnElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
+import useStartChat from "../../hooks/useStartChat";
 
-export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParams) => {
+export const ReconnectChatPaneStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const chatSDK: any = useChatSDKStore();
-    const { reconnectChatProps, initStartChat } = props;
+    const startChat = useStartChat(props);
+    const { reconnectChatPaneProps } = props;
 
-    const startChat = async (continueChat: boolean) => {
+    const startChatInternal = async (continueChat: boolean) => {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         if (continueChat && state.appStates.reconnectId) {
             const optionalParams: StartChatOptionalParams = { reconnectId: state.appStates.reconnectId };
-            await initStartChat(optionalParams);
+            await startChat(optionalParams);
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
             if (state?.domainStates?.initialChatSdkRequestId) {
@@ -37,7 +39,7 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
             } else {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-                await initStartChat();
+                await startChat();
             }
         }
     };
@@ -50,14 +52,14 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
                 Event: TelemetryEvent.ReconnectChatContinueConversation,
                 Description: "Reconnect chat continue conversation button clicked."
             });
-            startChat(true);
+            startChatInternal(true);
         },
         onStartNewChat: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ReconnectChatStartNewConversation,
                 Description: "Reconnect chat start new conversation button clicked."
             });
-            startChat(false);
+            startChatInternal(false);
         },
         onMinimize: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -66,7 +68,7 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
             });
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
-        ...reconnectChatProps?.controlProps,
+        ...reconnectChatPaneProps?.controlProps,
     };
 
     useEffect(() => {
@@ -76,9 +78,9 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
 
     return (
         <ReconnectChatPane
-            componentOverrides={reconnectChatProps?.componentOverrides}
+            componentOverrides={reconnectChatPaneProps?.componentOverrides}
             controlProps={controlProps}
-            styleProps={reconnectChatProps?.styleProps}
+            styleProps={reconnectChatPaneProps?.styleProps}
         />
     );
 };

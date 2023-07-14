@@ -4,7 +4,6 @@ import { Components, StyleOptions } from "botframework-webchat";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     createTimer,
     getBroadcastChannelName,
@@ -19,7 +18,6 @@ import {
 } from "../../../common/utils";
 import { defaultClientDataStoreProvider, isCookieAllowed } from "../../../common/storage/default/defaultClientDataStoreProvider";
 import { endChat, prepareEndChat } from "../common/endChat";
-import { handleChatReconnect, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -75,6 +73,7 @@ import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 import { initCallingSdk } from "../common/initCallingSdk";
 import { initConfirmationPropsComposer } from "../common/initConfirmationPropsComposer";
 import { initWebChatComposer } from "../common/initWebChatComposer";
+import { isReconnectEnabled } from "../common/reconnectChatHelper";
 import { registerBroadcastServiceForStorage } from "../../../common/storage/default/defaultCacheManager";
 import { registerTelemetryLoggers } from "../common/registerTelemetryLoggers";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
@@ -82,6 +81,11 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import useCheckConversationValidity from "../../../hooks/useCheckConversationValidity";
+import usePreChatStartChat from "../../../hooks/usePreChatStartChat";
+import usePrepareStartChat from "../../../hooks/usePrepareStartChat";
+import useReconnectChat from "../../../hooks/useReconnectChat";
+import useStartChat from "../../../hooks/useStartChat";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -94,6 +98,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
+    const checkConversationValidity = useCheckConversationValidity();
+    const startChat = useStartChat(props);
+    const preChatStartChat = usePreChatStartChat(props);
+    const prepareStartChat = usePrepareStartChat(props);
+    const reconnectChat = useReconnectChat(props);
 
     // Process general styles
     const generalStyles: IStackStyles = {
@@ -130,43 +139,39 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
+    const startChatInternal = async (props: ILiveChatWidgetProps) => {
         let isChatValid = false;
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
-            if (localState) {
-                localState.appStates.conversationState = ConversationState.Loading;
-            }
-
             //Check if conversation state is not in wrapup or closed state
-            isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
+            isChatValid = await checkConversationValidity();
             if (isChatValid === true) {
                 //Check if reconnect enabled
                 if (isReconnectEnabled(props.chatConfig) === true) {
-                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                    await reconnectChat();
                     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
                     if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
                         return;
                     }
                 }
-                await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
+                await startChat(optionalParams);
                 return;
             }
         }
 
         if (isChatValid === false) {
-            if (localState) {
+            if (state?.appStates?.hideStartChatButton === true) {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
                 if (isReconnectEnabled(props.chatConfig) === true) {
-                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                    await reconnectChat();
                     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
                     if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
                         return;
                     }
                 }
-                await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
+                await preChatStartChat();
                 return;
             } else {
                 // To avoid showing blank screen in popout
@@ -227,14 +232,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Unauth chat
         if (state?.appStates?.hideStartChatButton === false) {
-            startChat(props);
+            startChatInternal(props);
         }
     }, []);
 
     // useEffect for when skip chat button rendering
     useEffect(() => {
         if (state?.appStates?.hideStartChatButton === true) {
-            //handle OOH pane
+            // Handle OOOH pane
             if (props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 return;
@@ -243,8 +248,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.ChatInitiated
             });
-            //Pass the state to avoid getting stale state
-            startChat(props, state);
+
+            // Pass the state to avoid getting stale state
+            startChatInternal(props);
         }
     }, [state?.appStates?.hideStartChatButton]);
 
@@ -311,7 +317,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
-                prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
+                prepareStartChat();
                 return;
             }
 
@@ -324,7 +330,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     BroadcastService.postMessage({
                         eventName: BroadcastEvent.ChatInitiated
                     });
-                    prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
+                    prepareStartChat();
                     return;
                 }
 
@@ -422,11 +428,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         }
     }, [state.appStates.conversationState]);
-
-    useEffect(() => {
-        canStartProactiveChat.current = state.appStates.conversationState === ConversationState.Closed &&
-            !state.appStates.proactiveChatStates.proactiveChatInNewWindow;
-    }, [state.appStates.conversationState, state.appStates.proactiveChatStates.proactiveChatInNewWindow]);
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
@@ -560,9 +561,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab, uwid.current);
-    const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
@@ -623,9 +621,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         styles={generalStyles}
                         className={livechatProps.styleProps?.className}>
 
-                        {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
+                        {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || <ChatButtonStateful {...livechatProps} />)}
 
-                        {!livechatProps.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(livechatProps.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={livechatProps.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
+                        {!livechatProps.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(livechatProps.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful {...livechatProps} />)}
 
                         {!livechatProps.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(livechatProps.componentOverrides?.header) || <HeaderStateful headerProps={livechatProps.headerProps} outOfOfficeHeaderProps={livechatProps.outOfOfficeHeaderProps} endChat={endChatRelay} {...headerDraggableConfig} />)}
 
@@ -633,9 +631,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(livechatProps.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...livechatProps.outOfOfficeHoursPaneProps} />)}
 
-                        {!livechatProps.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(livechatProps.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful reconnectChatProps={livechatProps.reconnectChatPaneProps} initStartChat={initStartChatRelay} />)}
+                        {!livechatProps.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(livechatProps.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful {...livechatProps} />)}
 
-                        {!livechatProps.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful surveyProps={livechatProps.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />)}
+                        {!livechatProps.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful {...livechatProps} />)}
 
                         {!livechatProps.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...livechatProps.callingContainerProps} />}
 
