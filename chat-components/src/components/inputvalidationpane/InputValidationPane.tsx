@@ -237,6 +237,7 @@ function InputValidationPane(props: IInputValidationPaneProps) {
                             borderless={isInvalidInput}
                             onChange={handleInputChange}
                             onKeyUp={handleInputKeyUp}
+                            placeholder={props.controlProps?.InputPlaceholder || defaultInputValidationPaneControlProps.InputPlaceholder}
                         />) }
 
                         { isInvalidInput && (decodeComponentString(props.componentOverrides?.invalidInputErrorMessage) ||

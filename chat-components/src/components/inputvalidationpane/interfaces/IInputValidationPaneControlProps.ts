@@ -15,6 +15,7 @@ export interface IInputValidationPaneControlProps {
     hideInput?: boolean;
     inputAriaLabel?: string;
     inputWithErrorMessageBorderColor?: string;
+    InputPlaceholder?: string;
 
     invalidInputErrorMessageText?: string;
 
