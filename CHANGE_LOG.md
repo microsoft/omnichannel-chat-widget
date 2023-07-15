@@ -138,6 +138,9 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+### Added
+
+- Added place holder for inputvalidationPane, to display the proper format of an email.
 
 ## [1.0.4] - 2023-6-20
 
