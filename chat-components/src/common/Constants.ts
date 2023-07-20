@@ -176,6 +176,7 @@ export const Texts = class {
     public static readonly ConfirmationPaneTitle = "Close chat";
     public static readonly ConfirmationPaneSubtitle = "Do you really want to close this chat?";
     public static readonly ConfirmButtonText = "Close";
+    public static readonly EmailPlaceHolderText = "johnsmith@outlook.com";
     public static readonly CancelButtonText = "Cancel";
     public static readonly DownloadChatTranscriptText = "Download chat transcript";
     public static readonly EmailTranscriptText = "Email Transcript";

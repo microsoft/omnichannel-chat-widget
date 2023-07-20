@@ -17,6 +17,7 @@ export const presetTwoInputValidationPaneControlProps: IInputValidationPaneContr
     hideInput: false,
     inputAriaLabel: AriaLabels.InputValidationPaneInput,
     inputWithErrorMessageBorderColor: "rgb(164, 38, 44)",
+    inputPlaceHolder: Texts.EmailPlaceHolderText,
     
     invalidInputErrorMessageText: Texts.InvalidInputErrorMessageText,
 
