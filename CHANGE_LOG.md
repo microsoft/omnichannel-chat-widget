@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.0] - 2023-7-20
+
 ### Added
 
 - Add ability for widget to be draggable on desktop browser
