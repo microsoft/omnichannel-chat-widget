@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/omnichannel-chat-widget",
-  "version": "1.1.1-0",
+  "version": "1.2.1-0",
   "description": "Microsoft Omnichannel Chat Widget",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",
@@ -74,7 +74,7 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "@microsoft/omnichannel-chat-components": "^1.0.3",
+    "@microsoft/omnichannel-chat-components": "^1.0.5",
     "@microsoft/omnichannel-chat-sdk": "1.4.4",
     "abort-controller-es5": "^2.0.1",
     "dompurify": "^2.3.4",

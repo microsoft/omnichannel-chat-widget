@@ -7,6 +7,8 @@
 
 > NEW! Check out our new [Developer Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md), which has detailed explanations of all component interfaces accompanied with sample code.
 
+> NEW! Veresion 1.2.0 introduces draggable widget, allowing the widget panel to move anywhere in the browser window. Set `draggableChatWidgetProps.disabled` to `true` to disable this behavior. See [interface](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetProps.ts#L68).
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
