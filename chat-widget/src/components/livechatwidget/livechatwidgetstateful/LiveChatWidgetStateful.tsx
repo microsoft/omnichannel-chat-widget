@@ -479,15 +479,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         // If start chat failed, and C2 is trying to close chat widget
-        if (state?.appStates?.startChatFailed) {
+        if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
             endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid.current);
             return;
         }
 
         // Scenario -> Chat was InActive and closing the chat (Refresh scenario on post chat)
-        if (state?.appStates?.conversationState === ConversationState.Postchat ||
-            state?.appStates?.conversationState === ConversationState.InActive) {
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid.current);
+        if (state?.appStates?.conversationState === ConversationState.InActive) {
+            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid.current);
             return;
         }
 
