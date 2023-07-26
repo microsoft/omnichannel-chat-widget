@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue where opening a chat right after agent ends the previous chat doesn't work
+
 ## [1.2.1] - 2023-7-24
 
 ### Changed
