@@ -234,6 +234,11 @@ export enum E2VVOptions {
     VoiceOnly = "192350002"
 }
 
+export enum ConversationMode {
+    Regular = "192350000",
+    Persistent = "192350001"
+}
+
 export enum LiveWorkItemState {
     Active = "Active",
     Closed = "Closed",
