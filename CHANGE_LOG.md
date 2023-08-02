@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.4.5](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.5)
+
 ### Fixed
 
 - Fixed an issue where opening a chat right after agent ends the previous chat doesn't work
