@@ -6,6 +6,7 @@ import { handleAuthentication, removeAuthTokenProvider } from "./authHelper";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
+import { ConversationMode } from "../../../common/Constants";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
@@ -19,8 +20,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext) => {
-
-    if (!isReconnectEnabled(props.chatConfig)) return;
+    if (!isReconnectEnabled(props.chatConfig) || isPersistentEnabled(props.chatConfig)) return;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
@@ -120,8 +120,16 @@ const isReconnectEnabled = (chatConfig?: ChatConfig): boolean => {
     return false;
 };
 
+const isPersistentEnabled = (chatConfig?: ChatConfig): boolean => {
+    if (chatConfig) {
+        const persistentEnabled = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode?.toLowerCase() === ConversationMode.Persistent;
+        return persistentEnabled;
+    }
+    return false;
+};
+
 const hasReconnectId = (reconnectAvailabilityResponse: IReconnectChatContext) => {
     return reconnectAvailabilityResponse && !isNullOrUndefined(reconnectAvailabilityResponse.reconnectId);
 };
 
-export { handleChatReconnect, isReconnectEnabled, getChatReconnectContext };
+export { handleChatReconnect, isReconnectEnabled, isPersistentEnabled, getChatReconnectContext };
