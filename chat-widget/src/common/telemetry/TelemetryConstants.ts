@@ -192,7 +192,7 @@ export enum TelemetryEvent {
     MessageSent = "MessageSent",
     MessageReceived = "MessageReceived",
     SystemMessageReceived = "SystemMessageReceived",
-    HistoryMessageReceived = "HistoryMessageReceived",
+    RehydrateMessageReceived = "RehydrateMessageReceived",
 
     CustomContextReceived = "CustomContextReceived",
 

@@ -5,7 +5,7 @@ import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
-
+import { TelemetryManager } from "../common/telemetry/TelemetryManager";
 
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
     const onNewAdapterActivityHandler = (activity: IActivity) => {
@@ -14,8 +14,23 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
         raiseMessageEvent(activity, isHistoryMessage);
     };
+
     let isHistoryMessageReceivedEventRasied = false;
     const raiseMessageEvent = (activity: IActivity, isHistoryMessage: boolean) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const polyfillMessagePayloadForEvent = (payload: any) => {
+            return {
+                ...payload,
+                channelData: activity?.channelData,
+                chatId: activity?.conversation?.id,
+                conversationId: TelemetryManager.InternalTelemetryData?.conversationId,
+                id: activity?.id,
+                isChatComplete: false,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                text: (activity as any)?.text
+            };
+        };
+
         if (activity?.type === Constants.message) {
             const payload = {
                 // To identify hidden contents vs empty content
@@ -33,7 +48,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 payload.messageType = Constants.userMessageTag;
                 const newMessageSentEvent: ICustomEvent = {
                     eventName: BroadcastEvent.NewMessageSent,
-                    payload: payload
+                    payload: polyfillMessagePayloadForEvent(payload)
                 };
                 BroadcastService.postMessage(newMessageSentEvent);
 
@@ -67,7 +82,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
                 const newMessageReceivedEvent: ICustomEvent = {
                     eventName: isHistoryMessage ? BroadcastEvent.HistoryMessageReceived : BroadcastEvent.NewMessageReceived,
-                    payload: payload
+                    payload: polyfillMessagePayloadForEvent(payload)
                 };
                 BroadcastService.postMessage(newMessageReceivedEvent);
 
@@ -81,7 +96,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     if (!isHistoryMessageReceivedEventRasied) {
                         isHistoryMessageReceivedEventRasied = true;
                         TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                            Event: TelemetryEvent.HistoryMessageReceived,
+                            Event: TelemetryEvent.RehydrateMessageReceived,
                             Description: "History message received",
                             Data: payload
                         });
