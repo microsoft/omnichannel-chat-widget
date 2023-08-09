@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Uptake [@microsoft/omnichannel-chat-sdk@1.4.5](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.5)
 - Added parity to NewMessage event payload, and renamed `HistoryMessageReceived` to `RehydrateMessageReceived` to avoid conflict with the same BroadcastEvent
-
+- Added Pull Request Template
 ### Fixed
 
 - Fixed an issue where opening a chat right after agent ends the previous chat doesn't work
