@@ -3,9 +3,7 @@
 import { IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
-import { BroadcastChannel } from "broadcast-channel";
 import { Components } from "botframework-webchat";
 import { Constants } from "../../common/Constants";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -54,8 +52,8 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const magicCodeBroadcastChannel = new BroadcastChannel(Constants.magicCodeBroadcastChannel);
-    const magicCodeResponseBroadcastChannel = new BroadcastChannel(Constants.magicCodeResponseBroadcastChannel);
+    const magicCodeBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
+    const magicCodeResponseBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeResponseBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
     const {webChatContainerProps, contextDataStore} = props;
 
     const containerStyles: IStackStyles = {
