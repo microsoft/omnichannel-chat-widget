@@ -54,6 +54,19 @@ const main = async () => {
             document.getElementById("oc-lcw-container")
         );
     };
+
+    const setCustomContext = () => {
+        const setCustomContextEvent = {
+            eventName: "SetCustomContext",
+            payload: {
+                "contextKey1": {"value": "contextValue1", "isDisplayable": true},
+                "contextKey2": {"value": 12.34, "isDisplayable": false},
+                "contextKey3": {"value": true}
+            }
+        };
+        BroadcastService.postMessage(setCustomContextEvent);
+    };
+
     const startProactiveChat = (notificationUIConfig, showPrechat, inNewWindow) => {
         const startProactiveChatEvent = {
             eventName: "StartProactiveChat",
@@ -68,6 +81,7 @@ const main = async () => {
 
     window["switchConfig"] = switchConfig;
     window["startProactiveChat"] = startProactiveChat;
+    window["setCustomContext"] = setCustomContext;
     switchConfig(await getCustomizationJson());
 };
 

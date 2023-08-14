@@ -77,11 +77,11 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
-    await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
+    await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
+const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
     const chatConfig = props?.chatConfig;
     const getAuthToken = props?.getAuthToken;
@@ -118,7 +118,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         try {
             // Set custom context params
-            await setCustomContextParams(props);
+            await setCustomContextParams(state, props);
             const defaultOptionalParams: StartChatOptionalParams = {
                 sendDefaultInitContext: true,
                 isProactiveChat: !!params?.isProactiveChat,
@@ -251,7 +251,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         persistedState?.appStates?.conversationState === ConversationState.Active) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
-        await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
+        await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
         return true;
     }
 
@@ -259,11 +259,18 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = async (props?: ILiveChatWidgetProps) => {
+const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = (props?.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
     //Should not set custom context for auth chat
     if (isAuthenticatedChat) {
+        return;
+    }
+
+    if (state?.domainStates.customContext) {
+        optionalParams = Object.assign({}, optionalParams, {
+            customContext: JSON.parse(JSON.stringify(state?.domainStates.customContext))
+        });
         return;
     }
 
@@ -280,13 +287,13 @@ const setCustomContextParams = async (props?: ILiveChatWidgetProps) => {
         });
 
         optionalParams = Object.assign({}, optionalParams, {
-            customContext: customContextLocal
+            customContext: JSON.parse(JSON.stringify(customContextLocal))
         });
     } else {
         const customContextFromParent = await getInitContextParamsForPopout();
         if (!isUndefinedOrEmpty(customContextFromParent?.contextVariables)) {
             optionalParams = Object.assign({}, optionalParams, {
-                customContext: customContextFromParent.contextVariables
+                customContext: JSON.parse(JSON.stringify(customContextFromParent.contextVariables))
             });
         }
     }
