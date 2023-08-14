@@ -1,9 +1,8 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 
 import { ChatButton } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../common/Constants";
-import { setFocusOnElement } from "../../common/utils";
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { IChatButtonControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonControlProps";
 import { IChatButtonStatefulParams } from "./interfaces/IChatButtonStatefulParams";
@@ -14,6 +13,7 @@ import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetAc
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
+import { setFocusOnElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
@@ -23,6 +23,19 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     //Setting OutOfOperatingHours Flag
     const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
     
+    const ref = useRef(() => {return;});
+    ref.current = async () => {
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.LCWChatButtonClicked
+        });
+        
+        if (state.appStates.isMinimized) {
+            dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+        } else {
+            await startChat();
+        }
+    };
+
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);
     const controlProps: IChatButtonControlProps = {
         id: "oc-lcw-chat-button",
@@ -31,17 +44,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         subtitleText: "We're online.",
         hideNotificationBubble: buttonProps?.controlProps?.hideNotificationBubble === true || state.appStates.isMinimized === false,
         unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? props.buttonProps?.controlProps?.largeUnreadMessageString : state.appStates.unreadMessageCount.toString()) : "0",
-        onClick: async () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.LCWChatButtonClicked
-            });
-            
-            if (state.appStates.isMinimized) {
-                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-            } else {
-                await startChat();
-            }
-        },
+        onClick: () => ref.current(),
         unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
         ...buttonProps?.controlProps,
     };

@@ -151,7 +151,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         return;
                     }
                 }
-                await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
+                await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
                 return;
             }
         }
@@ -561,7 +561,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab, uwid.current);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams, persistedState);
+    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
