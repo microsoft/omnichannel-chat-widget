@@ -36,6 +36,7 @@ import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import DOMPurify from "dompurify";
+import createMessageSequenceIdOverrideMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageSequenceIdOverrideMiddleware";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any) => {
@@ -83,6 +84,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createConversationEndMiddleware(conversationEndCallback),
             createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
             createMessageTimeStampMiddleware,
+            createMessageSequenceIdOverrideMiddleware,
             gifUploadMiddleware,
             htmlPlayerMiddleware,
             htmlTextMiddleware,

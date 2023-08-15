@@ -133,6 +133,10 @@ export class Constants {
     // Popup mode custom context response event message name
     public static readonly InitContextParamsRequest = "initContextParamsRequest";
     public static readonly InitContextParamsResponse = "initContextParamsResponse";
+
+    public static readonly OCOriginalMessageId = "OriginalMessageId";
+    public static readonly WebchatSequenceIdAttribute = "webchat:sequence-id";
+    public static readonly MessageSequenceIdOverride = "MessageSequenceIdOverride";
 }
 
 export const Regex = class {
