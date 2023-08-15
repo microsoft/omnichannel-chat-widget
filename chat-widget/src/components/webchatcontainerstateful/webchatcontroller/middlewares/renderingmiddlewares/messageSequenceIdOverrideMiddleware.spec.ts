@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Constants } from "../../../../../common/Constants";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
@@ -209,7 +210,6 @@ describe("messageSequenceIdOverrideMiddleware", () => {
         const middleware = createMessageSequenceIdOverrideMiddleware(dispatch)(next)(action);
         expect((middleware.payload as any)).toEqual(payloadExpected.payload);
     });
-
 
     it("no override, since the type of message is not incoming activity", () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
