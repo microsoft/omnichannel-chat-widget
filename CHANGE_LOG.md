@@ -162,6 +162,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.6] - 2023-8-18
+
 ### Fixed
 
 - Fixed PreChatPane not showing full text for toggle input text
