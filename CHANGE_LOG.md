@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.2] - 2023-8-16
+
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-sdk@1.4.5](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.5)
@@ -159,6 +161,12 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+## [1.0.6] - 2023-8-18
+
+### Fixed
+
+- Fixed PreChatPane not showing full text for toggle input text
 
 ## [1.0.5] - 2023-7-20
 

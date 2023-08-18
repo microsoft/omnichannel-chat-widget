@@ -1,11 +1,11 @@
 import * as AdaptiveCards from "adaptivecards";
 
+import { ElementType, EventNames } from "../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { useCallback } from "react";
 import { addNoreferrerNoopenerTag, broadcastError, getInputValuesFromAdaptiveCard } from "../../common/utils";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType, EventNames } from "../../common/Constants";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { IPreChatSurveyPaneProps } from "./interfaces/IPreChatSurveyPaneProps";
 import { defaultPreChatSurveyPaneACContainerStyles } from "./common/defaultProps/defaultStyles/defaultPreChatSurveyPaneACContainerStyles";
@@ -75,6 +75,8 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 font-size: ${props.styleProps?.customTextStyleProps?.fontSize} !important;
                 height: ${props.styleProps?.customTextStyleProps?.height};
                 padding-top: ${props.styleProps?.customTextStyleProps?.paddingTop};
+                overflow-wrap: break-word;
+                white-space: normal !important;
             }
             .ac-textRun {
                 font-size: ${props.styleProps?.customTextStyleProps?.fontSize} !important;
