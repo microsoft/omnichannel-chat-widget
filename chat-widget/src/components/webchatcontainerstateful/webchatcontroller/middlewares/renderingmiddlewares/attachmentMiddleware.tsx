@@ -119,8 +119,8 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
         }
     
         const { activity: { attachments }, attachment } : {activity: { attachments: any}, attachment: any} = card;
-        // No attachment
-        if (!attachments || !attachments.length || !attachment) {
+        // No attachment or attachment is invalid
+        if (!attachments || !attachments.length || !attachment || !attachment.name) {
             return next(...args);
         }
     
