@@ -65,6 +65,7 @@ export class Constants {
         "application/vnd.microsoft.card.thumbnail",
         "application/vnd.microsoft.card.signin",
         "application/vnd.microsoft.card.oauth",
+        "application/vnd.microsoft.card.video"
     ];
     public static readonly maxUploadFileSize = "500000";
     public static readonly imageRegex = /(\.)(jpeg|jpg|jiff|png|gif|bmp|webp)$/i;
