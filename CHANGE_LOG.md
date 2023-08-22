@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 # Chat Widget
 
 ## [Unreleased]
+### Added
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
 
 ## [1.2.2] - 2023-8-16
