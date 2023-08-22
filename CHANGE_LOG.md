@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
+- Added handling for OriginalMessageId in transcript component to fix sorting issues.
 
 ## [1.2.2] - 2023-8-16
 
