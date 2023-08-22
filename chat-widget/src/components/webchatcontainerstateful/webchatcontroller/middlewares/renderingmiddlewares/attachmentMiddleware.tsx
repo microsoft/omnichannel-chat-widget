@@ -156,6 +156,8 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
                     {next(...args)}
                 </div>
             );
+        } else if (contentType.startsWith(Constants.adaptiveCardContentTypePrefix)) {
+            console.warn(`${contentType} adaptive card type is currently not supported.`);
         }
     
         if (card.activity.channelData?.middlewareData) {
@@ -163,7 +165,11 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
         } else if (attachment?.tempContentUrl) {
             attachment.contentUrl = attachment.tempContentUrl;
         }
-    
+
+        if (!attachment.name) {
+            return next(...args);
+        }
+
         const fileExtension = attachment.name.substring(attachment.name.lastIndexOf(".") + 1, attachment.name.length) || attachment.name;
         const imageExtension = Constants.imageRegex.test(attachment.name);
     

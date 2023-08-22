@@ -9,6 +9,14 @@ All notable changes to this project will be documented in this file.
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
 - Added handling for OriginalMessageId in transcript component to fix sorting issues.
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.6)
+
+### Fixed
+
+- Fixed an issue where video card cannot be rendered
+
 ## [1.2.2] - 2023-8-16
 
 ### Changed

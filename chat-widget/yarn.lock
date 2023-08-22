@@ -2255,10 +2255,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.4.tgz#26b8650287bb7bc2a5baa8db47c2371fe9034434"
   integrity sha512-iLLgQjxqYnXrcAzGrbHFqpRLdTjjadZOySEU32CoR5Had34ug4capBiqP1FYmITmfHO0u9G9oC4N1ghCtqFkNw==
 
-"@microsoft/omnichannel-chat-components@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-1.0.5.tgz#c7e2a2059245bb3037a879c5a2804a41867079aa"
-  integrity sha512-7oRBUhf1mMyCutVWfTh8rJWNUNdXNomzrpSiw4Ru+l7s3oezrlScpmnJUtmBeqpjvKidlUuTEmW+Pfx7U8+ffw==
+"@microsoft/omnichannel-chat-components@1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-1.0.6.tgz#21a4a9d95a725db104d1bfcabb09bc5d5ea76d15"
+  integrity sha512-ZcF/qIEBwVQKYgDhNexI36P9sYDuGImYDdqFqYwCMD+IdKuuYsCoBHhCUNSnJ+ieofR/DGVUIdrEptrDvlH8kA==
   dependencies:
     "@fluentui/react" "^8.46.0"
     adaptivecards "^2.10.0"
