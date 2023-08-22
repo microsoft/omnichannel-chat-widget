@@ -38,10 +38,11 @@ const isWebSequenceIdPresent = (action: IWebChatAction) => {
 const overrideSequenceIdWithOriginalMessageId = (action: IWebChatAction): IWebChatAction => {
 
     const originalMessageId = extractOriginalMessageId(action);
+    const channelData = action.payload.activity.channelData;
 
     if (originalMessageId === undefined) return action;
 
-    Object.keys(action.payload.activity.channelData).forEach(function (key) {
+    Object.keys(channelData).forEach(function (key) {
         if (key === Constants.WebchatSequenceIdAttribute && action.payload.activity.channelData[key] !== originalMessageId) {
             action.payload.activity.channelData[key] = originalMessageId;
         }
@@ -51,6 +52,7 @@ const overrideSequenceIdWithOriginalMessageId = (action: IWebChatAction): IWebCh
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const extractOriginalMessageId = (action: any): number | undefined => {
+
     const originalMessageId = lookupOriginalMessageId(action);
     if (typeof originalMessageId !== "string" || originalMessageId === "") {
         return undefined;

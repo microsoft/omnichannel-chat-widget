@@ -195,7 +195,7 @@ class TranscriptHTMLBuilder {
                                     timestamp: created,
                                     channelData: { 
                                         "webchat:sequence-id": webchatSequenceId
-                                    },
+                                    }
                                 }
                             }
 
@@ -211,7 +211,7 @@ class TranscriptHTMLBuilder {
                                             timestamp: created,
                                             channelData: { 
                                                 "webchat:sequence-id": webchatSequenceId
-                                            },
+                                            }
                                         };
                                     } catch {
 
@@ -225,12 +225,11 @@ class TranscriptHTMLBuilder {
                                 timestamp: created,
                                 channelData: { 
                                     "webchat:sequence-id": webchatSequenceId
-                                },
+                                }
                             };
                         }
                         
                         static convertStringValueToInt(value) {
-
                             if (typeof value !== "string" || value === "") {
                                 return undefined;
                             }
