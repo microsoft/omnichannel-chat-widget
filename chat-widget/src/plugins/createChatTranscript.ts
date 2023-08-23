@@ -131,7 +131,13 @@ class TranscriptHTMLBuilder {
                 <script>
                     class Translator {
                         static convertTranscriptMessageToActivity(message) {
-                            const {created, isControlMessage, content, tags, from, attachments, amsMetadata, amsReferences} = message;
+                            const {created, OriginalMessageId, id, isControlMessage, content, tags, from, attachments, amsMetadata, amsReferences} = message;
+                            
+                            //it's required to convert the id to a number, otherwise the webchat will not render the messages in the correct order
+                            // if the OrginalMessageId is not present, we can use the id as the sequence id, which is always present.
+                            
+                            const webchatSequenceId = Translator.convertStringValueToInt(OriginalMessageId) || Translator.convertStringValueToInt(id);
+                            
                             const activity = {
                                 from: {
                                     role: 'bot'
@@ -186,7 +192,10 @@ class TranscriptHTMLBuilder {
                                 return {
                                     ...activity,
                                     text,
-                                    timestamp: created
+                                    timestamp: created,
+                                    channelData: { 
+                                        "webchat:sequence-id": webchatSequenceId
+                                    }
                                 }
                             }
 
@@ -199,7 +208,10 @@ class TranscriptHTMLBuilder {
                                         return {
                                             ...activity,
                                             ...partialActivity,
-                                            timestamp: created
+                                            timestamp: created,
+                                            channelData: { 
+                                                "webchat:sequence-id": webchatSequenceId
+                                            }
                                         };
                                     } catch {
 
@@ -210,8 +222,20 @@ class TranscriptHTMLBuilder {
                             return {
                                 ...activity,
                                 text: content,
-                                timestamp: created
+                                timestamp: created,
+                                channelData: { 
+                                    "webchat:sequence-id": webchatSequenceId
+                                }
                             };
+                        }
+                        
+                        static convertStringValueToInt(value) {
+                            if (typeof value !== "string" || value === "") {
+                                return undefined;
+                            }
+
+                            const result = parseInt(value);
+                            return isNaN(result) ? undefined : result;
                         }
                     }
                 <\/script>
