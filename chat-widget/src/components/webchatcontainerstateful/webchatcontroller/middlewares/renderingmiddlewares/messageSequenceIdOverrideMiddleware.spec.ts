@@ -256,11 +256,11 @@ describe("messageSequenceIdOverrideMiddleware", () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const dispatch: any = () => { return 1; };
         const action: IWebChatAction = {
-            type: "something else",
+            type: WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY,
             payload: {
                 text: "test-text",
                 activity: {
-                    channelId: "OtherChannel",
+                    channelId: "something_else",
                     from: {
                         role: "user"
                     },
@@ -289,4 +289,74 @@ describe("messageSequenceIdOverrideMiddleware", () => {
     },
     );
 
+    it("no override, since the channel channelData is not present", () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const next = (args: any) => args;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dispatch: any = () => { return 1; };
+        const action: IWebChatAction = {
+            type: WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY,
+            payload: {
+                text: "test-text channel data is not present",
+                activity: {
+                    channelId: "ACS_CHANNEL",
+                    from: {
+                        role: "user"
+                    }
+                },
+            },
+        };
+
+        const middleware = createMessageSequenceIdOverrideMiddleware(dispatch)(next)(action);
+        expect((middleware.payload as any)).toEqual(action.payload);
+    },
+    );
+
+    it("no override, since channelData is empty object", () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const next = (args: any) => args;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dispatch: any = () => { return 1; };
+        const action: IWebChatAction = {
+            type: WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY,
+            payload: {
+                text: "test-text channel data empty",
+                activity: {
+                    channelId: "ACS_CHANNEL",
+                    from: {
+                        role: "user"
+                    },
+                    channelData: {}
+                },
+            },
+        };
+
+        const middleware = createMessageSequenceIdOverrideMiddleware(dispatch)(next)(action);
+        expect((middleware.payload as any)).toEqual(action.payload);
+    },
+    );
+
+    it("no override, since channelData null", () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const next = (args: any) => args;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const dispatch: any = () => { return 1; };
+        const action: IWebChatAction = {
+            type: WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY,
+            payload: {
+                text: "test-channel Data null",
+                activity: {
+                    channelId: "ACS_CHANNEL",
+                    from: {
+                        role: "user"
+                    },
+                    channelData: null
+                },
+            },
+        };
+
+        const middleware = createMessageSequenceIdOverrideMiddleware(dispatch)(next)(action);
+        expect((middleware.payload as any)).toEqual(action.payload);
+    },
+    );
 });

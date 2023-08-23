@@ -1,7 +1,6 @@
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { Constants } from "../../../../../common/Constants";
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const createMessageSequenceIdOverrideMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
     if (isApplicable(action)) {
@@ -14,8 +13,8 @@ const isApplicable = (action: IWebChatAction): boolean => {
 
     return action.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY &&
         isValidChannel(action) &&
-        lookupOriginalMessageId(action) !== undefined &&
-        isWebSequenceIdPresent(action);
+        isWebSequenceIdPresent(action) &&
+        lookupOriginalMessageId(action) !== undefined;
 };
 
 const isValidChannel = (action: IWebChatAction): boolean => {
@@ -23,10 +22,11 @@ const isValidChannel = (action: IWebChatAction): boolean => {
 };
 
 const isChannelDataPresent = (action: IWebChatAction) => {
-    return action?.payload?.activity?.channelData !== undefined;
+    return action?.payload?.activity?.channelData !== undefined && action?.payload?.activity?.channelData !== null;
 };
 
 const isWebSequenceIdPresent = (action: IWebChatAction) => {
+
     if (!isChannelDataPresent(action)) return false;
     const channelData = action.payload.activity.channelData;
 
@@ -36,7 +36,6 @@ const isWebSequenceIdPresent = (action: IWebChatAction) => {
 };
 
 const overrideSequenceIdWithOriginalMessageId = (action: IWebChatAction): IWebChatAction => {
-
     const originalMessageId = extractOriginalMessageId(action);
     const channelData = action.payload.activity.channelData;
 
