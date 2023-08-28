@@ -19,7 +19,7 @@ import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/St
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext) => {
+const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext): Promise<boolean | undefined> => {
     if (!isReconnectEnabled(props.chatConfig) || isPersistentEnabled(props.chatConfig)) return;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,7 +37,7 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
     if (hasReconnectId(reconnectChatContext)) {
         //if reconnect id is provided in props, don't show reconnect pane
         if (props.reconnectChatPaneProps?.reconnectId && !isNullOrEmptyString(props.reconnectChatPaneProps?.reconnectId)) {
-            await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, props, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);
+            await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, state, props, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);
             return;
         }
 
@@ -47,6 +47,10 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
         return;
     }
+
+    // If we have reached this point, it means there is no valid reconnect id or redirectUrl
+    // This is a unauth reconnect refresh scenario - returns true so that we can start normal hydration process
+    return true;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,7 +88,7 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, reconnectId: string, initStartChat: any) => {
+const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK: any, state: ILiveChatWidgetContext, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, reconnectId: string, initStartChat: any) => {
     if (!isAuthenticatedChat) {
         const startUnauthenticatedReconnectChat: ICustomEvent = {
             eventName: BroadcastEvent.StartUnauthenticatedReconnectChat,
@@ -96,7 +100,7 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK:
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
-    await initStartChat(chatSDK, dispatch, setAdapter, props, optionalParams);
+    await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 
 const redirectPage = (redirectURL: string, redirectInSameWindow: boolean) => {

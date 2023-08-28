@@ -145,9 +145,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (isChatValid === true) {
                 //Check if reconnect enabled
                 if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
-                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                    const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
                     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+                    if (!noValidReconnectId && (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat)) {
                         return;
                     }
                 }
@@ -160,9 +160,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (localState) {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
                 if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
-                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                    const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
                     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+                    if (!noValidReconnectId && (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat)) {
                         return;
                     }
                 }
