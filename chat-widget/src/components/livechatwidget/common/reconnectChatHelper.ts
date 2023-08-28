@@ -18,9 +18,10 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 
+// Return value: should start normal chat flow when reconnect is enabled
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext): Promise<boolean | undefined> => {
-    if (!isReconnectEnabled(props.chatConfig) || isPersistentEnabled(props.chatConfig)) return;
+const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext): Promise<boolean> => {
+    if (!isReconnectEnabled(props.chatConfig) || isPersistentEnabled(props.chatConfig)) return false;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
@@ -31,21 +32,21 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
     //Redirect if enabled
     if (reconnectChatContext?.redirectURL) {
         redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow);
-        return;
+        return false;
     }
 
     if (hasReconnectId(reconnectChatContext)) {
         //if reconnect id is provided in props, don't show reconnect pane
         if (props.reconnectChatPaneProps?.reconnectId && !isNullOrEmptyString(props.reconnectChatPaneProps?.reconnectId)) {
             await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, state, props, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);
-            return;
+            return false;
         }
 
         //show reconnect pane
         state.appStates.conversationState = ConversationState.ReconnectChat;
         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectChatContext.reconnectId ?? "" });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ReconnectChat });
-        return;
+        return false;
     }
 
     // If we have reached this point, it means there is no valid reconnect id or redirectUrl
