@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 # Chat Widget
 
 ## [Unreleased]
+
 ### Added
+
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
 - Added handling for OriginalMessageId in transcript component to fix sorting issues.
 
@@ -16,6 +18,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed an issue where video card cannot be rendered
+- Fixed an issue where refreshing unauthenticated reconnect chat results in infinite loading
+- Fixed an issue where unauthenticated reconnect chat doesn't work with valid reconnect id
 
 ## [1.2.2] - 2023-8-16
 

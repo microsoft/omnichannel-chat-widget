@@ -131,6 +131,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
+        const isReconnectTriggered = async (): Promise<boolean> => {
+            if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
+                const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+                if (!noValidReconnectId && (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
         let isChatValid = false;
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
@@ -143,15 +154,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
             if (isChatValid === true) {
-                //Check if reconnect enabled
-                if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
-                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
-                    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
-                        return;
-                    }
+                const reconnectTriggered = await isReconnectTriggered();
+                if (!reconnectTriggered) {
+                    await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
                 }
-                await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
                 return;
             }
         }
@@ -159,14 +165,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (isChatValid === false) {
             if (localState) {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
-                if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
-                    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
-                    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
-                        return;
-                    }
+                const reconnectTriggered = await isReconnectTriggered();
+                if (!reconnectTriggered) {
+                    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 }
-                await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 return;
             } else {
                 // To avoid showing blank screen in popout

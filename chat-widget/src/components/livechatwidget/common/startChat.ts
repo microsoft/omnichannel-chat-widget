@@ -267,9 +267,9 @@ const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined,
         return;
     }
 
-    if (state?.domainStates.customContext) {
+    if (state?.domainStates?.customContext) {
         optionalParams = Object.assign({}, optionalParams, {
-            customContext: JSON.parse(JSON.stringify(state?.domainStates.customContext))
+            customContext: JSON.parse(JSON.stringify(state?.domainStates?.customContext))
         });
         return;
     }
