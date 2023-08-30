@@ -6,10 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Fixed
-
-- Fixed an issue where sign-in card cannot be rendered
-
 ### Added
 
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
@@ -20,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - Uptake [@microsoft/omnichannel-chat-components@1.0.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.6)
 
 ### Fixed
-
+- Fixed an issue where sign-in card cannot be rendered
 - Fixed an issue where video card cannot be rendered
 - Fixed an issue where refreshing unauthenticated reconnect chat results in infinite loading
 - Fixed an issue where unauthenticated reconnect chat doesn't work with valid reconnect id
