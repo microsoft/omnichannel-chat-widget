@@ -86,7 +86,10 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
         const signInId = extractSignInId(signInUrl);
 
         if (!signInId) {
-            return;
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.BotAuthActivityUndefinedSignInId
+            });
+            return activity;
         }
 
         if (this.signInCardSeen.has(signInId)) {
