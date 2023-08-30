@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue where sign-in card cannot be rendered
+
 ### Added
 
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages

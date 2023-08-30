@@ -221,6 +221,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ChatVisibilityChanged` | On minimizing the chat window |
 | `SigninCardReceived` | On sign-in adaptive card received from bot |
 | `BotAuthActivityEmptySasUrl` | On detecting a sign-in adaptive card with no SAS Url |
+| `BotAuthActivityUndefinedSignInId` | On detecting a sign-in adaptive card with undefined sign-in id |
 | `BotAuthConfigRequest` | On triggering the execution of the BotAuthTokenProvider function |
 | `RemoveWidgetDataFromCache` | On triggering `browserunload` on popout mode |
 | `LinkModePostChatWorkflowStarted` | On link mode post chat workflow being triggered
