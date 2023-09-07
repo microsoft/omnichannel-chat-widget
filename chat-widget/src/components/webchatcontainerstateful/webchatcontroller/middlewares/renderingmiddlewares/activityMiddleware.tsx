@@ -46,11 +46,9 @@ const handleSystemMessage = (next: any, args: any[], card: any, systemMessageSty
         return () => false;
     }
 
-    // eslint-disable-next-line react/display-name, @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line react/display-name
     return () => (
-        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="true">
-            {card.activity.text}
-        </div>
+        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="true" dangerouslySetInnerHTML={{ __html: escapeHtml(card.activity.text)}}/>
     );
 };
 

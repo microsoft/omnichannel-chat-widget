@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue where video card cannot be rendered
 - Fixed an issue where refreshing unauthenticated reconnect chat results in infinite loading
 - Fixed an issue where unauthenticated reconnect chat doesn't work with valid reconnect id
+- Fixed an issue where system message does not support html tags
 
 ## [1.2.2] - 2023-8-16
 
