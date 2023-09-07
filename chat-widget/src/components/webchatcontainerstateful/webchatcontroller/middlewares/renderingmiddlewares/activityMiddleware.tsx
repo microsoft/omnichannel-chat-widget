@@ -48,7 +48,7 @@ const handleSystemMessage = (next: any, args: any[], card: any, systemMessageSty
 
     // eslint-disable-next-line react/display-name
     return () => (
-        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="true" dangerouslySetInnerHTML={{ __html: card.activity.text }}/>
+        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="true" dangerouslySetInnerHTML={{ __html: escapeHtml("<img src='' onerror=\"alert('XSS attack')\"/>")}}/>
     );
 };
 
