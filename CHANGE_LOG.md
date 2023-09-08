@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.3] - 2023-09-07
+
 ### Added
 
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
