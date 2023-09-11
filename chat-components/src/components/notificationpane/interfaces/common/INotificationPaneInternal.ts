@@ -8,7 +8,9 @@ import { INotificationPaneComponentOverrides } from "./INotificationPaneComponen
  * Stateful will populate this interface based on the scenario type and send it to NotificationPane component view.
  */
 export interface INotificationPaneInternal {
-    // Common notification properties
+    /**
+    * Common notification properties
+    */ 
 
     // general
     id?: string;
@@ -52,7 +54,9 @@ export interface INotificationPaneInternal {
     dismissButtonHoverStyleProps?: IStyle;
     dismissButtonClassName?: string;
 
-    // Chat disconnect scenario specific properties
+    /**
+    * Chat disconnect scenario specific properties
+    */ 
 
     // close chat button
     hideCloseChatButton?: boolean;
@@ -64,6 +68,5 @@ export interface INotificationPaneInternal {
     // button group styles
     buttonGroupStyleProps?: IStyle;
 
-    // Define properties for - Start Chat scenario.
-    // .....Continue adding properties for other notification scenarios
+    // ...other notification scenarios to be added
 }
