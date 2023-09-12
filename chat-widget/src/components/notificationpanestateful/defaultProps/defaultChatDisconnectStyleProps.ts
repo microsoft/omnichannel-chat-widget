@@ -15,20 +15,22 @@ export const defaultChatDisconnectStyleProps: IChatDisconnectStyleProps = {
         alignItems: "center",
     },
     titleStyleProps: {
-        fontFamily: "Segoe UI, Arial, sans-serif",
+        fontFamily: "'Segoe UI', Arial, sans-serif",
         fontSize: "87.5%",
         minHeight: "32px",
         fontWeight: "bold",
     },
     subtitleStyleProps: {
-        fontFamily: "Segoe UI, Arial, sans-serif",
+        fontFamily: "'Segoe UI', Arial, sans-serif",
         fontSize: "87.5%",
+        fontWeight: "normal",
     },
     hyperlinkStyleProps: {
-        fontFamily: "Segoe UI, Arial, sans-serif",
+        fontFamily: "'Segoe UI', Arial, sans-serif",
         fontSize: "87.5%",
         textDecoration: "none",
         color: "#0078d4",
+        fontWeight: "normal",
     },
     hyperlinkHoverStyleProps: {
         textDecoration: "none",
