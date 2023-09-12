@@ -52,15 +52,13 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
 
     let genericPropsObj: INotificationPaneInternal = {};
 
-    // const mergedGeneralStyleProps = Object.assign({}, defaultChatDisconnectStyleProps.generalStyleProps, notificationPaneProps.styleProps?.generalStyleProps);
-    // const mergedTitleProps = Object.assign({}, defaultChatDisconnectControlProps, notificationProps.styleProps?.generalStyleProps);
-
+    // populate INotificationPaneInternal after merging customized props with default props
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const populateInternalProps = (notificationProps: any) => {
         if (!notificationProps) {
             notificationProps = {};
         }
-        // populate INotificationPaneInternal after merging in customized props with default props (using mergeProps)
+        
         console.log("ADAD populating internal props using: ", notificationProps);
         genericPropsObj = {
             generalStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.generalStyleProps, notificationProps.styleProps?.generalStyleProps),
@@ -101,15 +99,15 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
         };
     };
 
-    // perhaps do an initial merge of general notification pane props first, and then merge the more specfic default cases (ie. chat disconnect)
     switch (notificationScenarioType) {
         case NotificationScenarios.ChatDisconnect:
-            populateInternalProps(notificationPaneProps?.chatDisconnectNotificationProps); // merging of default chatDisconnectNotification props to be passed in as a parameter and done within this method
+            populateInternalProps(notificationPaneProps?.chatDisconnectNotificationProps);
             break;
         // case NotificationScenarios.AttachmentError:
-        //     populateInternalProps(props.notificationPaneProps?.attachmentErrorNotificationProps);
-        // additional scenario type cases to be added...
+        //     populateInternalProps(notificationPaneProps?.attachmentErrorNotificationProps);
+        // ...additional scenario type cases to be added
         default:
+            // setting chat disconnect as default case for now until further customization support is added
             populateInternalProps(notificationPaneProps?.chatDisconnectNotificationProps);
     }
 
