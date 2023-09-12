@@ -10,17 +10,19 @@ const createToastMiddleware = (notificationPaneProps: INotificationPaneProps | u
         console.log("ADAD toastMiddleware");
         const {notification} = card;
         console.log(notification);
-
-        if (notification.id === NotificationScenarios.ChatDisconnect) {
-            return <NotificationPaneStateful notificationPaneProps={notificationPaneProps} notificationScenarioType={NotificationScenarios.ChatDisconnect} endChat={endChat} />;
+        
+        if (notificationPaneProps) {
+            if (notification.id === NotificationScenarios.ChatDisconnect) {
+                return <NotificationPaneStateful notificationPaneProps={notificationPaneProps} notificationScenarioType={NotificationScenarios.ChatDisconnect} endChat={endChat} />;
+            }
+    
+            // if (notification.id === NotificationScenarios.AttachmentError) {
+            //     return <NotificationPaneStateful notificationBannerProps={notificationBannerProps} notificationScenarioType={NotificationScenarios.AttachmentError} />;
+            // }
+    
+            // ...additional notification scenarios to be added
         }
-
-        // if (notification.id === NotificationScenarios.AttachmentError) {
-        //     return <NotificationPaneStateful notificationBannerProps={notificationBannerProps} notificationScenarioType={NotificationScenarios.AttachmentError} />;
-        // }
-
-        // ...additional notification scenarios to be added
-
+        
         return next(card);
     };
 

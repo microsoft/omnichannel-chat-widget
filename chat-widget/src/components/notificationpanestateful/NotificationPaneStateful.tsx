@@ -83,20 +83,12 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
             notificationIconStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.notificationIconStyleProps, notificationProps.styleProps?.notificationIconStyleProps),
             notificationIconClassName: notificationProps.styleProps?.classNames?.notificationIconClassName ?? defaultChatDisconnectStyleProps.classNames?.notificationIconClassName,
             hideDismissButton: notificationProps.controlProps?.hideDismissButton ?? defaultChatDisconnectControlProps.hideDismissButton,
-            // dismissButtonProps: {
-            //     onClick: handleDismissNotification,
-            //     ...notificationProps.controlProps?.dismissButtonProps
-            // },
             dismissButtonProps: Object.assign({ onClick: handleDismissNotification }, defaultChatDisconnectControlProps.dismissButtonProps, notificationProps.controlProps?.dismissButtonProps),
             dismissButtonStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.dismissButtonStyleProps, notificationProps.styleProps?.dismissButtonStyleProps),
             dismissButtonHoverStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.dismissButtonHoverStyleProps, notificationProps.styleProps?.dismissButtonHoverStyleProps),
             dismissButtonClassName: notificationProps.styleProps?.classNames?.dismissButtonClassName ?? defaultChatDisconnectStyleProps.classNames?.dismissButtonClassName,
             hideCloseChatButton: notificationProps.controlProps?.hideCloseChatButton ?? defaultChatDisconnectControlProps.hideCloseChatButton,
             closeChatButtonProps: Object.assign({ onClick: onCloseChatClick }, defaultChatDisconnectControlProps.closeChatButtonProps, notificationProps.controlProps?.closeChatButtonProps),
-            // closeChatButtonProps: {
-            //     onClick: onCloseChatClick,
-            //     ...notificationProps.controlProps?.closeChatButtonProps
-            // },
             closeChatButtonStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.closeChatButtonStyleProps, notificationProps.styleProps?.closeChatButtonStyleProps),
             closeChatButtonHoverStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.closeChatButtonHoverStyleProps, notificationProps.styleProps?.closeChatButtonHoverStyleProps),
             closeChatButtonClassName: notificationProps.styleProps?.classNames?.closeChatButtonClassName ?? defaultChatDisconnectStyleProps.classNames?.closeChatButtonClassName,
