@@ -7,7 +7,6 @@ import NotificationPaneStateful from "../../../../notificationpanestateful/Notif
 const createToastMiddleware = (notificationPaneProps: INotificationPaneProps | undefined, endChat: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name
     const toastMiddleware = () => (next: any) => (card: any) => {
-        console.log("ADAD toastMiddleware");
         const {notification} = card;
         console.log(notification);
         

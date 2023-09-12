@@ -19,9 +19,6 @@ import { defaultChatDisconnectControlProps } from "./defaultProps/defaultChatDis
 export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) => {
     const { notificationPaneProps, notificationScenarioType, endChat } = props;
 
-    console.log("ADAD notificationPaneProps", notificationPaneProps);
-    console.log("ADAD notificationType", notificationScenarioType);
-
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
@@ -31,13 +28,11 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
         TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.NotificationCloseChatButtonClicked, Description: "Notification Close Chat button clicked." });
 
         if (localConfirmationPaneState.current !== ConfirmationState.Ok) {
-            console.log("ADAD show confirmation");
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
         } else {
             const skipEndChatSDK = true;
             const skipCloseChat = false;
             const postMessageToOtherTabs = true;
-            console.log("ADAD endChat SDK call");
             await endChat(adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTabs);
         }
     };
@@ -59,7 +54,6 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
             notificationProps = {};
         }
         
-        console.log("ADAD populating internal props using: ", notificationProps);
         genericPropsObj = {
             generalStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.generalStyleProps, notificationProps.styleProps?.generalStyleProps),
             containerClassName: notificationProps.styleProps?.classNames?.containerClassName ?? defaultChatDisconnectStyleProps.classNames?.containerClassName,
@@ -110,8 +104,6 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
             // setting chat disconnect as default case for now until further customization support is added
             populateInternalProps(notificationPaneProps?.chatDisconnectNotificationProps);
     }
-
-    console.log("ADAD genericPropsObj", genericPropsObj);
 
     return (
         <NotificationPane
