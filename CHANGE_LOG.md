@@ -11,8 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
-- Added handling for OriginalMessageId in transcript component to fix sorting issues
-- Added notification pane component to support chat disconnect notification customization
+- Added handling for OriginalMessageId in transcript component to fix sorting issues.
 
 ### Changed
 
@@ -179,6 +178,9 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+### Added
+- Added notification pane component to support chat disconnect notification customization
 
 ## [1.0.6] - 2023-8-18
 
