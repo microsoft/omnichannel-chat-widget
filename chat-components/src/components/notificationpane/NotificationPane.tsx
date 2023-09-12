@@ -4,9 +4,10 @@ import { INotificationPaneInternal } from "./interfaces/common/INotificationPane
 import DismissButton from "./subcomponents/DismissButton";
 import CloseChatButton from "./subcomponents/CloseChatButton";
 import { decodeComponentString } from "../../common/decodeComponentString";
+import { Ids } from "../../common/Constants";
 
 function NotificationPane(props: INotificationPaneInternal) {
-    const elementId = props.id ?? "lcw-notification-pane";
+    const elementId = props.id ?? Ids.DefaultNotificationPaneId;
 
     const containerStyles: IStackStyles = {
         root: Object.assign({}, props.generalStyleProps)
@@ -30,6 +31,9 @@ function NotificationPane(props: INotificationPaneInternal) {
     const notificationIconProps = Object.assign({}, props.notificationIconProps);
     const notificationIconStyles = Object.assign({}, props.notificationIconStyleProps);
     const notificationIconImageStyles: IImageStyles = { root: {}, image: notificationIconStyles };
+    const notificationIconContainerStyles: IStackStyles = {
+        root: Object.assign({}, props.notificationIconContainerStyleProps)
+    };
 
     const dismissButtonProps = Object.assign({}, props.dismissButtonProps);
     const dismissButtonStyles = Object.assign({}, props.dismissButtonStyleProps);
@@ -57,16 +61,20 @@ function NotificationPane(props: INotificationPaneInternal) {
                 role={"presentation"}>
 
                 <Stack horizontal
+                    horizontalAlign="space-between"
                     styles={containerStyles}
                     dir={props.dir ?? "ltr"}>
-                    {!props.hideNotificationIcon && (decodeComponentString(props.componentOverrides?.notificationIcon) || <Image
-                        className={notificationIconProps.className}
-                        id={notificationIconProps.id}
-                        src={notificationIconProps.src}
-                        alt={notificationIconProps.alt}
-                        tabIndex={-1}
-                        styles={notificationIconImageStyles}
-                    />)}
+                    <Stack
+                        styles={notificationIconContainerStyles}>
+                        {!props.hideNotificationIcon && (decodeComponentString(props.componentOverrides?.notificationIcon) || <Image
+                            className={notificationIconProps.className}
+                            id={notificationIconProps.id}
+                            src={notificationIconProps.src}
+                            alt={notificationIconProps.alt}
+                            tabIndex={-1}
+                            styles={notificationIconImageStyles}
+                        />)}
+                    </Stack>
 
                     <Stack 
                         styles={infoGroupStyles}

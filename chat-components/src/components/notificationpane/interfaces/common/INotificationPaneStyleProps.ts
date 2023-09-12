@@ -12,5 +12,6 @@ export interface INotificationPaneStyleProps {
     hyperlinkStyleProps?: IStyle;
     hyperlinkHoverStyleProps?: IStyle;
     notificationIconStyleProps?: IStyle;
+    notificationIconContainerStyleProps?: IStyle
     infoGroupStyleProps?: IStyle;
 }

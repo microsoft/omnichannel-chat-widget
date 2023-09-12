@@ -9,9 +9,8 @@ import { INotificationPaneComponentOverrides } from "./INotificationPaneComponen
  */
 export interface INotificationPaneInternal {
     /**
-    * Common notification properties
-    */ 
-
+     * Common notification properties
+     */ 
     // general
     id?: string;
     dir?: "ltr" | "rtl" | "auto";
@@ -46,6 +45,7 @@ export interface INotificationPaneInternal {
     notificationIconProps?: IImageControlProps;
     notificationIconStyleProps?: IStyle;
     notificationIconClassName?: string;
+    notificationIconContainerStyleProps?: IStyle;
 
     // dismiss button "X"
     hideDismissButton?: boolean;
@@ -55,9 +55,8 @@ export interface INotificationPaneInternal {
     dismissButtonClassName?: string;
 
     /**
-    * Chat disconnect scenario specific properties
-    */ 
-
+     * Chat disconnect scenario specific properties
+     */ 
     // close chat button
     hideCloseChatButton?: boolean;
     closeChatButtonProps?: ICommandButtonControlProps;
