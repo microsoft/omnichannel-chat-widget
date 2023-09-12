@@ -1,4 +1,3 @@
-// import { IChatDisconnectStyleProps } from "../../interfaces/chatdisconnect/IChatDisconnectStyleProps";
 import { IChatDisconnectStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/chatdisconnect/IChatDisconnectStyleProps";
 
 export const defaultChatDisconnectStyleProps: IChatDisconnectStyleProps = {
@@ -9,8 +8,13 @@ export const defaultChatDisconnectStyleProps: IChatDisconnectStyleProps = {
     notificationIconStyleProps: {
         display: "flex",
         height: "19px",
-        width: "20px",
-        margin: "8px 16px 8px 8px",
+        width: "19px",
+    },
+    notificationIconContainerStyleProps: {
+        display: "flex",
+        width: "36px",
+        height: "32px",
+        flexShrink: "0",
         justifyContent: "center",
         alignItems: "center",
     },
@@ -37,16 +41,22 @@ export const defaultChatDisconnectStyleProps: IChatDisconnectStyleProps = {
         color: "#005a9e",
     },
     dismissButtonStyleProps: {
-        width: "32px",
-        height: "32px",
+        width: "22px",
+        height: "22px",
         borderRadius: "3px",
         border: "0",
         margin: "4px",
         backgroundColor: "transparent",
         color: "black",
+        icon: {
+            fontSize: "14px",
+        },
     },
     dismissButtonHoverStyleProps: {
         filter: "brightness(0.8)",
+        icon: {
+            color: "black"
+        }
     },
     closeChatButtonStyleProps: {
         backgroundColor: "white",
@@ -63,7 +73,8 @@ export const defaultChatDisconnectStyleProps: IChatDisconnectStyleProps = {
     infoGroupStyleProps: {
         display: "flex",
         justifyContent: "space-between",
-        margin: "2px",
+        flex: "1 1 0%",
+        marginTop: "2px",
     },
     buttonGroupStyleProps: {
         display: "flex",

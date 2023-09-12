@@ -85,6 +85,7 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
             notificationIconProps: Object.assign({}, defaultChatDisconnectControlProps.notificationIconProps, notificationProps.controlProps?.notificationIconProps),
             notificationIconStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.notificationIconStyleProps, notificationProps.styleProps?.notificationIconStyleProps),
             notificationIconClassName: notificationProps.styleProps?.classNames?.notificationIconClassName ?? defaultChatDisconnectStyleProps.classNames?.notificationIconClassName,
+            notificationIconContainerStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.notificationIconContainerStyleProps, notificationProps.styleProps?.notificationIconContainerStyleProps),
             hideDismissButton: notificationProps.controlProps?.hideDismissButton ?? defaultChatDisconnectControlProps.hideDismissButton,
             dismissButtonProps: Object.assign({ onClick: handleDismissNotification }, defaultChatDisconnectControlProps.dismissButtonProps, notificationProps.controlProps?.dismissButtonProps),
             dismissButtonStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.dismissButtonStyleProps, notificationProps.styleProps?.dismissButtonStyleProps),
