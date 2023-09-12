@@ -1,5 +1,5 @@
 import React from "react";
-import { AriaLabels, ElementType, EventNames } from "../../../common/Constants";
+import { ElementType, EventNames } from "../../../common/Constants";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
 import CommandButton from "../../common/commandbutton/CommandButton";
 import { ICommandButtonProps } from "../../common/interfaces/ICommandButtonProps";
