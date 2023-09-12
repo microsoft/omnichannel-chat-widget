@@ -57,6 +57,9 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const populateInternalProps = (notificationProps: any) => {
+        if (!notificationProps) {
+            notificationProps = {};
+        }
         // populate INotificationPaneInternal after merging in customized props with default props (using mergeProps)
         console.log("ADAD populating internal props using: ", notificationProps);
         genericPropsObj = {
