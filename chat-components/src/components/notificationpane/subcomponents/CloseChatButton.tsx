@@ -1,5 +1,5 @@
 import React from "react";
-import { AriaLabels, ElementType, EventNames, IconNames, Texts } from "../../../common/Constants";
+import { AriaLabels, ElementType, EventNames } from "../../../common/Constants";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
 import CommandButton from "../../common/commandbutton/CommandButton";
 import { ICommandButtonProps } from "../../common/interfaces/ICommandButtonProps";
@@ -16,14 +16,14 @@ function CloseChatButton(props: ICommandButtonProps) {
         <CommandButton
             id={props?.id}
             type={type}
-            text={props.text ?? Texts.NotificationCloseChatText}
+            text={props.text}
             styles={props.styles}
             hoverStyles={props.hoverStyles}
             focusStyles={props.focusStyles}
-            iconName={props.iconName ?? IconNames.ChromeClose}
+            iconName={props.iconName}
             imageIconProps={props.imageIconProps}
             onClick={props.onClick}
-            ariaLabel={props.ariaLabel ?? AriaLabels.NotificationCloseChat}
+            ariaLabel={props.ariaLabel}
             className={props.className}
             customEvent={customEvent}
             hideButtonTitle = {props.hideButtonTitle}/>

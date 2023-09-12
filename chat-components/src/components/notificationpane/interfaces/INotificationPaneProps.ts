@@ -6,9 +6,6 @@ import { IChatDisconnectNotificationProps } from "./chatdisconnect/IChatDisconne
  */
 export interface INotificationPaneProps {
     chatDisconnectNotificationProps?: IChatDisconnectNotificationProps;
-
-    // startChatErrorNotificationProps?: IStartChatErrorNotificationProps;
-    // attachmentErrorNotificationProps?: IAttachmentNotificationProps;
-    // networkConnectionNotificationProps?: INetworkConnectionNotificationProps;
+    
     // ...other notification scenarios to be added
 }
