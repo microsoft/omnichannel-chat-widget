@@ -22,11 +22,15 @@ export const defaultChatDisconnectControlProps: IChatDisconnectControlProps = {
         id: NotificationPaneConstants.DismissId,
         text: NotificationPaneConstants.DismissText,
         type: "icon",
+        iconName: NotificationPaneConstants.ChromeCloseIconName,
+        ariaLabel: NotificationPaneConstants.DismissAriaLabel,
     },
     hideCloseChatButton: false,
     closeChatButtonProps: {
         id: NotificationPaneConstants.CloseChatId,
         text: NotificationPaneConstants.CloseChatText,
         type: "text",
+        iconName: NotificationPaneConstants.ChromeCloseIconName,
+        ariaLabel: NotificationPaneConstants.CloseChatAriaLabel,
     }
 };
