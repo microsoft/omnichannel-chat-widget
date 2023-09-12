@@ -1,6 +1,5 @@
-import React, { Dispatch, useRef } from "react";
+import React, { Dispatch, useEffect, useRef } from "react";
 import { NotificationPane } from "@microsoft/omnichannel-chat-components";
-// import { NotificationBanner } from "@microsoft/omnichannel-chat-components";
 import { hooks } from "botframework-webchat";
 import { useCallback } from "react";
 import { INotificationPaneStatefulProps } from "./interfaces/INotificationPaneStatefulProps";
@@ -14,9 +13,8 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { ConfirmationState } from "../../common/Constants";
-// import { defaultChatDisconnectStyleProps } from "./defaultProps/defaultStyles/defaultChatDisconnectStyleProps";
+import { defaultChatDisconnectStyleProps } from "./defaultProps/defaultChatDisconnectStyleProps";
 import { defaultChatDisconnectControlProps } from "./defaultProps/defaultChatDisconnectControlProps";
-// import { defaultChatDisconnectControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/defaultProps/defaultChatDisconnectControlProps";
 
 export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) => {
     const { notificationPaneProps, notificationScenarioType, endChat } = props;
@@ -44,6 +42,10 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
         }
     };
 
+    useEffect(() => {
+        localConfirmationPaneState.current = state?.domainStates?.confirmationState;
+    }, [state?.domainStates?.confirmationState]);
+
     const {useDismissNotification} = hooks;
     const dismissNotification = useDismissNotification();
     const handleDismissNotification = useCallback(() => dismissNotification(notificationScenarioType ?? ""), []); 
@@ -51,7 +53,6 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     let genericPropsObj: INotificationPaneInternal = {};
 
     // const mergedGeneralStyleProps = Object.assign({}, defaultChatDisconnectStyleProps.generalStyleProps, notificationPaneProps.styleProps?.generalStyleProps);
-
     // const mergedTitleProps = Object.assign({}, defaultChatDisconnectControlProps, notificationProps.styleProps?.generalStyleProps);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,47 +60,48 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
         // populate INotificationPaneInternal after merging in customized props with default props (using mergeProps)
         console.log("ADAD populating internal props using: ", notificationProps);
         genericPropsObj = {
-            // generalStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.generalStyleProps, notificationProps.styleProps?.generalStyleProps),
-            generalStyleProps: notificationProps.styleProps?.generalStyleProps,
-            containerClassName: notificationProps.styleProps?.classNames?.containerClassName,
+            generalStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.generalStyleProps, notificationProps.styleProps?.generalStyleProps),
+            containerClassName: notificationProps.styleProps?.classNames?.containerClassName ?? defaultChatDisconnectStyleProps.classNames?.containerClassName,
             componentOverrides: notificationProps.componentOverrides,
-            hideTitle: notificationProps.controlProps?.hideTitle,
+            hideTitle: notificationProps.controlProps?.hideTitle ?? defaultChatDisconnectControlProps.hideTitle,
             titleText: notificationProps.controlProps?.titleText ?? defaultChatDisconnectControlProps.titleText,
-            titleStyleProps: notificationProps.styleProps?.titleStyleProps,
-            titleClassName: notificationProps.styleProps?.classNames?.titleClassName,
-            hideSubtitle: notificationProps.controlProps?.hideSubtitle,
+            titleStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.titleStyleProps, notificationProps.styleProps?.titleStyleProps),
+            titleClassName: notificationProps.styleProps?.classNames?.titleClassName ?? defaultChatDisconnectStyleProps.classNames?.titleClassName,
+            hideSubtitle: notificationProps.controlProps?.hideSubtitle ?? defaultChatDisconnectControlProps.hideSubtitle,
             subtitleText: notificationProps.controlProps?.subtitleText ?? defaultChatDisconnectControlProps.subtitleText,
-            subtitleStyleProps: notificationProps.styleProps?.subtitleStyleProps,
-            subtitleClassName: notificationProps.styleProps?.classNames?.subtitleClassName,
-            hideHyperlink: notificationProps.controlProps?.hideHyperlink,
-            hyperlinkText: notificationProps.controlProps?.hyperlinkText,
-            hyperlinkAriaLabel: notificationProps.controlProps?.hyperlinkAriaLabel,
-            hyperlinkHref: notificationProps.controlProps?.hyperlinkHref,
-            hyperlinkStyleProps: notificationProps.styleProps?.hyperlinkStyleProps,
-            hyperlinkHoverStyleProps: notificationProps.styleProps?.hyperlinkHoverStyleProps,
-            hyperlinkClassName: notificationProps.styleProps?.classNames?.hyperlinkClassName,
-            hideNotificationIcon: notificationProps.controlProps?.hideNotificationIcon,
-            notificationIconProps: Object.assign({}, defaultChatDisconnectControlProps.notificationIconProps, notificationProps.controlProps?.notificationIconProps), // depending on level, return the icon needed
-            notificationIconStyleProps: notificationProps.styleProps?.notificationIconStyleProps,
-            notificationIconClassName: notificationProps.styleProps?.classNames?.notificationIconClassName,
-            hideDismissButton: notificationProps.controlProps?.hideDismissButton,
-            dismissButtonProps: {
-                onClick: handleDismissNotification,
-                ...notificationProps.controlProps?.dismissButtonProps
-            },
-            dismissButtonStyleProps: notificationProps.styleProps?.dismissButtonStyleProps,
-            dismissButtonHoverStyleProps: notificationProps.styleProps?.dismissButtonHoverStyleProps,
-            dismissButtonClassName: notificationProps.styleProps?.classNames?.dismissButtonClassName,
-            hideCloseChatButton: notificationProps.controlProps?.hideCloseChatButton, // in the case a scenario does not have showCloseChatButton, this value will be undefined and not rendered
-            closeChatButtonProps: {
-                onClick: onCloseChatClick,
-                ...notificationProps.controlProps?.closeChatButtonProps
-            },
-            closeChatButtonStyleProps: notificationProps.styleProps?.closeChatButtonStyleProps,
-            closeChatButtonHoverStyleProps: notificationProps.styleProps?.closeChatButtonHoverStyleProps,
-            closeChatButtonClassName: notificationProps.styleProps?.classNames?.closeChatButtonClassName,
-            infoGroupStyleProps: notificationProps.styleProps?.infoGroupStyleProps,
-            buttonGroupStyleProps: notificationProps.styleProps?.buttonGroupStyleProps,
+            subtitleStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.subtitleStyleProps, notificationProps.styleProps?.subtitleStyleProps),
+            subtitleClassName: notificationProps.styleProps?.classNames?.subtitleClassName ?? defaultChatDisconnectStyleProps.classNames?.subtitleClassName,
+            hideHyperlink: notificationProps.controlProps?.hideHyperlink ?? defaultChatDisconnectControlProps.hideHyperlink,
+            hyperlinkText: notificationProps.controlProps?.hyperlinkText ?? defaultChatDisconnectControlProps.hyperlinkText,
+            hyperlinkAriaLabel: notificationProps.controlProps?.hyperlinkAriaLabel ?? defaultChatDisconnectControlProps.hyperlinkAriaLabel,
+            hyperlinkHref: notificationProps.controlProps?.hyperlinkHref ?? defaultChatDisconnectControlProps.hyperlinkHref,
+            hyperlinkStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.hyperlinkStyleProps, notificationProps.styleProps?.hyperlinkStyleProps),
+            hyperlinkHoverStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.hyperlinkHoverStyleProps, notificationProps.styleProps?.hyperlinkHoverStyleProps),
+            hyperlinkClassName: notificationProps.styleProps?.classNames?.hyperlinkClassName ?? defaultChatDisconnectStyleProps.classNames?.hyperlinkClassName,
+            hideNotificationIcon: notificationProps.controlProps?.hideIcon ?? defaultChatDisconnectControlProps.hideIcon,
+            notificationIconProps: Object.assign({}, defaultChatDisconnectControlProps.notificationIconProps, notificationProps.controlProps?.notificationIconProps),
+            notificationIconStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.notificationIconStyleProps, notificationProps.styleProps?.notificationIconStyleProps),
+            notificationIconClassName: notificationProps.styleProps?.classNames?.notificationIconClassName ?? defaultChatDisconnectStyleProps.classNames?.notificationIconClassName,
+            hideDismissButton: notificationProps.controlProps?.hideDismissButton ?? defaultChatDisconnectControlProps.hideDismissButton,
+            // dismissButtonProps: {
+            //     onClick: handleDismissNotification,
+            //     ...notificationProps.controlProps?.dismissButtonProps
+            // },
+            dismissButtonProps: Object.assign({ onClick: handleDismissNotification }, defaultChatDisconnectControlProps.dismissButtonProps, notificationProps.controlProps?.dismissButtonProps),
+            dismissButtonStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.dismissButtonStyleProps, notificationProps.styleProps?.dismissButtonStyleProps),
+            dismissButtonHoverStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.dismissButtonHoverStyleProps, notificationProps.styleProps?.dismissButtonHoverStyleProps),
+            dismissButtonClassName: notificationProps.styleProps?.classNames?.dismissButtonClassName ?? defaultChatDisconnectStyleProps.classNames?.dismissButtonClassName,
+            hideCloseChatButton: notificationProps.controlProps?.hideCloseChatButton ?? defaultChatDisconnectControlProps.hideCloseChatButton,
+            closeChatButtonProps: Object.assign({ onClick: onCloseChatClick }, defaultChatDisconnectControlProps.closeChatButtonProps, notificationProps.controlProps?.closeChatButtonProps),
+            // closeChatButtonProps: {
+            //     onClick: onCloseChatClick,
+            //     ...notificationProps.controlProps?.closeChatButtonProps
+            // },
+            closeChatButtonStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.closeChatButtonStyleProps, notificationProps.styleProps?.closeChatButtonStyleProps),
+            closeChatButtonHoverStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.closeChatButtonHoverStyleProps, notificationProps.styleProps?.closeChatButtonHoverStyleProps),
+            closeChatButtonClassName: notificationProps.styleProps?.classNames?.closeChatButtonClassName ?? defaultChatDisconnectStyleProps.classNames?.closeChatButtonClassName,
+            infoGroupStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.infoGroupStyleProps, notificationProps.styleProps?.infoGroupStyleProps),
+            buttonGroupStyleProps: Object.assign({}, defaultChatDisconnectStyleProps.buttonGroupStyleProps, notificationProps.styleProps?.buttonGroupStyleProps),
         };
     };
 

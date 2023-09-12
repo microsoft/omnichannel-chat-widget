@@ -57,7 +57,7 @@ export interface ILiveChatWidgetProps {
     startChatErrorPaneProps?: IStartChatErrorPaneProps;
     styleProps?: ILiveChatWidgetStyleProps;
     telemetryConfig: ITelemetryConfig;
-    notificationBannerProps?: INotificationPaneProps;
+    notificationPaneProps?: INotificationPaneProps;
     webChatContainerProps?: IWebChatContainerStatefulProps;
     liveChatContextFromCache?: ILiveChatWidgetContext;
     contextDataStore?: IContextDataStore;

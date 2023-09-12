@@ -2,7 +2,6 @@ import React from "react";
 import { NotificationScenarios } from "../../enums/NotificationScenarios";
 import { INotificationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/INotificationPaneProps";
 import NotificationPaneStateful from "../../../../notificationpanestateful/NotificationPaneStateful";
-// import { INotificationBannerProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationbanner/interfaces/INotificationBannerProps";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createToastMiddleware = (notificationPaneProps: INotificationPaneProps | undefined, endChat: any) => {
