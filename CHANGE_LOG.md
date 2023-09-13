@@ -6,13 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added toast middleware to override with custom notification pane for chat disconnect scenario
+
 ## [1.2.3] - 2023-09-07
 
 ### Added
 
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
 - Added handling for OriginalMessageId in transcript component to fix sorting issues
-- Added toast middleware to override with custom notification pane for chat disconnect scenario
 
 ### Changed
 
