@@ -180,6 +180,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added notification pane component to support chat disconnect notification customization
+
 ## [1.0.6] - 2023-8-18
 
 ### Fixed

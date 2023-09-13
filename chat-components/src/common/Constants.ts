@@ -33,6 +33,8 @@ export enum ElementType {
     ChatButton = "ChatButton",
     CloseButton = "CloseButton",
     HeaderMinimizeButton = "HeaderMinimizeButton",
+    NotificationDismissButton = "NotificationDismissButton",
+    NotificationCloseChatButton = "NotificationCloseChatButton",
     FooterDownloadTranscriptButton = "FooterDownloadTranscriptButton",
     FooterEmailTranscriptButton = "FooterEmailTranscriptButton",
     FooterSoundNotificationButton = "FooterSoundNotificationButton",
@@ -98,6 +100,7 @@ export const Ids = class {
     public static readonly DefaultInputValidationPaneId = "lcw-email-transcript-dialog-container";
     public static readonly DefaultInputValidationPaneInputId = "lcw-email-transcript-dialog-text-field";
     public static readonly DefaultLoadingPaneId = "lcw-loading-pane";
+    public static readonly DefaultNotificationPaneId = "lcw-notification-pane";
     public static readonly DefaultOOOHPaneId = "lcw-out-of-office-hours-pane";
     public static readonly DefaultPostChatSurveyPaneId = "lcw-postchat-survey-pane";
     public static readonly DefaultPreChatSurveyPaneId = "lcw-prechat-survey-pane-default";
