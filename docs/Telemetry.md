@@ -208,6 +208,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ConfirmationConfirmButtonClicked`|On confirmation pane Confirm button clicked|
 | `HeaderCloseButtonClicked`|On Header Close button clicked|
 | `HeaderMinimizeButtonClicked`|On Header Minimize button clicked|
+| `NotificationCloseChatButtonClicked`|On Notification Pane Close Chat button clicked|
 | `MessageSent`|On Message Sent|
 | `MessageReceived`|On Message Received|
 | `CustomContextReceived`|On Custom Context Received|

@@ -13,5 +13,4 @@ export interface INotificationPaneStatefulProps extends INotificationPaneProps {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     endChat: (adapter: any, skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => Promise<void>;
-
 }

@@ -137,6 +137,7 @@ export enum TelemetryEvent {
     ReconnectChatPaneLoaded = "ReconnectChatPaneLoaded",
     HeaderCloseButtonClicked = "HeaderCloseButtonClicked",
     HeaderMinimizeButtonClicked = "HeaderMinimizeButtonClicked",
+    NotificationCloseChatButtonClicked = "NotificationCloseChatButtonClicked",
     DownloadTranscriptButtonClicked = "DownloadTranscriptButtonClicked",
     EmailTranscriptButtonClicked = "EmailTranscriptButtonClicked",
     EmailTranscriptCancelButtonClicked = "EmailTranscriptCancelButtonClicked",
@@ -159,7 +160,6 @@ export enum TelemetryEvent {
     SetBotAuthProviderNotFound = "SetBotAuthProviderNotFound",
     BotAuthActivityUndefinedSignInId = "BotAuthActivityUndefinedSignInId",
     ThirdPartyCookiesBlocked = "ThirdPartyCookiesBlocked",
-    NotificationCloseChatButtonClicked = "NotificationCloseChatButtonClicked",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
@@ -269,6 +269,7 @@ export class TelemetryConstants {
             case TelemetryEvent.PreChatSurveyStartChatMethodFailed:
             case TelemetryEvent.HeaderCloseButtonClicked:
             case TelemetryEvent.HeaderMinimizeButtonClicked:
+            case TelemetryEvent.NotificationCloseChatButtonClicked:
             case TelemetryEvent.MessageSent:
             case TelemetryEvent.MessageReceived:
             case TelemetryEvent.CustomContextReceived:

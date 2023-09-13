@@ -8,18 +8,13 @@ const createToastMiddleware = (notificationPaneProps: INotificationPaneProps | u
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name
     const toastMiddleware = () => (next: any) => (card: any) => {
         const {notification} = card;
-        console.log(notification);
         
         if (notificationPaneProps) {
             if (notification.id === NotificationScenarios.ChatDisconnect) {
                 return <NotificationPaneStateful notificationPaneProps={notificationPaneProps} notificationScenarioType={NotificationScenarios.ChatDisconnect} endChat={endChat} />;
             }
     
-            // if (notification.id === NotificationScenarios.AttachmentError) {
-            //     return <NotificationPaneStateful notificationBannerProps={notificationBannerProps} notificationScenarioType={NotificationScenarios.AttachmentError} />;
-            // }
-    
-            // ...additional notification scenarios to be added
+            // TODO: additional notification scenarios to be added...
         }
         
         return next(card);

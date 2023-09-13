@@ -10,6 +10,7 @@ export interface IRenderingMiddlewareProps {
     disableGroupActivitiesMiddleware?: boolean;
     disableTypingIndicatorMiddleware?: boolean;
     disableThirdPartyCookiesAlert?: boolean;
+    disableToastMiddleware?: boolean;
     hideSendboxOnConversationEnd?: boolean;
 
     userMessageStyleProps?: React.CSSProperties;

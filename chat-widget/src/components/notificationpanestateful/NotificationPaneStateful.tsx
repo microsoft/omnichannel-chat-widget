@@ -97,9 +97,6 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
         case NotificationScenarios.ChatDisconnect:
             populateInternalProps(notificationPaneProps?.chatDisconnectNotificationProps);
             break;
-        // case NotificationScenarios.AttachmentError:
-        //     populateInternalProps(notificationPaneProps?.attachmentErrorNotificationProps);
-        // ...additional scenario type cases to be added
         default:
             // setting chat disconnect as default case for now until further customization support is added
             populateInternalProps(notificationPaneProps?.chatDisconnectNotificationProps);
