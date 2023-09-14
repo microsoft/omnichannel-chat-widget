@@ -138,6 +138,7 @@ export enum TelemetryEvent {
     HeaderCloseButtonClicked = "HeaderCloseButtonClicked",
     HeaderMinimizeButtonClicked = "HeaderMinimizeButtonClicked",
     NotificationCloseChatButtonClicked = "NotificationCloseChatButtonClicked",
+    NotificationDismissButtonClicked = "NotificationDismissButtonClicked",
     DownloadTranscriptButtonClicked = "DownloadTranscriptButtonClicked",
     EmailTranscriptButtonClicked = "EmailTranscriptButtonClicked",
     EmailTranscriptCancelButtonClicked = "EmailTranscriptCancelButtonClicked",
