@@ -271,6 +271,7 @@ export class TelemetryConstants {
             case TelemetryEvent.HeaderCloseButtonClicked:
             case TelemetryEvent.HeaderMinimizeButtonClicked:
             case TelemetryEvent.NotificationCloseChatButtonClicked:
+            case TelemetryEvent.NotificationDismissButtonClicked:
             case TelemetryEvent.MessageSent:
             case TelemetryEvent.MessageReceived:
             case TelemetryEvent.CustomContextReceived:
