@@ -289,6 +289,21 @@ export class TranscriptConstants {
     public static readonly AgentFontColor = "white";
 }
 
+export class NotificationPaneConstants {
+    public static readonly DefaultNotificationPaneId = "lcw-notification-pane";
+    public static readonly DismissId = "lcw-notification-pane-dismiss-button";
+    public static readonly DismissText = "Dismiss";
+    public static readonly DismissAriaLabel = "Notification dismiss";
+    public static readonly CloseChatId = "lcw-notification-pane-close-chat-button";
+    public static readonly CloseChatText = "Close Chat";
+    public static readonly CloseChatAriaLabel = "Close chat";
+    public static readonly IconId = "lcw-notification-pane-icon";
+    public static readonly IconText = "Notification Icon";
+    public static readonly ChatDisconnectTitleText = "Chat disconnected";
+    public static readonly ChatDisconnectSubtitleText = "For additional assistance, please close the chat and try again.";
+    public static readonly ChromeCloseIconName = "ChromeClose";
+}
+
 export class AriaTelemetryConstants {
     // Aria Endpoint for different environment types.
     public static readonly GERMANY_ENDPOINT: string = "https://de.pipe.aria.microsoft.com/Collector/3.0/";

@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Added toast middleware to override with custom notification pane for chat disconnect scenario
+
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-sdk@1.4.7](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.7)
@@ -15,7 +19,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Added new middleware (messageSequenceIdOverrideMiddleware) to ensure proper order of messages
-- Added handling for OriginalMessageId in transcript component to fix sorting issues.
+- Added handling for OriginalMessageId in transcript component to fix sorting issues
 
 ### Changed
 

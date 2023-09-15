@@ -137,6 +137,8 @@ export enum TelemetryEvent {
     ReconnectChatPaneLoaded = "ReconnectChatPaneLoaded",
     HeaderCloseButtonClicked = "HeaderCloseButtonClicked",
     HeaderMinimizeButtonClicked = "HeaderMinimizeButtonClicked",
+    NotificationCloseChatButtonClicked = "NotificationCloseChatButtonClicked",
+    NotificationDismissButtonClicked = "NotificationDismissButtonClicked",
     DownloadTranscriptButtonClicked = "DownloadTranscriptButtonClicked",
     EmailTranscriptButtonClicked = "EmailTranscriptButtonClicked",
     EmailTranscriptCancelButtonClicked = "EmailTranscriptCancelButtonClicked",
@@ -268,6 +270,8 @@ export class TelemetryConstants {
             case TelemetryEvent.PreChatSurveyStartChatMethodFailed:
             case TelemetryEvent.HeaderCloseButtonClicked:
             case TelemetryEvent.HeaderMinimizeButtonClicked:
+            case TelemetryEvent.NotificationCloseChatButtonClicked:
+            case TelemetryEvent.NotificationDismissButtonClicked:
             case TelemetryEvent.MessageSent:
             case TelemetryEvent.MessageReceived:
             case TelemetryEvent.CustomContextReceived:
