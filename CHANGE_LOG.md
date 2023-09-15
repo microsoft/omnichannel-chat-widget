@@ -7,7 +7,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+
 - Added toast middleware to override with custom notification pane for chat disconnect scenario
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.4.7](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.7)
 
 ## [1.2.3] - 2023-09-07
 
@@ -181,6 +186,8 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+## [1.0.7] - 2023-9-13
 
 ### Added
 - Added notification pane component to support chat disconnect notification customization
