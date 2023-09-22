@@ -133,6 +133,14 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
                     });
                     // we are waiting for the response or timeout
                     waitForResponseOrTimeOut(timeOutWaitForResponse);
+
+                    if (!ack){
+                        TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
+                            Event: TelemetryEvent.ClientDataStoreProviderFailed,
+                            ExceptionDetails: "External storage did not respond in time for key " + key + ".    Timeout: " + timeOutWaitForResponse + " ms",
+                            Description: "External storage did not respond in time for key " + key + ".    Timeout: " + timeOutWaitForResponse + " ms"
+                        });
+                    }
                 }
                 return result;
             }

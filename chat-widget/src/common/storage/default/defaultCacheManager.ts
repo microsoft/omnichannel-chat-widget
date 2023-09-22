@@ -1,6 +1,7 @@
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { StorageType } from "../../Constants";
 import { defaultClientDataStoreProvider } from "./defaultClientDataStoreProvider";
+import { ILiveChatWidgetExternalStorage } from "../../../contexts/common/ILiveChatWidgetExternalStorage";
 
 export class defaultCacheManager {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -8,11 +9,11 @@ export class defaultCacheManager {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const registerBroadcastServiceForStorage = (widgetCacheId: string, ttlInMins: number, storageType: StorageType) => {
+export const registerBroadcastServiceForStorage = (widgetCacheId: string, ttlInMins: number, storageType: StorageType, alternateStorage? : ILiveChatWidgetExternalStorage) => {
     BroadcastService.getMessageByEventName(widgetCacheId)
         .subscribe((msg) => {
             try {
-                defaultClientDataStoreProvider(ttlInMins, storageType).setData(
+                defaultClientDataStoreProvider(ttlInMins, storageType, alternateStorage?.useExternalStorage, alternateStorage?.timeOutWaitForResponse).setData(
                     widgetCacheId,
                     JSON.stringify(msg.payload));
             } catch (error) {

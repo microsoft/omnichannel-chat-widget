@@ -189,7 +189,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (props.contextDataStore === undefined) {
             const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
             const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
-            DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins, storageType);
+            const alternateStorageProps = props?.liveChatWidgetExternalStorage;
+            DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins, storageType, alternateStorageProps?.useExternalStorage, alternateStorageProps?.timeOutWaitForResponse);
             registerBroadcastServiceForStorage(widgetCacheId, cacheTtlInMins, storageType);
         } else {
             DataStoreManager.clientDataStore = props.contextDataStore;
