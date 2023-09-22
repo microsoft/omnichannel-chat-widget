@@ -56,7 +56,10 @@ export enum BroadcastEvent {
     HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent",
     UpdateSessionDataForTelemetry = "UpdateSessionDataForTelemetry",
     UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry",
-    ContactIdNotFound = "ContactIdNotFound"
+    ContactIdNotFound = "ContactIdNotFound",
+    NotifyExternalSaveData = "external:saveData",
+    ReceiveExternalItemData = "external:receiveItemData",
+    RequestExternalItemData = "external:requestItemData",
 }
 
 // Events being logged

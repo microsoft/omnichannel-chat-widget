@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
 
 import { IContextDataStore } from "../../interfaces/IContextDataStore";
 import { StorageType } from "../../Constants";
 import { TelemetryHelper } from "../../telemetry/TelemetryHelper";
 import { inMemoryDataStore } from "./defaultInMemoryDataStore";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
 export const isCookieAllowed = () => {
     try {
@@ -25,8 +26,10 @@ export const isCookieAllowed = () => {
     }
 };
 
-export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage): IContextDataStore => {
+export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage, useExternalStorage?: boolean, timeOut?: number | 1000): IContextDataStore => {
     let ttlInMs = 0;
+    const switchToExternalStorage = useExternalStorage || false;
+    const timeOutWaitForResponse = timeOut || 1000;
 
     if (ttlInMs == 0) {
         ttlInMs = cacheTtlinMins * 60 * 1000;
@@ -60,11 +63,17 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
                 }
             } else {
                 const dataToCache = {
+                    messageName: "external:saveData",
                     key: key,
                     data: data,
                     type: (storageType == StorageType.localStorage ? "localStorage" : "sessionStorage")
                 };
-                parent.postMessage(dataToCache, "*");
+
+                //Emit the data to be cached to the external storage
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.NotifyExternalSaveData,
+                    payload: dataToCache
+                });
             }
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,7 +101,40 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
                 }
             } else {
                 // get data from in memory db when cookie is disabled
-                return inMemoryDataStore().getData(key);
+                let result = inMemoryDataStore().getData(key);
+                let ack = false;
+
+                // we are not using promise since is not an async function, we are using a while loop to wait for the response
+                const waitForResponseOrTimeOut = (miliseconds: number) => {
+                    const start = new Date().getTime();
+                    const end = start + miliseconds;
+                    // eslint-disable-next-line no-empty
+                    while ((new Date().getTime() < end) && !ack) {}
+                };
+
+                //only switch to events when customer initiates the switch
+                if (result === null && switchToExternalStorage) {
+                    //we are listening to the event to receive the data from external storage
+                    BroadcastService.getMessageByEventName(BroadcastEvent.ReceiveExternalItemData).subscribe((data) => {
+                        if (data.payload.key === key) {
+                            result = data.payload.data;
+                            // we save the data in the in memory db
+                            inMemoryDataStore().setData(key, result);
+                            //indicates the response was received, we can stop waiting
+                            ack = true;
+                        }
+                    });
+                    // we are sending the request to external storage to get the data
+                    BroadcastService.postMessage({
+                        eventName: BroadcastEvent.RequestExternalItemData,
+                        payload: {
+                            key: key
+                        }
+                    });
+                    // we are waiting for the response or timeout
+                    waitForResponseOrTimeOut(timeOutWaitForResponse);
+                }
+                return result;
             }
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

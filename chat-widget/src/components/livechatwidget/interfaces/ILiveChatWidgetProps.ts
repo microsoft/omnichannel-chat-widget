@@ -25,6 +25,7 @@ import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestatef
 import { IScrollBarProps } from "./IScrollBarProps";
 import { IDraggableChatWidgetProps } from "./IDraggableChatWidgetProps";
 import { INotificationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/INotificationPaneProps";
+import { ILiveChatWidgetExternalStorage } from "../../../contexts/common/ILiveChatWidgetExternalStorage";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -68,4 +69,5 @@ export interface ILiveChatWidgetProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     initialCustomContext?: any;
     draggableChatWidgetProps?: IDraggableChatWidgetProps;
+    liveChatWidgetExternalStorage?: ILiveChatWidgetExternalStorage;
 }
