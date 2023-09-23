@@ -12,7 +12,14 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
     const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
     const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
     const alternateStorage = props?.liveChatWidgetExternalStorage;
-    const initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType, alternateStorage?.useExternalStorage, alternateStorage?.timeOutWaitForResponse).getData(widgetCacheId);
+    let initialState;
+
+    try {
+        initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType, alternateStorage?.useExternalStorage, alternateStorage?.timeOutWaitForResponse).getData(widgetCacheId);
+    } catch (e) {
+        initialState = null;
+        console.error("Error while getting initial state from cache", e);
+    }
 
     if (!isNullOrUndefined(initialState)) {
         const initialStateFromCache: ILiveChatWidgetContext = JSON.parse(initialState);
