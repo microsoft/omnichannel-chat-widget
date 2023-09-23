@@ -8,13 +8,14 @@ import { TelemetryHelper } from "../../telemetry/TelemetryHelper";
 import { inMemoryDataStore } from "./defaultInMemoryDataStore";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
-export const isCookieAllowed = () => {
+export const isCookieAllowed = (isUsingExternalStorage : boolean) => {
     try {
         localStorage;
         sessionStorage;
         return true;
     } catch (error) {
-        if (!(window as any).TPCWarningLogged) {
+        // no display of TPC warning if alternate storage is defined
+        if (!isUsingExternalStorage && !(window as any).TPCWarningLogged) {
             console.warn("Third party cookies blocked.");
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.ThirdPartyCookiesBlocked,
@@ -38,7 +39,7 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
     const dataStoreProvider = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setData: (key: any, data: any) => {
-            if (isCookieAllowed()) {
+            if (isCookieAllowed(switchToExternalStorage)) {
                 try {
                     if (key) {
                         const now = new Date();
@@ -78,7 +79,7 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         getData: (key: any) => {
-            if (isCookieAllowed()) {
+            if (isCookieAllowed(switchToExternalStorage)) {
                 let item;
                 if (storageType === StorageType.localStorage) {
                     item = localStorage.getItem(key);
@@ -147,7 +148,7 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         removeData: (key: any) => {
-            if (isCookieAllowed()) {
+            if (isCookieAllowed(switchToExternalStorage)) {
                 if (key) {
                     if (storageType === StorageType.localStorage) {
                         return localStorage.removeItem(key);
