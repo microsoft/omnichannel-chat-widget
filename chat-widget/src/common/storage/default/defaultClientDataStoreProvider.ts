@@ -14,6 +14,8 @@ export const isCookieAllowed = (isUsingExternalStorage : boolean) => {
         sessionStorage;
         return true;
     } catch (error) {
+
+        (window as any).ExternalStorageInUse = isUsingExternalStorage;
         // no display of TPC warning if alternate storage is defined
         if (!isUsingExternalStorage && !(window as any).TPCWarningLogged) {
             console.warn("Third party cookies blocked.");

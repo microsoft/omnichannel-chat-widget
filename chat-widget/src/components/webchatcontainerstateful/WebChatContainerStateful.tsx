@@ -80,7 +80,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 localStorage;
                 sessionStorage;
             } catch (error) {
-                if (!(window as any).TPCWarningShown) {
+                
+                if ( !(window as any).TPCWarningShown  && !props.liveChatWidgetExternalStorage?.useExternalStorage) {
                     NotificationHandler.notifyWarning(NotificationScenarios.TPC, localizedTexts?.THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE ?? "");
                     (window as any).TPCWarningShown = true;
                 }
