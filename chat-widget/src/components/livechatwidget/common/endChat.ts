@@ -17,21 +17,49 @@ import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstat
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any, uwid: string) => {
+    // const resetCallingStates = () => {
+    //     dispatch({ type: LiveChatWidgetActionType.SHOW_CALLING_CONTAINER, payload: false });
+    //     dispatch({ type: LiveChatWidgetActionType.SET_INCOMING_CALL, payload: true });
+    //     dispatch({ type: LiveChatWidgetActionType.DISABLE_VIDEO_CALL, payload: true });
+    //     dispatch({ type: LiveChatWidgetActionType.DISABLE_LOCAL_VIDEO, payload: true });
+    //     dispatch({ type: LiveChatWidgetActionType.DISABLE_REMOTE_VIDEO, payload: true });
+    // };
+
     try {
+        // Use Case: If call is ongoing, end the call by simulating end call button click
+        const voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
+        if (voiceVideoCallingSdk.isInACall()) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const callId = (voiceVideoCallingSdk as any).callId;
+            try {
+                voiceVideoCallingSdk.stopCall();
+                TelemetryHelper.logCallingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.EndCallButtonClick,
+                }, callId);
+                callingStateCleanUp(dispatch);
+            } catch (error) {
+                TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.EndCallButtonClickException,
+                    ExceptionDetails: {
+                        exception: `Failed to End Call:  ${error}`
+                    }
+                }, callId);
+            }
+        }
 
         const conversationDetails = await getConversationDetailsCall(chatSDK);
 
-        // Use Case : When post chat is not configured
+        // Use Case: When post chat is not configured
         if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
             // If ended by customer, just close chat
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
                 await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid);
             }
-            //Use Case: If ended by Agent, stay chat in InActive state
+            // Use Case: If ended by Agent, stay chat in InActive state
             return;
         }
 
-        // Use Case : Can render post chat scenarios
+        // Use Case: Can render post chat scenarios
         await getPostChatContext(chatSDK, state, dispatch);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,6 +160,14 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             payload: uwid
         });
     }
+};
+
+const callingStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    dispatch({ type: LiveChatWidgetActionType.SHOW_CALLING_CONTAINER, payload: false });
+    dispatch({ type: LiveChatWidgetActionType.SET_INCOMING_CALL, payload: true });
+    dispatch({ type: LiveChatWidgetActionType.DISABLE_VIDEO_CALL, payload: true });
+    dispatch({ type: LiveChatWidgetActionType.DISABLE_LOCAL_VIDEO, payload: true });
+    dispatch({ type: LiveChatWidgetActionType.DISABLE_REMOTE_VIDEO, payload: true });
 };
 
 const endChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
