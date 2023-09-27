@@ -5,17 +5,36 @@ import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontain
 import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
 import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { BroadcastEvent } from "../../common/telemetry/TelemetryConstants";
+import { inMemoryDataStore } from "../../common/storage/default/defaultInMemoryDataStore";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
+    //   console.log("ELOPEZANAYA :: getLiveChatWidgetContextInitialState :: creating BroadcastServiceInitialize");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const widgetCacheId = getWidgetCacheIdfromProps(props);
     const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
     const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
     const alternateStorage = props?.liveChatWidgetExternalStorage;
     let initialState;
 
-    try {
-        initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType, alternateStorage?.useExternalStorage, alternateStorage?.timeOutWaitForResponse).getData(widgetCacheId);
+    try {   
+        
+        BroadcastService.getMessageByEventName(BroadcastEvent.ReceiveExternalItemData).subscribe((data) => {
+            const result = data.payload.data;
+            // we save the data in the in memory db
+            inMemoryDataStore().setData(widgetCacheId, result);
+            //indicates the response was received, we can stop waiting
+        }
+        );
+
+        if (props?.liveChatWidgetExternalStorage?.useExternalStorage && props.liveChatWidgetExternalStorage.cachedData){
+            initialState = props.liveChatWidgetExternalStorage.cachedData;
+        }else{
+            initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType, alternateStorage?.useExternalStorage, alternateStorage?.timeOutWaitForResponse).getData(widgetCacheId);
+
+        }
     } catch (e) {
         initialState = null;
         console.error("Error while getting initial state from cache", e);

@@ -66,9 +66,12 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
                     });
                 }
             } else {
+                const now = new Date();
+
                 const dataToCache = {
                     key: key,
                     data: data,
+                    expiry: now.getTime() + ttlInMs,
                 };
                 //Emit the data to be cached to the external storage
                 BroadcastService.postMessage({
