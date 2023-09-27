@@ -10,10 +10,11 @@ export class defaultCacheManager {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const registerBroadcastServiceForStorage = (widgetCacheId: string, ttlInMins: number, storageType: StorageType, alternateStorage? : ILiveChatWidgetExternalStorage) => {
+
     BroadcastService.getMessageByEventName(widgetCacheId)
         .subscribe((msg) => {
             try {
-                defaultClientDataStoreProvider(ttlInMins, storageType, alternateStorage?.useExternalStorage, alternateStorage?.timeOutWaitForResponse).setData(
+                defaultClientDataStoreProvider(ttlInMins, storageType, alternateStorage?.useExternalStorage).setData(
                     widgetCacheId,
                     JSON.stringify(msg.payload));
             } catch (error) {
