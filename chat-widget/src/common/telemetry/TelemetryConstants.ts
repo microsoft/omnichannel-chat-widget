@@ -57,9 +57,9 @@ export enum BroadcastEvent {
     UpdateSessionDataForTelemetry = "UpdateSessionDataForTelemetry",
     UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry",
     ContactIdNotFound = "ContactIdNotFound",
-    NotifyExternalSaveData = "external:saveData",
-    ReceiveExternalItemData = "external:receiveItemData",
-    RequestExternalItemData = "external:requestItemData",
+    ExternalSaveDataRequest = "ExternalSaveDataRequest",
+    ReceiveExternalItemData = "ReceiveExternalItemData",
+    RequestExternalItemData = "RequestExternalItemData",
 }
 
 // Events being logged
