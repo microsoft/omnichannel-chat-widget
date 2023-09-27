@@ -189,9 +189,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (props.contextDataStore === undefined) {
             const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
             const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
-            const alternateStorageProps = props?.liveChatWidgetExternalStorage;
-            DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins, storageType, alternateStorageProps?.useExternalStorage, alternateStorageProps?.timeOutWaitForResponse);
-            registerBroadcastServiceForStorage(widgetCacheId, cacheTtlInMins, storageType, alternateStorageProps);
+            DataStoreManager.clientDataStore = defaultClientDataStoreProvider(cacheTtlInMins, storageType, props?.liveChatWidgetExternalStorage?.useExternalStorage);
+            registerBroadcastServiceForStorage(widgetCacheId, cacheTtlInMins, storageType);
         } else {
             DataStoreManager.clientDataStore = props.contextDataStore;
         }
@@ -413,7 +412,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // Check for TPC and log in telemetry if blocked
-        isCookieAllowed(props?.liveChatWidgetExternalStorage?.useExternalStorage || false);
+        isCookieAllowed();
 
         return () => {
             disposeTelemetryLoggers();
