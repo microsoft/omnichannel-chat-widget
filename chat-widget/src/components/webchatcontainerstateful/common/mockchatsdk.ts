@@ -1,5 +1,6 @@
 import { ParticipantType } from "../../../common/Constants";
 import MockAdapter from "./mockadapter";
+import { MockVoiceVideoCallingSDK } from "./mockvoicevideocallingsdk";
 
 export class MockChatSDK {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,5 +58,9 @@ export class MockChatSDK {
         return {
             reconnectId: "123"
         };
+    }
+
+    public getVoiceVideoCalling() {
+        return null;
     }
 }

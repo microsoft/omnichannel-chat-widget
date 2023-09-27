@@ -19,25 +19,7 @@ import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstat
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any, uwid: string) => {
     try {
         // Use Case: If call is ongoing, end the call by simulating end call button click
-        const voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
-        if (voiceVideoCallingSdk.isInACall()) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const callId = (voiceVideoCallingSdk as any).callId;
-            try {
-                voiceVideoCallingSdk.stopCall();
-                TelemetryHelper.logCallingEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.EndCallButtonClick,
-                }, callId);
-                callingStateCleanUp(dispatch);
-            } catch (error) {
-                TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.EndCallButtonClickException,
-                    ExceptionDetails: {
-                        exception: `Failed to End Call:  ${error}`
-                    }
-                }, callId);
-            }
-        }
+        endVoiceVideoCallIfOngoing(chatSDK, dispatch);
 
         const conversationDetails = await getConversationDetailsCall(chatSDK);
 
@@ -184,6 +166,30 @@ const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) 
             proactiveChatInNewWindow: false
         }
     });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const endVoiceVideoCallIfOngoing = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    let callId = "";
+    try {
+        const voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
+        if (voiceVideoCallingSdk && voiceVideoCallingSdk.isInACall()) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            callId = (voiceVideoCallingSdk as any).callId;
+            voiceVideoCallingSdk.stopCall();
+            TelemetryHelper.logCallingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.EndCallButtonClick,
+            }, callId);
+            callingStateCleanUp(dispatch);
+        }
+    } catch (error) {
+        TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.EndCallButtonClickException,
+            ExceptionDetails: {
+                exception: `Failed to End Call:  ${error}`
+            }
+        }, callId);
+    }
 };
 
 const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>, props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
