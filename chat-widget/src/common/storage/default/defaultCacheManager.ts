@@ -14,7 +14,7 @@ export const registerBroadcastServiceForStorage = (widgetCacheId: string, ttlInM
     BroadcastService.getMessageByEventName(widgetCacheId)
         .subscribe((msg) => {
             try {
-                defaultClientDataStoreProvider(ttlInMins, storageType, alternateStorage?.useExternalStorage).setData(
+                defaultClientDataStoreProvider(ttlInMins, storageType, alternateStorage?.useExternalStorage || false).setData(
                     widgetCacheId,
                     JSON.stringify(msg.payload));
             } catch (error) {

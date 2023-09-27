@@ -29,7 +29,7 @@ export const isCookieAllowed = (isUsingExternalStorage: boolean) => {
     }
 };
 
-export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage, useExternalStorage?: boolean): IContextDataStore => {
+export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage, useExternalStorage: boolean): IContextDataStore => {
     let ttlInMs = 0;
     const switchToExternalStorage = useExternalStorage || false;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
