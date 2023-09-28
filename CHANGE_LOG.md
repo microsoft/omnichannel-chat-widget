@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 
 - Added customContext option in `StartChat` BroadcastEvent to pass in custom context variables synchronously
 
+### Fixed
+- Fixed an issue where C2 voice/video feed does not end despite C2 ending the chat
+
 ## [1.3.0] - 2023-09-18
 
 ### Added
