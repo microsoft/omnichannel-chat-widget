@@ -111,7 +111,6 @@ const Spinner = (props: any) => {
 };
 
 const ScanInProgressAttachment = (props: any) => {
-    console.log("[ScanInProgressAttachment]");
     const renderer = () => (
         <div style={{display: "flex", padding: "10px 10px 10px 8px", width: "100%"}}>
             <div style={{fontSize: 12, fontFamily: "Segoe UI, Arial, sans-serif"}}> {props.textCard.attachment.name} </div>
@@ -127,7 +126,6 @@ const ScanInProgressAttachment = (props: any) => {
 };
 
 const MaliciousAttachment = (props: any) => {
-    console.log("[MaliciousAttachment]");
     const renderer = () => (
         <div style={{display: "flex", padding: "10px 10px 10px 8px", width: "100%"}}>
             <div style={{fontSize: 12, fontFamily: "Segoe UI, Arial, sans-serif"}}> {props.textCard.attachment.name} </div>
@@ -236,8 +234,6 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
         }
 
         if (card.activity.channelData && card.activity.channelData.fileScan) {
-            console.log("[AttachmentMiddleware][FileScan]");
-            console.log(card.activity);
             const index = attachments.findIndex((attachment: any) => (attachment.name === card.attachment.name));
             const {activity: {channelData: {fileScan}}} = card;
 
