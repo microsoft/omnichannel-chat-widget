@@ -113,7 +113,7 @@ const Spinner = (props: any) => {
 const ScanInProgressAttachment = (props: any) => {
     console.log("[ScanInProgressAttachment]");
     const renderer = () => (
-        <div style={{display: "flex", padding: 10, width: "100%"}}>
+        <div style={{display: "flex", padding: "10px 10px 10px 8px", width: "100%"}}>
             <div style={{fontSize: 12, fontFamily: "Segoe UI, Arial, sans-serif"}}> {props.textCard.attachment.name} </div>
             <div style={{marginLeft: "auto"}}>
                 <Spinner size={16}/>
