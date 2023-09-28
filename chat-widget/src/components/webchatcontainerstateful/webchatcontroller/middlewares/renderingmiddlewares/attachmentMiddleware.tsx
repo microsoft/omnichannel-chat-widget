@@ -23,7 +23,7 @@ import { defaultAttachmentProps } from "../../../common/defaultProps/defaultAtta
 import { defaultAttachmentSizeStyles } from "./defaultStyles/defaultAttachmentSizeStyles";
 import { defaultAttachmentStyles } from "./defaultStyles/defaultAtttachmentStyles";
 import { useChatContextStore } from "../../../../..";
-import { FileScanInProgressIcon, MaliciousFileIcon } from "../../../../../assets/Icons";
+import { CrossIcon, FileScanInProgressIcon, MaliciousFileIcon } from "../../../../../assets/Icons";
 
 const AttachmentContent = (props: any) => {
     return (
@@ -115,21 +115,30 @@ const ScanInProgressAttachment = (props: any) => {
     const renderer = () => (
         <div style={{display: "flex", padding: "10px 10px 10px 8px", width: "100%"}}>
             <div style={{fontSize: 12, fontFamily: "Segoe UI, Arial, sans-serif"}}> {props.textCard.attachment.name} </div>
-            <div style={{marginLeft: "auto"}}>
+            <div style={{marginLeft: "auto", paddingRight: "10px"}}>
                 <Spinner size={16}/>
             </div>
         </div>
     );
 
     return (
-        <Attachment {...props} imageCard={undefined} renderer={renderer}/>
+        <Attachment {...props} iconData={FileScanInProgressIcon} imageCard={undefined} renderer={renderer}/>
     );
 };
 
 const MaliciousAttachment = (props: any) => {
     console.log("[MaliciousAttachment]");
+    const renderer = () => (
+        <div style={{display: "flex", padding: "10px 10px 10px 8px", width: "100%"}}>
+            <div style={{fontSize: 12, fontFamily: "Segoe UI, Arial, sans-serif"}}> {props.textCard.attachment.name} </div>
+            <div style={{marginLeft: "auto", paddingRight: "10px"}}>
+                <img src={CrossIcon} alt="Malicious" />
+            </div>
+        </div>
+    );
+
     return (
-        <Attachment {...props} imageCard={undefined}/>
+        <Attachment {...props} iconData={MaliciousFileIcon} imageCard={undefined} renderer={renderer}/>
     );
 };
 
@@ -237,13 +246,13 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
 
             if (scanResult?.status === "in progress") {
                 return (
-                    <ScanInProgressAttachment iconData={FileScanInProgressIcon} textCard={card} />
+                    <ScanInProgressAttachment textCard={card} />
                 );
             }
 
             if (scanResult?.status === "malware") {
                 return (
-                    <MaliciousAttachment iconData={MaliciousFileIcon} textCard={card} />
+                    <MaliciousAttachment textCard={card} />
                 );
             }
         }
