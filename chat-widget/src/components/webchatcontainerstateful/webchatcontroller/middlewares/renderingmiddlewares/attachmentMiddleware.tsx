@@ -24,6 +24,9 @@ import { defaultAttachmentSizeStyles } from "./defaultStyles/defaultAttachmentSi
 import { defaultAttachmentStyles } from "./defaultStyles/defaultAtttachmentStyles";
 import { useChatContextStore } from "../../../../..";
 import { CrossIcon, FileScanInProgressIcon, MaliciousFileIcon } from "../../../../../assets/Icons";
+import { NotificationHandler } from "../../notification/NotificationHandler";
+import { NotificationScenarios } from "../../enums/NotificationScenarios";
+import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 const AttachmentContent = (props: any) => {
     return (
@@ -247,6 +250,9 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
             }
 
             if (scanResult?.status === "malware") {
+                const localizedText = state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_IS_MALICIOUS ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_FILE_IS_MALICIOUS;
+                NotificationHandler.notifyError(NotificationScenarios.AttachmentError, (localizedText as string).replace("{0}", attachment.name));
+
                 return (
                     <MaliciousAttachment textCard={card} />
                 );

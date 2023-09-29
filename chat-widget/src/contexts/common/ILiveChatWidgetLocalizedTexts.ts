@@ -146,4 +146,12 @@ export interface ILiveChatWidgetLocalizedTexts {
      * Warning message when third party cookies are blocked.
      */
     THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE?: string;
+
+    /**
+     * Error message shown when the file is malicious
+     * Variable replacement:
+     * {0} - File name
+     * e.g. "{0} has been blocked because the file may contain a malware."
+     */
+    MIDDLEWARE_BANNER_FILE_IS_MALICIOUS?: string
 }
