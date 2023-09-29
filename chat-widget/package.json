@@ -75,7 +75,7 @@
   },
   "dependencies": {
     "@microsoft/omnichannel-chat-components": "^1.0.7",
-    "@microsoft/omnichannel-chat-sdk": "1.4.7",
+    "@microsoft/omnichannel-chat-sdk": "^1.4.8-main.73ecb9b",
     "abort-controller-es5": "^2.0.1",
     "dompurify": "^2.3.4",
     "markdown-it": "^12.3.2",
