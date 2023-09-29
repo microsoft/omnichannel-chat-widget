@@ -2268,10 +2268,10 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.4.8-main.73ecb9b":
-  version "1.4.8-main.73ecb9b"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.4.8-main.73ecb9b.tgz#775bd84e2eb5e901a47affdd610715579839fae5"
-  integrity sha512-uSRP8tAuAXwv4TgRGn9i2KgwXVB+Vhx81HuJL5hA8lNulbc5jPEm/BKHhxtOocLsWd6rrEcqhMG4OW3EtICp6w==
+"@microsoft/omnichannel-chat-sdk@^1.4.8-main.aa0bd7a":
+  version "1.4.8-main.aa0bd7a"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.4.8-main.aa0bd7a.tgz#3df7e81f160c2b941bd0d34847e384d102c0bd2b"
+  integrity sha512-elMJIbLIjKNdl/BxgyEmDCDWZV64SfO2/fz5VlKRZB3hwy6fG88ebXtWxtyiujIi2xKYL8TWyZ7NF2RFVHISQQ==
   dependencies:
     "@azure/communication-chat" "1.1.1"
     "@azure/communication-common" "1.1.0"
@@ -10598,7 +10598,7 @@ markdown-escapes@^1.0.0:
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
 
-markdown-it-attrs-es5@2.0.2:
+markdown-it-attrs-es5@2.0.2, markdown-it-attrs-es5@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/markdown-it-attrs-es5/-/markdown-it-attrs-es5-2.0.2.tgz#4897bcee110f68a5393cce1552ad156b3f195d5f"
   integrity sha512-VJczS1pwXA/OEyWD/30ehzBwyFwNT7V53tvwng6+S1uTLedPUGwp3nI2/HwOlKrMfRTe2L6zNb3HzmSNWUEhDA==
@@ -10613,7 +10613,7 @@ markdown-it-attrs-es5@2.0.2:
     read-pkg-up "^9.1.0"
     terser "^5.11.0"
 
-markdown-it-attrs@4.1.6:
+markdown-it-attrs@4.1.6, markdown-it-attrs@^4.1.6:
   version "4.1.6"
   resolved "https://registry.yarnpkg.com/markdown-it-attrs/-/markdown-it-attrs-4.1.6.tgz#2bc331c7649d8c6396a0613c2bba1093f3e64da9"
   integrity sha512-O7PDKZlN8RFMyDX13JnctQompwrrILuz2y43pW2GagcwpIIElkAdfeek+erHfxUOlXWPsjFeWmZ8ch1xtRLWpA==
