@@ -168,6 +168,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | MARKDOWN_EXTERNAL_LINK_ALT | string | No | Markdown Text for URL opening in a new window | "Opens in a new window; external." |
 | MIDDLEWARE_BANNER_CHAT_DISCONNECT | string | No | Warning message on chat disconnect | "Your conversation has been disconnected. For additional assistance, please start a new chat." |
 | THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE | string | No | Warning message when third party cookies are blocked | "Third party cookies are blocked. Reloading this page will start a new conversation." |
+| MIDDLEWARE_BANNER_FILE_IS_MALICIOUS | string | No | Error message shown when the file uploaded may be malicious | "{0} has been blocked because the file may contain a malware."
 
 ### [IBotMagicCodeConfig](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IBotMagicCodeConfig.ts)
 
