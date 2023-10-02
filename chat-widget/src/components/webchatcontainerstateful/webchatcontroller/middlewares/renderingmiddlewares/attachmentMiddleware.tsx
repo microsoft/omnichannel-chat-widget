@@ -240,8 +240,7 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
             const index = attachments.findIndex((attachment: any) => (attachment.name === card.attachment.name));
             const {activity: {channelData: {fileScan}}} = card;
 
-            let scanResult = undefined;
-            scanResult = fileScan[index];
+            const scanResult = fileScan[index];
 
             if (scanResult?.status === "in progress") {
                 return (
