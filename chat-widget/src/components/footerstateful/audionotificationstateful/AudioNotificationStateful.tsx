@@ -10,7 +10,14 @@ export const AudioNotificationStateful = (props: IAudioNotificationStatefulParam
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
         BroadcastService.getMessageByEventName("NewMessageNotification").subscribe((msg: any) => {
-            audioRef.current.play();
+            const playPromise = audioRef.current.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    //TODO: handle success
+                }).catch(() => {
+                    //TODO: handle error
+                });
+            }
         });
     }, []);
 
