@@ -22,6 +22,7 @@ import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/de
 import Attachment from "./attachments/Attachment";
 import ScanInProgressAttachment from "./attachments/ScanInProgressAttachment";
 import MaliciousAttachment from "./attachments/MaliciousAttachment";
+import FileScanStatus from "./attachments/FileScanStatus";
 
 /**
 * Patch card with different attachment data.
@@ -122,13 +123,13 @@ const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) =>
 
             const scanResult = fileScan[index];
 
-            if (scanResult?.status === "in progress") {
+            if (scanResult?.status === FileScanStatus.INPROGRESS) {
                 return (
                     <ScanInProgressAttachment textCard={card} />
                 );
             }
 
-            if (scanResult?.status === "malware") {
+            if (scanResult?.status === FileScanStatus.MALWARE) {
                 const localizedText = state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_IS_MALICIOUS ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_FILE_IS_MALICIOUS;
                 NotificationHandler.notifyError(NotificationScenarios.AttachmentError, (localizedText as string).replace("{0}", attachment.name));
 
