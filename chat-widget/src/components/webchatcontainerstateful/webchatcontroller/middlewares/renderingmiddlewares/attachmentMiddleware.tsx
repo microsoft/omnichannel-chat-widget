@@ -23,33 +23,32 @@ import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/de
 import Attachment from "./attachments/Attachment";
 import Spinner from "./attachments/Spinner";
 
-const ScanInProgressAttachment = (props: any) => {
+const DownloadBlockedAttachment = (props: any) => {
     const renderer = () => (
         <div style={{display: "flex", padding: "10px 10px 10px 8px", width: "100%"}}>
             <div style={{fontSize: 12, fontFamily: "Segoe UI, Arial, sans-serif"}}> {props.textCard.attachment.name} </div>
             <div style={{marginLeft: "auto", paddingRight: "10px"}}>
-                <Spinner size={16}/>
+                {props.extraContent && props.extraContent}
             </div>
         </div>
     );
 
     return (
-        <Attachment {...props} iconData={FileScanInProgressIcon} imageCard={undefined} renderer={renderer}/>
+        <Attachment {...props} imageCard={undefined} renderer={renderer}/>
+    );
+};
+
+const ScanInProgressAttachment = (props: any) => {
+    const extraContent = <Spinner size={16}/>;
+    return (
+        <DownloadBlockedAttachment {...props} iconData={FileScanInProgressIcon} extraContent={extraContent}/>
     );
 };
 
 const MaliciousAttachment = (props: any) => {
-    const renderer = () => (
-        <div style={{display: "flex", padding: "10px 10px 10px 8px", width: "100%"}}>
-            <div style={{fontSize: 12, fontFamily: "Segoe UI, Arial, sans-serif"}}> {props.textCard.attachment.name} </div>
-            <div style={{marginLeft: "auto", paddingRight: "10px"}}>
-                <img src={CrossIcon} alt="Malicious" />
-            </div>
-        </div>
-    );
-
+    const extraContent = <img src={CrossIcon} alt="Malicious" />;
     return (
-        <Attachment {...props} iconData={MaliciousFileIcon} imageCard={undefined} renderer={renderer}/>
+        <DownloadBlockedAttachment {...props} iconData={MaliciousFileIcon} extraContent={extraContent}/>
     );
 };
 
