@@ -4,7 +4,7 @@ import { getFileAttachmentIconData } from "../../../../common/utils/FileAttachme
 const AttachmentIcon = (props: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     return (
         <div id={props.id} style={props.style} >
-            <img src={props.src ?? getFileAttachmentIconData("txt")} />
+            <img src={props.src ?? getFileAttachmentIconData("txt")} alt="attachment icon" />
         </div>
     );
 };
