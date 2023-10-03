@@ -56,7 +56,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
 
     //Setting PreChat and intiate chat
-    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, undefined, props);
+    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, state, props);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

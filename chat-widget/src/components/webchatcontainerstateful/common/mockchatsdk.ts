@@ -58,4 +58,8 @@ export class MockChatSDK {
             reconnectId: "123"
         };
     }
+
+    public getVoiceVideoCalling() {
+        return null;
+    }
 }

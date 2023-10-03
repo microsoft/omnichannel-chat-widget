@@ -299,7 +299,23 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // Start chat from SDK Event
-        BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe(() => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
+            let stateWithUpdatedContext: ILiveChatWidgetContext = state;
+            if (msg?.payload?.customContext) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.CustomContextReceived,
+                    Description: "CustomContext received through startChat event."
+                });
+                dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
+                stateWithUpdatedContext = {
+                    ...state,
+                    domainStates: {
+                        ...state.domainStates,
+                        customContext: msg?.payload?.customContext
+                    }
+                };
+            }
+            
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
@@ -313,7 +329,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
-                prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
+                prepareStartChat(props, chatSDK, stateWithUpdatedContext, dispatch, setAdapter);
                 return;
             }
 
@@ -326,7 +342,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     BroadcastService.postMessage({
                         eventName: BroadcastEvent.ChatInitiated
                     });
-                    prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
+                    prepareStartChat(props, chatSDK, stateWithUpdatedContext, dispatch, setAdapter);
                     return;
                 }
 
