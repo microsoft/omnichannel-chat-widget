@@ -16,41 +16,12 @@ import { WebChatActionType } from "../../enums/WebChatActionType";
 import { defaultAttachmentAdaptiveCardStyles } from "./defaultStyles/defaultAtttachmentAdaptiveCardStyles";
 import { defaultAttachmentProps } from "../../../common/defaultProps/defaultAttachmentProps";
 import { useChatContextStore } from "../../../../..";
-import { CrossIcon, FileScanInProgressIcon, MaliciousFileIcon } from "../../../../../assets/Icons";
 import { NotificationHandler } from "../../notification/NotificationHandler";
 import { NotificationScenarios } from "../../enums/NotificationScenarios";
 import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import Attachment from "./attachments/Attachment";
-import Spinner from "./attachments/Spinner";
-
-const DownloadBlockedAttachment = (props: any) => {
-    const renderer = () => (
-        <div style={{display: "flex", padding: "10px 10px 10px 8px", width: "100%"}}>
-            <div style={{fontSize: 12, fontFamily: "Segoe UI, Arial, sans-serif"}}> {props.textCard.attachment.name} </div>
-            <div style={{marginLeft: "auto", paddingRight: "10px"}}>
-                {props.extraContent && props.extraContent}
-            </div>
-        </div>
-    );
-
-    return (
-        <Attachment {...props} imageCard={undefined} renderer={renderer}/>
-    );
-};
-
-const ScanInProgressAttachment = (props: any) => {
-    const extraContent = <Spinner size={16}/>;
-    return (
-        <DownloadBlockedAttachment {...props} iconData={FileScanInProgressIcon} extraContent={extraContent}/>
-    );
-};
-
-const MaliciousAttachment = (props: any) => {
-    const extraContent = <img src={CrossIcon} alt="Malicious" />;
-    return (
-        <DownloadBlockedAttachment {...props} iconData={MaliciousFileIcon} extraContent={extraContent}/>
-    );
-};
+import ScanInProgressAttachment from "./attachments/ScanInProgressAttachment";
+import MaliciousAttachment from "./attachments/MaliciousAttachment";
 
 /**
 * Patch card with different attachment data.
