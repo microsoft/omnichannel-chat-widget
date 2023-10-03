@@ -25,6 +25,11 @@ export const createAdapter = async (chatSDK: any) => {
                     }
                 }
             }
+        },
+        ACSAdapter: {
+            fileScan: {
+                disabled: false
+            }
         }
     };
     let adapter = await chatSDK.createChatAdapter(chatAdapterOptionalParams);
