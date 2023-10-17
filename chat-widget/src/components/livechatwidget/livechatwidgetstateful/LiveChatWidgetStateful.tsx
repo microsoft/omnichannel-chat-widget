@@ -88,9 +88,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useChatAdapterStore();
-    const [webChatStyles, setWebChatStyles] = useState({
-        ...defaultWebChatContainerStatefulProps.webChatStyles,
-        ...props.webChatContainerProps?.webChatStyles});
+    const [webChatStyles, setWebChatStyles] = useState({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles});
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const chatSDK: any = useChatSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
