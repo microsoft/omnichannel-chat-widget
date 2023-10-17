@@ -6,9 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Uptake [@microsoft/omnichannel-chat-sdk@1.5.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.5.2)
+
 ### Added
 
 - Added customContext option in `StartChat` BroadcastEvent to pass in custom context variables synchronously
+- Add ability to block attachments on file scanning and on malicious files
+
+### Fixed
+- Fixed an issue where C2 voice/video feed does not end despite C2 ending the chat
 
 ## [1.3.0] - 2023-09-18
 
