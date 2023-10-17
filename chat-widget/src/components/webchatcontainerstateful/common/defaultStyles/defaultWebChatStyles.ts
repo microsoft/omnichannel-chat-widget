@@ -1,12 +1,11 @@
 import { StyleOptions } from "botframework-webchat-api";
-import { defaultAdaptiveCardStyles } from "./defaultAdaptiveCardStyles";
 
 export const defaultWebChatStyles: StyleOptions = {
     avatarSize: 32,
     backgroundColor: "#F7F7F9",
     botAvatarBackgroundColor: "#315FA2",
     botAvatarInitials: "WC",
-    bubbleBackground: defaultAdaptiveCardStyles.background,
+    bubbleBackground: "#315FA2",
     bubbleBorderRadius: 4,
     bubbleBorderWidth: 0,
     bubbleFromUserBackground: "White",
@@ -17,7 +16,7 @@ export const defaultWebChatStyles: StyleOptions = {
     bubbleMaxWidth: 250,
     bubbleMinHeight: 34,
     bubbleMinWidth: 20,
-    bubbleTextColor: defaultAdaptiveCardStyles.color,
+    bubbleTextColor: "White",
     hideSendBox: false,
     hideUploadButton: true,
     primaryFont: "Segoe UI, Arial, sans-serif",

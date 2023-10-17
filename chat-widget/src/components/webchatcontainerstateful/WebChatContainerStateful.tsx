@@ -25,7 +25,6 @@ import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/ren
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
-import { defaultWebChatStyles } from "./common/defaultStyles/defaultWebChatStyles";
 
 const broadcastChannelMessageEvent = "message";
 const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any

@@ -636,7 +636,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer
                     {...webChatProps}
-                    styleOptions={webChatStyles}
+                    styleOptions={{
+                        ...webChatStyles,
+                        bubbleBackground: props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background,
+                        bubbleTextColor: props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color
+                    }}
                     directLine={livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine}>
                     <Stack
                         id={widgetElementId}
