@@ -3,6 +3,7 @@
 import { IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
+
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import { Components } from "botframework-webchat";
 import { Constants } from "../../common/Constants";
@@ -24,6 +25,7 @@ import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/ren
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
+import { defaultWebChatStyles } from "./common/defaultStyles/defaultWebChatStyles";
 
 const broadcastChannelMessageEvent = "message";
 const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -139,8 +141,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             max-width: ${webChatContainerProps?.renderingMiddlewareProps?.systemMessageBoxStyles?.maxWidth ?? defaultSystemMessageBoxStyles?.maxWidth}
         }
 
-        div[class="ac-textBlock"] *,
-        div[class="ac-input-container"] * {color:${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color}; white-space:${webChatContainerProps?.adaptiveCardStyles?.textWhiteSpace ?? defaultAdaptiveCardStyles.textWhiteSpace}}
+        .ms_lcw_webchat_received_message>div.webchat__stacked-layout>div.webchat__stacked-layout__main>div.webchat__stacked-layout__content>div.webchat__stacked-layout__message-row>[class^=webchat]:not(.webchat__bubble--from-user)>.webchat__bubble__content {
+            background-color: ${props.webChatContainerProps?.webChatStyles?.bubbleBackground ?? "#315FA2"};
+            color:${props.webChatContainerProps?.webChatStyles?.bubbleTextColor ?? "white"};
+        }
+
         div[class="ac-textBlock"] a:link,
         div[class="ac-textBlock"] a:visited,
         div[class="ac-textBlock"] a:hover,
