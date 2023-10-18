@@ -34,7 +34,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
     let surveyInviteLink = "";
     const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
 
-    if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot && state.domainStates.postChatContext.botSurveyInviteLink) {
+    if (state?.appStates?.conversationEndedBy !== ConversationEndEntity.Agent && state.domainStates.postChatContext.botSurveyInviteLink) {
         surveyInviteLink = generateSurveyInviteLink(
             state.domainStates.postChatContext.botSurveyInviteLink,
             surveyMode,
