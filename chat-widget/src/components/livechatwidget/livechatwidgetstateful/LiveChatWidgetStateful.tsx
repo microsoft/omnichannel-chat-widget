@@ -82,6 +82,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -633,7 +634,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer
                     {...webChatProps}
-                    styleOptions={webChatStyles}
+                    styleOptions={{
+                        ...webChatStyles,
+                        bubbleBackground: props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background,
+                        bubbleTextColor: props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color
+                    }}
                     directLine={livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine}>
                     <Stack
                         id={widgetElementId}

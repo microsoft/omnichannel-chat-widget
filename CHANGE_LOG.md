@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fixed an issue where C2 voice/video feed does not end despite C2 ending the chat
+- Added workaround to render all adaptive card texts properly
 
 ## [1.3.0] - 2023-09-18
 
