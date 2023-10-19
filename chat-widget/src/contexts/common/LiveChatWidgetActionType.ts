@@ -263,8 +263,14 @@ export enum LiveChatWidgetActionType {
     SET_SURVEY_MODE,
 
     /*
-    Parameters:
-    ConfirmationState: Set confirmation state(OK/Cancel/NotSet)
+        Parameters:
+        ConfirmationState: Set confirmation state(OK/Cancel/NotSet)
     */
-    SET_CONFIRMATION_STATE
+    SET_CONFIRMATION_STATE,
+
+    /*
+        Parameters:
+        ParticipantType: Set participant type when rendering post chat survey
+    */
+    SET_POST_CHAT_PARTICIPANT_TYPE
 }

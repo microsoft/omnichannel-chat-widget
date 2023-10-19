@@ -1,4 +1,4 @@
-import { ConfirmationState, Constants, ConversationEndEntity } from "../../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { getConversationDetailsCall, getWidgetEndChatEventName, isNullOrEmptyString } from "../../../common/utils";
@@ -31,6 +31,11 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             }
             // Use Case: If ended by Agent, stay chat in InActive state
             return;
+        }
+
+        // Register post chat participant type
+        if (conversationDetails?.participantType === ParticipantType.Bot || conversationDetails?.participantType === ParticipantType.User) {
+            dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_PARTICIPANT_TYPE, payload: conversationDetails?.participantType });
         }
 
         // Use Case: Can render post chat scenarios
