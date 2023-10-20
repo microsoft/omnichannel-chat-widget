@@ -23,7 +23,7 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
     let _logger: AWTLogger;
 
     // AWTLogManager is a global variable. Reset after a logEvent() is required to prevent collisions with other components using AWTLogManager.
-    const resetAriaLogger = (configuration: AWTLogConfiguration = AWTDefaultConfiguration) => {
+    const resetAriaLogger = (configuration: AWTLogConfiguration = AWTDefaultConfiguration) => { // eslint-disable-line @typescript-eslint/no-unused-vars
         AWTLogManager.flushAndTeardown();
         (AWTLogManager as any)._isInitialized = false; // eslint-disable-line @typescript-eslint/no-explicit-any
         (AWTLogManager as any)._isDestroyed = false; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -31,7 +31,7 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
     };
 
     const logger = (): AWTLogger => {
-        if (!isNullOrEmptyString(ariaTelemetryKey)) {
+        if (isNullOrUndefined(_logger) && !isNullOrEmptyString(ariaTelemetryKey)) {
             const configuration: AWTLogConfiguration = {
                 disableCookiesUsage: disabledCookieUsage
             };
@@ -53,7 +53,7 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
             }
 
             try {
-                resetAriaLogger(configuration);
+                _logger = AWTLogManager.initialize(ariaTelemetryKey, configuration);
                 if (_logger === undefined) {
                     _logger = AWTLogManager.getLogger(ariaTelemetryKey);
                 }
@@ -89,7 +89,6 @@ export const ariaTelemetryLogger = (ariaTelemetryKey: string,
                 }
 
                 logger() ? logger().logEvent(eventProperties) : console.log("Unable to initialize aria logger");
-                resetAriaLogger();
             }
             catch (error) {
                 console.error("Error in logging telemetry to Aria logger:" + error);
