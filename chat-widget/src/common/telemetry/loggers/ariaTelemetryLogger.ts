@@ -8,27 +8,11 @@ import { Constants, AriaTelemetryConstants, EnvironmentVersion } from "../../Con
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
 import { TelemetryManager } from "../TelemetryManager";
 
-const AWTDefaultConfiguration = {
-    collectorUri: "https://browser.pipe.aria.microsoft.com/Collector/3.0/",
-    cacheMemorySizeLimitInNumberOfEvents: 10000,
-    disableCookiesUsage: false,
-    canSendStatEvent: (eventName: string) => { return true; }, // eslint-disable-line @typescript-eslint/no-unused-vars
-    clockSkewRefreshDurationInMins: 0
-};
-
 export const ariaTelemetryLogger = (ariaTelemetryKey: string,
     disabledCookieUsage: boolean,
     collectiorUriForTelemetry: string,
     ariaTelemetryApplicationName: string): IChatSDKLogger => {
     let _logger: AWTLogger;
-
-    // AWTLogManager is a global variable. Reset after a logEvent() is required to prevent collisions with other components using AWTLogManager.
-    const resetAriaLogger = (configuration: AWTLogConfiguration = AWTDefaultConfiguration) => { // eslint-disable-line @typescript-eslint/no-unused-vars
-        AWTLogManager.flushAndTeardown();
-        (AWTLogManager as any)._isInitialized = false; // eslint-disable-line @typescript-eslint/no-explicit-any
-        (AWTLogManager as any)._isDestroyed = false; // eslint-disable-line @typescript-eslint/no-explicit-any
-        _logger = AWTLogManager.initialize(ariaTelemetryKey, configuration);
-    };
 
     const logger = (): AWTLogger => {
         if (isNullOrUndefined(_logger) && !isNullOrEmptyString(ariaTelemetryKey)) {
