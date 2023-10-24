@@ -1,7 +1,7 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 
-import { ConversationEndEntity } from "../../common/Constants";
+import { ParticipantType } from "../../common/Constants";
 import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -34,7 +34,8 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
     let surveyInviteLink = "";
     const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
 
-    if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot && state.domainStates.postChatContext.botSurveyInviteLink) {
+    if (state.domainStates.postChatContext.botSurveyInviteLink && // Bot survey enabled
+        state.appStates.postChatParticipantType === ParticipantType.Bot) { // Only Bot has engaged
         surveyInviteLink = generateSurveyInviteLink(
             state.domainStates.postChatContext.botSurveyInviteLink,
             surveyMode,

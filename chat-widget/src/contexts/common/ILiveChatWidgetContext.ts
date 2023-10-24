@@ -3,7 +3,7 @@ import { ConversationState } from "./ConversationState";
 import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
-import { ConfirmationState, ConversationEndEntity } from "../../common/Constants";
+import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../../common/Constants";
 
 export interface ILiveChatWidgetContext {
     domainStates: {
@@ -51,6 +51,7 @@ export interface ILiveChatWidgetContext {
         conversationEndedBy: ConversationEndEntity; // The entity that ends conversation
         chatDisconnectEventReceived: boolean; // true when customer disconnect event is received
         selectedSurveyMode: string | null; // selected survey mode
+        postChatParticipantType: undefined | ParticipantType; // participant type to render post chat survey
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

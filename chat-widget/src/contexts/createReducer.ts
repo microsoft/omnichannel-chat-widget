@@ -7,7 +7,7 @@ import { ILiveChatWidgetContext } from "./common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "./common/ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
-import { ConfirmationState, ConversationEndEntity } from "../common/Constants";
+import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../common/Constants";
 import { PostChatSurveyMode } from "../components/postchatsurveypanestateful/enums/PostChatSurveyMode";
 
 export const createReducer = () => {
@@ -360,6 +360,15 @@ export const createReducer = () => {
                     domainStates: {
                         ...state.domainStates,
                         confirmationState: action.payload as ConfirmationState
+                    }
+                };
+
+            case LiveChatWidgetActionType.SET_POST_CHAT_PARTICIPANT_TYPE:
+                return {
+                    ...state,
+                    appStates: {
+                        ...state.appStates,
+                        postChatParticipantType: action.payload as ParticipantType
                     }
                 };
 

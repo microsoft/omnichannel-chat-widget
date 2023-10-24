@@ -66,6 +66,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
             }
 
+            if (conversationDetails?.participantType === ParticipantType.Bot || conversationDetails?.participantType === ParticipantType.User) {
+                dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_PARTICIPANT_TYPE, payload: conversationDetails?.participantType });
+            }
+
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedThreadEventReceived,
                 Description: "Conversation end by agent side or by timeout event received."

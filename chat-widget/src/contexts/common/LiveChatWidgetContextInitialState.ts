@@ -58,7 +58,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             unreadMessageCount: 0,
             conversationEndedBy: ConversationEndEntity.NotSet,
             chatDisconnectEventReceived: false,
-            selectedSurveyMode: null
+            selectedSurveyMode: null,
+            postChatParticipantType: undefined
         },
         uiStates: {
             showConfirmationPane: false,
