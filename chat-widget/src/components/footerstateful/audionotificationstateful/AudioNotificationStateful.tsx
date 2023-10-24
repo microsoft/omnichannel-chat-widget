@@ -13,9 +13,9 @@ export const AudioNotificationStateful = (props: IAudioNotificationStatefulParam
             const playPromise = audioRef.current.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    //TODO: handle success
-                }).catch(() => {
-                    //TODO: handle error
+                    console.log("Audio played successfully");
+                }).catch((error) => {
+                    console.error("Error occurred while playing audio: ",error);
                 });
             }
         });
