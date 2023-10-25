@@ -14,6 +14,7 @@ import {
     getWidgetCacheIdfromProps,
     getWidgetEndChatEventName,
     isNullOrEmptyString,
+    isNullOrUndefined,
     isUndefinedOrEmpty,
     newGuid
 } from "../../../common/utils";
@@ -62,7 +63,7 @@ import ProactiveChatPaneStateful from "../../proactivechatpanestateful/Proactive
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
+import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
 import { createFooter } from "../common/createFooter";
@@ -301,6 +302,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
+            // If the startChat event is not initiated by the same tab. Ignore the call
+            if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+                return;
+            }
+            
             let stateWithUpdatedContext: ILiveChatWidgetContext = state;
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
