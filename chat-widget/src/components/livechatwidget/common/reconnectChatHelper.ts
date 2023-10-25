@@ -29,7 +29,7 @@ const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<
     // Get chat reconnect context
     const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig, props, isAuthenticatedChat);
 
-    //Redirect if enabled
+    // Redirect if enabled
     if (reconnectChatContext?.redirectURL) {
         redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow);
         return false;
