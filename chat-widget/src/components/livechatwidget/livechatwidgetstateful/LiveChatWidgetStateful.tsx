@@ -300,8 +300,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
-            // If the startChat event is not initiated by the same tab. Ignore the call
-            if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+            if (!isNullOrUndefined(msg?.payload?.runtimeId) &&
+                msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId && // If the startChat event is not initiated by the same tab. Ignore the call
+                props.controlProps?.hideStartChatButton !== true) { // Skip the above check for popout chat
                 return;
             }
             
@@ -399,7 +400,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 endChatStateCleanUp(dispatch);
-                chatSDK.requestId = uuidv4();
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (chatSDK as any).requestId = uuidv4();
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (chatSDK as any).chatToken = {};
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (chatSDK as any).reconnectId = null;
                 return;
             }
         });
