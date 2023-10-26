@@ -205,6 +205,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Update of values for title and subtitle for e-mail pane component.
+
 ## [1.0.7] - 2023-9-13
 
 ### Added
