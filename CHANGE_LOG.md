@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 # Chat Widget
 
 ## [Unreleased]
+### Added
+- [A11Y] Notification banner when e-mail address is introduced to receive transcript after chat ends.
 
 ## [1.4.0] - 2023-10-25
 

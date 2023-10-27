@@ -160,7 +160,6 @@ export interface ILiveChatWidgetLocalizedTexts {
      */
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS?: string;
 
-
     /**
      * Error message, indicating the email address introduced couldnt be registered.
      * {0} - e-mail address introduced
