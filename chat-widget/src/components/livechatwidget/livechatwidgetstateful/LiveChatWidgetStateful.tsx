@@ -300,9 +300,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
-            if (!isNullOrUndefined(msg?.payload?.runtimeId) &&
-                msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId && // If the startChat event is not initiated by the same tab. Ignore the call
-                props.controlProps?.hideStartChatButton !== true) { // Skip the above check for popout chat
+            // If the startChat event is not initiated by the same tab. Ignore the call
+            if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 return;
             }
             
