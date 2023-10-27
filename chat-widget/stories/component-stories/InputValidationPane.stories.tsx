@@ -19,7 +19,7 @@ const defaultInputValidationPaneProps: IInputValidationPaneProps = {
         inputValidationPaneAriaLabel: "Email Chat Transcript Pane",
     
         hideTitle: false,
-        titleText: "EPlease provide e-mail address to send transcript to.",
+        titleText: "Please provide e-mail address to send transcript to.",
     
         hideSubtitle: false,
         subtitleText: "The transcript will be sent after the chat ends.",
