@@ -19,15 +19,15 @@ const defaultInputValidationPaneProps: IInputValidationPaneProps = {
         inputValidationPaneAriaLabel: "Email Chat Transcript Pane",
     
         hideTitle: false,
-        titleText: "Email this chat transcript",
+        titleText: "EPlease provide e-mail address to send transcript to.",
     
         hideSubtitle: false,
-        subtitleText: "This will be sent after your chat ends.",
+        subtitleText: "The transcript will be sent after the chat ends.",
     
         inputId: "oclcw-emailTranscriptDialogTextField",
         inputInitialText: "",
         hideInput: false,
-        inputAriaLabel: "Email this chat transcript. This will be sent after your chat ends. Email address text area",
+        inputAriaLabel: "Please provide e-mail address to send transcript to. The transcript will be sent after the chat ends. Email address text area",
         inputWithErrorMessageBorderColor: "rgb(164, 38, 44)",
     
         invalidInputErrorMessageText: "Enter a valid email address.",

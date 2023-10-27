@@ -2,6 +2,7 @@ export enum NotificationScenarios {
     Connection = "connection",
     DownloadTranscriptError = "download transcript",
     EmailTranscriptError = "email transcript",
+    EmailAddressRecorded = "email address recorded",
     AttachmentError = "attachment",
     InternetConnection = "internet connection",
     MaxSizeError = "max size",

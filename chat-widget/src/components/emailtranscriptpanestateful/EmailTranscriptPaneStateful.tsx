@@ -16,6 +16,7 @@ import { Regex } from "../../common/Constants";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
+import { defaultMiddlewareLocalizedTexts } from "../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) => {
     const initialTabIndexMap: Map<string, number> = new Map();
@@ -47,6 +48,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
             };
             try {
                 await chatSDK?.emailLiveChatTranscript(chatTranscriptBody);
+                NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressRecorded, defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED||"");
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.EmailTranscriptSent,
                     Description: "Transcript sent to email successfully."
