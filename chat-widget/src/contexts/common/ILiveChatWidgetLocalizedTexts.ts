@@ -158,5 +158,12 @@ export interface ILiveChatWidgetLocalizedTexts {
     /**
      * Success message, indicating the email address introduced has been registered to receive the transcript.
      */
-    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED?: string;
+    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS?: string;
+
+
+    /**
+     * Error message, indicating the email address introduced couldnt be registered.
+     * {0} - e-mail address introduced
+     */
+    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR?: string;
 }

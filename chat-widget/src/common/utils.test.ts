@@ -300,4 +300,40 @@ describe("utils unit test", () => {
         const testResult1 = getBroadcastChannelName("widgetid","");
         expect(testResult1).toBe(testChannelName1);
     });
+
+    it("should return the same string when no placeholders are present", () => {
+        const templateMessage = "Hello, world!";
+        const values = [];
+        expect(formatTemplateString(templateMessage, values)).toEqual(templateMessage);
+    });
+
+    it("should replace placeholders with corresponding values", () => {
+        const templateMessage = "Hello, {0}! You are {1} years old.";
+        const values = ["Alice", 30];
+        expect(formatTemplateString(templateMessage, values)).toEqual("Hello, Alice! You are 30 years old.");
+    });
+
+    it("should ignore placeholders with undefined values", () => {
+        const templateMessage = "Hello, {0}! You are {1} years old.";
+        const values = ["Alice"];
+        expect(formatTemplateString(templateMessage, values)).toEqual("Hello, Alice! You are {1} years old.");
+    });
+
+    it("should ignore extra values", () => {
+        const templateMessage = "Hello, {0}!";
+        const values = ["Alice", 30];
+        expect(formatTemplateString(templateMessage, values)).toEqual("Hello, Alice!");
+    });
+
+    it("should replace multiple occurrences of the same placeholder", () => {
+        const templateMessage = "Hello, {0}! You are {1} years old. {0}, how are you?";
+        const values = ["Alice", 30];
+        expect(formatTemplateString(templateMessage, values)).toEqual("Hello, Alice! You are 30 years old. Alice, how are you?");
+    });
+
+    it("should replace placeholders with empty string values", () => {
+        const templateMessage = "Hello, {0}! You are {1} years old.";
+        const values = ["Alice", ""];
+        expect(formatTemplateString(templateMessage, values)).toEqual("Hello, Alice! You are  years old.");
+    });
 });
