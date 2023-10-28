@@ -30,5 +30,5 @@ export const defaultMiddlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts = {
     THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE: "Third party cookies are blocked. Reloading this page will start a new conversation.",
     MIDDLEWARE_BANNER_FILE_IS_MALICIOUS: "{0} has been blocked because the file may contain a malware.",
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS: "Email will be sent after chat end!",
-    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR: "Email {0} couldnt be recorded!"    
+    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR: "Email {0} could not be saved!, try again later."    
 };
