@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue where invoking `StartChat` event will create different chats across all tabs
+
 ## [1.4.0] - 2023-10-25
 
 ### Changed
