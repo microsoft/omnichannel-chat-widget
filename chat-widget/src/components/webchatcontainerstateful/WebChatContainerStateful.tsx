@@ -92,6 +92,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         }
 
         if (!(window as any).BroadcastChannel) { // eslint-disable-line @typescript-eslint/no-explicit-any
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.SuppressBotMagicCodeFailed,
+                Description: "BroadcastChannel not supported by default on current browser"
+            });
+
             return;
         }
 
