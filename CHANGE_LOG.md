@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed an issue where invoking `StartChat` event will create different chats across all tabs
+- Fix widget crashing due to `BroadcastChannel` not supported on `Safari` browsers below `15.4`
 
 ## [1.4.0] - 2023-10-25
 
