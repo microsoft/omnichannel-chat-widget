@@ -14,11 +14,11 @@ import {
     getWidgetCacheIdfromProps,
     getWidgetEndChatEventName,
     isNullOrEmptyString,
-    isUndefinedOrEmpty,
-    newGuid
+    isNullOrUndefined,
+    isUndefinedOrEmpty
 } from "../../../common/utils";
 import { defaultClientDataStoreProvider, isCookieAllowed } from "../../../common/storage/default/defaultClientDataStoreProvider";
-import { endChat, prepareEndChat } from "../common/endChat";
+import { endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
@@ -62,7 +62,7 @@ import ProactiveChatPaneStateful from "../../proactivechatpanestateful/Proactive
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
+import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
 import { createFooter } from "../common/createFooter";
@@ -83,6 +83,7 @@ import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
+import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -114,7 +115,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const lastLWICheckTimeRef = useRef<number>(0);
     let optionalParams: StartChatOptionalParams;
     let activeCachedChatExist = false;
-    const uwid = useRef<string>(""); // its an uniqueid per chatr instance
 
     const setOptionalParams = () => {
         if (!isUndefinedOrEmpty(state.appStates?.reconnectId)) {
@@ -203,7 +203,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         setupClientDataStore();
         registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler();
-        uwid.current = newGuid();
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_BUTTON_DISPLAY, payload: props.controlProps?.hideStartChatButton || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
@@ -301,6 +300,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
+            // If the startChat event is not initiated by the same tab. Ignore the call
+            if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+                return;
+            }
+            
             let stateWithUpdatedContext: ILiveChatWidgetContext = state;
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -392,9 +396,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             props.controlProps?.widgetInstanceId ?? "");
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
-            console.log("Receiving end chat event", JSON.stringify(msg.payload));
-            if (msg.payload !== uwid.current) {
+            if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
+                endChatStateCleanUp(dispatch);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (chatSDK as any).requestId = uuidv4();
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (chatSDK as any).chatToken = {};
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (chatSDK as any).reconnectId = null;
                 return;
             }
         });
@@ -499,13 +509,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // If start chat failed, and C2 is trying to close chat widget
         if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true, uwid.current);
+            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
             return;
         }
 
         // Scenario -> Chat was InActive and closing the chat (Refresh scenario on post chat)
         if (state?.appStates?.conversationState === ConversationState.InActive) {
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true, uwid.current);
+            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             return;
         }
 
@@ -515,7 +525,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         // All other cases
-        prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
+        prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
 
     }, [state?.appStates?.conversationEndedBy]);
 
@@ -576,13 +586,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab, uwid.current);
+    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
     const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, uwid.current);
+    const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
     const webChatProps = initWebChatComposer(props, state, dispatch, chatSDK, endChatRelay);
 
     const downloadTranscriptProps = createDownloadTranscriptProps(props.downloadTranscriptProps as IDownloadTranscriptProps,
