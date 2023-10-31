@@ -40,10 +40,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         }
 
         // Use Case: Can render post chat scenarios
-        await getPostChatContext(chatSDK, state, dispatch);
-
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const postchatContext: any = state?.domainStates?.postChatContext;
+        const postchatContext: any = await getPostChatContext(chatSDK, state, dispatch) ?? state?.domainStates?.postChatContext;
 
         if (postchatContext === undefined) {
             // For Customer intiated conversations, just close chat widget
@@ -60,7 +58,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
 
         // Initiate post chat render
-        if (state?.domainStates?.postChatContext) {
+        if (postchatContext) {
             await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
             return;
         }

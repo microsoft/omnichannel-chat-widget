@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed an issue where invoking `StartChat` event will create different chats across all tabs
+- Fixed an issue where post chat does not load on first chat on a browser session
 
 ### Changed
 
