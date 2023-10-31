@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed an issue where invoking `StartChat` event will create different chats across all tabs
+- Fixed an issue where post chat does not load on first chat on a browser session
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.8](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.8)
 
 ## [1.4.0] - 2023-10-25
 
@@ -211,9 +216,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
+[1.0.9] 2023-10-31
 
-- Added tooltips for header and footer action bar buttons
+### Changed
+- Modify texts for email input validation
 
 ## [1.0.8] - 2023-10-31
 

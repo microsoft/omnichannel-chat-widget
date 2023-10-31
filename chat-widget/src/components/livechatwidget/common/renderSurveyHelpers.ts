@@ -43,30 +43,31 @@ const setSurveyMode = async (props: ILiveChatWidgetProps, participantType: strin
     }
 };
 
-const renderSurvey = async (state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const renderSurvey = async (postChatContext: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     if (postChatSurveyMode === PostChatSurveyMode.Link) {
         setWidgetStateToInactive(dispatch);
         return;
     }
     if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-        await embedModePostChatWorkflow(state, dispatch);
+        await embedModePostChatWorkflow(postChatContext, dispatch);
     }
 };
 
 // Function for embed mode postchat workflow which is essentially same for both customer and agent
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const embedModePostChatWorkflow = async (state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const embedModePostChatWorkflow = async (postChatContext: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     TelemetryHelper.logActionEvent(LogLevel.INFO, {
         Event: TelemetryEvent.EmbedModePostChatWorkflowStarted
     });
-    if (state?.domainStates?.postChatContext) {
+    if (postChatContext) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
 
         await addDelayInMs(Constants.PostChatLoadingDurationInMs);
 
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
     } else {
-        const error = `Conversation was Ended but App State was not set correctly: postChatContext = ${state.domainStates.postChatContext}`;
+        const error = `Conversation was Ended but App State was not set correctly: postChatContext = ${postChatContext}`;
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AppStatesException,
             ExceptionDetails: {
@@ -82,7 +83,7 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, conversationDetails
     const participantType = conversationDetails?.participantType ?? postchatContext.participantType;
     await setSurveyMode(props, participantType, state, dispatch);
 
-    await renderSurvey(state, dispatch);
+    await renderSurvey(postchatContext, dispatch);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -102,6 +103,7 @@ const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, d
                 Description: "Postchat context call succeed."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
+            return context;
         }
     } catch (error) {
         TelemetryHelper.logSDKEvent(LogLevel.INFO, {
