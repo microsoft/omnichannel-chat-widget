@@ -25,8 +25,7 @@ function CloseButton(props: ICommandButtonProps) {
             onClick={props.onClick}
             ariaLabel={props.ariaLabel ?? AriaLabels.Close}
             className={props.className} 
-            customEvent={customEvent} 
-            hideButtonTitle = {props.hideButtonTitle}/>
+            customEvent={customEvent}/>
     );
 }
 

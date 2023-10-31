@@ -24,8 +24,7 @@ function EmailTranscriptButton(props: ICommandButtonProps) {
             onClick={props.onClick}
             ariaLabel={props.ariaLabel ?? AriaLabels.EmailTranscript}
             className={props.className}
-            customEvent={customEvent}
-            hideButtonTitle = {props.hideButtonTitle}/>
+            customEvent={customEvent}/>
     );
 }
 

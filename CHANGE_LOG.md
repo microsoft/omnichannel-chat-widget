@@ -209,6 +209,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Added tooltips for header and footer action bar buttons
+
 ## [1.0.7] - 2023-9-13
 
 ### Added
