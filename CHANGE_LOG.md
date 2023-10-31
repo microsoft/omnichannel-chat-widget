@@ -214,9 +214,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
+[1.0.9] 2023-10-31
 
-- Added tooltips for header and footer action bar buttons
+### Changed
+- Modify texts for email input validation
 
 ## [1.0.8] - 2023-10-31
 

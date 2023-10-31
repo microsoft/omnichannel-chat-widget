@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/omnichannel-chat-components",
-  "version": "1.0.9-0",
+  "version": "1.0.10-0",
   "description": "Microsoft Omnichannel Chat Components",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",
