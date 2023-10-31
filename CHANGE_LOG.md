@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue where invoking `StartChat` event will create different chats across all tabs
+
 ## [1.4.0] - 2023-10-25
 
 ### Changed
@@ -205,8 +209,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Fixed
-- Update of values for title and subtitle for e-mail pane component.
+### Added
+
+- Added tooltips for header and footer action bar buttons
+
+## [1.0.8] - 2023-10-31
+
+### Added
+
+- Added tooltips for header and footer action bar buttons
 
 ## [1.0.7] - 2023-9-13
 

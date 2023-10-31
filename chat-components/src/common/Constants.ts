@@ -153,7 +153,6 @@ export const AriaLabels = class {
     public static readonly Minimize = "Minimize";
     public static readonly EmailChatTranscriptPane = "Email Chat Transcript Pane";
     public static readonly InputValidationPaneInput = "Please provide e-mail address to send transcript. The transcript will be sent after the chat ends. Email address text area";
-    public static readonly Send = "Send";
     public static readonly Save = "Save";
     public static readonly Cancel = "Cancel";
     public static readonly ProactiveChatPane = "Proactive Chat Pane";
