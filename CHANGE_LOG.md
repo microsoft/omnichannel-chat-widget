@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue where invoking `StartChat` event will create different chats across all tabs
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.8](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.8)
+
 ## [1.4.0] - 2023-10-25
 
 ### Changed
