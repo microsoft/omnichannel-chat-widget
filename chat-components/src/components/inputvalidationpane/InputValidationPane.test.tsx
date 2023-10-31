@@ -130,7 +130,7 @@ describe("Input Validation Pane component", () => {
             render(<InputValidationPane {...inputValidationPanePropsHide}/>);
 
             try {
-                screen.getByText(Texts.SendButtonText);
+                screen.getByText(Texts.SaveButtonText);
                 fail("Send button should be in the document");
             // eslint-disable-next-line no-empty
             } catch (ex) {
@@ -174,7 +174,7 @@ describe("Input Validation Pane component", () => {
 
             render(<InputValidationPane {...inputValidationPaneProps}/>);
 
-            const sendButton = screen.getByText(Texts.SendButtonText);
+            const sendButton = screen.getByText(Texts.SaveButtonText);
             fireEvent.click(sendButton);
             expect(handleSendClick).toHaveBeenCalledTimes(1);
         });
@@ -194,7 +194,7 @@ describe("Input Validation Pane component", () => {
 
             render(<InputValidationPane {...inputValidationPaneProps}/>);
 
-            const sendButton = screen.getByText(Texts.SendButtonText);
+            const sendButton = screen.getByText(Texts.SaveButtonText);
             fireEvent.click(sendButton);
             expect(handleSendClick).toHaveBeenCalledTimes(0);
         });
@@ -260,7 +260,7 @@ describe("Input Validation Pane component", () => {
                 target: { value: "some value" }
             });
             
-            const sendButton = screen.getByText(Texts.SendButtonText);
+            const sendButton = screen.getByText(Texts.SaveButtonText);
             expect(sendButton).not.toBeDisabled();
         });
     });
