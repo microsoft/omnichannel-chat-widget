@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { ILabelControlProps } from "../../../../common/interfaces/ILabelControlProps";
 import { ICurrentCallNonActionControlIds } from "./ICurrentCallNonActionControlIds";
 import { ICommandButtonControlProps } from "../../../../common/interfaces/ICommandButtonControlProps";
 import { ITimer } from "../../Timer/ITimer";

@@ -209,10 +209,6 @@ All notable changes to this project will be documented in this file.
 
 - Added tooltips for header and footer action bar buttons
 
-### Changed
-
-- Uptake [botframework-webchat@4.15.9](https://www.npmjs.com/package/botframework-webchat/v/4.15.9)
-
 ## [1.0.7] - 2023-9-13
 
 ### Added
