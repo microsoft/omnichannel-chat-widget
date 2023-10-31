@@ -48,7 +48,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
             };
             try {
                 await chatSDK?.emailLiveChatTranscript(chatTranscriptBody);
-                NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressRecorded, defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string);
+                NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressSaved, defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string);
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.EmailTranscriptSent,
                     Description: "Transcript sent to email successfully."

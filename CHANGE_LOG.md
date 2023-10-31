@@ -216,7 +216,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-[1.0.9] 2023-10-31
+## [1.0.9] 2023-10-31
 
 ### Changed
 - Modify texts for email input validation
