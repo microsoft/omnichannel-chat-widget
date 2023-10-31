@@ -9,7 +9,12 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed an issue where invoking `StartChat` event will create different chats across all tabs
+- Fixed an issue where post chat does not load on first chat on a browser session
 - Fix widget crashing due to `BroadcastChannel` not supported on `Safari` browsers below `15.4`
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.8](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.8)
 
 ## [1.4.0] - 2023-10-25
 
@@ -209,6 +214,16 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+### Added
+
+- Added tooltips for header and footer action bar buttons
+
+## [1.0.8] - 2023-10-31
+
+### Added
+
+- Added tooltips for header and footer action bar buttons
 
 ## [1.0.7] - 2023-9-13
 
