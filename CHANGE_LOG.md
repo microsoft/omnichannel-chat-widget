@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue where invoking `StartChat` event will create different chats across all tabs
 - Fixed an issue where post chat does not load on first chat on a browser session
+- Fix widget crashing due to `BroadcastChannel` not supported on `Safari` browsers below `15.4`
 
 ### Changed
 

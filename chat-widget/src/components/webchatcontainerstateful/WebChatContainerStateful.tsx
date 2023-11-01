@@ -52,14 +52,12 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const magicCodeBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
-    const magicCodeResponseBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeResponseBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
     const {webChatContainerProps, contextDataStore} = props;
 
     const containerStyles: IStackStyles = {
         root: Object.assign(
             {}, defaultWebChatContainerStatefulProps.containerStyles, webChatContainerProps?.containerStyles,
-            { display: state.appStates.isMinimized ? "none" : "" }) // Use this instead of removing WebChat from the picture so that the activity observer inside the adapter is not invoked 
+            { display: state.appStates.isMinimized ? "none" : "" }) // Use this instead of removing WebChat from the picture so that the activity observer inside the adapter is not invoked
     };
 
     const localizedTexts = {
@@ -85,10 +83,26 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                     (window as any).TPCWarningShown = true;
                 }
             }
-        } 
+        }
     }, []);
 
     useEffect(() => {
+        if (!props.webChatContainerProps?.botMagicCode?.disabled) {
+            return;
+        }
+
+        if (!(window as any).BroadcastChannel) { // eslint-disable-line @typescript-eslint/no-explicit-any
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.SuppressBotMagicCodeFailed,
+                Description: "BroadcastChannel not supported by default on current browser"
+            });
+
+            return;
+        }
+
+        const magicCodeBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
+        const magicCodeResponseBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeResponseBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
+
         const eventListener = (event: { data: any; }) => { // eslint-disable-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
             const { data } = event;
             if (BotMagicCodeStore.botOAuthSignInId === data.signin) {
@@ -152,11 +166,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         div[class="ac-textBlock"] a:hover,
         div[class="ac-textBlock"] a:active {
             color: ${webChatContainerProps?.adaptiveCardStyles?.anchorColor ?? defaultAdaptiveCardStyles.anchorColor};
-        } 
+        }
 
         .webchat__stacked-layout__content .ac-actionSet > .ac-pushButton > div {white-space: ${webChatContainerProps?.adaptiveCardStyles?.buttonWhiteSpace ?? defaultAdaptiveCardStyles.buttonWhiteSpace} !important;}
 
-        .ms_lcw_webchat_received_message img.webchat__markdown__external-link-icon { 
+        .ms_lcw_webchat_received_message img.webchat__markdown__external-link-icon {
             background-image : url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIzIDMgMTggMTgiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik03LjI1MDEgNC41MDAxN0gxMC43NDk1QzExLjE2MzcgNC41MDAxNyAxMS40OTk1IDQuODM1OTYgMTEuNDk5NSA1LjI1MDE3QzExLjQ5OTUgNS42Mjk4NiAxMS4yMTczIDUuOTQzNjYgMTAuODUxMyA1Ljk5MzMyTDEwLjc0OTUgNi4wMDAxN0g3LjI0OTc0QzYuMDcwNzkgNS45OTk2MSA1LjEwMzQ5IDYuOTA2NTYgNS4wMDc4NiA4LjA2MTEyTDUuMDAwMjggOC4yMjAwM0w1LjAwMzEyIDE2Ljc1MDdDNS4wMDM0MyAxNy45NDE1IDUuOTI4ODUgMTguOTE2MSA3LjA5OTY2IDE4Ljk5NDlMNy4yNTM3MSAxOS4wMDAxTDE1Ljc1MTggMTguOTg4NEMxNi45NDE1IDE4Ljk4NjggMTcuOTE0NSAxOC4wNjIgMTcuOTkzNSAxNi44OTIzTDE3Ljk5ODcgMTYuNzM4NFYxMy4yMzIxQzE3Ljk5ODcgMTIuODE3OSAxOC4zMzQ1IDEyLjQ4MjEgMTguNzQ4NyAxMi40ODIxQzE5LjEyODQgMTIuNDgyMSAxOS40NDIyIDEyLjc2NDMgMTkuNDkxOCAxMy4xMzAzTDE5LjQ5ODcgMTMuMjMyMVYxNi43Mzg0QzE5LjQ5ODcgMTguNzQwNyAxNy45MjkzIDIwLjM3NjkgMTUuOTUyOCAyMC40ODI5TDE1Ljc1MzggMjAuNDg4NEw3LjI1ODI3IDIwLjUwMDFMNy4wNTQ5NSAyMC40OTQ5QzUuMTQyMzkgMjAuMzk1NCAzLjYwODk1IDE4Ljg2MjcgMy41MDgzNyAxNi45NTAyTDMuNTAzMTIgMTYuNzUxMUwzLjUwMDg5IDguMjUyN0wzLjUwNTI5IDguMDUwMkMzLjYwNTM5IDYuMTM3NDkgNS4xMzg2NyA0LjYwNDQ5IDcuMDUwOTYgNC41MDUyN0w3LjI1MDEgNC41MDAxN0gxMC43NDk1SDcuMjUwMVpNMTMuNzQ4MSAzLjAwMTQ2TDIwLjMwMTggMy4wMDE5N0wyMC40MDE0IDMuMDE1NzVMMjAuNTAyMiAzLjA0MzkzTDIwLjU1OSAzLjA2ODAzQzIwLjYxMjIgMy4wOTEyMiAyMC42NjM0IDMuMTIxNjMgMjAuNzExMSAzLjE1ODg1TDIwLjc4MDQgMy4yMjE1NkwyMC44NjQxIDMuMzIwMTRMMjAuOTE4MyAzLjQxMDI1TDIwLjk1NyAzLjUwMDU3TDIwLjk3NjIgMy41NjQ3NkwyMC45ODk4IDMuNjI4NjJMMjAuOTk5MiAzLjcyMjgyTDIwLjk5OTcgMTAuMjU1NEMyMC45OTk3IDEwLjY2OTYgMjAuNjYzOSAxMS4wMDU0IDIwLjI0OTcgMTEuMDA1NEMxOS44NyAxMS4wMDU0IDE5LjU1NjIgMTAuNzIzMiAxOS41MDY1IDEwLjM1NzFMMTkuNDk5NyAxMC4yNTU0TDE5LjQ5ODkgNS41NjE0N0wxMi4yNzk3IDEyLjc4NDdDMTIuMDEzNCAxMy4wNTEgMTEuNTk2OCAxMy4wNzUzIDExLjMwMzEgMTIuODU3NUwxMS4yMTkgMTIuNzg0OUMxMC45NTI3IDEyLjUxODcgMTAuOTI4NCAxMi4xMDIxIDExLjE0NjIgMTEuODA4NEwxMS4yMTg4IDExLjcyNDNMMTguNDM2OSA0LjUwMTQ2SDEzLjc0ODFDMTMuMzY4NCA0LjUwMTQ2IDEzLjA1NDYgNC4yMTkzMSAxMy4wMDUgMy44NTMyNEwxMi45OTgxIDMuNzUxNDZDMTIuOTk4MSAzLjM3MTc3IDEzLjI4MDMgMy4wNTc5NyAxMy42NDY0IDMuMDA4MzFMMTMuNzQ4MSAzLjAwMTQ2WiIgZmlsbD0iI0ZGRkZGRiIgLz48L3N2Zz4) !important;
             height: '.75em';
             marginLeft: '.25em';
@@ -174,7 +188,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         .ms_lcw_webchat_received_message a:hover,
         .ms_lcw_webchat_received_message a:active {
             color: ${webChatContainerProps?.renderingMiddlewareProps?.receivedMessageAnchorStyles?.color ?? defaultReceivedMessageAnchorStyles?.color};
-        } 
+        }
         .ms_lcw_webchat_sent_message a:link,
         .ms_lcw_webchat_sent_message a:visited,
         .ms_lcw_webchat_sent_message a:hover,
