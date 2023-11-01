@@ -153,5 +153,16 @@ export interface ILiveChatWidgetLocalizedTexts {
      * {0} - File name
      * e.g. "{0} has been blocked because the file may contain a malware."
      */
-    MIDDLEWARE_BANNER_FILE_IS_MALICIOUS?: string
+    MIDDLEWARE_BANNER_FILE_IS_MALICIOUS?: string;
+
+    /**
+     * Success message, indicating the email address introduced has been registered to receive the transcript.
+     */
+    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS?: string;
+
+    /**
+     * Error message, indicating the email address introduced couldnt be registered.
+     * {0} - e-mail address introduced
+     */
+    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR?: string;
 }
