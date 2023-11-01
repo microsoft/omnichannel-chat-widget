@@ -26,8 +26,8 @@ export const defaultInputValidationPaneControlProps: IInputValidationPaneControl
 
     hideSendButton: false,
     enableSendButton: false,
-    sendButtonText: Texts.SendButtonText,
-    sendButtonAriaLabel: AriaLabels.Send,
+    sendButtonText: Texts.SaveButtonText,
+    sendButtonAriaLabel: AriaLabels.Save,
 
     hideCancelButton: false,
     cancelButtonText: Texts.CancelButtonText,

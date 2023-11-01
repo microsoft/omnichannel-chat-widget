@@ -26,7 +26,6 @@ export const presetTwoInputValidationPaneControlProps: IInputValidationPaneContr
     hideSendButton: false,
     enableSendButton: true,
     sendButtonText: Texts.SendButtonText,
-    sendButtonAriaLabel: AriaLabels.Send,
 
     hideCancelButton: false,
     cancelButtonText: Texts.CancelButtonText,

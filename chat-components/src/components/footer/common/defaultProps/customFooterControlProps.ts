@@ -19,14 +19,12 @@ export const customFooterControlProps: IFooterControlProps = {
         type: ButtonTypes.Icon,
         imageIconProps: { src: TranscriptDownloadIconBase64 },
         ariaLabel: AriaLabels.DownloadChatTranscript,
-        hideButtonTitle: true
     },
     emailTranscriptButtonProps: {
         id: Ids.EmailTranscriptButtonId,
         type: ButtonTypes.Icon,
         imageIconProps: { src: TranscriptEmailIconBase64 },
         ariaLabel: AriaLabels.EmailTranscript,
-        hideButtonTitle: true
     },
     audioNotificationButtonProps: {
         id: Ids.AudioNotificationButtonId,
@@ -34,6 +32,5 @@ export const customFooterControlProps: IFooterControlProps = {
         toggleAriaLabel: AriaLabels.TurnSoundOn,
         imageIconProps: { src: AudioNotificationOnIconBase64 },
         imageToggleIconProps: { src: AudioNotificationOffIconBase64 },
-        hideButtonTitle: true
     }
 };

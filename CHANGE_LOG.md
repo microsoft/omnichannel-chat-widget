@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 # Chat Widget
 
 ## [Unreleased]
+### Added
+- [A11Y] Notification banner when e-mail address is introduced to receive transcript after chat ends.
 
 ### Fixed
 
 - Fixed an issue where invoking `StartChat` event will create different chats across all tabs
-- Fix widget crashing due to `BroadcastChannel` not supported on `Safari` browsers below `15.4`
+- Fixed an issue where post chat does not load on first chat on a browser session
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.0.8](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.8)
 
 ## [1.4.0] - 2023-10-25
 
@@ -209,6 +215,17 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+## [1.0.9] 2023-10-31
+
+### Changed
+- Modify texts for email input validation
+
+## [1.0.8] - 2023-10-31
+
+### Added
+
+- Added tooltips for header and footer action bar buttons
 
 ## [1.0.7] - 2023-9-13
 

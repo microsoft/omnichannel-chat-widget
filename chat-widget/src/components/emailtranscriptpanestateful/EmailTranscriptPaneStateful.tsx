@@ -1,6 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useState } from "react";
-import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
+import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, formatTemplateString, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
 
 import { DimLayer } from "../dimlayer/DimLayer";
 import { IChatTranscriptBody } from "./interfaces/IChatTranscriptBody";
@@ -16,6 +16,7 @@ import { Regex } from "../../common/Constants";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
+import { defaultMiddlewareLocalizedTexts } from "../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) => {
     const initialTabIndexMap: Map<string, number> = new Map();
@@ -47,6 +48,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
             };
             try {
                 await chatSDK?.emailLiveChatTranscript(chatTranscriptBody);
+                NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressSaved, defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string);
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.EmailTranscriptSent,
                     Description: "Transcript sent to email successfully."
@@ -58,9 +60,10 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
                         exception: ex
                     }
                 });
+                const message = formatTemplateString(defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR as string, [email]);
                 NotificationHandler.notifyError(
                     NotificationScenarios.EmailTranscriptError,
-                    props?.bannerMessageOnError ?? "Email transcript to " + email + " failed.");
+                    props?.bannerMessageOnError ?? message);
             }
         },
         onCancel: () => {
