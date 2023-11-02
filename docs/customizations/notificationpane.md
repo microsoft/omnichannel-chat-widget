@@ -1,4 +1,6 @@
-# Loading Pane
+# Notification Pane
+
+> :pushpin: Customization of the notification pane is currently limited to private preview.
 
 ## Table of contents
 
@@ -15,6 +17,7 @@
     - [IChatDisconnectClassNames](#ichatdisconnectclassnames)
 - [Sample Scenarios](#sample-scenarios)
   - [Changing chat disconnect notification pane styling](#changing-chat-disconnect-notification-pane-styling)
+  - [Default chat disconnect notification view in accordion format](#default-chat-disconnect-notification-view-in-accordion-format)
 
 ## Interfaces
 
@@ -179,3 +182,22 @@ liveChatWidgetProps = {
 <img src="../.attachments/customizations-chat-disconnect-notification-pane.png" width="450">
 
 --------------------------------
+
+### Default chat disconnect notification view in accordion format
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    // no customizations necessary for this default
+    // customizing the accordion which renders the chat disconnect notification is not supported
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-chat-disconnect-default-in-accordion.png" width="450">
