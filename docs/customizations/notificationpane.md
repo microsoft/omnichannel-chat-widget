@@ -29,7 +29,7 @@ The top-level interface for customizing `NotificationPane`, containing all the s
 | - | - | - | - | - |
 | chatDisconnectNotificationProps     | [IChatDisconnectNotificationProps](#ichatdisconnectnotificationprops)     | No | Used for customizing the chat disconnect notification scenario | -
 
-### [INotificationPaneComponentOverrides ](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/notificationpane/interfaces/common/INotificationPaneComponentOverrides.ts)
+### [INotificationPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/notificationpane/interfaces/common/INotificationPaneComponentOverrides.ts)
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
