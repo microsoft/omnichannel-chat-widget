@@ -422,3 +422,19 @@ export const createFileAndDownload = (fileName: string, blobData: string, mimeTy
     aElement.click();
     document.body.removeChild(aElement);
 };
+
+/**
+ * 
+ * Replace placeholders with format {0}..{n} , in a string with values
+ * 
+ * @param template String with placeholders to be replaced
+ * @param values array of values to replace the placeholders
+ * @returns formatted string with replaced values
+ */
+// use of any for values as array of any type is passed
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const  formatTemplateString = (templateMessage : string, values : any) => {
+    return templateMessage.replace(/{(\d+)}/g, (match, index) => {
+        return typeof values[index] !== "undefined" ? values[index] : match;
+    });
+};
