@@ -218,6 +218,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed loading pane icon image fit
+
 ## [1.0.9] 2023-10-31
 
 ### Changed

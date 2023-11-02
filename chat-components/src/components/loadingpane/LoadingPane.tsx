@@ -1,4 +1,4 @@
-import { IIconStyles, ILabelStyles, ISpinnerStyles, IStackStyles, Icon, Label, Spinner, Stack } from "@fluentui/react";
+import { IIconStyles, IImageProps, ILabelStyles, ISpinnerStyles, IStackStyles, Icon, Label, Spinner, Stack } from "@fluentui/react";
 
 import { ILoadingPaneProps } from "./interfaces/ILoadingPaneProps";
 import React from "react";
@@ -24,7 +24,7 @@ function LoadingPane(props: ILoadingPaneProps) {
         root: Object.assign({}, defaultLoadingPaneIconStyles, props.styleProps?.iconStyleProps)
     };
 
-    const iconImageProps = props.styleProps?.iconImageProps ?? defaultLoadingPaneIconImageProps;
+    const iconImageProps: IImageProps = Object.assign({}, defaultLoadingPaneIconImageProps, props.styleProps?.iconImageProps);
 
     const titleStyles: ILabelStyles = {
         root: Object.assign({}, defaultLoadingPaneTitleStyles, props.styleProps?.titleStyleProps)
