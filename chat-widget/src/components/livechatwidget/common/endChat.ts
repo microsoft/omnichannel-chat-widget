@@ -19,6 +19,9 @@ import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
     try {
+        //Get new auth token again if chat continued for longer time, otherwise chatsdk throws 401 error for auth chats
+        await handleAuthenticationIfEnabled(props, chatSDK);
+
         // Use Case: If call is ongoing, end the call by simulating end call button click
         endVoiceVideoCallIfOngoing(chatSDK, dispatch);
 
