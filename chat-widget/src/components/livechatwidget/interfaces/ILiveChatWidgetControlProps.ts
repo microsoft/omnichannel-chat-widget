@@ -17,4 +17,5 @@ export interface ILiveChatWidgetControlProps {
     hideStartChatButton?: boolean;
     widgetInstanceId?: string | undefined;
     cacheTtlInMins?: number;
+    skipBroadcastChannelInit?: boolean;
 }
