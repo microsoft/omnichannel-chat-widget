@@ -105,8 +105,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     //Scrollbar styles
     const scrollbarProps: IScrollBarProps = Object.assign({}, defaultScrollBarProps, props?.scrollBarProps);
 
-    const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
-    BroadcastServiceInitialize(broadcastServiceChannelName);
+    // In case the broadcast channel is already initialized elsewhere; One tab can only hold 1 instance
+    if (props?.controlProps?.skipBroadcastChannelInit !== true) {
+        const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
+        BroadcastServiceInitialize(broadcastServiceChannelName);
+    }
     TelemetryTimers.LcwLoadToChatButtonTimer = createTimer();
 
     const widgetElementId: string = props.controlProps?.id || "oc-lcw";
