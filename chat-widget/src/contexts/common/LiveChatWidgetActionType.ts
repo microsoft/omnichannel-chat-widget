@@ -52,6 +52,19 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
+        - true: When error pane is shown
+        - false: When chat is functioning normally
+    */
+    SET_SHOW_ERROR_PANE,
+
+    /*
+        Parameters:
+        - string: The start chat failure type
+    */
+    SET_START_CHAT_FAILURE_TYPE,
+
+    /*
+        Parameters:
         - true: When chat is outside operating hours
         - false: When chat is not outside operatin hours
     */

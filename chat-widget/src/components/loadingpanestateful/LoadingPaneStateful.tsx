@@ -9,7 +9,7 @@ import { IStyle } from "@fluentui/react";
 import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralLoadingPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralLoadingPaneStyleProps";
-import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
+// import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
@@ -17,7 +17,7 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const LoadingPaneStateful = (props: any) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const { loadingPaneProps, startChatErrorPaneProps } = props;
+    const { loadingPaneProps } = props;
 
     const generalLoadingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, loadingPaneProps?.styleProps?.generalStyleProps);
     const loadingPaneStyleProps: ILoadingPaneStyleProps = {
@@ -25,9 +25,9 @@ export const LoadingPaneStateful = (props: any) => {
         generalStyleProps: generalLoadingPaneStyleProps
     };
     
-    const errorUIStyleProps: ILoadingPaneStyleProps = {
-        ...errorUILoadingPaneStyleProps
-    };
+    // const errorUIStyleProps: ILoadingPaneStyleProps = {
+    //     ...errorUILoadingPaneStyleProps
+    // };
 
     const loadingPaneControlProps: ILoadingPaneControlProps = {
         id: "oc-lcw-loading-pane",
@@ -35,15 +35,15 @@ export const LoadingPaneStateful = (props: any) => {
         ...loadingPaneProps?.controlProps
     };
 
-    const errorUIControlProps: ILoadingPaneControlProps = {
-        ...loadingPaneProps?.controlProps,
-        id: "oc-lcw-alert-pane",
-        dir: state.domainStates.globalDir,
-        titleText: startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.",
-        subtitleText: startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.",
-        hideSpinner: true,
-        hideSpinnerText: true
-    };
+    // const errorUIControlProps: ILoadingPaneControlProps = {
+    //     ...loadingPaneProps?.controlProps,
+    //     id: "oc-lcw-alert-pane",
+    //     dir: state.domainStates.globalDir,
+    //     titleText: startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.",
+    //     subtitleText: startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.",
+    //     hideSpinner: true,
+    //     hideSpinnerText: true
+    // };
     
     const { height, width } = useWindowDimensions();
 
@@ -59,8 +59,8 @@ export const LoadingPaneStateful = (props: any) => {
     return (
         <LoadingPane
             componentOverrides={loadingPaneProps?.componentOverrides}
-            controlProps={state.appStates.startChatFailed ? errorUIControlProps : loadingPaneControlProps}
-            styleProps={state.appStates.startChatFailed ? errorUIStyleProps : loadingPaneStyleProps}
+            controlProps={loadingPaneControlProps}
+            styleProps={loadingPaneStyleProps}
             windowWidth={width}
             windowHeight={height}
         />

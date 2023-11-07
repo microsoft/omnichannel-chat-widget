@@ -39,6 +39,11 @@ export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
         (state.appStates.conversationState === ConversationState.Loading);
 };
 
+export const shouldShowErrorPane = (state: ILiveChatWidgetContext) => {
+    return !state.appStates.isMinimized &&
+        (state.appStates.conversationState === ConversationState.Error);
+};
+
 export const shouldShowReconnectChatPane = (state: ILiveChatWidgetContext) => {
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState === ConversationState.ReconnectChat);

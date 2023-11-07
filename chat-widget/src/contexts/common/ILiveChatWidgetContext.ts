@@ -4,6 +4,7 @@ import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInter
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../../common/Constants";
+import { StartChatFailureType } from "./StartChatFailureType";
 
 export interface ILiveChatWidgetContext {
     domainStates: {
@@ -29,6 +30,7 @@ export interface ILiveChatWidgetContext {
         transcriptRequestId: string; //Contains request id for downloading transcript
         confirmationPaneConfirmedOptionClicked: boolean; //shows if confirmation pane already displayed
         confirmationState: ConfirmationState;
+        startChatFailureType: StartChatFailureType;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
@@ -55,6 +57,7 @@ export interface ILiveChatWidgetContext {
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show
+        showErrorPane: boolean; // true if the error pane should show
         showEmailTranscriptPane: boolean; // true if the email transcript pane should show
         disableVideoCall: boolean; // true when voice call is enabled
         showCallingPopup: boolean; // true when showing the calling container

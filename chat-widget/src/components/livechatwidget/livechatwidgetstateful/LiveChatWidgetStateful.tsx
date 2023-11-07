@@ -25,6 +25,7 @@ import {
     shouldShowChatButton,
     shouldShowConfirmationPane,
     shouldShowEmailTranscriptPane,
+    shouldShowErrorPane,
     shouldShowHeader,
     shouldShowLoadingPane,
     shouldShowOutOfOfficeHoursPane,
@@ -84,6 +85,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
+import ErrorPaneStateful from "../../errorpanestateful/ErrorPaneStateful";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -662,6 +664,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {!livechatProps.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(livechatProps.componentOverrides?.header) || <HeaderStateful headerProps={livechatProps.headerProps} outOfOfficeHeaderProps={livechatProps.outOfOfficeHeaderProps} endChat={endChatRelay} {...headerDraggableConfig} />)}
 
                         {!livechatProps.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.loadingPane) || <LoadingPaneStateful loadingPaneProps={livechatProps.loadingPaneProps} startChatErrorPaneProps={livechatProps.startChatErrorPaneProps} />)}
+
+                        {shouldShowErrorPane(state) && <ErrorPaneStateful {...livechatProps.postChatLoadingPaneProps} />}
 
                         {!livechatProps.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(livechatProps.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...livechatProps.outOfOfficeHoursPaneProps} />)}
 
