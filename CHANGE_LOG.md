@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue where invoking `StartChat` opens pre-chat survey during out of operation hours.
+
 ### Added
 
 - [A11Y] Notification banner when e-mail address is introduced to receive transcript after chat ends.
