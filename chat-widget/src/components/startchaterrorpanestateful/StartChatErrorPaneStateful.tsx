@@ -10,7 +10,6 @@ import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-// import { errorUILoadingPaneStyleProps } from "../loadingpanestateful/common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 import { StartChatFailureType } from "../../contexts/common/StartChatFailureType";
 import { defaultErrorPaneGeneralStyleProps } from "./common/defaultErrorPaneGeneralStyleProps";
 import { defaultErrorPaneTitleStyleProps } from "./common/defaultErrorPaneTitleStyleProps";
@@ -32,7 +31,6 @@ export const StartChatErrorPaneStateful = (props: any) => {
     const iconImageProps: IImageProps = Object.assign({}, defaultErrorPaneIconImageStyleProps, errorPaneProps.styleProps?.generalStyleProps);
 
     const errorUIStyleProps: ILoadingPaneStyleProps = {
-        // ...errorUILoadingPaneStyleProps,
         generalStyleProps: generalStyleProps,
         titleStyleProps: titleStyleProps,
         subtitleStyleProps: subtitleStyleProps,

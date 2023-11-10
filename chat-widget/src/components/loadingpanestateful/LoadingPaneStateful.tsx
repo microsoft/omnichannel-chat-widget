@@ -9,7 +9,6 @@ import { IStyle } from "@fluentui/react";
 import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralLoadingPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralLoadingPaneStyleProps";
-// import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
@@ -17,33 +16,18 @@ import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/ty
 
 export const LoadingPaneStateful = (loadingPaneProps: ILoadingPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    // const { loadingPaneProps } = props;
 
     const generalLoadingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, loadingPaneProps?.styleProps?.generalStyleProps);
     const loadingPaneStyleProps: ILoadingPaneStyleProps = {
         ...loadingPaneProps?.styleProps,
         generalStyleProps: generalLoadingPaneStyleProps
     };
-    
-    // const errorUIStyleProps: ILoadingPaneStyleProps = {
-    //     ...errorUILoadingPaneStyleProps
-    // };
 
     const loadingPaneControlProps: ILoadingPaneControlProps = {
         id: "oc-lcw-loading-pane",
         dir: state.domainStates.globalDir,
         ...loadingPaneProps?.controlProps
     };
-
-    // const errorUIControlProps: ILoadingPaneControlProps = {
-    //     ...loadingPaneProps?.controlProps,
-    //     id: "oc-lcw-alert-pane",
-    //     dir: state.domainStates.globalDir,
-    //     titleText: startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.",
-    //     subtitleText: startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.",
-    //     hideSpinner: true,
-    //     hideSpinnerText: true
-    // };
     
     const { height, width } = useWindowDimensions();
 
