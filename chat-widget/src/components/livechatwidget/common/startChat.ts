@@ -67,7 +67,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
     const parseToJson = false;
     const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
     const showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
-    const isOutOfOperatingHours = state?.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True";
+    const isOutOfOperatingHours = state?.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true";
 
     if (showPrechat) {
         if (isOutOfOperatingHours === true) {
