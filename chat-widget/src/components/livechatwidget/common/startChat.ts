@@ -11,8 +11,8 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
-import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
-import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
+// import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
+// import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
@@ -21,6 +21,7 @@ import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEv
 import { handleChatReconnect } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
+import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -96,10 +97,14 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         });
 
         const authClientFunction = getAuthClientFunction(chatConfig);
+        console.log("ADAD authClientFunction", authClientFunction);
+        console.log("ADAD getAuthToken", getAuthToken);
         if (getAuthToken && authClientFunction) {
             // set auth token to chat sdk before start chat
+            console.log("ADAD handling authSuccess");
             const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
             if (!authSuccess) {
+                console.log("ADAD throwing auth failure error");
                 // Replacing with error ui
                 throw new Error("Authentication was not successful");
             }
@@ -125,10 +130,12 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+            console.log("ADAD chatSDK.startChat() call");
             await chatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
             checkContactIdError(error);
+            console.log("ADAD catching startChat error");
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.StartChatMethodException,
                 ExceptionDetails: {
@@ -138,6 +145,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             isStartChatSuccessful = false;
             throw error;
         }
+
+        console.log("ADAD new adapter creation");
 
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
@@ -183,6 +192,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
     } catch (ex) {
+        console.log("ADAD raw exception");
+        console.log(ex);
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
@@ -195,15 +207,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             return;
         }
 
-        TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-            Event: TelemetryEvent.WidgetLoadFailed,
-            ExceptionDetails: {
-                Exception: `Widget load Failed: ${ex}`
-            },
-            ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
-        });
-        NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);
-        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
+        // NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex); -> not used logically
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true }); // ADAD TODO check definition of start chat failing
         if (!hideErrorUIPane) {
             // Set app state to failing start chat if hideErrorUI is not turned on
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -211,12 +216,52 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 Description: "Error UI Pane Loaded"
             });
         }
-        // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        switch ((ex as any).message) {
+            case "ChatTokenRetrievalFailure": {
+                console.log("ADAD dispatching start chat error pane -- auth 1");
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
+                dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Authentication });
+                TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.WidgetLoadComplete,
+                    Description: "Widget load complete. Widget authentication failed.",
+                    ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+                });
+                break;
+            }
+            case "Authentication was not successful": {
+                console.log("ADAD dispatching start chat error pane -- auth 2");
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
+                dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Authentication });
+                TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.WidgetLoadComplete,
+                    Description: "Widget load complete. Widget authentication failed.",
+                    ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+                });
+                break;
+            }
+            default: {
+                console.log("ADAD dispatching start chat error pane -- generic");
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
+                dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Generic });
+                TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.WidgetLoadFailed,
+                    ExceptionDetails: {
+                        Exception: `Widget load Failed: ${ex}`
+                    },
+                    ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+                });
+                break;
+            }
+        }
+
+        // // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
+        // // dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
         // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
         // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state 
-        if (isStartChatSuccessful === true) {
+        if (isStartChatSuccessful === true) { // ADAD TODO: does isStartChatSuccessful need to be true for the auth scenarios above?
             await forceEndChat(chatSDK);
         }
     } finally {

@@ -54,6 +54,7 @@ export interface ILiveChatWidgetProps {
     preChatSurveyPaneProps?: IPreChatSurveyPaneProps;
     proactiveChatPaneProps?: IProactiveChatPaneStatefulProps;
     reconnectChatPaneProps?: IReconnectChatPaneStatefulProps;
+    errorPaneProps?: ILoadingPaneProps;
     startChatErrorPaneProps?: IStartChatErrorPaneProps;
     styleProps?: ILiveChatWidgetStyleProps;
     telemetryConfig: ITelemetryConfig;
