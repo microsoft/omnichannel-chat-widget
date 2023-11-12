@@ -171,6 +171,7 @@ liveChatWidgetProps = {
         },
         styleProps: {
             generalStyleProps: {
+                minWidth: "60px",
                 width: "60px",
                 height: "60px"
             }
