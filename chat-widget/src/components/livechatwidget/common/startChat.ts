@@ -18,7 +18,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
-import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
+import { handleChatReconnect } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 
@@ -35,12 +35,10 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     widgetInstanceId = getWidgetCacheIdfromProps(props);
 
     // reconnect > chat from cache
-    if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
-        const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
-        // If chat reconnect has kicked in, just exit, else go next
-        if (!noValidReconnectId) {
-            return;
-        }
+    await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
+    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
+        return;
     }
 
     // Check if there is any active popout chats in cache
