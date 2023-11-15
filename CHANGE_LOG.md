@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed an issue where Chat disconnect banner message is not showing localized text.
 - Fixed an issue where invoking `StartChat` opens pre-chat survey during out of operation hours.
 
 ### Added
