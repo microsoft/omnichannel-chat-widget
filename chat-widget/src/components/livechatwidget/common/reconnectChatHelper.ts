@@ -21,9 +21,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 // Return value: should start normal chat flow when reconnect is enabled
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext): Promise<boolean> => {
-    if (!isReconnectEnabled(props.chatConfig) || isPersistentEnabled(props.chatConfig)) return true;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
 
     // Get chat reconnect context

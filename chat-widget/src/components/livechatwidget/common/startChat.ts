@@ -18,7 +18,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
-import { handleChatReconnect } from "./reconnectChatHelper";
+import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 
@@ -35,9 +35,11 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     widgetInstanceId = getWidgetCacheIdfromProps(props);
 
     // reconnect > chat from cache
-    const shouldStartChatNormally = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
-    if (!shouldStartChatNormally) {
-        return;
+    if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
+        const shouldStartChatNormally = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+        if (!shouldStartChatNormally) {
+            return;
+        }
     }
 
     // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
