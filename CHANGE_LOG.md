@@ -6,27 +6,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Fixed
-
-- Fixed an issue where Chat disconnect banner message is not showing localized text.
-- Fixed an issue where invoking `StartChat` opens pre-chat survey during out of operation hours.
-
 ### Added
 
-- [A11Y] Notification banner when e-mail address is introduced to receive transcript after chat ends.
+- [A11Y] Notification banner when e-mail address is introduced to receive transcript after chat ends
 - Added `skipBroadcastChannelInit` prop to avoid duplicate initialization on BroadcastChannel
 
 ### Fixed
 
 - Fixed an issue where invoking `StartChat` event will create different chats across all tabs
 - Fixed an issue where post chat does not load on first chat on a browser session
-- Fix widget crashing due to `BroadcastChannel` not supported on `Safari` browsers below `15.4`
+- Fixed widget crashing due to `BroadcastChannel` not supported on `Safari` browsers below `15.4`
+- Fixed an issue where Chat disconnect banner message is not showing localized text
+- Fixed an issue where invoking `StartChat` opens pre-chat survey during out of operation hours
+- Fixed an issue where new chat starts even after reconnectUrl is being used
 
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-components@1.0.8](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.8)
-- Uptake [@microsoft/omnichannel-chat-sdk@1.5.5](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.5.5)
-- Uptake [@microsoft/omnichannel-chat-sdk@1.5.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.5.6)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.5.7](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.5.7)
 
 ## [1.4.0] - 2023-10-25
 
