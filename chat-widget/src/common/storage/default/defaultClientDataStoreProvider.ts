@@ -1,19 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../telemetry/TelemetryConstants";
 
 import { IContextDataStore } from "../../interfaces/IContextDataStore";
 import { StorageType } from "../../Constants";
 import { TelemetryHelper } from "../../telemetry/TelemetryHelper";
 import { inMemoryDataStore } from "./defaultInMemoryDataStore";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
-export const isCookieAllowed = () => {
+export const isCookieAllowed = (isUsingExternalStorage: boolean) => {
     try {
         localStorage;
         sessionStorage;
         return true;
     } catch (error) {
-        if (!(window as any).TPCWarningLogged) {
+
+        (window as any).ExternalStorageInUse = isUsingExternalStorage;
+        // no display of TPC warning if alternate storage is defined
+        if (!isUsingExternalStorage && !(window as any).TPCWarningLogged) {
             console.warn("Third party cookies blocked.");
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.ThirdPartyCookiesBlocked,
@@ -25,9 +29,10 @@ export const isCookieAllowed = () => {
     }
 };
 
-export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage): IContextDataStore => {
+export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: StorageType = StorageType.localStorage, useExternalStorage: boolean): IContextDataStore => {
     let ttlInMs = 0;
-
+    const switchToExternalStorage = useExternalStorage || false;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     if (ttlInMs == 0) {
         ttlInMs = cacheTtlinMins * 60 * 1000;
     }
@@ -35,7 +40,7 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
     const dataStoreProvider = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setData: (key: any, data: any) => {
-            if (isCookieAllowed()) {
+            if (isCookieAllowed(switchToExternalStorage)) {
                 try {
                     if (key) {
                         const now = new Date();
@@ -59,17 +64,23 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
                     });
                 }
             } else {
+                const now = new Date();
+
                 const dataToCache = {
                     key: key,
                     data: data,
-                    type: (storageType == StorageType.localStorage ? "localStorage" : "sessionStorage")
+                    expiry: now.getTime() + ttlInMs,
                 };
-                parent.postMessage(dataToCache, "*");
+                //Emit the data to be cached to the external storage
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.ExternalSaveDataRequest,
+                    payload: dataToCache
+                });
             }
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         getData: (key: any) => {
-            if (isCookieAllowed()) {
+            if (isCookieAllowed(switchToExternalStorage)) {
                 let item;
                 if (storageType === StorageType.localStorage) {
                     item = localStorage.getItem(key);
@@ -91,13 +102,27 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
                     return itemInJson.data;
                 }
             } else {
-                // get data from in memory db when cookie is disabled
-                return inMemoryDataStore().getData(key);
+                
+                const result = inMemoryDataStore().getData(key);
+                let itemInJson = undefined;
+                if (result !== null && result !== undefined) {
+                    itemInJson = JSON.parse(result);
+                    const now = new Date();
+                    // compare the expiry time of the item with the current time
+                    if (now.getTime() > itemInJson.expiry) {
+                        // If the item is expired, delete the item from storage
+                        // and return null
+                        localStorage.removeItem(key);
+                        return null;
+                    }
+                    return itemInJson.data;
+                }
+                return itemInJson;
             }
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         removeData: (key: any) => {
-            if (isCookieAllowed()) {
+            if (isCookieAllowed(switchToExternalStorage)) {
                 if (key) {
                     if (storageType === StorageType.localStorage) {
                         return localStorage.removeItem(key);

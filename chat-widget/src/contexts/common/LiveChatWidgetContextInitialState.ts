@@ -5,13 +5,30 @@ import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontain
 import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
 import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
+import { inMemoryDataStore } from "../../common/storage/default/defaultInMemoryDataStore";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
     const widgetCacheId = getWidgetCacheIdfromProps(props);
     const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
     const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
-    const initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType).getData(widgetCacheId);
+    const alternateStorage = props?.liveChatWidgetExternalStorage;
+    let initialState;
+
+    try {
+        if (alternateStorage?.useExternalStorage && alternateStorage?.cachedData) {
+            initialState = alternateStorage.cachedData;
+            // lets save the value in the in-memory cache
+            if (initialState){
+                inMemoryDataStore().setData(widgetCacheId, initialState);
+            }
+        } else {
+            initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType, false).getData(widgetCacheId);
+        }
+    } catch (e) {
+        initialState = null;
+        console.error("Error while getting initial state from cache", e);
+    }
 
     if (!isNullOrUndefined(initialState)) {
         const initialStateFromCache: ILiveChatWidgetContext = JSON.parse(initialState);
