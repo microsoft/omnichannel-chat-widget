@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.0] - 2023-11-21
+
 ### Added
 
 - [A11Y] Notification banner when e-mail address is introduced to receive transcript after chat ends
