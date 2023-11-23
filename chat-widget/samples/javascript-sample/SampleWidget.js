@@ -77,13 +77,15 @@ const main = async () => {
         BroadcastService.postMessage(setCustomContextEvent);
     };
 
-    const startProactiveChat = (notificationUIConfig, showPrechat, inNewWindow) => {
+    const startProactiveChat = () => {
         const startProactiveChatEvent = {
             eventName: "StartProactiveChat",
             payload: {
-                bodyTitle: (notificationUIConfig && notificationUIConfig.message) ? notificationUIConfig.message : "Hello Customer",
-                showPrechat: showPrechat,
-                inNewWindow: inNewWindow
+                notificationConfig: {
+                    message: "Hi, how may I help you?" // title text
+                },
+                enablePreChat: true, // enablePreChat
+                inNewWindow: false
             }
         };
         BroadcastService.postMessage(startProactiveChatEvent);
