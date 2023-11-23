@@ -115,11 +115,12 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         if (getAuthToken && authClientFunction) {
             // set auth token to chat sdk before start chat
             console.log("ADAD handling authSuccess");
+            // ADAD UndefinedAuthToken when handleAuthentication returns false, then throws below error
             const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
             if (!authSuccess) {
                 console.log("ADAD throwing auth failure error");
                 // Replacing with error ui
-                throw new Error("Authentication was not successful");
+                throw new Error("Authentication was not successful"); // UndefinedAuthToken, AuthTokenProviderFailure, UndefinedAuthTokenProvider 
             }
         }
 
@@ -207,6 +208,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     } catch (ex) {
         console.log("ADAD raw exception");
         console.log(ex);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        console.log((ex as any).message);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
@@ -245,6 +248,17 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             }
             case "Authentication was not successful": {
                 console.log("ADAD dispatching start chat error pane -- auth 2");
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
+                dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Authentication });
+                TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.WidgetLoadComplete,
+                    Description: "Widget load complete. Widget authentication failed.",
+                    ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+                });
+                break;
+            }
+            case "InvalidAuthentication": {
+                console.log("ADAD dispatching start chat error pane -- InvalidAuthentication");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
                 dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Authentication });
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {

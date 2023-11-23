@@ -17,7 +17,8 @@ const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undef
     const authClientFunction = getAuthClientFunction(chatConfig);
     if (getAuthToken && authClientFunction) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
-        const token = await getAuthToken(authClientFunction);
+        // ADAD technically AuthTokenProviderFailure covered here too, exception will be raised to be caught outside + lcw:error, and returns empty token TODO validate
+        const token = await getAuthToken(authClientFunction); // ADAD UndefinedAuthTokenProvider covered here, exception will be raised to be caught outside + lcw:error, and returns empty token
         if (!isNullOrEmptyString(token)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (chatSDK as any).setAuthTokenProvider(async () => {
