@@ -235,7 +235,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         switch ((ex as any).message) {
-            case "ChatTokenRetrievalFailure": {
+            case "ChatTokenRetrievalFailure": { // ADAD TODO remove
                 console.log("ADAD dispatching start chat error pane -- auth 1");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
                 dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Authentication });
@@ -246,7 +246,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 });
                 break;
             }
-            case "Authentication was not successful": {
+            case "Authentication was not successful": { // ADAD TODO consolidate with below
                 console.log("ADAD dispatching start chat error pane -- auth 2");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
                 dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Authentication });
