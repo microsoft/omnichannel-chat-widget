@@ -2,7 +2,6 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { ChatSDKError, Constants, LiveWorkItemState } from "../../../common/Constants";
 import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
-
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
@@ -21,6 +20,7 @@ import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEv
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
+import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -99,6 +99,15 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     const chatConfig = props?.chatConfig;
     const getAuthToken = props?.getAuthToken;
     const hideErrorUIPane = props?.controlProps?.hideErrorUIPane;
+
+    if (state?.appStates.conversationState === ConversationState.Closed) {
+
+        // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
+        chatSDK.requestId = uuidv4();
+        chatSDK.chatToken = {};
+        chatSDK.reconnectId = null;
+    }
+
     try {
         //Start widget load timer
         TelemetryTimers.WidgetLoadTimer = createTimer();
@@ -228,7 +237,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
         // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
-        // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state 
+        // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state
         if (isStartChatSuccessful === true) {
             await forceEndChat(chatSDK);
         }
