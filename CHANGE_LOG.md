@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Clear ChatSDK's internal `liveChatContext` when `conversationState` is set to `Closed` on `startChat()`
+
 ## [1.5.0] - 2023-11-21
 
 ### Added
