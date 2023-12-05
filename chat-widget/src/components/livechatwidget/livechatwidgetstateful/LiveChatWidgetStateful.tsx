@@ -565,9 +565,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Handle Chat disconnect cases
     useEffect(() => {
-        if (state.appStates.chatDisconnectEventReceived) {
-            handleChatDisconnect(props, state, setWebChatStyles);
-        }
+        handleChatDisconnect(props, state, setWebChatStyles);
     }, [state.appStates.chatDisconnectEventReceived]);
 
     const initiateEndChatOnBrowserUnload = () => {
