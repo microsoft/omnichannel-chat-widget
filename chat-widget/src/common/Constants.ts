@@ -222,11 +222,6 @@ export enum ElementType {
     CallingContainerSDK = "CallingContainerSDK"
 }
 
-export enum ChatSDKError {
-    WidgetUseOutsideOperatingHour = "WidgetUseOutsideOperatingHour",
-    AuthContactIdNotFoundFailure = "AuthContactIdNotFoundFailure"
-}
-
 export enum EnvironmentVersion {
     prod = "prod",
     dogfood = "df",

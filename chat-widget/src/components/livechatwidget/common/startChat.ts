@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { ChatSDKError, Constants, LiveWorkItemState } from "../../../common/Constants";
+import { Constants, LiveWorkItemState } from "../../../common/Constants";
 import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
@@ -10,8 +10,6 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
-import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
-import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
@@ -20,7 +18,8 @@ import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEv
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
-import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
+import { logWidgetLoadComplete, handleStartChatError } from "./startChatErrorHandler";
+import { chatSDKStateCleanUp } from "./endChat";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -98,14 +97,10 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     let isStartChatSuccessful = false;
     const chatConfig = props?.chatConfig;
     const getAuthToken = props?.getAuthToken;
-    const hideErrorUIPane = props?.controlProps?.hideErrorUIPane;
 
     if (state?.appStates.conversationState === ConversationState.Closed) {
-
         // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
-        chatSDK.requestId = uuidv4();
-        chatSDK.chatToken = {};
-        chatSDK.reconnectId = null;
+        chatSDKStateCleanUp(chatSDK);
     }
 
     try {
@@ -179,11 +174,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.WidgetLoadComplete,
-                Description: "Widget load complete. Persisted state retrieved",
-                ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
-            });
+            logWidgetLoadComplete("Persisted state retrieved");
             await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
             return;
         }
@@ -192,11 +183,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
         dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
 
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.WidgetLoadComplete,
-            Description: "Widget load complete",
-            ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
-        });
+        logWidgetLoadComplete();
 
         // Set post chat context in state
         // Commenting this for now as post chat context is fetched during end chat
@@ -205,36 +192,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
     } catch (ex) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
-            dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.WidgetLoadComplete,
-                Description: "Widget load complete. Widget is OOOH.",
-                ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
-            });
-            return;
-        }
-
-        TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-            Event: TelemetryEvent.WidgetLoadFailed,
-            ExceptionDetails: {
-                Exception: `Widget load Failed: ${ex}`
-            },
-            ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
-        });
-        NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);
-        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
-        if (!hideErrorUIPane) {
-            // Set app state to failing start chat if hideErrorUI is not turned on
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.ErrorUIPaneLoaded,
-                Description: "Error UI Pane Loaded"
-            });
-        }
-        // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+        handleStartChatError(dispatch, chatSDK, props ,ex);
 
         // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
         // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state
