@@ -37,6 +37,7 @@ export const LoadingPaneStateful = (loadingPaneProps: ILoadingPaneProps) => {
         if (firstElement && firstElement[0]) {
             firstElement[0].focus();
         }
+        console.log("ADAD loadingPaneControlProps", loadingPaneControlProps);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.LoadingPaneLoaded, Description: "Loading pane loaded." });
     }, []);
     
