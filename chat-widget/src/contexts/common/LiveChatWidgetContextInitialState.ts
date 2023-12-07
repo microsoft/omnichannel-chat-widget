@@ -5,7 +5,6 @@ import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontain
 import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
 import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
-import { StartChatFailureType } from "./StartChatFailureType";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
@@ -38,7 +37,6 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             transcriptRequestId: "",
             confirmationPaneConfirmedOptionClicked: false,
             confirmationState: ConfirmationState.NotSet,
-            startChatFailureType: StartChatFailureType.None,
         },
         appStates: {
             conversationState: ConversationState.Closed,

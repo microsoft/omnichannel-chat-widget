@@ -10,7 +10,6 @@ import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import { StartChatFailureType } from "../../contexts/common/StartChatFailureType";
 import { defaultErrorPaneGeneralStyleProps } from "./common/defaultErrorPaneGeneralStyleProps";
 import { defaultErrorPaneTitleStyleProps } from "./common/defaultErrorPaneTitleStyleProps";
 import { defaultErrorPaneSubtitleStyleProps } from "./common/defaultErrorPaneSubtitleStyleProps";
@@ -38,15 +37,10 @@ export const StartChatErrorPaneStateful = (props: any) => {
         iconImageProps: iconImageProps,
     };
 
-    console.log("ADAD state.domainStates.startChatFailureType", state.domainStates.startChatFailureType);
+    // console.log("ADAD state.domainStates.startChatFailureType", state.domainStates.startChatFailureType);
 
-    let errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.";
-    let errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.";
-
-    if (state.domainStates.startChatFailureType === StartChatFailureType.Authentication) {
-        errorPaneTitleText = startChatErrorPaneProps?.controlProps?.authTitleText ?? "Chat authentication has failed.";
-        errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.authSubtitleText ?? "Please check authentication setup and try again.";
-    }
+    const errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.";
+    const errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.";
 
     const errorUIControlProps: ILoadingPaneControlProps = {
         id: "oc-lcw-start-chat-error-pane",

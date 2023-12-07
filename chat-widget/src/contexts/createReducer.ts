@@ -9,7 +9,6 @@ import { IRenderingMiddlewareProps } from "../components/webchatcontainerstatefu
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
 import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../common/Constants";
 import { PostChatSurveyMode } from "../components/postchatsurveypanestateful/enums/PostChatSurveyMode";
-import { StartChatFailureType } from "./common/StartChatFailureType";
 
 export const createReducer = () => {
     const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): ILiveChatWidgetContext => {
@@ -74,15 +73,6 @@ export const createReducer = () => {
                     appStates: {
                         ...state.appStates,
                         startChatFailed: action.payload as boolean
-                    }
-                };
-
-            case LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE:
-                return {
-                    ...state,
-                    domainStates: {
-                        ...state.domainStates,
-                        startChatFailureType: action.payload as StartChatFailureType
                     }
                 };
 
