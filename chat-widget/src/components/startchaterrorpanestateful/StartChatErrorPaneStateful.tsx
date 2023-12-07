@@ -23,11 +23,11 @@ export const StartChatErrorPaneStateful = (props: any) => {
 
     console.log("ADAD StartChatErrorPaneStateful props", props);
     
-    const generalStyleProps: IStyle = Object.assign({}, defaultErrorPaneGeneralStyleProps, errorPaneProps.styleProps?.generalStyleProps);
-    const titleStyleProps: IStyle = Object.assign({}, defaultErrorPaneTitleStyleProps, errorPaneProps.styleProps?.titleStyleProps);
-    const subtitleStyleProps: IStyle = Object.assign({}, defaultErrorPaneSubtitleStyleProps, errorPaneProps.styleProps?.subtitleStyleProps);
-    const iconStyleProps: IStyle = Object.assign({}, defaultErrorPaneIconStyleProps, errorPaneProps.styleProps?.iconStyleProps);
-    const iconImageProps: IImageProps = Object.assign({}, defaultErrorPaneIconImageStyleProps, errorPaneProps.styleProps?.iconImageProps);
+    const generalStyleProps: IStyle = Object.assign({}, defaultErrorPaneGeneralStyleProps, errorPaneProps?.styleProps?.generalStyleProps);
+    const titleStyleProps: IStyle = Object.assign({}, defaultErrorPaneTitleStyleProps, errorPaneProps?.styleProps?.titleStyleProps);
+    const subtitleStyleProps: IStyle = Object.assign({}, defaultErrorPaneSubtitleStyleProps, errorPaneProps?.styleProps?.subtitleStyleProps);
+    const iconStyleProps: IStyle = Object.assign({}, defaultErrorPaneIconStyleProps, errorPaneProps?.styleProps?.iconStyleProps);
+    const iconImageProps: IImageProps = Object.assign({}, defaultErrorPaneIconImageStyleProps, errorPaneProps?.styleProps?.iconImageProps);
 
     const errorUIStyleProps: ILoadingPaneStyleProps = {
         generalStyleProps: generalStyleProps,
