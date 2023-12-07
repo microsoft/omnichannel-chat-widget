@@ -68,7 +68,7 @@ export const StartChatErrorPaneStateful = (props: any) => {
     
     return (
         <LoadingPane
-            componentOverrides={errorPaneProps.componentOverrides}
+            componentOverrides={errorPaneProps?.componentOverrides}
             controlProps={errorUIControlProps}
             styleProps={errorUIStyleProps}
         />
