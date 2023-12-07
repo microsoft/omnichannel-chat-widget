@@ -241,14 +241,14 @@ liveChatWidgetProps = {
 ...
 liveChatWidgetProps = {
     ...liveChatWidgetProps,
-    headerProps: {
-        controlProps: {
-            headerIconProps: {
-                src: "https://msft-lcw-trial.azureedge.net/public/resources/microsoft.jpg"
+    webChatContainerProps: {
+        renderingMiddlewareProps: {
+            userMessageStyleProps: {
+                fontSize: "20px"
             },
-            headerTitleProps: {
-                text: "Contoso Coffee"
-            },
+            systemMessageStyleProps: {
+                fontSize: "20px"
+            }
         }
     }
 };
