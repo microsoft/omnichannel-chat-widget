@@ -13,7 +13,6 @@ export const shouldShowProactiveChatPane = (state: ILiveChatWidgetContext) => {
 };
 
 export const shouldShowHeader = (state: ILiveChatWidgetContext) => {
-    console.log("ADAD shouldShowHeader conversationState", state.appStates.conversationState);
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState !== ConversationState.Closed &&
             state.appStates.conversationState !== ConversationState.ProactiveChat);

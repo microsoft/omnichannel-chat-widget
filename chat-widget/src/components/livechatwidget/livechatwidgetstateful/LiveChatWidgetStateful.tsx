@@ -122,7 +122,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     let activeCachedChatExist = false;
 
     const setOptionalParams = () => {
-        console.log("ADAD state?.appStates?.conversationState setOptionalParams", state?.appStates?.conversationState);
         if (!isUndefinedOrEmpty(state.appStates?.reconnectId)) {
             activeCachedChatExist = true;
             optionalParams = { reconnectId: state?.appStates?.reconnectId };
@@ -134,7 +133,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             activeCachedChatExist = false;
             optionalParams = {};
         }
-        console.log("ADAD optionalParams", optionalParams);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -153,11 +151,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         let isChatValid = false;
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
-            console.log("ADAD dispatching loading state after activeCachedChatExist");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-
-            console.log("ADAD state activeCachedChatExist", state);
-            console.log("ADAD localState activeCachedChatExist", localState);
 
             if (localState) {
                 localState.appStates.conversationState = ConversationState.Loading;
@@ -166,10 +160,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
             if (isChatValid === true) {
-                console.log("ADAD isChatValid-TRUE activeCachedChatExist");
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
-                    console.log("ADAD initStartChat activeCachedChatExist");
                     await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
                 }
                 return;
@@ -177,19 +169,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         if (isChatValid === false) {
-            console.log("ADAD isChatValid-FALSE");
-            console.log("ADAD state activeCachedChatExist", state);
-            console.log("ADAD localState activeCachedChatExist", localState);
             if (localState) {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
-                    // ADAD TODO test error pane with prechat scenarios
                     await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 }
                 return;
             } else {
-                // ADAD TODO test error pane with popout scenarios
                 // To avoid showing blank screen in popout
                 if (state?.appStates?.hideStartChatButton === false) {
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
@@ -246,7 +233,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         setOptionalParams();
 
         // Unauth chat
-        console.log("ADAD state?.appStates?.hideStartChatButton blank hook", state?.appStates?.hideStartChatButton); // ADAD TODO: why is this unauth?
         if (state?.appStates?.hideStartChatButton === false) {
             startChat(props);
         }
@@ -450,7 +436,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, []);
 
     useEffect(() => {
-        console.log("ADAD state.appStates.conversationState hook", state.appStates.conversationState);
         // On new message
         if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {

@@ -109,17 +109,12 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         });
 
         const authClientFunction = getAuthClientFunction(chatConfig);
-        console.log("ADAD authClientFunction", authClientFunction);
-        console.log("ADAD getAuthToken", getAuthToken);
         if (getAuthToken && authClientFunction) {
             // set auth token to chat sdk before start chat
-            console.log("ADAD handling authSuccess");
-            // ADAD UndefinedAuthToken when handleAuthentication returns false, then throws below error
             const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
             if (!authSuccess) {
-                console.log("ADAD throwing auth failure error");
                 // Replacing with error ui
-                throw new Error("Authentication was not successful"); // UndefinedAuthToken, AuthTokenProviderFailure, UndefinedAuthTokenProvider 
+                throw new Error("Authentication was not successful");
             }
         }
 
@@ -143,12 +138,10 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
-            console.log("ADAD chatSDK.startChat() call");
             await chatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
             checkContactIdError(error);
-            console.log("ADAD catching startChat error");
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.StartChatMethodException,
                 ExceptionDetails: {
@@ -158,8 +151,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             isStartChatSuccessful = false;
             throw error;
         }
-
-        console.log("ADAD new adapter creation");
 
         // New adapter creation
         const newAdapter = await createAdapter(chatSDK);
@@ -205,11 +196,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
     } catch (ex) {
-        console.log("ADAD raw exception");
-        console.log(ex);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        console.log((ex as any).message);
-
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((ex as any).message === ChatSDKError.WidgetUseOutsideOperatingHour) {
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
@@ -230,8 +216,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
         });
 
-        NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex); // -> not used logically
-        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true }); // ADAD TODO check definition of start chat failing
+        NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
         if (!hideErrorUIPane) {
             // Set app state to failing start chat if hideErrorUI is not turned on
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -244,7 +230,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
         // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state 
-        if (isStartChatSuccessful === true) { // ADAD TODO: does isStartChatSuccessful need to be true for the auth scenarios above?
+        if (isStartChatSuccessful === true) {
             await forceEndChat(chatSDK);
         }
     } finally {

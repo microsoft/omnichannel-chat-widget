@@ -20,8 +20,6 @@ import { defaultErrorPaneIconImageStyleProps } from "./common/defaultErrorPaneIc
 export const StartChatErrorPaneStateful = (props: any) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { errorPaneProps, startChatErrorPaneProps } = props;
-
-    console.log("ADAD StartChatErrorPaneStateful props", props);
     
     const generalStyleProps: IStyle = Object.assign({}, defaultErrorPaneGeneralStyleProps, errorPaneProps?.styleProps?.generalStyleProps);
     const titleStyleProps: IStyle = Object.assign({}, defaultErrorPaneTitleStyleProps, errorPaneProps?.styleProps?.titleStyleProps);
@@ -37,8 +35,6 @@ export const StartChatErrorPaneStateful = (props: any) => {
         iconImageProps: iconImageProps,
     };
 
-    // console.log("ADAD state.domainStates.startChatFailureType", state.domainStates.startChatFailureType);
-
     const errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.";
     const errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.";
 
@@ -52,17 +48,12 @@ export const StartChatErrorPaneStateful = (props: any) => {
         ...props?.controlProps,
     };
 
-    console.log("ADAD errorUIStyleProps", errorUIStyleProps);
-
-    console.log("ADAD errorUIControlProps", errorUIControlProps);
-
     // Move focus to the first button
     useEffect(() => {
         const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${state.domainStates.widgetElementId}`);
         if (firstElement && firstElement[0]) {
             firstElement[0].focus();
         }
-        console.log("ADAD new error pane loaded!!!");
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.StartChatErrorPaneLoaded, Description: "Start chat error pane loaded." });
     }, []);
     
