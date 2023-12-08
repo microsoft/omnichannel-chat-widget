@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue, where after the agent end the chat and C2 sees the disconnect banner after toggling, refreshing the browser does not show the message box.
+- Clear ChatSDK's internal `liveChatContext` when `conversationState` is set to `Closed` on `startChat()`
+
 ## [1.5.0] - 2023-11-21
 
 ### Added
