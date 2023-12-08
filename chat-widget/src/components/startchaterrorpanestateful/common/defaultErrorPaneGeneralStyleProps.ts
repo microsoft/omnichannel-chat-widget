@@ -8,5 +8,5 @@ export const defaultErrorPaneGeneralStyleProps: IStyle = {
     top: "0%",
     borderRadius: "0 0 4px 4px",
     borderWidth: "0px",
-    backgroundColor: "#315FA2"
+    backgroundColor: "#FFFFFF"
 };
