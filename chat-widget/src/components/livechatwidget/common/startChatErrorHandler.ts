@@ -14,7 +14,7 @@ import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any) => {
+export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
     if (!ex) {
         logWidgetLoadFailed();
         return;
@@ -25,6 +25,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             logWidgetLoadComplete("Widget is OOOH.");
+            return;
         } else if (ex.message === ChatSDKErrorName.PersistentChatConversationRetrievalFailure ||
             ex.message === ChatSDKErrorName.ConversationInitializationFailure ||
             ex.message === ChatSDKErrorName.ChatTokenRetrievalFailure ||
@@ -67,6 +68,12 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
     }
     // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+
+    // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
+    // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state
+    if (isStartChatSuccessful === true) {
+        forceEndChat(chatSDK);
+    }
 };
 
 const logWidgetLoadFailed = (ex?: ChatSDKError) => {
@@ -113,4 +120,15 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
     });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const forceEndChat = (chatSDK: any) => {
+    TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+        Event: TelemetryEvent.WidgetLoadFailed,
+        ExceptionDetails: {
+            Exception: "SessionInit was successful, but widget load failed."
+        }
+    });
+    chatSDK?.endChat();
 };

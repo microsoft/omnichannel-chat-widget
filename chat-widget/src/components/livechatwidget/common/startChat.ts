@@ -192,28 +192,11 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
     } catch (ex) {
-        handleStartChatError(dispatch, chatSDK, props ,ex);
-
-        // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
-        // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state
-        if (isStartChatSuccessful === true) {
-            await forceEndChat(chatSDK);
-        }
+        handleStartChatError(dispatch, chatSDK, props, ex, isStartChatSuccessful);
     } finally {
         optionalParams = {};
         widgetInstanceId = "";
     }
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const forceEndChat = async (chatSDK: any) => {
-    TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-        Event: TelemetryEvent.WidgetLoadFailed,
-        ExceptionDetails: {
-            Exception: "SessionInit was successful, but widget load failed."
-        }
-    });
-    chatSDK?.endChat();
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
