@@ -320,3 +320,13 @@ export class AriaTelemetryConstants {
         "crm19.omnichannelengagementhub.com"
     ];
 }
+
+export class WidgetLoadTelemetryMessage {
+    public static readonly OOOHMessage = "Widget is OOOH";
+    public static readonly PersistedStateRetrievedMessage = "Persisted state retrieved";
+}
+
+export class WidgetLoadCustomErrorString {
+    public static readonly AuthenticationFailedErrorString = "Authentication was not successful";
+    public static readonly NetworkErrorString = "Network Error";
+}

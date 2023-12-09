@@ -12,6 +12,7 @@ import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcon
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
+import { WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
@@ -24,7 +25,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         if (ex.message === ChatSDKErrorName.WidgetUseOutsideOperatingHour) {
             dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
-            logWidgetLoadComplete("Widget is OOOH.");
+            logWidgetLoadComplete(WidgetLoadTelemetryMessage.OOOHMessage);
             return;
         } else if (ex.message === ChatSDKErrorName.PersistentChatConversationRetrievalFailure ||
             ex.message === ChatSDKErrorName.ConversationInitializationFailure ||
@@ -52,8 +53,8 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         } else {
             logWidgetLoadFailed(ex);
         }
-    } else if (ex.message === "Authentication was not successful" ||
-        ex.message === "Network Error") {
+    } else if (ex.message === WidgetLoadCustomErrorString.AuthenticationFailedErrorString ||
+        ex.message === WidgetLoadCustomErrorString.NetworkErrorString) {
         logWidgetLoadCompleteWithError(ex);
     }
 

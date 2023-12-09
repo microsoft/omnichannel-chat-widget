@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { Constants, LiveWorkItemState } from "../../../common/Constants";
+import { Constants, LiveWorkItemState, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
 import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
@@ -117,8 +117,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             // set auth token to chat sdk before start chat
             const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
             if (!authSuccess) {
-                // Replacing with error ui
-                throw new Error("Authentication was not successful");
+                throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
             }
         }
 
@@ -174,7 +173,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
-            logWidgetLoadComplete("Persisted state retrieved");
+            logWidgetLoadComplete(WidgetLoadTelemetryMessage.PersistedStateRetrievedMessage);
             await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
             return;
         }
