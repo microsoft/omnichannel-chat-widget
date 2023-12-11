@@ -58,7 +58,6 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         logWidgetLoadCompleteWithError(ex);
     }
 
-    NotificationHandler.notifyError(NotificationScenarios.Connection, "Start Chat Failed: " + ex);
     dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
     if (!props?.controlProps?.hideErrorUIPane) {
         // Set app state to failing start chat if hideErrorUI is not turned on
