@@ -304,6 +304,12 @@ export class NotificationPaneConstants {
     public static readonly ChromeCloseIconName = "ChromeClose";
 }
 
+export class StartChatErrorPaneConstants {
+    public static readonly DefaultStartChatErrorPaneId = "oc-lcw-start-chat-error-pane";
+    public static readonly DefaultStartChatErrorTitleText = "We are unable to load chat at this time.";
+    public static readonly DefaultStartChatErrorSubtitleText = "Please try again later.";
+}
+
 export class AriaTelemetryConstants {
     // Aria Endpoint for different environment types.
     public static readonly GERMANY_ENDPOINT: string = "https://de.pipe.aria.microsoft.com/Collector/3.0/";

@@ -16,6 +16,7 @@ import { defaultErrorPaneSubtitleStyleProps } from "./common/defaultErrorPaneSub
 import { defaultErrorPaneIconStyleProps } from "./common/defaultErrorPaneIconStyleProps";
 import { defaultErrorPaneIconImageStyleProps } from "./common/defaultErrorPaneIconImageProps";
 import { IStartChatErrorPaneProps } from "./interfaces/IStartChatErrorPaneProps";
+import { StartChatErrorPaneConstants } from "../../common/Constants";
 
 export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatErrorPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -34,11 +35,11 @@ export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatEr
         iconImageProps: iconImageProps,
     };
 
-    const errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.";
-    const errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.";
+    const errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorTitleText;
+    const errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorSubtitleText;
 
     const errorUIControlProps: ILoadingPaneControlProps = {
-        id: "oc-lcw-start-chat-error-pane",
+        id: StartChatErrorPaneConstants.DefaultStartChatErrorPaneId,
         dir: state.domainStates.globalDir,
         titleText: errorPaneTitleText,
         subtitleText: errorPaneSubtitleText,
