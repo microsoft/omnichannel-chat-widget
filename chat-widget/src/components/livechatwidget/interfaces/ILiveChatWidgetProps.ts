@@ -15,7 +15,7 @@ import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types
 import { IPreChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneProps";
 import { IProactiveChatPaneStatefulProps } from "../../proactivechatpanestateful/interfaces/IProactiveChatPaneStatefulProps";
 import { IReconnectChatPaneStatefulProps } from "../../reconnectchatpanestateful/interfaces/IReconnectChatPaneStatefulProps";
-import { IStartChatErrorPaneProps } from "../../loadingpanestateful/interfaces/IStartChatErrorPaneProps";
+import { IStartChatErrorPaneProps } from "../../startchaterrorpanestateful/interfaces/IStartChatErrorPaneProps";
 import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetryConfig";
 import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
@@ -54,7 +54,6 @@ export interface ILiveChatWidgetProps {
     preChatSurveyPaneProps?: IPreChatSurveyPaneProps;
     proactiveChatPaneProps?: IProactiveChatPaneStatefulProps;
     reconnectChatPaneProps?: IReconnectChatPaneStatefulProps;
-    errorPaneProps?: ILoadingPaneProps;
     startChatErrorPaneProps?: IStartChatErrorPaneProps;
     styleProps?: ILiveChatWidgetStyleProps;
     telemetryConfig: ITelemetryConfig;

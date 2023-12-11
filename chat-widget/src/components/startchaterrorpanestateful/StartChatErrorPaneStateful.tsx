@@ -15,17 +15,16 @@ import { defaultErrorPaneTitleStyleProps } from "./common/defaultErrorPaneTitleS
 import { defaultErrorPaneSubtitleStyleProps } from "./common/defaultErrorPaneSubtitleStyleProps";
 import { defaultErrorPaneIconStyleProps } from "./common/defaultErrorPaneIconStyleProps";
 import { defaultErrorPaneIconImageStyleProps } from "./common/defaultErrorPaneIconImageProps";
+import { IStartChatErrorPaneProps } from "./interfaces/IStartChatErrorPaneProps";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const StartChatErrorPaneStateful = (props: any) => {
+export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatErrorPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const { errorPaneProps, startChatErrorPaneProps } = props;
     
-    const generalStyleProps: IStyle = Object.assign({}, defaultErrorPaneGeneralStyleProps, errorPaneProps?.styleProps?.generalStyleProps);
-    const titleStyleProps: IStyle = Object.assign({}, defaultErrorPaneTitleStyleProps, errorPaneProps?.styleProps?.titleStyleProps);
-    const subtitleStyleProps: IStyle = Object.assign({}, defaultErrorPaneSubtitleStyleProps, errorPaneProps?.styleProps?.subtitleStyleProps);
-    const iconStyleProps: IStyle = Object.assign({}, defaultErrorPaneIconStyleProps, errorPaneProps?.styleProps?.iconStyleProps);
-    const iconImageProps: IImageProps = Object.assign({}, defaultErrorPaneIconImageStyleProps, errorPaneProps?.styleProps?.iconImageProps);
+    const generalStyleProps: IStyle = Object.assign({}, defaultErrorPaneGeneralStyleProps, startChatErrorPaneProps?.styleProps?.generalStyleProps);
+    const titleStyleProps: IStyle = Object.assign({}, defaultErrorPaneTitleStyleProps, startChatErrorPaneProps?.styleProps?.titleStyleProps);
+    const subtitleStyleProps: IStyle = Object.assign({}, defaultErrorPaneSubtitleStyleProps, startChatErrorPaneProps?.styleProps?.subtitleStyleProps);
+    const iconStyleProps: IStyle = Object.assign({}, defaultErrorPaneIconStyleProps, startChatErrorPaneProps?.styleProps?.iconStyleProps);
+    const iconImageProps: IImageProps = Object.assign({}, defaultErrorPaneIconImageStyleProps, startChatErrorPaneProps?.styleProps?.iconImageProps);
 
     const errorUIStyleProps: ILoadingPaneStyleProps = {
         generalStyleProps: generalStyleProps,
@@ -45,7 +44,7 @@ export const StartChatErrorPaneStateful = (props: any) => {
         subtitleText: errorPaneSubtitleText,
         hideSpinner: true,
         hideSpinnerText: true,
-        ...props?.controlProps,
+        ...startChatErrorPaneProps?.controlProps,
     };
 
     // Move focus to the first button
@@ -59,7 +58,7 @@ export const StartChatErrorPaneStateful = (props: any) => {
     
     return (
         <LoadingPane
-            componentOverrides={errorPaneProps?.componentOverrides}
+            componentOverrides={startChatErrorPaneProps?.componentOverrides}
             controlProps={errorUIControlProps}
             styleProps={errorUIStyleProps}
         />
