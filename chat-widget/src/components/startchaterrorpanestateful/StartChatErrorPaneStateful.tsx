@@ -10,22 +10,22 @@ import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import { defaultErrorPaneGeneralStyleProps } from "./common/defaultErrorPaneGeneralStyleProps";
-import { defaultErrorPaneTitleStyleProps } from "./common/defaultErrorPaneTitleStyleProps";
-import { defaultErrorPaneSubtitleStyleProps } from "./common/defaultErrorPaneSubtitleStyleProps";
-import { defaultErrorPaneIconStyleProps } from "./common/defaultErrorPaneIconStyleProps";
-import { defaultErrorPaneIconImageStyleProps } from "./common/defaultErrorPaneIconImageProps";
+import { defaultStartChatErrorPaneGeneralStyleProps } from "./common/defaultStartChatErrorPaneGeneralStyleProps";
+import { defaultStartChatErrorPaneTitleStyleProps } from "./common/defaultStartChatErrorPaneTitleStyleProps";
+import { defaultStartChatErrorPaneSubtitleStyleProps } from "./common/defaultStartChatErrorPaneSubtitleStyleProps";
+import { defaultStartChatErrorPaneIconStyleProps } from "./common/defaultStartChatErrorPaneIconStyleProps";
+import { defaultStartChatErrorPaneIconImageStyleProps } from "./common/defaultStartChatErrorPaneIconImageProps";
 import { IStartChatErrorPaneProps } from "./interfaces/IStartChatErrorPaneProps";
 import { StartChatErrorPaneConstants } from "../../common/Constants";
 
 export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatErrorPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     
-    const generalStyleProps: IStyle = Object.assign({}, defaultErrorPaneGeneralStyleProps, startChatErrorPaneProps?.styleProps?.generalStyleProps);
-    const titleStyleProps: IStyle = Object.assign({}, defaultErrorPaneTitleStyleProps, startChatErrorPaneProps?.styleProps?.titleStyleProps);
-    const subtitleStyleProps: IStyle = Object.assign({}, defaultErrorPaneSubtitleStyleProps, startChatErrorPaneProps?.styleProps?.subtitleStyleProps);
-    const iconStyleProps: IStyle = Object.assign({}, defaultErrorPaneIconStyleProps, startChatErrorPaneProps?.styleProps?.iconStyleProps);
-    const iconImageProps: IImageProps = Object.assign({}, defaultErrorPaneIconImageStyleProps, startChatErrorPaneProps?.styleProps?.iconImageProps);
+    const generalStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneGeneralStyleProps, startChatErrorPaneProps?.styleProps?.generalStyleProps);
+    const titleStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneTitleStyleProps, startChatErrorPaneProps?.styleProps?.titleStyleProps);
+    const subtitleStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneSubtitleStyleProps, startChatErrorPaneProps?.styleProps?.subtitleStyleProps);
+    const iconStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneIconStyleProps, startChatErrorPaneProps?.styleProps?.iconStyleProps);
+    const iconImageProps: IImageProps = Object.assign({}, defaultStartChatErrorPaneIconImageStyleProps, startChatErrorPaneProps?.styleProps?.iconImageProps);
 
     const errorUIStyleProps: ILoadingPaneStyleProps = {
         generalStyleProps: generalStyleProps,

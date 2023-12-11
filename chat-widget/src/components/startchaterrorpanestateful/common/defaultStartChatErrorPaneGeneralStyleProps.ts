@@ -1,6 +1,6 @@
 import { IStyle } from "@fluentui/react";
 
-export const defaultErrorPaneGeneralStyleProps: IStyle = {
+export const defaultStartChatErrorPaneGeneralStyleProps: IStyle = {
     position: "initial",
     width: "100%",
     height: "100%",

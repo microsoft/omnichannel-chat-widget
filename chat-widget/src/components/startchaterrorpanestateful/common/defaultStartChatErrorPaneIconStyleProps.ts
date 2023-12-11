@@ -1,6 +1,6 @@
 import { IStyle } from "@fluentui/react";
 
-export const defaultErrorPaneIconStyleProps: IStyle = {
+export const defaultStartChatErrorPaneIconStyleProps: IStyle = {
     display: "flex",
     order: 1,
     alignSelf: "auto",
