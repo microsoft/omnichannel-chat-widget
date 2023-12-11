@@ -1,5 +1,5 @@
 import { IPreChatSurveyPaneToggleInputStyles } from "../../../interfaces/IPreChatSurveyPaneToggleInputStyles";
 
 export const defaultPreChatSurveyPaneToggleInputStyles: IPreChatSurveyPaneToggleInputStyles = {
-    alignItems: "center",
+    alignItems: "baseline"
 };
