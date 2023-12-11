@@ -180,9 +180,9 @@ export const chatSDKStateCleanUp = (chatSDK: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chatSDK as any).requestId = uuidv4();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (chatSDK as any) = {};
+    (chatSDK as any).chatToken = {};
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (chatSDK as any) = null;
+    (chatSDK as any).reconnectId = null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
