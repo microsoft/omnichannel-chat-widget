@@ -104,6 +104,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     }
 
     try {
+        // Clear disconnect state on start chat
+        state?.appStates?.chatDisconnectEventReceived && dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
+
         //Start widget load timer
         TelemetryTimers.WidgetLoadTimer = createTimer();
 
