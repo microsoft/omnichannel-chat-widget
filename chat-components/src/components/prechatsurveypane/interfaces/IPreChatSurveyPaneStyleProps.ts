@@ -1,6 +1,7 @@
 import { IPreChatSurveyPaneButtonStyles } from "./IPreChatSurveyPaneButtonStyles";
 import { IStyle } from "@fluentui/react";
 import { IPreChatSurveyPaneElementStyles } from "./IPreChatSurveyPaneElementStyles";
+import { IPreChatSurveyPaneToggleInputStyles } from "./IPreChatSurveyPaneToggleInputStyles";
 
 export interface IPreChatSurveyPaneStyleProps {
     generalStyleProps?: IStyle;
@@ -10,4 +11,5 @@ export interface IPreChatSurveyPaneStyleProps {
     customTextInputStyleProps?: IPreChatSurveyPaneElementStyles;
     customMultilineTextInputStyleProps?: IPreChatSurveyPaneElementStyles;
     customMultichoiceInputStyleProps?: IPreChatSurveyPaneElementStyles;
+    customToggleInputStyleProps?: IPreChatSurveyPaneToggleInputStyles;
 }

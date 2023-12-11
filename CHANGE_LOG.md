@@ -231,6 +231,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Add ability to customize `PreChatSurveyPane`'s toggle inputs using `IPreChatSurveyPaneToggleInputStyles` & Use `baseline` by default
+
 ### Fixed
 
 - Fixed loading pane icon image fit
