@@ -12,7 +12,6 @@ import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/Teleme
 import { Constants } from "../../../../../common/Constants";
 import { DirectLineActivityType } from "../../enums/DirectLineActivityType";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
-import { MessageTypes } from "../../enums/MessageType";
 import React from "react";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
@@ -72,12 +71,6 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
     const [card] = args;
     if (card.activity) {
         if (card.activity.from?.role === DirectLineSenderRole.Channel) {
-            if (card.activity.channelData?.type === MessageTypes.Thread) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.IC3ThreadUpdateEventReceived,
-                    Description: "IC3 ThreadUpdateEvent Received"
-                });
-            }
             return () => false;
         }
 

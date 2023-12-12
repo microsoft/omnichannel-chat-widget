@@ -15,6 +15,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
+import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
@@ -142,7 +143,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
     }
 };
 
-export const callingStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const callingStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     dispatch({ type: LiveChatWidgetActionType.SHOW_CALLING_CONTAINER, payload: false });
     dispatch({ type: LiveChatWidgetActionType.SET_INCOMING_CALL, payload: true });
     dispatch({ type: LiveChatWidgetActionType.DISABLE_VIDEO_CALL, payload: true });
@@ -150,14 +151,14 @@ export const callingStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetActi
     dispatch({ type: LiveChatWidgetActionType.DISABLE_REMOTE_VIDEO, payload: true });
 };
 
-export const endChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const endChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // Need to clear these states immediately when chat ended from OC.
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
 };
 
-export const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
     // dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
@@ -172,6 +173,16 @@ export const closeChatStateCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAc
             proactiveChatInNewWindow: false
         }
     });
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const chatSDKStateCleanUp = (chatSDK: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (chatSDK as any).requestId = uuidv4();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (chatSDK as any).chatToken = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (chatSDK as any).reconnectId = null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
