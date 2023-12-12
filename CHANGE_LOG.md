@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Updated exception details on chat start to include http status code for all `WidgetLoadFailed` and `WidgetLoadComplete` events with error 
+- Updated exception details on chat start to include http status code for all `WidgetLoadFailed` and `WidgetLoadComplete` events with error
 
 ## [1.5.0] - 2023-11-21
 
@@ -235,6 +235,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.0] 2023-12-12
 ### Added
 
 - Add ability to customize `PreChatSurveyPane`'s toggle inputs using `IPreChatSurveyPaneToggleInputStyles` & Use `baseline` by default
