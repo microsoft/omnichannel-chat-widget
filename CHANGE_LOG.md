@@ -13,7 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Updated a few exception's details on chat start
+- Updated exception details on chat start to include http status code for all `WidgetLoadFailed` and `WidgetLoadComplete` events with error 
 
 ## [1.5.0] - 2023-11-21
 
