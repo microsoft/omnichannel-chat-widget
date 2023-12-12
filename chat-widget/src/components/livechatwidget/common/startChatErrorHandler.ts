@@ -7,8 +7,6 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { callingStateCleanUp, endChatStateCleanUp, closeChatStateCleanUp, chatSDKStateCleanUp } from "./endChat";
-import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
-import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
@@ -21,43 +19,40 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         return;
     }
 
-    if (ex instanceof ChatSDKError) {
-        if (ex.message === ChatSDKErrorName.WidgetUseOutsideOperatingHour) {
-            dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
-            logWidgetLoadComplete(WidgetLoadTelemetryMessage.OOOHMessage);
-            return;
-        } else if (ex.message === ChatSDKErrorName.PersistentChatConversationRetrievalFailure ||
-            ex.message === ChatSDKErrorName.ConversationInitializationFailure ||
-            ex.message === ChatSDKErrorName.ChatTokenRetrievalFailure ||
-            ex.message === ChatSDKErrorName.UninitializedChatSDK) {
-            if (ex.httpResponseStatusCode === 400) {
-                logWidgetLoadFailed(ex);
-            } else {
-                logWidgetLoadCompleteWithError(ex);
-            }
-        } else if (ex.message === ChatSDKErrorName.InvalidConversation ||
-            ex.message === ChatSDKErrorName.ClosedConversation) {
-            logWidgetLoadCompleteWithError(ex);
-
-            // Reset all internal states
-            callingStateCleanUp(dispatch);
-            endChatStateCleanUp(dispatch);
-            closeChatStateCleanUp(dispatch);
-            chatSDKStateCleanUp(chatSDK);
-            DataStoreManager.clientDataStore?.removeData(getWidgetCacheIdfromProps(props));
-
-            // Starts new chat
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-            return;
-        } else {
-            logWidgetLoadFailed(ex);
-        }
-    } else if (ex.message === WidgetLoadCustomErrorString.AuthenticationFailedErrorString ||
+    // Handle internal or misc errors
+    if (ex.message === WidgetLoadCustomErrorString.AuthenticationFailedErrorString ||
         ex.message === WidgetLoadCustomErrorString.NetworkErrorString) {
         logWidgetLoadCompleteWithError(ex);
     }
 
+    // Handle ChatSDK errors
+    if (ex instanceof ChatSDKError) {
+        switch (ex.message) {
+            case ChatSDKErrorName.WidgetUseOutsideOperatingHour:
+                handleWidgetUseOutsideOperatingHour(dispatch);
+                return;
+            case ChatSDKErrorName.PersistentChatConversationRetrievalFailure:
+                handlePersistentChatConversationRetrievalFailure(ex);
+                break;
+            case ChatSDKErrorName.ConversationInitializationFailure:
+                handleConversationInitializationFailure(ex);
+                break;
+            case ChatSDKErrorName.ChatTokenRetrievalFailure:
+                handleChatTokenRetrievalFailure(ex);
+                break;
+            case ChatSDKErrorName.UninitializedChatSDK:
+                handleUninitializedChatSDK(ex);
+                break;
+            case ChatSDKErrorName.InvalidConversation:
+            case ChatSDKErrorName.ClosedConversation:
+                handleInvalidOrClosedConversation(dispatch, chatSDK, props, ex);
+                return;
+            default:
+                logWidgetLoadFailed(ex);
+        }
+    }
+
+    // Show the error UI pane
     dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
     if (!props?.controlProps?.hideErrorUIPane) {
         // Set app state to failing start chat if hideErrorUI is not turned on
@@ -131,4 +126,57 @@ const forceEndChat = (chatSDK: any) => {
         }
     });
     chatSDK?.endChat();
+};
+
+const handleWidgetUseOutsideOperatingHour = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
+    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
+    logWidgetLoadComplete(WidgetLoadTelemetryMessage.OOOHMessage);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handlePersistentChatConversationRetrievalFailure = (ex: any) => {
+    if (ex.httpResponseStatusCode === 400) {
+        logWidgetLoadFailed(ex);
+    } else {
+        logWidgetLoadCompleteWithError(ex);
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleConversationInitializationFailure = (ex: any) => {
+    if (ex.httpResponseStatusCode === 400) {
+        logWidgetLoadFailed(ex);
+    } else {
+        logWidgetLoadCompleteWithError(ex);
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleChatTokenRetrievalFailure = (ex: any) => {
+    if (ex.httpResponseStatusCode === 400) {
+        logWidgetLoadFailed(ex);
+    } else {
+        logWidgetLoadCompleteWithError(ex);
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleUninitializedChatSDK = (ex: any) => {
+    logWidgetLoadCompleteWithError(ex);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleInvalidOrClosedConversation = (dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any) => {
+    logWidgetLoadCompleteWithError(ex);
+
+    // Reset all internal states
+    callingStateCleanUp(dispatch);
+    endChatStateCleanUp(dispatch);
+    closeChatStateCleanUp(dispatch);
+    chatSDKStateCleanUp(chatSDK);
+    DataStoreManager.clientDataStore?.removeData(getWidgetCacheIdfromProps(props));
+
+    // Starts new chat
+    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
 };
