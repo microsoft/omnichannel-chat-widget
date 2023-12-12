@@ -18,7 +18,7 @@ import {
     isUndefinedOrEmpty
 } from "../../../common/utils";
 import { defaultClientDataStoreProvider, isCookieAllowed } from "../../../common/storage/default/defaultClientDataStoreProvider";
-import { endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
+import { chatSDKStateCleanUp, endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
@@ -84,7 +84,6 @@ import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
-import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
@@ -405,12 +404,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 endChatStateCleanUp(dispatch);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (chatSDK as any).requestId = uuidv4();
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (chatSDK as any).chatToken = {};
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (chatSDK as any).reconnectId = null;
+                chatSDKStateCleanUp(chatSDK);
                 return;
             }
         });

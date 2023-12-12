@@ -2241,10 +2241,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.295.tgz#d3c8d7ab186f422727ba112d6ebe5fe8e41051d9"
   integrity sha512-W+IzEBw8a6LOOfRJM02dTT7BDZijxm+Z7lhtOAz1+y9vQm1Kdz9jlAO+qCEKsfxtUOmKilW8DIRqFw2aUgKeGg==
 
-"@microsoft/ocsdk@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.4.1.tgz#a379457f09ec149eb3bf35bf7f8187b86cfe9b67"
-  integrity sha512-3W8joowPyf2qVNBG7FQjGugNLBT34gVQB4KtF9G3PEbIKiJyVOdgCHl91foNMU0u82rZHxUIg7grfbWxskkfJw==
+"@microsoft/ocsdk@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.4.2.tgz#7cc9740308b6d24dfeb775844d9f5e5070fa5157"
+  integrity sha512-x2cMpdkKB5psuS6ChE6w9R7TygSeJwXJBJTo8iGD0BEo03JbV85hHJUL7xaV2oBHAvCpwl5CcWUQez1ZnE/3mQ==
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@types/node" "^12.20.26"
@@ -2268,14 +2268,14 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@1.5.7":
-  version "1.5.7"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.5.7.tgz#cac075f4ac85406062c82adbca681a17ec769f9b"
-  integrity sha512-HySzoKCPXGbciVPySSBl3gGyXjSC8NlymZwiU0h94gV1iPoZok3mhT/gSqJn+dn2jlnwU4sDa9Jui4Jgj9VY7Q==
+"@microsoft/omnichannel-chat-sdk@1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.6.1.tgz#14469c185ab086798144acf375adf60429a29fff"
+  integrity sha512-/Ros5D5fki5p6aoIPspapKNng5Jd3QGY/a1DlYxTUXwE9yg2ErgF1awi+SQh2lDu12rPgzcv6kDZOjhZECq4FA==
   dependencies:
     "@azure/communication-chat" "1.1.1"
     "@azure/communication-common" "1.1.0"
-    "@microsoft/ocsdk" "^0.4.1"
+    "@microsoft/ocsdk" "^0.4.2"
     "@microsoft/omnichannel-amsclient" "^0.1.6"
     "@microsoft/omnichannel-ic3core" "^0.1.3"
 
