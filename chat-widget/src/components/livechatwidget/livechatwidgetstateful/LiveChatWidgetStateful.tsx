@@ -203,6 +203,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
         state.domainStates.confirmationPaneConfirmedOptionClicked = false;
         state.domainStates.confirmationState = ConfirmationState.NotSet;
         setupClientDataStore();
@@ -664,7 +665,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(livechatProps.componentOverrides?.header) || <HeaderStateful headerProps={livechatProps.headerProps} outOfOfficeHeaderProps={livechatProps.outOfOfficeHeaderProps} endChat={endChatRelay} {...headerDraggableConfig} />)}
 
-                        {!livechatProps.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.loadingPane) || <LoadingPaneStateful {...livechatProps.loadingPaneProps} />)}
+                        {!livechatProps.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.loadingPane) || <LoadingPaneStateful loadingPaneProps={livechatProps.loadingPaneProps} startChatErrorPaneProps={livechatProps.startChatErrorPaneProps} />)}
 
                         {!livechatProps.controlProps?.hideErrorUIPane && shouldShowStartChatErrorPane(state) && (decodeComponentString(livechatProps.componentOverrides?.startChatErrorPane) || <StartChatErrorPaneStateful {...livechatProps.startChatErrorPaneProps} />)}
 

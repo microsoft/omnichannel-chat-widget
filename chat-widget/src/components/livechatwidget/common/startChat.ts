@@ -238,8 +238,13 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             });
         }
 
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
-
+        if (hideErrorUIPane) {
+            // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+        } else {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
+        }
+        
         // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
         // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state
         if (isStartChatSuccessful === true) {

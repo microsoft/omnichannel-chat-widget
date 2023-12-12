@@ -12,10 +12,12 @@ import { defaultGeneralLoadingPaneStyleProps } from "./common/defaultStyleProps/
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
+import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 
-export const LoadingPaneStateful = (loadingPaneProps: ILoadingPaneProps) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const LoadingPaneStateful = (props: any) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const { loadingPaneProps, startChatErrorPaneProps } = props;
 
     const generalLoadingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, loadingPaneProps?.styleProps?.generalStyleProps);
     const loadingPaneStyleProps: ILoadingPaneStyleProps = {
@@ -23,10 +25,24 @@ export const LoadingPaneStateful = (loadingPaneProps: ILoadingPaneProps) => {
         generalStyleProps: generalLoadingPaneStyleProps
     };
 
+    const errorUIStyleProps: ILoadingPaneStyleProps = {
+        ...errorUILoadingPaneStyleProps
+    };
+
     const loadingPaneControlProps: ILoadingPaneControlProps = {
         id: "oc-lcw-loading-pane",
         dir: state.domainStates.globalDir,
         ...loadingPaneProps?.controlProps
+    };
+
+    const errorUIControlProps: ILoadingPaneControlProps = {
+        ...loadingPaneProps?.controlProps,
+        id: "oc-lcw-alert-pane",
+        dir: state.domainStates.globalDir,
+        titleText: startChatErrorPaneProps?.controlProps?.titleText ?? "We are unable to load chat at this time.",
+        subtitleText: startChatErrorPaneProps?.controlProps?.subtitleText ?? "Please try again later.",
+        hideSpinner: true,
+        hideSpinnerText: true
     };
     
     const { height, width } = useWindowDimensions();
@@ -43,8 +59,8 @@ export const LoadingPaneStateful = (loadingPaneProps: ILoadingPaneProps) => {
     return (
         <LoadingPane
             componentOverrides={loadingPaneProps?.componentOverrides}
-            controlProps={loadingPaneControlProps}
-            styleProps={loadingPaneStyleProps}
+            controlProps={state.appStates.startChatFailed ? errorUIControlProps : loadingPaneControlProps}
+            styleProps={state.appStates.startChatFailed ? errorUIStyleProps : loadingPaneStyleProps}
             windowWidth={width}
             windowHeight={height}
         />
