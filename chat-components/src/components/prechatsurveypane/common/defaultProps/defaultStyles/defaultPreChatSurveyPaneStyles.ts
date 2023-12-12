@@ -5,6 +5,7 @@ import { defaultPreChatSurveyPaneGeneralStyles } from "./defaultPreChatSurveyPan
 import { defaultPreChatSurveyPaneMultilineTextInputStyles } from "./defaultPreChatSurveyPaneMultilineTextInputStyles";
 import { defaultPreChatSurveyPaneTextInputStyles } from "./defaultPreChatSurveyPaneTextInputStyles";
 import { defaultPreChatSurveyPaneMultichoiceInputStyles } from "./defaultPreChatSurveyPaneMultichoiceInputStyles";
+import { defaultPreChatSurveyPaneToggleInputStyles } from "./defaultPreChatSurveyPaneToggleInputStyles";
 
 export const defaultPreChatSurveyPaneStyles: IPreChatSurveyPaneStyleProps = {
     generalStyleProps: defaultPreChatSurveyPaneGeneralStyles,
@@ -12,5 +13,6 @@ export const defaultPreChatSurveyPaneStyles: IPreChatSurveyPaneStyleProps = {
     adaptiveCardContainerStyleProps: defaultPreChatSurveyPaneACContainerStyles,
     customTextInputStyleProps: defaultPreChatSurveyPaneTextInputStyles,
     customMultilineTextInputStyleProps: defaultPreChatSurveyPaneMultilineTextInputStyles,
-    customMultichoiceInputStyleProps: defaultPreChatSurveyPaneMultichoiceInputStyles
+    customMultichoiceInputStyleProps: defaultPreChatSurveyPaneMultichoiceInputStyles,
+    customToggleInputStyleProps: defaultPreChatSurveyPaneToggleInputStyles
 };
