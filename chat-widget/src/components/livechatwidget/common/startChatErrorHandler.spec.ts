@@ -6,7 +6,6 @@ import { WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../.
 import { ChatSDKError, ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { ConversationState } from "../../../contexts/common/ConversationState";
-import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 
 describe("startChatErrorHandler unit test", () => {
     it("handleStartChatError should log failed event and return if exception is undefined", () => {
