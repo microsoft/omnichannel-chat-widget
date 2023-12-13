@@ -77,6 +77,13 @@ const main = async () => {
         BroadcastService.postMessage(setCustomContextEvent);
     };
 
+    const endChat = () => {
+        const endChatEvent = {
+            eventName: "InitiateEndChat"
+        };
+        BroadcastService.postMessage(endChatEvent);
+    };
+
     const startProactiveChat = () => {
         const startProactiveChatEvent = {
             eventName: "StartProactiveChat",
@@ -94,6 +101,7 @@ const main = async () => {
     window["switchConfig"] = switchConfig;
     window["startProactiveChat"] = startProactiveChat;
     window["startChat"] = startChat;
+    window["endChat"] = endChat;
     window["setCustomContext"] = setCustomContext;
     switchConfig(await getCustomizationJson());
 };

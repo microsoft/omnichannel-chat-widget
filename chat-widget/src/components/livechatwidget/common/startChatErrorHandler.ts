@@ -123,11 +123,12 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const forceEndChat = (chatSDK: any) => {
-    TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-        Event: TelemetryEvent.WidgetLoadFailed,
-        ExceptionDetails: {
-            Exception: "SessionInit was successful, but widget load failed."
-        }
+    TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+        Event: TelemetryEvent.PrepareEndChat,
+        Description: "SessionInit was successful, but widget load failed. Ending chat to avoid ghost chats in OC."
+    });
+    TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+        Event: TelemetryEvent.EndChatSDKCall
     });
     chatSDK?.endChat();
 };

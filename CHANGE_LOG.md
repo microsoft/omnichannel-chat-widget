@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Enabled customizations for the start chat error pane by adding new `IStartChatErrorPaneProps` interface
+- Added `PrepareEndChat` Telemetry Event to identify end chat workflow
 
 ### Fixed
 
