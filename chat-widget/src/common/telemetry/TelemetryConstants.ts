@@ -129,6 +129,7 @@ export enum TelemetryEvent {
     ConfirmationCancelButtonClicked = "ConfirmationCancelButtonClicked",
     ConfirmationConfirmButtonClicked = "ConfirmationConfirmButtonClicked",
     LoadingPaneLoaded = "LoadingPaneLoaded",
+    StartChatErrorPaneLoaded = "StartChatErrorPaneLoaded",
     EmailTranscriptLoaded = "EmailTranscriptLoaded",
     OutOfOfficePaneLoaded = "OutOfOfficePaneLoaded",
     ConfirmationPaneLoaded = "ConfirmationPaneLoaded",

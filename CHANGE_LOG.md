@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Enabled customizations for the start chat error pane by adding new `IStartChatErrorPaneProps` interface
+
 ### Fixed
 
 - Fixed an issue, where after the agent end the chat and C2 sees the disconnect banner after toggling, refreshing the browser does not show the message box.

@@ -63,6 +63,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         },
         uiStates: {
             showConfirmationPane: false,
+            showStartChatErrorPane: false,
             showEmailTranscriptPane: false,
             showCallingPopup: false,
             isIncomingCall: true,

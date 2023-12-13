@@ -9,10 +9,10 @@ import { IStyle } from "@fluentui/react";
 import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralLoadingPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralLoadingPaneStyleProps";
-import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const LoadingPaneStateful = (props: any) => {
@@ -24,7 +24,7 @@ export const LoadingPaneStateful = (props: any) => {
         ...loadingPaneProps?.styleProps,
         generalStyleProps: generalLoadingPaneStyleProps
     };
-    
+
     const errorUIStyleProps: ILoadingPaneStyleProps = {
         ...errorUILoadingPaneStyleProps
     };

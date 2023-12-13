@@ -25,6 +25,7 @@ import {
     shouldShowChatButton,
     shouldShowConfirmationPane,
     shouldShowEmailTranscriptPane,
+    shouldShowStartChatErrorPane,
     shouldShowHeader,
     shouldShowLoadingPane,
     shouldShowOutOfOfficeHoursPane,
@@ -83,6 +84,7 @@ import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
+import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -200,6 +202,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
         state.domainStates.confirmationPaneConfirmedOptionClicked = false;
         state.domainStates.confirmationState = ConfirmationState.NotSet;
         setupClientDataStore();
@@ -657,6 +660,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {!livechatProps.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(livechatProps.componentOverrides?.header) || <HeaderStateful headerProps={livechatProps.headerProps} outOfOfficeHeaderProps={livechatProps.outOfOfficeHeaderProps} endChat={endChatRelay} {...headerDraggableConfig} />)}
 
                         {!livechatProps.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.loadingPane) || <LoadingPaneStateful loadingPaneProps={livechatProps.loadingPaneProps} startChatErrorPaneProps={livechatProps.startChatErrorPaneProps} />)}
+
+                        {!livechatProps.controlProps?.hideErrorUIPane && shouldShowStartChatErrorPane(state) && (decodeComponentString(livechatProps.componentOverrides?.startChatErrorPane) || <StartChatErrorPaneStateful {...livechatProps.startChatErrorPaneProps} />)}
 
                         {!livechatProps.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(livechatProps.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...livechatProps.outOfOfficeHoursPaneProps} />)}
 

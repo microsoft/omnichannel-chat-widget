@@ -55,14 +55,18 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
     // Show the error UI pane
     dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
     if (!props?.controlProps?.hideErrorUIPane) {
+        // New flow of leveraging ConversationState.Error
         // Set app state to failing start chat if hideErrorUI is not turned on
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.ErrorUIPaneLoaded,
             Description: "Error UI Pane Loaded"
         });
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
+    } else {
+        // Old flow of leveraging ConversationState.Loading
+        // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     }
-    // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
-    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
     // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
     // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state
