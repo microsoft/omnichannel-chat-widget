@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue, where after the agent end the chat and C2 sees the disconnect banner after toggling, refreshing the browser does not show the message box.
 - Clear ChatSDK's internal `liveChatContext` when `conversationState` is set to `Closed` on `startChat()`
+- A11Y fix for JAWS screen reader, not able to read/navigate messages when scan mode is activated
 
 ### Changed
 

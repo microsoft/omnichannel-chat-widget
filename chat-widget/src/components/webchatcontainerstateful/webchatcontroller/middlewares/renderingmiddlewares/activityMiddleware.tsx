@@ -47,7 +47,7 @@ const handleSystemMessage = (next: any, args: any[], card: any, systemMessageSty
 
     // eslint-disable-next-line react/display-name
     return () => (
-        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="true" dangerouslySetInnerHTML={{ __html: escapeHtml(card.activity.text)}}/>
+        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" dangerouslySetInnerHTML={{ __html: escapeHtml(card.activity.text)}}/>
     );
 };
 
@@ -93,7 +93,7 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
             return (...renderArgs: any) => (
                 <div
                     className={card.activity.from.role === DirectLineSenderRole.User ? Constants.sentMessageClassName : Constants.receivedMessageClassName}
-                    style={userMessageStyles} aria-hidden="true">
+                    style={userMessageStyles}>
                     {next(...args)(...renderArgs)}
                 </div>
             );
