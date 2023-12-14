@@ -55,6 +55,7 @@ export interface ILiveChatWidgetContext {
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show
+        showStartChatErrorPane: boolean; // true if the start chat error pane should show
         showEmailTranscriptPane: boolean; // true if the email transcript pane should show
         disableVideoCall: boolean; // true when voice call is enabled
         showCallingPopup: boolean; // true when showing the calling container
