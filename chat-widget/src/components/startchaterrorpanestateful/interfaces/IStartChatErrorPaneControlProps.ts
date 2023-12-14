@@ -7,4 +7,8 @@ export interface IStartChatErrorPaneControlProps {
     hideSubtitle?: boolean;
     titleText?: string;
     subtitleText?: string;
+    unauthorizedTitleText?: string;
+    unauthorizedSubtitleText?: string;
+    authSetupErrorTitleText?: string;
+    authSetupErrorSubtitleText?: string;
 }

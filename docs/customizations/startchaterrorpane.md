@@ -13,7 +13,7 @@
 
 ## Interfaces
 
-### [IStartChatErrorPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/StartChatErrorPane/interfaces/IStartChatErrorPaneProps.ts)
+### [IStartChatErrorPaneProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/interfaces/IStartChatErrorPaneProps.ts)
 
 The top-level interface for customizing `StartChatErrorPane`.
 
@@ -23,7 +23,7 @@ The top-level interface for customizing `StartChatErrorPane`.
 controlProps | [IStartChatErrorPaneControlProps](#istartchaterrorpanecontrolprops) | No | Properties that control the element behaviors | -
 styleProps | [IStartChatErrorPaneStyleProps](#istartchaterrorpanestyleprops) | No | Properties that control the element styles | -
 
-### [IStartChatErrorPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/StartChatErrorPane/interfaces/IStartChatErrorPaneComponentOverrides.ts)
+### [IStartChatErrorPaneComponentOverrides](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/interfaces/IStartChatErrorPaneComponentOverrides.ts)
 
 Custom React components can be passed as input to override the default sub-components. Alternatively, you can stringify the React component before passing it in. The `chat-components` library provides one util function that can be used: [encodeComponentString](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/common/encodeComponentString.ts).
 
@@ -33,7 +33,7 @@ Custom React components can be passed as input to override the default sub-compo
 title | ReactNode\|string | No | Used for overriding default start chat error pane title | -
 subtitle | ReactNode\|string | No | Used for overriding default start chat error pane subtitle | -
 
-### [IStartChatErrorPaneControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/StartChatErrorPane/interfaces/IStartChatErrorPaneControlProps.ts)
+### [IStartChatErrorPaneControlProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/interfaces/IStartChatErrorPaneControlProps.ts)
 
 | Property | Type | Required | Description | Default |
 | - | - | - | - | - |
@@ -48,20 +48,20 @@ subtitleText | string | No | The subtitle text of the start chat error pane | "P
 
 > :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
 
-### [IStartChatErrorPaneStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-components/src/components/StartChatErrorPane/interfaces/IStartChatErrorPaneStyleProps.ts)
+### [IStartChatErrorPaneStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/interfaces/IStartChatErrorPaneStyleProps.ts)
 
 [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) is the interface provided by [FluentUI](https://developer.microsoft.com/en-us/fluentui#/).
 
 | Property | Type | Required | Description | Default |
 | - | - | - | - | - |
-| generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `StartChatErrorPane` component, including the container | [defaultStartChatErrorPaneGeneralStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/StartChatErrorPane/common/defaultProps/defaultStyles/defaultStartChatErrorPaneGeneralStyles.ts) |
-| titleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the start chat error pane title | [defaultStartChatErrorPaneTitleStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/StartChatErrorPane/common/defaultProps/defaultStyles/defaultStartChatErrorPaneTitleStyles.ts) |
-| subtitleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the start chat error pane subtitle | [defaultStartChatErrorPaneSubtitleStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/StartChatErrorPane/common/defaultProps/defaultStyles/defaultStartChatErrorPaneSubtitleStyles.ts) |
-| iconStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the start chat error pane icon | [defaultStartChatErrorPaneIconStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/StartChatErrorPane/common/defaultProps/defaultStyles/defaultStartChatErrorPaneIconStyles.ts) |
-| iconImageProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the start chat error pane icon image | [defaultStartChatErrorPaneIconImageStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/StartChatErrorPane/common/defaultProps/defaultStyles/defaultStartChatErrorPaneIconImageProps.ts) |
-| classNames | [IStartChatErrorPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/StartChatErrorPane/interfaces/IStartChatErrorPaneClassNames.ts) | No | Sets custom class names for sub-components | - |
+| generalStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Overall styles of the `StartChatErrorPane` component, including the container | [defaultStartChatErrorPaneGeneralStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/common/defaultStartChatErrorPaneGeneralStyleProps.ts) |
+| titleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the start chat error pane title | [defaultStartChatErrorPaneTitleStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/common/defaultStartChatErrorPaneTitleStyleProps.ts) |
+| subtitleStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the start chat error pane subtitle | [defaultStartChatErrorPaneSubtitleStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/common/defaultStartChatErrorPaneSubtitleStyleProps.ts) |
+| iconStyleProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the start chat error pane icon | [defaultStartChatErrorPaneIconStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/common/defaultStartChatErrorPaneIconStyleProps.ts) |
+| iconImageProps | [IStyle](https://github.com/microsoft/fluentui/blob/master/packages/merge-styles/src/IStyle.ts) | No | Styles of the start chat error pane icon image | [defaultStartChatErrorPaneIconImageStyleProps](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/common/defaultStartChatErrorPaneIconImageProps.ts) |
+| classNames | [IStartChatErrorPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/interfaces/IStartChatErrorPaneClassNames.ts) | No | Sets custom class names for sub-components | - |
 
-### [IStartChatErrorPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/d9ea24e14e0363dce0d771e6d8686edd95a32335/chat-components/src/components/StartChatErrorPane/interfaces/IStartChatErrorPaneClassNames.ts)
+### [IStartChatErrorPaneClassNames](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/startchaterrorpanestateful/interfaces/IStartChatErrorPaneClassNames.ts)
 
 | Property | Type | Required | Description | Default |
 | - | - | - | - | - |

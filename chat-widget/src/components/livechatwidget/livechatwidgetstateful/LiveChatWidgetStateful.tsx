@@ -85,6 +85,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
+import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -202,7 +203,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
+        console.log("ADAD state.appStates.startChatFailed", state.appStates.startChatFailed);
+        console.log("ADAD state.domainStates.startChatFailureType", state.domainStates.startChatFailureType);
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Generic });
         state.domainStates.confirmationPaneConfirmedOptionClicked = false;
         state.domainStates.confirmationState = ConfirmationState.NotSet;
         setupClientDataStore();
