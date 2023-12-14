@@ -22,7 +22,6 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
 
     // Handle internal or misc errors
     if (ex.message === WidgetLoadCustomErrorString.AuthenticationFailedErrorString) {
-        console.log("ADAD AuthenticationFailedErrorString");
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.AuthSetupError });
         logWidgetLoadCompleteWithError(ex);
     }
@@ -167,7 +166,6 @@ const handleChatTokenRetrievalFailure = (dispatch: Dispatch<ILiveChatWidgetActio
         logWidgetLoadFailed(ex);
     } else {
         if (ex.httpResponseStatusCode === 401) {
-            console.log("ADAD 401");
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
         }
         logWidgetLoadCompleteWithError(ex);

@@ -203,8 +203,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
-        console.log("ADAD state.appStates.startChatFailed", state.appStates.startChatFailed);
-        console.log("ADAD state.domainStates.startChatFailureType", state.domainStates.startChatFailureType);
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Generic });
         state.domainStates.confirmationPaneConfirmedOptionClicked = false;

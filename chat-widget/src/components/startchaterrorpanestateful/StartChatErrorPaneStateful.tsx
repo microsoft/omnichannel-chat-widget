@@ -21,8 +21,6 @@ import { StartChatFailureType } from "../../contexts/common/StartChatFailureType
 
 export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatErrorPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-
-    console.log("ADAD startChatErrorPaneProps", startChatErrorPaneProps);
     
     const generalStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneGeneralStyleProps, startChatErrorPaneProps?.styleProps?.generalStyleProps);
     const titleStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneTitleStyleProps, startChatErrorPaneProps?.styleProps?.titleStyleProps);
@@ -38,35 +36,21 @@ export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatEr
         iconImageProps: iconImageProps,
     };
 
-    console.log("ADAD state.domainStates.startChatFailureType", state.domainStates.startChatFailureType);
-
-    // let errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorTitleText;
-    // let errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorSubtitleText;
     let errorPaneTitleText;
     let errorPaneSubtitleText;
-
     switch (state.domainStates.startChatFailureType) {
         case StartChatFailureType.Unauthorized:
-            console.log("ADAD updating error strings with unauthorized scenario");
             errorPaneTitleText = startChatErrorPaneProps?.controlProps?.unauthorizedTitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorUnauthorizedTitleText;
             errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.unauthorizedSubtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorUnauthorizedSubtitleText;
             break;
         case StartChatFailureType.AuthSetupError:
-            console.log("ADAD updating error strings with auth setup error scenario");
             errorPaneTitleText = startChatErrorPaneProps?.controlProps?.authSetupErrorTitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorAuthSetupErrorTitleText;
             errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.authSetupErrorSubtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorAuthSetupErrorSubtitleText;
             break;
         default:
-            console.log("ADAD updating error strings with generic error scenario");
             errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorTitleText;
             errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorSubtitleText;
     }
-
-    // if (state.domainStates.startChatFailureType === StartChatFailureType.Authentication) {
-    //     console.log("ADAD updating error strings with auth scenario");
-    //     errorPaneTitleText = startChatErrorPaneProps?.controlProps?.authTitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorAuthTitleText;
-    //     errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.authSubtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorAuthSubtitleText;
-    // }
 
     const errorUIControlProps: ILoadingPaneControlProps = {
         id: StartChatErrorPaneConstants.DefaultStartChatErrorPaneId,
@@ -77,10 +61,6 @@ export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatEr
         titleText: errorPaneTitleText,
         subtitleText: errorPaneSubtitleText,
     };
-
-    console.log("ADAD errorUIStyleProps", errorUIStyleProps);
-
-    console.log("ADAD errorUIControlProps", errorUIControlProps);
 
     // Move focus to the first button
     useEffect(() => {
