@@ -36,7 +36,7 @@ describe("startChatErrorHandler unit test", () => {
                 Exception: `Widget load complete with error: Error: ${WidgetLoadCustomErrorString.AuthenticationFailedErrorString}`
             })
         }));
-        expect(dispatch).toHaveBeenCalledTimes(2);
+        expect(dispatch).toHaveBeenCalledTimes(3);
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
         }));
@@ -199,6 +199,26 @@ describe("startChatErrorHandler unit test", () => {
             })
         }));
         expect(dispatch).toHaveBeenCalledTimes(2);
+        expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
+            type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
+        }));
+    });
+
+    it("handleStartChatError should log failed with error event for ChatTokenRetrievalFailure for 401 status", () => {
+        const dispatch = jest.fn();
+        const mockEx = new ChatSDKError(ChatSDKErrorName.ChatTokenRetrievalFailure, 401);
+        spyOn(BroadcastService, "postMessage").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        handleStartChatError(dispatch, {}, {} as ILiveChatWidgetProps, mockEx, false);
+
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+            ExceptionDetails: expect.objectContaining({
+                Exception: `Widget load complete with error: ${ChatSDKErrorName.ChatTokenRetrievalFailure}`,
+                HttpResponseStatusCode: 401
+            })
+        }));
+        expect(dispatch).toHaveBeenCalledTimes(3);
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
         }));
