@@ -524,7 +524,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: "Start chat failed and cutsomer is trying to close chat widget."
+                Description: "Cutsomer is trying to close chat widget on start chat failure or post chat pane."
             });
             endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
             return;
@@ -542,10 +542,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
             state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) {
-            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.PrepareEndChat,
-                Description: "Conversation ended by agent or bot."
-            });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
         }
 

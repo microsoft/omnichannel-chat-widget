@@ -63,10 +63,10 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         }
 
         // Log PrepareEndChat if conversation ended by customer (bot and agent cases are handled in LiveChatWidgetStateful.tsx)
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+        if (state?.appStates?.conversationEndedBy) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: "Conversation ended by customer."
+                Description: `Conversation ended by ${state?.appStates?.conversationEndedBy}.`
             });
         }
         endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
