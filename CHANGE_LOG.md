@@ -9,11 +9,13 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Enabled customizations for the start chat error pane by adding new `IStartChatErrorPaneProps` interface
 - Added `PrepareEndChat` Telemetry Event to identify end chat workflow
+- Add specific error strings to start chat error pane for authentication related failure scenarios by including new texts to `IStartChatErrorPaneControlProps`
 
 ### Fixed
 
 - Fixed an issue, where after the agent end the chat and C2 sees the disconnect banner after toggling, refreshing the browser does not show the message box.
 - Clear ChatSDK's internal `liveChatContext` when `conversationState` is set to `Closed` on `startChat()`
+- A11Y fix for JAWS screen reader, not able to read/navigate messages when scan mode is activated
 
 ### Changed
 

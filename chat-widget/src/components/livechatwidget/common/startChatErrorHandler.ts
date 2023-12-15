@@ -11,6 +11,7 @@ import { DataStoreManager } from "../../../common/contextDataStore/DataStoreMana
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
 import { WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
+import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
@@ -20,8 +21,11 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
     }
 
     // Handle internal or misc errors
-    if (ex.message === WidgetLoadCustomErrorString.AuthenticationFailedErrorString ||
-        ex.message === WidgetLoadCustomErrorString.NetworkErrorString) {
+    if (ex.message === WidgetLoadCustomErrorString.AuthenticationFailedErrorString) {
+        dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.AuthSetupError });
+        logWidgetLoadCompleteWithError(ex);
+    }
+    if (ex.message === WidgetLoadCustomErrorString.NetworkErrorString) {
         logWidgetLoadCompleteWithError(ex);
     }
 
@@ -38,7 +42,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
                 handleConversationInitializationFailure(ex);
                 break;
             case ChatSDKErrorName.ChatTokenRetrievalFailure:
-                handleChatTokenRetrievalFailure(ex);
+                handleChatTokenRetrievalFailure(dispatch, ex);
                 break;
             case ChatSDKErrorName.UninitializedChatSDK:
                 handleUninitializedChatSDK(ex);
@@ -158,10 +162,13 @@ const handleConversationInitializationFailure = (ex: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleChatTokenRetrievalFailure = (ex: any) => {
+const handleChatTokenRetrievalFailure = (dispatch: Dispatch<ILiveChatWidgetAction>, ex: any) => {
     if (ex.httpResponseStatusCode === 400) {
         logWidgetLoadFailed(ex);
     } else {
+        if (ex.httpResponseStatusCode === 401) {
+            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
+        }
         logWidgetLoadCompleteWithError(ex);
     }
 };

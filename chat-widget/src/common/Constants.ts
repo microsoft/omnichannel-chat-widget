@@ -303,6 +303,10 @@ export class StartChatErrorPaneConstants {
     public static readonly DefaultStartChatErrorPaneId = "oc-lcw-start-chat-error-pane";
     public static readonly DefaultStartChatErrorTitleText = "We are unable to load chat at this time.";
     public static readonly DefaultStartChatErrorSubtitleText = "Please try again later.";
+    public static readonly DefaultStartChatErrorUnauthorizedTitleText = "Chat authentication has failed.";
+    public static readonly DefaultStartChatErrorAuthSetupErrorTitleText = "Chat authentication has failed.";
+    public static readonly DefaultStartChatErrorUnauthorizedSubtitleText = "UNAUTHORIZED";
+    public static readonly DefaultStartChatErrorAuthSetupErrorSubtitleText = "AUTH SETUP ERROR";
 }
 
 export class AriaTelemetryConstants {

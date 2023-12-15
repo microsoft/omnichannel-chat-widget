@@ -17,6 +17,7 @@ import { defaultStartChatErrorPaneIconStyleProps } from "./common/defaultStartCh
 import { defaultStartChatErrorPaneIconImageStyleProps } from "./common/defaultStartChatErrorPaneIconImageProps";
 import { IStartChatErrorPaneProps } from "./interfaces/IStartChatErrorPaneProps";
 import { StartChatErrorPaneConstants } from "../../common/Constants";
+import { StartChatFailureType } from "../../contexts/common/StartChatFailureType";
 
 export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatErrorPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -35,17 +36,30 @@ export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatEr
         iconImageProps: iconImageProps,
     };
 
-    const errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorTitleText;
-    const errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorSubtitleText;
+    let errorPaneTitleText;
+    let errorPaneSubtitleText;
+    switch (state.domainStates.startChatFailureType) {
+        case StartChatFailureType.Unauthorized:
+            errorPaneTitleText = startChatErrorPaneProps?.controlProps?.unauthorizedTitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorUnauthorizedTitleText;
+            errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.unauthorizedSubtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorUnauthorizedSubtitleText;
+            break;
+        case StartChatFailureType.AuthSetupError:
+            errorPaneTitleText = startChatErrorPaneProps?.controlProps?.authSetupErrorTitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorAuthSetupErrorTitleText;
+            errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.authSetupErrorSubtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorAuthSetupErrorSubtitleText;
+            break;
+        default:
+            errorPaneTitleText = startChatErrorPaneProps?.controlProps?.titleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorTitleText;
+            errorPaneSubtitleText = startChatErrorPaneProps?.controlProps?.subtitleText ?? StartChatErrorPaneConstants.DefaultStartChatErrorSubtitleText;
+    }
 
     const errorUIControlProps: ILoadingPaneControlProps = {
         id: StartChatErrorPaneConstants.DefaultStartChatErrorPaneId,
         dir: state.domainStates.globalDir,
-        titleText: errorPaneTitleText,
-        subtitleText: errorPaneSubtitleText,
         hideSpinner: true,
         hideSpinnerText: true,
         ...startChatErrorPaneProps?.controlProps,
+        titleText: errorPaneTitleText,
+        subtitleText: errorPaneSubtitleText,
     };
 
     // Move focus to the first button
