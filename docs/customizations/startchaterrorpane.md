@@ -45,6 +45,10 @@ hideTitle | boolean | No | Whether to hide the title string on the start chat er
 hideSubtitle | boolean | No | Whether to hide the subtitle on the start chat error pane | false
 titleText | string | No | The title text of the start chat error pane | "We are unable to load chat at this time."
 subtitleText | string | No | The subtitle text of the start chat error pane | "Please try again later."
+unauthorizedTitleText | string | No | The title text of the start chat error pane during unauthorized error | "Chat authentication has failed."
+unauthorizedSubtitleText | string | No | The subtitle text of the start chat error pane during unauthorized error | "UNAUTHORIZED"
+authSetupErrorTitleText | string | No | The title text of the start chat error pane during auth setup error | "Chat authentication has failed."
+authSetupErrorSubtitleText | string | No | The subtitle text of the start chat error pane during auth setup error | "AUTH SETUP ERROR"
 
 > :pushpin: If both `hide-` option and `componentOverride` are used on the same sub-component, that sub-component will be hidden. `hide-` options take higher priority.
 
