@@ -104,7 +104,10 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 padding-top: 7px;
                 padding-bottom: 7px;
             }
-            .ac-pushButton { 
+            .ac-input.ac-toggleInput {
+                align-items: ${props.styleProps?.customToggleInputStyleProps?.alignItems ?? defaultPreChatSurveyPaneStyles.customToggleInputStyleProps?.alignItems} !important;
+            }
+            .ac-pushButton {
                 border: 1px solid #00000000;
                 margin: 2px;
                 height: ${props.styleProps?.customButtonStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.height};
@@ -115,7 +118,7 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 font-size: ${props.styleProps?.customButtonStyleProps?.fontSize ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.fontSize};
                 font-family: ${props.styleProps?.customButtonStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.fontFamily};
                 color: ${props.styleProps?.customButtonStyleProps?.color ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.color};
-                background-color: ${props.styleProps?.customButtonStyleProps?.backgroundColor ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.backgroundColor}; 
+                background-color: ${props.styleProps?.customButtonStyleProps?.backgroundColor ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.backgroundColor};
             }`}</style>
             {!props.controlProps?.hidePreChatSurveyPane &&
                 <Stack

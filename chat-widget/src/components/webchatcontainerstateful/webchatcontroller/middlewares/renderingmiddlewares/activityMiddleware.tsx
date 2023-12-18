@@ -12,7 +12,6 @@ import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/Teleme
 import { Constants } from "../../../../../common/Constants";
 import { DirectLineActivityType } from "../../enums/DirectLineActivityType";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
-import { MessageTypes } from "../../enums/MessageType";
 import React from "react";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
@@ -48,7 +47,7 @@ const handleSystemMessage = (next: any, args: any[], card: any, systemMessageSty
 
     // eslint-disable-next-line react/display-name
     return () => (
-        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="true" dangerouslySetInnerHTML={{ __html: escapeHtml(card.activity.text)}}/>
+        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" dangerouslySetInnerHTML={{ __html: escapeHtml(card.activity.text)}}/>
     );
 };
 
@@ -72,12 +71,6 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
     const [card] = args;
     if (card.activity) {
         if (card.activity.from?.role === DirectLineSenderRole.Channel) {
-            if (card.activity.channelData?.type === MessageTypes.Thread) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.IC3ThreadUpdateEventReceived,
-                    Description: "IC3 ThreadUpdateEvent Received"
-                });
-            }
             return () => false;
         }
 
@@ -100,7 +93,7 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
             return (...renderArgs: any) => (
                 <div
                     className={card.activity.from.role === DirectLineSenderRole.User ? Constants.sentMessageClassName : Constants.receivedMessageClassName}
-                    style={userMessageStyles} aria-hidden="true">
+                    style={userMessageStyles}>
                     {next(...args)(...renderArgs)}
                 </div>
             );

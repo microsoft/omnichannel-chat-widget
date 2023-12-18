@@ -126,10 +126,10 @@ export enum TelemetryEvent {
     ErrorUIPaneLoaded = "ErrorUIPaneLoaded",
     DownloadTranscriptFailed = "DownloadTranscriptFailed",
     StartChatFailed = "StartChatFailed",
-    IC3ThreadUpdateEventReceived = "IC3ThreadUpdateEventReceived",
     ConfirmationCancelButtonClicked = "ConfirmationCancelButtonClicked",
     ConfirmationConfirmButtonClicked = "ConfirmationConfirmButtonClicked",
     LoadingPaneLoaded = "LoadingPaneLoaded",
+    StartChatErrorPaneLoaded = "StartChatErrorPaneLoaded",
     EmailTranscriptLoaded = "EmailTranscriptLoaded",
     OutOfOfficePaneLoaded = "OutOfOfficePaneLoaded",
     ConfirmationPaneLoaded = "ConfirmationPaneLoaded",
@@ -264,7 +264,6 @@ export class TelemetryConstants {
             case TelemetryEvent.EmailTranscriptSent:
             case TelemetryEvent.EmailTranscriptFailed:
             case TelemetryEvent.DownloadTranscriptFailed:
-            case TelemetryEvent.IC3ThreadUpdateEventReceived:
             case TelemetryEvent.ConfirmationCancelButtonClicked:
             case TelemetryEvent.ConfirmationConfirmButtonClicked:
             case TelemetryEvent.PreChatSurveyStartChatMethodFailed:

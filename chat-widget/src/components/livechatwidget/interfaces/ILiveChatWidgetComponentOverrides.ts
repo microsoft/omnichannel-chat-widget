@@ -7,6 +7,7 @@ export interface ILiveChatWidgetComponentOverrides {
     emailTranscriptPane?: ReactNode | string;
     header?: ReactNode | string;
     loadingPane?: ReactNode | string;
+    startChatErrorPane?: ReactNode | string;
     outOfOfficeHoursPane?: ReactNode | string;
     postChatLoadingPane?: ReactNode | string;
     postChatSurveyPane?: ReactNode | string;

@@ -22,7 +22,7 @@ describe("activityMiddleware test", () => {
 
         const results = createActivityMiddleware()()(next)(args);
         expect(results()).toEqual(false);
-        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
     });
 
     it ("createActivityMiddleware() with Hidden tag should return nothing", () => {

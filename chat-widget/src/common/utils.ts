@@ -1,4 +1,4 @@
-import { AriaTelemetryConstants, ChatSDKError, Constants, HtmlAttributeNames, LocaleConstants } from "./Constants";
+import { AriaTelemetryConstants, Constants, HtmlAttributeNames, LocaleConstants } from "./Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -8,6 +8,7 @@ import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { Md5 } from "md5-typescript";
 import { TelemetryHelper } from "./telemetry/TelemetryHelper";
+import { ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -396,7 +397,7 @@ export const getConversationDetailsCall = async (chatSDK: any) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const checkContactIdError = (e: any) => {
-    if (e?.message === ChatSDKError.AuthContactIdNotFoundFailure) {
+    if (e?.message === ChatSDKErrorName.AuthContactIdNotFoundFailure) {
         const contactIdNotFoundErrorEvent: ICustomEvent = {
             eventName: BroadcastEvent.ContactIdNotFound,
             payload: {

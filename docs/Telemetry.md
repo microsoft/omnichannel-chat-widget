@@ -188,10 +188,8 @@ Refer to the below table to understand different critical telemetry events raise
 | `ProcessingHTMLTextMiddlewareFailed`     |On HTML Field adding noopener noreferrer failed |
 | `ProcessingSanitizationMiddlewareFailed`     |On HTML Field sanitization failed |
 | `FormatTagsMiddlewareJSONStringifyFailed`     |On ACS Format Message Tags Middleware failed |
-| `IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
 | `AverageWaitTimeMessageRecieved`|On Average Wait Time system message Received|
 | `QueuePositionMessageRecieved`|On Queue Position system message Received|
-| `IC3ThreadUpdateEventReceived`|On `IC3 ThreadUpdateEvent` Received|
 | `ConversationEndedThreadEventReceived`     |On Conversation ended by agent side or by timeout |
 | `InvalidConfiguration`     |On Invalid data masking regex rule collection |
 | `DataMaskingRuleApplied`     |On data masking regex rule applied |

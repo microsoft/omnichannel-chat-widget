@@ -6,10 +6,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Enabled customizations for the start chat error pane by adding new `IStartChatErrorPaneProps` interface
+- Add specific error strings to start chat error pane for authentication related failure scenarios by including new texts to `IStartChatErrorPaneControlProps`
+
 ### Fixed
 
 - Fixed an issue, where after the agent end the chat and C2 sees the disconnect banner after toggling, refreshing the browser does not show the message box.
 - Clear ChatSDK's internal `liveChatContext` when `conversationState` is set to `Closed` on `startChat()`
+- A11Y fix for JAWS screen reader, not able to read/navigate messages when scan mode is activated
+
+### Changed
+
+- Updated exception details on chat start to include http status code for all `WidgetLoadFailed` and `WidgetLoadComplete` events with error
+- Uptake [@microsoft/omnichannel-chat-components@1.1.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.0)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.6.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.6.2)
 
 ## [1.5.0] - 2023-11-21
 
@@ -230,6 +241,11 @@ All notable changes to this project will be documented in this file.
 # Chat Components
 
 ## [Unreleased]
+
+## [1.1.0] 2023-12-12
+### Added
+
+- Add ability to customize `PreChatSurveyPane`'s toggle inputs using `IPreChatSurveyPaneToggleInputStyles` & Use `baseline` by default
 
 ### Fixed
 
