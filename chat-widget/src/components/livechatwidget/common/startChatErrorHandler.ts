@@ -10,7 +10,7 @@ import { callingStateCleanUp, endChatStateCleanUp, closeChatStateCleanUp, chatSD
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
-import { WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
+import { PrepareEndChatDescriptionConstants, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -129,7 +129,7 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
 const forceEndChat = (chatSDK: any) => {
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
         Event: TelemetryEvent.PrepareEndChat,
-        Description: "SessionInit was successful, but widget load failed. Ending chat to avoid ghost chats in OC."
+        Description: PrepareEndChatDescriptionConstants.WidgetLoadFailedAfterSessionInit
     });
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
         Event: TelemetryEvent.EndChatSDKCall

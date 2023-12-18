@@ -340,3 +340,16 @@ export class WidgetLoadCustomErrorString {
     public static readonly AuthenticationFailedErrorString = "Authentication was not successful";
     public static readonly NetworkErrorString = "Network Error";
 }
+
+export class PrepareEndChatDescriptionConstants {
+    public static readonly ConversationEndedByCustomerWithoutPostChat = "Conversation ended by customer. Post chat not configured or should not show.";
+    public static readonly ConversationEndedByCustomerWithInvalidPostChat = "Conversation ended by customer. Post chat context is invalid.";
+    public static readonly ConversationEndedBy = "Conversation ended by";
+    public static readonly PrepareEndChatError = "There's an error while preparing to end chat. Closing chat widget.";
+    public static readonly WidgetLoadFailedAfterSessionInit = "SessionInit was successful, but widget load failed. Ending chat to avoid ghost chats in OC.";
+    public static readonly InitiateEndChatReceived = "Received InitiateEndChat BroadcastEvent while conversation state is not Active. Ending chat.";
+    public static readonly EndChatReceivedFromOtherTabs = "Received EndChat BroadcastEvent from other tabs. Closing this chat.";
+    public static readonly CustomerCloseChatOnFailureOrPostChat = "Cutsomer is trying to close chat widget on start chat failure or post chat pane.";
+    public static readonly CustomerCloseInactiveChat = "Chat was Inactive and cutsomer is trying to close chat widget or refreshing the page.";
+    public static readonly BrowserUnload = "Browser unload event received. Ending chat.";
+}

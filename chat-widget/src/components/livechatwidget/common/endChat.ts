@@ -1,4 +1,4 @@
-import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType } from "../../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../common/utils";
@@ -31,7 +31,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: "Conversation ended by customer. Post chat not configured or should not show."
+                    Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithoutPostChat
                 });
                 await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             }
@@ -54,7 +54,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: "Conversation ended by customer. Post chat context is invalid."
+                    Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat
                 });
                 await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
                 return;
@@ -69,7 +69,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         if (state?.appStates?.conversationEndedBy) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: `Conversation ended by ${state?.appStates?.conversationEndedBy}.`
+                Description: `${PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat} ${state?.appStates?.conversationEndedBy}.`
             });
         }
         endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
@@ -91,7 +91,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         if (props.controlProps?.hideStartChatButton === false) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: "There's an error while preparing to end chat. Closing chat widget."
+                Description: PrepareEndChatDescriptionConstants.PrepareEndChatError
             });
             await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
         }

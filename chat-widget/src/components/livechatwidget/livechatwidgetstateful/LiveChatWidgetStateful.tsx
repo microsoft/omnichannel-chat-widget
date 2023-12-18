@@ -1,7 +1,7 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { Components, StyleOptions } from "botframework-webchat";
-import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, StorageType } from "../../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
@@ -390,7 +390,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const skipCloseChat = false;
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: "Received InitiateEndChat BroadcastEvent while conversation state is not Active. Ending chat."
+                    Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceived
                 });
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
             }
@@ -415,7 +415,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: "Received EndChat BoradcastEvent from other tabs. Closing this chat."
+                    Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
                 });
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 endChatStateCleanUp(dispatch);
@@ -526,7 +526,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: "Cutsomer is trying to close chat widget on start chat failure or post chat pane."
+                Description: PrepareEndChatDescriptionConstants.CustomerCloseChatOnFailureOrPostChat
             });
             endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
             return;
@@ -536,7 +536,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state?.appStates?.conversationState === ConversationState.InActive) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: "Chat was InActive and cutsomer is trying to close chat widget or refreshing the page."
+                Description: PrepareEndChatDescriptionConstants.CustomerCloseInactiveChat
             });
             endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             return;
@@ -595,7 +595,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
         TelemetryHelper.logSDKEvent(LogLevel.INFO, {
             Event: TelemetryEvent.PrepareEndChat,
-            Description: "Browser unload event received. Ending chat."
+            Description: PrepareEndChatDescriptionConstants.BrowserUnload
         });
         endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, false);
         // Clean local storage
