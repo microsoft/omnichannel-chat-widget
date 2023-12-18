@@ -19,16 +19,6 @@ import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
-    const checkCustomerEndChat = async () => {
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
-            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.PrepareEndChat,
-                Description: "Conversation ended by customer. Post chat not configured or should not show."
-            });
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
-        }
-    };
-
     try {
         // Use Case: If call is ongoing, end the call by simulating end call button click
         endVoiceVideoCallIfOngoing(chatSDK, dispatch);
@@ -38,7 +28,13 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         // Use Case: When post chat is not configured
         if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
             // If ended by customer, just close chat
-            await checkCustomerEndChat();
+            if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.PrepareEndChat,
+                    Description: "Conversation ended by customer. Post chat not configured or should not show."
+                });
+                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+            }
 
             // Use Case: If ended by Agent, stay chat in InActive state
             return;
@@ -55,7 +51,14 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 
         if (postchatContext === undefined) {
             // For Customer intiated conversations, just close chat widget
-            await checkCustomerEndChat();
+            if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
+                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.PrepareEndChat,
+                    Description: "Conversation ended by customer. Post chat context is invalid."
+                });
+                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+                return;
+            }
 
             //For agent initiated end chat, allow to download transcript
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
