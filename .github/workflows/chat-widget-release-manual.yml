@@ -1,11 +1,7 @@
 name: chat-widget-release
 
 on:
-  push:
-    tags:
-      - 'w-v*'
-    paths:
-      - 'chat-widget/**'
+  workflow_dispatch:
 
 jobs: 
   build:
