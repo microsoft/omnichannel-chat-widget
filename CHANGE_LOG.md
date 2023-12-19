@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.6.0] 2023-12-19
+
 ### Added
 - Enabled customizations for the start chat error pane by adding new `IStartChatErrorPaneProps` interface
 - Added `PrepareEndChat` Telemetry Event to identify end chat workflow
