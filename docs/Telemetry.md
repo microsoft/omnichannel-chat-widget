@@ -273,6 +273,7 @@ Refer to the below table to understand different critical telemetry events raise
 |`CloseChatMethodException`|On failed to end chat from `ConfirmationPane` Confirm button click|
 |`GetChatReconnectContextSDKCallFailed`| On get reconnect context SDK call failed|
 |`GetConversationDetailsCallFailed`|On `PropactiveChatPane` load complete|
+|`PrepareEndChat`|On preparing to call ChatSDK end chat, used to identify end-chat scenarios|
 |`EndChatSDKCall`|On initiating ChatSDK end chat call|
 |`EndChatEventRecevied `| On end chat event received|
 |`EndChatSDKCallFailed`|On ChatSDK end chat failure|

@@ -6,6 +6,7 @@ import { WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../.
 import { ChatSDKError, ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { ConversationState } from "../../../contexts/common/ConversationState";
+import { TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
 describe("startChatErrorHandler unit test", () => {
     it("handleStartChatError should log failed event and return if exception is undefined", () => {
@@ -314,13 +315,12 @@ describe("startChatErrorHandler unit test", () => {
         };
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
         spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logSDKEvent").and.callFake(() => false);
         handleStartChatError(dispatch, mockSDK, {} as ILiveChatWidgetProps, mockEx, true);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(3);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
-            ExceptionDetails: expect.objectContaining({
-                Exception: "SessionInit was successful, but widget load failed."
-            })
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
+        expect(TelemetryHelper.logSDKEvent).toHaveBeenCalledWith("INFO", expect.objectContaining({
+            Event: TelemetryEvent.EndChatSDKCall
         }));
         expect(dispatch).toHaveBeenCalledTimes(2);
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
