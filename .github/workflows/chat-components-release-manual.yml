@@ -1,4 +1,4 @@
-name: chat-components-release-manual
+name: chat-components-release
 
 on:
   workflow_dispatch:

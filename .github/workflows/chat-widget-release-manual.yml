@@ -1,4 +1,4 @@
-name: chat-widget-release-manual
+name: chat-widget-release
 
 on:
   workflow_dispatch:
