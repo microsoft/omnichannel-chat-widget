@@ -10,7 +10,7 @@ import { callingStateCleanUp, endChatStateCleanUp, closeChatStateCleanUp, chatSD
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
-import { WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
+import { PrepareEndChatDescriptionConstants, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,11 +127,12 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const forceEndChat = (chatSDK: any) => {
-    TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-        Event: TelemetryEvent.WidgetLoadFailed,
-        ExceptionDetails: {
-            Exception: "SessionInit was successful, but widget load failed."
-        }
+    TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+        Event: TelemetryEvent.PrepareEndChat,
+        Description: PrepareEndChatDescriptionConstants.WidgetLoadFailedAfterSessionInit
+    });
+    TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+        Event: TelemetryEvent.EndChatSDKCall
     });
     chatSDK?.endChat();
 };
