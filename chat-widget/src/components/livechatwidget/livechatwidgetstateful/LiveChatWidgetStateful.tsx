@@ -384,6 +384,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             if (persistedState &&
                 persistedState.appStates.conversationState === ConversationState.Active) {
+
+                // We need to simulate states for closing chat, in order to messup with close confirmation pane.
+                dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
+                dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
+                
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
             } else {
                 const skipEndChatSDK = true;
