@@ -116,6 +116,7 @@ export enum TelemetryEvent {
     StartChatSDKCall = "StartChatCall",
     StartChatEventRecevied = "StartChatEventReceived",
     EndChatSDKCall = "EndChatSDKCall",
+    PrepareEndChat = "PrepareEndChat",
     EndChatEventReceived = "EndChatEventReceived",
     WindowClosed = "WindowClosed",
     OnNewMessageFailed = "OnNewMessageFailed",
@@ -305,6 +306,7 @@ export class TelemetryConstants {
             case TelemetryEvent.PostChatContextCallFailed:
             case TelemetryEvent.PostChatContextCallSucceed:
             case TelemetryEvent.GetConversationDetailsException:
+            case TelemetryEvent.PrepareEndChat:
                 return ScenarioType.SDK;
 
             case TelemetryEvent.VideoCallAcceptButtonClick:

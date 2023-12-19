@@ -61,19 +61,22 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const conversationDetails: any = await getConversationDetailsCall(chatSDK);
             if (conversationDetails?.participantType === ParticipantType.Bot) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ConversationEndedThreadEventReceived,
+                    Description: "Conversation end by bot or timeout event received."
+                });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Bot });
             } else {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ConversationEndedThreadEventReceived,
+                    Description: "Conversation end by agent or timeout event received."
+                });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
             }
 
             if (conversationDetails?.participantType === ParticipantType.Bot || conversationDetails?.participantType === ParticipantType.User) {
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_PARTICIPANT_TYPE, payload: conversationDetails?.participantType });
             }
-
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.ConversationEndedThreadEventReceived,
-                Description: "Conversation end by agent side or by timeout event received."
-            });
         };
 
         webChatStore = createStore(

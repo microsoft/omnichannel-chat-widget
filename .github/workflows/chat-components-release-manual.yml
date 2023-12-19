@@ -1,11 +1,7 @@
-name: chat-widget-release
+name: chat-components-release
 
 on:
-  push:
-    tags:
-      - 'w-v*'
-    paths:
-      - 'chat-widget/**'
+  workflow_dispatch:
 
 jobs: 
   build:
@@ -18,41 +14,41 @@ jobs:
         with:
           node-version: 16.X
       - name: Update package version
-        working-directory: chat-widget
+        working-directory: chat-components
         run: npx version-from-git --no-git-tag-version
         if: ${{ startsWith(github.ref, 'refs/heads/') }}
       - name: Read package.json
         id: read-package-json
-        working-directory: chat-widget
+        working-directory: chat-components
         run: |
           echo "::set-output name=name::$(cat package.json | jq -r '.name')"
           echo "::set-output name=version::$(cat package.json | jq -r '.version')"
       - name: Install packages
-        working-directory: chat-widget
+        working-directory: chat-components
         run: yarn install --network-timeout 100000
       - name: Unit Tests
-        working-directory: chat-widget
+        working-directory: chat-components
         run: yarn test:unit
       - name: Build Storybook
-        working-directory: chat-widget
+        working-directory: chat-components
         run: yarn build-storybook
       - name: VRT Tests
-        working-directory: chat-widget
+        working-directory: chat-components
         run: yarn test:visual
       - name: Upload VRT Tests failures screenshots
         uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: VRT Failure Screenshots
-          path: 'chat-widget/**/__diff_output__/*.png'
+          path: 'chat-components/**/__diff_output__/*.png'
       - name: Build package
-        working-directory: chat-widget
+        working-directory: chat-components
         run: yarn build
       - name: Npm packaging
-        working-directory: chat-widget
+        working-directory: chat-components
         run: npm pack
       - name: Move package tarball to root
-        working-directory: chat-widget
+        working-directory: chat-components
         run: |
           mv *.tgz ../
       - name: Upload a Build Artifact
@@ -80,4 +76,4 @@ jobs:
         run: |
           npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
           npm publish *.tgz --tag main --access public
-          npm dist-tag add ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }} latest
+          npm dist-tag add ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }} latest 

@@ -1,7 +1,7 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { Components, StyleOptions } from "botframework-webchat";
-import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, StorageType } from "../../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
@@ -374,6 +374,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
+            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.EndChatEventReceived,
+                Description: "Received InitiateEndChat BroadcastEvent."
+            });
+            
             // This is to ensure to get latest state from cache in multitab
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
@@ -388,6 +393,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             } else {
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
+                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.PrepareEndChat,
+                    Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceived
+                });
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
             }
 
@@ -409,6 +418,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
             if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.PrepareEndChat,
+                    Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
+                });
                 endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 endChatStateCleanUp(dispatch);
                 chatSDKStateCleanUp(chatSDK);
@@ -516,12 +529,20 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // If start chat failed, and C2 is trying to close chat widget
         if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
+            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.PrepareEndChat,
+                Description: PrepareEndChatDescriptionConstants.CustomerCloseChatOnFailureOrPostChat
+            });
             endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
             return;
         }
 
         // Scenario -> Chat was InActive and closing the chat (Refresh scenario on post chat)
         if (state?.appStates?.conversationState === ConversationState.InActive) {
+            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.PrepareEndChat,
+                Description: PrepareEndChatDescriptionConstants.CustomerCloseInactiveChat
+            });
             endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             return;
         }
@@ -576,6 +597,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
             Description: "Browser unload event received."
+        });
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.PrepareEndChat,
+            Description: PrepareEndChatDescriptionConstants.BrowserUnload
         });
         endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, false);
         // Clean local storage
