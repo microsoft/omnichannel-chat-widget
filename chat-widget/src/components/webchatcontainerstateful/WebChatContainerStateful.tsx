@@ -140,6 +140,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
     return (
         <><style>{`
+        .webchat__stacked-layout__content .ac-pushButton {
+            cursor: pointer;
+        }
 
         .webchat__bubble__content>div#ms_lcw_webchat_adaptive_card {
             background: ${webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background};
