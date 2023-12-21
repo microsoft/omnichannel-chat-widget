@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed an issue where AdaptiveCard push button does not have `cursor: pointer`
+- Fixed an issue where StartChat event doesn't work after closing a refreshed chat
 
 ## [1.6.0] 2023-12-19
 
