@@ -1,4 +1,4 @@
-name: Release to NPM a new chat-widget version
+name:  ✨ ✨ ✨ ✨ Release to NPM a new chat-widget version ⚡⚡⚡⚡⚡⚡
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
         with:
           ref: main
 
-      - name: Git Pull main branch
+      - name: Git Pull main branch 
         run: |
           git fetch origin main
           git checkout main
@@ -115,12 +115,6 @@ jobs:
           else
             echo "Tag 'Chat-Widget' not found in CHANGE_LOG.md"
           fi
-
-      - name: Push changes
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-        #  git push origin HEAD:${{ steps.create_branch.outputs.branch_name }}
 
       - name: Create Pull Request
         id: cpr
