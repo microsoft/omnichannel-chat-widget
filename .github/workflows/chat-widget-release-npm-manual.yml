@@ -61,8 +61,9 @@ jobs:
 
       - name: Update Changelog
         run: |
-          version="${{ steps.bump_version_step.outputs.version }}"
-          sed -i "0,/\[Unreleased\]/s/\[Unreleased\]/[${version}] %Y-%m-%d/" CHANGE_LOG.md
+            today=$(date +'%Y%m%d')
+            version="${{ steps.bump_version_step.outputs.version }}"
+            sed -i "0,/\[Unreleased\]/s/\[Unreleased\]/[${version}] ${today}/" CHANGE_LOG.md
 
       - name: Commit Changes
         run: |
