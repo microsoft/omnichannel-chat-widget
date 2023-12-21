@@ -69,8 +69,8 @@ jobs:
         run: |
           git config --global user.email "noreply@github.com"
           git config --global user.name "noreply@github.com"
-          git add chat-widget/package.json CHANGE_LOG.md
-          git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
+          # git add chat-widget/package.json CHANGE_LOG.md
+          # git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
 
       - name: Create tag
         run: |
@@ -108,9 +108,7 @@ jobs:
 
 
           line_number_unreleased=$(grep -n '[Unreleased]' CHANGE_LOG.md | cut -d':' -f1)
-            if [ -n "$line_number_unreleased" < 5 ]; then
-                sed -i "${line_number_unreleased}d pollito!!" CHANGE_LOG.md
-            fi
+          echo $line_number_unreleased
 
           
           if [ -n "$line_number" ]; then
