@@ -100,23 +100,18 @@ jobs:
               echo "::set-output name=version::$new_version"
             fi
 
-      - name: Check for [unreleased] text
-        run: |
-          if grep -q -E 'chat-widget.*\[Unreleased\].*chat-components' CHANGE_LOG.md; then
-            echo "[Unreleased] found between 'chat-widget' and 'Chat-Components' in $file_path"
-            today=$(date +'%Y-%m-%d')
-            version="${{ steps.bump_version_step.outputs.version }}"
-            sed -i "0,/\[Unreleased\]/s/\[Unreleased\]/[${version}] ${today}/" CHANGE_LOG.md
-
-          else
-            echo "[Unreleased] not found between 'Chat-Widget' and 'Chat-Components'"
-
-          fi
 
       - name: Search for 'Chat Widget' tag and add '##[Unreleased]'
         run: |
           # Find the line number where 'Chat-Widget' tag is located in the file
           line_number=$(grep -n 'Chat-Widget' CHANGE_LOG.md | cut -d':' -f1)
+
+
+          line_number_unreleased=$(grep -n '[Unreleased]' CHANGE_LOG.md | cut -d':' -f1)
+            if [ -n "$line_number_unreleased" < 5 ]; then
+                sed -i "${line_number_unreleased}d pollito!!" CHANGE_LOG.md
+            fi
+
           
           if [ -n "$line_number" ]; then
           # Increment line number by 1 to add '##[Unreleased]' below the 'Chat Widget' tag
