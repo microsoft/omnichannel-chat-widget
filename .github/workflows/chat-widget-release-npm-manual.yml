@@ -99,6 +99,20 @@ jobs:
               jq --arg new_version "$new_version" '.version |= $new_version' chat-widget/package.json > temp.json && mv temp.json chat-widget/package.json
               echo "::set-output name=version::$new_version"
             fi
+      - name: Check for [unreleased] text
+        run: |
+          file_path=CHANGE_LOG.md
+
+          if grep -q -E 'Chat-Widget.*\[unreleased\].*Chat-Components' "$file_path"; then
+            echo "[unreleased] found between 'chat-widget' and 'Chat-Components' in $file_path"
+            today=$(date +'%Y-%m-%d')
+            version="${{ steps.bump_version_step.outputs.version }}"
+            sed -i "0,/\[Unreleased\]/s/\[Unreleased\]/[${version}] ${today}/" CHANGE_LOG.md
+
+          else
+            echo "[unreleased] not found between 'chat-widget' and 'chat-components' in $file_path"
+            
+          fi
 
       - name: Search for 'Chat Widget' tag and add '##[Unreleased]'
         run: |
