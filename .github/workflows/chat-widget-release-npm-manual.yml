@@ -69,16 +69,11 @@ jobs:
         run: |
           git config --global user.email "noreply@github.com"
           git config --global user.name "noreply@github.com"
-          # git add chat-widget/package.json CHANGE_LOG.md
-          # git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
+          git add chat-widget/package.json CHANGE_LOG.md
+          git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
 
-      - name: Create tag
-        run: |
-          version="${{ steps.bump_version_step.outputs.version }}"
-          git tag -a "edgar-v${version}" -m "Version ${version}"
-          
-          version="${{ steps.bump_version_step.outputs.version }}"
-          git push origin "edgar-v${version}"
+          git tag -a "edgar-v${{ steps.bump_version_step.outputs.version }}" -m "Version ${{ steps.bump_version_step.outputs.version }}"
+          git push origin "edgar-v${{ steps.bump_version_step.outputs.version }}"
 
   
       - name: Bump Version in package.json
@@ -125,7 +120,7 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git push origin HEAD:${{ steps.create_branch.outputs.branch_name }}
+        #  git push origin HEAD:${{ steps.create_branch.outputs.branch_name }}
 
       - name: Create Pull Request
         id: cpr
