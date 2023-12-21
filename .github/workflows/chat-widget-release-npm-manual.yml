@@ -109,8 +109,8 @@ jobs:
           # Increment line number by 1 to add '##[Unreleased]' below the 'Chat Widget' tag
             new_line_number=$((line_number + 1))
             sed -i "${new_line_number}i## [Unreleased] \n" CHANGE_LOG.md
-            git add CHANGE_LOG.md
-            git commit -m "Bump"
+            # git add CHANGE_LOG.md
+            # git commit -m "Bump"
           else
             echo "Tag 'Chat-Widget' not found in CHANGE_LOG.md"
           fi
