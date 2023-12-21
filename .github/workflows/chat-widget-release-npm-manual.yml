@@ -79,7 +79,6 @@ jobs:
           
           version="${{ steps.bump_version_step.outputs.version }}"
           git push origin "edgar-v${version}"
-          git push origin HEAD:${{ steps.create_branch.outputs.branch_name }}
 
   
       - name: Bump Version in package.json
