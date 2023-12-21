@@ -102,7 +102,7 @@ jobs:
 
       - name: Check for [unreleased] text
         run: |
-          if grep -q -E 'chat-widget.*\[Unreleased\].*chat-components' changelog.md; then
+          if grep -q -E 'chat-widget.*\[Unreleased\].*chat-components' CHANGE_LOG.md; then
             echo "[Unreleased] found between 'chat-widget' and 'Chat-Components' in $file_path"
             today=$(date +'%Y-%m-%d')
             version="${{ steps.bump_version_step.outputs.version }}"
