@@ -15,7 +15,6 @@ permissions: write-all
 jobs:
   release:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout main and pull upstream master
         uses: actions/checkout@v2
@@ -59,8 +58,8 @@ jobs:
             echo "::set-output name=version::$new_version"
           fi
 
-          - name: Update Changelog
-          run: |
+      - name: Update Changelog
+        run: |
             version="${{ steps.bump_version_step.outputs.version }}"
             awk -v version="$version" 'BEGIN { count = 0 } /\[Unreleased\]/ { count++ } count == 2 && !done { sub(/\[Unreleased\]/, "[" version "]", $0); done=1 } 1' CHANGE_LOG.md > temp && mv temp CHANGE_LOG.md
   
