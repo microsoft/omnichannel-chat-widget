@@ -102,7 +102,7 @@ jobs:
 
       - name: Search for 'Chat Widget' tag and add '##[Unreleased]'
         run: |
-          # Find the line number where 'Food' tag is located in the file
+          # Find the line number where 'Chat-Widget' tag is located in the file
           line_number=$(grep -n 'Chat-Widget' CHANGE_LOG.md | cut -d':' -f1)
           
           if [ -n "$line_number" ]; then
@@ -112,7 +112,7 @@ jobs:
            # git add CHANGE_LOG.md
            # git commit -m "Bump"
           else
-            echo "Tag 'Chat Widget' not found in CHANGE_LOG.md"
+            echo "Tag 'Chat-Widget' not found in CHANGE_LOG.md"
           fi
 
       - name: Push changes
