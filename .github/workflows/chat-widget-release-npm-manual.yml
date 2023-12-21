@@ -103,15 +103,15 @@ jobs:
         run: |
           file_path=CHANGE_LOG.md
 
-          if grep -q -E 'Chat-Widget.*\[unreleased\].*Chat-Components' "$file_path"; then
-            echo "[unreleased] found between 'chat-widget' and 'Chat-Components' in $file_path"
+          if grep -q -E 'Chat-Widget.*\[Unreleased\].*Chat-Components' "$file_path"; then
+            echo "[Unreleased] found between 'chat-widget' and 'Chat-Components' in $file_path"
             today=$(date +'%Y-%m-%d')
             version="${{ steps.bump_version_step.outputs.version }}"
             sed -i "0,/\[Unreleased\]/s/\[Unreleased\]/[${version}] ${today}/" CHANGE_LOG.md
 
           else
             echo "[unreleased] not found between 'chat-widget' and 'chat-components' in $file_path"
-            
+
           fi
 
       - name: Search for 'Chat Widget' tag and add '##[Unreleased]'
