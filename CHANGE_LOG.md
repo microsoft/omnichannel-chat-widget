@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.6.1] 2023-12-21
+
 ### Fixed
 
 - Fixed an issue where AdaptiveCard push button does not have `cursor: pointer`
