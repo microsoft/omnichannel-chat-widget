@@ -103,7 +103,7 @@ jobs:
       - name: Search for 'Chat Widget' tag and add '##[Unreleased]'
         run: |
           # Find the line number where 'Food' tag is located in the file
-          line_number=$(grep -n 'Chat Widget' CHANGE_LOG.md | cut -d':' -f1)
+          line_number=$(grep -n 'Chat-Widget' CHANGE_LOG.md | cut -d':' -f1)
           
           if [ -n "$line_number" ]; then
           # Increment line number by 1 to add '##[Unreleased]' below the 'Chat Widget' tag
