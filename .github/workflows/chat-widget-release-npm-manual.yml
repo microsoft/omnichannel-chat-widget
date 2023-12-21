@@ -76,9 +76,7 @@ jobs:
         run: |
           version="${{ steps.bump_version_step.outputs.version }}"
           git tag -a "edgar-v${version}" -m "Version ${version}"
-
-      - name: Push tag
-        run: |
+          
           version="${{ steps.bump_version_step.outputs.version }}"
           git push origin "edgar-v${version}"
           git push origin HEAD:${{ steps.create_branch.outputs.branch_name }}
