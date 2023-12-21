@@ -72,8 +72,8 @@ jobs:
           git add chat-widget/package.json CHANGE_LOG.md
           git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
 
-          git tag -a "edgar-v${{ steps.bump_version_step.outputs.version }}" -m "Version ${{ steps.bump_version_step.outputs.version }}"
-          git push origin "edgar-v${{ steps.bump_version_step.outputs.version }}"
+          git tag -a "w-v${{ steps.bump_version_step.outputs.version }}" -m "Version ${{ steps.bump_version_step.outputs.version }}"
+          git push origin "w-v${{ steps.bump_version_step.outputs.version }}"
 
   
       - name: Bump Version in package.json

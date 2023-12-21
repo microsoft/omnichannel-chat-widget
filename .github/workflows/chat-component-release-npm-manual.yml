@@ -71,8 +71,8 @@ jobs:
           git add chat-components/package.json CHANGE_LOG.md
           git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
 
-          git tag -a "israel-v${{ steps.bump_version_step.outputs.version }}" -m "Version ${{ steps.bump_version_step.outputs.version }}"
-          git push origin "israel-v${{ steps.bump_version_step.outputs.version }}"
+          git tag -a "c-v${{ steps.bump_version_step.outputs.version }}" -m "Version ${{ steps.bump_version_step.outputs.version }}"
+          git push origin "c-v${{ steps.bump_version_step.outputs.version }}"
 
   
       - name: Bump Version in package.json
