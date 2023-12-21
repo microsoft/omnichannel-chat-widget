@@ -20,13 +20,13 @@ jobs:
       - name: Checkout main and pull upstream master
         uses: actions/checkout@v2
         with:
-          ref: test-actions
+          ref: main
 
       - name: Git Pull main branch
         run: |
-          git fetch origin test-actions
-          git checkout test-actions
-          git pull origin test-actions
+          git fetch origin main
+          git checkout main
+          git pull origin main
 
       - name: Create and checkout new branch
         id: create_branch
@@ -131,7 +131,7 @@ jobs:
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          base: test-actions
+          base: main
           branch: ${{ steps.create_branch.outputs.branch_name }}
           delete-branch: true
           title: 'Bump version for chat-widget to ${{ steps.bump_version_step.outputs.version }}'
