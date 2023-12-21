@@ -68,7 +68,7 @@ jobs:
         run: |
           git config --global user.email "noreply@github.com"
           git config --global user.name "noreply@github.com"
-          git add chat-widget/package.json CHANGELOG.md
+          git add chat-widget/package.json CHANGE_LOG.md
           git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
 
       - name: Create tag
