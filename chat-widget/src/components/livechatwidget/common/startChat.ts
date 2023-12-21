@@ -41,11 +41,6 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
         }
     }
 
-    // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-    if (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat) {
-        return;
-    }
-
     // Check if there is any active popout chats in cache
     if (await canStartPopoutChat(props)) {
         return;
