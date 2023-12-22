@@ -5,8 +5,6 @@ All notable changes to this project will be documented in this file.
 # Chat-Widget
 
 ## [Unreleased]
-### Added 
-- New github action job to automate the release process
 
 ### Fixed
 
