@@ -63,17 +63,14 @@ jobs:
             version="${{ steps.bump_version_step.outputs.version }}"
             awk -v version="$version" 'BEGIN { count = 0 } /\[Unreleased\]/ { count++ } count == 2 && !done { sub(/\[Unreleased\]/, "[" version "]", $0); done=1 } 1' CHANGE_LOG.md > temp && mv temp CHANGE_LOG.md
   
-
       - name: Commit Changes
         run: |
           git config --global user.email "noreply@github.com"
           git config --global user.name "noreply@github.com"
           git add chat-components/package.json CHANGE_LOG.md
           git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
-
           git tag -a "c-v${{ steps.bump_version_step.outputs.version }}" -m "Version ${{ steps.bump_version_step.outputs.version }}"
           git push origin "c-v${{ steps.bump_version_step.outputs.version }}"
-
   
       - name: Bump Version in package.json
         id: bump_version_step_minor
@@ -93,7 +90,6 @@ jobs:
               jq --arg new_version "$new_version" '.version |= $new_version' chat-components/package.json > temp.json && mv temp.json chat-components/package.json
               echo "::set-output name=version::$new_version"
             fi
-
 
       - name: Search for 'Chat-Components' tag and add '##[Unreleased]'
         run: |

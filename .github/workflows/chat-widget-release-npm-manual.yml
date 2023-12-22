@@ -74,7 +74,6 @@ jobs:
 
           git tag -a "w-v${{ steps.bump_version_step.outputs.version }}" -m "Version ${{ steps.bump_version_step.outputs.version }}"
           git push origin "w-v${{ steps.bump_version_step.outputs.version }}"
-
   
       - name: Bump Version in package.json
         id: bump_version_step_minor
@@ -95,16 +94,10 @@ jobs:
               echo "::set-output name=version::$new_version"
             fi
 
-
       - name: Search for 'Chat Widget' tag and add '##[Unreleased]'
         run: |
           # Find the line number where 'Chat-Widget' tag is located in the file
           line_number=$(grep -n 'Chat-Widget' CHANGE_LOG.md | cut -d':' -f1)
-
-
-          line_number_unreleased=$(grep -n '[Unreleased]' CHANGE_LOG.md | cut -d':' -f1)
-          echo $line_number_unreleased
-
           
           if [ -n "$line_number" ]; then
           # Increment line number by 1 to add '##[Unreleased]' below the 'Chat Widget' tag
