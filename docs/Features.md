@@ -74,7 +74,7 @@ There are 2 types of chat reconnect:
 2. Authenticated chat: When the customer closes the browser tab after chat has started, they will have the option to continue the previous conversation or start a new conversation. The ```<ReconnectChatPane/>``` will show up in this case.
 
 > :warning: Chat reconnect may not be used if chat has ended.
-> :warning: For Auth Reconnect, settings `controlProps.hideReconnectChatPane` to `true` will completely skip the ReconnectPane rendering process. If there is a reconnectable chat, it will directly be rehydrated. If not, the chat button will show up.
+> :warning: For Auth Reconnect, setting `controlProps.hideReconnectChatPane` to `true` will completely skip the ReconnectPane rendering process. If there is a reconnectable chat, it will directly be rehydrated. If not, the chat button will show up.
 
 For more details, see [Chat SDK documentation](https://github.com/microsoft/omnichannel-chat-sdk#:~:text=Chat%20Reconnect%20with%20Authenticated%20User).
 
