@@ -4109,7 +4109,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "#oc-lcw-chat-button>div"
+                "selector": "#oc-lcw-chat-button"
               }
             },
             {
@@ -4137,7 +4137,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-chat-button>div"
+                    "selector": "#oc-lcw-chat-button"
                   }
                 },
                 {
@@ -4191,7 +4191,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-chat-button>div"
+                    "selector": "#oc-lcw-chat-button"
                   }
                 },
                 {
@@ -4245,7 +4245,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-chat-button>div"
+                    "selector": "#oc-lcw-chat-button"
                   }
                 },
                 {
@@ -4299,7 +4299,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-chat-button>div"
+                    "selector": "#oc-lcw-chat-button"
                   }
                 },
                 {
@@ -4388,7 +4388,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-chat-button>div"
+                    "selector": "#oc-lcw-chat-button"
                   }
                 },
                 {
@@ -4477,7 +4477,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "#oc-lcw-chat-button>div"
+                    "selector": "#oc-lcw-chat-button"
                   }
                 },
                 {
