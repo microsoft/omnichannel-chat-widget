@@ -4598,7 +4598,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
+                "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(1)"
               }
             },
             {
@@ -4854,7 +4854,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(1)"
                   }
                 },
                 {
@@ -4891,7 +4891,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(1)"
                   }
                 },
                 {
@@ -4928,7 +4928,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>div:nth-child(5)>div>div:nth-child(2)>div>div>button:nth-child(1)"
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(1)"
                   }
                 },
                 {
