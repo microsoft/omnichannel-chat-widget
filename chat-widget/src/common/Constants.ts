@@ -116,7 +116,7 @@ export class Constants {
     public static readonly TargetRelationshipAttributes = "noopener noreferrer";
 
     // Markdown icons
-    public static readonly OpenLinkIconCssClass = "webchat__markdown__external-link-icon";
+    public static readonly OpenLinkIconCssClass = "webchat__render-markdown__external-link-icon";
 
     // internet connection test
     public static readonly internetConnectionTestUrl = "https://ocsdk-prod.azureedge.net/public/connecttest.txt";
