@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- For Auth Reconnect, setting `controlProps.hideReconnectChatPane` to `true` no longer hides the pane UI, but will completely skip the ReconnectPane rendering process. If there is a reconnectable chat, it will directly be rehydrated. If not, the chat button will show up
 - Uptake [@microsoft/omnichannel-chat-components@1.1.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.1)
 
 ## [1.6.1] 2023-12-21

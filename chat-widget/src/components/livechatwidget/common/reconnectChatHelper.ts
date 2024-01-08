@@ -17,25 +17,27 @@ import { IReconnectChatOptionalParams } from "../../reconnectchatpanestateful/in
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 
 // Return value: should start normal chat flow when reconnect is enabled
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleChatReconnect = async (chatSDK: any, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext): Promise<boolean> => {
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleChatReconnect = async (chatSDK: any, props: ILiveChatWidgetProps, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext): Promise<boolean> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
 
     // Get chat reconnect context
-    const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig, props, isAuthenticatedChat);
+    const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig as ChatConfig, props, isAuthenticatedChat);
 
     // Redirect if enabled
     if (reconnectChatContext?.redirectURL) {
-        redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow);
+        redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow as boolean);
         return false;
     }
 
     if (hasReconnectId(reconnectChatContext)) {
-        //if reconnect id is provided in props, don't show reconnect pane
-        if (props.reconnectChatPaneProps?.reconnectId && !isNullOrEmptyString(props.reconnectChatPaneProps?.reconnectId)) {
+        //if reconnect id is provided in props, or hideReconnectChatPane is true, don't show reconnect pane
+        if (props.reconnectChatPaneProps?.reconnectId && !isNullOrEmptyString(props.reconnectChatPaneProps?.reconnectId) ||
+            props.controlProps?.hideReconnectChatPane) {
             await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, state, props, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);
             return false;
         }
