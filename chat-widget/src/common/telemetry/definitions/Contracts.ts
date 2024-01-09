@@ -12,6 +12,9 @@ export interface BaseContract {
     ExceptionDetails?: any;
     LogLevel: string;
     Description?: string;
+    OCChatSDKVersion?: string;
+    OCChatWidgetVersion?: string;
+    OCChatComponentsVersion?: string;
 }
 
 export interface ConfigValidationContract extends BaseContract {

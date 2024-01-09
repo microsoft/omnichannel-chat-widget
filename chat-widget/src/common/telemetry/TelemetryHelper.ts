@@ -53,7 +53,10 @@ export class TelemetryHelper {
             OrganizationUrl: TelemetryManager.InternalTelemetryData?.orgUrl ?? "",
             LCWRuntimeId: TelemetryManager.InternalTelemetryData?.lcwRuntimeId ?? "",
             CurrentRequestId: TelemetryManager.InternalTelemetryData?.currentRequestId ?? "",
-            LogLevel: level
+            LogLevel: level,
+            OCChatSDKVersion: TelemetryManager.InternalTelemetryData?.OCChatSDKVersion ?? "",
+            OCChatWidgetVersion: TelemetryManager.InternalTelemetryData?.chatWidgetVersion ?? "",
+            OCChatComponentsVersion: TelemetryManager.InternalTelemetryData?.chatComponentVersion ?? ""
         };
     }
 
@@ -130,9 +133,6 @@ export class TelemetryHelper {
                 event.ChatType = payload.ChatType;
                 event.ElapsedTimeInMilliseconds = payload.ElapsedTimeInMilliseconds;
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
-                event.OCChatSDKVersion = TelemetryManager.InternalTelemetryData?.OCChatSDKVersion ?? "";
-                event.OCChatWidgetVersion = TelemetryManager.InternalTelemetryData?.chatWidgetVersion ?? "";
-                event.OCChatComponentsVersion = TelemetryManager.InternalTelemetryData?.chatComponentVersion ?? "";
             });
     }
 
