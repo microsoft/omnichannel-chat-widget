@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.6.2] 2024-01-10
+
 ### Changed
 
 - For Auth Reconnect, setting `controlProps.hideReconnectChatPane` to `true` no longer hides the pane UI, but will completely skip the ReconnectPane rendering process. If there is a reconnectable chat, it will directly be rehydrated. If not, the chat button will show up
