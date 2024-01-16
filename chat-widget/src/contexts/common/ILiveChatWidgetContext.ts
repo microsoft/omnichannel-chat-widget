@@ -66,4 +66,5 @@ export interface ILiveChatWidgetContext {
         isIncomingCall: boolean; //incoming/currentcall
         focusChatButton: boolean; // true after the first rendering for chat button
     };
+    lastStamp?: number; // last stamp of the message
 }

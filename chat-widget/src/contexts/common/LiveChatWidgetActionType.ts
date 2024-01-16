@@ -278,5 +278,7 @@ export enum LiveChatWidgetActionType {
         Parameters:
         ParticipantType: Set participant type when rendering post chat survey
     */
-    SET_POST_CHAT_PARTICIPANT_TYPE
+    SET_POST_CHAT_PARTICIPANT_TYPE,
+
+    GET_CONVERSATION_STATE,
 }

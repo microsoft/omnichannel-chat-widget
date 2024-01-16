@@ -42,6 +42,8 @@ const handleChatReconnect = async (chatSDK: any, props: ILiveChatWidgetProps, di
             return false;
         }
 
+        console.log("ELOPEZANAYA :: reconnectChatHelper::handleChatReconnect:: set conversation state to ReconnectChat");
+
         //show reconnect pane
         state.appStates.conversationState = ConversationState.ReconnectChat;
         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectChatContext.reconnectId ?? "" });
@@ -101,6 +103,7 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK:
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
+    console.log("ELOPEZANAYA :: reconnectChatHelper::setReconnectIdAndStartChat::call initStartChat & set conversation state to Loading ");
     await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 

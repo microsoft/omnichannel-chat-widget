@@ -86,6 +86,9 @@ import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
+import { getReducer } from "../../../contexts/createReducer";
+
+
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -137,11 +140,28 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
+
+
         const isReconnectTriggered = async (): Promise<boolean> => {
+
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
+
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                
+                const last= getReducer()(state, { type: LiveChatWidgetActionType.GET_CONVERSATION_STATE, payload: null });
+                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: last.lastStamp => ",last.lastStamp);
+                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: last.conversationState => ",last.appStates.conversationState);
+
+                dispatch({ type: LiveChatWidgetActionType.GET_CONVERSATION_STATE, payload: null });
+                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: state.conversationState => ",state.appStates.conversationState);
+                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: state.lastStamp => ",state.lastStamp);
+
+
+                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: noValidReconnectId",noValidReconnectId);
+                console.log("ELOPEZANAYA :: livechatsttfull:: startChat:: isReconnectTriggered:: state.appStates.conversationState",state.appStates.conversationState);
                 // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                if (!noValidReconnectId && (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat)) {
+                if (!noValidReconnectId && (last.appStates.conversationState === ConversationState.Active 
+                    || last.appStates.conversationState === ConversationState.ReconnectChat)) {
                     return true;
                 }
             }
@@ -151,6 +171,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         let isChatValid = false;
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
+            console.log("ELOPEZANAYA :: livechatsttfull:: startChat:: activeCachedChatExist:: set cobnversation state to loading");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             if (localState) {
@@ -159,9 +180,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
+            console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: isChatValid", isChatValid);
             if (isChatValid === true) {
+                console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: isChatValid : inside block");
+
                 const reconnectTriggered = await isReconnectTriggered();
+                console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: isChatValid : inside block ::reconnectTriggered::",reconnectTriggered);
                 if (!reconnectTriggered) {
+                    console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: isChatValid : inside block ::reconnectTriggered:: inside block");
                     await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
                 }
                 return;
@@ -171,17 +197,26 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (isChatValid === false) {
             if (localState) {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
+                
                 const reconnectTriggered = await isReconnectTriggered();
+                console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: NOT isChatValid : inside block ::reconnectTriggered::",reconnectTriggered);
+
                 if (!reconnectTriggered) {
+                    console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: NOT isChatValid : inside block ::NOT reconnectTriggered::");
+
                     await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 }
                 return;
             } else {
                 // To avoid showing blank screen in popout
                 if (state?.appStates?.hideStartChatButton === false) {
+                    console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: NOT isChatValid : set cobnversation state to closed");
+
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
                     return;
                 }
+                console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: NOT isChatValid : set cobnversation state to loading");
+
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             }
         }
