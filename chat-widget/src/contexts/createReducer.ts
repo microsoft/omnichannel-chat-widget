@@ -20,26 +20,21 @@ export const getReducer = () => {
 };
 
 export const executeReducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): ILiveChatWidgetContext => {
-
     return reducer(state, action);
-
 };
 
+// inMemory state to store the runtime state of the widget for access immediately
 let inMemory: ILiveChatWidgetContext;
 
 const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): ILiveChatWidgetContext => {
 
+    // Initialize inMemory state
     if (!inMemory) {
         inMemory = state;
     }
 
-    if (action && action.type === LiveChatWidgetActionType.SET_CONVERSATION_STATE) {
-        console.log("ELOPEZANAYAY SET_CONVERSATION_STATE CALL :: PAYYLOAF :: " + JSON.stringify(action.payload));
-    }
-
     switch (action.type) {
         case LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID:
-
             inMemory = {
                 ...inMemory,
                 domainStates: {
@@ -56,7 +51,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS:
-
             inMemory = {
                 ...inMemory,
                 domainStates: {
@@ -64,7 +58,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     renderingMiddlewareProps: action.payload as IRenderingMiddlewareProps
                 }
             };
-
             return {
                 ...state,
                 domainStates: {
@@ -74,7 +67,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS:
-
             inMemory = {
                 ...inMemory,
                 domainStates: {
@@ -91,7 +83,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_GLOBAL_DIR:
-
             inMemory = {
                 ...inMemory,
                 domainStates: {
@@ -108,9 +99,7 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_MINIMIZED:
-
             inMemory = {
-
                 ...inMemory,
                 appStates: {
                     ...state.appStates,
@@ -127,9 +116,8 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_CONVERSATION_STATE:
-            console.log("ELOPEZANAYAY SET_CONVERSATION_STATE :: PAYYLOAF :: " + JSON.stringify(action.payload));
-            console.log("ELOPEZANAYAY SET_CONVERSATION_STATE :: STATTE" + JSON.stringify(state.appStates.conversationState));
-
+            console.log("ADAD current state", state.appStates.conversationState);
+            console.log("ADAD reducer SET_CONVERSATION_STATE to", action.payload);
             inMemory = {
                 ...inMemory,
                 appStates: {
@@ -137,7 +125,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     conversationState: action.payload as ConversationState
                 }
             };
-
             return {
                 ...state,
                 appStates: {
@@ -146,8 +133,21 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                 }
             };
 
-        case LiveChatWidgetActionType.SET_START_CHAT_FAILING:
+            // if (action.payload) {
+            //     console.log("ADAD setting conversation state to value");
+            //     return {
+            //         ...state,
+            //         appStates: {
+            //             ...state.appStates,
+            //             conversationState: action.payload as ConversationState
+            //         }
+            //     };
+            // } else {
+            //     console.log("ADAD setting conversation state to returning regular state");
+            //     return state;
+            // }
 
+        case LiveChatWidgetActionType.SET_START_CHAT_FAILING:
             inMemory = {
                 ...inMemory,
                 appStates: {
@@ -155,7 +155,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     startChatFailed: action.payload as boolean
                 }
             };
-
             return {
                 ...state,
                 appStates: {
@@ -172,7 +171,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     startChatFailureType: action.payload as StartChatFailureType
                 }
             };
-
             return {
                 ...state,
                 domainStates: {
@@ -189,7 +187,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     outsideOperatingHours: action.payload as boolean
                 }
             };
-
             return {
                 ...state,
                 appStates: {
@@ -206,7 +203,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     preChatSurveyResponse: action.payload as string
                 }
             };
-
             return {
                 ...state,
                 domainStates: {
@@ -224,7 +220,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     customContext: action.payload as any
                 }
             };
-
             return {
                 ...state,
                 domainStates: {
@@ -235,7 +230,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID:
-
             inMemory = {
                 ...inMemory,
                 appStates: {
@@ -243,7 +237,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     previousElementIdOnFocusBeforeModalOpen: action.payload as string | null
                 }
             };
-
             return {
                 ...state,
                 appStates: {
@@ -253,7 +246,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_SHOW_CONFIRMATION:
-
             inMemory = {
                 ...inMemory,
                 uiStates: {
@@ -270,7 +262,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT:
-
             inMemory = {
                 ...inMemory,
                 domainStates: {
@@ -289,7 +280,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SHOW_CALLING_CONTAINER:
-
             inMemory = {
                 ...inMemory,
                 uiStates: {
@@ -297,7 +287,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     showCallingPopup: action.payload as boolean
                 }
             };
-
             return {
                 ...state,
                 uiStates: {
@@ -307,7 +296,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_INCOMING_CALL:
-
             inMemory = {
                 ...inMemory,
                 uiStates: {
@@ -324,7 +312,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_FOCUS_CHAT_BUTTON:
-
             inMemory = {
                 ...inMemory,
                 uiStates: {
@@ -332,7 +319,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     focusChatButton: action.payload as boolean
                 }
             };
-
             return {
                 ...state,
                 uiStates: {
@@ -342,7 +328,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.DISABLE_VIDEO_CALL:
-
             inMemory = {
                 ...inMemory,
                 uiStates: {
@@ -350,7 +335,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     disableVideoCall: action.payload as boolean
                 }
             };
-
             return {
                 ...state,
                 uiStates: {
@@ -360,7 +344,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.DISABLE_LOCAL_VIDEO:
-
             inMemory = {
                 ...inMemory,
                 uiStates: {
@@ -368,7 +351,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     disableSelfVideo: action.payload as boolean
                 }
             };
-
             return {
                 ...state,
                 uiStates: {
@@ -385,7 +367,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     disableRemoteVideo: action.payload as boolean
                 }
             };
-
             return {
                 ...state,
                 uiStates: {
@@ -403,7 +384,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     chatToken: action.payload as any
                 }
             };
-
             return {
                 ...state,
                 domainStates: {
@@ -412,7 +392,15 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     chatToken: action.payload as any
                 }
             };
+
         case LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE:
+            inMemory = {
+                ...inMemory,
+                uiStates: {
+                    ...inMemory.uiStates,
+                    showEmailTranscriptPane: action.payload as boolean,
+                }
+            };
             return {
                 ...state,
                 uiStates: {
@@ -420,7 +408,15 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     showEmailTranscriptPane: action.payload as boolean
                 }
             };
+
         case LiveChatWidgetActionType.SET_PRECHAT_RESPONSE_EMAIL:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    preChatResponseEmail: action.payload as string
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -428,7 +424,15 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     preChatResponseEmail: action.payload as string
                 }
             };
+
         case LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    isAudioMuted: action.payload as boolean
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -436,7 +440,15 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     isAudioMuted: action.payload as boolean | null
                 }
             };
+
         case LiveChatWidgetActionType.SET_E2VV_ENABLED:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    e2vvEnabled: action.payload as boolean
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -444,7 +456,15 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     e2vvEnabled: action.payload as boolean
                 }
             };
+
         case LiveChatWidgetActionType.SET_START_CHAT_BUTTON_DISPLAY:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    hideStartChatButton: action.payload as boolean
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -452,7 +472,20 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     hideStartChatButton: action.payload as boolean
                 }
             };
+
         case LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    proactiveChatStates: {
+                        ...state.appStates.proactiveChatStates,
+                        proactiveChatBodyTitle: action.payload?.proactiveChatBodyTitle as string,
+                        proactiveChatEnablePrechat: action.payload?.proactiveChatEnablePrechat as boolean,
+                        proactiveChatInNewWindow: action.payload?.proactiveChatInNewWindow as boolean
+                    }
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -465,7 +498,15 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     }
                 }
             };
+
         case LiveChatWidgetActionType.SET_TELEMETRY_DATA:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    telemetryInternalData: action.payload as IInternalTelemetryData
+                }
+            };
             return {
                 ...state,
                 domainStates: {
@@ -473,7 +514,15 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     telemetryInternalData: action.payload as IInternalTelemetryData
                 }
             };
+
         case LiveChatWidgetActionType.SET_RECONNECT_ID:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    reconnectId: action.payload as (string | undefined)
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -483,6 +532,13 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    unreadMessageCount: action.payload as number
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -492,6 +548,14 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    liveChatContext: action.payload as any
+                }
+            };
             return {
                 ...state,
                 domainStates: {
@@ -502,11 +566,21 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_WIDGET_STATE:
+            inMemory = {
+                ...action.payload as ILiveChatWidgetContext
+            };
             return {
                 ...action.payload as ILiveChatWidgetContext
             };
 
         case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    conversationEndedBy: action.payload as ConversationEndEntity
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -516,6 +590,14 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_WIDGET_SIZE:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    widgetSize: action.payload as any
+                }
+            };
             return {
                 ...state,
                 domainStates: {
@@ -526,6 +608,14 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_WIDGET_INSTANCE_ID:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    widgetInstanceId: action.payload as string
+                }
+            };
             return {
                 ...state,
                 domainStates: {
@@ -536,6 +626,14 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_LIVE_CHAT_CONFIG:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    liveChatConfig: action.payload as any
+                }
+            };
             return {
                 ...state,
                 domainStates: {
@@ -546,6 +644,13 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    initialChatSdkRequestId: action.payload as string
+                }
+            };
             return {
                 ...state,
                 domainStates: {
@@ -555,6 +660,13 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    chatDisconnectEventReceived: action.payload as boolean
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -562,7 +674,15 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     chatDisconnectEventReceived: action.payload as boolean
                 }
             };
+
         case LiveChatWidgetActionType.SET_SURVEY_MODE:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    selectedSurveyMode: action.payload as PostChatSurveyMode
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -572,6 +692,13 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_CONFIRMATION_STATE:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    confirmationState: action.payload as ConfirmationState
+                }
+            };
             return {
                 ...state,
                 domainStates: {
@@ -581,6 +708,13 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_POST_CHAT_PARTICIPANT_TYPE:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    postChatParticipantType: action.payload as ParticipantType
+                }
+            };
             return {
                 ...state,
                 appStates: {
@@ -588,20 +722,12 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     postChatParticipantType: action.payload as ParticipantType
                 }
             };
-
-        case LiveChatWidgetActionType.GET_CONVERSATION_STATE:
-            {
-                return {
-                    ...state,
-                    appStates: {
-                        ...state.appStates,
-                        conversationState: inMemory.appStates.conversationState
-                    }
-                };
-
-            }
+            
+        case LiveChatWidgetActionType.GET_IN_MEMORY_STATE:
+            return inMemory;
 
         default:
+            // console.log("ADAD returning default state");
             return state;
     }
 };
