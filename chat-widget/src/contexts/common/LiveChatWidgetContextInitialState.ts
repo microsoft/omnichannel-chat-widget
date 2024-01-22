@@ -14,11 +14,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
     const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
     const initialState = defaultClientDataStoreProvider(cacheTtlInMins, storageType).getData(widgetCacheId);
 
-    console.log("ADAD initialState", initialState);
-
     if (!isNullOrUndefined(initialState)) {
         const initialStateFromCache: ILiveChatWidgetContext = JSON.parse(initialState);
-        console.log("ADAD initialStateFromCache", initialStateFromCache);
         return initialStateFromCache;
     }
 

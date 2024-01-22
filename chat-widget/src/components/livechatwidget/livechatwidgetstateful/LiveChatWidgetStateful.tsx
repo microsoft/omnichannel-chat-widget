@@ -139,20 +139,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
         const isReconnectTriggered = async (): Promise<boolean> => {
-
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
-
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
-
-                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: state.conversationState => ",state.appStates.conversationState);
-                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: state.lastStamp => ",state.lastStamp);
-                
-                // const inMemoryState = getReducer()(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: last.lastStamp => ",inMemoryState.lastStamp);
-                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: last.conversationState => ",inMemoryState.appStates.conversationState);
-
-                console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: noValidReconnectId",noValidReconnectId);
                 // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
                 if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active 
                     || inMemoryState.appStates.conversationState === ConversationState.ReconnectChat)) {
@@ -165,7 +154,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         let isChatValid = false;
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
-            console.log("ELOPEZANAYA :: livechatsttfull:: startChat:: activeCachedChatExist:: set conversation state to loading");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             if (localState) {
@@ -174,14 +162,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
-            console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: isChatValid", isChatValid);
             if (isChatValid === true) {
-                console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: isChatValid : inside block");
-
                 const reconnectTriggered = await isReconnectTriggered();
-                console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: isChatValid : inside block ::reconnectTriggered::", reconnectTriggered);
                 if (!reconnectTriggered) {
-                    console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: isChatValid : inside block ::reconnectTriggered:: inside block");
                     await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
                 }
                 return;
@@ -192,23 +175,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (localState) {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
                 const reconnectTriggered = await isReconnectTriggered();
-                console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: NOT isChatValid : inside block ::reconnectTriggered::", reconnectTriggered);
-
                 if (!reconnectTriggered) {
-                    console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: NOT isChatValid : inside block ::NOT reconnectTriggered::");
                     await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
                 }
                 return;
             } else {
                 // To avoid showing blank screen in popout
                 if (state?.appStates?.hideStartChatButton === false) {
-                    console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: NOT isChatValid : set conversation state to closed");
-
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
                     return;
                 }
-                console.log("ELOPEZANAYA :: livechatsttfull :: startChat:: NOT isChatValid : set conversation state to loading");
-
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             }
         }
@@ -336,7 +312,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
             // If the startChat event is not initiated by the same tab. Ignore the call
             if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
-                console.log("ADAD startChat event is not initiatedby the same tab -- ignored call");
                 return;
             }
             
@@ -361,18 +336,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Description: "Start chat event received."
             });
 
-            console.log("ADAD INITIAL state.appStates?.conversationState", state.appStates?.conversationState);
-            console.log("ADAD INITIAL state.appStates?.isMinimized", state.appStates?.isMinimized);
-
-            // const inMemoryState = getReducer()(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-            console.log("ADAD inMemoryState", inMemoryState);
 
             // Only initiate new chat if widget runtime state is one of the followings
             if (inMemoryState.appStates?.conversationState === ConversationState.Closed ||
                 inMemoryState.appStates?.conversationState === ConversationState.InActive ||
                 inMemoryState.appStates?.conversationState === ConversationState.Postchat) {
-                console.log("ADAD initiating chat");
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
@@ -382,7 +351,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true) {
-                console.log("ADAD maximizing chat, bc it is currently minimized");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
@@ -393,9 +361,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
                 return;
             }
-            
-            // If we have reached this point in code, startChat SDK has behaved as a no-op
-            console.log("ADAD startChat SDK no-op");
         });
 
         // End chat
@@ -477,8 +442,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, []);
 
     useEffect(() => {
-        console.log("ADAD state.appStates.conversationState hook", state.appStates.conversationState);
-
         // On new message
         if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {
@@ -543,8 +506,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [props.webChatContainerProps?.webChatStyles]);
 
     useEffect(() => {
-        console.log("ADAD state.domainStates.confirmationState hook", state.domainStates.confirmationState);
-
         //Confirmation pane dismissing through OK option, so proceed with end chat
         if (state.domainStates.confirmationState === ConfirmationState.Ok) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
