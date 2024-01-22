@@ -86,7 +86,7 @@ import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
-import { getReducer } from "../../../contexts/createReducer";
+import { executeReducer } from "../../../contexts/createReducer";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -137,7 +137,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const startChat = async (props: ILiveChatWidgetProps, localState?: any) => { // ADAD TODO: this start chat does not have a dispatch passed in, but a localState?
+    const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
         const isReconnectTriggered = async (): Promise<boolean> => {
 
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
@@ -147,7 +147,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: state.conversationState => ",state.appStates.conversationState);
                 console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: state.lastStamp => ",state.lastStamp);
                 
-                const inMemoryState = getReducer()(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                // const inMemoryState = getReducer()(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: last.lastStamp => ",inMemoryState.lastStamp);
                 console.log("ELOPEZANAYA ::livechatsttfull:: startChat:: isReconnectTriggered:: last.conversationState => ",inMemoryState.appStates.conversationState);
 
@@ -363,19 +364,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             console.log("ADAD INITIAL state.appStates?.conversationState", state.appStates?.conversationState);
             console.log("ADAD INITIAL state.appStates?.isMinimized", state.appStates?.isMinimized);
 
-            // const lastestState = getReducer()(state, { type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: null });
-            const inMemoryState = getReducer()(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-            // console.log("ADAD latestState", lastestState);
+            // const inMemoryState = getReducer()(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+            const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
             console.log("ADAD inMemoryState", inMemoryState);
-            // const lastestMinimizedState = getReducer()(state, { type: LiveChatWidgetActionType.SET_MINIMIZED, payload: null });
-
-            // const last = getReducer()(state, { type: LiveChatWidgetActionType.GET_CONVERSATION_STATE, payload: null });
-            // console.log("ADAD last.lastStamp => ", last.lastStamp);
-            // console.log("ADAD last.appStates.conversationState => ", last.appStates.conversationState);
-
-            // dispatch({ type: LiveChatWidgetActionType.GET_CONVERSATION_STATE, payload: null });
-            // console.log("ADAD state.appStates.conversationState => ", state.appStates.conversationState);
-            // console.log("ADAD state.lastStamp => ", state.lastStamp);
 
             // Only initiate new chat if widget runtime state is one of the followings
             if (inMemoryState.appStates?.conversationState === ConversationState.Closed ||
@@ -405,46 +396,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             
             // If we have reached this point in code, startChat SDK has behaved as a no-op
             console.log("ADAD startChat SDK no-op");
-
-            // // DataStoreManager.clientDataStore?.swtichToSessionStorage(true);
-            // const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
-
-            // // Chat not found in cache - scenario: explicitly clearing cache and calling startChat SDK method
-            // if (persistedState === undefined) {
-            //     console.log("ADAD chat not found in cache");
-            //     BroadcastService.postMessage({
-            //         eventName: BroadcastEvent.ChatInitiated
-            //     });
-            //     prepareStartChat(props, chatSDK, stateWithUpdatedContext, dispatch, setAdapter);
-            //     return;
-            // }
-
-            // // Chat exist in cache
-            // if (persistedState) {
-            //     console.log("ADAD chat exists in cache");
-            //     // Only initiate new chat if widget state in cache in one of the followings
-            //     if (persistedState.appStates?.conversationState === ConversationState.Closed ||
-            //         persistedState.appStates?.conversationState === ConversationState.InActive ||
-            //         persistedState.appStates?.conversationState === ConversationState.Postchat) {
-            //         BroadcastService.postMessage({
-            //             eventName: BroadcastEvent.ChatInitiated
-            //         });
-            //         prepareStartChat(props, chatSDK, stateWithUpdatedContext, dispatch, setAdapter);
-            //         return;
-            //     }
-
-            //     // If minimized, maximize the chat
-            //     if (persistedState?.appStates?.isMinimized === true) {
-            //         dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-            //         BroadcastService.postMessage({
-            //             eventName: BroadcastEvent.MaximizeChat,
-            //             payload: {
-            //                 height: persistedState?.domainStates?.widgetSize?.height,
-            //                 width: persistedState?.domainStates?.widgetSize?.width
-            //             }
-            //         });
-            //     }
-            // }
         });
 
         // End chat
@@ -527,10 +478,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         console.log("ADAD state.appStates.conversationState hook", state.appStates.conversationState);
-        // ADAD TODO: perhaps call dispatch to update the state and then add an additional reducer call???
-        // dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: state.appStates.conversationState });
-        // debate add: const nextState = reducer(state, action);
-        // problem here is were can we leverage nextState effectively???
 
         // On new message
         if (state.appStates.conversationState === ConversationState.Active) {

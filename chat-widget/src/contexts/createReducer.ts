@@ -15,10 +15,6 @@ export const createReducer = () => {
     return reducer;
 };
 
-export const getReducer = () => {
-    return reducer;
-};
-
 export const executeReducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): ILiveChatWidgetContext => {
     return reducer(state, action);
 };
@@ -132,20 +128,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     conversationState: action.payload as ConversationState
                 }
             };
-
-            // if (action.payload) {
-            //     console.log("ADAD setting conversation state to value");
-            //     return {
-            //         ...state,
-            //         appStates: {
-            //             ...state.appStates,
-            //             conversationState: action.payload as ConversationState
-            //         }
-            //     };
-            // } else {
-            //     console.log("ADAD setting conversation state to returning regular state");
-            //     return state;
-            // }
 
         case LiveChatWidgetActionType.SET_START_CHAT_FAILING:
             inMemory = {
@@ -727,7 +709,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             return inMemory;
 
         default:
-            // console.log("ADAD returning default state");
             return state;
     }
 };

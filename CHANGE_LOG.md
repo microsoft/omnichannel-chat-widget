@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Running startChat SDK multiple times on an active chat without local storage is treated as a no-op
+- Reconnecting to an unauthenticated popout reconnect chat with prechat survey configured does not present the prechat survey again
+
 ## [1.6.2] 2024-01-10
 
 ### Changed
