@@ -112,8 +112,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_CONVERSATION_STATE:
-            console.log("ADAD current state", state.appStates.conversationState);
-            console.log("ADAD reducer SET_CONVERSATION_STATE to", action.payload);
             inMemory = {
                 ...inMemory,
                 appStates: {
