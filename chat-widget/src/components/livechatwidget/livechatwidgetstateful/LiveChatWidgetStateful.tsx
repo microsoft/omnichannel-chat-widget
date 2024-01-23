@@ -86,6 +86,7 @@ import useChatSDKStore from "../../../hooks/useChatSDKStore";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
+import { executeReducer } from "../../../contexts/createReducer";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -140,8 +141,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         const isReconnectTriggered = async (): Promise<boolean> => {
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                if (!noValidReconnectId && (state.appStates.conversationState === ConversationState.Active || state.appStates.conversationState === ConversationState.ReconnectChat)) {
+                if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active 
+                    || inMemoryState.appStates.conversationState === ConversationState.ReconnectChat)) {
                     return true;
                 }
             }
@@ -333,11 +336,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Description: "Start chat event received."
             });
 
-            // DataStoreManager.clientDataStore?.swtichToSessionStorage(true);
-            const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
+            const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
-            // Chat not found in cache - scenario: explicitly clearing cache and calling startChat SDK method
-            if (persistedState === undefined) {
+            // Only initiate new chat if widget runtime state is one of the followings
+            if (inMemoryState.appStates?.conversationState === ConversationState.Closed ||
+                inMemoryState.appStates?.conversationState === ConversationState.InActive ||
+                inMemoryState.appStates?.conversationState === ConversationState.Postchat) {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
@@ -345,30 +349,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 return;
             }
 
-            // Chat exist in cache
-            if (persistedState) {
-                // Only initiate new chat if widget state in cache in one of the followings
-                if (persistedState.appStates?.conversationState === ConversationState.Closed ||
-                    persistedState.appStates?.conversationState === ConversationState.InActive ||
-                    persistedState.appStates?.conversationState === ConversationState.Postchat) {
-                    BroadcastService.postMessage({
-                        eventName: BroadcastEvent.ChatInitiated
-                    });
-                    prepareStartChat(props, chatSDK, stateWithUpdatedContext, dispatch, setAdapter);
-                    return;
-                }
-
-                // If minimized, maximize the chat
-                if (persistedState?.appStates?.isMinimized === true) {
-                    dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-                    BroadcastService.postMessage({
-                        eventName: BroadcastEvent.MaximizeChat,
-                        payload: {
-                            height: persistedState?.domainStates?.widgetSize?.height,
-                            width: persistedState?.domainStates?.widgetSize?.width
-                        }
-                    });
-                }
+            // If minimized, maximize the chat
+            if (inMemoryState?.appStates?.isMinimized === true) {
+                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.MaximizeChat,
+                    payload: {
+                        height: inMemoryState?.domainStates?.widgetSize?.height,
+                        width: inMemoryState?.domainStates?.widgetSize?.width
+                    }
+                });
+                return;
             }
         });
 
