@@ -439,3 +439,7 @@ export const  formatTemplateString = (templateMessage : string, values : any) =>
         return typeof values[index] !== "undefined" ? values[index] : match;
     });
 };
+
+export const parseLowerCaseString = (property: string | boolean | undefined): string => {
+    return String(property).toLowerCase();
+}
