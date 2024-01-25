@@ -442,4 +442,4 @@ export const  formatTemplateString = (templateMessage : string, values : any) =>
 
 export const parseLowerCaseString = (property: string | boolean | undefined): string => {
     return String(property).toLowerCase();
-}
+};
