@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Running startChat SDK multiple times on an active chat without local storage is treated as a no-op
 - Reconnecting to an unauthenticated popout reconnect chat with prechat survey configured does not present the prechat survey again
+- Fix data `Data Masking` being enabled when `msdyn_maskforcustomer` is set to `false` and `dataMaskingRules` is not empty 
 
 ## [1.6.2] 2024-01-10
 
