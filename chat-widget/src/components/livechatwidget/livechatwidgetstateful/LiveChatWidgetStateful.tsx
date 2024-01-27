@@ -137,13 +137,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const startChat = async (props: ILiveChatWidgetProps, initChat: boolean) => {
+    const startChat = async (props: ILiveChatWidgetProps) => {
         const isReconnectTriggered = async (): Promise<boolean> => {
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active 
+                if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active
                     || inMemoryState.appStates.conversationState === ConversationState.ReconnectChat)) {
                     return true;
                 }
@@ -168,17 +168,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         if (isChatValid === false) {
-            if (initChat === true) {
-                console.log("ELOPEZANAYA :: localState : not popout");
+            //this is needed, to obtain the latest state
+            let runtimeState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+
+            if (runtimeState?.appStates?.hideStartChatButton === true) {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
-                    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-                    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, inMemoryState, props);
+                    runtimeState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, runtimeState, props);
                 }
                 return;
             } else {
-                console.log("ELOPEZANAYA :: I guess popout");
                 // To avoid showing blank screen in popout
                 if (state?.appStates?.hideStartChatButton === false) {
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
@@ -239,7 +240,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Unauth chat
         if (state?.appStates?.hideStartChatButton === false) {
             console.log("ELOPEZANAYA : calling startChat,, NO state");
-            startChat(props, false);
+            //false
+            startChat(props);
         }
     }, []);
 
@@ -257,7 +259,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             });
             console.log("ELOPEZANAYA :: calling startChat and passing state");
             //Pass the state to avoid getting stale state
-            startChat(props, true);
+            //true
+            startChat(props);
         }
     }, [state?.appStates?.hideStartChatButton]);
 
@@ -315,7 +318,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 return;
             }
-            
+
             let stateWithUpdatedContext: ILiveChatWidgetContext = state;
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -331,7 +334,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     }
                 };
             }
-            
+
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
@@ -370,7 +373,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent."
             });
-            
+
             // This is to ensure to get latest state from cache in multitab
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
@@ -380,7 +383,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 // We need to simulate states for closing chat, in order to messup with close confirmation pane.
                 dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
-                
+
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
             } else {
                 const skipEndChatSDK = true;
@@ -624,7 +627,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         },
         props.webChatContainerProps);
 
-    const livechatProps = {...props, downloadTranscriptProps};
+    const livechatProps = { ...props, downloadTranscriptProps };
 
     const chatWidgetDraggableConfig = {
         elementId: widgetElementId,
@@ -639,7 +642,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     const headerDraggableConfig = {
         draggableEventChannel: chatWidgetDraggableConfig.channel ?? "lcw",
-        draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe? window.parent: window,
+        draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe ? window.parent : window,
         draggable: props.draggableChatWidgetProps?.disabled !== true // Draggable by default, unless explicitly disabled
     };
 
