@@ -137,7 +137,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
+    const startChat = async (props: ILiveChatWidgetProps, initChat: boolean) => {
         const isReconnectTriggered = async (): Promise<boolean> => {
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
@@ -156,10 +156,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (activeCachedChatExist === true) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
-            if (localState) {
-                localState.appStates.conversationState = ConversationState.Loading;
-            }
-
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
             if (isChatValid === true) {
@@ -172,14 +168,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         if (isChatValid === false) {
-            if (localState) {
+            if (initChat === true) {
+                console.log("ELOPEZANAYA :: localState : not popout");
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
-                    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
+                    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, inMemoryState, props);
                 }
                 return;
             } else {
+                console.log("ELOPEZANAYA :: I guess popout");
                 // To avoid showing blank screen in popout
                 if (state?.appStates?.hideStartChatButton === false) {
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
@@ -239,7 +238,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Unauth chat
         if (state?.appStates?.hideStartChatButton === false) {
-            startChat(props);
+            console.log("ELOPEZANAYA : calling startChat,, NO state");
+            startChat(props, false);
         }
     }, []);
 
@@ -255,8 +255,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.ChatInitiated
             });
+            console.log("ELOPEZANAYA :: calling startChat and passing state");
             //Pass the state to avoid getting stale state
-            startChat(props, state);
+            startChat(props, true);
         }
     }, [state?.appStates?.hideStartChatButton]);
 
