@@ -351,4 +351,19 @@ describe("utils unit test", () => {
         const property = true;
         expect(parseLowerCaseString(property)).toEqual("true");
     });
+
+    it("should parse 'False' string value to lower case string", () => {
+        const property = "False";
+        expect(parseLowerCaseString(property)).toEqual("false");
+    });
+
+    it("should parse 'false' string value to lower case string", () => {
+        const property = "false";
+        expect(parseLowerCaseString(property)).toEqual("false");
+    });
+
+    it("should parse false boolean value to lower case string", () => {
+        const property = false;
+        expect(parseLowerCaseString(property)).toEqual("false");
+    });
 });
