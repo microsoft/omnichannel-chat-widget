@@ -249,6 +249,7 @@ const handleAuthenticationIfEnabled = async (props: ILiveChatWidgetProps, chatSD
         const authClientFunction = getAuthClientFunction(props.chatConfig);
         if (props.getAuthToken && authClientFunction) {
             // set auth token to chat sdk before end chat
+            console.log("ELOPEZANAYA :: handleAuthenticationIfEnabled :: calling handleAuthentication");
             const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
             if (!authSuccess) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {

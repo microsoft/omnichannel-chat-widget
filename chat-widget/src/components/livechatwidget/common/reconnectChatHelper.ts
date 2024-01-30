@@ -28,6 +28,9 @@ const handleChatReconnect = async (chatSDK: any, props: ILiveChatWidgetProps, di
     // Get chat reconnect context
     const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig as ChatConfig, props, isAuthenticatedChat);
 
+    if (reconnectChatContext === null) {
+        return false;
+    }
     // Redirect if enabled
     if (reconnectChatContext?.redirectURL) {
         redirectPage(reconnectChatContext.redirectURL, props.reconnectChatPaneProps?.redirectInSameWindow as boolean);
@@ -41,7 +44,7 @@ const handleChatReconnect = async (chatSDK: any, props: ILiveChatWidgetProps, di
             await setReconnectIdAndStartChat(isAuthenticatedChat, chatSDK, state, props, dispatch, setAdapter, reconnectChatContext.reconnectId ?? "", initStartChat);
             return false;
         }
-
+        
         //show reconnect pane
         state.appStates.conversationState = ConversationState.ReconnectChat;
         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectChatContext.reconnectId ?? "" });
@@ -51,6 +54,7 @@ const handleChatReconnect = async (chatSDK: any, props: ILiveChatWidgetProps, di
 
     // If we have reached this point, it means there is no valid reconnect id or redirectUrl
     // This is a unauth reconnect refresh scenario - returns true so that we can start normal hydration process
+    
     return true;
 };
 
@@ -65,19 +69,30 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
         const chatReconnectOptionalParams: IReconnectChatOptionalParams = {
             reconnectId: props.reconnectChatPaneProps?.reconnectId
         };
+
         // Get auth token for getting chat reconnect context
+        let result = null;
         if (isAuthenticatedChat) {
-            await handleAuthentication(chatSDK, chatConfig, props.getAuthToken);
+            
+            result = await handleAuthentication(chatSDK, chatConfig, props.getAuthToken);
+
+            if (!result) {
+            
+                throw new Error("Failed to get auth token");
+            }
         }
+        
         const reconnectChatContext = await chatSDK?.getChatReconnectContext(chatReconnectOptionalParams);
         if (isAuthenticatedChat) {
             // remove auth token after reconnectId is fetched
             // AuthToken will be reset later at start chat
             removeAuthTokenProvider(chatSDK);
         }
+        
         return reconnectChatContext;
     }
     catch (error) {
+        
         checkContactIdError(error);
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.GetChatReconnectContextSDKCallFailed,
@@ -90,7 +105,9 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK: any, state: ILiveChatWidgetContext, props: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, reconnectId: string, initStartChat: any) => {
+    
     if (!isAuthenticatedChat) {
+    
         const startUnauthenticatedReconnectChat: ICustomEvent = {
             eventName: BroadcastEvent.StartUnauthenticatedReconnectChat,
         };
@@ -100,7 +117,6 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, chatSDK:
 
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-
     await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 

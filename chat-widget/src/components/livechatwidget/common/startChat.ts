@@ -101,10 +101,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     try {
         // Clear disconnect state on start chat
         state?.appStates?.chatDisconnectEventReceived && dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
-
         //Start widget load timer
         TelemetryTimers.WidgetLoadTimer = createTimer();
-
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.WidgetLoadStarted,
             Description: "Widget loading started",
@@ -306,7 +304,6 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
             chatSDK.requestId = currentRequestId;
             return false;
         }
-
         return true;
     }
     catch (erorr) {

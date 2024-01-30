@@ -163,6 +163,7 @@ const handleConversationInitializationFailure = (ex: any) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleChatTokenRetrievalFailure = (dispatch: Dispatch<ILiveChatWidgetAction>, ex: any) => {
+    console.log("ELOPEPZANAYA :: handleChatTokenRetrievalFailure :: ex :: ", ex.httpResponseStatusCode);
     if (ex.httpResponseStatusCode === 400) {
         logWidgetLoadFailed(ex);
     } else {

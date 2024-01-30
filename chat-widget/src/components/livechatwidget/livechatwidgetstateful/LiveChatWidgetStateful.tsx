@@ -138,9 +138,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps) => {
+
         const isReconnectTriggered = async (): Promise<boolean> => {
+
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
+
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
                 if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active
@@ -155,13 +159,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-
+            const runtimeState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
             //Check if conversation state is not in wrapup or closed state
-            isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
+            isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, runtimeState);
             if (isChatValid === true) {
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
-                    await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
+                    await initStartChat(chatSDK, dispatch, setAdapter, runtimeState, props, optionalParams);
                 }
                 return;
             }
@@ -239,8 +243,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Unauth chat
         if (state?.appStates?.hideStartChatButton === false) {
-            console.log("ELOPEZANAYA : calling startChat,, NO state");
-            //false
             startChat(props);
         }
     }, []);
@@ -257,9 +259,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.ChatInitiated
             });
-            console.log("ELOPEZANAYA :: calling startChat and passing state");
             //Pass the state to avoid getting stale state
-            //true
             startChat(props);
         }
     }, [state?.appStates?.hideStartChatButton]);
