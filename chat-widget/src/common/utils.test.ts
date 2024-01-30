@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { Md5 } from "md5-typescript";
@@ -335,5 +335,20 @@ describe("utils unit test", () => {
         const templateMessage = "Hello, {0}! You are {1} years old.";
         const values = ["Alice", ""];
         expect(formatTemplateString(templateMessage, values)).toEqual("Hello, Alice! You are  years old.");
+    });
+
+    it("should parse 'True' string value to lower case string", () => {
+        const property = "True";
+        expect(parseLowerCaseString(property)).toEqual("true");
+    });
+
+    it("should parse 'true' string value to lower case string", () => {
+        const property = "true";
+        expect(parseLowerCaseString(property)).toEqual("true");
+    });
+
+    it("should parse true boolean value to lower case string", () => {
+        const property = true;
+        expect(parseLowerCaseString(property)).toEqual("true");
     });
 });
