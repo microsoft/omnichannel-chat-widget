@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 - Reconnecting to an unauthenticated popout reconnect chat with prechat survey configured does not present the prechat survey again
 - Fix data `Data Masking` being enabled when `msdyn_maskforcustomer` is set to `false` and `dataMaskingRules` is not empty 
 
+## Changed
+- Uptake [@microsoft/omnichannel-chat-sdk@1.6.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.6.3)
+
 ## [1.6.2] 2024-01-10
 
 ### Changed
