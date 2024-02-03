@@ -83,13 +83,6 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     catch (error : any ) {
-
-        // when auth token is not available, propagte the error to stop the execution and ensure error pane is loaded
-        if (error?.message == WidgetLoadCustomErrorString.AuthenticationFailedErrorString){
-            handleStartChatError(dispatch, chatSDK, props, new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString), false);
-            throw error;
-        }
-
         checkContactIdError(error);
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.GetChatReconnectContextSDKCallFailed,
@@ -97,6 +90,12 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
                 exception: error
             }
         });
+
+        // when auth token is not available, propagate the error to stop the execution and ensure error pane is loaded
+        if (error?.message == WidgetLoadCustomErrorString.AuthenticationFailedErrorString){
+            handleStartChatError(dispatch, chatSDK, props, new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString), false);
+            throw error;
+        }
     }
 };
 
