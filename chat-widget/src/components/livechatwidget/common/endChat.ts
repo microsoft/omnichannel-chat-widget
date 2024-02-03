@@ -111,7 +111,6 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
                 Event: TelemetryEvent.EndChatSDKCall
             });
             //Get auth token again if chat continued for longer time, otherwise gets 401 error
-            //await handleAuthenticationIfEnabled(props, chatSDK);
             await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
             await chatSDK?.endChat();
         } catch (ex) {
