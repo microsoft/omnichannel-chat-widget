@@ -18,7 +18,7 @@ import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUI
 export const LoadingPaneStateful = (props: any) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { loadingPaneProps, startChatErrorPaneProps } = props;
-
+    
     const generalLoadingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, loadingPaneProps?.styleProps?.generalStyleProps);
     const loadingPaneStyleProps: ILoadingPaneStyleProps = {
         ...loadingPaneProps?.styleProps,

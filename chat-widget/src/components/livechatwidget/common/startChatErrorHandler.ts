@@ -23,6 +23,9 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
     // Handle internal or misc errors
     if (ex.message === WidgetLoadCustomErrorString.AuthenticationFailedErrorString) {
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.AuthSetupError });
+        // set conversation to error to enforce error UI pane
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
+
         logWidgetLoadCompleteWithError(ex);
     }
     if (ex.message === WidgetLoadCustomErrorString.NetworkErrorString) {

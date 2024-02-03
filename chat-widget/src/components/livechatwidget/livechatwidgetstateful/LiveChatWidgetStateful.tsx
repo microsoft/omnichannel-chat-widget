@@ -138,6 +138,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
+       
         const isReconnectTriggered = async (): Promise<boolean> => {
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
