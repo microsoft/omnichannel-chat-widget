@@ -6,7 +6,7 @@ import { handleAuthentication, removeAuthTokenProvider } from "./authHelper";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
-import { ConversationMode } from "../../../common/Constants";
+import { ConversationMode, WidgetLoadCustomErrorString } from "../../../common/Constants";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
@@ -18,6 +18,7 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { handleStartChatError } from "./startChatErrorHandler";
 
 // Return value: should start normal chat flow when reconnect is enabled
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -26,7 +27,7 @@ const handleChatReconnect = async (chatSDK: any, props: ILiveChatWidgetProps, di
     const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
 
     // Get chat reconnect context
-    const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig as ChatConfig, props, isAuthenticatedChat);
+    const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(chatSDK, props.chatConfig as ChatConfig, props, isAuthenticatedChat, dispatch);
 
     // Redirect if enabled
     if (reconnectChatContext?.redirectURL) {
@@ -54,8 +55,9 @@ const handleChatReconnect = async (chatSDK: any, props: ILiveChatWidgetProps, di
     return true;
 };
 
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, props: any, isAuthenticatedChat: boolean) => {
+const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, props: any, isAuthenticatedChat: boolean, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     try {
         TelemetryHelper.logSDKEvent(LogLevel.INFO, {
             Event: TelemetryEvent.GetChatReconnectContextSDKCallStarted,
@@ -67,8 +69,10 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
         };
         // Get auth token for getting chat reconnect context
         if (isAuthenticatedChat) {
+            // handle authentication will throw error if auth token is not available, so no need to check for response
             await handleAuthentication(chatSDK, chatConfig, props.getAuthToken);
         }
+
         const reconnectChatContext = await chatSDK?.getChatReconnectContext(chatReconnectOptionalParams);
         if (isAuthenticatedChat) {
             // remove auth token after reconnectId is fetched
@@ -77,7 +81,8 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
         }
         return reconnectChatContext;
     }
-    catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    catch (error : any ) {
         checkContactIdError(error);
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.GetChatReconnectContextSDKCallFailed,
@@ -85,6 +90,12 @@ const getChatReconnectContext = async (chatSDK: any, chatConfig: ChatConfig, pro
                 exception: error
             }
         });
+
+        // when auth token is not available, propagate the error to stop the execution and ensure error pane is loaded
+        if (error?.message == WidgetLoadCustomErrorString.AuthenticationFailedErrorString){
+            handleStartChatError(dispatch, chatSDK, props, new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString), false);
+            throw error;
+        }
     }
 };
 

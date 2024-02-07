@@ -1,6 +1,6 @@
 import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { getAuthClientFunction, handleAuthentication } from "./authHelper";
+import { handleAuthentication } from "./authHelper";
 import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../common/utils";
 import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
 
@@ -111,7 +111,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
                 Event: TelemetryEvent.EndChatSDKCall
             });
             //Get auth token again if chat continued for longer time, otherwise gets 401 error
-            await handleAuthenticationIfEnabled(props, chatSDK);
+            await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
             await chatSDK?.endChat();
         } catch (ex) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -240,27 +240,6 @@ const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>, props: ILive
 
     // Embedded chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleAuthenticationIfEnabled = async (props: ILiveChatWidgetProps, chatSDK: any) => {
-    //Unable to end chat if token has expired
-    if (props.getAuthToken) {
-        const authClientFunction = getAuthClientFunction(props.chatConfig);
-        if (props.getAuthToken && authClientFunction) {
-            // set auth token to chat sdk before end chat
-            const authSuccess = await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
-            if (!authSuccess) {
-                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.GetAuthTokenFailed,
-                    ExceptionDetails: {
-                        exception: "Unable to get auth token during end chat"
-                    }
-                });
-                throw new Error("handleAuthenticationIfEnabled:Failed to get authentication token");
-            }
-        }
-    }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
