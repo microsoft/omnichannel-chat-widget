@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Running startChat SDK multiple times on an active chat without local storage is treated as a no-op
 - Reconnecting to an unauthenticated popout reconnect chat with prechat survey configured does not present the prechat survey again
 - Fix data `Data Masking` being enabled when `msdyn_maskforcustomer` is set to `false` and `dataMaskingRules` is not empty 
+- Forcing failures on authenticated chats to be sent immediately during reconnect flow and dont allow to continue with the chat flow.
 
 ## Changed
 - Uptake [@microsoft/omnichannel-chat-sdk@1.6.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.6.3)
