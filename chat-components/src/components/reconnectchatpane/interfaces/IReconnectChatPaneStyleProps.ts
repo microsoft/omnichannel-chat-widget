@@ -10,7 +10,9 @@ export interface IReconnectChatPaneStyleProps {
     buttonGroupStyleProps?: IStyle;
     continueChatButtonStyleProps?: IStyle;
     continueChatButtonHoveredStyleProps?: IStyle;
+    continueChatButtonFocusedStyleProps?: IStyle;
     startNewChatButtonStyleProps?: IStyle;
     startNewChatButtonHoveredStyleProps?: IStyle;
+    startNewChatButtonFocusedStyleProps?: IStyle;
     classNames?: IReconnectChatPaneClassNames;
 }

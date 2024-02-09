@@ -18,6 +18,8 @@ import { defaultReconnectChatPaneStartNewChatButtonStyles } from "./common/defau
 import { defaultReconnectChatPaneSubtitleStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneSubtitleStyles";
 import { defaultReconnectChatPaneTitleStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneTitleStyles";
 import { defaultReconnectChatPaneWrapperStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneWrapperStyles";
+import { defaultReconnectChatPaneContinueChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneContinueChatButtonFocusedStyles";
+import { defaultReconnectChatPaneStartChatChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneStartChatChatButtonFocusedStyles";
 
 function ReconnectChatPane(props: IReconnectChatPaneProps) {
 
@@ -87,13 +89,15 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
     const continueChatButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultReconnectChatPaneContinueChatButtonStyles, props.styleProps?.continueChatButtonStyleProps),
         rootHovered: Object.assign({}, defaultReconnectChatPaneContinueChatButtonHoveredStyles, props.styleProps?.continueChatButtonHoveredStyleProps),
-        rootPressed: Object.assign({}, defaultReconnectChatPaneContinueChatButtonHoveredStyles, props.styleProps?.continueChatButtonHoveredStyleProps)
+        rootPressed: Object.assign({}, defaultReconnectChatPaneContinueChatButtonHoveredStyles, props.styleProps?.continueChatButtonHoveredStyleProps), 
+        rootFocused: Object.assign({}, defaultReconnectChatPaneContinueChatFocusedStyles, props.styleProps?.continueChatButtonFocusedStyleProps), 
     };
 
     const startNewChatButtonStyles: IButtonStyles = {
         root: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonStyles, props.styleProps?.startNewChatButtonStyleProps),
         rootHovered: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonHoveredStyles, props.styleProps?.startNewChatButtonHoveredStyleProps),
-        rootPressed: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonHoveredStyles, props.styleProps?.startNewChatButtonHoveredStyleProps)
+        rootPressed: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonHoveredStyles, props.styleProps?.startNewChatButtonHoveredStyleProps),
+        rootFocused: Object.assign({}, defaultReconnectChatPaneStartChatChatFocusedStyles, props.styleProps?.startNewChatButtonFocusedStyleProps), 
     };
 
     return (
