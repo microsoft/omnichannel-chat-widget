@@ -19,7 +19,7 @@ import { defaultReconnectChatPaneSubtitleStyles } from "./common/default/default
 import { defaultReconnectChatPaneTitleStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneTitleStyles";
 import { defaultReconnectChatPaneWrapperStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneWrapperStyles";
 import { defaultReconnectChatPaneContinueChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneContinueChatButtonFocusedStyles";
-import { defaultReconnectChatPaneStartChatChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneStartChatChatButtonFocusedStyles";
+import { defaultReconnectChatPaneStartChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneStartChatButtonFocusedStyles";
 
 function ReconnectChatPane(props: IReconnectChatPaneProps) {
 
@@ -97,7 +97,7 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
         root: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonStyles, props.styleProps?.startNewChatButtonStyleProps),
         rootHovered: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonHoveredStyles, props.styleProps?.startNewChatButtonHoveredStyleProps),
         rootPressed: Object.assign({}, defaultReconnectChatPaneStartNewChatButtonHoveredStyles, props.styleProps?.startNewChatButtonHoveredStyleProps),
-        rootFocused: Object.assign({}, defaultReconnectChatPaneStartChatChatFocusedStyles, props.styleProps?.startNewChatButtonFocusedStyleProps), 
+        rootFocused: Object.assign({}, defaultReconnectChatPaneStartChatFocusedStyles, props.styleProps?.startNewChatButtonFocusedStyleProps), 
     };
 
     return (

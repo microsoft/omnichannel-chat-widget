@@ -1,6 +1,6 @@
 import { IStyle } from "@fluentui/react";
 
-export const defaultReconnectChatPaneStartChatChatFocusedStyles: IStyle = {
+export const defaultReconnectChatPaneStartChatFocusedStyles: IStyle = {
     content:"",
     inset:"0px",
     border: "1px solid transparent",
