@@ -271,6 +271,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- A11Y issue with buttons in reconnect pane.
+
 ## [1.1.1] 2024-1-4
 ### Changed
 
