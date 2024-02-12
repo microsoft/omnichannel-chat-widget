@@ -1,6 +1,6 @@
 import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
 import { IButtonStyles, ILabelStyles, IStackStyles, IStyle, ITextFieldStyles, Label, Stack, TextField } from "@fluentui/react";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {CSSProperties, useCallback, useEffect, useState} from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
@@ -119,9 +119,8 @@ function InputValidationPane(props: IInputValidationPaneProps) {
         root: Object.assign({}, defaultInputValidationPaneHeaderGroupStyles, props.styleProps?.headerGroupStyleProps)
     };
 
-    const titleStyles: ILabelStyles = {
-        root: Object.assign({}, defaultInputValidationPaneTitleStyles, props.styleProps?.titleStyleProps)
-    };
+    const titleStyles = Object.assign({}, defaultInputValidationPaneTitleStyles, props.styleProps?.titleStyleProps);
+
 
     const subtitleStyles: ILabelStyles = {
         root: Object.assign({}, defaultInputValidationPaneSubtitleStyles, props.styleProps?.subtitleStyleProps)
@@ -209,13 +208,13 @@ function InputValidationPane(props: IInputValidationPaneProps) {
                         id={elementId + "-headergroup"}>
 
                         {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.title) ||
-                        <Label
+                        <h1
                             className={props.styleProps?.classNames?.titleClassName}
-                            styles={titleStyles}
+                            style={titleStyles as CSSProperties}
                             tabIndex={-1}
                             id={elementId + "-title"}>
                             {props.controlProps?.titleText || defaultInputValidationPaneControlProps.titleText}
-                        </Label>) }
+                        </h1>) }
 
                         {!props.controlProps?.hideSubtitle && (decodeComponentString(props.componentOverrides?.subtitle) ||
                         <Label
