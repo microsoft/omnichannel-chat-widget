@@ -7,6 +7,7 @@ export const defaultReconnectChatPaneGeneralStyles: IStyle = {
     borderStyle: "solid",
     borderWidth: "3px",
     padding: "15px",
-    height: "100%",
-    width: "100%"
+    height: "inherit",
+    width: "inherit",
+    overflowY: "auto"
 };
