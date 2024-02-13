@@ -274,6 +274,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - A11Y issue with buttons in reconnect pane.
+- A11Y issue with missing H1 tag for input pane.
 
 ## [1.1.1] 2024-1-4
 ### Changed
