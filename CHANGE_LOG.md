@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 # Chat-Widget
 
 ## [Unreleased]
+### Changed
+- Uptake [@microsoft/omnichannel-chat-components@1.1.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.2)
+
 
 ### Fixed
 - Running startChat SDK multiple times on an active chat without local storage is treated as a no-op
