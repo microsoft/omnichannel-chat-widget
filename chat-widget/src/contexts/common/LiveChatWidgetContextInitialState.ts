@@ -16,6 +16,9 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
 
     if (!isNullOrUndefined(initialState)) {
         const initialStateFromCache: ILiveChatWidgetContext = JSON.parse(initialState);
+        if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat) {
+            initialStateFromCache.appStates.conversationState = ConversationState.Closed;
+        }
         return initialStateFromCache;
     }
 
