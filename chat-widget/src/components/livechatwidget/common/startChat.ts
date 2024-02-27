@@ -76,10 +76,12 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
-            // If minimized, maximize the chat
+            
+            // If minimized, maximize the chat, if the state is missing, consider it as minimized
             if (state?.appStates.isMinimized == undefined || state?.appStates?.isMinimized === true) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
 
+                // this event will notify the upper layer to maximize the widget, an event missing during multi-tab scenario.
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
@@ -88,8 +90,6 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
                     }
                 });
             }
-
-
             return;
         }
     }
@@ -105,7 +105,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     let isStartChatSuccessful = false;
     const chatConfig = props?.chatConfig;
     const getAuthToken = props?.getAuthToken;
-
 
     if (state?.appStates.conversationState === ConversationState.Closed) {
         // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
@@ -143,10 +142,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 }
             });
         }
-
         
         try {
-
             // Set custom context params
             await setCustomContextParams(state, props);
             const defaultOptionalParams: StartChatOptionalParams = {
@@ -323,11 +320,11 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
 
         return true;
     }
-    catch (erorr) {
+    catch (error) {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.GetConversationDetailsException,
             ExceptionDetails: {
-                exception: `Conversation is not valid: ${erorr}`
+                exception: `Conversation is not valid: ${error}`
             }
         });
         chatSDK.requestId = currentRequestId;
