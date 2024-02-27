@@ -56,7 +56,8 @@ export enum BroadcastEvent {
     HideChatVisibilityChangeEvent = "hideChatVisibilityChangeEvent",
     UpdateSessionDataForTelemetry = "UpdateSessionDataForTelemetry",
     UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry",
-    ContactIdNotFound = "ContactIdNotFound"
+    ContactIdNotFound = "ContactIdNotFound",
+    SyncMinimize = "SyncMinimize"
 }
 
 // Events being logged

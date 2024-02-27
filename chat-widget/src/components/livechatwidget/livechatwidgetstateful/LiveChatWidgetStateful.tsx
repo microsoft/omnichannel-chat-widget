@@ -305,9 +305,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
-        BroadcastService.getMessageByEventName("sync").subscribe((msg: ICustomEvent) => {
+        /**
+         * This will allow to sync multiple tabs to handle minimize and maximize state, 
+         * the event is expected to be emitted from scripting layer.
+         */
+        BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: msg?.payload?.minimized });
-
         });
 
         // Start chat from SDK Event
@@ -346,7 +349,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
 
             // If minimized, maximize the chat
-            if (state?.appStates?.isMinimized === true) {
+            if (inMemoryState?.appStates?.isMinimized === true) {
 
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
 
