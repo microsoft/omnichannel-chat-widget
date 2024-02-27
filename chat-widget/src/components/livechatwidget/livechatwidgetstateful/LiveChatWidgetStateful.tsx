@@ -173,19 +173,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
                     const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-                    console.log("ELOPEZANAYA :: startChat :: calling setPRechatAndInitiateChat");
                     await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, inMemoryState, props);
                 }
-                console.log("ELOPEZANAYA :: startChat :: returning");
                 return;
             } else {
                 // To avoid showing blank screen in popout
                 if (state?.appStates?.hideStartChatButton === false) {
-                    console.log("ELOPEZANAYA :: startChat :: closing conversation state");
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
                     return;
                 }
-                console.log("ELOPEZANAYA :: startChat :: conversation state to loading");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             }
         }
@@ -310,21 +306,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         BroadcastService.getMessageByEventName("sync").subscribe((msg: ICustomEvent) => {
-            console.log("ELOPEZANAYA :: Sync Event received");
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: msg?.payload?.minimized });
 
         });
 
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
-            console.log("ELOPEZANAYA :: StartChat Event received");
             // If the startChat event is not initiated by the same tab. Ignore the call
             if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
-                console.log("ELOPEZANAYA :: StartChat Event received from other tab, returning");  
                 return;
             }
-            
-            
             
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -332,8 +323,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Description: "CustomContext received through startChat event."
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
-                
-              
             }
             
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -345,7 +334,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             inMemoryState.domainStates.customContext = msg?.payload?.customContext;
 
-            console.log("ELOPEZANAYA :: StartChat Event received :: inMemoryState: ", inMemoryState.appStates.conversationState);
             // Only initiate new chat if widget runtime state is one of the followings
             if (inMemoryState.appStates?.conversationState === ConversationState.Closed ||
                 inMemoryState.appStates?.conversationState === ConversationState.InActive ||
@@ -353,15 +341,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
-                console.log("ELOPEZANAYA :: StartChat Event received :: calling prepareStartChat");
                 prepareStartChat(props, chatSDK, inMemoryState, dispatch, setAdapter);
                 return;
             }
 
-            console.log("ELOPEZANAYA :: StartChat Event received :: chat already initiated, minimize?? ::", inMemoryState.appStates);
             // If minimized, maximize the chat
             if (state?.appStates?.isMinimized === true) {
-                console.log("ELOPEZANAYA :: StartChat Event received :: chat already initiated, MAXIMIR?? :: maximizing");
 
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
 
@@ -374,7 +359,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
                 return;
             }
-            console.log("ELOPEZANAYA :: StartChat Event received :: DONE");
         });
 
         // End chat

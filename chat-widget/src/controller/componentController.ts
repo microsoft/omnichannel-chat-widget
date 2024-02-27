@@ -60,7 +60,6 @@ export const shouldShowOutOfOfficeHoursPane = (state: ILiveChatWidgetContext) =>
 };
 
 export const shouldShowPreChatSurveyPane = (state: ILiveChatWidgetContext) => {
-    console.log("ELOPEZANAYA :: shouldShowPreChatSurveyPane :: state.appStates.conversationState: ", state.appStates.conversationState);
     return (state.appStates.conversationState === ConversationState.Prechat);
 };
 

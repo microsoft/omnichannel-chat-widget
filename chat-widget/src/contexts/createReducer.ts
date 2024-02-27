@@ -95,7 +95,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
         case LiveChatWidgetActionType.SET_MINIMIZED:
-            console.log("ELOPEZANAYA : SET MINIMIZED : " + action.payload);
             inMemory = {
                 ...inMemory,
                 appStates: {
