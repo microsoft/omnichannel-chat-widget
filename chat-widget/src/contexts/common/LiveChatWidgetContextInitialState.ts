@@ -16,6 +16,16 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
 
     if (!isNullOrUndefined(initialState)) {
         const initialStateFromCache: ILiveChatWidgetContext = JSON.parse(initialState);
+
+        /*
+        * this step is needed to avoid the pre-chat pane to be injected in the DOM when the widget is reloaded, because wont be visible
+        * and it will be blocking all elements behind it
+        * as part of the flow, the pre-chat will be detected and then it will be displayed properly 
+        * this case is only and only for pre-chat pane.
+        * **/
+        if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat) {
+            initialStateFromCache.appStates.conversationState = ConversationState.Closed;
+        }
         return initialStateFromCache;
     }
 

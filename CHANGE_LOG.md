@@ -5,17 +5,21 @@ All notable changes to this project will be documented in this file.
 # Chat-Widget
 
 ## [Unreleased]
+
 ### Changed
+
 - Uptake [@microsoft/omnichannel-chat-components@1.1.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.2)
 
-
 ### Fixed
+
 - Running startChat SDK multiple times on an active chat without local storage is treated as a no-op
-- Reconnecting to an unauthenticated popout reconnect chat with prechat survey configured does not present the prechat survey again
-- Fix data `Data Masking` being enabled when `msdyn_maskforcustomer` is set to `false` and `dataMaskingRules` is not empty 
-- Forcing failures on authenticated chats to be sent immediately during reconnect flow and dont allow to continue with the chat flow.
+- Reconnecting to an unauthenticated popout reconnect chat with pre-chat survey configured does not present the pre-chat survey again
+- Fix data `Data Masking` being enabled when `msdyn_maskforcustomer` is set to `false` and `dataMaskingRules` is not empty.  
+- Forcing failures on authenticated chats to be sent immediately during reconnect flow and don't allow to continue with the chat flow.
+- Fix to handle pre-chat pane during reload and avoid the pane to be injected but no visible.
 
 ## Changed
+
 - Uptake [@microsoft/omnichannel-chat-sdk@1.6.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.6.3)
 
 ## [1.6.2] 2024-01-10

@@ -98,7 +98,7 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             inMemory = {
                 ...inMemory,
                 appStates: {
-                    ...state.appStates,
+                    ...inMemory.appStates,
                     isMinimized: action.payload as boolean
                 }
 

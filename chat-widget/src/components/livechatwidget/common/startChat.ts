@@ -32,7 +32,6 @@ let popoutWidgetInstanceId: any | "";
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
     widgetInstanceId = getWidgetCacheIdfromProps(props);
-
     // reconnect > chat from cache
     if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
         const shouldStartChatNormally = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
@@ -77,6 +76,20 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
+            
+            // If minimized, maximize the chat, if the state is missing, consider it as minimized
+            if (state?.appStates.isMinimized == undefined || state?.appStates?.isMinimized === true) {
+                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+
+                // this event will notify the upper layer to maximize the widget, an event missing during multi-tab scenario.
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.MaximizeChat,
+                    payload: {
+                        height: state?.domainStates?.widgetSize?.height,
+                        width: state?.domainStates?.widgetSize?.width
+                    }
+                });
+            }
             return;
         }
     }
@@ -179,9 +192,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
         dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
-
         logWidgetLoadComplete();
-
         // Set post chat context in state
         // Commenting this for now as post chat context is fetched during end chat
         await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
@@ -309,11 +320,11 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
 
         return true;
     }
-    catch (erorr) {
+    catch (error) {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.GetConversationDetailsException,
             ExceptionDetails: {
-                exception: `Conversation is not valid: ${erorr}`
+                exception: `Conversation is not valid: ${error}`
             }
         });
         chatSDK.requestId = currentRequestId;

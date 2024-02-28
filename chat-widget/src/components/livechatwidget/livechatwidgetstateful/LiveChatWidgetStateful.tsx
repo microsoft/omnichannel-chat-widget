@@ -156,10 +156,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (activeCachedChatExist === true) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
-            if (localState) {
-                localState.appStates.conversationState = ConversationState.Loading;
-            }
-
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
             if (isChatValid === true) {
@@ -176,7 +172,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
-                    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, localState, props);
+                    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, inMemoryState, props);
                 }
                 return;
             } else {
@@ -308,6 +305,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        /**
+         * This will allow to sync multiple tabs to handle minimize and maximize state, 
+         * the event is expected to be emitted from scripting layer.
+         */
+        BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
+            dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: msg?.payload?.minimized });
+        });
+
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
             // If the startChat event is not initiated by the same tab. Ignore the call
@@ -315,20 +320,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 return;
             }
             
-            let stateWithUpdatedContext: ILiveChatWidgetContext = state;
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomContextReceived,
                     Description: "CustomContext received through startChat event."
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
-                stateWithUpdatedContext = {
-                    ...state,
-                    domainStates: {
-                        ...state.domainStates,
-                        customContext: msg?.payload?.customContext
-                    }
-                };
             }
             
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -338,6 +335,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
+            inMemoryState.domainStates.customContext = msg?.payload?.customContext;
+
             // Only initiate new chat if widget runtime state is one of the followings
             if (inMemoryState.appStates?.conversationState === ConversationState.Closed ||
                 inMemoryState.appStates?.conversationState === ConversationState.InActive ||
@@ -345,13 +344,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
-                prepareStartChat(props, chatSDK, stateWithUpdatedContext, dispatch, setAdapter);
+                prepareStartChat(props, chatSDK, inMemoryState, dispatch, setAdapter);
                 return;
             }
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true) {
+
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
