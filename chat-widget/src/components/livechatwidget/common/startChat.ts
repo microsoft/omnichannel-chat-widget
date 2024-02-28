@@ -142,7 +142,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 }
             });
         }
-        
+
         try {
             // Set custom context params
             await setCustomContextParams(state, props);
