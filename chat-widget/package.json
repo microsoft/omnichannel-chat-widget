@@ -111,5 +111,8 @@
     "**/p-defer-es5": "^2.0.1",
     "**/abort-controller-es5": "^2.0.1",
     "**/minimist": "1.2.6"
+  },
+  "overrides": {
+    "sanitize-html": "2.12.1"
   }
 }
