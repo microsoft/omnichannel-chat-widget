@@ -84,6 +84,7 @@
     "markdown-it-for-inline": "^0.1.1",
     "md5-typescript": "^1.0.5",
     "p-defer-es5": "^2.0.1",
+    "sanitize-html": "2.12.1",
     "slack-markdown-it": "^1.0.5"
   },
   "scripts": {
@@ -110,9 +111,7 @@
     "**/url-parse": "1.5.9",
     "**/p-defer-es5": "^2.0.1",
     "**/abort-controller-es5": "^2.0.1",
-    "**/minimist": "1.2.6"
-  },
-  "overrides": {
-    "sanitize-html": "2.12.1"
+    "**/minimist": "1.2.6",
+    "**/sanitize-html": "2.12.1"
   }
 }
