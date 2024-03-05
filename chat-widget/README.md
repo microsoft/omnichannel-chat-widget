@@ -1,4 +1,4 @@
-# Omnichannel Live Chat Widget UI Components
+# Omnichannel Live Chat Widget UI Components.
 
 ![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-components-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-components)\
 ![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-widget-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-widget)
