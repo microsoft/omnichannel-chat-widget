@@ -75,12 +75,14 @@ function Header(props: IHeaderProps) {
                             styles={iconImageStyles} />)
                     }
                     {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.headerTitle) ||
-                        <Label
-                            id={titleProps.id}
-                            tabIndex={-1}
-                            styles={titleStyles}>
-                            {titleProps?.text}
-                        </Label>)
+                        <h1>
+                            <Label
+                                id={titleProps.id}
+                                tabIndex={-1}
+                                styles={titleStyles}>
+                                {titleProps?.text}
+                            </Label>
+                        </h1>)
                     }
                 </Stack>
             </Stack>
