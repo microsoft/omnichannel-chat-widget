@@ -172,7 +172,6 @@ export const callingStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) =
 
 export const endChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // Need to clear these states immediately when chat ended from OC.
-    dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
 };
@@ -192,6 +191,9 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
             proactiveChatInNewWindow: false
         }
     });
+
+    // Clear live chat context only if chat widget is fully closed to support transcript calls after sessionclose is called
+    dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
