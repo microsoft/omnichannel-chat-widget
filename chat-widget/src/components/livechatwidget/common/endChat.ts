@@ -248,7 +248,8 @@ const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>, props: ILive
 const chatTokenCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     //Just do cleanup here
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
-    dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+
+    // Need to keep liveChatContext until chat is fully closed to for transcript download/email
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
