@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.2)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.3)
 
 ### Fixed
 
