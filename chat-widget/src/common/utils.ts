@@ -374,9 +374,8 @@ export const debounceLeading = (fn: any, ms = 3000) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getConversationDetailsCall = async (chatSDK: any, liveChatContext: any = null) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let conversationDetails: any = undefined;
-    const optionalParams: any = {};
+    let conversationDetails: any = undefined; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const optionalParams: any = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
 
     if (liveChatContext?.requestId && liveChatContext?.chatToken) {
         optionalParams.liveChatContext = liveChatContext;

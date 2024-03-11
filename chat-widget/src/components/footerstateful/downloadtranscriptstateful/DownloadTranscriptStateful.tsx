@@ -5,7 +5,6 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import createChatTranscript from "../../../plugins/createChatTranscript";
-import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
 import DOMPurify from "dompurify";
 import { createFileAndDownload, isNullOrUndefined } from "../../../common/utils";
 import { IDownloadTranscriptProps } from "./interfaces/IDownloadTranscriptProps";
