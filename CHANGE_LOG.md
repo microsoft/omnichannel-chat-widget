@@ -82,6 +82,7 @@ All notable changes to this project will be documented in this file.
 ## [1.4.0] - 2023-10-25
 
 ### Changed
+
 - Uptake [@microsoft/omnichannel-chat-sdk@1.5.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.5.2)
 
 ### Added
@@ -90,6 +91,7 @@ All notable changes to this project will be documented in this file.
 - Add ability to block attachments on file scanning and on malicious files
 
 ### Fixed
+
 - Fixed an issue where C2 voice/video feed does not end despite C2 ending the chat
 - Added workaround to render all adaptive card texts properly
 - Fixed an issue where agent post chat survey is used when customer closes the chat with only bot engagement
@@ -117,6 +119,7 @@ All notable changes to this project will be documented in this file.
 - Uptake [@microsoft/omnichannel-chat-components@1.0.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.0.6)
 
 ### Fixed
+
 - Fixed an issue where sign-in card cannot be rendered
 - Fixed an issue where video card cannot be rendered
 - Fixed an issue where refreshing unauthenticated reconnect chat results in infinite loading
@@ -130,6 +133,7 @@ All notable changes to this project will be documented in this file.
 - Uptake [@microsoft/omnichannel-chat-sdk@1.4.5](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.4.5)
 - Added parity to NewMessage event payload, and renamed `HistoryMessageReceived` to `RehydrateMessageReceived` to avoid conflict with the same BroadcastEvent
 - Added Pull Request Template
+
 ### Fixed
 
 - Fixed an issue where opening a chat right after agent ends the previous chat doesn't work
@@ -278,7 +282,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.3] - 2024-03-11
+
 ### Fixed
+
 - A11Y missing heading for header
 
 ## [1.1.2] - 2024-02-13
@@ -290,11 +297,13 @@ All notable changes to this project will be documented in this file.
 - A11Y issue with reconnect pane style when full screen mode is on.
 
 ## [1.1.1] 2024-1-4
+
 ### Changed
 
 - Uptake [botframework-webchat@4.16.0](https://www.npmjs.com/package/botframework-webchat/v/4.16.0)
 
 ## [1.1.0] 2023-12-12
+
 ### Added
 
 - Add ability to customize `PreChatSurveyPane`'s toggle inputs using `IPreChatSurveyPaneToggleInputStyles` & Use `baseline` by default
@@ -306,6 +315,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.9] 2023-10-31
 
 ### Changed
+
 - Modify texts for email input validation
 
 ## [1.0.8] - 2023-10-31
@@ -317,6 +327,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.7] - 2023-9-13
 
 ### Added
+
 - Added notification pane component to support chat disconnect notification customization
 
 ## [1.0.6] - 2023-8-18
