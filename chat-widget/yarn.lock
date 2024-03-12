@@ -2258,10 +2258,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.6.tgz#748148bf8167640fd7ca933e80b10ec6eecb5391"
   integrity sha512-c7DyUsPy364NMb+uXzR6/QddynkAdYrucw2eUgvlslWpg9GyF1Horycs/iqNd+Qn1cBAWXXr639h3N+EPJ9AEA==
 
-"@microsoft/omnichannel-chat-components@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-1.1.2.tgz#feb9ece1ef86fea892223a7582da7e8169f043b7"
-  integrity sha512-SDjlJ4k7csWYNyDyTLVAIEgVN+iiuqdSiKnYd35I4OCwTIBUlJrk1KnQ7h9DUDH7XK1+k2tifYwGAJmbpvYyeA==
+"@microsoft/omnichannel-chat-components@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-1.1.3.tgz#3d8cbbbbfe8dc71c3154624aac7642138f0b24cd"
+  integrity sha512-2dirSJ4chH2wZfSkmPrV6BY7rmKfqnoTVk64KBOmJ/fGcOMx6VA6J85hHQVb0hhU+I/jVGbp7F2ANvpyWawstw==
   dependencies:
     "@fluentui/react" "^8.46.0"
     adaptivecards "^2.10.0"
@@ -13506,19 +13506,7 @@ sane@^4.0.3:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sanitize-html@2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.11.0.tgz#9a6434ee8fcaeddc740d8ae7cd5dd71d3981f8f6"
-  integrity sha512-BG68EDHRaGKqlsNjJ2xUB7gpInPA8gVx/mvjO743hZaeMCZ2DwzW7xvsqZ+KNU4QKwj86HJ3uu2liISf2qBBUA==
-  dependencies:
-    deepmerge "^4.2.2"
-    escape-string-regexp "^4.0.0"
-    htmlparser2 "^8.0.0"
-    is-plain-object "^5.0.0"
-    parse-srcset "^1.0.2"
-    postcss "^8.3.11"
-
-sanitize-html@2.12.1:
+sanitize-html@2.11.0, sanitize-html@2.12.1:
   version "2.12.1"
   resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.12.1.tgz#280a0f5c37305222921f6f9d605be1f6558914c7"
   integrity sha512-Plh+JAn0UVDpBRP/xEjsk+xDCoOvMBwQUf/K+/cBAVuTbtX8bj2VB7S1sL1dssVpykqp0/KPSesHrqXtokVBpA==
