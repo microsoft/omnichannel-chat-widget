@@ -373,15 +373,20 @@ export const debounceLeading = (fn: any, ms = 3000) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getConversationDetailsCall = async (chatSDK: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let conversationDetails: any = undefined;
+export const getConversationDetailsCall = async (chatSDK: any, liveChatContext: any = null) => {
+    let conversationDetails: any = undefined; // eslint-disable-line @typescript-eslint/no-explicit-any
+    const optionalParams: any = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+    if (liveChatContext?.requestId && liveChatContext?.chatToken) {
+        optionalParams.liveChatContext = liveChatContext;
+    }
+
     try {
         TelemetryHelper.logSDKEvent(LogLevel.INFO, {
             Event: TelemetryEvent.GetConversationDetailsCallStarted,
             Description: "Conversation details call started"
         });
-        conversationDetails = await chatSDK.getConversationDetails();
+        conversationDetails = await chatSDK.getConversationDetails(optionalParams);
     } catch (error) {
         checkContactIdError(error);
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {

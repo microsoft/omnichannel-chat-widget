@@ -5,7 +5,6 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import createChatTranscript from "../../../plugins/createChatTranscript";
-import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
 import DOMPurify from "dompurify";
 import { createFileAndDownload, isNullOrUndefined } from "../../../common/utils";
 import { IDownloadTranscriptProps } from "./interfaces/IDownloadTranscriptProps";
@@ -168,11 +167,8 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const downloadTranscript = async (chatSDK: any, downloadTranscriptProps: IDownloadTranscriptProps, state?: ILiveChatWidgetContext) => {
-    // Need to keep existing request id for scenarios when trnascript is downloaded after endchat
-    const liveChatContext: LiveChatContext = {
-        chatToken: state?.domainStates?.chatToken,
-        requestId: state?.domainStates?.chatToken?.requestId
-    };
+    // Need to keep existing live chat context for scenarios when trnascript is downloaded after endchat
+    const liveChatContext = state?.domainStates?.liveChatContext;
     let data = await chatSDK?.getLiveChatTranscript({liveChatContext});
     if (typeof (data) === Constants.String) {
         data = JSON.parse(data);

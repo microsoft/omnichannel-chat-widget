@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.2)
 - Uptake [@microsoft/omnichannel-chat-components@1.1.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.3)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.7.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.7.0)
 
 ### Fixed
 
@@ -18,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Fix data `Data Masking` being enabled when `msdyn_maskforcustomer` is set to `false` and `dataMaskingRules` is not empty.  
 - Forcing failures on authenticated chats to be sent immediately during reconnect flow and don't allow to continue with the chat flow.
 - Fix to handle pre-chat pane during reload and avoid the pane to be injected but no visible.
+- Fix `ChatSDK.emailLiveChatTranscript()` not working after `ChatSDK.endChat()` is called by not clearing `liveChatContext` on `chatTokenCleanUp`
 
 ## Changed
 
