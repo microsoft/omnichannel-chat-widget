@@ -169,11 +169,11 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const downloadTranscript = async (chatSDK: any, downloadTranscriptProps: IDownloadTranscriptProps, state?: ILiveChatWidgetContext) => {
-    const inMemoryState = executeReducer(state as ILiveChatWidgetContext, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
     // Need to keep existing live chat context for scenarios when transcript is downloaded after endchat
     let liveChatContext = state?.domainStates?.liveChatContext;
     if (!liveChatContext) {
+        const inMemoryState = executeReducer(state as ILiveChatWidgetContext, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         liveChatContext = inMemoryState.domainStates.liveChatContext;
     }
 
