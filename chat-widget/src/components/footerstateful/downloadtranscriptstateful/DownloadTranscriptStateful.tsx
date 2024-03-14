@@ -8,6 +8,8 @@ import createChatTranscript from "../../../plugins/createChatTranscript";
 import DOMPurify from "dompurify";
 import { createFileAndDownload, isNullOrUndefined } from "../../../common/utils";
 import { IDownloadTranscriptProps } from "./interfaces/IDownloadTranscriptProps";
+import { executeReducer } from "../../../contexts/createReducer";
+import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -167,8 +169,14 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const downloadTranscript = async (chatSDK: any, downloadTranscriptProps: IDownloadTranscriptProps, state?: ILiveChatWidgetContext) => {
-    // Need to keep existing live chat context for scenarios when trnascript is downloaded after endchat
-    const liveChatContext = state?.domainStates?.liveChatContext;
+    const inMemoryState = executeReducer(state as ILiveChatWidgetContext, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+
+    // Need to keep existing live chat context for scenarios when transcript is downloaded after endchat
+    let liveChatContext = state?.domainStates?.liveChatContext;
+    if (!liveChatContext) {
+        liveChatContext = inMemoryState.domainStates.liveChatContext;
+    }
+
     let data = await chatSDK?.getLiveChatTranscript({liveChatContext});
     if (typeof (data) === Constants.String) {
         data = JSON.parse(data);
