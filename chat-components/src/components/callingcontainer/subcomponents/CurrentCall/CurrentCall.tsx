@@ -164,7 +164,7 @@ function CurrentCall(props: ICurrentCallProps) {
     const hideCallTimer = props.controlProps?.hideCallTimer ?? defaultCurrentCallProps.controlProps?.hideCallTimer;
 
     useEffect(() => {
-        const endCallShortcut = (e: KeyboardEvent) => e.key === KeyCodes.ENTER;
+        const endCallShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key == KeyCodes.EndCallHotKey;
         const toggleMicShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === KeyCodes.ToggleMicHotKey;
         const toggleVideoShortcut = (e: KeyboardEvent) => e.ctrlKey && e.shiftKey && e.key === KeyCodes.ToggleCameraHotKey;
 
