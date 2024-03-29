@@ -21,6 +21,7 @@ export const KeyCodes = class {
     public static readonly AcceptVideoCallHotKey = "A";
     public static readonly ToggleMicHotKey = "M";
     public static readonly ToggleCameraHotKey = "O";
+    public static readonly EndCallHotKey = "H";
 };
 
 export const Regex = class {
