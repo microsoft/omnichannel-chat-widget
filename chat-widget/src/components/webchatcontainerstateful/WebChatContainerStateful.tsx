@@ -3,6 +3,7 @@
 import { IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
+
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import { Components } from "botframework-webchat";
 import { Constants } from "../../common/Constants";
@@ -197,6 +198,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         .ms_lcw_webchat_sent_message a:hover,
         .ms_lcw_webchat_sent_message a:active {
             color: ${webChatContainerProps?.renderingMiddlewareProps?.sentMessageAnchorStyles?.color ?? defaultSentMessageAnchorStyles?.color};
+        }
+
+        .webchat__bubble:not(.webchat__bubble--from-user) .webchat__bubble__content {
+            border-radius: 0 !important; /* Override border-radius */
         }
         `}</style>
         <Stack styles={containerStyles}>
