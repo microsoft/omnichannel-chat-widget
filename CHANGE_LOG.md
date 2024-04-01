@@ -283,6 +283,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.4] - 2024-04-01
+
 ### Fixed
 
 - Replacing `end call` shortcut key of pressing `enter` with `ctrl + shift + h` to prevent call to end while sending message
