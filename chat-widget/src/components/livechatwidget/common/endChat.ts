@@ -210,7 +210,13 @@ export const chatSDKStateCleanUp = (chatSDK: any) => {
 export const endVoiceVideoCallIfOngoing = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     let callId = "";
     try {
-        const voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
+        let voiceVideoCallingSdk;
+        if(chatSDK.isVoiceVideoCallingEnabled()) {
+            voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
+        }
+        else{
+            return;
+        }
         if (voiceVideoCallingSdk && voiceVideoCallingSdk.isInACall()) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             callId = (voiceVideoCallingSdk as any).callId;
