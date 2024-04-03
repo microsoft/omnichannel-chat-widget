@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.6.3] 2024-04-02
+
 ### Changed
 
 - Update banner message for browser storage unavailable.
