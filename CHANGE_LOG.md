@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Widget
 
+## [Unreleased]
+
 ## [1.6.3] 2024-04-02
 
 ### Changed
