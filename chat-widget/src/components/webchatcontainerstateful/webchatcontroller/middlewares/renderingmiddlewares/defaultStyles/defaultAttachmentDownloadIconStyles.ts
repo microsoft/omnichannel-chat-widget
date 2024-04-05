@@ -3,5 +3,5 @@ export const defaultAttachmentDownloadIconStyles: React.CSSProperties = {
     width: "12px",
     marginLeft: "auto !important", 
     padding: "2px !important",
-    fill: "#000000 !important"
+    fill: "#000000"
 };

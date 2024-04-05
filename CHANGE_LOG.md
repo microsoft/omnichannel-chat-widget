@@ -6,12 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.6.3] 2024-04-02
+
 ### Changed
 
 - Update banner message for browser storage unavailable.
 - Uptake [@microsoft/omnichannel-chat-components@1.1.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.3)
-- Uptake [@microsoft/omnichannel-chat-sdk@1.7.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.7.0)
-- Uptake [@microsoft/omnichannel-chat-sdk@1.7.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.7.2)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.8.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.8.0)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.4)
 
 ### Fixed
 
@@ -282,6 +284,8 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.4] - 2024-04-01
 
 ### Fixed
 
