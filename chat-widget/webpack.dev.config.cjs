@@ -18,6 +18,9 @@ module.exports = {
         compress: true,
         port: 9000,
     },
+    optimization: {
+        minimize: false,
+    },
     module: {
         rules: [
             {
