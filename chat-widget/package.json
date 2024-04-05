@@ -74,7 +74,7 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "@microsoft/omnichannel-chat-components": "1.1.4",
+    "@microsoft/omnichannel-chat-components": "1.1.5",
     "@microsoft/omnichannel-chat-sdk": "^1.8.0",
     "abort-controller-es5": "^2.0.1",
     "dompurify": "^2.3.4",
