@@ -13,6 +13,7 @@ import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetAc
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
+import { executeReducer } from "../../contexts/createReducer";
 import { setFocusOnElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
@@ -28,12 +29,13 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonClicked
         });
-        
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+        console.log("ChatButtonStateful: ref.current: state.appStates.isMinimized: ", state.appStates.isMinimized); 
+        console.log("ChatButtonStateful: inMemoryState: isMinimized: ", inMemoryState.appStates.isMinimized);
         if (state.appStates.isMinimized) {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-        } else {
-            await startChat();
         }
+        await startChat();
     };
 
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);
