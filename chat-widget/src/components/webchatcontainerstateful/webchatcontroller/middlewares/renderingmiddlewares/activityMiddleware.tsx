@@ -16,16 +16,11 @@ import React from "react";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
-import { domPurifier, escapeHtml } from "../../../../../common/utils";
-import { createMarkdown } from "../../../../livechatwidget/common/createMarkdown";
-import { defaultWebChatContainerStatefulProps } from "../../../common/defaultProps/defaultWebChatContainerStatefulProps";
+import { escapeHtml } from "../../../../../common/utils";
 
-const disableNewLineMarkdownSupport = defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport ?? false;
-const disableMarkdownMessageFormatting = defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting ?? false;
 const loggedSystemMessages = new Array<string>();
-const markdown = createMarkdown(disableMarkdownMessageFormatting, disableNewLineMarkdownSupport);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleSystemMessage = (next: any, args: any[], card: any, systemMessageStyleProps?: React.CSSProperties) => {
+const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties) => {
     const systemMessageStyles = { ...defaultSystemMessageStyles, ...systemMessageStyleProps };
 
     if (card.activity?.channelData?.tags?.includes(Constants.averageWaitTimeMessageTag) && loggedSystemMessages.indexOf(card.activity?.channelData?.clientmessageid) < 0) {
@@ -49,10 +44,10 @@ const handleSystemMessage = (next: any, args: any[], card: any, systemMessageSty
         return () => false;
     }
 
-    card.activity.text = markdown.render(card.activity.text);
+    card.activity.text = renderMarkdown(card.activity.text);
     // eslint-disable-next-line react/display-name
     return () => (
-        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" dangerouslySetInnerHTML={{ __html: domPurifier(card.activity.text) }} />
+        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" dangerouslySetInnerHTML={{ __html: card.activity.text }} />
     );
 };
 
@@ -72,7 +67,7 @@ const isDataTagsPresent = (card: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProperties, userMessageStyleProps?: React.CSSProperties) => () => (next: any) => (...args: any) => {
+export const createActivityMiddleware = (renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties, userMessageStyleProps?: React.CSSProperties) => () => (next: any) => (...args: any) => {
     const [card] = args;
     if (card.activity) {
         if (card.activity.from?.role === DirectLineSenderRole.Channel) {
@@ -84,7 +79,7 @@ export const createActivityMiddleware = (systemMessageStyleProps?: React.CSSProp
         }
 
         if (isTagIncluded(card, Constants.systemMessageTag)) {
-            return handleSystemMessage(next, args, card, systemMessageStyleProps);
+            return handleSystemMessage(next, args, card, renderMarkdown, systemMessageStyleProps);
         } else if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message
         ) {
