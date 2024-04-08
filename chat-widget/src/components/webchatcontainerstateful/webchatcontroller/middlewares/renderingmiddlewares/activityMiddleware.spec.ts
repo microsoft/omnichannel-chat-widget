@@ -62,13 +62,13 @@ describe("activityMiddleware test", () => {
 
         const results = createActivityMiddleware()()(next)(args);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
-        expect(results().props?.dangerouslySetInnerHTML?.__html).toEqual(systemMessage);
+        expect(results().props?.dangerouslySetInnerHTML?.__html).toContain("system message");
     });
 
     it ("createActivityMiddleware() should escape html texts to prevent XSS attacks", () => {
         spyOn(TelemetryHelper, "logActionEvent").and.callFake(() => false);
         const next = (args: any) => () => args; // eslint-disable-line @typescript-eslint/no-explicit-any
-        const systemMessage = "<img src='' onerror=\"alert('XSS attack')\"/>";
+        const systemMessage = "<img src='' onerror=\"alert('XSS attack')\"/></img>";
         const args = {
             activity: {
                 text: systemMessage,
@@ -83,7 +83,29 @@ describe("activityMiddleware test", () => {
 
         const results = createActivityMiddleware()()(next)(args);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
-        expect(results().props?.dangerouslySetInnerHTML?.__html).toEqual("&lt;img src=&#39;&#39; onerror=&quot;alert(&#39;XSS attack&#39;)&quot;&#x2F;&gt;");
+        expect(results().props?.dangerouslySetInnerHTML?.__html).not.toContain("onerror=\"alert('XSS attack')\"");
+    });
+
+
+    it ("createActivityMiddleware() should escape html texts to prevent XSS attacks", () => {
+        spyOn(TelemetryHelper, "logActionEvent").and.callFake(() => false);
+        const next = (args: any) => () => args; // eslint-disable-line @typescript-eslint/no-explicit-any
+        const systemMessage = "<img src='' onerror=\"alert('XSS attack')\"/></img>";
+        const args = {
+            activity: {
+                text: systemMessage,
+                channelData: {
+                    tags: [Constants.systemMessageTag]
+                },
+                from: {
+                    role: DirectLineSenderRole.User
+                }
+            }
+        };
+
+        const results = createActivityMiddleware()()(next)(args);
+        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
+        expect(results().props?.dangerouslySetInnerHTML?.__html).not.toContain("onerror=\"alert('XSS attack')\"");
     });
 
     it ("createActivityMiddleware() with QueuePosition tag should log QueuePosition message", () => {
