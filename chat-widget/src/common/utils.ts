@@ -134,15 +134,6 @@ export const escapeHtml = (inputString: string) => {
     });
 };
 
-export const domPurifier = (inputString: string) => {
-    const config = {
-        ALLOWED_TAGS: ["a","img"], 
-        ALLOWED_ATTR: ["href", "title","src","alt","class"], 
-        ALLOW_DATA_ATTR: false
-    };
-    return DOMPurify.sanitize(inputString, config);
-};
-
 export const getIconText = (text: string) => {
     if (text) {
         const initials = text.split(/\s/).reduce((response, word) => response += word.slice(0, 1), "");
