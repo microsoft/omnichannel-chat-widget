@@ -136,9 +136,9 @@ export const escapeHtml = (inputString: string) => {
 
 export const domPurifier = (inputString: string) => {
     const config = {
-        ALLOWED_TAGS: ["a","img","p"], 
+        ALLOWED_TAGS: ["a","img"], 
         ALLOWED_ATTR: ["href", "title","src","alt","class"], 
-        ALLOW_DATA_ATTR: false,
+        ALLOW_DATA_ATTR: false
     };
     return DOMPurify.sanitize(inputString, config);
 };
