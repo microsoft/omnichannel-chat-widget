@@ -9,6 +9,7 @@ import { KeyCodes } from "./KeyCodes";
 import { Md5 } from "md5-typescript";
 import { TelemetryHelper } from "./telemetry/TelemetryHelper";
 import { ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
+import DOMPurify from "dompurify";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -131,6 +132,15 @@ export const escapeHtml = (inputString: string) => {
     return String(inputString).replace(/[<>"'/]/g, (s: string) => {
         return entityMap[s];
     });
+};
+
+export const domPurifier = (inputString: string) => {
+    const config = {
+        ALLOWED_TAGS: ["a","img","p"], 
+        ALLOWED_ATTR: ["href", "title","src","alt","class"], 
+        ALLOW_DATA_ATTR: false,
+    };
+    return DOMPurify.sanitize(inputString, config);
 };
 
 export const getIconText = (text: string) => {
@@ -416,7 +426,7 @@ export const checkContactIdError = (e: any) => {
 export const createFileAndDownload = (fileName: string, blobData: string, mimeType: string) => {
     const aElement = document.createElement("a");
 
-    const blob = new Blob([blobData], {type: mimeType});
+    const blob = new Blob([blobData], { type: mimeType });
     const objectUrl = URL.createObjectURL(blob);
 
     aElement.setAttribute(HtmlAttributeNames.href, objectUrl);
@@ -439,7 +449,7 @@ export const createFileAndDownload = (fileName: string, blobData: string, mimeTy
  */
 // use of any for values as array of any type is passed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const  formatTemplateString = (templateMessage : string, values : any) => {
+export const formatTemplateString = (templateMessage: string, values: any) => {
     return templateMessage.replace(/{(\d+)}/g, (match, index) => {
         return typeof values[index] !== "undefined" ? values[index] : match;
     });
