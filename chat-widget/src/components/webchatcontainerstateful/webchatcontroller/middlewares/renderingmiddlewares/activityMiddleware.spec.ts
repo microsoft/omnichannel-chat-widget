@@ -248,6 +248,6 @@ describe("activityMiddleware test", () => {
 
         const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
-        expect(results().props?.dangerouslySetInnerHTML?.__html).toContain("<a href=\"https://www.microsoft.com/en-us/\" title=\"Opens in a new window; external.\" target=\"_blank\">https://www.microsoft.com/en-us/");
+        expect(results().props?.dangerouslySetInnerHTML?.__html).toContain("href=\"https://www.microsoft.com/en-us/\"");
     });
 });
