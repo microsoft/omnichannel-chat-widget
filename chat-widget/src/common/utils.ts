@@ -439,7 +439,7 @@ export const createFileAndDownload = (fileName: string, blobData: string, mimeTy
  */
 // use of any for values as array of any type is passed
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const  formatTemplateString = (templateMessage: string, values: any) => {
+export const  formatTemplateString = (templateMessage : string, values : any) => {
     return templateMessage.replace(/{(\d+)}/g, (match, index) => {
         return typeof values[index] !== "undefined" ? values[index] : match;
     });
