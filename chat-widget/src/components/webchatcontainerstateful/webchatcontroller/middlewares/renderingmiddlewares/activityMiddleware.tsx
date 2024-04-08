@@ -17,9 +17,13 @@ import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
 import { escapeHtml } from "../../../../../common/utils";
+import { createMarkdown } from "../../../../livechatwidget/common/createMarkdown";
+import { defaultWebChatContainerStatefulProps } from "../../../common/defaultProps/defaultWebChatContainerStatefulProps";
 
+const disableNewLineMarkdownSupport = defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport ?? false;
+const disableMarkdownMessageFormatting = defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting ?? false;
 const loggedSystemMessages = new Array<string>();
-
+const markdown = createMarkdown(disableMarkdownMessageFormatting, disableNewLineMarkdownSupport);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSystemMessage = (next: any, args: any[], card: any, systemMessageStyleProps?: React.CSSProperties) => {
     const systemMessageStyles = { ...defaultSystemMessageStyles, ...systemMessageStyleProps };
@@ -45,9 +49,10 @@ const handleSystemMessage = (next: any, args: any[], card: any, systemMessageSty
         return () => false;
     }
 
+    card.activity.text = markdown.render(card.activity.text);
     // eslint-disable-next-line react/display-name
     return () => (
-        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" dangerouslySetInnerHTML={{ __html: escapeHtml(card.activity.text)}}/>
+        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" dangerouslySetInnerHTML={{ __html: card.activity.text }} />
     );
 };
 
