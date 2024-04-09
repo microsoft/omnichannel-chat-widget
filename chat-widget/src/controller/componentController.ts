@@ -35,11 +35,6 @@ export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
 };
 
 export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
-
-    console.log("ELOPEZANAYA ::: should show loading pane:: minimize ::  ", state.appStates.isMinimized);
-    console.log("ELOPEZANAYA ::: should show loading pane:: conv state ::  ", state.appStates.conversationState);
-
-
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState === ConversationState.Loading);
 };
