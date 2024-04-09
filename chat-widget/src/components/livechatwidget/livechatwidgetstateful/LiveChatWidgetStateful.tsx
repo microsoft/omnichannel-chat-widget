@@ -139,6 +139,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
         
+        // Forcing state to minimize false, as this is an action to execute start chat
         dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
 
         const isReconnectTriggered = async (): Promise<boolean> => {
@@ -238,7 +239,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         setOptionalParams();
 
-        console.log("ELOPEZANAYA :: coming from 2");
         // Unauth chat
         if (state?.appStates?.hideStartChatButton === false) {
             startChat(props);
@@ -258,7 +258,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 eventName: BroadcastEvent.ChatInitiated
             });
             //Pass the state to avoid getting stale state
-            console.log("ELOPEZANAYA :: coming from 1");
             startChat(props, state);
         }
     }, [state?.appStates?.hideStartChatButton]);
