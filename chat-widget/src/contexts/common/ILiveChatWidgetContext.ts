@@ -1,9 +1,10 @@
+import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../../common/Constants";
+
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "./ConversationState";
 import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
-import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../../common/Constants";
 import { StartChatFailureType } from "./StartChatFailureType";
 
 export interface ILiveChatWidgetContext {
@@ -54,6 +55,7 @@ export interface ILiveChatWidgetContext {
         chatDisconnectEventReceived: boolean; // true when customer disconnect event is received
         selectedSurveyMode: string | null; // selected survey mode
         postChatParticipantType: undefined | ParticipantType; // participant type to render post chat survey
+        isPopOut: boolean | false;
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

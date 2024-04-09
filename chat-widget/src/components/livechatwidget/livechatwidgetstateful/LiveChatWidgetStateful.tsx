@@ -4,6 +4,8 @@ import { Components, StyleOptions } from "botframework-webchat";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
+import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
+import { chatSDKStateCleanUp, endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     createTimer,
@@ -18,14 +20,12 @@ import {
     isUndefinedOrEmpty
 } from "../../../common/utils";
 import { defaultClientDataStoreProvider, isCookieAllowed } from "../../../common/storage/default/defaultClientDataStoreProvider";
-import { chatSDKStateCleanUp, endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
     shouldShowConfirmationPane,
     shouldShowEmailTranscriptPane,
-    shouldShowStartChatErrorPane,
     shouldShowHeader,
     shouldShowLoadingPane,
     shouldShowOutOfOfficeHoursPane,
@@ -34,6 +34,7 @@ import {
     shouldShowPreChatSurveyPane,
     shouldShowProactiveChatPane,
     shouldShowReconnectChatPane,
+    shouldShowStartChatErrorPane,
     shouldShowWebChatContainer
 } from "../../../controller/componentController";
 
@@ -61,16 +62,19 @@ import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostCha
 import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
 import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
+import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
+import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
+import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
+import { executeReducer } from "../../../contexts/createReducer";
 import { getGeneralStylesForButton } from "../common/getGeneralStylesForButton";
 import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 import { initCallingSdk } from "../common/initCallingSdk";
@@ -83,10 +87,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
-import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
-import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
-import { executeReducer } from "../../../contexts/createReducer";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -203,6 +203,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
+        dispatch({ type: LiveChatWidgetActionType.SET_IS_POP_OUT, payload: props.isPopOut ?? false});
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Generic });
         state.domainStates.confirmationPaneConfirmedOptionClicked = false;

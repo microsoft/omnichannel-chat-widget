@@ -285,4 +285,8 @@ export enum LiveChatWidgetActionType {
         null payload, simply returns the existing inMemory state
     */
     GET_IN_MEMORY_STATE,
+
+    SET_IS_POP_OUT,
+
+    GET_IS_POP_OUT,
 }
