@@ -286,7 +286,10 @@ export enum LiveChatWidgetActionType {
     */
     GET_IN_MEMORY_STATE,
 
+    /* Parameters:
+    * - true: When the minimize button is clicked  
+    * - false: When the chat button is clicked after the chat is minimized (not closed)
+    **/
     SET_IS_POP_OUT,
 
-    GET_IS_POP_OUT,
 }
