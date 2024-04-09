@@ -29,31 +29,21 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonClicked
         });
-        
+
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-        console.log("ELOPEZANAYA :: ChatButtonStateful: ref.current: state.appStates.isMinimized: ", state.appStates.isMinimized); 
-        console.log("ELOPEZANAYA :: ChatButtonStateful: inMemoryState: isMinimized: ", inMemoryState.appStates.isMinimized);
-        console.log("ELOPEZANAYA :: ChatButtonStateful: inMemoryState: inMemoryState.appStates.isPopOut: ", inMemoryState.appStates.isPopOut);
-        
-        
-        if(inMemoryState.appStates.isPopOut === false){
-            console.log("ELOPEZANAYA :: ChatButtonStateful: 1");
+
+        if (inMemoryState.appStates.isPopOut === false) {
             if (state.appStates.isMinimized) {
-                console.log("ELOPEZANAYA :: ChatButtonStateful: 2");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             }
-            console.log("ELOPEZANAYA :: ChatButtonStateful: 3");
             await startChat();
             return;
         }
 
-        
-        console.log("ELOPEZANAYA :: ChatButtonStateful: 10");
+        // supports popout + multitab
         if (state.appStates.isMinimized) {
-            console.log("ELOPEZANAYA :: ChatButtonStateful: 4");
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-        }else{
-            console.log("ELOPEZANAYA :: ChatButtonStateful: 5");
+        } else {
             await startChat();
         }
     };
