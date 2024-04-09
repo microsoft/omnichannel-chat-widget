@@ -11,7 +11,7 @@ describe("activityMiddleware test", () => {
     let renderMarkdown: any; // eslint-disable-line @typescript-eslint/no-explicit-any
     beforeAll (() => {
         renderMarkdown =  initWebChatComposer({}, {domainStates: {}}).renderMarkdown;
-    })
+    });
     it ("createActivityMiddleware() with Channel role sender should returns nothing", () => {
         spyOn(TelemetryHelper, "logActionEvent").and.callFake(() => false);
         const next = (args: any) => () => args; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -228,7 +228,7 @@ describe("activityMiddleware test", () => {
         expect(results().activity?.text).toEqual(userMessage);
     });
 
-    it ('createActivityMiddleware() should render links', () => {
+    it ("createActivityMiddleware() should render links", () => {
 
         spyOn(TelemetryHelper, "logActionEvent").and.callFake(() => false);
         const next = (args: any) => () => args; // eslint-disable-line @typescript-eslint/no-explicit-any
