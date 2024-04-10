@@ -210,7 +210,7 @@ export const chatSDKStateCleanUp = (chatSDK: any) => {
 export const endVoiceVideoCallIfOngoing = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     let callId = "";
     try {
-        let voiceVideoCallingSdk;
+        let voiceVideoCallingSdk=null;
         if(chatSDK.isVoiceVideoCallingEnabled()) {
             voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
         }
