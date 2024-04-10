@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Fix to handle pre-chat pane during reload and avoid the pane to be injected but no visible.
 - Fix `ChatSDK.emailLiveChatTranscript()` not working after `ChatSDK.endChat()` is called by not clearing `liveChatContext` on `chatTokenCleanUp`
 - Fix `ChatSDK.getLiveChatTranscript()` not working during post chat survey when user ends the conversation by retreving `liveChatContext` from `inMemoryState`
+- Fix systems messages are not being part of markdown rendering for active links
 
 ## [1.6.2] 2024-01-10
 
