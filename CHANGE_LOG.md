@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.1.5](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.5)
+
 ### Fixed
 
 - Fix systems messages are not being part of markdown rendering for active links
@@ -16,8 +20,7 @@ All notable changes to this project will be documented in this file.
 
 - Update banner message for browser storage unavailable.
 - Uptake [@microsoft/omnichannel-chat-components@1.1.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.3)
-- Uptake [@microsoft/omnichannel-chat-sdk@1.7.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.7.0)
-- Uptake [@microsoft/omnichannel-chat-sdk@1.7.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.7.2)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.8.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.8.0)
 - Uptake [@microsoft/omnichannel-chat-components@1.1.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.4)
 
 ### Fixed
@@ -29,7 +32,6 @@ All notable changes to this project will be documented in this file.
 - Fix to handle pre-chat pane during reload and avoid the pane to be injected but no visible.
 - Fix `ChatSDK.emailLiveChatTranscript()` not working after `ChatSDK.endChat()` is called by not clearing `liveChatContext` on `chatTokenCleanUp`
 - Fix `ChatSDK.getLiveChatTranscript()` not working during post chat survey when user ends the conversation by retreving `liveChatContext` from `inMemoryState`
-
 
 ## [1.6.2] 2024-01-10
 
@@ -290,6 +292,12 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.5] - 2024-04-05
+
+### Fixed
+
+- Remove alert role from prechat component and use form role instead.
 
 ## [1.1.4] - 2024-04-01
 
