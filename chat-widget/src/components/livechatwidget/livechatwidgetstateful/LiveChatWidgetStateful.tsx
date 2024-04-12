@@ -662,6 +662,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             ::-webkit-scrollbar-thumb:hover {
                 background: ${scrollbarProps.thumbHoverColor};
             }
+          }
             `}</style>
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer

@@ -5,7 +5,13 @@ import { MessageTypes } from "../../enums/MessageType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { createActivityMiddleware } from "./activityMiddleware";
 
+import {initWebChatComposer} from "../../../../livechatwidget/common/initWebChatComposer";
+
 describe("activityMiddleware test", () => {
+    let renderMarkdown: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+    beforeAll (() => {
+        renderMarkdown =  initWebChatComposer({}, {domainStates: {}}).renderMarkdown;
+    });
     it ("createActivityMiddleware() with Channel role sender should returns nothing", () => {
         spyOn(TelemetryHelper, "logActionEvent").and.callFake(() => false);
         const next = (args: any) => () => args; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -20,7 +26,7 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        const results = createActivityMiddleware()()(next)(args);
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(results()).toEqual(false);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
     });
@@ -39,7 +45,7 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        const results = createActivityMiddleware()()(next)(args);
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(results()).toEqual(false);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
     });
@@ -60,9 +66,9 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        const results = createActivityMiddleware()()(next)(args);
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
-        expect(results().props?.dangerouslySetInnerHTML?.__html).toEqual(systemMessage);
+        expect(results().props?.dangerouslySetInnerHTML?.__html).toContain("system message");
     });
 
     it ("createActivityMiddleware() should escape html texts to prevent XSS attacks", () => {
@@ -81,10 +87,11 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        const results = createActivityMiddleware()()(next)(args);
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
-        expect(results().props?.dangerouslySetInnerHTML?.__html).toEqual("&lt;img src=&#39;&#39; onerror=&quot;alert(&#39;XSS attack&#39;)&quot;&#x2F;&gt;");
+        expect(results().props?.dangerouslySetInnerHTML?.__html).not.toContain("onerror=\"alert('XSS attack')\"");
     });
+
 
     it ("createActivityMiddleware() with QueuePosition tag should log QueuePosition message", () => {
         spyOn(TelemetryHelper, "logActionEvent").and.callFake(() => false);
@@ -102,7 +109,7 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        createActivityMiddleware()()(next)(args);
+        createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(1);
     });
 
@@ -128,7 +135,7 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        const results = createActivityMiddleware()()(next)(args);
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(results()).toEqual(false);
     });
 
@@ -152,7 +159,7 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        const results = createActivityMiddleware()()(next)(args);
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(results()).toEqual(false);
     });
 
@@ -174,7 +181,7 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        const results = createActivityMiddleware()()(next)(args);
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(results().props?.children?.activity?.text).toEqual(userMessage);
     });
 
@@ -196,7 +203,30 @@ describe("activityMiddleware test", () => {
             }
         };
 
-        const results = createActivityMiddleware()()(next)(args);
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
         expect(results().activity?.text).toEqual(userMessage);
+    });
+
+    it ("createActivityMiddleware() should render links", () => {
+
+        spyOn(TelemetryHelper, "logActionEvent").and.callFake(() => false);
+        const next = (args: any) => () => args; // eslint-disable-line @typescript-eslint/no-explicit-any
+        const systemMessage = "https://www.microsoft.com/en-us/ \
+        reach at elo@el.com";
+        const args = {
+            activity: {
+                text: systemMessage,
+                channelData: {
+                    tags: [Constants.systemMessageTag]
+                },
+                from: {
+                    role: DirectLineSenderRole.User
+                }
+            }
+        };
+
+        const results = createActivityMiddleware(renderMarkdown)()(next)(args);
+        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledTimes(0);
+        expect(results().props?.dangerouslySetInnerHTML?.__html).toContain("href=\"https://www.microsoft.com/en-us/\"");
     });
 });

@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.5](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.5)
 
+### Fixed
+
+- Fix systems messages are not being part of markdown rendering for active links
+
 ## [1.6.3] 2024-04-02
 
 ### Changed
