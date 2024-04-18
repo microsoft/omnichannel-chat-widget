@@ -11,6 +11,7 @@ import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
+import updateIn from "simple-update-in";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const convertTextToHtmlNode = (text: string): any => {
@@ -66,7 +67,7 @@ const processHTMLText = (action: IWebChatAction, text: string): IWebChatAction =
             }
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            action = (window as any).simpleUpdateIn(action, [Constants.payload, Constants.activity, Constants.text], () => htmlNode.innerHTML);
+            action = updateIn(action, [Constants.payload, Constants.activity, Constants.text], () => htmlNode.innerHTML);
         }
         catch (e) {
             let errorMessage = "Failed to apply action: ";

@@ -51,7 +51,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
     const hyperlinkTextOverride = props.webChatContainerProps?.hyperlinkTextOverride ?? defaultWebChatContainerStatefulProps.hyperlinkTextOverride;
     const disableNewLineMarkdownSupport = props.webChatContainerProps?.disableNewLineMarkdownSupport ?? defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const markdown = createMarkdown((props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting)!, disableNewLineMarkdownSupport!);
+    const disableMarkdownMessageFormatting = props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting;
+    const markdown = createMarkdown(disableMarkdownMessageFormatting!, disableNewLineMarkdownSupport!);
     // Initialize Web Chat's redux store
     let webChatStore = WebChatStoreLoader.store;
 
@@ -110,7 +111,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         if (props.webChatContainerProps?.webChatProps?.renderMarkdown) {
             text = props.webChatContainerProps?.webChatProps.renderMarkdown(text);
         } else {
-            const render = disableNewLineMarkdownSupport ? markdown.renderInline.bind(markdown) : markdown.render.bind(markdown);
+            const render = disableMarkdownMessageFormatting ? markdown.renderInline.bind(markdown) : markdown.render.bind(markdown);
             text = render(text);
         }
 
