@@ -47,7 +47,7 @@ const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: 
     card.activity.text = renderMarkdown(card.activity.text);
     // eslint-disable-next-line react/display-name
     return () => (
-        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" dangerouslySetInnerHTML={{ __html: card.activity.text }} />
+        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" className={Constants.markDownSystemMessageClass} dangerouslySetInnerHTML={{ __html: card.activity.text }} />
     );
 };
 
