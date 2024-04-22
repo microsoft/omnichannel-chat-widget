@@ -210,16 +210,19 @@ export const chatSDKStateCleanUp = (chatSDK: any) => {
 export const endVoiceVideoCallIfOngoing = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     let callId = "";
     try {
-        const voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
-        if (voiceVideoCallingSdk && voiceVideoCallingSdk.isInACall()) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            callId = (voiceVideoCallingSdk as any).callId;
-            voiceVideoCallingSdk.stopCall();
-            TelemetryHelper.logCallingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.EndCallButtonClick,
-            }, callId);
-            callingStateCleanUp(dispatch);
+        if (chatSDK.isVoiceVideoCallingEnabled()) {
+            const voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
+            if (voiceVideoCallingSdk && voiceVideoCallingSdk.isInACall()) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                callId = (voiceVideoCallingSdk as any).callId;
+                voiceVideoCallingSdk.stopCall();
+                TelemetryHelper.logCallingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.EndCallButtonClick,
+                }, callId);
+                callingStateCleanUp(dispatch);
+            }
         }
+       
     } catch (error) {
         TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.EndCallButtonClickException,
