@@ -92,6 +92,7 @@
     "**/nanoid": "3.1.31",
     "**/url-parse": "1.5.9",
     "**/markdown-it": "12.3.2",
-    "**/minimist": "1.2.6"
+    "**/minimist": "1.2.6",
+    "**/sanitize-html": "2.12.1"
   }
 }
