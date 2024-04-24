@@ -675,6 +675,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer
                     {...webChatProps}
+                    userID={state.domainStates.chatToken?.visitorId || "teamsvisitor"}
                     styleOptions={{
                         ...webChatStyles,
                         bubbleBackground: props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background,
