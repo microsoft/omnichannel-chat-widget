@@ -294,6 +294,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.6] - 2024-04-24
+
+### Fixed
+
+- Set resolution for 2.12.1 sanitize-html  to prevent security vulnerabilities coming from webchat.
+
 ## [1.1.5] - 2024-04-05
 
 ### Fixed
