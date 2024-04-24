@@ -132,6 +132,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
     // Initialize the remaining Web Chat props
     const webChatProps: IWebChatProps = {
         ...defaultWebChatContainerStatefulProps.webChatProps,
+        userID: state.domainStates.chatToken?.visitorId || "teamsvisitor",
         dir: state.domainStates.globalDir,
         locale: changeLanguageCodeFormatForWebChat(getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid)),
         store: webChatStore,

@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fix systems messages are not being part of markdown rendering for active links
+- Fix `suggestedActions` with `to` property not rendering by passing `userID` to `Composer`
 
 ## [1.6.3] 2024-04-02
 
