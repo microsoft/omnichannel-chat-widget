@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { IStackStyles, Stack } from "@fluentui/react";
+import { IStackStyles, Stack, IRawStyle } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 
@@ -203,8 +203,12 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         .webchat__bubble:not(.webchat__bubble--from-user) .webchat__bubble__content {
             border-radius: 0 !important; /* Override border-radius */
         }
+
+        .webchat__stacked-layout_container>div {
+            background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background?? ""}
+        }
         `}</style>
-        <Stack styles={containerStyles}>
+        <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <BasicWebChat></BasicWebChat>
         </Stack>
         </>
