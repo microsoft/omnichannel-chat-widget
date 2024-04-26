@@ -6,12 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.5](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.5)
 
 ### Fixed
-
+- Fix system message dynamic themeing capability
 - Fix systems messages are not being part of markdown rendering for active links
 - Fix `suggestedActions` with `to` property not rendering by passing `userID` to `Composer`
 
