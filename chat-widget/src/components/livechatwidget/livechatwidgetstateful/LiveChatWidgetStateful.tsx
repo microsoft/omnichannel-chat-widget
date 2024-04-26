@@ -585,6 +585,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         handleChatDisconnect(props, state, setWebChatStyles);
     }, [state.appStates.chatDisconnectEventReceived]);
 
+
+    // if props state gets updates we need to update the renderingMiddlewareProps in the state
+    useEffect(() => { 
+        dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: props.webChatContainerProps?.renderingMiddlewareProps });
+    }, [props.webChatContainerProps?.renderingMiddlewareProps]);
+
+
+
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
