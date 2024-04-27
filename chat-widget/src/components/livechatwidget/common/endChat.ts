@@ -4,6 +4,7 @@ import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../
 import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -34,7 +35,6 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithoutPostChat
                 });
-                console.log("ELOPEZANAYA :::  prepareEndChat.ts :: conversationEndedByCustomerWithoutPostChat");
                 await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             }
 
@@ -58,7 +58,6 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat
                 });
-                console.log("ELOPEZANAYA :::  postchatContext.ts :: conversationEndedByCustomerWithInvalidPostChat");
                 await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
                 return;
             }
@@ -75,31 +74,27 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                 Description: `${PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat} ${state?.appStates?.conversationEndedBy}.`
             });
         }
-        console.log("ELOPEZANAYA :::  calling endchat just because....", state?.appStates?.conversationEndedBy);
 
-        const persistentEnabled = isPersistentEnabled(props.chatConfig);
-        const endedByCustomer = state?.appStates?.conversationEndedBy == "Customer" ? true : false;
-        const skipEndChat = !endedByCustomer && persistentEnabled;
-        console.log("ELOPEZANAYA :::  calling endchat just because enddeby and persistenEnabled -> ....", endedByCustomer, persistentEnabled, skipEndChat);
+        const shouldCloseAndPresentSurvey = isValidCloseChatForPersistent(props?.chatConfig, state);
 
-        if (endedByCustomer && persistentEnabled) {
-            console.log("ELOPEZANAYA :::  ended by customer and persistent enabled, so skip end chat");
+        await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, shouldCloseAndPresentSurvey, !shouldCloseAndPresentSurvey, true);
+        if (postchatContext && shouldCloseAndPresentSurvey) {
+            await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
+            return;
+        }
 
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
-
+        /**
+        if (isValidCloseChatForPersistent(props?.chatConfig, state)) {
+            // enforcing closeChat , and not showing post chat survey
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
         } else {
-            console.log("ELOPEZANAYA :::  ended with any other scenario....");
-
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
-
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
             // Initiate post chat render
             if (postchatContext) {
-                console.log("ELOPEZANAYA :::  postchatcontext.ts :: initiatePostChat");
                 await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
                 return;
             }
-
-        }
+        }*/
     } catch (error) {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.EndChatFailed,
@@ -114,7 +109,6 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.PrepareEndChatError
             });
-            console.log("ELOPEZANAYA :::  postchatcontext.ts :: hideButton");
             await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
         }
     }
@@ -123,19 +117,31 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         await chatTokenCleanUp(dispatch);
     }
 };
+/**
+ * A Valid scenario to close chat and present survey is defined by NOT ended by customer and persistent chat is enabled
+ * 
+ */
+const isValidCloseChatForPersistent = (chatConfig?: ChatConfig, state?: ILiveChatWidgetContext) => {
+
+    if (!chatConfig || !state?.appStates?.conversationEndedBy) {
+        return false;
+    }
+    
+    const persistentEnabled = isPersistentEnabled(chatConfig);
+    const endedByCustomer = state?.appStates?.conversationEndedBy == "Customer" ? true : false;
+    return !endedByCustomer && persistentEnabled;
+};
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
     skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
-
-    console.log("ELOPEZANAYA - endChat.ts ::", skipEndChatSDK, skipCloseChat);
 
     if (!skipEndChatSDK && chatSDK.conversation) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatSDKCall
             });
-            console.log("ELOPEZANAYA :::  closing chat");
             //Get auth token again if chat continued for longer time, otherwise gets 401 error
             await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
             await chatSDK?.endChat();
@@ -154,8 +160,6 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
 
     if (!skipCloseChat) {
         try {
-
-            console.log("ELOPEZANAYA :::  closing chat widget 2");
             adapter?.end();
             setAdapter(undefined);
             setWebChatStyles({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
