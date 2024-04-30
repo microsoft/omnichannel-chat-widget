@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
-- reverted the webchat-composer-userid-fix
+- reverted - Fix `suggestedActions` with `to` property not rendering by passing `userID` to `Composer`
 
 ## [1.6.4] 2024-04-29
 
