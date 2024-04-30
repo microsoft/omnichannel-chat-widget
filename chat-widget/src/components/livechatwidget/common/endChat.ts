@@ -77,6 +77,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 
         const shouldCloseAndPresentSurvey = isValidCloseChatForPersistent(props?.chatConfig, state);
 
+        console.log("ELOPEZANAYA :: shouldCloseAndPresentSurvey", shouldCloseAndPresentSurvey);
+
         await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, shouldCloseAndPresentSurvey, !shouldCloseAndPresentSurvey, true);
         if (postchatContext && shouldCloseAndPresentSurvey) {
             await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
