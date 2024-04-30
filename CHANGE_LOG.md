@@ -7,7 +7,6 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
-- reverted - Fix `suggestedActions` with `to` property not rendering by passing `userID` to `Composer`
 
 ## [1.6.4] 2024-04-29
 
