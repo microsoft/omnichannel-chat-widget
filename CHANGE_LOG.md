@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- reverted the webchat-composer-userid-fix
 
 ## [1.6.4] 2024-04-29
 
