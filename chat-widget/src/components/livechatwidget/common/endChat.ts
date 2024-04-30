@@ -83,18 +83,6 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             return;
         }
 
-        /**
-        if (isValidCloseChatForPersistent(props?.chatConfig, state)) {
-            // enforcing closeChat , and not showing post chat survey
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
-        } else {
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
-            // Initiate post chat render
-            if (postchatContext) {
-                await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
-                return;
-            }
-        }*/
     } catch (error) {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.EndChatFailed,
@@ -123,13 +111,21 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
  */
 const isValidCloseChatForPersistent = (chatConfig?: ChatConfig, state?: ILiveChatWidgetContext) => {
 
-    if (!chatConfig || !state?.appStates?.conversationEndedBy) {
-        return false;
-    }
-    
     const persistentEnabled = isPersistentEnabled(chatConfig);
-    const endedByCustomer = state?.appStates?.conversationEndedBy == "Customer" ? true : false;
-    return !endedByCustomer && persistentEnabled;
+
+    if (!persistentEnabled) {
+        // if persistent is not enabled, then show survey
+        return true;
+    } else {
+        const endedByCustomer = state?.appStates?.conversationEndedBy == "Customer" ? true : false;
+
+        // if persistent is enabled , but it was ended by customer, then don't show survey
+        if (endedByCustomer) {
+            return false;
+        }
+        // any other actor, end chat and show survey
+        return true;
+    }
 };
 
 
