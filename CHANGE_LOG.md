@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix for handling properly close chat for persistent chat with postsurvey
+
 ### Changed
 - reverted - Fix `suggestedActions` with `to` property not rendering by passing `userID` to `Composer`
 
