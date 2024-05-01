@@ -75,7 +75,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             });
         }
 
-        const persistentEnabled = isPersistentEnabled(chatSDK.chatConfig);
+        const persistentEnabled = isPersistentEnabled(props.chatConfig);
         const inMemory = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: undefined });
         const endedByCustomer = inMemory?.appStates?.conversationEndedBy === "Customer";
 
@@ -117,7 +117,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
     skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
-
+    
     if (!skipEndChatSDK && chatSDK.conversation) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
