@@ -4,7 +4,6 @@ import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../
 import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -15,6 +14,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
+import { executeReducer } from "../../../contexts/createReducer";
 import { handleAuthentication } from "./authHelper";
 import { isPersistentEnabled } from "./reconnectChatHelper";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
@@ -75,12 +75,18 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             });
         }
 
-        const shouldCloseAndPresentSurvey = isValidCloseChatForPersistent(props?.chatConfig, state);
+        const persistentEnabled = isPersistentEnabled(chatSDK.chatConfig);
+        const inMemory = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: undefined });
+        const endedByCustomer = inMemory?.appStates?.conversationEndedBy === "Customer";
 
-        console.log("ELOPEZANAYA :: shouldCloseAndPresentSurvey", shouldCloseAndPresentSurvey);
+        if (persistentEnabled && endedByCustomer) {
+            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
+            return;
+        }
 
-        await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, shouldCloseAndPresentSurvey, !shouldCloseAndPresentSurvey, true);
-        if (postchatContext && shouldCloseAndPresentSurvey) {
+        await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
+
+        if (postchatContext) {
             await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
             return;
         }
@@ -107,29 +113,6 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         await chatTokenCleanUp(dispatch);
     }
 };
-/**
- * A Valid scenario to close chat and present survey is defined by NOT ended by customer and persistent chat is enabled
- * 
- */
-const isValidCloseChatForPersistent = (chatConfig?: ChatConfig, state?: ILiveChatWidgetContext) => {
-
-    const persistentEnabled = isPersistentEnabled(chatConfig);
-
-    if (!persistentEnabled) {
-        // if persistent is not enabled, then show survey
-        return true;
-    } else {
-        const endedByCustomer = state?.appStates?.conversationEndedBy == "Customer" ? true : false;
-
-        // if persistent is enabled , but it was ended by customer, then don't show survey
-        if (endedByCustomer) {
-            return false;
-        }
-        // any other actor, end chat and show survey
-        return true;
-    }
-};
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
