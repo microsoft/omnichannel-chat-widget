@@ -653,6 +653,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
     const userID = directLine.getState? directLine?.getState("acs.userId"): "teamsvisitor";
+
+    // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>
             <style>{`
