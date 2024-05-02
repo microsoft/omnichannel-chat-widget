@@ -1,6 +1,5 @@
 import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { handleAuthentication } from "./authHelper";
 import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../common/utils";
 import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
 
@@ -12,14 +11,19 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
-import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
+import { executeReducer } from "../../../contexts/createReducer";
+import { handleAuthentication } from "./authHelper";
+import { isPersistentEnabled } from "./reconnectChatHelper";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
     try {
+        const { chatConfig } = props;
+
         // Use Case: If call is ongoing, end the call by simulating end call button click
         endVoiceVideoCallIfOngoing(chatSDK, dispatch);
 
@@ -72,13 +76,25 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                 Description: `${PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat} ${state?.appStates?.conversationEndedBy}.`
             });
         }
-        endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
 
-        // Initiate post chat render
-        if (postchatContext) {
-            await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
-            return;
+        const persistentEnabled = isPersistentEnabled(chatConfig);
+        const { appStates } = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: undefined });
+        const endedByCustomer = appStates?.conversationEndedBy === "Customer";
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const commonParams: [ILiveChatWidgetProps, any, ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>, any, any, any] = [props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter];
+
+        if (persistentEnabled && endedByCustomer) {
+            await endChat(...commonParams, true, false, true);
+        } else {
+            await endChat(...commonParams, false, true, true);
+
+            if (postchatContext) {
+                await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
+                return;
+            }
         }
+
     } catch (error) {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.EndChatFailed,
@@ -105,6 +121,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
     skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
+
     if (!skipEndChatSDK && chatSDK.conversation) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
@@ -222,7 +239,7 @@ export const endVoiceVideoCallIfOngoing = async (chatSDK: any, dispatch: Dispatc
                 callingStateCleanUp(dispatch);
             }
         }
-       
+
     } catch (error) {
         TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.EndCallButtonClickException,
