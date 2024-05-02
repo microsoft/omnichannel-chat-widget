@@ -22,6 +22,8 @@ import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
     try {
+        const { chatConfig } = props;
+
         // Use Case: If call is ongoing, end the call by simulating end call button click
         endVoiceVideoCallIfOngoing(chatSDK, dispatch);
 
@@ -75,20 +77,22 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             });
         }
 
-        const persistentEnabled = isPersistentEnabled(props.chatConfig);
-        const inMemory = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: undefined });
-        const endedByCustomer = inMemory?.appStates?.conversationEndedBy === "Customer";
+        const persistentEnabled = isPersistentEnabled(chatConfig);
+        const { appStates } = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: undefined });
+        const endedByCustomer = appStates?.conversationEndedBy === "Customer";
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const commonParams: [ILiveChatWidgetProps, any, ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>, any, any, any] = [props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter];
 
         if (persistentEnabled && endedByCustomer) {
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
-            return;
-        }
+            await endChat(...commonParams, true, false, true);
+        } else {
+            await endChat(...commonParams, false, true, true);
 
-        await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, true, true);
-
-        if (postchatContext) {
-            await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
-            return;
+            if (postchatContext) {
+                await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
+                return;
+            }
         }
 
     } catch (error) {
@@ -117,7 +121,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
     skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
-    
+
     if (!skipEndChatSDK && chatSDK.conversation) {
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
