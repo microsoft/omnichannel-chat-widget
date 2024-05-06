@@ -68,6 +68,13 @@ class TranscriptHTMLBuilder {
         }
     }
 
+    createMetaElement() {
+        const htmlData = `
+            <meta charset="UTF-8">
+        `;
+
+        return htmlData;
+    }
     createTitleElement() {
         const htmlData = `<title> ${this.pageTitle} </title>`;
         return htmlData;
@@ -88,6 +95,7 @@ class TranscriptHTMLBuilder {
     createHeadElement() {
         const htmlData = `
             <head>
+                ${this.createMetaElement()}
                 ${this.createTitleElement()}
                 ${this.createExternalScriptElements()}
                 <script>
