@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fix for handling properly close chat for persistent chat with postsurvey
+- Fix for emoji characters showing for combination like :0 and :-0
 
 ### Changed
 - reverted - Fix `suggestedActions` with `to` property not rendering by passing `userID` to `Composer`
