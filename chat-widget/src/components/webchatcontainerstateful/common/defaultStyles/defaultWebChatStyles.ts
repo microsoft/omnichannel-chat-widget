@@ -1,6 +1,6 @@
 import { StyleOptions } from "botframework-webchat-api";
 
-export const  defaultWebChatStyles: StyleOptions = {
+export const defaultWebChatStyles: StyleOptions = {
     avatarSize: 32,
     backgroundColor: "#F7F7F9",
     botAvatarBackgroundColor: "#315FA2",
