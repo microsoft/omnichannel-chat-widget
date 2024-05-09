@@ -1,6 +1,6 @@
 import { StyleOptions } from "botframework-webchat-api";
 
-export const defaultWebChatStyles: StyleOptions = {
+export const    : StyleOptions = {
     avatarSize: 32,
     backgroundColor: "#F7F7F9",
     botAvatarBackgroundColor: "#315FA2",
@@ -31,28 +31,28 @@ export const defaultWebChatStyles: StyleOptions = {
     suggestedActionsStackedOverflow: "scroll" as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     typingAnimationDuration: 3500,
     emojiSet: {
-        ':)': '😊',
-        ':-)': '😊',
-        '(:': '😊',
-        '(-:': '😊',
-        ':-|': '😐',
-        ':|': '😐',
-        ':-(': '☹️',
-        ':(': '☹️',
-        ':-D': '😀',
-        ':D': '😀',
-        ':-p': '😛',
-        ':p': '😛',
-        ':-P': '😛',
-        ':P': '😛',
-        ':-o': '😲',
-        ':o': '😲',
-        ':O': '😲',
-        ':-O': '😲',
-        ';-)': '😉',
-        ';)': '😉',
-        '<3': '❤️',
-        '</3': '💔',
-        '<\\3': '💔'
+        ":)": "😊",
+        ":-)": "😊",
+        "(:": "😊",
+        "(-:": "😊",
+        ":-|": "😐",
+        ":|": "😐",
+        ":-(": "☹️",
+        ":(": "☹️",
+        ":-D": "😀",
+        ":D": "😀",
+        ":-p": "😛",
+        ":p": "😛",
+        ":-P": "😛",
+        ":P": "😛",
+        ":-o": "😲",
+        ":o": "😲",
+        ":O": "😲",
+        ":-O": "😲",
+        ";-)": "😉",
+        ";)": "😉",
+        "<3": "❤️",
+        "</3": "💔",
+        "<\\3": "💔"
       }
 };
