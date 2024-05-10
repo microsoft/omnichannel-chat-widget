@@ -29,5 +29,30 @@ export const defaultWebChatStyles: StyleOptions = {
     showAvatarInGroup: true,
     suggestedActionsStackedHeight: 125,
     suggestedActionsStackedOverflow: "scroll" as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    typingAnimationDuration: 3500
+    typingAnimationDuration: 3500,
+    emojiSet: {
+        ":)": "😊",
+        ":-)": "😊",
+        "(:": "😊",
+        "(-:": "😊",
+        ":-|": "😐",
+        ":|": "😐",
+        ":-(": "☹️",
+        ":(": "☹️",
+        ":-D": "😀",
+        ":D": "😀",
+        ":-p": "😛",
+        ":p": "😛",
+        ":-P": "😛",
+        ":P": "😛",
+        ":-o": "😲",
+        ":o": "😲",
+        ":O": "😲",
+        ":-O": "😲",
+        ";-)": "😉",
+        ";)": "😉",
+        "<3": "❤️",
+        "</3": "💔",
+        "<\\3": "💔"
+    }
 };
