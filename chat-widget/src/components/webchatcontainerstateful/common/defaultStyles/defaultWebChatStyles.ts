@@ -54,5 +54,5 @@ export const defaultWebChatStyles: StyleOptions = {
         "<3": "❤️",
         "</3": "💔",
         "<\\3": "💔"
-      }
+    }
 };
