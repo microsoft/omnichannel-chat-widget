@@ -657,7 +657,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         draggable: props.draggableChatWidgetProps?.disabled !== true // Draggable by default, unless explicitly disabled
     };
 
-    return (
+    const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
+    const userID = directLine.getState? directLine?.getState("acs.userId"): "teamsvisitor";
+
+    // WebChat's Composer can only be rendered if a directLine object is defined
+    return directLine && (
         <>
             <style>{`
             ::-webkit-scrollbar {
@@ -689,12 +693,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer
                     {...webChatProps}
+                    userID={userID}
                     styleOptions={{
                         ...webChatStyles,
                         bubbleBackground: props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background,
                         bubbleTextColor: props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color
                     }}
-                    directLine={livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine}>
+                    directLine={directLine}>
                     <Stack
                         id={widgetElementId}
                         styles={generalStyles}
