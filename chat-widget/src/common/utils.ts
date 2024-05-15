@@ -450,7 +450,7 @@ export const parseLowerCaseString = (property: string | boolean | undefined): st
 };
 
 export const setOcUserAgent = (chatSDK: any): void => { // eslint-disable-line @typescript-eslint/no-explicit-any
-    if (chatSDK.OCClient.ocUserAgent && !chatSDK.OCClient.ocUserAgent.join(" ").includes("omnichannel-chat-widget/")) {
+    if (chatSDK.OCClient?.ocUserAgent && !chatSDK.OCClient?.ocUserAgent.join(" ").includes("omnichannel-chat-widget/")) {
         try {
             const version = require("../../../package.json").version; // eslint-disable-line @typescript-eslint/no-var-requires
             const userAgent = `omnichannel-chat-widget/${version}`;
