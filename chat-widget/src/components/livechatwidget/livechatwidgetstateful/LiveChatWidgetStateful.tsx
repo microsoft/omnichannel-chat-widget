@@ -15,7 +15,8 @@ import {
     getWidgetEndChatEventName,
     isNullOrEmptyString,
     isNullOrUndefined,
-    isUndefinedOrEmpty
+    isUndefinedOrEmpty,
+    setOcUserAgent
 } from "../../../common/utils";
 import { defaultClientDataStoreProvider, isCookieAllowed } from "../../../common/storage/default/defaultClientDataStoreProvider";
 import { chatSDKStateCleanUp, endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
@@ -656,6 +657,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe? window.parent: window,
         draggable: props.draggableChatWidgetProps?.disabled !== true // Draggable by default, unless explicitly disabled
     };
+
+    // Add 'omnichannel-chat-widget' OC User Agent if not already set
+    setOcUserAgent(chatSDK);
 
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
     const userID = directLine.getState? directLine?.getState("acs.userId"): "teamsvisitor";

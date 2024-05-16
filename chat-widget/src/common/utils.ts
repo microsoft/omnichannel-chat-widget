@@ -448,3 +448,15 @@ export const  formatTemplateString = (templateMessage : string, values : any) =>
 export const parseLowerCaseString = (property: string | boolean | undefined): string => {
     return String(property).toLowerCase();
 };
+
+export const setOcUserAgent = (chatSDK: any): void => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    if (chatSDK.OCClient?.ocUserAgent && !chatSDK.OCClient?.ocUserAgent.join(" ").includes("omnichannel-chat-widget/")) {
+        try {
+            const version = require("../../../package.json").version; // eslint-disable-line @typescript-eslint/no-var-requires
+            const userAgent = `omnichannel-chat-widget/${version}`;
+            chatSDK.OCClient.ocUserAgent = [userAgent, ...chatSDK.OCClient.ocUserAgent];
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+};
