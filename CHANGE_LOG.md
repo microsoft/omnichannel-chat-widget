@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.0] 2024-05-30
+
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.0)
