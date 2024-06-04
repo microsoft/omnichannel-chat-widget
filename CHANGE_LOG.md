@@ -6,8 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Fixed
 
+### Fixed
+- Prechat payload from survey props get used when submitting response.
 - Fixed external link icon color css issue for markdown messages.
 
 ## [1.7.0] 2024-05-30
