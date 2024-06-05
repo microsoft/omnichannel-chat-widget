@@ -64,7 +64,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
 
     // Getting prechat Survey Context
     const parseToJson = false;
-    const preChatSurveyResponse: string = await chatSDK.getPreChatSurvey(parseToJson);
+    const preChatSurveyResponse: string = props?.preChatSurveyPaneProps?.controlProps?.payload ?? await chatSDK.getPreChatSurvey(parseToJson);
     const showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
 
     if (showPrechat) {
