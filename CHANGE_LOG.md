@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Add ability to pass external hosted URLs for the libraries of chat transcript
 
 ### Fixed
 - Prechat payload from survey props get used when submitting response.
