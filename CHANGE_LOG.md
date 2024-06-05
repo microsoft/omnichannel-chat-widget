@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed an issue allowing multiple listeners to execute multiple times for the same event (GetLiveWorkItemDetail)
 - Fixed external link icon color css issue for markdown messages.
 
 ## [1.7.0] 2024-05-30

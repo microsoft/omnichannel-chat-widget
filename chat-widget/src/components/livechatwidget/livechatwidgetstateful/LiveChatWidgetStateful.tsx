@@ -287,8 +287,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        // logical gate to prevent register multiple events
         if (listenerRegistered.current === false) {
-
             // Toggle chat visibility
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event: any) => {
@@ -298,8 +298,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     }
                     const dateNow = Date.now();
                   
+                    // callInProgress acts as semaphore to prevent multiple calls to getConversationDetailsCall, in case of multiple switchs between tabs
                     if (callInProgress.current === false && (dateNow - lastLWICheckTimeRef.current) > Constants.LWICheckOnVisibilityTimeout) {
                         lastLWICheckTimeRef.current = dateNow;
+                        
                         callInProgress.current = true;
                         const conversationDetails = await getConversationDetailsCall(chatSDK);
                         if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
