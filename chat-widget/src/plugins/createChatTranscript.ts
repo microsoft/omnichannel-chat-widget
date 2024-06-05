@@ -5,6 +5,9 @@ import { createFileAndDownload } from "../common/utils";
 interface TranscriptHTMLScripts {
     botframeworkWebChat?: {
         src?: string;
+        integrity?: string;
+        crossOrigin?: string;
+        referrerPolicy?: string;
     },
     rxJs?: {
         src?: string;
@@ -14,9 +17,15 @@ interface TranscriptHTMLScripts {
     },
     react?: {
         src?: string;
+        integrity?: string;
+        crossOrigin?: string;
+        referrerPolicy?: string;
     },
     reactDom?: {
         src?: string;
+        integrity?: string;
+        crossOrigin?: string;
+        referrerPolicy?: string;
     },
     markdownIt?: {
         src?: string;
@@ -25,6 +34,29 @@ interface TranscriptHTMLScripts {
         referrerPolicy?: string;
     }
 }
+
+const defaultLibraryScripts = {
+    botframeworkWebChat: {
+        src: "https://cdn.botframework.com/botframework-webchat/4.15.7/webchat.js"
+    },
+    rxJs: {
+        src: "https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.8.0/rxjs.umd.min.js",
+        integrity: "sha512-v0/YVjBcbjLN6scjmmJN+h86koeB7JhY4/2YeyA5l+rTdtKLv0VbDBNJ32rxJpsaW1QGMd1Z16lsLOSGI38Rbg==",
+        crossOrigin: "anonymous",
+        referrerPolicy: "no-referrer"
+    },
+    react: {
+        src: "https://unpkg.com/react@18.2.0/umd/react.production.min.js"
+    },
+    reactDom: {
+        src: "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"
+    },
+    markdownIt: {
+        src: "https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js",
+        integrity: "sha256-hNyljag6giCsjv/yKmxK8/VeHzvMDvc5u8AzmRvm1BI=",
+        crossOrigin: "anonymous",
+    }
+};
 
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -109,43 +141,26 @@ class TranscriptHTMLBuilder {
         return htmlData;
     }
 
+    createScriptElement(src: string, integrity: string | undefined = undefined, crossOrigin: string | undefined = undefined, referrerPolicy: string | undefined = undefined) {
+        return `<script src="${src}" ${integrity ? `integrity="${integrity}"`: ""} ${crossOrigin ? `crossorigin="${crossOrigin}"`: ""} ${referrerPolicy ? `referrerpolicy="${referrerPolicy}"`: ""}><\/script>`;
+    }
+
     createExternalScriptElements() {
-        const defaultLibraryScripts = {
-            botframeworkWebChat: {
-                src: "https://cdn.botframework.com/botframework-webchat/4.15.7/webchat.js"
-            },
-            rxJs: {
-                src: "https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.8.0/rxjs.umd.min.js",
-                integrity: "sha512-v0/YVjBcbjLN6scjmmJN+h86koeB7JhY4/2YeyA5l+rTdtKLv0VbDBNJ32rxJpsaW1QGMd1Z16lsLOSGI38Rbg==",
-                crossOrigin: "anonymous",
-                referrerPolicy: "no-referrer"
-            },
-            react: {
-                src: "https://unpkg.com/react@18.2.0/umd/react.production.min.js"
-            },
-            reactDom: {
-                src: "https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"
-            },
-            markdownIt: {
-                src: "https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js",
-                integrity: "sha256-hNyljag6giCsjv/yKmxK8/VeHzvMDvc5u8AzmRvm1BI=",
-                crossOrigin: "anonymous",
-            }
-        };
-
-        const createScriptElement = (src: string, integrity: string | undefined = undefined, crossOrigin: string | undefined = undefined, referrerPolicy: string | undefined = undefined) => {
-            return `<script src="${src}" ${integrity ? `integrity="${integrity}"`: ""} ${crossOrigin ? `crossorigin="${crossOrigin}"`: ""} ${referrerPolicy ? `referrerpolicy="${referrerPolicy}"`: ""}><\/script>`;
-        };
-
-        const webChatScript = createScriptElement(this.externalScripts?.botframeworkWebChat?.src ?? defaultLibraryScripts.botframeworkWebChat.src);
+        const webChatScript = this.externalScripts?.botframeworkWebChat?.src?
+            this.createScriptElement(this.externalScripts?.botframeworkWebChat?.src as string, this.externalScripts?.botframeworkWebChat?.integrity, this.externalScripts?.botframeworkWebChat?.crossOrigin, this.externalScripts?.botframeworkWebChat?.referrerPolicy):
+            this.createScriptElement(defaultLibraryScripts.botframeworkWebChat.src);
         const rxJsScript = this.externalScripts?.rxJs?.src ?
-            createScriptElement(this.externalScripts?.rxJs?.src as string, this.externalScripts?.rxJs?.integrity, this.externalScripts?.rxJs?.crossOrigin, this.externalScripts?.rxJs?.referrerPolicy): 
-            createScriptElement(defaultLibraryScripts.rxJs.src, defaultLibraryScripts.rxJs.integrity, defaultLibraryScripts.rxJs.crossOrigin, defaultLibraryScripts.rxJs.referrerPolicy);
-        const reactScript = createScriptElement(this.externalScripts?.react?.src ?? defaultLibraryScripts.react.src);
-        const reactDomScript = createScriptElement(this.externalScripts?.reactDom?.src ?? defaultLibraryScripts.reactDom.src);
+            this.createScriptElement(this.externalScripts?.rxJs?.src as string, this.externalScripts?.rxJs?.integrity, this.externalScripts?.rxJs?.crossOrigin, this.externalScripts?.rxJs?.referrerPolicy):
+            this.createScriptElement(defaultLibraryScripts.rxJs.src, defaultLibraryScripts.rxJs.integrity, defaultLibraryScripts.rxJs.crossOrigin, defaultLibraryScripts.rxJs.referrerPolicy);
+        const reactScript = this.externalScripts?.react?.src?
+            this.createScriptElement(this.externalScripts?.react?.src as string, this.externalScripts?.react?.integrity, this.externalScripts?.react?.crossOrigin, this.externalScripts?.react?.referrerPolicy):
+            this.createScriptElement(defaultLibraryScripts.react.src);
+        const reactDomScript = this.externalScripts?.reactDom?.src?
+            this.createScriptElement(this.externalScripts?.reactDom?.src as string, this.externalScripts?.reactDom?.integrity, this.externalScripts?.reactDom?.crossOrigin, this.externalScripts?.reactDom?.referrerPolicy):
+            this.createScriptElement(this.externalScripts?.reactDom?.src ?? defaultLibraryScripts.reactDom.src);
         const markdownItScript = this.externalScripts?.markdownIt?.src ?
-            createScriptElement(this.externalScripts?.markdownIt?.src as string, this.externalScripts?.markdownIt?.integrity, this.externalScripts?.markdownIt?.crossOrigin, this.externalScripts?.markdownIt?.referrerPolicy):
-            createScriptElement(defaultLibraryScripts.markdownIt.src, defaultLibraryScripts.markdownIt.integrity, defaultLibraryScripts.markdownIt.crossOrigin);
+            this.createScriptElement(this.externalScripts?.markdownIt?.src as string, this.externalScripts?.markdownIt?.integrity, this.externalScripts?.markdownIt?.crossOrigin, this.externalScripts?.markdownIt?.referrerPolicy):
+            this.createScriptElement(defaultLibraryScripts.markdownIt.src, defaultLibraryScripts.markdownIt.integrity, defaultLibraryScripts.markdownIt.crossOrigin);
 
         const htmlData = `
             ${webChatScript}
