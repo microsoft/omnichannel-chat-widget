@@ -113,22 +113,42 @@ class TranscriptHTMLBuilder {
         return `<script src="${src}" ${integrity ? `integrity="${integrity}"`: ""} ${crossOrigin ? `crossorigin="${crossOrigin}"`: ""} ${referrerPolicy ? `referrerpolicy="${referrerPolicy}"`: ""}><\/script>`;
     }
 
-    createExternalScriptElements() {
-        const webChatScript = this.externalScripts?.botframeworkWebChat?.src?
+    createWebChatScriptElement() {
+        return this.externalScripts?.botframeworkWebChat?.src?
             this.createScriptElement(this.externalScripts?.botframeworkWebChat?.src as string, this.externalScripts?.botframeworkWebChat?.integrity, this.externalScripts?.botframeworkWebChat?.crossOrigin, this.externalScripts?.botframeworkWebChat?.referrerPolicy):
             this.createScriptElement(defaultLibraryScripts.botframeworkWebChat.src);
-        const rxJsScript = this.externalScripts?.rxJs?.src ?
+    }
+
+    createRxJsScriptElement() {
+        return this.externalScripts?.rxJs?.src?
             this.createScriptElement(this.externalScripts?.rxJs?.src as string, this.externalScripts?.rxJs?.integrity, this.externalScripts?.rxJs?.crossOrigin, this.externalScripts?.rxJs?.referrerPolicy):
             this.createScriptElement(defaultLibraryScripts.rxJs.src, defaultLibraryScripts.rxJs.integrity, defaultLibraryScripts.rxJs.crossOrigin, defaultLibraryScripts.rxJs.referrerPolicy);
-        const reactScript = this.externalScripts?.react?.src?
+    }
+
+    createReactScriptElement() {
+        return this.externalScripts?.react?.src?
             this.createScriptElement(this.externalScripts?.react?.src as string, this.externalScripts?.react?.integrity, this.externalScripts?.react?.crossOrigin, this.externalScripts?.react?.referrerPolicy):
             this.createScriptElement(defaultLibraryScripts.react.src);
-        const reactDomScript = this.externalScripts?.reactDom?.src?
+    }
+
+    createReactDomScriptElement() {
+        return this.externalScripts?.reactDom?.src?
             this.createScriptElement(this.externalScripts?.reactDom?.src as string, this.externalScripts?.reactDom?.integrity, this.externalScripts?.reactDom?.crossOrigin, this.externalScripts?.reactDom?.referrerPolicy):
             this.createScriptElement(this.externalScripts?.reactDom?.src ?? defaultLibraryScripts.reactDom.src);
-        const markdownItScript = this.externalScripts?.markdownIt?.src ?
+    }
+
+    createMarkdownItScriptElement() {
+        return this.externalScripts?.markdownIt?.src?
             this.createScriptElement(this.externalScripts?.markdownIt?.src as string, this.externalScripts?.markdownIt?.integrity, this.externalScripts?.markdownIt?.crossOrigin, this.externalScripts?.markdownIt?.referrerPolicy):
             this.createScriptElement(defaultLibraryScripts.markdownIt.src, defaultLibraryScripts.markdownIt.integrity, defaultLibraryScripts.markdownIt.crossOrigin);
+    }
+
+    createExternalScriptElements() {
+        const webChatScript = this.createWebChatScriptElement();
+        const rxJsScript = this.createRxJsScriptElement();
+        const reactScript = this.createReactScriptElement();
+        const reactDomScript = this.createReactDomScriptElement();
+        const markdownItScript = this.createMarkdownItScriptElement();
 
         const htmlData = `
             ${webChatScript}
