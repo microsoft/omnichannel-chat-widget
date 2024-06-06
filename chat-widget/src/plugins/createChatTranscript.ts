@@ -1,39 +1,7 @@
 /* eslint-disable no-useless-escape */
 
 import { createFileAndDownload } from "../common/utils";
-
-interface TranscriptHTMLScripts {
-    botframeworkWebChat?: {
-        src?: string;
-        integrity?: string;
-        crossOrigin?: string;
-        referrerPolicy?: string;
-    },
-    rxJs?: {
-        src?: string;
-        integrity?: string;
-        crossOrigin?: string;
-        referrerPolicy?: string;
-    },
-    react?: {
-        src?: string;
-        integrity?: string;
-        crossOrigin?: string;
-        referrerPolicy?: string;
-    },
-    reactDom?: {
-        src?: string;
-        integrity?: string;
-        crossOrigin?: string;
-        referrerPolicy?: string;
-    },
-    markdownIt?: {
-        src?: string;
-        integrity?: string;
-        crossOrigin?: string;
-        referrerPolicy?: string;
-    }
-}
+import TranscriptHtmlScripts from "../components/footerstateful/downloadtranscriptstateful/interfaces/TranscriptHtmlScripts";
 
 const defaultLibraryScripts = {
     botframeworkWebChat: {
@@ -71,7 +39,7 @@ class TranscriptHTMLBuilder {
     private customerAvatarFontColor = "#FFF";
     private disableMarkdownMessageFormatting = false;
     private disableNewLineMarkdownSupport = false;
-    private externalScripts: TranscriptHTMLScripts = {};
+    private externalScripts: TranscriptHtmlScripts = {};
 
     constructor(options: any) {  // eslint-disable-line @typescript-eslint/no-explicit-any
         this.options = options;
