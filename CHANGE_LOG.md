@@ -6,8 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-
 ### Fixed
+
+- Fixed an issue allowing multiple listeners to execute multiple times for the same event (GetLiveWorkItemDetail)
 - Prechat payload from survey props get used when submitting response.
 - Fixed external link icon color css issue for markdown messages.
 - Fixed unread message count set to 0 on page refresh issue.
