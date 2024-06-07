@@ -295,14 +295,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 }
                 const dateNow = Date.now();
 
-                console.log("ELOPEZANAYA :: window?.location?.href?.includes(open-in-window=true) ", window?.location?.href?.includes("open-in-window=true"));
-                console.log("ELOPEZANAYA :: window?.location?.href?.includes(is-popout-mode=true) ", window?.location?.href?.includes("is-popout-mode=true"));
-            
                 if (window?.location?.href?.includes("open-in-window=true") && !window?.location?.href?.includes("is-popout-mode=true")) {
-                    console.warn("ELOPEZANAYA :: Popout enabled, BLOCKING current attempt from parent window");
                     return;
-                }else{
-                    console.warn("ELOPEZANAYA :: Popout disabled, ALLOWING current attempt from parent window");
                 }
 
                 /** 
