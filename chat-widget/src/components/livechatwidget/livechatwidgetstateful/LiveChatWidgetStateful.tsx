@@ -100,9 +100,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
-    const listenerRegistered = useRef(false);
-    const failureCounter = useRef(0);
-    const requestIdInFailure = useRef<string>("");
 
     // Process general styles
     const generalStyles: IStackStyles = {
@@ -264,7 +261,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // useEffect for custom context
     useEffect(() => {
-        console.error("ELOPEZANAYA :: **** SETTING LISTENERS **");
         // Add the custom context on receiving the SetCustomContext event
         BroadcastService.getMessageByEventName(BroadcastEvent.SetCustomContext).subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -275,7 +271,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         BroadcastService.getMessageByEventName(BroadcastEvent.StartProactiveChat).subscribe((msg: ICustomEvent) => {
-            console.error("ELOPEZANAYA :: startProactiveChat event received.");
 
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
@@ -291,65 +286,34 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
-        // logical gate to prevent register multiple events
-        //  if (listenerRegistered.current === false) {
         // Toggle chat visibility
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event: any) => {
-            console.log("ELOPEZANAYA :: HideChatVisibilityChangeEvent event received.");
-            console.error("ELOPEZANAYA :: HideChatVisibilityChangeEvent : event?.payload?.isChatHidden .", event?.payload?.isChatHidden );
-            console.error("ELOPEZANAYA :: HideChatVisibilityChangeEvent : props ", props);
-            console.error("ELOPEZANAYA :: HideChatVisibilityChangeEvent : state ", JSON.stringify(state));
-
-            console.warn("ELOPEZANAYA :: HideChatVisibilityChangeEvent : failureCounter.current .", failureCounter.current );
-            console.warn("ELOPEZANAYA :: HideChatVisibilityChangeEvent :  requestIdInFailure ", requestIdInFailure.current );
-
             if (event?.payload?.isChatHidden !== undefined) {
-
                 if (props.controlProps?.hideStartChatButton) {
                     dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
                 }
                 const dateNow = Date.now();
 
-                // callInProgress acts as semaphore to prevent multiple calls to getConversationDetailsCall, in case of multiple switchs between tabs
+                console.log("ELOPEZANAYA :: window?.location?.href?.includes(open-in-window=true) ", window?.location?.href?.includes("open-in-window=true"));
+                console.log("ELOPEZANAYA :: window?.location?.href?.includes(is-popout-mode=true) ", window?.location?.href?.includes("is-popout-mode=true"));
+            
+                if (window?.location?.href?.includes("open-in-window=true") && !window?.location?.href?.includes("is-popout-mode=true")) {
+                    console.warn("ELOPEZANAYA :: Popout enabled, BLOCKING current attempt from parent window");
+                    return;
+                }else{
+                    console.warn("ELOPEZANAYA :: Popout disabled, ALLOWING current attempt from parent window");
+                }
+
+                /** 
+                 * callInProgress acts as "thread lock" to prevent multiple calls to getConversationDetailsCall, 
+                 * in case of multiple switchs between tabs
+                 */
                 if (callInProgress.current === false && (dateNow - lastLWICheckTimeRef.current) > Constants.LWICheckOnVisibilityTimeout) {
+
                     lastLWICheckTimeRef.current = dateNow;
-
                     callInProgress.current = true;
-                    if (failureCounter.current > 2) {
-                        //if failure counter is more than 2, we assume it will keep failing due to reqId not present in dataverse
-                        // this is an scenario present for parent window when pop-out mode is ON.
-                        return;
-                    }
                     const conversationDetails = await getConversationDetailsCall(chatSDK);
-                    console.log("ELOPEZANAYA ::HideChatVisibilityChangeEvent :::  conversationDetails=>", conversationDetails);
-
-                    // if conversatioin details is undefined, we assume it failed
-                    // check if conversationDetails is an empty object
-
-                    if ((conversationDetails === undefined || conversationDetails === null) || 
-                    (Object.keys(conversationDetails).length === 0 && conversationDetails.constructor === Object)) {
-                        console.error("ELOPEZANAYA :: HideChatVisibilityChangeEvent : ****** conversationDetails is undefined. ****");
-                        const reqId = props.chatSDK.requestId;
-                        const hideStartButton = props.controlProps?.hideStartChatButton;
-                        console.warn("ELOPEZANAYA :: HideChatVisibilityChangeEvent : hideStartButton =>", hideStartButton);
-                        console.warn("ELOPEZANAYA :: HideChatVisibilityChangeEvent : reqId =>", reqId);
-
-
-                        if (hideStartButton === false) {
-                            const sameReqId = requestIdInFailure.current === reqId;
-                            if (sameReqId) {
-                                failureCounter.current++;
-
-                            }else{
-                                requestIdInFailure.current = reqId;
-                                failureCounter.current = 1;
-                            }
-                        }
-                        console.log("ELOPEZANAYA :: HideChatVisibilityChangeEvent : conversationDetails is undefined. Calling startChat.");
-                    }else{
-                        console.warn("ELOPEZANAYA :: HideChatVisibilityChangeEvent : conversationDetails present =>.",conversationDetails);
-                    }
 
                     if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
                         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
@@ -362,21 +326,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 }
             }
         });
-        listenerRegistered.current = true;
-        //elopez }
 
         /**
          * This will allow to sync multiple tabs to handle minimize and maximize state, 
          * the event is expected to be emitted from scripting layer.
          */
         BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
-            console.error("ELOPEZANAYA :: syncMinimize event received.");
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: msg?.payload?.minimized });
         });
 
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
-            console.error("ELOPEZANAYA :: startChat event received.");
             // If chat is out of operating hours chat widget sets the conversation state to OutOfOffice.
             if (props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
                 state?.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
@@ -418,10 +378,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true) {
-
-                console.error("ELOPEZANAYA :: startChat event received. Minimized is true.");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
@@ -435,7 +392,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
-            console.error("ELOPEZANAYA :: initiateEndChat event received.");
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent."
@@ -469,7 +425,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat on browser unload
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChatOnBrowserUnload).subscribe(() => {
-            console.error("ELOPEZANAYA :: initiateEndChatOnBrowserUnload event received.");
             initiateEndChatOnBrowserUnload();
         });
 
@@ -480,7 +435,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             props.controlProps?.widgetInstanceId ?? "");
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
-            console.error("ELOPEZANAYA :: endChat event received.");
             if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
@@ -495,13 +449,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
-            console.error("ELOPEZANAYA :: WidgetSize event received.");
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
         });
 
         // Reset state variables
         BroadcastService.getMessageByEventName(BroadcastEvent.RaiseErrorEvent).subscribe(() => {
-            console.error("ELOPEZANAYA :: RaiseErrorEvent event received.");
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONFIG, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
@@ -656,7 +608,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Handle Chat disconnect cases
     useEffect(() => {
-        handleChatDisconnect(props, state, setWebChatStyles);
+        
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+
+        handleChatDisconnect(props, inMemoryState, setWebChatStyles);
     }, [state.appStates.chatDisconnectEventReceived]);
 
 
