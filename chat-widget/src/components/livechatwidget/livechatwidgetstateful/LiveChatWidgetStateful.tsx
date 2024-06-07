@@ -17,6 +17,7 @@ import {
     getWidgetEndChatEventName,
     isNullOrEmptyString,
     isNullOrUndefined,
+    isThisSessionPopout,
     isUndefinedOrEmpty,
     setOcUserAgent
 } from "../../../common/utils";
@@ -295,9 +296,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 }
                 const dateNow = Date.now();
 
-                if (window?.location?.href?.includes("open-in-window=true") && !window?.location?.href?.includes("is-popout-mode=true")) {
+                if (isThisSessionPopout(window?.location?.href)){
                     return;
-                }
+                }              
 
                 /** 
                  * callInProgress acts as "thread lock" to prevent multiple calls to getConversationDetailsCall, 
