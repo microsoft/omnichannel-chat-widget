@@ -31,6 +31,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         
         if (state.appStates.isMinimized) {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+            dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
         } else {
             await startChat();
         }
