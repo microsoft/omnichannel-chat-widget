@@ -2,13 +2,13 @@ import { AriaTelemetryConstants, Constants, HtmlAttributeNames, LocaleConstants 
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 import { DataStoreManager } from "./contextDataStore/DataStoreManager";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { Md5 } from "md5-typescript";
 import { TelemetryHelper } from "./telemetry/TelemetryHelper";
-import { ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -371,7 +371,14 @@ export const debounceLeading = (fn: any, ms = 3000) => {
         timeoutId = setTimeout(() => { timeoutId = null; }, ms);
     };
 };
+export const isThisSessionPopout = (href: string): boolean => {
 
+    if (href?.includes("open-in-window=true") && !window?.location?.href?.includes("is-popout-mode=true")) {
+        return true;
+    }
+
+    return false;
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getConversationDetailsCall = async (chatSDK: any, liveChatContext: any = null) => {
     let conversationDetails: any = undefined; // eslint-disable-line @typescript-eslint/no-explicit-any
