@@ -17,6 +17,7 @@ import {
     getWidgetEndChatEventName,
     isNullOrEmptyString,
     isNullOrUndefined,
+    isThisSessionPopout,
     isUndefinedOrEmpty,
     setOcUserAgent
 } from "../../../common/utils";
@@ -146,7 +147,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active 
+                if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active
                     || inMemoryState.appStates.conversationState === ConversationState.ReconnectChat)) {
                     return true;
                 }
@@ -287,34 +288,41 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
-        if (listenerRegistered.current === false) {
-
-            // Toggle chat visibility
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event: any) => {
-                if (event?.payload?.isChatHidden !== undefined) {
-                    if (props.controlProps?.hideStartChatButton) {
-                        dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
-                    }
-                    const dateNow = Date.now();
-                  
-                    if (callInProgress.current === false && (dateNow - lastLWICheckTimeRef.current) > Constants.LWICheckOnVisibilityTimeout) {
-                        lastLWICheckTimeRef.current = dateNow;
-                        callInProgress.current = true;
-                        const conversationDetails = await getConversationDetailsCall(chatSDK);
-                        if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
-                            dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
-                            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                                Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
-                                Description: "Chat disconnected due to timeout, left or removed."
-                            });
-                        }
-                        callInProgress.current = false;
-                    }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event: any) => {
+            if (event?.payload?.isChatHidden !== undefined) {
+                if (props.controlProps?.hideStartChatButton) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
                 }
-            });
-            listenerRegistered.current = true;
-        }
+                const dateNow = Date.now();
+
+                if (isThisSessionPopout(window?.location?.href)){
+                    return;
+                }              
+
+                /** 
+                 * callInProgress acts as "thread lock" to prevent multiple calls to getConversationDetailsCall, 
+                 * in case of multiple switchs between tabs
+                 */
+                if (callInProgress.current === false && (dateNow - lastLWICheckTimeRef.current) > Constants.LWICheckOnVisibilityTimeout) {
+
+                    lastLWICheckTimeRef.current = dateNow;
+                    callInProgress.current = true;
+                    const conversationDetails = await getConversationDetailsCall(chatSDK);
+
+                    if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
+                        dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
+                        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                            Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
+                            Description: "Chat disconnected due to timeout, left or removed."
+                        });
+                    }
+                    callInProgress.current = false;
+                }
+            }
+        });
+        
+
 
         /**
          * This will allow to sync multiple tabs to handle minimize and maximize state, 
@@ -336,7 +344,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 return;
             }
-            
+
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomContextReceived,
@@ -344,7 +352,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }
-            
+
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
@@ -367,9 +375,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true) {
-
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
@@ -387,7 +393,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent."
             });
-            
+
             // This is to ensure to get latest state from cache in multitab
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
@@ -397,7 +403,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 // We need to simulate states for closing chat, in order to messup with close confirmation pane.
                 dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
-                
+
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
             } else {
                 const skipEndChatSDK = true;
@@ -493,15 +499,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         } else {
             setTimeout(() => ActivityStreamHandler.uncork(), 500);
         }
-
-        currentMessageCountRef.current = -1;
-        dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
-        const customEvent: ICustomEvent = {
-            elementType: ElementType.Custom,
-            eventName: BroadcastEvent.UnreadMessageCount,
-            payload: 0
-        };
-        BroadcastService.postMessage(customEvent);
+       
     }, [state.appStates.isMinimized]);
 
     // Broadcast the UnreadMessageCount state on any change.
@@ -511,6 +509,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 elementType: ElementType.Custom,
                 eventName: BroadcastEvent.UnreadMessageCount,
                 payload: `${state.appStates.unreadMessageCount}`
+            };
+            BroadcastService.postMessage(customEvent);
+        }
+        if (state.appStates.unreadMessageCount === 0) {
+            currentMessageCountRef.current = -1;
+            const customEvent: ICustomEvent = {
+                elementType: ElementType.Custom,
+                eventName: BroadcastEvent.UnreadMessageCount,
+                payload: 0
             };
             BroadcastService.postMessage(customEvent);
         }
@@ -599,12 +606,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Handle Chat disconnect cases
     useEffect(() => {
-        handleChatDisconnect(props, state, setWebChatStyles);
+        
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+
+        handleChatDisconnect(props, inMemoryState, setWebChatStyles);
     }, [state.appStates.chatDisconnectEventReceived]);
 
 
     // if props state gets updates we need to update the renderingMiddlewareProps in the state
-    useEffect(() => { 
+    useEffect(() => {
         dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: props.webChatContainerProps?.renderingMiddlewareProps });
     }, [props.webChatContainerProps?.renderingMiddlewareProps]);
 
@@ -649,7 +659,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         },
         props.webChatContainerProps);
 
-    const livechatProps = {...props, downloadTranscriptProps};
+    const livechatProps = { ...props, downloadTranscriptProps };
 
     const chatWidgetDraggableConfig = {
         elementId: widgetElementId,
@@ -664,7 +674,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     const headerDraggableConfig = {
         draggableEventChannel: chatWidgetDraggableConfig.channel ?? "lcw",
-        draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe? window.parent: window,
+        draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe ? window.parent : window,
         draggable: props.draggableChatWidgetProps?.disabled !== true // Draggable by default, unless explicitly disabled
     };
 
@@ -672,7 +682,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     setOcUserAgent(chatSDK);
 
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
-    const userID = directLine.getState? directLine?.getState("acs.userId"): "teamsvisitor";
+    const userID = directLine.getState ? directLine?.getState("acs.userId") : "teamsvisitor";
 
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
