@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Add ability to pass external hosted URLs for the libraries of chat transcript
+
 ### Fixed
 
 - Fixed an issue allowing multiple listeners to execute multiple times for the same event (GetLiveWorkItemDetail)
