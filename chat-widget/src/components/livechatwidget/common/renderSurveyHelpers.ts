@@ -93,7 +93,7 @@ const isPostChatEnabled = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCo
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, isPostchatEnabled?:boolean) => {
     try {
         if (state?.domainStates?.postChatContext === undefined) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,10 +106,12 @@ const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, d
             return context;
         }
     } catch (error) {
-        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.PostChatContextCallFailed,
-            Description: "Failed to get post chat context."
-        });
+        if(isPostchatEnabled){
+            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.PostChatContextCallFailed,
+                Description: "Failed to get post chat context."
+            });
+        }
     }
 };
 

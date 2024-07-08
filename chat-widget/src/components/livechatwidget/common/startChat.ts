@@ -181,11 +181,15 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
-
+        const isPostchatEnabled = (): boolean => {
+            return !!(props?.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable 
+                   ?? state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable);
+        };
+        const postchatEnabled = isPostchatEnabled();
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
             logWidgetLoadComplete(WidgetLoadTelemetryMessage.PersistedStateRetrievedMessage);
-            await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+            await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true, postchatEnabled);
             return;
         }
 
