@@ -34,6 +34,10 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
             "html_inline", // Rule to process html tags
             "newline" // Rule to proceess '\n'
         ]);
+
+        markdown.disable([           
+            "strikethrough"           
+        ]);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
