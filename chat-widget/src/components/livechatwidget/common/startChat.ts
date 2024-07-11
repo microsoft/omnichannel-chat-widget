@@ -20,6 +20,7 @@ import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurv
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { logWidgetLoadComplete, handleStartChatError } from "./startChatErrorHandler";
 import { chatSDKStateCleanUp } from "./endChat";
+import { checkPostChatEnabled } from "./renderSurveyHelpers"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -181,15 +182,17 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
-        const isPostchatEnabled = (): boolean => {
-            return !!(props?.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable 
-                   ?? state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyenable);
-        };
-        const postchatEnabled = isPostchatEnabled();
+
+        const postchatEnabled = checkPostChatEnabled(props!, state!);
+
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
             logWidgetLoadComplete(WidgetLoadTelemetryMessage.PersistedStateRetrievedMessage);
-            await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true, postchatEnabled);
+
+            if (postchatEnabled) {
+                await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+            }
+
             return;
         }
 
@@ -199,7 +202,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         logWidgetLoadComplete();
         // Set post chat context in state
         // Commenting this for now as post chat context is fetched during end chat
-        await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+        if (postchatEnabled) {
+            await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+        }
 
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);

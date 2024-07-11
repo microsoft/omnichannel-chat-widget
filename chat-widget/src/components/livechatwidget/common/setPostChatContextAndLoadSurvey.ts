@@ -8,7 +8,7 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean, isPostchatEnabled?:boolean) => {
+export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
     try {
         if (!persistedChat) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,14 +20,12 @@ export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Di
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
         }
     } catch (ex) {
-        if(isPostchatEnabled){
-            TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
-                Event: TelemetryEvent.PostChatContextCallFailed,
-                ExceptionDetails: {
-                    exception: ex
-                }
-            });
-        }
+        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.PostChatContextCallFailed,
+            ExceptionDetails: {
+                exception: ex
+            }
+        });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
