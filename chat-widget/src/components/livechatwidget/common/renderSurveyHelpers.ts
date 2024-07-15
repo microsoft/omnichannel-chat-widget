@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { Constants, ParticipantType } from "../../../common/Constants";
+import { Constants, ParticipantType, PostChatSurveyTelemetryMessage } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { addDelayInMs } from "../../../common/utils";
@@ -9,6 +9,7 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { isPostChatSurveyEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let conversationDetails: any = undefined;
@@ -93,23 +94,24 @@ const isPostChatEnabled = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCo
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, isPostchatEnabled?:boolean) => {
-    try {
-        if (state?.domainStates?.postChatContext === undefined) {
+const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    const postChatEnabled = await isPostChatSurveyEnabled(chatSDK);
+    if (postChatEnabled) {
+        try {
+            if (state?.domainStates?.postChatContext === undefined) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const context: any = await chatSDK.getPostChatSurveyContext();
-            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.PostChatContextCallSucceed,
-                Description: "Postchat context call succeed."
-            });
-            dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
-            return context;
-        }
-    } catch (error) {
-        if(isPostchatEnabled){
-            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                const context: any = await chatSDK.getPostChatSurveyContext();
+                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.PostChatContextCallSucceed,
+                    Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
+                });
+                dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
+                return context;
+            }
+        } catch (error) {
+            TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.PostChatContextCallFailed,
-                Description: "Failed to get post chat context."
+                Description: PostChatSurveyTelemetryMessage.PostChatContextCallFailed
             });
         }
     }
