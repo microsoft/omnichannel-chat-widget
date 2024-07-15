@@ -16,7 +16,6 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
-import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { logWidgetLoadComplete, handleStartChatError } from "./startChatErrorHandler";
 import { chatSDKStateCleanUp } from "./endChat";
@@ -181,11 +180,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
-
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
             logWidgetLoadComplete(WidgetLoadTelemetryMessage.PersistedStateRetrievedMessage);
-            await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
             return;
         }
 
@@ -195,7 +192,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         logWidgetLoadComplete();
         // Set post chat context in state
         // Commenting this for now as post chat context is fetched during end chat
-        await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
 
         // Updating chat session detail for telemetry
         await updateSessionDataForTelemetry(chatSDK, dispatch);
