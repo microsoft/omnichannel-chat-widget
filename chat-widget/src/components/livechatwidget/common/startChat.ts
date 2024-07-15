@@ -19,6 +19,7 @@ import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { logWidgetLoadComplete, handleStartChatError } from "./startChatErrorHandler";
 import { chatSDKStateCleanUp } from "./endChat";
+import { checkPostChatEnabled } from "./renderSurveyHelpers"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
