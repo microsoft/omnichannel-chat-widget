@@ -6,8 +6,9 @@ export const clientDataStoreProvider = () => {
 
     const isCookieAllowed = () => {
         try {
-            localStorage;
-            sessionStorage;
+            if (!localStorage || !sessionStorage) {
+                throw new Error("localStorage or sessionStorage is null");
+            }
             return true;
         } catch (error) {
             console.error("Third party cookie blocked");

@@ -4,6 +4,8 @@ import { Components, StyleOptions } from "botframework-webchat";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
+import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
+import { chatSDKStateCleanUp, endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
 import {
     createTimer,
@@ -15,18 +17,17 @@ import {
     getWidgetEndChatEventName,
     isNullOrEmptyString,
     isNullOrUndefined,
+    isThisSessionPopout,
     isUndefinedOrEmpty,
     setOcUserAgent
 } from "../../../common/utils";
 import { defaultClientDataStoreProvider, isCookieAllowed } from "../../../common/storage/default/defaultClientDataStoreProvider";
-import { chatSDKStateCleanUp, endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
     shouldShowConfirmationPane,
     shouldShowEmailTranscriptPane,
-    shouldShowStartChatErrorPane,
     shouldShowHeader,
     shouldShowLoadingPane,
     shouldShowOutOfOfficeHoursPane,
@@ -35,6 +36,7 @@ import {
     shouldShowPreChatSurveyPane,
     shouldShowProactiveChatPane,
     shouldShowReconnectChatPane,
+    shouldShowStartChatErrorPane,
     shouldShowWebChatContainer
 } from "../../../controller/componentController";
 
@@ -62,16 +64,19 @@ import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostCha
 import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
 import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
+import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
+import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
+import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
+import { executeReducer } from "../../../contexts/createReducer";
 import { getGeneralStylesForButton } from "../common/getGeneralStylesForButton";
 import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 import { initCallingSdk } from "../common/initCallingSdk";
@@ -84,10 +89,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
-import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
-import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
-import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
-import { executeReducer } from "../../../contexts/createReducer";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -120,6 +121,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const currentMessageCountRef = useRef<number>(0);
     let widgetStateEventId = "";
     const lastLWICheckTimeRef = useRef<number>(0);
+    const callInProgress = useRef<boolean>(false);
     let optionalParams: StartChatOptionalParams;
     let activeCachedChatExist = false;
 
@@ -144,7 +146,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active 
+                if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active
                     || inMemoryState.appStates.conversationState === ConversationState.ReconnectChat)) {
                     return true;
                 }
@@ -270,6 +272,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         BroadcastService.getMessageByEventName(BroadcastEvent.StartProactiveChat).subscribe((msg: ICustomEvent) => {
+
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
                 Description: "Start proactive chat event received."
@@ -292,9 +295,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
                 }
                 const dateNow = Date.now();
-                if (dateNow - lastLWICheckTimeRef.current > Constants.LWICheckOnVisibilityTimeout) {
-                    const conversationDetails = await getConversationDetailsCall(chatSDK);
+
+                if (isThisSessionPopout(window?.location?.href)){
+                    return;
+                }              
+
+                /** 
+                 * callInProgress acts as "thread lock" to prevent multiple calls to getConversationDetailsCall, 
+                 * in case of multiple switchs between tabs
+                 */
+                if (callInProgress.current === false && (dateNow - lastLWICheckTimeRef.current) > Constants.LWICheckOnVisibilityTimeout) {
+
                     lastLWICheckTimeRef.current = dateNow;
+                    callInProgress.current = true;
+                    const conversationDetails = await getConversationDetailsCall(chatSDK);
+
                     if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
                         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
                         TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -302,6 +317,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                             Description: "Chat disconnected due to timeout, left or removed."
                         });
                     }
+                    callInProgress.current = false;
                 }
             }
         });
@@ -326,7 +342,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 return;
             }
-            
+
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomContextReceived,
@@ -334,7 +350,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }
-            
+
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
@@ -357,9 +373,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true) {
-
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
@@ -377,7 +391,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent."
             });
-            
+
             // This is to ensure to get latest state from cache in multitab
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
 
@@ -387,7 +401,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 // We need to simulate states for closing chat, in order to messup with close confirmation pane.
                 dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
-                
+
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
             } else {
                 const skipEndChatSDK = true;
@@ -483,15 +497,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         } else {
             setTimeout(() => ActivityStreamHandler.uncork(), 500);
         }
-
-        currentMessageCountRef.current = -1;
-        dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
-        const customEvent: ICustomEvent = {
-            elementType: ElementType.Custom,
-            eventName: BroadcastEvent.UnreadMessageCount,
-            payload: 0
-        };
-        BroadcastService.postMessage(customEvent);
+       
     }, [state.appStates.isMinimized]);
 
     // Broadcast the UnreadMessageCount state on any change.
@@ -501,6 +507,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 elementType: ElementType.Custom,
                 eventName: BroadcastEvent.UnreadMessageCount,
                 payload: `${state.appStates.unreadMessageCount}`
+            };
+            BroadcastService.postMessage(customEvent);
+        }
+        if (state.appStates.unreadMessageCount === 0) {
+            currentMessageCountRef.current = -1;
+            const customEvent: ICustomEvent = {
+                elementType: ElementType.Custom,
+                eventName: BroadcastEvent.UnreadMessageCount,
+                payload: 0
             };
             BroadcastService.postMessage(customEvent);
         }
@@ -589,12 +604,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Handle Chat disconnect cases
     useEffect(() => {
-        handleChatDisconnect(props, state, setWebChatStyles);
+        
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+
+        handleChatDisconnect(props, inMemoryState, setWebChatStyles);
     }, [state.appStates.chatDisconnectEventReceived]);
 
 
     // if props state gets updates we need to update the renderingMiddlewareProps in the state
-    useEffect(() => { 
+    useEffect(() => {
         dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: props.webChatContainerProps?.renderingMiddlewareProps });
     }, [props.webChatContainerProps?.renderingMiddlewareProps]);
 
@@ -639,7 +657,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         },
         props.webChatContainerProps);
 
-    const livechatProps = {...props, downloadTranscriptProps};
+    const livechatProps = { ...props, downloadTranscriptProps };
 
     const chatWidgetDraggableConfig = {
         elementId: widgetElementId,
@@ -654,7 +672,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     const headerDraggableConfig = {
         draggableEventChannel: chatWidgetDraggableConfig.channel ?? "lcw",
-        draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe? window.parent: window,
+        draggableEventEmitterTargetWindow: props.draggableChatWidgetProps?.targetIframe ? window.parent : window,
         draggable: props.draggableChatWidgetProps?.disabled !== true // Draggable by default, unless explicitly disabled
     };
 
@@ -662,7 +680,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     setOcUserAgent(chatSDK);
 
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
-    const userID = directLine.getState? directLine?.getState("acs.userId"): "teamsvisitor";
+    const userID = directLine.getState ? directLine?.getState("acs.userId") : "teamsvisitor";
 
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
@@ -691,6 +709,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
            
             .webchat__basic-transcript__activity-markdown-body > :first-child {
                 margin-top: 0px;
+            }
+            .webchat__basic-transcript__activity-markdown-body img.webchat__render-markdown__external-link-icon {
+                background-image : url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIzIDMgMTggMTgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTcuMjUwMSA0LjUwMDE3SDEwLjc0OTVDMTEuMTYzNyA0LjUwMDE3IDExLjQ5OTUgNC44MzU5NiAxMS40OTk1IDUuMjUwMTdDMTEuNDk5NSA1LjYyOTg2IDExLjIxNzMgNS45NDM2NiAxMC44NTEzIDUuOTkzMzJMMTAuNzQ5NSA2LjAwMDE3SDcuMjQ5NzRDNi4wNzA3OSA1Ljk5OTYxIDUuMTAzNDkgNi45MDY1NiA1LjAwNzg2IDguMDYxMTJMNS4wMDAyOCA4LjIyMDAzTDUuMDAzMTIgMTYuNzUwN0M1LjAwMzQzIDE3Ljk0MTUgNS45Mjg4NSAxOC45MTYxIDcuMDk5NjYgMTguOTk0OUw3LjI1MzcxIDE5LjAwMDFMMTUuNzUxOCAxOC45ODg0QzE2Ljk0MTUgMTguOTg2OCAxNy45MTQ1IDE4LjA2MiAxNy45OTM1IDE2Ljg5MjNMMTcuOTk4NyAxNi43Mzg0VjEzLjIzMjFDMTcuOTk4NyAxMi44MTc5IDE4LjMzNDUgMTIuNDgyMSAxOC43NDg3IDEyLjQ4MjFDMTkuMTI4NCAxMi40ODIxIDE5LjQ0MjIgMTIuNzY0MyAxOS40OTE4IDEzLjEzMDNMMTkuNDk4NyAxMy4yMzIxVjE2LjczODRDMTkuNDk4NyAxOC43NDA3IDE3LjkyOTMgMjAuMzc2OSAxNS45NTI4IDIwLjQ4MjlMMTUuNzUzOCAyMC40ODg0TDcuMjU4MjcgMjAuNTAwMUw3LjA1NDk1IDIwLjQ5NDlDNS4xNDIzOSAyMC4zOTU0IDMuNjA4OTUgMTguODYyNyAzLjUwODM3IDE2Ljk1MDJMMy41MDMxMiAxNi43NTExTDMuNTAwODkgOC4yNTI3TDMuNTA1MjkgOC4wNTAyQzMuNjA1MzkgNi4xMzc0OSA1LjEzODY3IDQuNjA0NDkgNy4wNTA5NiA0LjUwNTI3TDcuMjUwMSA0LjUwMDE3SDEwLjc0OTVINy4yNTAxWk0xMy43NDgxIDMuMDAxNDZMMjAuMzAxOCAzLjAwMTk3TDIwLjQwMTQgMy4wMTU3NUwyMC41MDIyIDMuMDQzOTNMMjAuNTU5IDMuMDY4MDNDMjAuNjEyMiAzLjA5MTIyIDIwLjY2MzQgMy4xMjE2MyAyMC43MTExIDMuMTU4ODVMMjAuNzgwNCAzLjIyMTU2TDIwLjg2NDEgMy4zMjAxNEwyMC45MTgzIDMuNDEwMjVMMjAuOTU3IDMuNTAwNTdMMjAuOTc2MiAzLjU2NDc2TDIwLjk4OTggMy42Mjg2MkwyMC45OTkyIDMuNzIyODJMMjAuOTk5NyAxMC4yNTU0QzIwLjk5OTcgMTAuNjY5NiAyMC42NjM5IDExLjAwNTQgMjAuMjQ5NyAxMS4wMDU0QzE5Ljg3IDExLjAwNTQgMTkuNTU2MiAxMC43MjMyIDE5LjUwNjUgMTAuMzU3MUwxOS40OTk3IDEwLjI1NTRMMTkuNDk4OSA1LjU2MTQ3TDEyLjI3OTcgMTIuNzg0N0MxMi4wMTM0IDEzLjA1MSAxMS41OTY4IDEzLjA3NTMgMTEuMzAzMSAxMi44NTc1TDExLjIxOSAxMi43ODQ5QzEwLjk1MjcgMTIuNTE4NyAxMC45Mjg0IDEyLjEwMjEgMTEuMTQ2MiAxMS44MDg0TDExLjIxODggMTEuNzI0M0wxOC40MzY5IDQuNTAxNDZIMTMuNzQ4MUMxMy4zNjg0IDQuNTAxNDYgMTMuMDU0NiA0LjIxOTMxIDEzLjAwNSAzLjg1MzI0TDEyLjk5ODEgMy43NTE0NkMxMi45OTgxIDMuMzcxNzcgMTMuMjgwMyAzLjA1Nzk3IDEzLjY0NjQgMy4wMDgzMUwxMy43NDgxIDMuMDAxNDZaIiBmaWxsPSIjMjEyMTIxIiAvPjwvc3ZnPg==) !important;
+                height: .75em;
+                margin-left: .25em;
             }
           }
             `}</style>
