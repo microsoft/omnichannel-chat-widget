@@ -287,6 +287,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        // Toggle chat visibility
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event: any) => {
             if (event?.payload?.isChatHidden !== undefined) {
@@ -321,8 +322,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
         
-
-
         /**
          * This will allow to sync multiple tabs to handle minimize and maximize state, 
          * the event is expected to be emitted from scripting layer.
