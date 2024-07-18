@@ -321,7 +321,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 }
             }
         });
-        
+
         /**
          * This will allow to sync multiple tabs to handle minimize and maximize state, 
          * the event is expected to be emitted from scripting layer.
