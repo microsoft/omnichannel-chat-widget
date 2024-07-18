@@ -101,7 +101,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
-    const listenerRegistered = useRef(false);
 
     // Process general styles
     const generalStyles: IStackStyles = {
