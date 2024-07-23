@@ -1,14 +1,15 @@
 # Pre-Chat Survey Pane
 
 ## Table of Contents
+
 - [Interfaces](#interfaces)
-    - [IPreChatSurveyPaneStatefulParams](#iprechatsurveypanestatefulparams)
-    - [IPreChatSurveyPaneProps](#iprechatsurveypaneprops)
-    - [IPreChatSurveyPaneControlProps](#iprechatsurveypanecontrolprops)
-    - [IPreChatSurveyPaneStyleProps](#iprechatsurveypanestyleprops)
+  - [IPreChatSurveyPaneStatefulParams](#iprechatsurveypanestatefulparams)
+  - [IPreChatSurveyPaneProps](#iprechatsurveypaneprops)
+  - [IPreChatSurveyPaneControlProps](#iprechatsurveypanecontrolprops)
+  - [IPreChatSurveyPaneStyleProps](#iprechatsurveypanestyleprops)
 - [Sample Scenarios](#sample-scenarios)
-    - [Changing adaptive card host config background color](#changing-adaptive-card-host-config-background-color)
-    - [Changing adaptive card payload](#changing-adaptive-card-payload)
+  - [Changing adaptive card host config background color](#changing-adaptive-card-host-config-background-color)
+  - [Changing adaptive card payload](#changing-adaptive-card-payload)
 
 ## Interfaces
 
@@ -53,6 +54,7 @@
 ## Sample Scenarios
 
 ### Changing adaptive card host config background color
+
 <details>
     <summary> Show code</summary>
 
@@ -86,6 +88,7 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-prechat-adaptive-card-host-config-change-background-color.png" width="450">
@@ -93,8 +96,12 @@ liveChatWidgetProps = {
 ----------
 
 ### Changing adaptive card payload
+
+__NOTE__ : The goal of this sample, is to demonstrate HOW TO pass the props value to override the pre-chat survey, It is mandatory to match the format of the Adaptive Card with the same elements used by the Out-of-the-Box widget, which this sample may not fully cover. Specifically, this includes the format for the `Id` object.
+
 <details>
-    <summary> Show code</summary>
+
+<summary> Show code</summary>
 
 ```tsx
 ...
@@ -110,24 +117,21 @@ const payload = {
         },
         {
             "type": "Input.Text",
-            "id": "1e5e4e7a-8f0b-ec11-b6e6-000d3a305d38",
-            "label": "Your Name",
+            "id":"{\"Id\":\"1e5e4e7a-8f0b-ec11-b6e6-000d3a305d38\",\"Name\":\"Name\",\"IsOption\":false,\"Order\":1,\"IsRequired\":true,\"QuestionText\":\"First Name\"}",
             "maxLength": 100,
             "isRequired": true,
             "errorMessage": "Name is required"
         },
         {
             "type": "Input.Text",
-            "id": "487eee2b-41df-4548-bdfa-d27e8f123502",
-            "label": "Email",
+            "id":"{\"Id\":\"487eee2b-41df-4548-bdfa-d27e8f123502\",\"Name\":\"Email\",\"IsOption\":false,\"Order\":2,\"IsRequired\":true,\"QuestionText\":\"Email\"}",
             "maxLength": 100,
             "isRequired": true,
             "errorMessage": "Email is required"
         },
         {
             "type": "Input.ChoiceSet",
-            "id": "e4bdf7cb-995e-ec11-8f8f-000d3a31376e",
-            "label": "What brings you here today?",
+            "id":"{\"Id\":\"e4bdf7cb-995e-ec11-8f8f-000d3a31376e\",\"Name\":\"ProductQuestion\",\"IsOption\":false,\"Order\":3,\"IsRequired\":true,\"QuestionText\":\"What brings you here today?\"}",
             "isMultiSelect": false,
             "value": "1",
             "style": "compact",
@@ -156,15 +160,14 @@ const payload = {
         },
         {
             "type": "Input.Text",
-            "id": "7f8f5d6d-995e-ec11-8f8f-000d3a31376e",
-            "label": "Anything else you would like us to know?",
+            "id":"{\"Id\":\"7f8f5d6d-995e-ec11-8f8f-000d3a31376e\",\"Name\":\"Email\",\"IsOption\":false,\"Order\":4,\"IsRequired\":false,\"QuestionText\":\"Anything else you would like us to know?\"}",
             "style": "text",
             "isMultiline": true,
             "maxLength": 250
         },
-        {
+                {
             "type": "Input.Toggle",
-            "id": "b26011d2-995e-ec11-8f8f-000d3a31376e",
+            {\"Id\":\"b26011d2-995e-ec11-8f8f-000d3a31376e\",\"Name\":\"Consent\",\"IsOption\":false,\"Order\":5,\"IsRequired\":true,\"QuestionText\":\"I agree to the [Privacy policy](https://privacy.microsoft.com/en-us/privacystatement)\"}",            
             "title": "I agree to the [Privacy policy](https://privacy.microsoft.com/en-us/privacystatement)",
             "valueOn": "True",
             "valueOff": "False",
@@ -198,6 +201,7 @@ liveChatWidgetProps = {
 };
 ...
 ```
+
 </details>
 
 <img src="../.attachments/customizations-prechat-custom-adaptive-card-payload.png" width="450">
