@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 - Add disclaimer note for prechat sample.
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.3)
 
+### Fixed
+- Fixing disable strike through in markdown
+- checking localStorage null or undefined
+
 ## [1.7.1] 2024-06-21
 
 ### Changed
