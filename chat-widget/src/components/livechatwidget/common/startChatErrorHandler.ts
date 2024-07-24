@@ -58,7 +58,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
             case ChatSDKErrorName.ClosedConversation:
                 handleInvalidOrClosedConversation(dispatch, chatSDK, props, ex);
                 return;
-            default:                
+            default:
                 logWidgetLoadFailed(ex);
         }
     }
