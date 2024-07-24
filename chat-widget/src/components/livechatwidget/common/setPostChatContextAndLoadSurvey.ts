@@ -11,9 +11,9 @@ import { isPostChatSurveyEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
-    const postChatEnabled = await isPostChatSurveyEnabled(chatSDK);
-    if (postChatEnabled) {
-        try {
+    try {
+        const postChatEnabled = await isPostChatSurveyEnabled(chatSDK);
+        if (postChatEnabled) {
             if (!persistedChat) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await chatSDK.getPostChatSurveyContext();
@@ -23,17 +23,17 @@ export const setPostChatContextAndLoadSurvey = async (chatSDK: any, dispatch: Di
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
             }
-        } catch (ex) {
-            TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
-                Event: TelemetryEvent.PostChatContextCallFailed,
-                ExceptionDetails: {
-                    exception: ex
-                }
-            });
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
+    } catch (ex) {
+        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.PostChatContextCallFailed,
+            ExceptionDetails: {
+                exception: ex
+            }
         });
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
+        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
+    });
 };
