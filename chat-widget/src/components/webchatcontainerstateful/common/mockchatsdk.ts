@@ -62,4 +62,12 @@ export class MockChatSDK {
     public getVoiceVideoCalling() {
         return null;
     }
+
+    public getLiveChatConfig() {      
+        return {
+            LiveWSAndLiveChatEngJoin: {
+                msdyn_postconversationsurveyenable: "true"
+            }
+        };
+    }
 }

@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
+- Removed postchat telemetry logs when postchat survey is disabled
 - Add disclaimer note for prechat sample.
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.3)
 - Updated `handleStartChatError` to log `AuthenticatedChatConversationRetrievalFailure` as warning using `logWidgetLoadCompleteWithError`.

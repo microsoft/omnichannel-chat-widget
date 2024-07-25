@@ -355,3 +355,8 @@ export class PrepareEndChatDescriptionConstants {
     public static readonly CustomerCloseInactiveChat = "Chat was Inactive and customer is trying to close chat widget or refreshing the page.";
     public static readonly BrowserUnload = "Browser unload event received. Ending chat.";
 }
+
+export class PostChatSurveyTelemetryMessage {
+    public static readonly PostChatContextCallFailed = "Failed to get post chat context.";
+    public static readonly PostChatContextCallSucceed = "Postchat context call succeed.";
+}
