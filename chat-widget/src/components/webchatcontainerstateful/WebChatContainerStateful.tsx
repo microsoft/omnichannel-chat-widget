@@ -207,6 +207,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         .webchat__stacked-layout_container>div {
             background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background?? ""}
         }
+        .webchat__toaster__expandText {
+            display: flex;
+        }
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <BasicWebChat></BasicWebChat>
