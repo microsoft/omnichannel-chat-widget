@@ -34,11 +34,11 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
             "html_inline", // Rule to process html tags
             "newline" // Rule to proceess '\n'
         ]);
-
-        markdown.disable([           
-            "strikethrough"           
-        ]);
     }
+
+    markdown.disable([           
+        "strikethrough"           
+    ]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     markdown.use(MarkdownItForInline, "url_new_win", "link_open", function (tokens: any, idx: number, env: any) {
