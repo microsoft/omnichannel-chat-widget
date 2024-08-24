@@ -163,9 +163,11 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             });
         } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
+            dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
             closeChatWidget(dispatch, props, state);
         }
+
     }
 
     if (postMessageToOtherTab) {

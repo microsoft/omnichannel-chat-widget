@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Updated `handleStartChatError` to log `AuthenticatedChatConversationRetrievalFailure` as warning using `logWidgetLoadCompleteWithError` instead of an error.
 
 ### Fixed
+- Cleaning postsurvey state when ending the chat.
 - Fixing disable strike through in markdown
 - checking localStorage null or undefined
 
