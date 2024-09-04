@@ -18,6 +18,7 @@
 - [Sample Scenarios](#sample-scenarios)
   - [Changing chat disconnect notification pane styling](#changing-chat-disconnect-notification-pane-styling)
   - [Default chat disconnect notification view in accordion format](#default-chat-disconnect-notification-view-in-accordion-format)
+  - [Customizing RTL alignment of notifications in the notification pane](#customizing0-rtl-alignment-of-notifications-in-the-notification-pane)
 
 ## Interfaces
 
@@ -201,3 +202,27 @@ liveChatWidgetProps = {
 </details>
 
 <img src="../.attachments/customizations-chat-disconnect-default-in-accordion.png" width="450">
+
+
+--------------------------------
+### Customizing RTL alignment of notifications in the notification pane
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    webChatContainerProps: {
+        containerStyles: {
+            direction: "rtl",
+        }
+    }
+};
+...
+```
+
+</details>
+
+<img src="../.attachments/customizations-notificationpane-right-to-left.png" width="450">
