@@ -20,6 +20,7 @@ import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurv
 import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { logWidgetLoadComplete, handleStartChatError } from "./startChatErrorHandler";
 import { chatSDKStateCleanUp } from "./endChat";
+import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -105,6 +106,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     let isStartChatSuccessful = false;
     const chatConfig = props?.chatConfig;
     const getAuthToken = props?.getAuthToken;
+    const persistentEnabled = await isPersistentChatEnabled(chatSDK);
 
     if (state?.appStates.conversationState === ConversationState.Closed) {
         // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
@@ -190,7 +192,12 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
-        dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
+
+        // Persistent Chat relies on the `reconnectId` retrieved from reconnectablechats API to reconnect upon start chat and not `liveChatContext`
+        if (!persistentEnabled) {
+            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
+        }
+
         logWidgetLoadComplete();
         // Set post chat context in state
         // Commenting this for now as post chat context is fetched during end chat
