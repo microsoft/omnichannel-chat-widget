@@ -21,6 +21,7 @@ import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
 import { logWidgetLoadComplete, handleStartChatError } from "./startChatErrorHandler";
 import { chatSDKStateCleanUp } from "./endChat";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
+import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -57,24 +58,6 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 
     //Setting PreChat and intiate chat
     await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, state, props);
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const shouldSetPreChatIfPersistentChat = async (chatSDK: any, showPreChat: boolean) => {
-    const persistentEnabled = await isPersistentChatEnabled(chatSDK);
-    let skipPreChat = false;
-    if (persistentEnabled) {
-        const reconnectableChatsParams = {
-            authenticatedUserToken: chatSDK.authenticatedUserToken as string
-        };
-
-        const reconnectableChatsResponse = await chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams);
-        if (reconnectableChatsResponse && reconnectableChatsResponse.reconnectid) { // Skip rendering prechat on existing persistent chat session
-            skipPreChat = true;
-        }
-    }
-
-    return showPreChat && !skipPreChat;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,7 +108,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     let isStartChatSuccessful = false;
     const chatConfig = props?.chatConfig;
     const getAuthToken = props?.getAuthToken;
-    const persistentEnabled = await isPersistentChatEnabled(chatSDK);
+    const persistentChatEnabled = await isPersistentChatEnabled(chatSDK);
 
     if (state?.appStates.conversationState === ConversationState.Closed) {
         // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
@@ -213,7 +196,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
 
         // Persistent Chat relies on the `reconnectId` retrieved from reconnectablechats API to reconnect upon start chat and not `liveChatContext`
-        if (!persistentEnabled) {
+        if (!persistentChatEnabled) {
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
         }
 
