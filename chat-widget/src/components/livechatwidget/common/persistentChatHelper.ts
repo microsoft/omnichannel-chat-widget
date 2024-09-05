@@ -9,9 +9,13 @@ export const shouldSetPreChatIfPersistentChat = async (chatSDK: any, showPreChat
             authenticatedUserToken: chatSDK.authenticatedUserToken as string
         };
 
-        const reconnectableChatsResponse = await chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams);
-        if (reconnectableChatsResponse && reconnectableChatsResponse.reconnectid) { // Skip rendering prechat on existing persistent chat session
-            skipPreChat = true;
+        try {
+            const reconnectableChatsResponse = await chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams);
+            if (reconnectableChatsResponse && reconnectableChatsResponse.reconnectid) { // Skip rendering prechat on existing persistent chat session
+                skipPreChat = true;
+            }
+        } catch {
+            // eslint-disable-line no-empty
         }
     }
 
