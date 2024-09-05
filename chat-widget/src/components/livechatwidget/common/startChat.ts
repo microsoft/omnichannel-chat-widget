@@ -66,7 +66,19 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
     // Getting prechat Survey Context
     const parseToJson = false;
     const preChatSurveyResponse: string = props?.preChatSurveyPaneProps?.controlProps?.payload ?? await chatSDK.getPreChatSurvey(parseToJson);
-    const showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
+    let showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
+    const persistentEnabled = await isPersistentChatEnabled(chatSDK);
+
+    if (persistentEnabled) {
+        const reconnectableChatsParams = {
+            authenticatedUserToken: chatSDK.authenticatedUserToken as string
+        };
+
+        const reconnectableChatsResponse = await chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams);
+        if (reconnectableChatsResponse && reconnectableChatsResponse.reconnectid) { // Skip rendering prechat on existing persistent chat session
+            showPrechat = false;
+        }
+    }
 
     if (showPrechat) {
         const isOutOfOperatingHours = state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toLowerCase() === "true";
