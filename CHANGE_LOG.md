@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Removed `PreChat Survey` rendering on loading `Persistent Chat` on an existing chat
+
 ## [1.7.2] 09-03-2024
 
 ### Changed
