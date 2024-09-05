@@ -12,5 +12,5 @@ export const isPostChatSurveyEnabled = async (chatSDK: any) : Promise<boolean> =
 export const isPersistentChatEnabled = async (chatSDK: any): Promise<boolean> => {
     const chatConfig = await chatSDK.getLiveChatConfig();
     const conversationMode = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode.toString().toLowerCase();
-    return conversationMode === ConversationMode.Persistent.toString();
+    return conversationMode === ConversationMode.Persistent;
 };
