@@ -60,15 +60,9 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
-    //Handle reconnect scenario
-
-    // Getting prechat Survey Context
-    const parseToJson = false;
-    const preChatSurveyResponse: string = props?.preChatSurveyPaneProps?.controlProps?.payload ?? await chatSDK.getPreChatSurvey(parseToJson);
-    let showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
+const shouldSetPreChatIfPersistentChat = async (chatSDK: any, showPreChat: boolean) => {
     const persistentEnabled = await isPersistentChatEnabled(chatSDK);
-
+    let skipPreChat = false;
     if (persistentEnabled) {
         const reconnectableChatsParams = {
             authenticatedUserToken: chatSDK.authenticatedUserToken as string
@@ -76,9 +70,22 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
 
         const reconnectableChatsResponse = await chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams);
         if (reconnectableChatsResponse && reconnectableChatsResponse.reconnectid) { // Skip rendering prechat on existing persistent chat session
-            showPrechat = false;
+            skipPreChat = true;
         }
     }
+
+    return showPreChat && !skipPreChat;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
+    //Handle reconnect scenario
+
+    // Getting prechat Survey Context
+    const parseToJson = false;
+    const preChatSurveyResponse: string = props?.preChatSurveyPaneProps?.controlProps?.payload ?? await chatSDK.getPreChatSurvey(parseToJson);
+    let showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
+    showPrechat = await shouldSetPreChatIfPersistentChat(chatSDK, showPrechat as boolean);
 
     if (showPrechat) {
         const isOutOfOperatingHours = state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toLowerCase() === "true";
