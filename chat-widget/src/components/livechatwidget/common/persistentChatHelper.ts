@@ -1,9 +1,8 @@
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const shouldSetPreChatIfPersistentChat = async (chatSDK: any, state: ILiveChatWidgetContext | undefined, showPreChat: boolean) => {
-    const persistentEnabled = await isPersistentChatEnabled(state);
+export const shouldSetPreChatIfPersistentChat = async (chatSDK: any, conversationMode: string, showPreChat: boolean) => {
+    const persistentEnabled = await isPersistentChatEnabled(conversationMode);
     let skipPreChat = false;
     if (persistentEnabled) {
         const reconnectableChatsParams = {

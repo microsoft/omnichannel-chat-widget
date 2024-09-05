@@ -1,5 +1,4 @@
 import { ConversationMode } from "../../../common/Constants";
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const isPostChatSurveyEnabled = async (chatSDK: any) : Promise<boolean> => {
@@ -9,8 +8,6 @@ export const isPostChatSurveyEnabled = async (chatSDK: any) : Promise<boolean> =
     return postChatEnabled === "true";
 };
 
-export const isPersistentChatEnabled = async (state: ILiveChatWidgetContext | undefined): Promise<boolean> => {
-    const chatConfig = state?.domainStates.liveChatConfig;
-    const conversationMode = chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode.toString().toLowerCase();
-    return conversationMode === ConversationMode.Persistent;
+export const isPersistentChatEnabled = async (conversationMode: string): Promise<boolean> => {
+    return conversationMode.toString().toLowerCase() === ConversationMode.Persistent;
 };
