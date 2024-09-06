@@ -64,6 +64,17 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
     //Handle reconnect scenario
 
+    const chatConfig = props?.chatConfig;
+    const getAuthToken = props?.getAuthToken;
+    const authClientFunction = getAuthClientFunction(chatConfig);
+    if (getAuthToken && authClientFunction) {
+        // set auth token to chat sdk before start chat
+        const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
+        if (!authSuccess) {
+            throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
+        }
+    }
+
     // Getting prechat Survey Context
     const parseToJson = false;
     const preChatSurveyResponse: string = props?.preChatSurveyPaneProps?.controlProps?.payload ?? await chatSDK.getPreChatSurvey(parseToJson);
@@ -106,8 +117,6 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
-    const chatConfig = props?.chatConfig;
-    const getAuthToken = props?.getAuthToken;
     const persistentChatEnabled = await isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
     if (state?.appStates.conversationState === ConversationState.Closed) {
@@ -126,15 +135,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             Event: TelemetryEvent.WidgetLoadStarted,
             Description: "Widget loading started",
         });
-
-        const authClientFunction = getAuthClientFunction(chatConfig);
-        if (getAuthToken && authClientFunction) {
-            // set auth token to chat sdk before start chat
-            const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
-            if (!authSuccess) {
-                throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
-            }
-        }
 
         //Check if chat retrieved from cache
         if (persistedState || params?.liveChatContext) {
