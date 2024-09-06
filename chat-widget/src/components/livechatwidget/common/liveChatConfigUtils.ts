@@ -8,6 +8,6 @@ export const isPostChatSurveyEnabled = async (chatSDK: any) : Promise<boolean> =
     return postChatEnabled === "true";
 };
 
-export const isPersistentChatEnabled = async (conversationMode: string): Promise<boolean> => {
-    return conversationMode.toString().toLowerCase() === ConversationMode.Persistent;
+export const isPersistentChatEnabled = async (conversationMode: string | undefined): Promise<boolean> => {
+    return conversationMode?.toString().toLowerCase() === ConversationMode.Persistent;
 };
