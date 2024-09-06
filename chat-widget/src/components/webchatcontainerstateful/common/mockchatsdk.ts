@@ -66,8 +66,13 @@ export class MockChatSDK {
     public getLiveChatConfig() {      
         return {
             LiveWSAndLiveChatEngJoin: {
-                msdyn_postconversationsurveyenable: "true"
+                msdyn_postconversationsurveyenable: "true",
+                msdyn_conversationmode: "192350000"
             }
         };
+    }
+
+    public sendTypingEvent() {
+        return null;
     }
 }
