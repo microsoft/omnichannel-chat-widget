@@ -31,6 +31,20 @@ let widgetInstanceId: any | "";
 let popoutWidgetInstanceId: any | "";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps, chatSDK: any) => {
+    const chatConfig = props?.chatConfig;
+    const getAuthToken = props?.getAuthToken;
+    const authClientFunction = getAuthClientFunction(chatConfig);
+    if (getAuthToken && authClientFunction) {
+        // set auth token to chat sdk before start chat
+        const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
+        if (!authSuccess) {
+            throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
+        }
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
     widgetInstanceId = getWidgetCacheIdfromProps(props);
@@ -55,6 +69,8 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     // Setting Proactive chat settings
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
+
+    await setAuthenticationIfApplicable(props, chatSDK);
 
     //Setting PreChat and intiate chat
     await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, state, props);
@@ -106,8 +122,6 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
-    const chatConfig = props?.chatConfig;
-    const getAuthToken = props?.getAuthToken;
     const persistentChatEnabled = await isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
     if (state?.appStates.conversationState === ConversationState.Closed) {
@@ -126,15 +140,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             Event: TelemetryEvent.WidgetLoadStarted,
             Description: "Widget loading started",
         });
-
-        const authClientFunction = getAuthClientFunction(chatConfig);
-        if (getAuthToken && authClientFunction) {
-            // set auth token to chat sdk before start chat
-            const authSuccess = await handleAuthentication(chatSDK, chatConfig, getAuthToken);
-            if (!authSuccess) {
-                throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
-            }
-        }
 
         //Check if chat retrieved from cache
         if (persistedState || params?.liveChatContext) {

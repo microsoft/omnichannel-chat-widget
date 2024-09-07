@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Removed `PreChat Survey` rendering on loading `Persistent Chat` on an existing chat
+- Moved `AuthTokenAcquisition` to allow `auth` http calls to Omnichannel service before `StartChat`
 
 ## [1.7.2] 09-03-2024
 
