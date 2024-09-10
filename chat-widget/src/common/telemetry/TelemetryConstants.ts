@@ -94,6 +94,7 @@ export enum TelemetryEvent {
     GetConversationDetailsCallStarted = "GetConversationDetailsCallStarted",
     GetConversationDetailsCallFailed = "GetConversationDetailsCallFailed",
     EndChatSDKCallFailed = "EndChatSDKCallFailed",
+    DisconnectEndChatSDKCallFailed = "DisconnectEndChatSDKCallFailed",
     GetChatReconnectContextSDKCallStarted = "GetChatReconnectContextSDKCallStarted",
     GetChatReconnectContextSDKCallFailed = "GetChatReconnectContextSDKCallFailed",
     ParseAdaptiveCardFailed = "ParseAdaptiveCardFailed",

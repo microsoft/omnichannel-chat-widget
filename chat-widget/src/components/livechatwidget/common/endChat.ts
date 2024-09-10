@@ -131,12 +131,25 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
             await chatSDK?.endChat();
         } catch (ex) {
-            TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
-                Event: TelemetryEvent.EndChatSDKCallFailed,
-                ExceptionDetails: {
-                    exception: ex
-                }
-            });
+
+            const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+            // if the chat was disconnected or ended by the agent, we don't want to log the error
+            if (!inMemoryState?.appStates?.chatDisconnectEventReceived) {
+                TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.EndChatSDKCallFailed,
+                    ExceptionDetails: {
+                        exception: ex
+                    }
+                });
+            }else{
+                TelemetryHelper.logSDKEvent(LogLevel.WARN, {
+                    Event: TelemetryEvent.DisconnectEndChatSDKCallFailed,
+                    ExceptionDetails: {
+                        exception: ex
+                    }
+                });
+            }
+
             postMessageToOtherTab = false;
         } finally {
             await endChatStateCleanUp(dispatch);
