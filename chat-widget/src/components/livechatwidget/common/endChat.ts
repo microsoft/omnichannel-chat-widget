@@ -141,6 +141,13 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
                         exception: ex
                     }
                 });
+            }else{
+                TelemetryHelper.logSDKEvent(LogLevel.WARN, {
+                    Event: TelemetryEvent.DisconnectEndChatSDKCallFailed,
+                    ExceptionDetails: {
+                        exception: ex
+                    }
+                });
             }
 
             postMessageToOtherTab = false;
