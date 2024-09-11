@@ -10,6 +10,7 @@ import LiveChatWidgetStateful from "./livechatwidgetstateful/LiveChatWidgetState
 import { createReducer } from "../../contexts/createReducer";
 import { getLiveChatWidgetContextInitialState } from "../../contexts/common/LiveChatWidgetContextInitialState";
 import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
+import { DemoChatSDK } from "../webchatcontainerstateful/common/DemoChatSDK";
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
@@ -19,8 +20,14 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
     let chatSDK: any = props.chatSDK; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    if (props?.mock) {
-        chatSDK = new MockChatSDK();
+    if (props?.mock?.type) {
+        switch(props?.mock?.type.toLocaleLowerCase()) {
+            case "demo":
+                chatSDK = new DemoChatSDK();
+                break;
+            default:
+                chatSDK = new MockChatSDK();
+        }
     }
 
     return (
