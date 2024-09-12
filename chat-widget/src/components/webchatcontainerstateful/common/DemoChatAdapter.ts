@@ -39,7 +39,7 @@ export class DemoChatAdapter extends MockAdapter {
                 from: {
                     ...botUser
                 },
-                text: "Type `help` to learn more",
+                text: "Type `/help` to learn more",
                 type: "message"
             });
         }, 1000);
@@ -58,12 +58,48 @@ export class DemoChatAdapter extends MockAdapter {
 
         setTimeout(() => {
             this.activityObserver?.next(echoActivity); // mock message sent activity
-        }, 2000);
+        }, 1500);
+    }
+
+    private postBotCommandsActivity() {
+        setTimeout(() => {
+            this.activityObserver?.next({
+                id: uuidv4(),
+                from: {
+                    ...botUser
+                },
+                type: "message",
+                attachments: [
+                    {
+                        contentType: "application/vnd.microsoft.card.thumbnail",
+                        content: {
+                            buttons: [
+                                {
+                                    title: "Send system message",
+                                    type: "imBack",
+                                    value: "send system message"
+                                },
+                                {
+                                    title: "Send typing",
+                                    type: "imBack",
+                                    value: "send typing"
+                                }
+                            ],
+                            title: "Commands"
+                        }
+                    }
+                ]
+            });
+        }, 1500);
     }
 
     public postActivity(activity: Message): Observable<string> {
         if (activity) {
             this.postEchoActivity(activity, customerUser);
+
+            if (activity.text === "/help") {
+                this.postBotCommandsActivity();
+            }
         }
 
         return Observable.of(activity.id || "");
