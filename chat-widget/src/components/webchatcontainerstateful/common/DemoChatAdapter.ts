@@ -146,6 +146,9 @@ export class DemoChatAdapter extends MockAdapter {
                     case activity.text.startsWith("/bot "):
                         this.postBotMessageActivity(activity.text.substring(5));
                         break;
+                    case activity.text.startsWith("/system "):
+                        this.postSystemMessageActivity(activity.text.substring(8));
+                        break;
                 }
             }
         }
