@@ -129,18 +129,24 @@ export class DemoChatAdapter extends MockAdapter {
         if (activity) {
             this.postEchoActivity(activity, customerUser);
 
-            switch(activity.text) {
-                case "/help":
-                    this.postBotCommandsActivity();
-                    break;
-                case "send system message":
-                    this.postSystemMessageActivity("Contoso has joined the chat.");
-                    break;
-                case "send typing":
-                    this.postBotTypingActivity();
-                    break;
-                case "send bot message":
-                    this.postBotMessageActivity("Hi, how can I help you?");
+            if (activity.text) {
+                switch(true) {
+                    case activity.text === "/help":
+                        this.postBotCommandsActivity();
+                        break;
+                    case activity.text === "send system message":
+                        this.postSystemMessageActivity("Contoso has joined the chat.");
+                        break;
+                    case activity.text === "send typing":
+                        this.postBotTypingActivity();
+                        break;
+                    case activity.text === "send bot message":
+                        this.postBotMessageActivity("Hi, how can I help you?");
+                        break;
+                    case activity.text.startsWith("/bot "):
+                        this.postBotMessageActivity(activity.text.substring(5));
+                        break;
+                }
             }
         }
 
