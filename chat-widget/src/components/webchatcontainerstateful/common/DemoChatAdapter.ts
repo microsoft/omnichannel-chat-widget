@@ -104,6 +104,18 @@ export class DemoChatAdapter extends MockAdapter {
         }, delay);
     }
 
+    private postBotTypingActivity(delay = 1000) {
+        setTimeout(() => {
+            this.activityObserver?.next({
+                id: uuidv4(),
+                from: {
+                    ...botUser
+                },
+                type: "typing"
+            });
+        }, delay);
+    }
+
     public postActivity(activity: Message): Observable<string> {
         if (activity) {
             this.postEchoActivity(activity, customerUser);
@@ -114,6 +126,9 @@ export class DemoChatAdapter extends MockAdapter {
                     break;
                 case "send system message":
                     this.postSystemMessageActivity("Contoso has joined the chat.");
+                    break;
+                case "send typing":
+                    this.postBotTypingActivity();
                     break;
             }
         }
