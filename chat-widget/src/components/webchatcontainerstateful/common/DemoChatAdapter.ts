@@ -22,17 +22,7 @@ export class DemoChatAdapter extends MockAdapter {
         super();
 
         setTimeout(() => {
-            this.activityObserver?.next({ // send system message
-                id: uuidv4(),
-                from: {
-                    ...botUser
-                },
-                text: "You're currently using a demo.",
-                type: "message",
-                channelData: {
-                    tags: "system"
-                }
-            });
+            this.postSystemMessageActivity("You're currently using a demo.");
 
             this.activityObserver?.next({ // send init message from bot
                 id: uuidv4(),
@@ -58,7 +48,7 @@ export class DemoChatAdapter extends MockAdapter {
 
         setTimeout(() => {
             this.activityObserver?.next(echoActivity); // mock message sent activity
-        }, 1500);
+        }, 1000);
     }
 
     private postBotCommandsActivity() {
@@ -90,7 +80,21 @@ export class DemoChatAdapter extends MockAdapter {
                     }
                 ]
             });
-        }, 1500);
+        }, 1000);
+    }
+
+    private postSystemMessageActivity(text: string) {
+        this.activityObserver?.next({
+            id: uuidv4(),
+            from: {
+                ...botUser
+            },
+            text,
+            type: "message",
+            channelData: {
+                tags: "system"
+            }
+        });
     }
 
     public postActivity(activity: Message): Observable<string> {
