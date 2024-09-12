@@ -78,6 +78,11 @@ export class DemoChatAdapter extends MockAdapter {
                                     title: "Send typing",
                                     type: "imBack",
                                     value: "send typing"
+                                },
+                                {
+                                    title: "Send bot message",
+                                    type: "imBack",
+                                    value: "send bot message"
                                 }
                             ],
                             title: "Commands"
@@ -88,7 +93,7 @@ export class DemoChatAdapter extends MockAdapter {
         }, delay);
     }
 
-    private postSystemMessageActivity(text: string, delay = 1000) {
+    private postBotMessageActivity(text: string, tags = "", delay = 1000) {
         setTimeout(() => {
             this.activityObserver?.next({
                 id: uuidv4(),
@@ -98,10 +103,14 @@ export class DemoChatAdapter extends MockAdapter {
                 text,
                 type: "message",
                 channelData: {
-                    tags: "system"
+                    tags
                 }
             });
         }, delay);
+    }
+
+    private postSystemMessageActivity(text: string, delay = 1000) {
+        this.postBotMessageActivity(text, "system", delay);
     }
 
     private postBotTypingActivity(delay = 1000) {
@@ -130,6 +139,8 @@ export class DemoChatAdapter extends MockAdapter {
                 case "send typing":
                     this.postBotTypingActivity();
                     break;
+                case "send bot message":
+                    this.postBotMessageActivity("Hi, how can I help you?");
             }
         }
 
