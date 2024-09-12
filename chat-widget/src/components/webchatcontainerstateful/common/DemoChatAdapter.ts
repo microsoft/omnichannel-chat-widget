@@ -22,9 +22,14 @@ export class DemoChatAdapter extends MockAdapter {
         super();
 
         setTimeout(() => {
-            this.postSystemMessageActivity("You're currently using a demo.");
+            this.postSystemMessageActivity("You're currently using a demo.", 0);
+            this.postBotActivity("Type `/help` to learn more", 0); // send init message from bot
+        }, 1000);
+    }
 
-            this.activityObserver?.next({ // send init message from bot
+    private postBotActivity(text: string, delay = 1000): void {
+        setTimeout(() => {
+            this.activityObserver?.next({
                 id: uuidv4(),
                 from: {
                     ...botUser
@@ -32,11 +37,11 @@ export class DemoChatAdapter extends MockAdapter {
                 text: "Type `/help` to learn more",
                 type: "message"
             });
-        }, 1000);
+        }, delay);
     }
 
     // WebChat expects an "echo" activity to confirm the message has been sent successfully
-    private postEchoActivity(activity: Message, user: User): void {
+    private postEchoActivity(activity: Message, user: User, delay = 1000): void {
         const echoActivity: Message = {
             ...activity,
             id: uuidv4(),
@@ -48,10 +53,10 @@ export class DemoChatAdapter extends MockAdapter {
 
         setTimeout(() => {
             this.activityObserver?.next(echoActivity); // mock message sent activity
-        }, 1000);
+        }, delay);
     }
 
-    private postBotCommandsActivity() {
+    private postBotCommandsActivity(delay = 1000) {
         setTimeout(() => {
             this.activityObserver?.next({
                 id: uuidv4(),
@@ -80,29 +85,36 @@ export class DemoChatAdapter extends MockAdapter {
                     }
                 ]
             });
-        }, 1000);
+        }, delay);
     }
 
-    private postSystemMessageActivity(text: string) {
-        this.activityObserver?.next({
-            id: uuidv4(),
-            from: {
-                ...botUser
-            },
-            text,
-            type: "message",
-            channelData: {
-                tags: "system"
-            }
-        });
+    private postSystemMessageActivity(text: string, delay = 1000) {
+        setTimeout(() => {
+            this.activityObserver?.next({
+                id: uuidv4(),
+                from: {
+                    ...botUser
+                },
+                text,
+                type: "message",
+                channelData: {
+                    tags: "system"
+                }
+            });
+        }, delay);
     }
 
     public postActivity(activity: Message): Observable<string> {
         if (activity) {
             this.postEchoActivity(activity, customerUser);
 
-            if (activity.text === "/help") {
-                this.postBotCommandsActivity();
+            switch(activity.text) {
+                case "/help":
+                    this.postBotCommandsActivity();
+                    break;
+                case "send system message":
+                    this.postSystemMessageActivity("Contoso has joined the chat.");
+                    break;
             }
         }
 
