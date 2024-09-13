@@ -11,6 +11,7 @@ import { createReducer } from "../../contexts/createReducer";
 import { getLiveChatWidgetContextInitialState } from "../../contexts/common/LiveChatWidgetContextInitialState";
 import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
 import { DemoChatSDK } from "../webchatcontainerstateful/common/DemoChatSDK";
+import { DesignerChatSDK } from "../webchatcontainerstateful/common/DesignerChatSDK";
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
@@ -24,6 +25,9 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
         switch(props?.mock?.type.toLocaleLowerCase()) {
             case "demo":
                 chatSDK = new DemoChatSDK();
+                break;
+            case "designer":
+                chatSDK = new DesignerChatSDK();
                 break;
             default:
                 chatSDK = new MockChatSDK();
