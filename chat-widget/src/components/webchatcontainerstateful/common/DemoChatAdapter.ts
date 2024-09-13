@@ -162,6 +162,21 @@ export class DemoChatAdapter extends MockAdapter {
                     case activity.text === "send bot message":
                         this.postBotMessageActivity("Hi, how can I help you?");
                         break;
+                    case activity.text === "/card signin":
+                        this.postBotAttachmentActivity([{
+                            contentType: "application/vnd.microsoft.card.signin",
+                            content: {
+                                text: "Please login",
+                                buttons: [
+                                    {
+                                        type: "signin",
+                                        title: "Signin",
+                                        value: "https://login.live.com/"
+                                    }
+                                ]
+                            }
+                        }]);
+                        break;
                     case activity.text.startsWith("/bot "):
                         this.postBotMessageActivity(activity.text.substring(5));
                         break;
