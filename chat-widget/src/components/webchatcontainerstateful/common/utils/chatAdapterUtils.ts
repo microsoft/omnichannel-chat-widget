@@ -29,3 +29,19 @@ export const postEchoActivity = (activityObserver: Subscriber<Activity> | undefi
         activityObserver?.next(echoActivity); // mock message sent activity
     }, delay);
 };
+
+export const postBotMessageActivity = (activityObserver: Subscriber<Activity> | undefined, text: string, tags = "", delay = 1000) => {
+    setTimeout(() => {
+        activityObserver?.next({
+            id: uuidv4(),
+            from: {
+                ...botUser
+            },
+            text,
+            type: "message",
+            channelData: {
+                tags
+            }
+        });
+    }, delay);
+};

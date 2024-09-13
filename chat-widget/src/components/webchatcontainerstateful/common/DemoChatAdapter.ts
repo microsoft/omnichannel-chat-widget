@@ -4,7 +4,7 @@ import { Attachment, Message, User } from "botframework-directlinejs";
 import { Observable } from "rxjs/Observable";
 import MockAdapter from "./mockadapter";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
-import { postEchoActivity } from "./utils/chatAdapterUtils";
+import { postBotMessageActivity, postEchoActivity } from "./utils/chatAdapterUtils";
 
 const customerUser: User = {
     id: "usedId",
@@ -24,7 +24,7 @@ export class DemoChatAdapter extends MockAdapter {
 
         setTimeout(() => {
             this.postSystemMessageActivity("You're currently using a demo.", 0);
-            this.postBotMessageActivity("Type `/help` to learn more", undefined, 0); // send init message from bot
+            postBotMessageActivity(this.activityObserver, "Type `/help` to learn more", undefined, 0); // send init message from bot
         }, 1000);
     }
 
@@ -54,24 +54,8 @@ export class DemoChatAdapter extends MockAdapter {
         }], delay);
     }
 
-    private postBotMessageActivity(text: string, tags = "", delay = 1000) {
-        setTimeout(() => {
-            this.activityObserver?.next({
-                id: uuidv4(),
-                from: {
-                    ...botUser
-                },
-                text,
-                type: "message",
-                channelData: {
-                    tags
-                }
-            });
-        }, delay);
-    }
-
     private postSystemMessageActivity(text: string, delay = 1000) {
-        this.postBotMessageActivity(text, "system", delay);
+        postBotMessageActivity(this.activityObserver, text, "system", delay);
     }
 
     private postBotTypingActivity(delay = 1000) {
@@ -121,7 +105,7 @@ export class DemoChatAdapter extends MockAdapter {
                             contentUrl: "https://raw.githubusercontent.com/microsoft/omnichannel-chat-sdk/e7e75d4ede351e1cf2e52f13860d2284848c4af0/playwright/public/images/600x400.jpg"}]);
                         break;
                     case activity.text === "send bot message":
-                        this.postBotMessageActivity("Hi, how can I help you?");
+                        postBotMessageActivity(this.activityObserver, "Hi, how can I help you?");
                         break;
                     case activity.text === "/card signin":
                         this.postBotAttachmentActivity([{
@@ -185,7 +169,7 @@ export class DemoChatAdapter extends MockAdapter {
                         }]);
                         break;
                     case activity.text.startsWith("/bot "):
-                        this.postBotMessageActivity(activity.text.substring(5));
+                        postBotMessageActivity(this.activityObserver, activity.text.substring(5));
                         break;
                     case activity.text.startsWith("/system "):
                         this.postSystemMessageActivity(activity.text.substring(8));
