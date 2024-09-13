@@ -9,9 +9,7 @@ import { ILiveChatWidgetProps } from "./interfaces/ILiveChatWidgetProps";
 import LiveChatWidgetStateful from "./livechatwidgetstateful/LiveChatWidgetStateful";
 import { createReducer } from "../../contexts/createReducer";
 import { getLiveChatWidgetContextInitialState } from "../../contexts/common/LiveChatWidgetContextInitialState";
-import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
-import { DemoChatSDK } from "../webchatcontainerstateful/common/DemoChatSDK";
-import { DesignerChatSDK } from "../webchatcontainerstateful/common/DesignerChatSDK";
+import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
@@ -20,19 +18,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
     let chatSDK: any = props.chatSDK; // eslint-disable-line @typescript-eslint/no-explicit-any
-
-    if (props?.mock?.type) {
-        switch(props?.mock?.type.toLocaleLowerCase()) {
-            case "demo":
-                chatSDK = new DemoChatSDK();
-                break;
-            case "designer":
-                chatSDK = new DesignerChatSDK();
-                break;
-            default:
-                chatSDK = new MockChatSDK();
-        }
-    }
+    chatSDK = getMockChatSDKIfApplicable(chatSDK, props?.mock?.type);
 
     return (
         <ChatSDKStore.Provider value={chatSDK}>
