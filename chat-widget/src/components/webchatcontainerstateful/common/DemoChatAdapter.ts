@@ -1,35 +1,22 @@
 import "rxjs/add/operator/share";
 import "rxjs/add/observable/of";
-import { Attachment, Message, User } from "botframework-directlinejs";
+import { Message } from "botframework-directlinejs";
 import { Observable } from "rxjs/Observable";
 import MockAdapter from "./mockadapter";
-import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
-import { postBotMessageActivity, postEchoActivity } from "./utils/chatAdapterUtils";
-
-const customerUser: User = {
-    id: "usedId",
-    name: "User",
-    role: "user"
-};
-
-const botUser: User = {
-    id: "botId",
-    name: "Bot",
-    role: "bot"
-};
+import { customerUser, postBotMessageActivity, postBotAttachmentActivity, postBotTypingActivity, postEchoActivity, postSystemMessageActivity } from "./utils/chatAdapterUtils";
 
 export class DemoChatAdapter extends MockAdapter {
     constructor() {
         super();
 
         setTimeout(() => {
-            this.postSystemMessageActivity("You're currently using a demo.", 0);
+            postSystemMessageActivity(this.activityObserver, "You're currently using a demo.", 0);
             postBotMessageActivity(this.activityObserver, "Type `/help` to learn more", undefined, 0); // send init message from bot
         }, 1000);
     }
 
     private postBotCommandsActivity(delay = 1000) {
-        this.postBotAttachmentActivity([{
+        postBotAttachmentActivity(this.activityObserver, [{
             contentType: "application/vnd.microsoft.card.thumbnail",
             content: {
                 buttons: [
@@ -54,35 +41,6 @@ export class DemoChatAdapter extends MockAdapter {
         }], delay);
     }
 
-    private postSystemMessageActivity(text: string, delay = 1000) {
-        postBotMessageActivity(this.activityObserver, text, "system", delay);
-    }
-
-    private postBotTypingActivity(delay = 1000) {
-        setTimeout(() => {
-            this.activityObserver?.next({
-                id: uuidv4(),
-                from: {
-                    ...botUser
-                },
-                type: "typing"
-            });
-        }, delay);
-    }
-
-    private postBotAttachmentActivity(attachments: Attachment[] = [], delay = 1000) {
-        setTimeout(() => {
-            this.activityObserver?.next({
-                id: uuidv4(),
-                from: {
-                    ...botUser
-                },
-                attachments,
-                type: "message",
-            });
-        }, delay);
-    }
-
     public postActivity(activity: Message): Observable<string> {
         if (activity) {
             postEchoActivity(this.activityObserver, activity, customerUser);
@@ -93,13 +51,13 @@ export class DemoChatAdapter extends MockAdapter {
                         this.postBotCommandsActivity();
                         break;
                     case activity.text === "send system message":
-                        this.postSystemMessageActivity("Contoso has joined the chat.");
+                        postSystemMessageActivity(this.activityObserver, "Contoso has joined the chat.");
                         break;
                     case activity.text === "send typing":
-                        this.postBotTypingActivity();
+                        postBotTypingActivity(this.activityObserver);
                         break;
                     case activity.text === "send attachment":
-                        this.postBotAttachmentActivity([{
+                        postBotAttachmentActivity(this.activityObserver, [{
                             contentType: "image/jpeg", 
                             name: "600x400.jpg", 
                             contentUrl: "https://raw.githubusercontent.com/microsoft/omnichannel-chat-sdk/e7e75d4ede351e1cf2e52f13860d2284848c4af0/playwright/public/images/600x400.jpg"}]);
@@ -108,7 +66,7 @@ export class DemoChatAdapter extends MockAdapter {
                         postBotMessageActivity(this.activityObserver, "Hi, how can I help you?");
                         break;
                     case activity.text === "/card signin":
-                        this.postBotAttachmentActivity([{
+                        postBotAttachmentActivity(this.activityObserver, [{
                             contentType: "application/vnd.microsoft.card.signin",
                             content: {
                                 text: "Please login",
@@ -123,7 +81,7 @@ export class DemoChatAdapter extends MockAdapter {
                         }]);
                         break;
                     case activity.text === "/card hero":
-                        this.postBotAttachmentActivity([{
+                        postBotAttachmentActivity(this.activityObserver, [{
                             contentType: "application/vnd.microsoft.card.hero",
                             content: {
                                 buttons: [
@@ -148,7 +106,7 @@ export class DemoChatAdapter extends MockAdapter {
                         }]);
                         break;
                     case activity.text === "/card thumbnail":
-                        this.postBotAttachmentActivity([{
+                        postBotAttachmentActivity(this.activityObserver, [{
                             contentType: "application/vnd.microsoft.card.thumbnail",
                             content: {
                                 title: "Microsoft",
@@ -172,7 +130,7 @@ export class DemoChatAdapter extends MockAdapter {
                         postBotMessageActivity(this.activityObserver, activity.text.substring(5));
                         break;
                     case activity.text.startsWith("/system "):
-                        this.postSystemMessageActivity(activity.text.substring(8));
+                        postSystemMessageActivity(this.activityObserver, activity.text.substring(8));
                         break;
                 }
             }

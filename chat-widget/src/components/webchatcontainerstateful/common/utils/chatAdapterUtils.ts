@@ -1,5 +1,5 @@
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
-import { Activity, Message, User } from "botframework-directlinejs";
+import { Activity, Attachment, Message, User } from "botframework-directlinejs";
 import { Subscriber } from "rxjs/Subscriber";
 
 export const customerUser: User = {
@@ -30,7 +30,7 @@ export const postEchoActivity = (activityObserver: Subscriber<Activity> | undefi
     }, delay);
 };
 
-export const postBotMessageActivity = (activityObserver: Subscriber<Activity> | undefined, text: string, tags = "", delay = 1000) => {
+export const postBotMessageActivity = (activityObserver: Subscriber<Activity> | undefined, text: string, tags = "", delay = 1000): void => {
     setTimeout(() => {
         activityObserver?.next({
             id: uuidv4(),
@@ -42,6 +42,35 @@ export const postBotMessageActivity = (activityObserver: Subscriber<Activity> | 
             channelData: {
                 tags
             }
+        });
+    }, delay);
+};
+
+export const postSystemMessageActivity = (activityObserver: Subscriber<Activity> | undefined, text: string, delay = 1000): void => {
+    postBotMessageActivity(activityObserver, text, "system", delay);
+};
+
+export const postBotTypingActivity = (activityObserver: Subscriber<Activity> | undefined, delay = 1000): void => {
+    setTimeout(() => {
+        activityObserver?.next({
+            id: uuidv4(),
+            from: {
+                ...botUser
+            },
+            type: "typing"
+        });
+    }, delay);
+};
+
+export const postBotAttachmentActivity = (activityObserver: Subscriber<Activity> | undefined, attachments: Attachment[] = [], delay = 1000): void => {
+    setTimeout(() => {
+        activityObserver?.next({
+            id: uuidv4(),
+            from: {
+                ...botUser
+            },
+            attachments,
+            type: "message",
         });
     }, delay);
 };
