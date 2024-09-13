@@ -23,21 +23,8 @@ export class DemoChatAdapter extends MockAdapter {
 
         setTimeout(() => {
             this.postSystemMessageActivity("You're currently using a demo.", 0);
-            this.postBotActivity("Type `/help` to learn more", 0); // send init message from bot
+            this.postBotMessageActivity("Type `/help` to learn more", undefined, 0); // send init message from bot
         }, 1000);
-    }
-
-    private postBotActivity(text: string, delay = 1000): void {
-        setTimeout(() => {
-            this.activityObserver?.next({
-                id: uuidv4(),
-                from: {
-                    ...botUser
-                },
-                text: "Type `/help` to learn more",
-                type: "message"
-            });
-        }, delay);
     }
 
     // WebChat expects an "echo" activity to confirm the message has been sent successfully
