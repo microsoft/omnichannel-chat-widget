@@ -57,40 +57,29 @@ export class DemoChatAdapter extends MockAdapter {
     }
 
     private postBotCommandsActivity(delay = 1000) {
-        setTimeout(() => {
-            this.activityObserver?.next({
-                id: uuidv4(),
-                from: {
-                    ...botUser
-                },
-                type: "message",
-                attachments: [
+        this.postBotAttachmentActivity([{
+            contentType: "application/vnd.microsoft.card.thumbnail",
+            content: {
+                buttons: [
                     {
-                        contentType: "application/vnd.microsoft.card.thumbnail",
-                        content: {
-                            buttons: [
-                                {
-                                    title: "Send system message",
-                                    type: "imBack",
-                                    value: "send system message"
-                                },
-                                {
-                                    title: "Send typing",
-                                    type: "imBack",
-                                    value: "send typing"
-                                },
-                                {
-                                    title: "Send bot message",
-                                    type: "imBack",
-                                    value: "send bot message"
-                                }
-                            ],
-                            title: "Commands"
-                        }
+                        title: "Send system message",
+                        type: "imBack",
+                        value: "send system message"
+                    },
+                    {
+                        title: "Send typing",
+                        type: "imBack",
+                        value: "send typing"
+                    },
+                    {
+                        title: "Send bot message",
+                        type: "imBack",
+                        value: "send bot message"
                     }
-                ]
-            });
-        }, delay);
+                ],
+                title: "Commands"
+            }
+        }], delay);
     }
 
     private postBotMessageActivity(text: string, tags = "", delay = 1000) {
