@@ -4,6 +4,7 @@ import { Attachment, Message, User } from "botframework-directlinejs";
 import { Observable } from "rxjs/Observable";
 import MockAdapter from "./mockadapter";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
+import { postEchoActivity } from "./utils/chatAdapterUtils";
 
 const customerUser: User = {
     id: "usedId",
@@ -25,22 +26,6 @@ export class DemoChatAdapter extends MockAdapter {
             this.postSystemMessageActivity("You're currently using a demo.", 0);
             this.postBotMessageActivity("Type `/help` to learn more", undefined, 0); // send init message from bot
         }, 1000);
-    }
-
-    // WebChat expects an "echo" activity to confirm the message has been sent successfully
-    private postEchoActivity(activity: Message, user: User, delay = 1000): void {
-        const echoActivity: Message = {
-            ...activity,
-            id: uuidv4(),
-            from: {
-                ...activity.from,
-                ...user
-            }
-        };
-
-        setTimeout(() => {
-            this.activityObserver?.next(echoActivity); // mock message sent activity
-        }, delay);
     }
 
     private postBotCommandsActivity(delay = 1000) {
@@ -116,7 +101,7 @@ export class DemoChatAdapter extends MockAdapter {
 
     public postActivity(activity: Message): Observable<string> {
         if (activity) {
-            this.postEchoActivity(activity, customerUser);
+            postEchoActivity(this.activityObserver, activity, customerUser);
 
             if (activity.text) {
                 switch(true) {
