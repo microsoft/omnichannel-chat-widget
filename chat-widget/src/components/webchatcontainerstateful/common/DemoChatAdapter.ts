@@ -166,6 +166,31 @@ export class DemoChatAdapter extends MockAdapter {
                             }
                         }]);
                         break;
+                    case activity.text === "/card hero":
+                        this.postBotAttachmentActivity([{
+                            contentType: "application/vnd.microsoft.card.hero",
+                            content: {
+                                buttons: [
+                                    {
+                                        title: "Bellevue",
+                                        type: "imBack",
+                                        value: "Bellevue"
+                                    },
+                                    {
+                                        title: "Redmond",
+                                        type: "imBack",
+                                        value: "Redmond"
+                                    },
+                                    {
+                                        title: "Seattle",
+                                        type: "imBack",
+                                        value: "Seattle"
+                                    }
+                                ],
+                                title: "Choose your location"
+                            }
+                        }]);
+                        break;
                     case activity.text.startsWith("/bot "):
                         this.postBotMessageActivity(activity.text.substring(5));
                         break;
