@@ -1,6 +1,6 @@
 import "rxjs/add/operator/share";
 import "rxjs/add/observable/of";
-import { Message, User } from "botframework-directlinejs";
+import { Attachment, Message, User } from "botframework-directlinejs";
 import { Observable } from "rxjs/Observable";
 import MockAdapter from "./mockadapter";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
@@ -125,6 +125,19 @@ export class DemoChatAdapter extends MockAdapter {
         }, delay);
     }
 
+    private postBotAttachmentActivity(attachments: Attachment[] = [], delay = 1000) {
+        setTimeout(() => {
+            this.activityObserver?.next({
+                id: uuidv4(),
+                from: {
+                    ...botUser
+                },
+                attachments,
+                type: "message",
+            });
+        }, delay);
+    }
+
     public postActivity(activity: Message): Observable<string> {
         if (activity) {
             this.postEchoActivity(activity, customerUser);
@@ -139,6 +152,12 @@ export class DemoChatAdapter extends MockAdapter {
                         break;
                     case activity.text === "send typing":
                         this.postBotTypingActivity();
+                        break;
+                    case activity.text === "send attachment":
+                        this.postBotAttachmentActivity([{
+                            contentType: "image/jpeg", 
+                            name: "600x400.jpg", 
+                            contentUrl: "https://raw.githubusercontent.com/microsoft/omnichannel-chat-sdk/e7e75d4ede351e1cf2e52f13860d2284848c4af0/playwright/public/images/600x400.jpg"}]);
                         break;
                     case activity.text === "send bot message":
                         this.postBotMessageActivity("Hi, how can I help you?");
