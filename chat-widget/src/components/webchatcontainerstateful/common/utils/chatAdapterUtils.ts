@@ -22,7 +22,8 @@ export const postEchoActivity = (activityObserver: Subscriber<Activity> | undefi
         from: {
             ...activity.from,
             ...user
-        }
+        },
+        timestamp: new Date().toISOString()
     };
 
     setTimeout(() => {
@@ -41,7 +42,8 @@ export const postBotMessageActivity = (activityObserver: Subscriber<Activity> | 
             type: "message",
             channelData: {
                 tags
-            }
+            },
+            timestamp: new Date().toISOString()
         });
     }, delay);
 };
@@ -71,6 +73,7 @@ export const postBotAttachmentActivity = (activityObserver: Subscriber<Activity>
             },
             attachments,
             type: "message",
+            timestamp: new Date().toISOString()
         });
     }, delay);
 };
