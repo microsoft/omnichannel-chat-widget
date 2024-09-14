@@ -1,5 +1,7 @@
+import { Message } from "botframework-directlinejs";
+import { Observable } from "rxjs/Observable";
 import MockAdapter from "./mockadapter";
-import { customerUser, postBotMessageActivity, postSystemMessageActivity } from "./utils/chatAdapterUtils";
+import { customerUser, postBotMessageActivity, postEchoActivity, postSystemMessageActivity } from "./utils/chatAdapterUtils";
 
 export class DesignerChatAdapter extends MockAdapter {
     constructor() {
@@ -21,8 +23,17 @@ export class DesignerChatAdapter extends MockAdapter {
                     ...customerUser
                 },
                 text,
-                type: "message"
+                type: "message",
+                timestamp: new Date().toISOString()
             });
         }, delay);
+    }
+
+    public postActivity(activity: Message): Observable<string> {
+        if (activity) {
+            postEchoActivity(this.activityObserver, activity, customerUser);
+        }
+
+        return Observable.of(activity.id || "");
     }
 }
