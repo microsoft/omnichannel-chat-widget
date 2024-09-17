@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Stopped logging the end chat exception when the conversation is disconnected or ended by the agent/bot.
+- Updated dompurify version
 
 ## [1.7.2] 09-03-2024
 
