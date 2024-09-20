@@ -31,7 +31,7 @@ let widgetInstanceId: any | "";
 let popoutWidgetInstanceId: any | "";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps, chatSDK: any) => {
+const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps | undefined, chatSDK: any) => {
     const chatConfig = props?.chatConfig;
     const getAuthToken = props?.getAuthToken;
     const authClientFunction = getAuthClientFunction(chatConfig);
@@ -48,6 +48,7 @@ const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps, chatSD
 const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
     widgetInstanceId = getWidgetCacheIdfromProps(props);
+
     // reconnect > chat from cache
     if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
         const shouldStartChatNormally = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
@@ -70,7 +71,10 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
 
-    await setAuthenticationIfApplicable(props, chatSDK);
+    // Setting auth settings to OC API to retrieve existing persistent chat session before start chat if any
+    if (isPersistentEnabled(props.chatConfig)) {
+        await setAuthenticationIfApplicable(props, chatSDK);
+    }
 
     //Setting PreChat and intiate chat
     await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, state, props);
@@ -140,6 +144,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             Event: TelemetryEvent.WidgetLoadStarted,
             Description: "Widget loading started",
         });
+
+        // Auth token retrieval needs to happen during start chat to support pop-out chat
+        await setAuthenticationIfApplicable(props, chatSDK);
 
         //Check if chat retrieved from cache
         if (persistedState || params?.liveChatContext) {

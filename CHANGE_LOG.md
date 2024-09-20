@@ -14,10 +14,13 @@ All notable changes to this project will be documented in this file.
 
 - Removed `PreChat Survey` rendering on loading `Persistent Chat` on an existing chat
 - Moved `AuthTokenAcquisition` to allow `auth` http calls to Omnichannel service before `StartChat`
+- Added `AuthTokenAcquisition` to happen during `StartChat` by default to support `pop-out chat`
 
 ### Changed
 
 - Stopped logging the end chat exception when the conversation is disconnected or ended by the agent/bot.
+- Updated dompurify version
+- Uptake [@microsoft/omnichannel-chat-sdk@1.9.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.6)
 
 ## [1.7.2] 09-03-2024
 
