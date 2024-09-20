@@ -31,7 +31,7 @@ const main = async () => {
         widgetId: appId ?? script?.getAttribute("data-app-id")
     };
     const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
-    await chatSDK.initialize();
+    await chatSDK.initialize({useParallelLoad:true});
     const chatConfig = await chatSDK.getLiveChatConfig();
     memoryDataStore();
     await getUnreadMessageCount();
