@@ -5,7 +5,7 @@ import { MockChatSDK } from "../../webchatcontainerstateful/common/mockchatsdk";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getMockChatSDKIfApplicable = (chatSDK: any, type?: string) => {    
     if (type) {
-        switch(type.toLocaleLowerCase()) {
+        switch(type.toLowerCase()) {
             case "demo":
                 chatSDK = new DemoChatSDK();
                 break;
