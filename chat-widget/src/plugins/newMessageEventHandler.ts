@@ -27,7 +27,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 id: activity?.id,
                 isChatComplete: false,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                text: (activity as any)?.text
+                text: (activity as any)?.text,
+                attachment: (activity as any)?.attachments.length >= 1 ? (activity as any)?.attachments : []
             };
         };
 
