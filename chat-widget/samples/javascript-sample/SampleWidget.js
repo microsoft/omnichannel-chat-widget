@@ -13,9 +13,7 @@ import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/packa
 import { version as chatWidgetVersion } from "../../package.json";
 import { getCustomizationJson } from "./getCustomizationJson";
 import { memoryDataStore } from "./Common/MemoryDataStore";
-import { DesignerChatSDK } from "../../lib/esm/components/webchatcontainerstateful/common/DesignerChatSDK.js";
-import { DemoChatSDK } from "../../lib/esm/components/webchatcontainerstateful/common/DemoChatSDK.js";
-import { MockChatSDK } from "../../lib/esm/components/webchatcontainerstateful/common/mockchatsdk.js";
+import getMockChatSDKIfApplicable from "./getMockChatSDKIfApplicable";
 
 let liveChatWidgetProps;
 
@@ -36,18 +34,7 @@ const main = async () => {
     };
 
     let chatSDK = new OmnichannelChatSDK(omnichannelConfig);
-    if (customizationJson && customizationJson.mock && customizationJson.mock.type) {
-        switch(customizationJson.mock.type.toLowerCase()) {
-            case "demo":
-                chatSDK = new DemoChatSDK();
-                break;
-            case "designer":
-                chatSDK = new DesignerChatSDK();
-                break;
-            default:
-                chatSDK = new MockChatSDK();
-        }
-    }
+    chatSDK = getMockChatSDKIfApplicable(chatSDK, customizationJson);
 
     await chatSDK.initialize({useParallelLoad: true});
     const chatConfig = await chatSDK.getLiveChatConfig();
