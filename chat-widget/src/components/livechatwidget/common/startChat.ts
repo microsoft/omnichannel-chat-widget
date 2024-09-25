@@ -225,6 +225,7 @@ const createAdapterAndSubscribe = async (chatSDK: any, dispatch: Dispatch<ILiveC
     const newAdapter = await createAdapter(chatSDK);
     setAdapter(newAdapter);
 
+    //start chat is already seeding the chat token, so no need to get it again
     const chatToken = await chatSDK.getChatToken(true);
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
     newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
