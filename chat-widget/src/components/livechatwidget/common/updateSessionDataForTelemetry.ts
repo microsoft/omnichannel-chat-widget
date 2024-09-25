@@ -9,15 +9,13 @@ import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { getConversationDetailsCall } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const updateSessionDataForTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    console.time("updateSessionDataForTelemetry");
-    await Promise.all([updateTelemetry(chatSDK, dispatch), updateConversationDataForTelemetry(chatSDK, dispatch)]);
-    console.timeEnd("updateSessionDataForTelemetry");
+export const updateTelemetryData = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    // load it concurrently, this will reduce the load time
+    await Promise.all([updateSessionDataForTelemetry(chatSDK, dispatch), updateConversationDataForTelemetry(chatSDK, dispatch)]);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    console.time("updateTelemetry");
+const updateSessionDataForTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     if (chatSDK) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const chatSession: any = await chatSDK.getCurrentLiveChatContext();
@@ -25,12 +23,10 @@ const updateTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetA
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
         BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateSessionDataForTelemetry, payload: {chatSession}});
     }
-    console.timeEnd("updateTelemetry");
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const updateConversationDataForTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    console.time("updateConversationDataForTelemetry");
     if (chatSDK) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const liveWorkItem: any = await getConversationDetailsCall(chatSDK);
@@ -38,5 +34,4 @@ const updateConversationDataForTelemetry = async (chatSDK: any, dispatch: Dispat
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
         BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateConversationDataForTelemetry, payload: {liveWorkItem}});
     }
-    console.timeEnd("updateConversationDataForTelemetry");
 };

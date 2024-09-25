@@ -22,7 +22,7 @@ import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEv
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
-import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
+import { updateTelemetryData } from "./updateSessionDataForTelemetry";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -169,7 +169,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
-            //await Promise.all([chatSDK.startChat(startChatOptionalParams), createAdapterAndSubscribe(chatSDK, dispatch, setAdapter)]);
             await chatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
@@ -208,12 +207,10 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         }
 
         logWidgetLoadComplete();
-        // Set post chat context in state
-        // Commenting this for now as post chat context is fetched during end chat
+        // Set post chat context in state, load in background to do not block the load
         setPostChatContextAndLoadSurvey(chatSDK, dispatch);
-
         // Updating chat session detail for telemetry
-        await updateSessionDataForTelemetry(chatSDK, dispatch);
+        await updateTelemetryData(chatSDK, dispatch);
     } catch (ex) {
         handleStartChatError(dispatch, chatSDK, props, ex, isStartChatSuccessful);
     } finally {
