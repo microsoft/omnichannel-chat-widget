@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - Add `mock` props to allow chat widget to run in `mock mode` with `DemoChatAdapter`
 
 ### Fixed
-
+- Added attachment in message received event payload
 - Removed `PreChat Survey` rendering on loading `Persistent Chat` on an existing chat
 - Moved `AuthTokenAcquisition` to allow `auth` http calls to Omnichannel service before `StartChat`
 - Added `AuthTokenAcquisition` to happen during `StartChat` by default to support `pop-out chat`
