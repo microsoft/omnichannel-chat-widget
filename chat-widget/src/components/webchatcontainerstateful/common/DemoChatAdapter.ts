@@ -6,7 +6,7 @@ import MockAdapter from "./mockadapter";
 import { customerUser, postBotMessageActivity, postBotAttachmentActivity, postBotTypingActivity, postEchoActivity, postSystemMessageActivity } from "./utils/chatAdapterUtils";
 import { createHeroCardAttachment, createJpgFileAttachment, createSigninCardAttachment, createThumbnailCardAttachment } from "./utils/attachmentActivityUtils";
 
-enum BotCommands {
+enum MockBotCommands {
     Bot = "/bot",
     Card = "/card",
     Help = "/help",
@@ -15,6 +15,12 @@ enum BotCommands {
     SendSystemMessage = "send system message",
     SendTyping = "send typing",
     System = "/system"
+};
+
+enum MockBotCardCommandType {
+    Hero = "hero",
+    Signin = "signin",
+    Thumbnail = "thumbnail"
 };
 
 export class DemoChatAdapter extends MockAdapter {
@@ -59,34 +65,34 @@ export class DemoChatAdapter extends MockAdapter {
 
             if (activity.text) {
                 switch(true) {
-                    case activity.text === BotCommands.Help:
+                    case activity.text === MockBotCommands.Help:
                         this.postBotCommandsActivity();
                         break;
-                    case activity.text === BotCommands.SendSystemMessage:
+                    case activity.text === MockBotCommands.SendSystemMessage:
                         postSystemMessageActivity(this.activityObserver, "Contoso has joined the chat.");
                         break;
-                    case activity.text === BotCommands.SendTyping:
+                    case activity.text === MockBotCommands.SendTyping:
                         postBotTypingActivity(this.activityObserver);
                         break;
-                    case activity.text === BotCommands.SendAttachment:
+                    case activity.text === MockBotCommands.SendAttachment:
                         postBotAttachmentActivity(this.activityObserver, [createJpgFileAttachment()]);
                         break;
-                    case activity.text === BotCommands.SendBotMessage:
+                    case activity.text === MockBotCommands.SendBotMessage:
                         postBotMessageActivity(this.activityObserver, "Hi, how can I help you?");
                         break;
-                    case activity.text === `${BotCommands.Card} signin`:
+                    case activity.text === `${MockBotCommands.Card} ${MockBotCardCommandType.Signin}`:
                         postBotAttachmentActivity(this.activityObserver, [createSigninCardAttachment()]);
                         break;
-                    case activity.text === `${BotCommands.Card} hero`:
+                    case activity.text === `${MockBotCommands.Card} ${MockBotCardCommandType.Hero}`:
                         postBotAttachmentActivity(this.activityObserver, [createHeroCardAttachment()]);
                         break;
-                    case activity.text === `${BotCommands.Card} thumbnail`:
+                    case activity.text === `${MockBotCommands.Card} ${MockBotCardCommandType.Thumbnail}`:
                         postBotAttachmentActivity(this.activityObserver, [createThumbnailCardAttachment()]);
                         break;
-                    case activity.text.startsWith(`${BotCommands.Bot} `):
+                    case activity.text.startsWith(`${MockBotCommands.Bot} `):
                         postBotMessageActivity(this.activityObserver, activity.text.substring(5));
                         break;
-                    case activity.text.startsWith(`${BotCommands.System} `):
+                    case activity.text.startsWith(`${MockBotCommands.System} `):
                         postSystemMessageActivity(this.activityObserver, activity.text.substring(8));
                         break;
                 }
