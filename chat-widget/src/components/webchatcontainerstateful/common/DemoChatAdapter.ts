@@ -6,6 +6,17 @@ import MockAdapter from "./mockadapter";
 import { customerUser, postBotMessageActivity, postBotAttachmentActivity, postBotTypingActivity, postEchoActivity, postSystemMessageActivity } from "./utils/chatAdapterUtils";
 import { createHeroCardAttachment, createJpgFileAttachment, createSigninCardAttachment, createThumbnailCardAttachment } from "./utils/attachmentActivityUtils";
 
+enum BotCommands {
+    Bot = "/bot",
+    Card = "/card",
+    Help = "/help",
+    SendAttachment = "send attachment",
+    SendBotMessage = "send bot message",
+    SendSystemMessage = "send system message",
+    SendTyping = "send typing",
+    System = "/system"
+};
+
 export class DemoChatAdapter extends MockAdapter {
     constructor() {
         super();
@@ -48,34 +59,34 @@ export class DemoChatAdapter extends MockAdapter {
 
             if (activity.text) {
                 switch(true) {
-                    case activity.text === "/help":
+                    case activity.text === BotCommands.Help:
                         this.postBotCommandsActivity();
                         break;
-                    case activity.text === "send system message":
+                    case activity.text === BotCommands.SendSystemMessage:
                         postSystemMessageActivity(this.activityObserver, "Contoso has joined the chat.");
                         break;
-                    case activity.text === "send typing":
+                    case activity.text === BotCommands.SendTyping:
                         postBotTypingActivity(this.activityObserver);
                         break;
-                    case activity.text === "send attachment":
+                    case activity.text === BotCommands.SendAttachment:
                         postBotAttachmentActivity(this.activityObserver, [createJpgFileAttachment()]);
                         break;
-                    case activity.text === "send bot message":
+                    case activity.text === BotCommands.SendBotMessage:
                         postBotMessageActivity(this.activityObserver, "Hi, how can I help you?");
                         break;
-                    case activity.text === "/card signin":
+                    case activity.text === `${BotCommands.Card} signin`:
                         postBotAttachmentActivity(this.activityObserver, [createSigninCardAttachment()]);
                         break;
-                    case activity.text === "/card hero":
+                    case activity.text === `${BotCommands.Card} hero`:
                         postBotAttachmentActivity(this.activityObserver, [createHeroCardAttachment()]);
                         break;
-                    case activity.text === "/card thumbnail":
+                    case activity.text === `${BotCommands.Card} thumbnail`:
                         postBotAttachmentActivity(this.activityObserver, [createThumbnailCardAttachment()]);
                         break;
-                    case activity.text.startsWith("/bot "):
+                    case activity.text.startsWith(`${BotCommands.Bot} `):
                         postBotMessageActivity(this.activityObserver, activity.text.substring(5));
                         break;
-                    case activity.text.startsWith("/system "):
+                    case activity.text.startsWith(`${BotCommands.System} `):
                         postSystemMessageActivity(this.activityObserver, activity.text.substring(8));
                         break;
                 }
