@@ -141,7 +141,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
-        console.time("startChat");
         const isReconnectTriggered = async (): Promise<boolean> => {
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
                 const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
@@ -189,7 +188,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             }
         }
-        console.timeEnd("startChat");
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -208,7 +206,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
-        console.time("timer1");
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Generic });
         state.domainStates.confirmationPaneConfirmedOptionClicked = false;
@@ -243,14 +240,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Unauth chat
         if (state?.appStates?.hideStartChatButton === false) {
             startChat(props);
-            console.timeEnd("timer1");
         }
-        console.timeEnd("timer1");
     }, []);
 
     // useEffect for when skip chat button rendering
     useEffect(() => {
-        console.time("timer2");
         if (state?.appStates?.hideStartChatButton === true) {
             //handle OOH pane
             if (props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
@@ -264,7 +258,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             //Pass the state to avoid getting stale state
             startChat(props, state);
         }
-        console.timeEnd("timer2");
     }, [state?.appStates?.hideStartChatButton]);
 
     // useEffect for custom context
@@ -471,7 +464,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, []);
 
     useEffect(() => {
-        console.time("timer3");
         // On new message
         if (state.appStates.conversationState === ConversationState.Active) {
             chatSDK?.onNewMessage(() => {
@@ -491,7 +483,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
         }
-        console.timeEnd("timer3");
     }, [state.appStates.conversationState]);
 
     useEffect(() => {
