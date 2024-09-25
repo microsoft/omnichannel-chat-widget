@@ -5,23 +5,8 @@ import { Observable } from "rxjs/Observable";
 import MockAdapter from "./mockadapter";
 import { customerUser, postBotMessageActivity, postBotAttachmentActivity, postBotTypingActivity, postEchoActivity, postSystemMessageActivity } from "./utils/chatAdapterUtils";
 import { createHeroCardAttachment, createJpgFileAttachment, createSigninCardAttachment, createThumbnailCardAttachment } from "./utils/attachmentActivityUtils";
-
-enum MockBotCommands {
-    Bot = "/bot",
-    Card = "/card",
-    Help = "/help",
-    SendAttachment = "send attachment",
-    SendBotMessage = "send bot message",
-    SendSystemMessage = "send system message",
-    SendTyping = "send typing",
-    System = "/system"
-};
-
-enum MockBotCardCommandType {
-    Hero = "hero",
-    Signin = "signin",
-    Thumbnail = "thumbnail"
-};
+import MockBotCommand from "./MockBotCommand";
+import MockBotCardCommandType from "./MockBotCardCommandType";
 
 export class DemoChatAdapter extends MockAdapter {
     constructor() {
@@ -65,34 +50,34 @@ export class DemoChatAdapter extends MockAdapter {
 
             if (activity.text) {
                 switch(true) {
-                    case activity.text === MockBotCommands.Help:
+                    case activity.text === MockBotCommand.Help:
                         this.postBotCommandsActivity();
                         break;
-                    case activity.text === MockBotCommands.SendSystemMessage:
+                    case activity.text === MockBotCommand.SendSystemMessage:
                         postSystemMessageActivity(this.activityObserver, "Contoso has joined the chat.");
                         break;
-                    case activity.text === MockBotCommands.SendTyping:
+                    case activity.text === MockBotCommand.SendTyping:
                         postBotTypingActivity(this.activityObserver);
                         break;
-                    case activity.text === MockBotCommands.SendAttachment:
+                    case activity.text === MockBotCommand.SendAttachment:
                         postBotAttachmentActivity(this.activityObserver, [createJpgFileAttachment()]);
                         break;
-                    case activity.text === MockBotCommands.SendBotMessage:
+                    case activity.text === MockBotCommand.SendBotMessage:
                         postBotMessageActivity(this.activityObserver, "Hi, how can I help you?");
                         break;
-                    case activity.text === `${MockBotCommands.Card} ${MockBotCardCommandType.Signin}`:
+                    case activity.text === `${MockBotCommand.Card} ${MockBotCardCommandType.Signin}`:
                         postBotAttachmentActivity(this.activityObserver, [createSigninCardAttachment()]);
                         break;
-                    case activity.text === `${MockBotCommands.Card} ${MockBotCardCommandType.Hero}`:
+                    case activity.text === `${MockBotCommand.Card} ${MockBotCardCommandType.Hero}`:
                         postBotAttachmentActivity(this.activityObserver, [createHeroCardAttachment()]);
                         break;
-                    case activity.text === `${MockBotCommands.Card} ${MockBotCardCommandType.Thumbnail}`:
+                    case activity.text === `${MockBotCommand.Card} ${MockBotCardCommandType.Thumbnail}`:
                         postBotAttachmentActivity(this.activityObserver, [createThumbnailCardAttachment()]);
                         break;
-                    case activity.text.startsWith(`${MockBotCommands.Bot} `):
+                    case activity.text.startsWith(`${MockBotCommand.Bot} `):
                         postBotMessageActivity(this.activityObserver, activity.text.substring(5));
                         break;
-                    case activity.text.startsWith(`${MockBotCommands.System} `):
+                    case activity.text.startsWith(`${MockBotCommand.System} `):
                         postSystemMessageActivity(this.activityObserver, activity.text.substring(8));
                         break;
                 }
