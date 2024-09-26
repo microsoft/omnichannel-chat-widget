@@ -12,6 +12,11 @@ export class MockChatSDK {
         orgId: "00000000-0000-0000-0000-000000000000",
         orgUrl: "https://contoso.crm.dynamics.com",
     }
+
+    public async initialize() {
+        return this.getLiveChatConfig();
+    }
+
     public async startChat() {
         await this.sleep(1000);
     }
