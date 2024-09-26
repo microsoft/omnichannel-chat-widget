@@ -9,7 +9,7 @@ import { Subscriber } from "rxjs/Subscriber";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 export default class MockAdapter {
-    private activityObserver?: Subscriber<Activity>;
+    public activityObserver?: Subscriber<Activity>;
 
     public activity$: Observable<Activity>;
     public connectionStatus$: BehaviorSubject<ConnectionStatus> = new BehaviorSubject<ConnectionStatus>(ConnectionStatus.Uninitialized);
