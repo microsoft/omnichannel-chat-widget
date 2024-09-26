@@ -18,8 +18,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useReducer(reducer, getLiveChatWidgetContextInitialState(props));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
-    let chatSDK: any = props.chatSDK; // eslint-disable-line @typescript-eslint/no-explicit-any
-    chatSDK = getMockChatSDKIfApplicable(chatSDK, props?.mock?.type);
+    const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
     overridePropsOnMockIfApplicable(props);
 
     return (
