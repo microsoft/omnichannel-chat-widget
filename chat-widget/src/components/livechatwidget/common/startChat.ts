@@ -2,6 +2,9 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { Constants, LiveWorkItemState, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
 import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
+import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
+import { handleStartChatError, logWidgetLoadComplete } from "./startChatErrorHandler";
+
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
@@ -13,15 +16,13 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
+import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
-import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
-import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
-import { updateSessionDataForTelemetry } from "./updateSessionDataForTelemetry";
-import { logWidgetLoadComplete, handleStartChatError } from "./startChatErrorHandler";
-import { chatSDKStateCleanUp } from "./endChat";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
+import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
+import { updateTelemetryData } from "./updateSessionDataForTelemetry";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -182,14 +183,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             throw error;
         }
 
-        // New adapter creation
-        const newAdapter = await createAdapter(chatSDK);
-        setAdapter(newAdapter);
-
-        const chatToken = await chatSDK.getChatToken();
-        dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
-        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
-
         // Set app state to Active
         if (isStartChatSuccessful) {
             ActivityStreamHandler.uncork();
@@ -197,28 +190,29 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
+        
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
             logWidgetLoadComplete(WidgetLoadTelemetryMessage.PersistedStateRetrievedMessage);
-            await setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
+            // Set post chat context in state, load in background to do not block the load
+            setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
             return;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
-
+        await createAdapterAndSubscribe(chatSDK, dispatch, setAdapter);
+        
         // Persistent Chat relies on the `reconnectId` retrieved from reconnectablechats API to reconnect upon start chat and not `liveChatContext`
         if (!persistentChatEnabled) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
         }
 
         logWidgetLoadComplete();
-        // Set post chat context in state
-        // Commenting this for now as post chat context is fetched during end chat
-        await setPostChatContextAndLoadSurvey(chatSDK, dispatch);
-
+        // Set post chat context in state, load in background to do not block the load
+        setPostChatContextAndLoadSurvey(chatSDK, dispatch);
         // Updating chat session detail for telemetry
-        await updateSessionDataForTelemetry(chatSDK, dispatch);
+        await updateTelemetryData(chatSDK, dispatch);
     } catch (ex) {
         handleStartChatError(dispatch, chatSDK, props, ex, isStartChatSuccessful);
     } finally {
@@ -227,6 +221,17 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
     }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createAdapterAndSubscribe = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
+    // New adapter creation
+    const newAdapter = await createAdapter(chatSDK);
+    setAdapter(newAdapter);
+
+    //start chat is already seeding the chat token, so no need to get it again
+    const chatToken = await chatSDK.getChatToken(true);
+    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
+    newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     // By pass this function in case of popout chat
@@ -245,7 +250,6 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, chatSDK: an
         await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
         return true;
     }
-
     return false;
 };
 
@@ -317,10 +321,8 @@ const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
 const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
     const requestIdFromCache = state.domainStates?.liveChatContext?.requestId;
     const liveChatContext = state?.domainStates?.liveChatContext;
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let conversationDetails: any = undefined;
-
     // Preserve current requestId
     const currentRequestId = chatSDK.requestId ?? "";
     dispatch({ type: LiveChatWidgetActionType.SET_INITIAL_CHAT_SDK_REQUEST_ID, payload: currentRequestId });
@@ -337,7 +339,6 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
             return false;
         }
-
         return true;
     }
     catch (error) {

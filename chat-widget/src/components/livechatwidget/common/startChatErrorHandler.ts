@@ -1,17 +1,18 @@
-import { ChatSDKErrorName, ChatSDKError } from "@microsoft/omnichannel-chat-sdk";
+import { ChatSDKError, ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
+import { PrepareEndChatDescriptionConstants, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
+import { callingStateCleanUp, chatSDKStateCleanUp, closeChatStateCleanUp, endChatStateCleanUp } from "./endChat";
+
 import { ConversationState } from "../../../contexts/common/ConversationState";
-import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
-import { callingStateCleanUp, endChatStateCleanUp, closeChatStateCleanUp, chatSDKStateCleanUp } from "./endChat";
-import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
-import { getWidgetCacheIdfromProps } from "../../../common/utils";
-import { PrepareEndChatDescriptionConstants, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
+import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
+import { getWidgetCacheIdfromProps } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
