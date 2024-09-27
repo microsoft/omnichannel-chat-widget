@@ -184,7 +184,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         }
 
         await createAdapterAndSubscribe(chatSDK, dispatch, setAdapter);
-        console.log("ELOPEZANAYA:v5");
 
         // Set app state to Active
         if (isStartChatSuccessful) {
