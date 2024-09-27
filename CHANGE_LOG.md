@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Patch for multitab scenarios with perf changes
 - Improve load performance for startchat logic
 - Added attachment in message received event payload
 - Removed `PreChat Survey` rendering on loading `Persistent Chat` on an existing chat

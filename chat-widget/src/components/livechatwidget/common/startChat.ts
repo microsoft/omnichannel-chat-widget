@@ -183,6 +183,8 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             throw error;
         }
 
+        await createAdapterAndSubscribe(chatSDK, dispatch, setAdapter);
+
         // Set app state to Active
         if (isStartChatSuccessful) {
             ActivityStreamHandler.uncork();
@@ -199,12 +201,11 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             return;
         }
 
-        await createAdapterAndSubscribe(chatSDK, dispatch, setAdapter);
-        
         // Persistent Chat relies on the `reconnectId` retrieved from reconnectablechats API to reconnect upon start chat and not `liveChatContext`
         if (!persistentChatEnabled) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const liveChatContext: any = await chatSDK?.getCurrentLiveChatContext();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
         }
 
@@ -227,8 +228,7 @@ const createAdapterAndSubscribe = async (chatSDK: any, dispatch: Dispatch<ILiveC
     const newAdapter = await createAdapter(chatSDK);
     setAdapter(newAdapter);
 
-    //start chat is already seeding the chat token, so no need to get it again
-    const chatToken = await chatSDK.getChatToken(true);
+    const chatToken = await chatSDK.getChatToken();
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
     newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
 };
