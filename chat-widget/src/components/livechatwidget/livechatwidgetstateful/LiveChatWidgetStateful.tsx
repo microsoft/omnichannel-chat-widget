@@ -3,7 +3,7 @@ import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } f
 import { Components, StyleOptions } from "botframework-webchat";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
+import React, { Dispatch, Suspense, lazy, useEffect, useRef, useState } from "react";
 import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { chatSDKStateCleanUp, endChat, endChatStateCleanUp, prepareEndChat } from "../common/endChat";
 import { checkIfConversationStillValid, initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "../common/startChat";
@@ -42,7 +42,6 @@ import {
 
 import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
 import CallingContainerStateful from "../../callingcontainerstateful/CallingContainerStateful";
-import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
@@ -57,7 +56,6 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { IScrollBarProps } from "../interfaces/IScrollBarProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
-import LoadingPaneStateful from "../../loadingpanestateful/LoadingPaneStateful";
 import OutOfOfficeHoursPaneStateful from "../../ooohpanestateful/OOOHPaneStateful";
 import PostChatLoadingPaneStateful from "../../postchatloadingpanestateful/PostChatLoadingPaneStateful";
 import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostChatSurveyPaneStateful";
@@ -91,6 +89,10 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
+    
+    const LoadingPaneStateful = lazy(() => import(/* webpackChunkName: "loadingPaneStateful" */ "../../loadingpanestateful/LoadingPaneStateful"));
+    const ChatButtonStateful = lazy(() => import(/* webpackChunkName: "ChatButtonStateful" */"../../chatbuttonstateful/ChatButtonStateful"));
+
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useChatAdapterStore();
@@ -732,13 +734,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         styles={generalStyles}
                         className={livechatProps.styleProps?.className}>
 
-                        {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
+                        {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || 
+                        <Suspense fallback={<div>Loading button</div>}><ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} /></Suspense>)}
 
                         {!livechatProps.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(livechatProps.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={livechatProps.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
                         {!livechatProps.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(livechatProps.componentOverrides?.header) || <HeaderStateful headerProps={livechatProps.headerProps} outOfOfficeHeaderProps={livechatProps.outOfOfficeHeaderProps} endChat={endChatRelay} {...headerDraggableConfig} />)}
 
-                        {!livechatProps.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.loadingPane) || <LoadingPaneStateful loadingPaneProps={livechatProps.loadingPaneProps} startChatErrorPaneProps={livechatProps.startChatErrorPaneProps} />)}
+                        {!livechatProps.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.loadingPane) || 
+                        <Suspense fallback={<div>Loading p1</div>}>
+                            <LoadingPaneStateful loadingPaneProps={livechatProps.loadingPaneProps} startChatErrorPaneProps={livechatProps.startChatErrorPaneProps} />
+                        </Suspense>)}
 
                         {!livechatProps.controlProps?.hideErrorUIPane && shouldShowStartChatErrorPane(state) && (decodeComponentString(livechatProps.componentOverrides?.startChatErrorPane) || <StartChatErrorPaneStateful {...livechatProps.startChatErrorPaneProps} />)}
 
