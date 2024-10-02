@@ -41,14 +41,10 @@ import {
 } from "../../../controller/componentController";
 
 import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
-import CallingContainerStateful from "../../callingcontainerstateful/CallingContainerStateful";
-import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import DraggableChatWidget from "../../draggable/DraggableChatWidget";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
-import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
-import HeaderStateful from "../../headerstateful/HeaderStateful";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
@@ -56,17 +52,9 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { IScrollBarProps } from "../interfaces/IScrollBarProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
-import OutOfOfficeHoursPaneStateful from "../../ooohpanestateful/OOOHPaneStateful";
-import PostChatLoadingPaneStateful from "../../postchatloadingpanestateful/PostChatLoadingPaneStateful";
-import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostChatSurveyPaneStateful";
-import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
-import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
-import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
-import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
@@ -89,9 +77,22 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useChatSDKStore from "../../../hooks/useChatSDKStore";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
-    
+
     const LoadingPaneStateful = lazy(() => import(/* webpackChunkName: "loadingPaneStateful" */ "../../loadingpanestateful/LoadingPaneStateful"));
-    const ChatButtonStateful = lazy(() => import(/* webpackChunkName: "ChatButtonStateful" */"../../chatbuttonstateful/ChatButtonStateful"));
+    const ChatButtonStateful = lazy(() => import(/* webpackChunkName: "ChatButtonStateful" */ "../../chatbuttonstateful/ChatButtonStateful"));
+    const EmailTranscriptPaneStateful = lazy(() => import(/* webpackChunkName: "EmailTranscriptPanelStateful" */ "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful"));
+    const HeaderStateful = lazy(() => import(/* webpackChunkName: "HeaderStateful" */ "../../headerstateful/HeaderStateful"));
+    const OutOfOfficeHoursPaneStateful = lazy(() => import(/* webpackChunkName: "OutOfOfficeHoursPaneStateful" */ "../../ooohpanestateful/OOOHPaneStateful"));
+    const PostChatLoadingPaneStateful = lazy(() => import(/* webpackChunkName: "PostChatLoadingPaneStateful" */ "../../postchatloadingpanestateful/PostChatLoadingPaneStateful"));
+    const PostChatSurveyPaneStateful = lazy(() => import(/* webpackChunkName: "PostChatSurveyPaneStateful" */ "../../postchatsurveypanestateful/PostChatSurveyPaneStateful"));
+    const PreChatSurveyPaneStateful = lazy(() => import(/* webpackChunkName: "PreChatSurveyPaneStateful" */ "../../prechatsurveypanestateful/PreChatSurveyPaneStateful"));
+    const ProactiveChatPaneStateful = lazy(() => import(/* webpackChunkName: "ProactiveChatPaneStateful" */ "../../proactivechatpanestateful/ProactiveChatPaneStateful"));
+    const ReconnectChatPaneStateful = lazy(() => import(/* webpackChunkName: "ReconnectChatPaneStateful" */ "../../reconnectchatpanestateful/ReconnectChatPaneStateful"));
+    const StartChatErrorPaneStateful = lazy(() => import(/* webpackChunkName: "StartChatErrorPaneStateful" */ "../../startchaterrorpanestateful/StartChatErrorPaneStateful"));
+    const WebChatContainerStateful = lazy(() => import(/* webpackChunkName: "WebChatContainerStateful" */ "../../webchatcontainerstateful/WebChatContainerStateful"));
+    const CallingContainerStateful = lazy(() => import(/* webpackChunkName: "CallingContainerStateful" */ "../../callingcontainerstateful/CallingContainerStateful"));
+    const ConfirmationPaneStateful = lazy(() => import(/* webpackChunkName: "ConfirmationPaneStateful" */ "../../confirmationpanestateful/ConfirmationPaneStateful"));
+
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -298,9 +299,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 }
                 const dateNow = Date.now();
 
-                if (isThisSessionPopout(window?.location?.href)){
+                if (isThisSessionPopout(window?.location?.href)) {
                     return;
-                }              
+                }
 
                 /** 
                  * callInProgress acts as "thread lock" to prevent multiple calls to getConversationDetailsCall, 
@@ -499,7 +500,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         } else {
             setTimeout(() => ActivityStreamHandler.uncork(), 500);
         }
-       
+
     }, [state.appStates.isMinimized]);
 
     // Broadcast the UnreadMessageCount state on any change.
@@ -606,7 +607,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Handle Chat disconnect cases
     useEffect(() => {
-        
+
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
         handleChatDisconnect(props, inMemoryState, setWebChatStyles);
@@ -734,39 +735,93 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         styles={generalStyles}
                         className={livechatProps.styleProps?.className}>
 
-                        {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || 
-                        <Suspense fallback={<div>Loading button</div>}><ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} /></Suspense>)}
+                        {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) ||
+                            <Suspense fallback={<div>Loading button</div>}><ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} /></Suspense>)}
 
                         {!livechatProps.controlProps?.hideProactiveChatPane && shouldShowProactiveChatPane(state) && (decodeComponentString(livechatProps.componentOverrides?.proactiveChatPane) || <ProactiveChatPaneStateful proactiveChatProps={livechatProps.proactiveChatPaneProps} startChat={prepareStartChatRelay} />)}
 
-                        {!livechatProps.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(livechatProps.componentOverrides?.header) || <HeaderStateful headerProps={livechatProps.headerProps} outOfOfficeHeaderProps={livechatProps.outOfOfficeHeaderProps} endChat={endChatRelay} {...headerDraggableConfig} />)}
+                        {!livechatProps.controlProps?.hideHeader && shouldShowHeader(state) && (decodeComponentString(livechatProps.componentOverrides?.header) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <HeaderStateful headerProps={livechatProps.headerProps} outOfOfficeHeaderProps={livechatProps.outOfOfficeHeaderProps} endChat={endChatRelay} {...headerDraggableConfig} />
+                            </Suspense>
+                        )}
 
-                        {!livechatProps.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.loadingPane) || 
-                        <Suspense fallback={<div>Loading p1</div>}>
-                            <LoadingPaneStateful loadingPaneProps={livechatProps.loadingPaneProps} startChatErrorPaneProps={livechatProps.startChatErrorPaneProps} />
-                        </Suspense>)}
+                        {!livechatProps.controlProps?.hideLoadingPane && shouldShowLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.loadingPane) ||
+                            <Suspense fallback={<div>Loading p1</div>}>
+                                <LoadingPaneStateful loadingPaneProps={livechatProps.loadingPaneProps} startChatErrorPaneProps={livechatProps.startChatErrorPaneProps} />
+                            </Suspense>)}
 
-                        {!livechatProps.controlProps?.hideErrorUIPane && shouldShowStartChatErrorPane(state) && (decodeComponentString(livechatProps.componentOverrides?.startChatErrorPane) || <StartChatErrorPaneStateful {...livechatProps.startChatErrorPaneProps} />)}
 
-                        {!livechatProps.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(livechatProps.componentOverrides?.outOfOfficeHoursPane) || <OutOfOfficeHoursPaneStateful {...livechatProps.outOfOfficeHoursPaneProps} />)}
+                        {!livechatProps.controlProps?.hideErrorUIPane && shouldShowStartChatErrorPane(state) && (decodeComponentString(livechatProps.componentOverrides?.startChatErrorPane) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <StartChatErrorPaneStateful {...livechatProps.startChatErrorPaneProps} />
+                            </Suspense>
 
-                        {!livechatProps.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(livechatProps.componentOverrides?.reconnectChatPane) || <ReconnectChatPaneStateful reconnectChatProps={livechatProps.reconnectChatPaneProps} initStartChat={initStartChatRelay} />)}
+                        )}
 
-                        {!livechatProps.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.preChatSurveyPane) || <PreChatSurveyPaneStateful surveyProps={livechatProps.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />)}
+                        {!livechatProps.controlProps?.hideOutOfOfficeHoursPane && shouldShowOutOfOfficeHoursPane(state) && (decodeComponentString(livechatProps.componentOverrides?.outOfOfficeHoursPane) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <OutOfOfficeHoursPaneStateful {...livechatProps.outOfOfficeHoursPaneProps} />
+                            </Suspense>
 
-                        {!livechatProps.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...livechatProps.callingContainerProps} />}
+                        )}
 
-                        {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...livechatProps} />)}
+                        {!livechatProps.controlProps?.hideReconnectChatPane && shouldShowReconnectChatPane(state) && (decodeComponentString(livechatProps.componentOverrides?.reconnectChatPane) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <ReconnectChatPaneStateful reconnectChatProps={livechatProps.reconnectChatPaneProps} initStartChat={initStartChatRelay} />
+                            </Suspense>
 
-                        {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
+                        )}
 
-                        {!livechatProps.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...livechatProps.postChatLoadingPaneProps} />)}
+                        {!livechatProps.controlProps?.hidePreChatSurveyPane && shouldShowPreChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.preChatSurveyPane) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <PreChatSurveyPaneStateful surveyProps={livechatProps.preChatSurveyPaneProps} initStartChat={initStartChatRelay} />
+                            </Suspense>
 
-                        {shouldShowPostChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...livechatProps.postChatSurveyPaneProps} {...livechatProps.chatSDK} />)}
+                        )}
+
+                        {!livechatProps.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) &&
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...livechatProps.callingContainerProps} />
+                            </Suspense>
+
+                        }
+
+                        {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <WebChatContainerStateful {...livechatProps} />
+                            </Suspense>
+
+                        )}
+
+                        {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />
+                            </Suspense>
+
+                        )}
+
+                        {!livechatProps.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatLoadingPane) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <PostChatLoadingPaneStateful {...livechatProps.postChatLoadingPaneProps} />
+                            </Suspense>
+
+                        )}
+
+                        {shouldShowPostChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatSurveyPane) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <PostChatSurveyPaneStateful {...livechatProps.postChatSurveyPaneProps} {...livechatProps.chatSDK} />
+
+                            </Suspense>
+                        )}
 
                         {createFooter(livechatProps, state)}
 
-                        {shouldShowEmailTranscriptPane(state) && (decodeComponentString(livechatProps.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...livechatProps.emailTranscriptPane} />)}
+                        {shouldShowEmailTranscriptPane(state) && (decodeComponentString(livechatProps.componentOverrides?.emailTranscriptPane) ||
+                            <Suspense fallback={<div>Loading..</div>}>
+                                <EmailTranscriptPaneStateful {...livechatProps.emailTranscriptPane} />
+                            </Suspense>
+                        )}
                     </Stack>
                 </Composer>
             </DraggableChatWidget>
