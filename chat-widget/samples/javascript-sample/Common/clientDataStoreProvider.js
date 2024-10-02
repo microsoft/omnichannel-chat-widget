@@ -1,5 +1,5 @@
-import { Constants } from "./Constants";
-import { memoryDataStore } from "./MemoryDataStore";
+import { Constants } from "./Constants.js";
+import { memoryDataStore } from "./MemoryDataStore.js";
 
 export const clientDataStoreProvider = () => {
     const _memoryDataStore = memoryDataStore();
