@@ -39,7 +39,7 @@ export const createAdapter = async (chatSDK: any) => {
         adapter = new ChatAdapterShim(adapter);
         adapter.addSubscriber(new PauseActivitySubscriber());
         adapter.addSubscriber(new BotAuthActivitySubscriber());
-        // Remove this code after https://portal.microsofticm.com/imp/v5/incidents/details/544623085/summary is fixed
+        // Remove this code after ICM ID:544623085 is fixed
         adapter.addSubscriber(new HiddenAdaptiveCardActivitySubscriber());
         return adapter.chatAdapter;
     }
