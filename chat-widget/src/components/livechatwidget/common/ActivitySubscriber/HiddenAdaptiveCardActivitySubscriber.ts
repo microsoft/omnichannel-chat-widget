@@ -1,5 +1,6 @@
 import { Constants } from "../../../../common/Constants";
-import { BroadcastEvent } from "../../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../../common/telemetry/TelemetryConstants";
+import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
 import { IActivitySubscriber } from "./IActivitySubscriber";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
@@ -9,7 +10,15 @@ export class HiddenAdaptiveCardActivitySubscriber implements IActivitySubscriber
     public observer: any;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async apply(activity: any): Promise<void> {
+    public async apply(activity: any): Promise<void> { 
+        const { attachments, attachment } = activity;      
+        this.observer.next(false); 
+        BroadcastService.postMessage( { eventName: BroadcastEvent.NewMessageReceived, payload: { attachments: attachments || [attachment], text: "Custom Event" }});  
+        return;      
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    public applicable(activity: any): boolean {
         const { attachments, attachment } = activity;
 
         // Use `attachments` or `attachment` (whichever exists)
@@ -17,7 +26,7 @@ export class HiddenAdaptiveCardActivitySubscriber implements IActivitySubscriber
 
         // Check if contentType is "AdaptiveCard"
         const adaptiveCard = cards?.find(
-            (item: any) => Constants.supportedAdaptiveCardContentTypes.indexOf(item.contentType) >= 0
+            (item: any) => Constants.supportedAdaptiveCardContentTypes.indexOf(item?.contentType) >= 0
         );
 
         if (adaptiveCard && adaptiveCard.content) {
@@ -28,18 +37,15 @@ export class HiddenAdaptiveCardActivitySubscriber implements IActivitySubscriber
                 const allInvisible = body.every((item) => item.isVisible === false);
 
                 if (allInvisible) {
-                    this.observer.next(false); 
-                    BroadcastService.postMessage( { eventName: BroadcastEvent.NewMessageReceived, payload: { attachments: cards, text: "Custom Event" }});
-                    return;
+                    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                        Event: TelemetryEvent.BotAuthActivityUndefinedSignInId,
+                        Description: "All elements in AdaptiveCard are invisible"
+                    });
+                    return true;
                 }
             }
         }
-        return activity
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-    public applicable(activity: any): boolean {
-        return true;
+        return false;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
