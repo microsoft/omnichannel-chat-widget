@@ -5,6 +5,7 @@ import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/
 import { ChatAdapterShim } from "./ChatAdapterShim";
 import { PauseActivitySubscriber } from "./ActivitySubscriber/PauseActivitySubscriber";
 import { BotAuthActivitySubscriber } from "./ActivitySubscriber/BotAuthActivitySubscriber";
+import { HiddenAdaptiveCardActivitySubscriber } from "./ActivitySubscriber/HiddenAdaptiveCardActivitySubscriber";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createAdapter = async (chatSDK: any) => {
@@ -38,6 +39,8 @@ export const createAdapter = async (chatSDK: any) => {
         adapter = new ChatAdapterShim(adapter);
         adapter.addSubscriber(new PauseActivitySubscriber());
         adapter.addSubscriber(new BotAuthActivitySubscriber());
+        // Remove this code after https://portal.microsofticm.com/imp/v5/incidents/details/544623085/summary is fixed
+        adapter.addSubscriber(new HiddenAdaptiveCardActivitySubscriber());
         return adapter.chatAdapter;
     }
     return adapter;
