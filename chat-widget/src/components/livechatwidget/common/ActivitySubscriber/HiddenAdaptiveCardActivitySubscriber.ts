@@ -26,6 +26,7 @@ export class HiddenAdaptiveCardActivitySubscriber implements IActivitySubscriber
 
         // Check if contentType is "AdaptiveCard"
         const adaptiveCard = cards?.find(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (item: any) => Constants.supportedAdaptiveCardContentTypes.indexOf(item?.contentType) >= 0
         );
 
