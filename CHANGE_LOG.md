@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Add
-
+- Added retries to the call to retrieve conversation id immediately after the start chat is executed
 - Add New adapter subscriber to ignore adaptive card message from rendering if it contains all invisible fields
 - Add `mock` props to allow chat widget to run in `mock mode` with `DemoChatAdapter`
 

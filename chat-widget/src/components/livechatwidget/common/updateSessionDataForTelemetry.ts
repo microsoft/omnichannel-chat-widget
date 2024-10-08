@@ -38,7 +38,7 @@ const updateConversationDataForTelemetry = async (chatSDK: any, dispatch: Dispat
             // If liveWorkItem is empty and retry attempts remain, try again
             setTimeout(async () => {
                 await updateConversationDataForTelemetry(chatSDK, dispatch, maxAttempts, attempt + 1);
-            }, 2000); // Retry after 2 seconds
+            }, 1000); // Retry after 2 seconds
         }
     }
 };
