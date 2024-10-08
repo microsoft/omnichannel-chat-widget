@@ -26,12 +26,19 @@ const updateSessionDataForTelemetry = async (chatSDK: any, dispatch: Dispatch<IL
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateConversationDataForTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const updateConversationDataForTelemetry = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, maxAttempts = 3, attempt = 1) => {
     if (chatSDK) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const liveWorkItem: any = await getConversationDetailsCall(chatSDK);
-        const telemetryData = TelemetryHelper.addConversationDataToTelemetry(liveWorkItem, TelemetryManager.InternalTelemetryData);
-        dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
-        BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateConversationDataForTelemetry, payload: {liveWorkItem}});
+        if (liveWorkItem.conversationId) {
+            const telemetryData = TelemetryHelper.addConversationDataToTelemetry(liveWorkItem, TelemetryManager.InternalTelemetryData);
+            dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
+            BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateConversationDataForTelemetry, payload: {liveWorkItem}});
+        } else if (attempt < maxAttempts) {
+            // If liveWorkItem is empty and retry attempts remain, try again
+            setTimeout(async () => {
+                await updateConversationDataForTelemetry(chatSDK, dispatch, maxAttempts, attempt + 1);
+            }, 2000); // Retry after 2 seconds
+        }
     }
 };
