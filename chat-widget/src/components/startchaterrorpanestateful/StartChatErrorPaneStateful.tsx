@@ -1,26 +1,28 @@
-import React, { Dispatch, useEffect } from "react";
-import { IStyle, IImageProps } from "@fluentui/react";
+import { IImageProps, IStyle } from "@fluentui/react";
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import React, { Dispatch, Suspense, lazy, useEffect } from "react";
 
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILoadingPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneControlProps";
 import { ILoadingPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneStyleProps";
-import { LoadingPane } from "@microsoft/omnichannel-chat-components";
-import { findAllFocusableElement } from "../../common/utils";
-import useChatContextStore from "../../hooks/useChatContextStore";
-import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import { defaultStartChatErrorPaneGeneralStyleProps } from "./common/defaultStartChatErrorPaneGeneralStyleProps";
-import { defaultStartChatErrorPaneTitleStyleProps } from "./common/defaultStartChatErrorPaneTitleStyleProps";
-import { defaultStartChatErrorPaneSubtitleStyleProps } from "./common/defaultStartChatErrorPaneSubtitleStyleProps";
-import { defaultStartChatErrorPaneIconStyleProps } from "./common/defaultStartChatErrorPaneIconStyleProps";
-import { defaultStartChatErrorPaneIconImageStyleProps } from "./common/defaultStartChatErrorPaneIconImageProps";
 import { IStartChatErrorPaneProps } from "./interfaces/IStartChatErrorPaneProps";
+import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { StartChatErrorPaneConstants } from "../../common/Constants";
 import { StartChatFailureType } from "../../contexts/common/StartChatFailureType";
+import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { defaultStartChatErrorPaneGeneralStyleProps } from "./common/defaultStartChatErrorPaneGeneralStyleProps";
+import { defaultStartChatErrorPaneIconImageStyleProps } from "./common/defaultStartChatErrorPaneIconImageProps";
+import { defaultStartChatErrorPaneIconStyleProps } from "./common/defaultStartChatErrorPaneIconStyleProps";
+import { defaultStartChatErrorPaneSubtitleStyleProps } from "./common/defaultStartChatErrorPaneSubtitleStyleProps";
+import { defaultStartChatErrorPaneTitleStyleProps } from "./common/defaultStartChatErrorPaneTitleStyleProps";
+import { findAllFocusableElement } from "../../common/utils";
+import useChatContextStore from "../../hooks/useChatContextStore";
 
 export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatErrorPaneProps) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const LoadingPane = lazy(() => import(/* webpackChunkName: "LoadingPane" */ "@microsoft/omnichannel-chat-components").then(module => ({ default: module.LoadingPane })));
+
     
     const generalStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneGeneralStyleProps, startChatErrorPaneProps?.styleProps?.generalStyleProps);
     const titleStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneTitleStyleProps, startChatErrorPaneProps?.styleProps?.titleStyleProps);
@@ -72,11 +74,13 @@ export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatEr
     }, []);
     
     return (
-        <LoadingPane
-            componentOverrides={startChatErrorPaneProps?.componentOverrides}
-            controlProps={errorUIControlProps}
-            styleProps={errorUIStyleProps}
-        />
+        <Suspense fallback={<div>Loading</div>}>
+            <LoadingPane
+                componentOverrides={startChatErrorPaneProps?.componentOverrides}
+                controlProps={errorUIControlProps}
+                styleProps={errorUIStyleProps}
+            />
+        </Suspense>
     );
 };
 

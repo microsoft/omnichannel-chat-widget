@@ -1,8 +1,8 @@
 import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, Suspense, lazy, useEffect } from "react";
 import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
-import MarkdownIt from "markdown-it";
+
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -11,7 +11,7 @@ import { IPreChatSurveyPaneStatefulParams } from "./interfaces/IPreChatSurveyPan
 import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneStyleProps";
 import { IStyle } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
-import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
+import MarkdownIt from "markdown-it";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyles/defaultGeneralPreChatSurveyPaneStyleProps";
@@ -20,6 +20,8 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParams) => {
+
+    const PreChatSurveyPane = lazy(() => import(/* webpackChunkName: "PreChatSurveyPane" */ "@microsoft/omnichannel-chat-components").then(module => ({ default: module.PreChatSurveyPane })));
     // Set MarkDown global variable to be used for prechat adaptive cards
     window["markdownit"] = MarkdownIt;
 
@@ -144,9 +146,11 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
     }, []);
 
     return (
-        <PreChatSurveyPane
-            controlProps={controlProps}
-            styleProps={styleProps} />
+        <Suspense fallback={<div>Loading</div>}>
+            <PreChatSurveyPane
+                controlProps={controlProps}
+                styleProps={styleProps} />
+        </Suspense>
     );
 };
 
