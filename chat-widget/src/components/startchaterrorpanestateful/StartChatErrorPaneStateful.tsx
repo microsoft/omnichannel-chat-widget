@@ -7,7 +7,6 @@ import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetCon
 import { ILoadingPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneControlProps";
 import { ILoadingPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneStyleProps";
 import { IStartChatErrorPaneProps } from "./interfaces/IStartChatErrorPaneProps";
-import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { StartChatErrorPaneConstants } from "../../common/Constants";
 import { StartChatFailureType } from "../../contexts/common/StartChatFailureType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
