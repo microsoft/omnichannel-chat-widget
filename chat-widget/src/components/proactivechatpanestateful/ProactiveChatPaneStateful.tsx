@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, Suspense, lazy, useEffect, useState } from "react";
 import { createTimer, setFocusOnElement } from "../../common/utils";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -10,13 +10,15 @@ import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetActi
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IProactiveChatPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/proactivechatpane/interfaces/IProactiveChatPaneControlProps";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
-import { ProactiveChatPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ProactiveChatPaneStateful = (props: any) => {
+
+    const ProactiveChatPane = lazy(() => import(/* webpackChunkName: "ProactiveChatPane" */ "@microsoft/omnichannel-chat-components").then(module => ({ default: module.ProactiveChatPane })));
+
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { proactiveChatProps, startChat } = props;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -105,11 +107,13 @@ export const ProactiveChatPaneStateful = (props: any) => {
     }, []);
 
     return (
-        <ProactiveChatPane
-            componentOverrides={proactiveChatProps?.componentOverrides}
-            controlProps={controlProps}
-            styleProps={proactiveChatProps?.styleProps}
-        />
+        <Suspense fallback={<div>Loading</div>}>
+            <ProactiveChatPane
+                componentOverrides={proactiveChatProps?.componentOverrides}
+                controlProps={controlProps}
+                styleProps={proactiveChatProps?.styleProps}
+            />
+        </Suspense>
     );
 };
 

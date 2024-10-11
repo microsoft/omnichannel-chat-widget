@@ -1,6 +1,6 @@
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { clientDataStoreProvider } from "./Common/clientDataStoreProvider";
-import { Constants } from "./Common/Constants";
+import { clientDataStoreProvider } from "./Common/clientDataStoreProvider.js";
+import { Constants } from "./Common/Constants.js";
 
 export const registerCacheWidgetStateEvent = async () => {
     BroadcastService.getMessageByEventName(Constants.WidgetStateChangedEventName).subscribe((msg) => {

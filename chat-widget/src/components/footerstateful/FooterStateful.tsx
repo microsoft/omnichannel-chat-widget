@@ -1,9 +1,7 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch } from "react";
+import React, { Dispatch, Suspense, lazy } from "react";
 
-import AudioNotificationStateful from "./audionotificationstateful/AudioNotificationStateful";
 import { Constants } from "../../common/Constants";
-import { Footer } from "@microsoft/omnichannel-chat-components";
 import { IFooterControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterControlProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -19,6 +17,8 @@ import useChatSDKStore from "../../hooks/useChatSDKStore";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FooterStateful = (props: any) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const AudioNotificationStateful = lazy(() => import(/* webpackChunkName: "AudioNotificationStateful" */ "./audionotificationstateful/AudioNotificationStateful").then(module => ({ default: module.AudioNotificationStateful })));
+    const Footer = lazy(() => import(/* webpackChunkName: "Footer" */ "@microsoft/omnichannel-chat-components").then(module => ({ default: module.Footer })));
     // hideFooterDisplay - the purpose of this is to keep the footer always "active",
     // but hide it visually in certain states (e.g., loading state) and show in some other states (e.g. active state).
     // The reason for this approach is to make sure that state variables for audio notification work correctly after minimizing
@@ -66,18 +66,23 @@ export const FooterStateful = (props: any) => {
     return (
         <>
             {!hideFooterDisplay &&
-                <Footer
-                    componentOverrides={footerProps?.componentOverrides}
-                    controlProps={controlProps}
-                    styleProps={footerProps?.styleProps}
-                />
+                <Suspense fallback={<div>Loading</div>}>
+                    <Footer
+                        componentOverrides={footerProps?.componentOverrides}
+                        controlProps={controlProps}
+                        styleProps={footerProps?.styleProps}
+                    />
+                </Suspense>
             }
-            <AudioNotificationStateful
-                audioSrc={audioNotificationProps?.audioSrc ?? NewMessageNotificationSoundBase64}
-                isAudioMuted={state.appStates.isAudioMuted === null ?
-                    footerProps?.controlProps?.hideAudioNotificationButton ?? false :
-                    state.appStates.isAudioMuted ?? false}
-            />
+
+            <Suspense fallback={<div>Loading</div>}>
+                <AudioNotificationStateful
+                    audioSrc={audioNotificationProps?.audioSrc ?? NewMessageNotificationSoundBase64}
+                    isAudioMuted={state.appStates.isAudioMuted === null ?
+                        footerProps?.controlProps?.hideAudioNotificationButton ?? false :
+                        state.appStates.isAudioMuted ?? false}
+                />
+            </Suspense>
         </>
     );
 };
