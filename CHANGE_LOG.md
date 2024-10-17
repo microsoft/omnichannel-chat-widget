@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Add New adapter subscriber to ignore adaptive card message from rendering if it contains all invisible fields
 - Add `mock` props to allow chat widget to run in `mock mode` with `DemoChatAdapter`
+- Expose `IBotAuthConfig` to support configuration of `fetchBotAuthConfigRetries` and `fetchBotAuthConfigRetryInterval`
 
 ### Fixed
 

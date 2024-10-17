@@ -10,6 +10,7 @@
   - [IRenderingMiddlewareProps](#irenderingmiddlewareprops)
   - [ILiveChatWidgetLocalizedTexts](#ilivechatwidgetlocalizedtexts)
   - [IBotMagicCodeConfig](#ibotmagiccodeconfig)
+  - [IBotAuthConfig](#ibotauthconfig)
   - [IAdaptiveCardStyles](#iadaptivecardstyles)
   - [IAttachmentProps](#iattachmentprops)
 - [WebChat Middlewares](#webchat-middlewares)
@@ -176,6 +177,13 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | - | - | - | - | - |
 | disabled | boolean | No | Whether to use the default WebChat sign in url. Set this to true to enable Bot SSO feature | false |
 | fwdUrl | string | No | The signin url to override | - |
+
+### [IBotAuthConfig](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IBotAuthConfig.ts)
+
+| Property | Type | Required | Description | Default |
+| - | - | - | - | - |
+| fetchBotAuthConfigRetries | number | No | Number of retries to retrieve the botTokenUrl from the sign in card | 3 |
+| fetchBotAuthConfigRetryInterval | number | No | Interval to wait between retries to retrieve the botTokenUrl from the sign in card | 1000 |
 
 ### [IAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAdaptiveCardStyles.ts)
 

@@ -5,11 +5,11 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../../common/tel
 import { IActivitySubscriber } from "./IActivitySubscriber";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
+import { IBotAuthActivitySubscriberOptionalParams } from "../../interfaces/IBotAuthActivitySubscriberOptionalParams";
+
 const supportedSignInCardContentTypes = ["application/vnd.microsoft.card.signin", "application/vnd.microsoft.card.oauth"];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
 const delay = (t: number | undefined) => new Promise(resolve => setTimeout(resolve, t));
-const fetchBotAuthConfigRetries = 3;
-const fetchBotAuthConfigRetryInterval = 1000;
 let response: boolean | undefined;
 
 const extractSignInId = (signInUrl: string) => {
@@ -42,7 +42,7 @@ const extractSasUrl = async (attachment: any) => {
     return sasUrl;
 };
 
-const fetchBotAuthConfig = async (retries: number): Promise<any> => {
+const fetchBotAuthConfig = async (retries: number, interval: number): Promise<any> => {
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
         Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
     });
@@ -63,16 +63,28 @@ const fetchBotAuthConfig = async (retries: number): Promise<any> => {
     if (retries === 1) { // Base Case
         throw new Error();
     }
-    await delay(fetchBotAuthConfigRetryInterval);
-    return await fetchBotAuthConfig(--retries);
+    await delay(interval);
+    return await fetchBotAuthConfig(--retries, interval);
 };
 
 export class BotAuthActivitySubscriber implements IActivitySubscriber {
     public observer: any;
     private signInCardSeen: Set<string>;
+    private fetchBotAuthConfigRetries;
+    private fetchBotAuthConfigRetryInterval;
 
-    constructor() {
+    constructor(optionalParams: IBotAuthActivitySubscriberOptionalParams = {}) {
         this.signInCardSeen = new Set();
+        this.fetchBotAuthConfigRetries = 3;
+        this.fetchBotAuthConfigRetryInterval = 1000;
+
+        if (optionalParams.fetchBotAuthConfigRetries) {
+            this.fetchBotAuthConfigRetries = optionalParams.fetchBotAuthConfigRetries;
+        }
+
+        if (optionalParams.fetchBotAuthConfigRetryInterval) {
+            this.fetchBotAuthConfigRetryInterval = optionalParams.fetchBotAuthConfigRetryInterval;
+        }
     }
 
     public applicable(activity: any): boolean {
@@ -111,7 +123,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             BroadcastService.postMessage(event);
         }
         try {
-            const response = await fetchBotAuthConfig(fetchBotAuthConfigRetries);
+            const response = await fetchBotAuthConfig(this.fetchBotAuthConfigRetries, this.fetchBotAuthConfigRetryInterval);
             if (response === false) {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.SetBotAuthProviderHideCard,

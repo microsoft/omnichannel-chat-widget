@@ -183,7 +183,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
             throw error;
         }
 
-        await createAdapterAndSubscribe(chatSDK, dispatch, setAdapter);
+        await createAdapterAndSubscribe(chatSDK, dispatch, setAdapter, props);
 
         // Set app state to Active
         if (isStartChatSuccessful) {
@@ -223,9 +223,9 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createAdapterAndSubscribe = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
+const createAdapterAndSubscribe = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, props?: ILiveChatWidgetProps) => {
     // New adapter creation
-    const newAdapter = await createAdapter(chatSDK);
+    const newAdapter = await createAdapter(chatSDK, props);
     setAdapter(newAdapter);
 
     const chatToken = await chatSDK.getChatToken();
