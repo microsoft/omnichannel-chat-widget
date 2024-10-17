@@ -109,6 +109,13 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             return;
         }
 
+        // BotAuth should be ignored on rehydrating old messages
+        // Old messages are coming from HTTP API and would have `activity.channelData.fromList` set to `true`
+        // New messages could come from HTTP API in rare cases if the WS connection has not been full established or the messages was dropped while establishing the WS connection
+        if (activity?.channelData?.fromList === true) {
+            return activity;
+        }
+
         this.signInCardSeen.add(signInId);
         const sasUrl = await extractSasUrl(attachment);
         const event: ICustomEvent = { eventName: BroadcastEvent.SigninCardReceived, payload: { sasUrl } };
