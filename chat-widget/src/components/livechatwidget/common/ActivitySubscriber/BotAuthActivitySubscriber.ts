@@ -5,6 +5,8 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../../common/tel
 import { IActivitySubscriber } from "./IActivitySubscriber";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
+import IBotAuthActivitySubscriberOptionalParams from "../../interfaces/IBotAuthActivitySubscriberOptionalParams";
+
 const supportedSignInCardContentTypes = ["application/vnd.microsoft.card.signin", "application/vnd.microsoft.card.oauth"];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
 const delay = (t: number | undefined) => new Promise(resolve => setTimeout(resolve, t));
@@ -63,11 +65,6 @@ const fetchBotAuthConfig = async (retries: number, interval: number): Promise<an
     }
     await delay(interval);
     return await fetchBotAuthConfig(--retries, interval);
-};
-
-interface IBotAuthActivitySubscriberOptionalParams {
-    fetchBotAuthConfigRetries?: number;
-    fetchBotAuthConfigRetryInterval?: number;
 };
 
 export class BotAuthActivitySubscriber implements IActivitySubscriber {
