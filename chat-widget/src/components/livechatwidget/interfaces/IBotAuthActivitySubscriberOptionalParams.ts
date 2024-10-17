@@ -1,4 +1,4 @@
-export default interface IBotAuthActivitySubscriberOptionalParams {
+export interface IBotAuthActivitySubscriberOptionalParams {
     fetchBotAuthConfigRetries?: number;
     fetchBotAuthConfigRetryInterval?: number;
 }

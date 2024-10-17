@@ -1,4 +1,4 @@
-export default interface IBotAuthConfig {
+export interface IBotAuthConfig {
     fetchBotAuthConfigRetries?: number;
     fetchBotAuthConfigRetryInterval?: number;
-};
+}

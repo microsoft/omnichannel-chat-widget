@@ -5,7 +5,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../../common/tel
 import { IActivitySubscriber } from "./IActivitySubscriber";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
-import IBotAuthActivitySubscriberOptionalParams from "../../interfaces/IBotAuthActivitySubscriberOptionalParams";
+import { IBotAuthActivitySubscriberOptionalParams } from "../../interfaces/IBotAuthActivitySubscriberOptionalParams";
 
 const supportedSignInCardContentTypes = ["application/vnd.microsoft.card.signin", "application/vnd.microsoft.card.oauth"];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
