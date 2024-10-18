@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Stopped logging the end chat exception when the conversation is disconnected or ended by the agent/bot.
 - Updated dompurify version
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.6)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.9.8](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.8)
 
 ## [1.7.2] 09-03-2024
 
