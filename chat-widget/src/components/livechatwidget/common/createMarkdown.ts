@@ -1,7 +1,7 @@
 import { Constants } from "../../../common/Constants";
 import MarkdownIt from "markdown-it";
 import MarkdownItForInline from "markdown-it-for-inline";
-import MarkdownSlack from "slack-markdown-it";
+import SlackMarkdownIt from "slack-markdown-it";
 import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMarkdownLocalizedTexts";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,7 +17,8 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                 breaks: (!disableNewLineMarkdownSupport)
             }
         );
-        markdown.use(MarkdownSlack);
+        console.log("Slack MarkdownIt is used for markdown formatting.");
+        markdown.use(SlackMarkdownIt.default);
     } else {
         markdown = new MarkdownIt(
             Constants.Zero,
