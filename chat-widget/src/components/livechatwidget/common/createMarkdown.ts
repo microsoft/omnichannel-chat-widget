@@ -17,7 +17,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                 breaks: (!disableNewLineMarkdownSupport)
             }
         );
-        console.log("Slack MarkdownIt is used for markdown formatting.");
+
         markdown.use(SlackMarkdownIt.default);
     } else {
         markdown = new MarkdownIt(
