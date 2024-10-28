@@ -1,4 +1,3 @@
-
 import MarkdownIt from "markdown-it";
 import SlackMarkdown from "slack-markdown-it";
 
@@ -8,7 +7,12 @@ export const addSlackMarkdownIt = (markdown: MarkdownIt) => {
     } catch (e) {
         // this is to support the case when slack-markdown-it 
         // transpiled code doesn't export default (webpack5)
-        markdown.use(SlackMarkdown.default);
+        if (SlackMarkdown.default.apply) {
+            markdown.use(SlackMarkdown.default);
+        } else {
+            console.error("Error while adding slackMarkdown plugin", e);
+        }
+
     }
     return markdown;
 };
