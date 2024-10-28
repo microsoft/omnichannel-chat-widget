@@ -1,5 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, Suspense, lazy, useEffect } from "react";
 
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -7,13 +7,15 @@ import { IOOOHPaneControlProps } from "@microsoft/omnichannel-chat-components/li
 import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneProps";
 import { IOOOHPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneStyleProps";
 import { IStyle } from "@fluentui/react";
-import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
 export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
+
+    const OutOfOfficeHoursPane = lazy(() => import(/* webpackChunkName: "OutOfOfficeHoursPane" */ "@microsoft/omnichannel-chat-components").then(module => ({ default: module.OutOfOfficeHoursPane })));
+
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralStyleProps, props.styleProps?.generalStyleProps);
@@ -39,11 +41,13 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
     }, []);
     
     return (
-        <OutOfOfficeHoursPane
-            componentOverrides={props.componentOverrides}
-            controlProps={controlProps}
-            styleProps={styleProps}
-        />
+        <Suspense>
+            <OutOfOfficeHoursPane
+                componentOverrides={props.componentOverrides}
+                controlProps={controlProps}
+                styleProps={styleProps}
+            />
+        </Suspense>
     );
 };
 

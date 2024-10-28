@@ -1,7 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useCallback, useEffect } from "react";
+import React, { Dispatch, Suspense, lazy, useCallback, useEffect } from "react";
 
-import { CallingContainer } from "@microsoft/omnichannel-chat-components";
 import { ICallingContainerControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/interfaces/ICallingContainerControlProps";
 import { ICallingContainerStatefulProps } from "./ICallingContainerStatefulProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -13,7 +12,7 @@ import useChatSDKStore from "../../hooks/useChatSDKStore";
 
 export const CallingContainerStateful = (props: ICallingContainerStatefulProps) => {
 
-    //TODO : Close button confirmation implmentation is pending
+    const CallingContainer = lazy(() => import(/* webpackChunkName: "CallingContainer" */ "@microsoft/omnichannel-chat-components").then(module => ({ default: module.CallingContainer })));
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -281,7 +280,9 @@ export const CallingContainerStateful = (props: ICallingContainerStatefulProps) 
     return (
         <>
             {state.uiStates.showCallingPopup &&
-                <CallingContainer controlProps={controlProps} styleProps={props?.styleProps} />
+                <Suspense fallback={<div>Loading...</div>}>
+                    <CallingContainer controlProps={controlProps} styleProps={props?.styleProps} />
+                </Suspense>
             }
         </>
     );

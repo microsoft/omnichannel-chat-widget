@@ -1,8 +1,8 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import { ConfirmationPane } from "@microsoft/omnichannel-chat-components";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, Suspense, lazy, useEffect } from "react";
 import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
-import { DimLayer } from "../dimlayer/DimLayer";
+
+import { ConfirmationState } from "../../common/Constants";
 import { IConfirmationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/confirmationpane/interfaces/IConfirmationPaneControlProps";
 import { IConfirmationPaneStatefulParams } from "./interfaces/IConfirmationPaneStatefulParams";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -10,10 +10,12 @@ import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetCon
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { ConfirmationState } from "../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
+
+    const ConfirmationPane = lazy(() => import(/* webpackChunkName: "ConfirmationPane" */ "@microsoft/omnichannel-chat-components").then(module => ({ default: module.ConfirmationPane })));
+    const DimLayer = lazy(() => import(/* webpackChunkName: "DimLayer" */ "../dimlayer/DimLayer").then(module => ({ default: module.DimLayer })));
 
     const initialTabIndexMap: Map<string, number> = new Map();
     let elements: HTMLElement[] | null = [];
@@ -72,11 +74,13 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
 
     return (
         <>
-            <DimLayer brightness={controlProps?.brightnessValueOnDim ?? "0.2"} />
-            <ConfirmationPane
-                componentOverrides={props?.componentOverrides}
-                controlProps={controlProps}
-                styleProps={props?.styleProps} />
+            <Suspense fallback={<div>Loading..</div>}>
+                <DimLayer brightness={controlProps?.brightnessValueOnDim ?? "0.2"} />
+                <ConfirmationPane
+                    componentOverrides={props?.componentOverrides}
+                    controlProps={controlProps}
+                    styleProps={props?.styleProps} />
+            </Suspense>
         </>
     );
 };

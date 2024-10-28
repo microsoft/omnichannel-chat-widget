@@ -1,18 +1,19 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, Suspense, lazy, useEffect } from "react";
 
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILoadingPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneControlProps";
 import { ILoadingPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneStyleProps";
 import { IStyle } from "@fluentui/react";
-import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralLoadingPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralLoadingPaneStyleProps";
+import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import { errorUILoadingPaneStyleProps } from "./common/errorUIStyleProps/errorUILoadingPaneStyleProps";
+
+const LoadingPane = lazy(() => import("@microsoft/omnichannel-chat-components").then(module => ({ default: module.LoadingPane })));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const LoadingPaneStateful = (props: any) => {
@@ -57,13 +58,15 @@ export const LoadingPaneStateful = (props: any) => {
     }, []);
     
     return (
-        <LoadingPane
-            componentOverrides={loadingPaneProps?.componentOverrides}
-            controlProps={state.appStates.startChatFailed ? errorUIControlProps : loadingPaneControlProps}
-            styleProps={state.appStates.startChatFailed ? errorUIStyleProps : loadingPaneStyleProps}
-            windowWidth={width}
-            windowHeight={height}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+            <LoadingPane
+                componentOverrides={loadingPaneProps?.componentOverrides}
+                controlProps={state.appStates.startChatFailed ? errorUIControlProps : loadingPaneControlProps}
+                styleProps={state.appStates.startChatFailed ? errorUIStyleProps : loadingPaneStyleProps}
+                windowWidth={width}
+                windowHeight={height}
+            />
+        </Suspense>
     );
 };
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { getUnreadMessageCount, registerVisibilityListener } from "./getUnreadMessageCount";
+import { getUnreadMessageCount, registerVisibilityListener } from "./getUnreadMessageCount.js";
 
 import { BroadcastService } from "../../lib/esm/index.js";
 import LiveChatWidget from "../../lib/esm/components/livechatwidget/LiveChatWidget.js";
@@ -11,9 +11,9 @@ import ReactDOM from "react-dom";
 import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-components/package.json";
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
 import { version as chatWidgetVersion } from "../../package.json";
-import { getCustomizationJson } from "./getCustomizationJson";
-import { memoryDataStore } from "./Common/MemoryDataStore";
-import getMockChatSDKIfApplicable from "./getMockChatSDKIfApplicable";
+import { getCustomizationJson } from "./getCustomizationJson.js";
+import { memoryDataStore } from "./Common/MemoryDataStore.js";
+import getMockChatSDKIfApplicable from "./getMockChatSDKIfApplicable.js";
 
 let liveChatWidgetProps;
 
