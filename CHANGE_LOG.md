@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - Added `AuthTokenAcquisition` to happen during `StartChat` by default to support `pop-out chat`
 
 ### Changed
+
+- Using default component for SlackMarkDown, to avoid problems with the code transpiled when using webpack5
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.10](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.10)
 - Stopped logging the end chat exception when the conversation is disconnected or ended by the agent/bot.
 - Updated dompurify version
@@ -93,6 +95,7 @@ All notable changes to this project will be documented in this file.
 - Fix for emoji characters showing for combination like :0 and :-0
 
 ### Changed
+
 - reverted - Fix `suggestedActions` with `to` property not rendering by passing `userID` to `Composer`
 
 ## [1.6.4] 2024-04-29
@@ -103,6 +106,7 @@ All notable changes to this project will be documented in this file.
 - Uptake [@microsoft/omnichannel-chat-sdk@1.8.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.8.1)
 
 ### Fixed
+
 - Fix system message dynamic themeing capability
 - Fix systems messages are not being part of markdown rendering for active links
 

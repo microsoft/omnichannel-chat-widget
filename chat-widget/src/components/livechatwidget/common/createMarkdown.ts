@@ -1,8 +1,8 @@
 import { Constants } from "../../../common/Constants";
 import MarkdownIt from "markdown-it";
 import MarkdownItForInline from "markdown-it-for-inline";
-import MarkdownSlack from "slack-markdown-it";
 import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMarkdownLocalizedTexts";
+import { addSlackMarkdownIt } from "./helpers/markdownHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean) => {
@@ -17,7 +17,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                 breaks: (!disableNewLineMarkdownSupport)
             }
         );
-        markdown.use(MarkdownSlack);
+        markdown = addSlackMarkdownIt(markdown);
     } else {
         markdown = new MarkdownIt(
             Constants.Zero,
@@ -36,8 +36,8 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         ]);
     }
 
-    markdown.disable([           
-        "strikethrough"           
+    markdown.disable([
+        "strikethrough"
     ]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,7 +67,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                     tokens.splice(idx + 2, 0, ...iconTokens);
                 }
             }
-        } 
+        }
     });
 
     return markdown;
