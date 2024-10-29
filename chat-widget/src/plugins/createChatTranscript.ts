@@ -396,6 +396,91 @@ class TranscriptHTMLBuilder {
                     window.addEventListener("online", () => {
                         document.body.innerHTML = \`${this.networkOnlineMessage} <button onclick="window.location.reload()"> Refresh </button>\`;
                     });
+
+                    document.addEventListener("copy", (event) => {
+                        const clonedSelectedContent = window.getSelection().getRangeAt(0).cloneContents();
+                        const copiedContent = document.createElement("div");
+                        copiedContent.appendChild(clonedSelectedContent);
+                        console.log(copiedContent)
+        
+                        event.clipboardData.setData("text/plain", getAllText(copiedContent));
+                        event.preventDefault();
+                    });
+
+
+                    getAllText = (element) => {
+                        let plainText = "";
+                        Array.from(element.childNodes).forEach((node) => {
+                            // ignore aria-hidden elements and avartars
+                            const ariaHiddenAttr = node.attributes ? node.attributes.getNamedItem("aria-hidden") : null;
+                            if ((ariaHiddenAttr && ariaHiddenAttr.value === "true") || node.classList && node.classList.contains("webchat__keyboard-help")) {
+                                return;
+                            }
+                         
+                            // get all texts inside activity body, including message, translated message, attachment name, adaptive card content, status footer, etc.
+                            if (node.classList && node.classList.contains("webchat__basic-transcript__activity-body")) {
+                                plainText += this.processTranscriptActivityNode(node);
+                                return;
+                            }
+                            if (node.nodeType === Node.TEXT_NODE) {
+                                plainText += node.textContent + '\\n';
+                            } else {
+                                plainText += this.getAllText(node);
+                            }
+                        });
+                        return plainText;
+                    }
+
+                    processTranscriptActivityNode = (node) => {
+                        const divs = node.getElementsByTagName("div");
+                        let plainText = "";
+                
+                        if (divs && divs.length > 1 && divs[1]) {                           
+                            const messageRow = node.querySelector(".webchat__stacked-layout__message-row[aria-roledescription='message']");
+                            const author = node.querySelector(".message-name");
+                            const attachmentRow = node.querySelector(".webchat__stacked-layout__attachment-row[aria-roledescription='attachment']");
+                        
+                            if (messageRow) {
+                                let message = messageRow.getElementsByClassName("webchat__text-content__markdown");
+                                
+                                if (message.length === 0) {
+                                    message = messageRow.getElementsByClassName("markdown");                                    
+                                }
+
+                                if (message.length > 0) {
+                                    plainText += author.textContent + '\\n' + message[0].textContent + '\\n';
+                                }
+                            }  else if (attachmentRow) {
+                                const attachment = attachmentRow.getElementsByClassName("webchat__fileContent__fileName");
+                                const adaptiveCard = this.getAdaptiveCardContent(attachmentRow.querySelector(".ac-container.ac-adaptiveCard"));
+                               
+                                plainText += attachment && attachment.length > 0 ? author.textContent +'\\n' + attachment[0].textContent +'\\n': author.textContent +'\\n' + adaptiveCard +'\\n';
+                            }
+                
+                            const statusElements = node.getElementsByClassName("webchat__stacked-layout__status");
+                            if (statusElements.length > 0) {
+                                const timestampelement = statusElements[0].querySelector(".message-timestamp");
+                                plainText += timestampelement ? timestampelement.textContent+'\\n\\n' : '\\n';
+                            }
+                        }
+                
+                        return plainText;
+                    }
+
+                    getAdaptiveCardContent = (node) => {
+                        if (!node) {
+                            return undefined;
+                        }
+
+                        let plainText = "";
+                        const rows = node.querySelectorAll(".ac-textBlock p");
+                        rows.forEach((row) => {
+                            plainText += row.textContent+ '\\n';
+                        });
+
+                        return plainText;
+                    }
+
                 <\/script>
                 <div id="transcript"></div>
                 <script>
