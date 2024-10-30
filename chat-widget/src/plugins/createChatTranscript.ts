@@ -401,7 +401,6 @@ class TranscriptHTMLBuilder {
                         const clonedSelectedContent = window.getSelection().getRangeAt(0).cloneContents();
                         const copiedContent = document.createElement("div");
                         copiedContent.appendChild(clonedSelectedContent);
-                        console.log(copiedContent)
         
                         event.clipboardData.setData("text/plain", getAllText(copiedContent));
                         event.preventDefault();
