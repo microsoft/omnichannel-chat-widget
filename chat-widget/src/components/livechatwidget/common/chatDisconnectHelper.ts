@@ -1,17 +1,19 @@
-import { StyleOptions } from "botframework-webchat";
-import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
-import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
-import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
+import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
+import { StyleOptions } from "botframework-webchat";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleChatDisconnect = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, setWebChatStyles: any) => {
     const chatDisconnectState = state?.appStates?.chatDisconnectEventReceived;
     const chatDisconnectMessage = state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_CHAT_DISCONNECT ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_CHAT_DISCONNECT;
     const hideSendBoxOnConversationEnd = props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd;
+    console.log("Chat disconnect state: ", chatDisconnectState);
 
     switch (chatDisconnectState) {
         case true:
