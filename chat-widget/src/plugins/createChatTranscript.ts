@@ -410,7 +410,7 @@ class TranscriptHTMLBuilder {
                     getAllText = (element) => {
                         let plainText = "";
                         Array.from(element.childNodes).forEach((node) => {
-                            // ignore aria-hidden elements and avartars
+                            // ignore aria-hidden elements and keyboard help text
                             const ariaHiddenAttr = node.attributes ? node.attributes.getNamedItem("aria-hidden") : null;
                             if ((ariaHiddenAttr && ariaHiddenAttr.value === "true") || node.classList && node.classList.contains("webchat__keyboard-help")) {
                                 return;
