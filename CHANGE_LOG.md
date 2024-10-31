@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Updated dompurify version
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.6)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.9](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.9)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.0)
 
 ## [1.7.2] 09-03-2024
 
