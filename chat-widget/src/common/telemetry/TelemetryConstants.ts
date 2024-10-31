@@ -220,7 +220,8 @@ export enum TelemetryEvent {
     // Chat disconnected
     ChatDisconnectThreadEventReceived = "ChatDisconnectThreadEventReceived",
 
-    HiddenAdaptiveCardMessageReceived = "HiddenAdaptiveCardMessageReceived"
+    HiddenAdaptiveCardMessageReceived = "HiddenAdaptiveCardMessageReceived",
+    EndingAdapterAfterDisconnectionError = "EndingAdapterAfterDisconnectionError"
 }
 
 export interface TelemetryInput {
