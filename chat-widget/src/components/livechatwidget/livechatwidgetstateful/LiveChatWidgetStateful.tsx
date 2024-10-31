@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { Components, StyleOptions } from "botframework-webchat";
-import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType } from "../../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType, WidgetLoadCustomErrorString } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
@@ -324,7 +322,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         BroadcastService.getMessageByEventName(BroadcastEvent.NetworkReconnected).subscribe(async () => {
             if (isThisSessionPopout(window?.location?.href)) {
                 return;
@@ -622,10 +619,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Handle Chat disconnect cases
     useEffect(() => {
-
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         handleChatDisconnect(props, inMemoryState, setWebChatStyles);
-        console.log("End chat on disconnection");
         const chatDisconnectState = inMemoryState?.appStates?.chatDisconnectEventReceived;
 
         if (chatDisconnectState && adapter) {
@@ -634,8 +629,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 adapter.close();
                 setAdapter(adapter);
             } catch (e) {
-                console.warn("Error while disconnecting chat", e);
-            }
+                TelemetryHelper.logWebChatEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.EndingAdapterAfterDisconnectionError,
+                    Description: WidgetLoadCustomErrorString.CloseAdapterAfterDisconnectionErrorString
+                });            }
         }
     }, [state.appStates.chatDisconnectEventReceived]);
 

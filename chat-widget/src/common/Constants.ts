@@ -341,6 +341,7 @@ export class WidgetLoadTelemetryMessage {
 export class WidgetLoadCustomErrorString {
     public static readonly AuthenticationFailedErrorString = "Authentication was not successful";
     public static readonly NetworkErrorString = "Network Error";
+    public static readonly CloseAdapterAfterDisconnectionErrorString = "Error trying to end/close chat adapter after the widget is back on-line, for an already disconnected session";
 }
 
 export class PrepareEndChatDescriptionConstants {
