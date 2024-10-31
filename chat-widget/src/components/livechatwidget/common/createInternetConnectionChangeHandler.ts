@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../../common/Constants";
@@ -31,8 +31,7 @@ export const createInternetConnectionChangeHandler = async () => {
             });
             NotificationHandler.notifySuccess(NotificationScenarios.InternetConnection, defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE as string);
             BroadcastService.postMessage({
-                eventName: "recconnection",
-                payload: { connected: true }
+                eventName: BroadcastEvent.NetworkReconnected,
             });
         }
     };

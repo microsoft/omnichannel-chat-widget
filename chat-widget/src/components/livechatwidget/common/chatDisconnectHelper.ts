@@ -13,7 +13,6 @@ const handleChatDisconnect = (props: ILiveChatWidgetProps, state: ILiveChatWidge
     const chatDisconnectState = state?.appStates?.chatDisconnectEventReceived;
     const chatDisconnectMessage = state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_CHAT_DISCONNECT ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_CHAT_DISCONNECT;
     const hideSendBoxOnConversationEnd = props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd;
-    console.log("Chat disconnect state: ", chatDisconnectState);
 
     switch (chatDisconnectState) {
         case true:
