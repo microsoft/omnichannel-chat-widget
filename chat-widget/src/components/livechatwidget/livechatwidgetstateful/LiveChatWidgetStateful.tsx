@@ -627,7 +627,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             try {
                 adapter.end();
                 adapter.close();
-                setAdapter(adapter);
             } catch (e) {
                 TelemetryHelper.logWebChatEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.EndingAdapterAfterDisconnectionError,
