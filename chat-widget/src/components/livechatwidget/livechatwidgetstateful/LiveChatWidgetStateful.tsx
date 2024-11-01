@@ -332,7 +332,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
-                    Description: "Chat disconnected due to timeout, left or removed."
+                    Description: "Chat disconnected due to timeout, user went offline or blocked the device (including closing laptop)"
                 });
             }
         });
