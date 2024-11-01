@@ -1,7 +1,7 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { Components, StyleOptions } from "botframework-webchat";
-import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType } from "../../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType, WidgetLoadCustomErrorString } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
@@ -322,6 +322,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        BroadcastService.getMessageByEventName(BroadcastEvent.NetworkReconnected).subscribe(async () => {
+            if (isThisSessionPopout(window?.location?.href)) {
+                return;
+            }
+            const conversationDetails = await getConversationDetailsCall(chatSDK);
+
+            if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
+                    Description: "Chat disconnected due to timeout, user went offline or blocked the device (including closing laptop)"
+                });
+            }
+        });
+
         /**
          * This will allow to sync multiple tabs to handle minimize and maximize state, 
          * the event is expected to be emitted from scripting layer.
@@ -604,10 +619,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Handle Chat disconnect cases
     useEffect(() => {
-        
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-
         handleChatDisconnect(props, inMemoryState, setWebChatStyles);
+        const chatDisconnectState = inMemoryState?.appStates?.chatDisconnectEventReceived;
+
+        if (chatDisconnectState && adapter) {
+            try {
+                adapter.end();
+                adapter.close();
+            } catch (e) {
+                TelemetryHelper.logWebChatEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.EndingAdapterAfterDisconnectionError,
+                    Description: WidgetLoadCustomErrorString.CloseAdapterAfterDisconnectionErrorString
+                });
+            }
+        }
     }, [state.appStates.chatDisconnectEventReceived]);
 
 
@@ -615,8 +641,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: props.webChatContainerProps?.renderingMiddlewareProps });
     }, [props.webChatContainerProps?.renderingMiddlewareProps]);
-
-
 
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {

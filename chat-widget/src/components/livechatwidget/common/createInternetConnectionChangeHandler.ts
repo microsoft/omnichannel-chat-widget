@@ -1,9 +1,11 @@
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../../common/Constants";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
-import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 const isInternetConnected = async () => {
     try {
@@ -28,6 +30,9 @@ export const createInternetConnectionChangeHandler = async () => {
                 Event: TelemetryEvent.NetworkReconnected
             });
             NotificationHandler.notifySuccess(NotificationScenarios.InternetConnection, defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE as string);
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.NetworkReconnected,
+            });
         }
     };
 
