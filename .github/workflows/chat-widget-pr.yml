@@ -32,7 +32,7 @@ jobs:
         run: yarn test
       - name: Build Storybook 2
         working-directory: chat-widget
-        run : set NODE_OPTIONS=--openssl-legacy-provider && yarn build-storybook
+        run : NODE_OPTIONS=--openssl-legacy-provider && yarn build-storybook
       - name: VRT Tests
         working-directory: chat-widget
         run: yarn test:visual
