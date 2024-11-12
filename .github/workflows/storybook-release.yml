@@ -29,6 +29,8 @@ jobs:
         run: yarn install
       - name: Build Composite Storybook
         working-directory: chat-widget
+        env :
+          NODE_OPTIONS: --openssl-legacy-provider
         run: yarn build-composite-storybook
       - name: Deploy Storybook
         uses: JamesIves/github-pages-deploy-action@v4.3.3
