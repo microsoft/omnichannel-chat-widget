@@ -6,7 +6,8 @@ export const shouldSetPreChatIfPersistentChat = async (chatSDK: any, conversatio
     let skipPreChat = false;
     if (persistentEnabled) {
         const reconnectableChatsParams = {
-            authenticatedUserToken: chatSDK.authenticatedUserToken as string
+            authenticatedUserToken: chatSDK.authenticatedUserToken as string,
+            requestId: chatSDK.requestId as string,
         };
 
         try {
