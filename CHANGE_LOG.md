@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Add
+
 - Fix to format the output when user do CTRL + COPY in transcript.html
 - Add New adapter subscriber to ignore adaptive card message from rendering if it contains all invisible fields
 - Add `mock` props to allow chat widget to run in `mock mode` with `DemoChatAdapter`
@@ -21,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Moved `AuthTokenAcquisition` to allow `auth` http calls to Omnichannel service before `StartChat`
 - Added `AuthTokenAcquisition` to happen during `StartChat` by default to support `pop-out chat`
 - When "offline" session recovers, detect if the session is active, otherwise hide send-box.
+- Use of reconnectionId when calling reconnect API instead of orgId.
 
 ### Changed
 
@@ -31,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.6)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.9](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.9)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.0)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.1)
 
 ## [1.7.2] 09-03-2024
 
