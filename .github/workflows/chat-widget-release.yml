@@ -16,7 +16,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.X
+          node-version: 20.X
       - name: Update package version
         working-directory: chat-widget
         run: npx version-from-git --no-git-tag-version
