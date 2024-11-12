@@ -17,7 +17,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20.X
+          node-version: 18.X
       - name: Install packages
         working-directory: chat-widget
         run: yarn install
@@ -30,7 +30,7 @@ jobs:
       - name: E2E Tests
         working-directory: chat-widget/automation_tests
         run: yarn test
-      - name: Build Storybook
+      - name: Build Storybook 2
         working-directory: chat-widget
         run : set NODE_OPTIONS=--openssl-legacy-provider && yarn build-storybook
       - name: VRT Tests
