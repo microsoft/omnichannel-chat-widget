@@ -15,7 +15,7 @@ export class FacadeChatSDK {
     private isAuthenticated!: boolean;
     private getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
 
-    get ChatSDK(): OmnichannelChatSDK {
+    public getChatSDK(): OmnichannelChatSDK {
         return this.chatSDK;
     }
 
