@@ -35,8 +35,11 @@ export class FacadeChatSDK {
         const now = Date.now();
         // compare expiration time with current time
         if (now > this.expiration) {
+            console.log("Token expired");
             return true;
         }
+        console.log("Token is ok");
+        
         return false;
     }
 
@@ -45,12 +48,12 @@ export class FacadeChatSDK {
         if (this.getAuthToken && authClientFunction) {
             const token = await this.getAuthToken(authClientFunction);
             if (!isNullOrEmptyString(token)) {
+                console.log("ELOPEZANAYA :: new token obtained ", token);
                 this.token = token;
                 // decompose token
                 const tokenParts = this.token.split(".");
                 // decode token
                 const tokenDecoded = JSON.parse(atob(tokenParts[1]));
-                console.log("exp => ", tokenDecoded.exp);
                 // calculate expiration time
                 this.expiration = tokenDecoded.exp * 1000;
             }
@@ -59,7 +62,7 @@ export class FacadeChatSDK {
     private tokenRing(): void {
         if (this.isAuthenticated) {
             if (this.isTokenExpired()) {
-                this.isAuthenticated = false;
+                console.log("ELOPEZANAYA : requesting a new token");
                 this.token = "";
                 this.expiration = 0;
                 if (this.getAuthToken) {
@@ -71,6 +74,7 @@ export class FacadeChatSDK {
     }
     
     private withTokenRing<T>(fn: () => Promise<T>): Promise<T> {
+        console.log("facade in action");
         this.tokenRing();
         return fn();
     }
@@ -164,6 +168,8 @@ export class FacadeChatSDK {
     }
 
     public isVoiceVideoCallingEnabled(): boolean {
+        console.log("facade in action 3");
+
         this.tokenRing();
         return this.chatSDK.isVoiceVideoCallingEnabled();
     }

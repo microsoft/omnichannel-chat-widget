@@ -194,7 +194,7 @@ const handleInvalidOrClosedConversation = (dispatch: Dispatch<ILiveChatWidgetAct
     callingStateCleanUp(dispatch);
     endChatStateCleanUp(dispatch);
     closeChatStateCleanUp(dispatch);
-    chatSDKStateCleanUp(facadeChatSDK.getChatSDKState());
+    chatSDKStateCleanUp(facadeChatSDK.getChatSDK());
     DataStoreManager.clientDataStore?.removeData(getWidgetCacheIdfromProps(props));
 
     // Starts new chat
