@@ -21,7 +21,7 @@ export class FacadeChatSDK {
         this.getAuthToken = input.getAuthToken;
         this.isAuthenticated = input.isAuthenticated;
 
-        if (this.isAuthenticated) {
+        if (this.isAuthenticated === true) {
             this.setToken();
         }
     }
@@ -31,23 +31,9 @@ export class FacadeChatSDK {
         const now = Date.now();
         // compare expiration time with current time
         if (now > this.expiration) {
-            return false;
+            return true;
         }
-        return true;
-    }
-
-    private tokenRing(): void {
-        if (this.isAuthenticated) {
-            if (this.isTokenExpired()) {
-                this.isAuthenticated = false;
-                this.token = "";
-                this.expiration = 0;
-                if (this.getAuthToken) {
-                    handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
-                    this.setToken();
-                }
-            }
-        }
+        return false;
     }
 
     private async setToken() {
@@ -66,122 +52,111 @@ export class FacadeChatSDK {
             }
         }
     }
-
-    public async initialize(optionalParams: any = {}): Promise<ChatConfig> {
+    private tokenRing(): void {
+        if (this.isAuthenticated) {
+            if (this.isTokenExpired()) {
+                this.isAuthenticated = false;
+                this.token = "";
+                this.expiration = 0;
+                if (this.getAuthToken) {
+                    handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
+                    this.setToken();
+                }
+            }
+        }
+    }
+    
+    private withTokenRing<T>(fn: () => Promise<T>): Promise<T> {
         this.tokenRing();
-        return await this.chatSDK.initialize(optionalParams);
+        return fn();
     }
 
-    public async getChatReconnectContext(optionalParams: any = {}): Promise<any> {
-        this.tokenRing();
-        return await this.chatSDK.getChatReconnectContext(optionalParams);
+    public initialize(optionalParams: any = {}): Promise<ChatConfig> {
+        return this.withTokenRing(() => this.chatSDK.initialize(optionalParams));
     }
 
-    public async startChat(optionalParams: any = {}): Promise<void> {
-        this.tokenRing();
-        return await this.chatSDK.startChat(optionalParams);
+    public getChatReconnectContext(optionalParams: any = {}): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getChatReconnectContext(optionalParams));
     }
 
-    public async endChat(): Promise<void> {
-        this.tokenRing();
-        return await this.chatSDK.endChat();
+    public startChat(optionalParams: any = {}): Promise<void> {
+        return this.withTokenRing(() => this.chatSDK.startChat(optionalParams));
     }
 
-    public async getCurrentLiveChatContext(): Promise<object> {
-        this.tokenRing();
-        return await this.chatSDK.getCurrentLiveChatContext();
+    public endChat(): Promise<void> {
+        return this.withTokenRing(() => this.chatSDK.endChat());
     }
 
-    public async getConversationDetails(optionalParams: any = {}): Promise<any> {
-        this.tokenRing();
-        return await this.chatSDK.getConversationDetails(optionalParams);
+    public getCurrentLiveChatContext(): Promise<object> {
+        return this.withTokenRing(() => this.chatSDK.getCurrentLiveChatContext());
     }
 
-    public async getPreChatSurvey(parse = true): Promise<any> {
-        this.tokenRing();
-        return await this.chatSDK.getPreChatSurvey(parse);
+    public getConversationDetails(optionalParams: any = {}): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getConversationDetails(optionalParams));
     }
 
-    public async getLiveChatConfig(optionalParams?: any): Promise<any> {
-
-        this.tokenRing();
-        return await this.chatSDK.getLiveChatConfig(optionalParams);
+    public getPreChatSurvey(parse = true): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getPreChatSurvey(parse));
     }
 
-    public async getChatToken(cached = true, optionalParams?: any): Promise<any> {
-
-        this.tokenRing();
-        return await this.chatSDK.getChatToken(cached, optionalParams);
+    public getLiveChatConfig(optionalParams?: any): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getLiveChatConfig(optionalParams));
     }
 
-    public async getCallingToken(): Promise<string> {
-        this.tokenRing();
-        return await this.chatSDK.getCallingToken();
+    public getChatToken(cached = true, optionalParams?: any): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getChatToken(cached, optionalParams));
     }
 
-    public async getMessages(): Promise<any | undefined> {
-        this.tokenRing();
-        return await this.chatSDK.getMessages();
+    public getCallingToken(): Promise<string> {
+        return this.withTokenRing(() => this.chatSDK.getCallingToken());
     }
 
-    public async getDataMaskingRules(): Promise<any> { 
-
-        this.tokenRing();
-        return await this.chatSDK.getDataMaskingRules();
+    public getMessages(): Promise<any | undefined> {
+        return this.withTokenRing(() => this.chatSDK.getMessages());
     }
 
-    public async sendMessage(message: any): Promise<void> {
-        this.tokenRing();
-        return await this.chatSDK.sendMessage(message);
+    public getDataMaskingRules(): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getDataMaskingRules());
     }
 
-    public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: any | unknown = {}): Promise<void> {
-        this.tokenRing();
-        return await this.chatSDK.onNewMessage(onNewMessageCallback, optionalParams);
+    public sendMessage(message: any): Promise<void> {
+        return this.withTokenRing(() => this.chatSDK.sendMessage(message));
     }
 
-    public async sendTypingEvent(): Promise<void> {
-        this.tokenRing();
-        return await this.chatSDK.sendTypingEvent();
+    public onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: any | unknown = {}): Promise<void> {
+        return this.withTokenRing(() => this.chatSDK.onNewMessage(onNewMessageCallback, optionalParams));
     }
 
-    public async onTypingEvent(onTypingEventCallback: CallableFunction): Promise<void> {
-        this.tokenRing();
-        return await this.chatSDK.onTypingEvent(onTypingEventCallback);
+    public sendTypingEvent(): Promise<void> {
+        return this.withTokenRing(() => this.chatSDK.sendTypingEvent());
     }
 
-    public async onAgentEndSession(onAgentEndSessionCallback: (message: any | any) => void): Promise<void> {
-
-        this.tokenRing();
-        return await this.chatSDK.onAgentEndSession(onAgentEndSessionCallback);
+    public onTypingEvent(onTypingEventCallback: CallableFunction): Promise<void> {
+        return this.withTokenRing(() => this.chatSDK.onTypingEvent(onTypingEventCallback));
     }
 
-    public async uploadFileAttachment(fileInfo: any | File): Promise<any | any> {
-        this.tokenRing();
-        return await this.chatSDK.uploadFileAttachment(fileInfo);
+    public onAgentEndSession(onAgentEndSessionCallback: (message: any | any) => void): Promise<void> {
+        return this.withTokenRing(() => this.chatSDK.onAgentEndSession(onAgentEndSessionCallback));
     }
 
-    public async downloadFileAttachment(fileMetadata: any | any): Promise<Blob> {
-
-        this.tokenRing();
-        return await this.chatSDK.downloadFileAttachment(fileMetadata);
+    public uploadFileAttachment(fileInfo: any | File): Promise<any | any> {
+        return this.withTokenRing(() => this.chatSDK.uploadFileAttachment(fileInfo));
     }
 
-    public async emailLiveChatTranscript(body: any, optionalParams: any = {}): Promise<any> { 
-        this.tokenRing();
-        return await this.chatSDK.emailLiveChatTranscript(body, optionalParams);
+    public downloadFileAttachment(fileMetadata: any | any): Promise<Blob> {
+        return this.withTokenRing(() => this.chatSDK.downloadFileAttachment(fileMetadata));
     }
 
-    public async getLiveChatTranscript(optionalParams: any = {}): Promise<any> { 
-
-        this.tokenRing();
-        return await this.chatSDK.getLiveChatTranscript(optionalParams);
+    public emailLiveChatTranscript(body: any, optionalParams: any = {}): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.emailLiveChatTranscript(body, optionalParams));
     }
 
-    public async createChatAdapter(optionalParams: any = {}): Promise<unknown> {
+    public getLiveChatTranscript(optionalParams: any = {}): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getLiveChatTranscript(optionalParams));
+    }
 
-        this.tokenRing();
-        return await this.chatSDK.createChatAdapter(optionalParams);
+    public createChatAdapter(optionalParams: any = {}): Promise<unknown> {
+        return this.withTokenRing(() => this.chatSDK.createChatAdapter(optionalParams));
     }
 
     public isVoiceVideoCallingEnabled(): boolean {
@@ -189,19 +164,15 @@ export class FacadeChatSDK {
         return this.chatSDK.isVoiceVideoCallingEnabled();
     }
 
-    public async getVoiceVideoCalling(params: any = {}): Promise<any> { 
-        this.tokenRing();
-        return await this.chatSDK.getVoiceVideoCalling(params);
+    public getVoiceVideoCalling(params: any = {}): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getVoiceVideoCalling(params));
     }
 
-    public async getPostChatSurveyContext(): Promise<any> { 
-        this.tokenRing();
-        return await this.chatSDK.getPostChatSurveyContext();
+    public getPostChatSurveyContext(): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getPostChatSurveyContext());
     }
 
-    public async getAgentAvailability(optionalParams: any = {}): Promise<any> { 
-        this.tokenRing();
-        return await this.chatSDK.getAgentAvailability(optionalParams);
+    public getAgentAvailability(optionalParams: any = {}): Promise<any> {
+        return this.withTokenRing(() => this.chatSDK.getAgentAvailability(optionalParams));
     }
-
 }
