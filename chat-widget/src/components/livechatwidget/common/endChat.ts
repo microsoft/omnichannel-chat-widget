@@ -82,7 +82,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, s
         const endedByCustomer = appStates?.conversationEndedBy === "Customer";
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const commonParams: [ILiveChatWidgetProps, any, ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>, any, any, any] = [props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter];
+        const commonParams: [ILiveChatWidgetProps, any, ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>, any, any, any] = [props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter];
 
         if (persistentEnabled && endedByCustomer) {
             await endChat(...commonParams, true, false, true);

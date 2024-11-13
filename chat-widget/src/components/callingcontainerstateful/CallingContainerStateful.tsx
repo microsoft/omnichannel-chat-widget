@@ -9,18 +9,13 @@ import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetCon
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import useChatSDKStore from "../../hooks/useChatSDKStore";
 import useFacadeSDKStore from "../../hooks/useFacadeStore";
 
 export const CallingContainerStateful = (props: ICallingContainerStatefulProps) => {
 
-    //TODO : Close button confirmation implmentation is pending
-
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //const chatSDK: any = useChatSDKStore();
     const facadeChatSDK : any = useFacadeSDKStore();
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { voiceVideoCallingSdk } = props as any;
 

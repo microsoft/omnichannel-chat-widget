@@ -11,7 +11,7 @@ import { getConversationDetailsCall } from "../../../common/utils";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateTelemetryData = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // load it concurrently, this will reduce the load time
-    await Promise.all([updateSessionDataForTelemetry(facadeChatSDK, dispatch), updateConversationDataForTelemetry(chatSDK, dispatch)]);
+    await Promise.all([updateSessionDataForTelemetry(facadeChatSDK, dispatch), updateConversationDataForTelemetry(facadeChatSDK, dispatch)]);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -3,7 +3,6 @@ import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, formatTemplateString, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
 
 import { DimLayer } from "../dimlayer/DimLayer";
-import { FacadeChatSDK } from "../../common/facadechatsdk/facadechatsdk";
 import { IChatTranscriptBody } from "./interfaces/IChatTranscriptBody";
 import { IEmailTranscriptPaneProps } from "./interfaces/IEmailTranscriptPaneProps";
 import { IInputValidationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/inputvalidationpane/interfaces/IInputValidationPaneControlProps";

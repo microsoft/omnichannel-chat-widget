@@ -6,7 +6,6 @@ import { callingStateCleanUp, chatSDKStateCleanUp, closeChatStateCleanUp, endCha
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { Dispatch } from "react";
-import { FacadeChatSDK } from "../../../common/facadechatsdk/facadechatsdk";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";

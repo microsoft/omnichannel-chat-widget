@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { getAuthClientFunction, handleAuthentication } from "../livechatwidget/common/authHelper";
+import { getAuthClientFunction, handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { IFacadeChatSDKInput } from "./types/IFacadeChatSDKInput";
