@@ -3,6 +3,8 @@ import React, { Dispatch, useReducer, useState } from "react";
 import { ChatAdapterStore } from "../../contexts/ChatAdapterStore";
 import { ChatContextStore } from "../../contexts/ChatContextStore";
 import { ChatSDKStore } from "../../contexts/ChatSDKStore";
+import { FacadeChatSDK } from "../../common/facadechatsdk/facadechatsdk";
+import { FacadeStore } from "../../contexts/FacadeStore";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "./interfaces/ILiveChatWidgetProps";
@@ -20,15 +22,29 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
     overridePropsOnMockIfApplicable(props);
+    if (!props.chatConfig) {
+        throw new Error("chatConfig is required");
+    }
+
+    const facade = new FacadeChatSDK(
+        { 
+            "chatSDK" : chatSDK, 
+            "chatConfig" : props.chatConfig,
+            "isAuthenticated": props.getAuthToken? true : false,
+            "getAuthToken": props?.getAuthToken
+        }
+    );
 
     return (
-        <ChatSDKStore.Provider value={chatSDK}>
-            <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
-                <ChatContextStore.Provider value={[state, dispatch]}>
-                    <LiveChatWidgetStateful {...props} />
-                </ChatContextStore.Provider>
-            </ChatAdapterStore.Provider>
-        </ChatSDKStore.Provider>
+        <FacadeStore.Provider value={facade}>
+            <ChatSDKStore.Provider value={chatSDK}>
+                <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
+                    <ChatContextStore.Provider value={[state, dispatch]}>
+                        <LiveChatWidgetStateful {...props} />
+                    </ChatContextStore.Provider>
+                </ChatAdapterStore.Provider>
+            </ChatSDKStore.Provider>
+        </FacadeStore.Provider>
     );
 };
 

@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-escape */
 
+import TranscriptHtmlScripts from "../components/footerstateful/downloadtranscriptstateful/interfaces/TranscriptHtmlScripts";
 import { createFileAndDownload } from "../common/utils";
 import defaultLibraryScripts from "../components/footerstateful/downloadtranscriptstateful/common/defaultLibraryScripts";
-import TranscriptHtmlScripts from "../components/footerstateful/downloadtranscriptstateful/interfaces/TranscriptHtmlScripts";
 
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -677,7 +677,7 @@ class TranscriptHTMLBuilder {
     }
 }
 
-const createChatTranscript = async (transcript: string, chatSDK: any, renderAttachments = false, transcriptOptions: any = {}) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+const createChatTranscript = async (transcript: string, facadeChatSDK: any, renderAttachments = false, transcriptOptions: any = {}) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const transcriptMessages = JSON.parse(transcript);
 
     const convertBlobToBase64 = async (blob: Blob) => {
@@ -701,7 +701,7 @@ const createChatTranscript = async (transcript: string, chatSDK: any, renderAtta
                     type: metadata[0].contentType
                 };
 
-                const blob = await chatSDK.downloadFileAttachment(fileMetadata);
+                const blob = await facadeChatSDK.downloadFileAttachment(fileMetadata);
                 const base64 = await convertBlobToBase64(blob);
                 message.contentUrl = base64;
             }

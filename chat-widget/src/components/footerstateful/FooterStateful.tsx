@@ -14,7 +14,7 @@ import { NotificationScenarios } from "../webchatcontainerstateful/webchatcontro
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { downloadTranscript } from "./downloadtranscriptstateful/DownloadTranscriptStateful";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import useChatSDKStore from "../../hooks/useChatSDKStore";
+import useFacadeSDKStore from "../../hooks/useFacadeStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FooterStateful = (props: any) => {
@@ -24,14 +24,15 @@ export const FooterStateful = (props: any) => {
     // The reason for this approach is to make sure that state variables for audio notification work correctly after minimizing
     const { footerProps, downloadTranscriptProps, audioNotificationProps, hideFooterDisplay } = props;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chatSDK: any = useChatSDKStore();
+    const facadeChatSDK = useFacadeSDKStore();
+    
     const controlProps: IFooterControlProps = {
         id: "oc-lcw-footer",
         dir: state.domainStates.globalDir,
         onDownloadTranscriptClick: async () => {
             try {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.DownloadTranscriptButtonClicked, Description: "Download Transcript button clicked." });
-                await downloadTranscript(chatSDK, downloadTranscriptProps, state);
+                await downloadTranscript(facadeChatSDK, downloadTranscriptProps, state);
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.DownloadTranscriptFailed,

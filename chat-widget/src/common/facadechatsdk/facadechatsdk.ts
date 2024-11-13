@@ -15,6 +15,10 @@ export class FacadeChatSDK {
     private isAuthenticated!: boolean;
     private getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
 
+    get ChatSDK(): OmnichannelChatSDK {
+        return this.chatSDK;
+    }
+
     constructor(input: IFacadeChatSDKInput) {
         this.chatSDK = input.chatSDK;
         this.chatConfig = input.chatConfig;

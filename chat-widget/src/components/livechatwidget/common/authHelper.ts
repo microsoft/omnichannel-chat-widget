@@ -1,9 +1,10 @@
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
+
 import AuthSettings from "@microsoft/omnichannel-chat-sdk/lib/core/AuthSettings";
+import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { isNullOrEmptyString } from "../../../common/utils";
 import { WidgetLoadCustomErrorString } from "../../../common/Constants";
+import { isNullOrEmptyString } from "../../../common/utils";
 
 const getAuthClientFunction = (chatConfig: ChatConfig | undefined) => {
     let authClientFunction = undefined;

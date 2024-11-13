@@ -16,14 +16,15 @@ import { defaultTypingIndicatorBubbleStyles } from "./defaultStyles/defaultTypin
 import { defaultTypingIndicatorContainerStyles } from "./defaultStyles/defaultTypingIndicatorContainerStyles";
 import { defaultTypingIndicatorMessageStyles } from "./defaultStyles/defaultTypingIndicatorMessageStyles";
 import { useChatContextStore } from "../../../../..";
-import useChatSDKStore from "../../../../../hooks/useChatSDKStore";
+import useFacadeSDKStore from "../../../../../hooks/useFacadeStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TypingIndicator = ({ activeTyping, visible }: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chatSDK: any = useChatSDKStore();
+    const facadeChatSDK = useFacadeSDKStore();
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const debounceTyping = useCallback(debounceLeading(() => chatSDK?.sendTypingEvent()), []);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const debounceTyping = useCallback(debounceLeading(() => (facadeChatSDK as any)?.sendTypingEvent()), []);
 
     if (!activeTyping || Object.keys(activeTyping).length === 0 || (state.domainStates.liveChatConfig?.LiveChatVersion === 1 && !visible)) {
         return null;

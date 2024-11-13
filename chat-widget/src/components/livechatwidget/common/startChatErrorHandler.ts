@@ -6,6 +6,7 @@ import { callingStateCleanUp, chatSDKStateCleanUp, closeChatStateCleanUp, endCha
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { Dispatch } from "react";
+import { FacadeChatSDK } from "../../../common/facadechatsdk/facadechatsdk";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
@@ -15,7 +16,7 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
+export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
     if (!ex) {
         logWidgetLoadFailed();
         return;
@@ -57,7 +58,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
                 break;
             case ChatSDKErrorName.InvalidConversation:
             case ChatSDKErrorName.ClosedConversation:
-                handleInvalidOrClosedConversation(dispatch, chatSDK, props, ex);
+                handleInvalidOrClosedConversation(dispatch, facadeChatSDK, props, ex);
                 return;
             default:
                 logWidgetLoadFailed(ex);
@@ -83,7 +84,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
     // If sessionInit was successful but LCW startchat failed due to some reason e.g adapter didn't load
     // we need to directly endChat to avoid leaving ghost chats in OC, not disturbing any other UI state
     if (isStartChatSuccessful === true) {
-        forceEndChat(chatSDK);
+        forceEndChat(facadeChatSDK);
     }
 };
 
@@ -134,7 +135,7 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const forceEndChat = (chatSDK: any) => {
+const forceEndChat = (facadeChatSDK: any) => {
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
         Event: TelemetryEvent.PrepareEndChat,
         Description: PrepareEndChatDescriptionConstants.WidgetLoadFailedAfterSessionInit
@@ -142,7 +143,7 @@ const forceEndChat = (chatSDK: any) => {
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
         Event: TelemetryEvent.EndChatSDKCall
     });
-    chatSDK?.endChat();
+    facadeChatSDK?.endChat();
 };
 
 const handleWidgetUseOutsideOperatingHour = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
@@ -187,14 +188,14 @@ const handleUninitializedChatSDK = (ex: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleInvalidOrClosedConversation = (dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any) => {
+const handleInvalidOrClosedConversation = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any) => {
     logWidgetLoadCompleteWithError(ex);
 
     // Reset all internal states
     callingStateCleanUp(dispatch);
     endChatStateCleanUp(dispatch);
     closeChatStateCleanUp(dispatch);
-    chatSDKStateCleanUp(chatSDK);
+    chatSDKStateCleanUp(facadeChatSDK.getChatSDKState());
     DataStoreManager.clientDataStore?.removeData(getWidgetCacheIdfromProps(props));
 
     // Starts new chat

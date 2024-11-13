@@ -88,7 +88,7 @@ import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAnd
 import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
-import useChatSDKStore from "../../../hooks/useChatSDKStore";
+import useFacadeSDKStore from "../../../hooks/useFacadeStore";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -96,7 +96,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useChatAdapterStore();
     const [webChatStyles, setWebChatStyles] = useState({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chatSDK: any = useChatSDKStore();
+    //const chatSDK: any = useChatSDKStore();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const facadeChatSDK: any = useFacadeSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;
@@ -112,7 +114,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // In case the broadcast channel is already initialized elsewhere; One tab can only hold 1 instance
     if (props?.controlProps?.skipBroadcastChannelInit !== true) {
-        const broadcastServiceChannelName = getBroadcastChannelName(chatSDK?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
+        const broadcastServiceChannelName = getBroadcastChannelName(facadeChatSDK.getChatSDK()?.omnichannelConfig?.widgetId, props.controlProps?.widgetInstanceId ?? "");
         BroadcastServiceInitialize(broadcastServiceChannelName);
     }
     TelemetryTimers.LcwLoadToChatButtonTimer = createTimer();
@@ -143,7 +145,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
         const isReconnectTriggered = async (): Promise<boolean> => {
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
-                const noValidReconnectId = await handleChatReconnect(chatSDK, props, dispatch, setAdapter, initStartChat, state);
+                const noValidReconnectId = await handleChatReconnect(facadeChatSDK, props, dispatch, setAdapter, initStartChat, state);
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
                 if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active
@@ -160,11 +162,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             //Check if conversation state is not in wrapup or closed state
-            isChatValid = await checkIfConversationStillValid(chatSDK, dispatch, state);
+            isChatValid = await checkIfConversationStillValid(facadeChatSDK, dispatch, state);
             if (isChatValid === true) {
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
-                    await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
+                    await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
                 }
                 return;
             }
@@ -176,7 +178,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const reconnectTriggered = await isReconnectTriggered();
                 if (!reconnectTriggered) {
                     const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-                    await setPreChatAndInitiateChat(chatSDK, dispatch, setAdapter, undefined, undefined, inMemoryState, props);
+                    await setPreChatAndInitiateChat(facadeChatSDK, dispatch, setAdapter, undefined, undefined, inMemoryState, props);
                 }
                 return;
             } else {
@@ -221,7 +223,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         if (props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_callingoptions !== E2VVOptions.NoCalling) {
-            initCallingSdk(chatSDK, setVoiceVideoCallingSDK)
+            initCallingSdk(facadeChatSDK, setVoiceVideoCallingSDK)
                 .then((sdkCreated: boolean) => {
                     sdkCreated && dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: true });
                 });
@@ -308,7 +310,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                     lastLWICheckTimeRef.current = dateNow;
                     callInProgress.current = true;
-                    const conversationDetails = await getConversationDetailsCall(chatSDK);
+                    const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
 
                     if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
                         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
@@ -326,7 +328,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (isThisSessionPopout(window?.location?.href)) {
                 return;
             }
-            const conversationDetails = await getConversationDetailsCall(chatSDK);
+            const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
 
             if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
@@ -382,7 +384,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
-                prepareStartChat(props, chatSDK, inMemoryState, dispatch, setAdapter);
+                prepareStartChat(props, facadeChatSDK, inMemoryState, dispatch, setAdapter);
                 return;
             }
 
@@ -425,7 +427,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceived
                 });
-                endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
+                endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
             }
 
             BroadcastService.postMessage({
@@ -440,8 +442,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Listen to end chat event from other tabs
         const endChatEventName = getWidgetEndChatEventName(
-            chatSDK?.omnichannelConfig?.orgId,
-            chatSDK?.omnichannelConfig?.widgetId,
+            facadeChatSDK.getChatSDK()?.omnichannelConfig?.orgId,
+            facadeChatSDK.getChatSDK()?.omnichannelConfig?.widgetId,
             props.controlProps?.widgetInstanceId ?? "");
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
@@ -450,9 +452,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
                 });
-                endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
+                endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 endChatStateCleanUp(dispatch);
-                chatSDKStateCleanUp(chatSDK);
+                chatSDKStateCleanUp(facadeChatSDK);
                 return;
             }
         });
@@ -481,7 +483,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         // On new message
         if (state.appStates.conversationState === ConversationState.Active) {
-            chatSDK?.onNewMessage(() => {
+            facadeChatSDK?.onNewMessage(() => {
                 // Track the message count
                 currentMessageCountRef.current++;
                 dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: currentMessageCountRef.current + 1 });
@@ -562,7 +564,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.CustomerCloseChatOnFailureOrPostChat
             });
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
+            endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
             return;
         }
 
@@ -572,7 +574,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.CustomerCloseInactiveChat
             });
-            endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+            endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             return;
         }
 
@@ -582,7 +584,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         // All other cases
-        prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
+        prepareEndChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
 
     }, [state?.appStates?.conversationEndedBy]);
 
@@ -651,7 +653,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             Event: TelemetryEvent.PrepareEndChat,
             Description: PrepareEndChatDescriptionConstants.BrowserUnload
         });
-        endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, false);
+        endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, false);
         // Clean local storage
         DataStoreManager.clientDataStore?.removeData(widgetStateEventId);
 
@@ -663,16 +665,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
-    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
-    const prepareStartChatRelay = () => prepareStartChat(props, chatSDK, state, dispatch, setAdapter);
+    const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
+    const prepareStartChatRelay = () => prepareStartChat(props, facadeChatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
+    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
     const confirmationPaneProps = initConfirmationPropsComposer(props);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const prepareEndChatRelay = () => prepareEndChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
-    const webChatProps = initWebChatComposer(props, state, dispatch, chatSDK, endChatRelay);
+    const prepareEndChatRelay = () => prepareEndChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
+    const webChatProps = initWebChatComposer(props, state, dispatch, facadeChatSDK, endChatRelay);
 
     const downloadTranscriptProps = createDownloadTranscriptProps(props.downloadTranscriptProps as IDownloadTranscriptProps,
         {
@@ -701,7 +703,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     };
 
     // Add 'omnichannel-chat-widget' OC User Agent if not already set
-    setOcUserAgent(chatSDK);
+    setOcUserAgent(facadeChatSDK.getChatSDK());
 
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
     const userID = directLine.getState ? directLine?.getState("acs.userId") : "teamsvisitor";

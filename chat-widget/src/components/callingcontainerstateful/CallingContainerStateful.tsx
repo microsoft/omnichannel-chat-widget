@@ -10,6 +10,7 @@ import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetAc
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
+import useFacadeSDKStore from "../../hooks/useFacadeStore";
 
 export const CallingContainerStateful = (props: ICallingContainerStatefulProps) => {
 
@@ -17,7 +18,8 @@ export const CallingContainerStateful = (props: ICallingContainerStatefulProps) 
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chatSDK: any = useChatSDKStore();
+    //const chatSDK: any = useChatSDKStore();
+    const facadeChatSDK : any = useFacadeSDKStore();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { voiceVideoCallingSdk } = props as any;
@@ -43,7 +45,7 @@ export const CallingContainerStateful = (props: ICallingContainerStatefulProps) 
                     chatToken: state.domainStates.chatToken,
                     selfVideoHTMLElementId: controlProps.currentCallControlProps?.nonActionIds?.selfVideoTileId, // HTML element id where video stream of the agent will be rendered
                     remoteVideoHTMLElementId: controlProps.currentCallControlProps?.nonActionIds?.remoteVideoTileId, // HTML element id where video stream of the customer will be rendered
-                    OCClient: chatSDK?.OCClient
+                    OCClient: facadeChatSDK.getChatSDK()?.OCClient
                 });
             } catch (e) {
                 TelemetryHelper.logCallingEvent(LogLevel.ERROR, {
