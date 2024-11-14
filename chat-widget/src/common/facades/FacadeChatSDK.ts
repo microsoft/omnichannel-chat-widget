@@ -5,7 +5,7 @@ import { getAuthClientFunction, handleAuthentication } from "../../components/li
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { IFacadeChatSDKInput } from "./types/IFacadeChatSDKInput";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
-import { isNullOrEmptyString } from "../../common/utils";
+import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
     private chatSDK: OmnichannelChatSDK;
@@ -20,6 +20,7 @@ export class FacadeChatSDK {
     }
 
     constructor(input: IFacadeChatSDKInput) {
+        console.log("New Facade Object");
         this.chatSDK = input.chatSDK;
         this.chatConfig = input.chatConfig;
         this.getAuthToken = input.getAuthToken;
@@ -47,7 +48,8 @@ export class FacadeChatSDK {
         const authClientFunction = getAuthClientFunction(this.chatConfig);
         if (this.getAuthToken && authClientFunction) {
             const token = await this.getAuthToken(authClientFunction);
-            if (!isNullOrEmptyString(token)) {
+            // token must be not null, and must be new
+            if (!isNullOrEmptyString(token) && token !== this.token) {
                 console.log("ELOPEZANAYA :: new token obtained ", token);
                 this.token = token;
                 // decompose token
@@ -56,6 +58,12 @@ export class FacadeChatSDK {
                 const tokenDecoded = JSON.parse(atob(tokenParts[1]));
                 // calculate expiration time
                 this.expiration = tokenDecoded.exp * 1000;
+
+                if (this.expiration < Date.now()){
+                    throw new Error("New token is already expired");
+                }
+            }else{
+                throw new Error("Token is empty or expired, auth function dint provide a new valid token");
             }
         }
     }

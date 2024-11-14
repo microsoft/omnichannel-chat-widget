@@ -14,7 +14,7 @@ import { NotificationScenarios } from "../webchatcontainerstateful/webchatcontro
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { downloadTranscript } from "./downloadtranscriptstateful/DownloadTranscriptStateful";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import useFacadeSDKStore from "../../hooks/useFacadeStore";
+import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FooterStateful = (props: any) => {

@@ -16,7 +16,7 @@ import { defaultTypingIndicatorBubbleStyles } from "./defaultStyles/defaultTypin
 import { defaultTypingIndicatorContainerStyles } from "./defaultStyles/defaultTypingIndicatorContainerStyles";
 import { defaultTypingIndicatorMessageStyles } from "./defaultStyles/defaultTypingIndicatorMessageStyles";
 import { useChatContextStore } from "../../../../..";
-import useFacadeSDKStore from "../../../../../hooks/useFacadeStore";
+import useFacadeSDKStore from "../../../../../hooks/useFacadeChatSDKStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TypingIndicator = ({ activeTyping, visible }: any) => {

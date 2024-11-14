@@ -9,7 +9,7 @@ import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetCon
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import useFacadeSDKStore from "../../hooks/useFacadeStore";
+import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 
 export const CallingContainerStateful = (props: ICallingContainerStatefulProps) => {
 

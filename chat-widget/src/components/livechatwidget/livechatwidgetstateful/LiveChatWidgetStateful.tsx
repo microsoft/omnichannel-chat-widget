@@ -88,7 +88,7 @@ import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAnd
 import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
-import useFacadeSDKStore from "../../../hooks/useFacadeStore";
+import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -97,6 +97,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [webChatStyles, setWebChatStyles] = useState({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     //const chatSDK: any = useChatSDKStore();
+    console.log("LCW stateful, about to call facade");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const facadeChatSDK: any = useFacadeSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

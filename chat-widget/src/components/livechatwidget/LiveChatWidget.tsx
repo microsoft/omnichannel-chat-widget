@@ -3,8 +3,8 @@ import React, { Dispatch, useReducer, useState } from "react";
 import { ChatAdapterStore } from "../../contexts/ChatAdapterStore";
 import { ChatContextStore } from "../../contexts/ChatContextStore";
 import { ChatSDKStore } from "../../contexts/ChatSDKStore";
-import { FacadeChatSDK } from "../../common/facadechatsdk/facadechatsdk";
-import { FacadeStore } from "../../contexts/FacadeStore";
+import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
+import { FacadeChatSDKStore } from "../../contexts/FacadeChatSDKStore";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "./interfaces/ILiveChatWidgetProps";
@@ -16,6 +16,7 @@ import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfAppli
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
+    console.log("New Livechat");
     const reducer = createReducer();
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useReducer(reducer, getLiveChatWidgetContextInitialState(props));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,7 +37,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     );
 
     return (
-        <FacadeStore.Provider value={facade}>
+        <FacadeChatSDKStore.Provider value={facade}>
             <ChatSDKStore.Provider value={chatSDK}>
                 <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
                     <ChatContextStore.Provider value={[state, dispatch]}>
@@ -44,7 +45,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
                     </ChatContextStore.Provider>
                 </ChatAdapterStore.Provider>
             </ChatSDKStore.Provider>
-        </FacadeStore.Provider>
+        </FacadeChatSDKStore.Provider>
     );
 };
 

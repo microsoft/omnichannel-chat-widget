@@ -16,7 +16,7 @@ import { Regex } from "../../common/Constants";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultMiddlewareLocalizedTexts } from "../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import useFacadeSDKStore from "../../hooks/useFacadeStore";
+import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 
 export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) => {
     const initialTabIndexMap: Map<string, number> = new Map();
