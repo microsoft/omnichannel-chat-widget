@@ -239,7 +239,7 @@ export const isNullOrUndefined = (obj: any) => {
 };
 
 export const isNullOrEmptyString = (s: string | null) => {
-    return isNullOrUndefined(s) || s?.trim() === "";
+    return isNullOrUndefined(s) || s === "";
 };
 
 export const newGuid = () => {

@@ -40,7 +40,7 @@ export class FacadeChatSDK {
             return true;
         }
         console.log("Token is ok");
-        
+
         return false;
     }
 
@@ -59,10 +59,10 @@ export class FacadeChatSDK {
                 // calculate expiration time
                 this.expiration = tokenDecoded.exp * 1000;
 
-                if (this.expiration < Date.now()){
+                if (this.expiration < Date.now()) {
                     throw new Error("New token is already expired");
                 }
-            }else{
+            } else {
                 throw new Error("Token is empty or expired, auth function dint provide a new valid token");
             }
         }
@@ -80,7 +80,7 @@ export class FacadeChatSDK {
             }
         }
     }
-    
+
     private withTokenRing<T>(fn: () => Promise<T>): Promise<T> {
         console.log("facade in action");
         this.tokenRing();
