@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Add
-
+- Fix to set the state of audio notification button through configuration props
 - Fix to format the output when user do CTRL + COPY in transcript.html
 - Add New adapter subscriber to ignore adaptive card message from rendering if it contains all invisible fields
 - Add `mock` props to allow chat widget to run in `mock mode` with `DemoChatAdapter`
