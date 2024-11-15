@@ -11,44 +11,25 @@
 <body style="margin: 0">
   <script>
 
-    function convertToJwtToken(payloadToEncrypt) {
-      return function (callback) {
-        setTimeout(() => {
-          callback(jwt);
-        }, 10);
-      }
-    }
+authFunction = async (callback) => {
+      try {
+        const response = await fetch("api-rate-limit-and-tokens-vert.vercel.app/api/ping", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "API-KEY": "6f8e4b9a2d3c4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f"
+          }
+        });
 
-    authFunction = (callback) => {
-
-      const now = Date.now();
-
-      let keys = [
-        
-      ];
-
-
-      while (keys.length > 0) {
-        const token = keys[0];
-        const tokenParts = token.split(".");
-        try {
-          const tokenDecoded = JSON.parse(atob(tokenParts[1]));
-          const expiration = tokenDecoded.exp * 1000;
-
-            if (now < expiration) {
-                console.log("new token returned => ", token);
-                return token;
-            } else {
-              console.log("keep looking");
-                keys = keys.slice(1);
-            }
-        } catch (e) {
-            console.error("Error decoding token:", e);
-            keys = keys.slice(1);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-    }
-    console.log("Empty kkeys?", keys.length);
-      return "";
+
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error("Request failed", error);
+      }
     };
 
     function lcw() {

@@ -67,24 +67,34 @@ export class FacadeChatSDK {
             }
         }
     }
-    private tokenRing(): void {
+    private tokenRing(): boolean {
         if (this.isAuthenticated) {
             if (this.isTokenExpired()) {
                 console.log("ELOPEZANAYA : requesting a new token");
                 this.token = "";
                 this.expiration = 0;
                 if (this.getAuthToken) {
-                    handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
-                    this.setToken();
+                    try {
+                        handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
+                        this.setToken();
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
                 }
             }
+            return true;
         }
+        return true;
     }
 
     private withTokenRing<T>(fn: () => Promise<T>): Promise<T> {
         console.log("facade in action");
-        this.tokenRing();
-        return fn();
+        if (this.tokenRing()) {
+            return fn();
+        }
+        console.error("Authentication not possible, so holding any interaction with backend");
+        return Promise.reject("Authentication failed");
     }
 
     public initialize(optionalParams: any = {}): Promise<ChatConfig> {
