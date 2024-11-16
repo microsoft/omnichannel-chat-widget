@@ -7,7 +7,7 @@ import { handleAuthentication } from "../../components/livechatwidget/common/aut
 import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
-    private chatSDK: OmnichannelChatSDK;
+    private chatSDK: any;
     private chatConfig: ChatConfig;
     private token!: any | "";
     private expiration = 0;

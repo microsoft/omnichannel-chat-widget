@@ -96,10 +96,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useChatAdapterStore();
     const [webChatStyles, setWebChatStyles] = useState({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //const chatSDK: any = useChatSDKStore();
-    console.log("LCW stateful, about to call facade");
+    console.log("ELOPEZANAYA ******* LCW stateful, about to call facade **********");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const facadeChatSDK: any = useFacadeSDKStore();
+    //const facadeChatSDK: any = useFacadeSDKStore();
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
+
+    console.log("ELOPEZANAYA ******* facadeChatSDK **********", facadeChatSDK);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;

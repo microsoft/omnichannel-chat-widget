@@ -14,6 +14,17 @@ import { getLiveChatWidgetContextInitialState } from "../../contexts/common/Live
 import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
 
+//import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
+
+
+
+
+
+
+
+
+
+
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
     console.log("New Livechat");
@@ -21,23 +32,30 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useReducer(reducer, getLiveChatWidgetContextInitialState(props));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [facadeChatSDK, setFacadeChatSDK]: [any, (facade: any) => void] = useState(undefined);
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
     overridePropsOnMockIfApplicable(props);
     if (!props.chatConfig) {
         throw new Error("chatConfig is required");
     }
 
-    const facade = new FacadeChatSDK(
-        { 
-            "chatSDK" : chatSDK, 
-            "chatConfig" : props.chatConfig,
-            "isAuthenticated": props.getAuthToken? true : false,
-            "getAuthToken": props?.getAuthToken
-        }
-    );
+    if (!facadeChatSDK){
+        console.log("New FacadeChatSDK");
+        setFacadeChatSDK(new FacadeChatSDK(
+            { 
+                "chatSDK" : chatSDK, 
+                "chatConfig" : props.chatConfig,
+                "isAuthenticated": props.getAuthToken? true : false,
+                "getAuthToken": props?.getAuthToken
+            }
+        ));
+    }
+
+    /*const facade = */
 
     return (
-        <FacadeChatSDKStore.Provider value={facade}>
+        <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
             <ChatSDKStore.Provider value={chatSDK}>
                 <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
                     <ChatContextStore.Provider value={[state, dispatch]}>
