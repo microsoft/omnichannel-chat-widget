@@ -26,8 +26,12 @@ const handleChatReconnect = async (facadeChatSDK: any, props: ILiveChatWidgetPro
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
 
+    console.log("ELOPEZANAYA :: handleChatReconnect isAuthenticatedChat ", isAuthenticatedChat);
+
     // Get chat reconnect context
     const reconnectChatContext: IReconnectChatContext = await getChatReconnectContext(facadeChatSDK, props.chatConfig as ChatConfig, props, isAuthenticatedChat, dispatch);
+
+    console.log("ELOPEZANAYA :: handleChatReconnect reconnectChatContext ", reconnectChatContext);
 
     // Redirect if enabled
     if (reconnectChatContext?.redirectURL) {
@@ -111,7 +115,8 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, facadeCh
 
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-
+    
+    console.log("ELOPEZANAYA :: init start chat with reconnectId ", reconnectId);
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 

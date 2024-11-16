@@ -43,6 +43,9 @@ export class FacadeChatSDK {
 
     private async setToken(token: string | null): Promise<void> {
 
+        console.log("ELOPEZANAYA :: setToken ", token);
+        console.log("ELOPEZANAYA :: this.token ", this.token);
+
         // token must be not null, and must be new
         if (!isNullOrEmptyString(token) && token !== this.token) {
             console.log("ELOPEZANAYA :: new token obtained ", token);
