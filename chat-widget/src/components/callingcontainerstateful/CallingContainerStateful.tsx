@@ -15,7 +15,7 @@ export const CallingContainerStateful = (props: ICallingContainerStatefulProps) 
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const facadeChatSDK : any = useFacadeSDKStore();
+    const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { voiceVideoCallingSdk } = props as any;
 

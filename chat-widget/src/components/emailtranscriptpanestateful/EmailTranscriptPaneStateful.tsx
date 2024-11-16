@@ -23,7 +23,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
     let elements: HTMLElement[] | null = [];
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const facadeChatSDK : any = useFacadeSDKStore();
+    const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
     const [initialEmail, setInitialEmail] = useState("");
     const closeEmailTranscriptPane = () => {
         dispatch({ type: LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE, payload: false });

@@ -24,7 +24,7 @@ export const FooterStateful = (props: any) => {
     // The reason for this approach is to make sure that state variables for audio notification work correctly after minimizing
     const { footerProps, downloadTranscriptProps, audioNotificationProps, hideFooterDisplay } = props;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const facadeChatSDK = useFacadeSDKStore();
+    const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
     
     const controlProps: IFooterControlProps = {
         id: "oc-lcw-footer",

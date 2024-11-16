@@ -21,7 +21,7 @@ import useFacadeSDKStore from "../../../../../hooks/useFacadeChatSDKStore";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TypingIndicator = ({ activeTyping, visible }: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const facadeChatSDK = useFacadeSDKStore();
+    const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const debounceTyping = useCallback(debounceLeading(() => (facadeChatSDK as any)?.sendTypingEvent()), []);
