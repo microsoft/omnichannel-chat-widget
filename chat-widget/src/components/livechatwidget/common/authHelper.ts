@@ -26,7 +26,7 @@ const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undef
             (chatSDK as any).setAuthTokenProvider(async () => {
                 return token;
             });
-            return true;
+            return {"result": true, "token": token};
         } else {
             // instead of returning false, it's more appropiate to thrown an error to force error handling on the caller side
             // this will help to avoid the error to be ignored and the chat to be started
@@ -34,7 +34,7 @@ const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undef
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
     }
-    return false;
+    return {"result":false};
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

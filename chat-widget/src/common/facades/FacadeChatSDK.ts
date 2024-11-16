@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { getAuthClientFunction, handleAuthentication } from "../../components/livechatwidget/common/authHelper";
-
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { IFacadeChatSDKInput } from "./types/IFacadeChatSDKInput";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
+import { handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
@@ -25,59 +24,59 @@ export class FacadeChatSDK {
         this.chatConfig = input.chatConfig;
         this.getAuthToken = input.getAuthToken;
         this.isAuthenticated = input.isAuthenticated;
-
-        if (this.isAuthenticated === true) {
-            this.setToken();
-        }
     }
 
     private isTokenExpired(): boolean {
         // obtain current time
         const now = Date.now();
         // compare expiration time with current time
+        console.log("ELOPEZANAYA :: expiration ", this.expiration);
+        console.log("ELOPEZANAYA :: now ", now);
         if (now > this.expiration) {
-            console.log("Token expired");
+            console.log("ELOPEZANAYA :: Token expired");
             return true;
         }
-        console.log("Token is ok");
+        console.log("ELOPEZANAYA :: Token is ok");
 
         return false;
     }
 
-    private async setToken() {
-        const authClientFunction = getAuthClientFunction(this.chatConfig);
-        if (this.getAuthToken && authClientFunction) {
-            const token = await this.getAuthToken(authClientFunction);
-            // token must be not null, and must be new
-            if (!isNullOrEmptyString(token) && token !== this.token) {
-                console.log("ELOPEZANAYA :: new token obtained ", token);
-                this.token = token;
-                // decompose token
-                const tokenParts = this.token.split(".");
-                // decode token
-                const tokenDecoded = JSON.parse(atob(tokenParts[1]));
-                // calculate expiration time
-                this.expiration = tokenDecoded.exp * 1000;
+    private async setToken(token: string | null): Promise<void> {
 
-                if (this.expiration < Date.now()) {
-                    throw new Error("New token is already expired");
-                }
-            } else {
-                throw new Error("Token is empty or expired, auth function dint provide a new valid token");
+        // token must be not null, and must be new
+        if (!isNullOrEmptyString(token) && token !== this.token) {
+            console.log("ELOPEZANAYA :: new token obtained ", token);
+            this.token = token;
+            // decompose token
+            const tokenParts = this.token.split(".");
+            // decode token
+            const tokenDecoded = JSON.parse(atob(tokenParts[1]));
+            // calculate expiration time
+            this.expiration = tokenDecoded.exp * 1000;
+
+            if (this.expiration < Date.now()) {
+                throw new Error("New token is already expired");
             }
+        } else {
+            throw new Error("Token is empty or expired, auth function dint provide a new valid token");
         }
+
     }
-    private tokenRing(): boolean {
+    private async tokenRing(): Promise<boolean> {
         if (this.isAuthenticated) {
+            console.log("ELOPEZANAYA :: tokenRing :: isAuthenticated");
             if (this.isTokenExpired()) {
                 console.log("ELOPEZANAYA : requesting a new token");
                 this.token = "";
                 this.expiration = 0;
                 if (this.getAuthToken) {
                     try {
-                        handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
-                        this.setToken();
-                        return true;
+                        const ring = await handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
+                        if (ring.result === true && ring.token) {
+                            this.setToken(ring.token);
+                            return true;
+                        }
+                        return false;
                     } catch (e) {
                         return false;
                     }
@@ -88,119 +87,119 @@ export class FacadeChatSDK {
         return true;
     }
 
-    private withTokenRing<T>(fn: () => Promise<T>): Promise<T> {
+    private async withTokenRing<T>(fn: () => Promise<T>): Promise<T> {
         console.log("facade in action");
-        if (this.tokenRing()) {
+        if (await this.tokenRing()) {
             return fn();
         }
         console.error("Authentication not possible, so holding any interaction with backend");
         return Promise.reject("Authentication failed");
     }
 
-    public initialize(optionalParams: any = {}): Promise<ChatConfig> {
+    public async initialize(optionalParams: any = {}): Promise<ChatConfig> {
         return this.withTokenRing(() => this.chatSDK.initialize(optionalParams));
     }
 
-    public getChatReconnectContext(optionalParams: any = {}): Promise<any> {
+    public async getChatReconnectContext(optionalParams: any = {}): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getChatReconnectContext(optionalParams));
     }
 
-    public startChat(optionalParams: any = {}): Promise<void> {
+    public async startChat(optionalParams: any = {}): Promise<void> {
         return this.withTokenRing(() => this.chatSDK.startChat(optionalParams));
     }
 
-    public endChat(): Promise<void> {
+    public async endChat(): Promise<void> {
         return this.withTokenRing(() => this.chatSDK.endChat());
     }
 
-    public getCurrentLiveChatContext(): Promise<object> {
+    public async getCurrentLiveChatContext(): Promise<object> {
         return this.withTokenRing(() => this.chatSDK.getCurrentLiveChatContext());
     }
 
-    public getConversationDetails(optionalParams: any = {}): Promise<any> {
+    public async getConversationDetails(optionalParams: any = {}): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getConversationDetails(optionalParams));
     }
 
-    public getPreChatSurvey(parse = true): Promise<any> {
+    public async getPreChatSurvey(parse = true): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getPreChatSurvey(parse));
     }
 
-    public getLiveChatConfig(optionalParams?: any): Promise<any> {
+    public async getLiveChatConfig(optionalParams?: any): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getLiveChatConfig(optionalParams));
     }
 
-    public getChatToken(cached = true, optionalParams?: any): Promise<any> {
+    public async getChatToken(cached = true, optionalParams?: any): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getChatToken(cached, optionalParams));
     }
 
-    public getCallingToken(): Promise<string> {
+    public async getCallingToken(): Promise<string> {
         return this.withTokenRing(() => this.chatSDK.getCallingToken());
     }
 
-    public getMessages(): Promise<any | undefined> {
+    public async getMessages(): Promise<any | undefined> {
         return this.withTokenRing(() => this.chatSDK.getMessages());
     }
 
-    public getDataMaskingRules(): Promise<any> {
+    public async getDataMaskingRules(): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getDataMaskingRules());
     }
 
-    public sendMessage(message: any): Promise<void> {
+    public async sendMessage(message: any): Promise<void> {
         return this.withTokenRing(() => this.chatSDK.sendMessage(message));
     }
 
-    public onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: any | unknown = {}): Promise<void> {
+    public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: any | unknown = {}): Promise<void> {
         return this.withTokenRing(() => this.chatSDK.onNewMessage(onNewMessageCallback, optionalParams));
     }
 
-    public sendTypingEvent(): Promise<void> {
+    public async sendTypingEvent(): Promise<void> {
         return this.withTokenRing(() => this.chatSDK.sendTypingEvent());
     }
 
-    public onTypingEvent(onTypingEventCallback: CallableFunction): Promise<void> {
+    public async onTypingEvent(onTypingEventCallback: CallableFunction): Promise<void> {
         return this.withTokenRing(() => this.chatSDK.onTypingEvent(onTypingEventCallback));
     }
 
-    public onAgentEndSession(onAgentEndSessionCallback: (message: any | any) => void): Promise<void> {
+    public async onAgentEndSession(onAgentEndSessionCallback: (message: any | any) => void): Promise<void> {
         return this.withTokenRing(() => this.chatSDK.onAgentEndSession(onAgentEndSessionCallback));
     }
 
-    public uploadFileAttachment(fileInfo: any | File): Promise<any | any> {
+    public async uploadFileAttachment(fileInfo: any | File): Promise<any | any> {
         return this.withTokenRing(() => this.chatSDK.uploadFileAttachment(fileInfo));
     }
 
-    public downloadFileAttachment(fileMetadata: any | any): Promise<Blob> {
+    public async downloadFileAttachment(fileMetadata: any | any): Promise<Blob> {
         return this.withTokenRing(() => this.chatSDK.downloadFileAttachment(fileMetadata));
     }
 
-    public emailLiveChatTranscript(body: any, optionalParams: any = {}): Promise<any> {
+    public async emailLiveChatTranscript(body: any, optionalParams: any = {}): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.emailLiveChatTranscript(body, optionalParams));
     }
 
-    public getLiveChatTranscript(optionalParams: any = {}): Promise<any> {
+    public async getLiveChatTranscript(optionalParams: any = {}): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getLiveChatTranscript(optionalParams));
     }
 
-    public createChatAdapter(optionalParams: any = {}): Promise<unknown> {
+    public async createChatAdapter(optionalParams: any = {}): Promise<unknown> {
         return this.withTokenRing(() => this.chatSDK.createChatAdapter(optionalParams));
     }
 
-    public isVoiceVideoCallingEnabled(): boolean {
+    public async isVoiceVideoCallingEnabled(): Promise<boolean> {
         console.log("facade in action 3");
 
         this.tokenRing();
         return this.chatSDK.isVoiceVideoCallingEnabled();
     }
 
-    public getVoiceVideoCalling(params: any = {}): Promise<any> {
+    public async getVoiceVideoCalling(params: any = {}): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getVoiceVideoCalling(params));
     }
 
-    public getPostChatSurveyContext(): Promise<any> {
+    public async getPostChatSurveyContext(): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getPostChatSurveyContext());
     }
 
-    public getAgentAvailability(optionalParams: any = {}): Promise<any> {
+    public async getAgentAvailability(optionalParams: any = {}): Promise<any> {
         return this.withTokenRing(() => this.chatSDK.getAgentAvailability(optionalParams));
     }
 }
