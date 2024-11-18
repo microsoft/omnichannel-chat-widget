@@ -8,7 +8,7 @@ import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
     private chatSDK: any;
-    private chatConfig: ChatConfig;
+    private chatConfig: ChatConfig | undefined;
     private token!: any | "";
     private expiration = 0;
     private isAuthenticated!: boolean;
@@ -16,6 +16,16 @@ export class FacadeChatSDK {
 
     public getChatSDK(): OmnichannelChatSDK {
         return this.chatSDK;
+    }
+
+    public destroy(){
+        this.chatSDK = null;
+        this.chatConfig = undefined ;
+        this.token = null;
+        this.expiration = 0;
+        this.isAuthenticated = false;
+        this.getAuthToken = async () => null;
+
     }
 
     constructor(input: IFacadeChatSDKInput) {
@@ -26,12 +36,24 @@ export class FacadeChatSDK {
         this.isAuthenticated = input.isAuthenticated;
     }
 
+    private convertExpiration(expiration: number): number {
+        // Check if the last 3 digits are zeroes
+        if (expiration % 1000 === 0) {
+
+            return expiration * 1000;
+        }
+        // Otherwise, keep it as is
+        return expiration;
+    }
+
+
     private isTokenExpired(): boolean {
         // obtain current time
         const now = Date.now();
         // compare expiration time with current time
         console.log("ELOPEZANAYA :: expiration ", this.expiration);
         console.log("ELOPEZANAYA :: now ", now);
+        console.log("ELOPEZANAYA :: expired? ", now > this.expiration);
         if (now > this.expiration) {
             console.log("ELOPEZANAYA :: Token expired");
             return true;
@@ -42,9 +64,8 @@ export class FacadeChatSDK {
     }
 
     private async setToken(token: string | null): Promise<void> {
-
         console.log("ELOPEZANAYA :: setToken ", token);
-        console.log("ELOPEZANAYA :: this.token ", this.token);
+        console.log("ELOPEZANAYA :: this.token before setting ", this.token);
 
         // token must be not null, and must be new
         if (!isNullOrEmptyString(token) && token !== this.token) {
@@ -55,16 +76,18 @@ export class FacadeChatSDK {
             // decode token
             const tokenDecoded = JSON.parse(atob(tokenParts[1]));
             // calculate expiration time
-            this.expiration = tokenDecoded.exp * 1000;
+            this.expiration = this.convertExpiration(tokenDecoded.exp);
+
+            console.log("ELOPEZANAYA :: new expiration time ", this.expiration);
 
             if (this.expiration < Date.now()) {
                 throw new Error("New token is already expired");
             }
         } else {
-            throw new Error("Token is empty or expired, auth function dint provide a new valid token");
+            throw new Error("Token is empty or expired, auth function didn't provide a new valid token");
         }
-
     }
+
     private async tokenRing(): Promise<boolean> {
         if (this.isAuthenticated) {
             console.log("ELOPEZANAYA :: tokenRing :: isAuthenticated");
@@ -76,16 +99,19 @@ export class FacadeChatSDK {
                     try {
                         const ring = await handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
                         if (ring.result === true && ring.token) {
-                            this.setToken(ring.token);
+                            await this.setToken(ring.token);
                             return true;
                         }
                         return false;
                     } catch (e) {
+                        console.error("ELOPEZANAYA :: tokenRing :: error while getting new token", e);
                         return false;
                     }
                 }
             }
             return true;
+        }else{
+            console.log("ELOPEZANAYA :: not authenticated");
         }
         return true;
     }
