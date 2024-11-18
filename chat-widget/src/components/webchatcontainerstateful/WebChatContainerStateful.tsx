@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { IStackStyles, Stack, IRawStyle } from "@fluentui/react";
+import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 
@@ -27,7 +27,8 @@ import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
 
 const broadcastChannelMessageEvent = "message";
-const postActivity = (activity: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+const postActivity = (activity: any) => { 
+    // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
         type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
         meta: { method: "keyboard" },

@@ -1,5 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch } from "react";
+import React, { Dispatch, useEffect } from "react";
 
 import AudioNotificationStateful from "./audionotificationstateful/AudioNotificationStateful";
 import { Constants } from "../../common/Constants";
@@ -63,6 +63,12 @@ export const FooterStateful = (props: any) => {
             isAudioMuted: state.appStates.isAudioMuted
         },
     };
+
+    useEffect(() => {
+        if (state.appStates.isAudioMuted === null) {
+            dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: footerProps?.controlProps?.audioNotificationButtonProps?.isAudioMuted ?? false });
+        }
+    }, []);
 
     return (
         <>
