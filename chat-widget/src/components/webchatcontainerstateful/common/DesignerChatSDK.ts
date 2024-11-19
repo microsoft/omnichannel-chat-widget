@@ -9,4 +9,13 @@ export class DesignerChatSDK extends MockChatSDK {
     public createChatAdapter() {
         return new DesignerChatAdapter();
     }
+
+    public getLiveChatConfig() {
+        return {
+            LiveWSAndLiveChatEngJoin: {
+                msdyn_postconversationsurveyenable: "false",
+                msdyn_conversationmode: "192350000"
+            }
+        };
+    }
 }
