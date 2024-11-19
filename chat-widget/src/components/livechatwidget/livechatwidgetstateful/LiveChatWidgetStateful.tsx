@@ -99,7 +99,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     console.log("ELOPEZANAYA ******* LCW stateful, about to call facade **********");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     //const facadeChatSDK: any = useFacadeSDKStore();
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
 
@@ -304,9 +304,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 }
                 const dateNow = Date.now();
 
-                if (isThisSessionPopout(window?.location?.href)){
+                if (isThisSessionPopout(window?.location?.href)) {
                     return;
-                }              
+                }
 
                 /** 
                  * callInProgress acts as "thread lock" to prevent multiple calls to getConversationDetailsCall, 
@@ -460,7 +460,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
                 endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 endChatStateCleanUp(dispatch);
-                chatSDKStateCleanUp(facadeChatSDK);
+                chatSDKStateCleanUp(facadeChatSDK.getChatSDK());
                 return;
             }
         });
@@ -520,7 +520,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         } else {
             setTimeout(() => ActivityStreamHandler.uncork(), 500);
         }
-       
+
     }, [state.appStates.isMinimized]);
 
     // Broadcast the UnreadMessageCount state on any change.

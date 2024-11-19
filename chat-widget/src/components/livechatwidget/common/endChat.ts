@@ -15,7 +15,6 @@ import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { executeReducer } from "../../../contexts/createReducer";
-import { handleAuthentication } from "./authHelper";
 import { isPersistentEnabled } from "./reconnectChatHelper";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
@@ -128,8 +127,10 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
                 Event: TelemetryEvent.EndChatSDKCall
             });
             //Get auth token again if chat continued for longer time, otherwise gets 401 error
-            await handleAuthentication(facadeChatSDK.getChatSDK(), props.chatConfig, props.getAuthToken);
+            //await handleAuthentication(facadeChatSDK.getChatSDK(), props.chatConfig, props.getAuthToken);
+
             await facadeChatSDK?.endChat();
+
         } catch (ex) {
 
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
@@ -141,7 +142,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
                         exception: ex
                     }
                 });
-            }else{
+            } else {
                 TelemetryHelper.logSDKEvent(LogLevel.WARN, {
                     Event: TelemetryEvent.DisconnectEndChatSDKCallFailed,
                     ExceptionDetails: {
@@ -152,7 +153,9 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
 
             postMessageToOtherTab = false;
         } finally {
+            console.log("***** ENCHAT 1 *******");
             endChatStateCleanUp(dispatch);
+            facadeChatSDK.destroy();
         }
     }
 
@@ -175,10 +178,13 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
                 }
             });
         } finally {
+            console.log("***** ENCHAT 2 *******");
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
             closeChatWidget(dispatch, props, state);
+            facadeChatSDK.destroy();
+
         }
 
     }

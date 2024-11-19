@@ -14,17 +14,6 @@ import { getLiveChatWidgetContextInitialState } from "../../contexts/common/Live
 import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
 
-//import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
-
-
-
-
-
-
-
-
-
-
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
     console.log("New Livechat");
@@ -36,23 +25,27 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [facadeChatSDK, setFacadeChatSDK]: [any, (facade: any) => void] = useState(undefined);
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
     overridePropsOnMockIfApplicable(props);
+
+    console.log("ELOPEZANAYA :: LiveChatWidget :: PROPS =>  ", props);
+
     if (!props.chatConfig) {
         throw new Error("chatConfig is required");
     }
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
 
-    if (!facadeChatSDK){
-        console.log("New FacadeChatSDK");
+    if (!facadeChatSDK) {
+        console.log("New FacadeChatSDK =>  ", props.getAuthToken);
         setFacadeChatSDK(new FacadeChatSDK(
-            { 
-                "chatSDK" : chatSDK, 
-                "chatConfig" : props.chatConfig,
-                "isAuthenticated": props.getAuthToken? true : false,
+            {
+                "chatSDK": chatSDK,
+                "chatConfig": props.chatConfig,
+                "isAuthenticated": isAuthenticatedChat,
                 "getAuthToken": props?.getAuthToken
             }
         ));
     }
-
-    /*const facade = */
 
     return (
         <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>

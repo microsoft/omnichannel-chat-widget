@@ -8,7 +8,7 @@ import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
     private chatSDK: any;
-    private chatConfig: ChatConfig | undefined;
+    private chatConfig: ChatConfig;
     private token!: any | "";
     private expiration = 0;
     private isAuthenticated!: boolean;
@@ -19,12 +19,11 @@ export class FacadeChatSDK {
     }
 
     public destroy(){
-        this.chatSDK = null;
-        this.chatConfig = undefined ;
+        console.log("ELOPEZANAYA ::: DESTROY");
         this.token = null;
         this.expiration = 0;
         this.isAuthenticated = false;
-        this.getAuthToken = async () => null;
+        
 
     }
 
@@ -39,7 +38,6 @@ export class FacadeChatSDK {
     private convertExpiration(expiration: number): number {
         // Check if the last 3 digits are zeroes
         if (expiration % 1000 === 0) {
-
             return expiration * 1000;
         }
         // Otherwise, keep it as is
