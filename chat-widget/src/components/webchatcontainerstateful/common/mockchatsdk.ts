@@ -71,7 +71,7 @@ export class MockChatSDK {
     public getLiveChatConfig() {
         return {
             LiveWSAndLiveChatEngJoin: {
-                msdyn_postconversationsurveyenable: "false",
+                msdyn_postconversationsurveyenable: "true",
                 msdyn_conversationmode: "192350000"
             }
         };
