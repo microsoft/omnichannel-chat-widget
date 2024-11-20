@@ -45,7 +45,6 @@ export class FacadeChatSDK {
         return expiration;
     }
 
-
     private isTokenExpired(): boolean {
         // obtain current time in seconds
         const now = Math.floor(Date.now() / 1000);
