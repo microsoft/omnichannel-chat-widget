@@ -39,7 +39,6 @@ const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps | undef
     if (getAuthToken && authClientFunction) {
         // set auth token to chat sdk before start chat
         const authSuccess = await handleAuthentication(facadeChatSDK.getChatSDK(), chatConfig, getAuthToken);
-        console.log("ELOPEZANAYA :: setAuthenticationIfApplicable authSuccess ", authSuccess);
         if (!authSuccess.result) {
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }

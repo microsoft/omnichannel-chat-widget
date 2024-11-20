@@ -2,7 +2,6 @@ import { FacadeChatSDKStore } from "../contexts/FacadeChatSDKStore";
 import { useContext } from "react";
 
 const useFacadeChatSDKStore = () => {
-    //    const facadeChatSDK = useContext(FacadeChatSDKStore);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     const facadeChatSDK : [any, (facadeChatSDK: any) => void] = useContext(FacadeChatSDKStore);
 
