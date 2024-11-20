@@ -97,7 +97,7 @@ const getChatReconnectContext = async (facadeChatSDK: any, chatConfig: ChatConfi
 
         // when auth token is not available, propagate the error to stop the execution and ensure error pane is loaded
         if (error?.message == WidgetLoadCustomErrorString.AuthenticationFailedErrorString){
-            handleStartChatError(dispatch, facadeChatSDK.getChatSDK(), props, new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString), false);
+            handleStartChatError(dispatch, facadeChatSDK, props, new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString), false);
             throw error;
         }
     }
