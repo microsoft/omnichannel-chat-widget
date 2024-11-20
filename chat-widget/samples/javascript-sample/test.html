@@ -10,50 +10,8 @@
 
 <body style="margin: 0">
   <script>
-
-    function convertToJwtToken(payloadToEncrypt) {
-      return function (callback) {
-        setTimeout(() => {
-          callback(jwt);
-        }, 10);
-      }
-    }
-
-    authFunction = (callback) => {
-
-      const now = Date.now();
-
-      let keys = [
-        
-      ];
-
-
-      while (keys.length > 0) {
-        const token = keys[0];
-        const tokenParts = token.split(".");
-        try {
-          const tokenDecoded = JSON.parse(atob(tokenParts[1]));
-          const expiration = tokenDecoded.exp * 1000;
-
-            if (now < expiration) {
-                console.log("new token returned => ", token);
-                return token;
-            } else {
-              console.log("keep looking");
-                keys = keys.slice(1);
-            }
-        } catch (e) {
-            console.error("Error decoding token:", e);
-            keys = keys.slice(1);
-        }
-    }
-    console.log("Empty kkeys?", keys.length);
-      return "";
-    };
-
     function lcw() {
       return {
-        getAuthToken: authFunction,
         styleProps: {
           generalStyles: {
             width: "360px",
@@ -109,9 +67,8 @@
     }
   </script>
   <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
-  <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw"
-    data-app-id="1b60f18d-3b71-4404-94a8-13d1a16c52ed" data-org-id="ce4db5f6-1c20-ee11-a66d-000d3a0a02f3"
-    data-org-url="https://m-ce4db5f6-1c20-ee11-a66d-000d3a0a02f3.ca.omnichannelengagementhub.com"></script>
+  <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" data-org-id="" data-app-id=""
+    data-org-url=""></script>
 </body>
 
 </html>
