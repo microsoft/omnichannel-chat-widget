@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Add
+## [1.7.3] 2024-11-20
+
+### Added
 
 - Change LCW Designer default custom chat. Disable survey from LCW Designer mock.
 - Fix to set the state of audio notification button through configuration props
@@ -37,7 +39,7 @@ All notable changes to this project will be documented in this file.
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.0)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.1)
 
-## [1.7.2] 09-03-2024
+## [1.7.2] 2024-09-03
 
 ### Changed
 
