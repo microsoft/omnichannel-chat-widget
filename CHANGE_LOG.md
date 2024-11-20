@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Add
+
+- Change LCW Designer default custom chat. Disable survey from LCW Designer mock.
 - Fix to set the state of audio notification button through configuration props
 - Fix to format the output when user do CTRL + COPY in transcript.html
 - Add New adapter subscriber to ignore adaptive card message from rendering if it contains all invisible fields

@@ -8,11 +8,11 @@ export class DesignerChatAdapter extends MockAdapter {
         super();
 
         setTimeout(() => {
-            postBotMessageActivity(this.activityObserver, "Id venenatis a condimentum vitae?", undefined, 0);
-            this.postUserActivity("Diam donec adipiscing tristique risus nec feugiat in fermentum", 0);
-            postSystemMessageActivity(this.activityObserver, "We are finding the best agent for your inquiry, please hold ...", 100);
+            postBotMessageActivity(this.activityObserver, "Thank you for contacting us! How can I help you today?", undefined, 0);
+            this.postUserActivity("I need to change my address.", 0);
+            postBotMessageActivity(this.activityObserver, "Okay, let me connect you with a live agent.", undefined, 100);
             postSystemMessageActivity(this.activityObserver, "John has joined the chat", 100);
-            postBotMessageActivity(this.activityObserver, "Neque viverra justo nec ultrices dui sapien eget mi proin", undefined, 100);
+            postBotMessageActivity(this.activityObserver, "I'd be happy to help you update your account.", undefined, 100);
         }, 1000);
     }
 
