@@ -126,11 +126,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatSDKCall
             });
-            //Get auth token again if chat continued for longer time, otherwise gets 401 error
-            //await handleAuthentication(facadeChatSDK.getChatSDK(), props.chatConfig, props.getAuthToken);
-
             await facadeChatSDK?.endChat();
-
         } catch (ex) {
 
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
@@ -153,7 +149,6 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
 
             postMessageToOtherTab = false;
         } finally {
-            console.log("***** ENCHAT 1 *******");
             endChatStateCleanUp(dispatch);
             facadeChatSDK.destroy();
         }
@@ -178,16 +173,12 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
                 }
             });
         } finally {
-            console.log("***** ENCHAT 2 *******");
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
             closeChatWidget(dispatch, props, state);
             facadeChatSDK.destroy();
-            
-
         }
-
     }
 
     if (postMessageToOtherTab) {

@@ -103,7 +103,6 @@ export interface FacadeChatSDKTelemetryData extends BaseTelemetryData {
     ElapsedTimeInMilliseconds?: number;
     ExceptionDetails?: object;
     Description?: string;
-    
 }
 
 export type TelemetryData = ConfigValidationTelemetryData | OCChatSDKTelemetryData |
