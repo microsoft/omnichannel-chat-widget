@@ -8,7 +8,8 @@ All notable changes to this project will be documented in this file.
 
 ### Add
 
-- Change LCW Designer default custom chat. Disable survey from LCW Designer mock.
+- Add mockChatSdk init call mock
+- Export getMockChatSDKIfApplicable
 - Fix to set the state of audio notification button through configuration props
 - Fix to format the output when user do CTRL + COPY in transcript.html
 - Add New adapter subscriber to ignore adaptive card message from rendering if it contains all invisible fields
@@ -28,6 +29,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Change LCW Designer default custom chat.
 - Using default component for SlackMarkDown, to avoid problems with the code transpiled when using webpack5
 - Uptake [@microsoft/omnichannel-chat-sdk@1.9.10](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.9.10)
 - Stopped logging the end chat exception when the conversation is disconnected or ended by the agent/bot.
