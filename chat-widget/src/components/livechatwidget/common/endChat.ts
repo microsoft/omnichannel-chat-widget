@@ -184,6 +184,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             // Always allow to close the chat for embedded mode irrespective of end chat errors
             closeChatWidget(dispatch, props, state);
             facadeChatSDK.destroy();
+            
 
         }
 
