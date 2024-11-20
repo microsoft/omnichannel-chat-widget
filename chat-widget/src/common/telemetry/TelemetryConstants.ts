@@ -182,6 +182,7 @@ export enum TelemetryEvent {
     SendTypingIndicatorSucceeded = "SendTypingIndicatorSucceeded",
     SendTypingIndicatorFailed = "SendTypingIndicatorFailed",
     WebChatEvent = "WebChatEvent",
+    FacadeChatSDKEvent = "FacadeChatSDKEvent",
 
     PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
     ChatAlreadyTriggered = "ChatAlreadyTriggered",

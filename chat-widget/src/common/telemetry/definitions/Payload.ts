@@ -98,6 +98,14 @@ export interface CallingTelemetryData extends BaseTelemetryData {
     Description?: string;
 }
 
+export interface FacadeChatSDKTelemetryData extends BaseTelemetryData {
+    Event?: string;
+    ElapsedTimeInMilliseconds?: number;
+    ExceptionDetails?: object;
+    Description?: string;
+    
+}
+
 export type TelemetryData = ConfigValidationTelemetryData | OCChatSDKTelemetryData |
     IC3ClientTelemetryData | LoadTelemetryData | ActionTelemetryData | WebChatTelemetryData |
     CallingTelemetryData | MessageProcessingErrorData;

@@ -7,3 +7,8 @@ export interface IFacadeChatSDKInput {
     isAuthenticated: boolean, 
     getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
 }
+
+export interface PingResponse {
+    result: boolean;
+    message: string;
+}
