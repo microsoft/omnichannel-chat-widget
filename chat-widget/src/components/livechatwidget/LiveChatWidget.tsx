@@ -16,7 +16,6 @@ import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfAppli
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
-    console.log("New Livechat");
     const reducer = createReducer();
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useReducer(reducer, getLiveChatWidgetContextInitialState(props));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,8 +24,6 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [facadeChatSDK, setFacadeChatSDK]: [any, (facade: any) => void] = useState(undefined);
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
     overridePropsOnMockIfApplicable(props);
-
-    console.log("ELOPEZANAYA :: LiveChatWidget :: PROPS =>  ", props);
 
     if (!props.chatConfig) {
         throw new Error("chatConfig is required");

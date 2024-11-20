@@ -174,7 +174,7 @@ export class FacadeChatSDK {
     }
 
     public async initialize(optionalParams: any = {}): Promise<ChatConfig> {
-        return this.withTokenRing("initialize",() => this.chatSDK.initialize(optionalParams));
+        return this.withTokenRing("initialize", () => this.chatSDK.initialize(optionalParams));
     }
 
     public async getChatReconnectContext(optionalParams: any = {}): Promise<any> {
@@ -182,7 +182,7 @@ export class FacadeChatSDK {
     }
 
     public async startChat(optionalParams: any = {}): Promise<void> {
-        return this.withTokenRing("startChat",() => this.chatSDK.startChat(optionalParams));
+        return this.withTokenRing("startChat", () => this.chatSDK.startChat(optionalParams));
     }
 
     public async endChat(): Promise<void> {
@@ -194,71 +194,71 @@ export class FacadeChatSDK {
     }
 
     public async getConversationDetails(optionalParams: any = {}): Promise<any> {
-        return this.withTokenRing("getConversationDetails",() => this.chatSDK.getConversationDetails(optionalParams));
+        return this.withTokenRing("getConversationDetails", () => this.chatSDK.getConversationDetails(optionalParams));
     }
 
     public async getPreChatSurvey(parse = true): Promise<any> {
-        return this.withTokenRing("getPreChatSurvey",() => this.chatSDK.getPreChatSurvey(parse));
+        return this.withTokenRing("getPreChatSurvey", () => this.chatSDK.getPreChatSurvey(parse));
     }
 
     public async getLiveChatConfig(optionalParams?: any): Promise<any> {
-        return this.withTokenRing("getLiveChatConfig",() => this.chatSDK.getLiveChatConfig(optionalParams));
+        return this.withTokenRing("getLiveChatConfig", () => this.chatSDK.getLiveChatConfig(optionalParams));
     }
 
     public async getChatToken(cached = true, optionalParams?: any): Promise<any> {
-        return this.withTokenRing(() => this.chatSDK.getChatToken(cached, optionalParams));
+        return this.withTokenRing("getChatToken", () => this.chatSDK.getChatToken(cached, optionalParams));
     }
 
     public async getCallingToken(): Promise<string> {
-        return this.withTokenRing(() => this.chatSDK.getCallingToken());
+        return this.withTokenRing("getCallingToken", () => this.chatSDK.getCallingToken());
     }
 
     public async getMessages(): Promise<any | undefined> {
-        return this.withTokenRing(() => this.chatSDK.getMessages());
+        return this.withTokenRing("getMessages", () => this.chatSDK.getMessages());
     }
 
     public async getDataMaskingRules(): Promise<any> {
-        return this.withTokenRing(() => this.chatSDK.getDataMaskingRules());
+        return this.withTokenRing("getDataMaskingRules", () => this.chatSDK.getDataMaskingRules());
     }
 
     public async sendMessage(message: any): Promise<void> {
-        return this.withTokenRing(() => this.chatSDK.sendMessage(message));
+        return this.withTokenRing("sendMessage", () => this.chatSDK.sendMessage(message));
     }
 
     public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: any | unknown = {}): Promise<void> {
-        return this.withTokenRing(() => this.chatSDK.onNewMessage(onNewMessageCallback, optionalParams));
+        return this.withTokenRing("onNewMessage", () => this.chatSDK.onNewMessage(onNewMessageCallback, optionalParams));
     }
 
     public async sendTypingEvent(): Promise<void> {
-        return this.withTokenRing(() => this.chatSDK.sendTypingEvent());
+        return this.withTokenRing("sendTypingEvent", () => this.chatSDK.sendTypingEvent());
     }
 
     public async onTypingEvent(onTypingEventCallback: CallableFunction): Promise<void> {
-        return this.withTokenRing(() => this.chatSDK.onTypingEvent(onTypingEventCallback));
+        return this.withTokenRing("onTypingEvent", () => this.chatSDK.onTypingEvent(onTypingEventCallback));
     }
 
     public async onAgentEndSession(onAgentEndSessionCallback: (message: any | any) => void): Promise<void> {
-        return this.withTokenRing(() => this.chatSDK.onAgentEndSession(onAgentEndSessionCallback));
+        return this.withTokenRing("onAgentEndSession", () => this.chatSDK.onAgentEndSession(onAgentEndSessionCallback));
     }
 
     public async uploadFileAttachment(fileInfo: any | File): Promise<any | any> {
-        return this.withTokenRing(() => this.chatSDK.uploadFileAttachment(fileInfo));
+        return this.withTokenRing("uploadFileAttachment", () => this.chatSDK.uploadFileAttachment(fileInfo));
     }
 
     public async downloadFileAttachment(fileMetadata: any | any): Promise<Blob> {
-        return this.withTokenRing(() => this.chatSDK.downloadFileAttachment(fileMetadata));
+        return this.withTokenRing("downloadFileAttachment", () => this.chatSDK.downloadFileAttachment(fileMetadata));
     }
 
     public async emailLiveChatTranscript(body: any, optionalParams: any = {}): Promise<any> {
-        return this.withTokenRing(() => this.chatSDK.emailLiveChatTranscript(body, optionalParams));
+        return this.withTokenRing("emailLiveChatTranscript", () => this.chatSDK.emailLiveChatTranscript(body, optionalParams));
     }
 
     public async getLiveChatTranscript(optionalParams: any = {}): Promise<any> {
-        return this.withTokenRing(() => this.chatSDK.getLiveChatTranscript(optionalParams));
+        return this.withTokenRing("getLiveChatTranscript", () => this.chatSDK.getLiveChatTranscript(optionalParams));
     }
 
     public async createChatAdapter(optionalParams: any = {}): Promise<unknown> {
-        return this.withTokenRing(() => this.chatSDK.createChatAdapter(optionalParams));
+        return this.withTokenRing("createChatAdapter", () => this.chatSDK.createChatAdapter(optionalParams));
     }
 
     public async isVoiceVideoCallingEnabled(): Promise<boolean> {
@@ -267,15 +267,15 @@ export class FacadeChatSDK {
     }
 
     public async getVoiceVideoCalling(params: any = {}): Promise<any> {
-        return this.withTokenRing(() => this.chatSDK.getVoiceVideoCalling(params));
+        return this.withTokenRing("getVoiceVideoCalling", () => this.chatSDK.getVoiceVideoCalling(params));
     }
 
     public async getPostChatSurveyContext(): Promise<any> {
-        return this.withTokenRing(() => this.chatSDK.getPostChatSurveyContext());
+        return this.withTokenRing("getPostChatSurveyContext", () => this.chatSDK.getPostChatSurveyContext());
     }
 
     public async getAgentAvailability(optionalParams: any = {}): Promise<any> {
-        return this.withTokenRing(() => this.chatSDK.getAgentAvailability(optionalParams));
+        return this.withTokenRing("getAgentAvailability", () => this.chatSDK.getAgentAvailability(optionalParams));
     }
 }
 
