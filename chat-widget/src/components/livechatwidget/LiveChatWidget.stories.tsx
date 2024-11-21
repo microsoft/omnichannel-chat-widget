@@ -1,6 +1,6 @@
-import { BroadcastServiceInitialize, OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import React, { useState } from "react";
 
+import { BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ILiveChatWidgetProps } from "./interfaces/ILiveChatWidgetProps";
 import { IconButton } from "@fluentui/react/lib/Button";
