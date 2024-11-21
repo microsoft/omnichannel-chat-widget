@@ -339,7 +339,7 @@ describe("startChatErrorHandler unit test", () => {
         };
 
         const mockFacade = {
-            getChatSDK : mockSDK
+            getChatSDK : () =>{ return mockSDK;}
         };
 
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
