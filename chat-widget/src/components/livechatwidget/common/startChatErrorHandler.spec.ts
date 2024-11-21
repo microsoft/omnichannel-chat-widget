@@ -241,7 +241,7 @@ describe("startChatErrorHandler unit test", () => {
     it("handleStartChatError should log failed with error event for UninitializedChatSDK", () => {
         const dispatch = jest.fn();
         const mockEx = new ChatSDKError(ChatSDKErrorName.UninitializedChatSDK);
-        const mockFacade = { getChatSDK: jest.fn()};
+        const mockFacade = { getChatSDK: (jest.fn())};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
         spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
@@ -262,7 +262,8 @@ describe("startChatErrorHandler unit test", () => {
     it("handleStartChatError should log failed with error event for InvalidConversation", () => {
         const dispatch = jest.fn();
         const mockEx = new ChatSDKError(ChatSDKErrorName.InvalidConversation);
-        const mockFacade = { getChatSDK: jest.fn()};
+        const mockFacade = { getChatSDK: ()=>{ return {} }};
+        
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
         spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
