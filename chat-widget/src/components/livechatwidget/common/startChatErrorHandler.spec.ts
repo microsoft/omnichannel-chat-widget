@@ -285,7 +285,8 @@ describe("startChatErrorHandler unit test", () => {
     it("handleStartChatError should log failed with error event for ClosedConversation", () => {
         const dispatch = jest.fn();
         const mockEx = new ChatSDKError(ChatSDKErrorName.ClosedConversation);
-        const mockFacade = { getChatSDK: jest.fn()};
+        const mockFacade = { getChatSDK: ()=> { return {}; }};
+
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
         spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
 
