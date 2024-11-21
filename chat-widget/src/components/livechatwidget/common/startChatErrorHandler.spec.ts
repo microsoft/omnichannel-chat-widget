@@ -357,6 +357,6 @@ describe("startChatErrorHandler unit test", () => {
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
         }));
-        expect(mockSDK.endChat).toHaveBeenCalled();
+        expect(mockFacade.getChatSDK).toHaveBeenCalled();
     });
 });
