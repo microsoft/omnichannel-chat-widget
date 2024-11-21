@@ -7,6 +7,7 @@ import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { endChat } from "./endChat";
 import { handleStartChatError } from "./startChatErrorHandler";
 
 describe("startChatErrorHandler unit test", () => {
@@ -334,12 +335,13 @@ describe("startChatErrorHandler unit test", () => {
     it("handleStartChatError should force end chat if isStartChatSuccessful is true", () => {
         const dispatch = jest.fn();
         const mockEx = new ChatSDKError(ChatSDKErrorName.ScriptLoadFailure, 405);
-        const mockSDK = {
-            endChat: jest.fn()
-        };
 
         const mockFacade = {
-            getChatSDK : () =>{ return mockSDK;}
+            getChatSDK: () => {
+                return {
+                    endChat: jest.fn()
+                };
+            }
         };
 
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
