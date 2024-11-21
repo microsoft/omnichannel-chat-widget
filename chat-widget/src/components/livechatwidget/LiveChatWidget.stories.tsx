@@ -447,7 +447,7 @@ const liveChatWidgetCustom2Props: ILiveChatWidgetProps = {
                 width: "100%",
                 height: "100%",
                 justifyContent: "center",
-                backgroundImage: "url(https://charlwanconvcontroldev.blob.core.windows.net/botframework/abcd.png)",
+                backgroundImage: "url(https://lcwstorageaccountdev.blob.core.windows.net/internaltrialpoc/dev/assets/images/black.png)",
                 backgroundSize: "100% 100%",
                 borderStyle: "",
                 borderRadius: 0,
@@ -671,7 +671,7 @@ const liveChatWidgetCustom3Props: ILiveChatWidgetProps = {
                 text: "Customer Support Chat"
             },
             headerIconProps: {
-                src: "https://charlwanconvcontroldev.blob.core.windows.net/botframework/hp.png"
+                src: "https://lcwstorageaccountdev.blob.core.windows.net/internaltrialpoc/dev/assets/images/HP_Black_RGB_150_SM.png"
             }
         },
         styleProps: {
@@ -897,7 +897,7 @@ const MockChatConfig: ChatConfig = {
     LiveWSAndLiveChatEngJoin: {
         msdyn_postconversationsurveyenable: "true",
         msdyn_postconversationsurveymode: "192350000",
-        OutOfOperatingHours: false
+        OutOfOperatingHours: "false"
     },
     allowedFileExtensions: "",
     maxUploadFileSize: ""

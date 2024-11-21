@@ -158,8 +158,11 @@ export class FacadeChatSDK {
         const pingResponse = await this.tokenRing();
 
         if (pingResponse.result === true) {
+            console.log("ELOPEZANAYA :: function name :: executed", functionName);
             return fn();
         }
+
+        console.log("ELOPEZANAYA :: function name :: NOT executed", functionName);
         
         
         TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {

@@ -36,7 +36,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     && (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction === true)? true : false;
 
     if (!facadeChatSDK) {
-        console.log("New FacadeChatSDK =>  ", props.getAuthToken);
+        console.log("New FacadeChatSDK =>  ", props?.getAuthToken);
         setFacadeChatSDK(new FacadeChatSDK(
             {
                 "chatSDK": chatSDK,
