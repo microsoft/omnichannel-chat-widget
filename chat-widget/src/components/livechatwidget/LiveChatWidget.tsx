@@ -22,7 +22,14 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [facadeChatSDK, setFacadeChatSDK]: [any, (facade: any) => void] = useState(undefined);
+
+    console.log("ELOPEZANAYA :: LiveChatWidget props", props);
+    console.log("ELOPEZANAYA :: LiveChatWidget pROPS : TYPE :: ", props.mock?.type);
+
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
+
+    console.log("ELOPEZANAYA :: chatSDK", chatSDK);
+
     overridePropsOnMockIfApplicable(props);
 
     if (!props.chatConfig) {
@@ -30,7 +37,11 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     }
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
+    const isAuthenticatedChat = ((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction  
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    && (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction === true)? true : false;
+
+    console.log("ELOPEZANAYA :: isAuthenticatedChat", isAuthenticatedChat);
 
     if (!facadeChatSDK) {
         console.log("New FacadeChatSDK =>  ", props.getAuthToken);

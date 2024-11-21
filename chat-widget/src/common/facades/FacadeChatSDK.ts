@@ -150,7 +150,7 @@ export class FacadeChatSDK {
             return { result: true, message: "Token is valid" };
         }
 
-        return { result: false, message: "Authentication no needed" };
+        return { result: true, message: "Authentication no needed" };
     }
 
     private async withTokenRing<T>(functionName: string, fn: () => Promise<T>): Promise<T> {
@@ -160,7 +160,8 @@ export class FacadeChatSDK {
         if (pingResponse.result === true) {
             return fn();
         }
-
+        
+        
         TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.FacadeChatSDKEvent,
             Description: "Authentication failed : Process to get a token failed",

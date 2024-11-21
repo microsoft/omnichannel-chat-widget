@@ -1,7 +1,9 @@
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 
 const overridePropsOnMockIfApplicable = (props: ILiveChatWidgetProps) => {
+    
     if (props?.mock?.type && props?.mock?.type.toLowerCase() === "designer") {
+        console.log("ELOPEZANAYA :: Overriding props for mock type designer");
         if (!props.webChatContainerProps) {
             props.webChatContainerProps = {};
         }
@@ -35,6 +37,8 @@ const overridePropsOnMockIfApplicable = (props: ILiveChatWidgetProps) => {
             }
         };
     }
+
+    console.log("ELOPEZANAYA :: Props without change");
 };
 
 export default overridePropsOnMockIfApplicable;

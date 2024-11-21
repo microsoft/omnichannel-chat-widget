@@ -247,7 +247,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         if (state?.appStates?.hideStartChatButton === true) {
             //handle OOH pane
-            if (props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
+            if (typeof props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "string" &&
+                props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 return;
             }
@@ -348,7 +349,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
             // If chat is out of operating hours chat widget sets the conversation state to OutOfOffice.
-            if (props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
+            if (typeof props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "string" &&
+                props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
                 state?.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 return;
