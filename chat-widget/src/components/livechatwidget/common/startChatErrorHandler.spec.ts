@@ -335,12 +335,13 @@ describe("startChatErrorHandler unit test", () => {
     it("handleStartChatError should force end chat if isStartChatSuccessful is true", () => {
         const dispatch = jest.fn();
         const mockEx = new ChatSDKError(ChatSDKErrorName.ScriptLoadFailure, 405);
+        const mockSDK = {
+            endChat: jest.fn()
+        };
 
         const mockFacade = {
             getChatSDK: () => {
-                return {
-                    endChat: jest.fn()
-                };
+                return mockSDK;
             }
         };
 
@@ -357,6 +358,6 @@ describe("startChatErrorHandler unit test", () => {
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
         }));
-        expect(mockFacade.getChatSDK).toHaveBeenCalled();
+        expect(mockSDK.endChat).toHaveBeenCalled();
     });
 });
