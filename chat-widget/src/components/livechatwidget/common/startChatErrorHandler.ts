@@ -142,7 +142,7 @@ const forceEndChat = (facadeChatSDK: any) => {
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
         Event: TelemetryEvent.EndChatSDKCall
     });
-    facadeChatSDK?.endChat();
+    facadeChatSDK?.getChatSDK().endChat();
 };
 
 const handleWidgetUseOutsideOperatingHour = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
