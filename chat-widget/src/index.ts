@@ -7,6 +7,7 @@ import useChatSDKStore from "./hooks/useChatSDKStore";
 import useFacadeChatSDKStore from "./hooks/useFacadeChatSDKStore";
 
 export { default as LiveChatWidget } from "./components/livechatwidget/LiveChatWidget";
+export { getMockChatSDKIfApplicable } from "./components/livechatwidget/common/getMockChatSDKIfApplicable";
+export { getWidgetCacheId, getWidgetEndChatEventName, ConversationState };
 
 export { encodeComponentString, decodeComponentString, BroadcastService, useChatSDKStore, useChatContextStore, useFacadeChatSDKStore };
-export { getWidgetCacheId, getWidgetEndChatEventName, ConversationState };
