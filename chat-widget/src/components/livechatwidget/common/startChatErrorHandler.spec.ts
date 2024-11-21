@@ -7,7 +7,6 @@ import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { endChat } from "./endChat";
 import { handleStartChatError } from "./startChatErrorHandler";
 
 describe("startChatErrorHandler unit test", () => {
@@ -263,7 +262,7 @@ describe("startChatErrorHandler unit test", () => {
     it("handleStartChatError should log failed with error event for InvalidConversation", () => {
         const dispatch = jest.fn();
         const mockEx = new ChatSDKError(ChatSDKErrorName.InvalidConversation);
-        const mockFacade = { getChatSDK: ()=>{ return {} }};
+        const mockFacade = { getChatSDK: ()=>{ return {}; }};
         
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
         spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
