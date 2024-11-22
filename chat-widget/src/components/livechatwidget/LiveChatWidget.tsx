@@ -29,11 +29,9 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     if (!props.chatConfig) {
         throw new Error("chatConfig is required");
     }
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = ((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction  
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    && (props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction === true)? true : false;
+    const isAuthenticatedChat = ((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction)?true : false;
 
     if (!facadeChatSDK) {
         setFacadeChatSDK(new FacadeChatSDK(

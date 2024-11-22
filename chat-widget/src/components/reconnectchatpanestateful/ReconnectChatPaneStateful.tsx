@@ -12,12 +12,15 @@ import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/St
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { setFocusOnElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import useChatSDKStore from "../../hooks/useChatSDKStore";
+import useFacadeChatSDKStore from "../../hooks/useFacadeChatSDKStore";
 
 export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParams) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chatSDK: any = useChatSDKStore();
+    //const chatSDK: any = useChatSDKStore();
+    const [facadeChatSDK,] = useFacadeChatSDKStore();
+    const chatSDK = facadeChatSDK.getChatSDK();
+
     const { reconnectChatProps, initStartChat } = props;
 
     const startChat = async (continueChat: boolean) => {
