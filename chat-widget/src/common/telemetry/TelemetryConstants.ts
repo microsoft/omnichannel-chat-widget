@@ -222,7 +222,13 @@ export enum TelemetryEvent {
     ChatDisconnectThreadEventReceived = "ChatDisconnectThreadEventReceived",
 
     HiddenAdaptiveCardMessageReceived = "HiddenAdaptiveCardMessageReceived",
-    EndingAdapterAfterDisconnectionError = "EndingAdapterAfterDisconnectionError"
+    EndingAdapterAfterDisconnectionError = "EndingAdapterAfterDisconnectionError",
+
+    //FacadeChatSDK events
+    NewTokenSuccess = "NewTokenSuccess",
+    NewTokenFailed = "NewTokenFailed",
+    NewTokenExpired = "NewTokenExpired",
+    TokenEmptyOrSame = "TokenEmptyOrSame"
 }
 
 export interface TelemetryInput {
