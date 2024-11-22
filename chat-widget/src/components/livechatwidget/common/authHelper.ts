@@ -34,7 +34,15 @@ const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undef
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
     }
-    return {"result":false};
+    return {
+        "result": false, 
+        "token": null,
+        "error": {
+            "message": "No auth client function or getAuthToken function provided",
+            "getAuthTokenPresent": getAuthToken ? true : false,
+            "authClientFunctionPresent": authClientFunction ? true : false
+        }
+    };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

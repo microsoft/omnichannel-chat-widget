@@ -77,22 +77,8 @@ export class FacadeChatSDK {
                         "Expiration": this.expiration
                     }
                 });
-
                 throw new Error("New token is already expired, with epoch time " + this.expiration);
             }
-        } else {
-
-            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
-                Event: TelemetryEvent.TokenEmptyOrSame,
-                Description: "Token is empty or auth function didn't provide a new valid token",
-                ExceptionDetails: {
-                    "EmptyToken": isNullOrEmptyString(token),
-                    "SameToken": token === this.token,
-                }
-            });
-
-            console.error("Token is empty or auth function didn't provide a new valid token");
-            throw new Error("Token is empty or auth function didn't provide a new valid token");
         }
     }
 
@@ -120,13 +106,13 @@ export class FacadeChatSDK {
 
                             TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                                 Event: TelemetryEvent.NewTokenFailed,
-                                Description: "Token is empty or auth function didn't provide a new valid token",
-                                ExceptionDetails: "Token is empty or auth function didn't provide a new valid token"
+                                Description: ring.error?.message,
+                                ExceptionDetails: ring.error
 
                             });
                             return {
                                 result: false,
-                                message: "Token is empty or auth function didn't provide a new valid token"
+                                message: ring.error?.message || "Failed to get token"
                             };
                         }
 
@@ -162,7 +148,7 @@ export class FacadeChatSDK {
         }
 
         //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
-        console.error("Authentication failed : Process to get a token failed for :" + functionName);
+        console.error("Authentication failed : Process to get a token failed for :" + functionName, pingResponse.message);
         return Promise.reject("Authentication failed : Process to get a token failed for :" + functionName);
     }
 
@@ -270,6 +256,8 @@ export class FacadeChatSDK {
     public async getAgentAvailability(optionalParams: any = {}): Promise<any> {
         return this.withTokenRing("getAgentAvailability", () => this.chatSDK.getAgentAvailability(optionalParams));
     }
+
+    
 }
 
 
