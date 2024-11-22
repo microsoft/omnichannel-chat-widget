@@ -91,6 +91,8 @@ export class FacadeChatSDK {
                 }
             });
 
+            console.error("Token is empty or auth function didn't provide a new valid token");
+
             throw new Error("Token is empty or auth function didn't provide a new valid token");
         }
     }
@@ -158,13 +160,11 @@ export class FacadeChatSDK {
         const pingResponse = await this.tokenRing();
 
         if (pingResponse.result === true) {
-            console.log("ELOPEZANAYA :: function name :: executed", functionName);
             return fn();
         }
 
-        console.log("ELOPEZANAYA :: function name :: NOT executed", functionName);
-        
-        
+        console.error("Authentication failed : Process to get a token failed for :" + functionName);
+
         TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.FacadeChatSDKEvent,
             Description: "Authentication failed : Process to get a token failed",
