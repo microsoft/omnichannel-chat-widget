@@ -38,7 +38,13 @@ export class FacadeChatSDK {
     }
 
     private convertExpiration(expiration: number): number {
-        const expStr = expiration.toString();
+
+        // token with no expiration, are not going to be validated
+        if (expiration === undefined){
+            return 0;
+        }
+        
+        const expStr = expiration?.toString();
         if ((expStr.indexOf(".") > -1) && expStr.toString().length >= 13) {
             return Math.floor(expiration / 1000);
         }
@@ -46,6 +52,12 @@ export class FacadeChatSDK {
     }
 
     private isTokenExpired(): boolean {
+
+        // if expiration is 0, token is not going to be validated ( this is to cover the case of token with no expiration)
+        if (this.expiration === 0){
+            return false;
+        }
+        
         // obtain current time in seconds
         const now = Math.floor(Date.now() / 1000);
         // compare expiration time with current time
@@ -84,7 +96,8 @@ export class FacadeChatSDK {
 
     private async tokenRing(): Promise<PingResponse> {
         if (this.isAuthenticated) {
-            if (this.isTokenExpired()) {
+            // if token is not set, or token is already expired , then go to grab a token
+            if (!this.isTokenSet() || this.isTokenExpired() ) {
                 this.token = "";
                 this.expiration = 0;
                 if (this.getAuthToken) {
@@ -104,6 +117,8 @@ export class FacadeChatSDK {
                             return { result: true, message: "New Token obtained" };
                         } else {
 
+                            console.error("Failed to get token", ring);
+
                             TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                                 Event: TelemetryEvent.NewTokenFailed,
                                 Description: ring.error?.message,
@@ -117,6 +132,8 @@ export class FacadeChatSDK {
                         }
 
                     } catch (e: any) {
+
+                        console.error("Unexpected error while getting token", e);
 
                         TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                             Event: TelemetryEvent.NewTokenFailed,
@@ -149,7 +166,8 @@ export class FacadeChatSDK {
 
         //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
         console.error("Authentication failed : Process to get a token failed for :" + functionName, pingResponse.message);
-        return Promise.reject("Authentication failed : Process to get a token failed for :" + functionName);
+
+        throw new Error("Authentication failed : Process to get a token failed for :" + functionName + " : " + pingResponse.message);
     }
 
     public async initialize(optionalParams: any = {}): Promise<ChatConfig> {
@@ -177,7 +195,10 @@ export class FacadeChatSDK {
     }
 
     public async getPreChatSurvey(parse = true): Promise<any> {
-        return this.withTokenRing("getPreChatSurvey", () => this.chatSDK.getPreChatSurvey(parse));
+        //prechat survey is obtained from config object, which is not required to be authenticated
+        // removing the tokenRing function from this call for backward compatibility
+        // TODO ::  wrap this function around authentication
+        return this.chatSDK.getPreChatSurvey(parse);
     }
 
     public async getLiveChatConfig(optionalParams?: any): Promise<any> {
