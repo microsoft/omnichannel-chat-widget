@@ -4,4 +4,5 @@ export interface IAdaptiveCardStyles {
     anchorColor?: string;
     buttonWhiteSpace?: string;
     textWhiteSpace?: string;
+    choiceInputPadding?: string;
 }
