@@ -343,7 +343,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
-                const desc = "Chat disconnected due to timeout, user went offline or blocked the device (including closing laptop)"
+                const desc = "Chat disconnected due to timeout, user went offline or blocked the device (including closing laptop)";
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
                     Description: desc
