@@ -179,6 +179,13 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
                     exception: `Failed to setup startChat: ${error}`
                 }
             });
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.OnWidgetError,
+                payload: {
+                    errorMessage: error,
+                }
+            });
+
             isStartChatSuccessful = false;
             throw error;
         }
