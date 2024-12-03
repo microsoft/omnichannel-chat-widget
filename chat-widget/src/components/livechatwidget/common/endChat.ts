@@ -58,7 +58,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.OnWidgetError,
                 payload: {
-                    errorMessage: "Widget closed as getPostChatContext returned undefined."
+                    errorMessage: "Widget did not display post chat survey as getPostChatContext returned undefined."
                 }
             });
             

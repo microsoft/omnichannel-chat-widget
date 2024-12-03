@@ -4,7 +4,7 @@ import { NotificationLevel } from "../enums/NotificationLevel";
 import { WebChatActionType } from "../enums/WebChatActionType";
 import { WebChatStoreLoader } from "../WebChatStoreLoader";
 import { setFocusOnSendBox } from "../../../../common/utils";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components/lib/types/services/BroadcastService";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { BroadcastEvent } from "../../../../common/telemetry/TelemetryConstants";
 
 export class NotificationHandler {
