@@ -7,7 +7,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
- - Padding property to control the padding size choice input adaptive card form field
+
+- Padding property to control the padding size choice input adaptive card form field
+
+### Fixed
+
+- Restriction of the elements allowed to be render in the UI, to avoid security vulnerabilities.
 
 ## [1.7.3] 2024-11-20
 
