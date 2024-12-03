@@ -109,24 +109,18 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
     const hyperlinkTextOverrideRenderer = new HyperlinkTextOverrideRenderer(hyperlinkTextOverride as boolean);
     const markdownRenderers = [hyperlinkTextOverrideRenderer];
     const renderMarkdown = (text: string): string => {
-        console.log("ELOPEZANAYA :: renderMarkdown");
+
         if (props.webChatContainerProps?.webChatProps?.renderMarkdown) {
-            console.log("ELOPEZANAYA :: renderMarkdown :: 1");
             text = props.webChatContainerProps?.webChatProps.renderMarkdown(text);
         } else {
-            console.log("ELOPEZANAYA :: renderMarkdown :: 2, ",disableMarkdownMessageFormatting);
             const render = disableMarkdownMessageFormatting ? markdown.renderInline.bind(markdown) : markdown.render.bind(markdown);
             text = render(text);
         }
 
         markdownRenderers.forEach((renderer) => {
-            console.log("ELOPEZANAYA :: renderMarkdown ;;; 4");
             text = renderer.render(text);
         });
 
-        console.log("ELOPEZANAYA :: renderMarkdown::: 5");
-        console.log("ELOPEZANAYA :: renderMarkdown::: 5::: text: ", text);
-        
         const config = {
             //ALLOWED_TAGS: ["a", "b", "i", "em", "strong", "blockquote", "code", "pre", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "p", "br", "hr", "img"],
             FORBID_TAGS: ["form", "button", "script", "div"],
@@ -134,8 +128,6 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         };
 
         text = DOMPurify.sanitize(text, config);
-        console.log("ELOPEZANAYA :: renderMarkdown::: 6::: text: ", text);
-
         return text;
     };
 
