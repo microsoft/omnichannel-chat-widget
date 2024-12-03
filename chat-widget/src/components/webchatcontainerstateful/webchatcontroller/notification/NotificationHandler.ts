@@ -4,6 +4,8 @@ import { NotificationLevel } from "../enums/NotificationLevel";
 import { WebChatActionType } from "../enums/WebChatActionType";
 import { WebChatStoreLoader } from "../WebChatStoreLoader";
 import { setFocusOnSendBox } from "../../../../common/utils";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components/lib/types/services/BroadcastService";
+import { BroadcastEvent } from "../../../../common/telemetry/TelemetryConstants";
 
 export class NotificationHandler {
     private static notify(id: string, level: NotificationLevel, message: string) {
@@ -32,6 +34,13 @@ export class NotificationHandler {
     }
 
     public static notifyError(id: string, message: string) {
+        BroadcastService.postMessage({
+            eventName: BroadcastEvent.OnWidgetError,
+            payload: {
+                errorMessage: message
+            }
+        });
+        
         this.notify(id, NotificationLevel.Error, message);
     }
 

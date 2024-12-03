@@ -168,6 +168,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 }
                 return;
             }
+
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.OnWidgetError,
+                payload: {
+                    errorMessage: "Chat found in cache but invalid as the conversation status is inactive."
+                }
+            });
         }
 
         if (isChatValid === false) {
@@ -249,6 +256,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             //handle OOH pane
             if (props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.OnWidgetError,
+                    payload: {
+                        errorMessage: "Out-of-office hours status is shown."
+                    }
+                });
                 return;
             }
 
@@ -330,9 +343,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
+                const desc = "Chat disconnected due to timeout, user went offline or blocked the device (including closing laptop)"
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
-                    Description: "Chat disconnected due to timeout, user went offline or blocked the device (including closing laptop)"
+                    Description: desc
+                });
+
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.OnWidgetError,
+                    payload: {
+                        errorMessage: desc
+                    }
                 });
             }
         });
