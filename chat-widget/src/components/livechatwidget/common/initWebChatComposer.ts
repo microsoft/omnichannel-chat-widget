@@ -2,6 +2,7 @@ import { ConversationEndEntity, ParticipantType } from "../../../common/Constant
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { changeLanguageCodeFormatForWebChat, getConversationDetailsCall } from "../../../common/utils";
 
+import DOMPurify from "dompurify";
 import { Dispatch } from "react";
 import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
 import { IDataMaskingInfo } from "../../webchatcontainerstateful/interfaces/IDataMaskingInfo";
@@ -23,8 +24,10 @@ import createConversationEndMiddleware from "../../webchatcontainerstateful/webc
 import createDataMaskingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/dataMaskingMiddleware";
 import { createMarkdown } from "./createMarkdown";
 import createMaxMessageSizeValidator from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/maxMessageSizeValidator";
+import createMessageSequenceIdOverrideMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageSequenceIdOverrideMiddleware";
 import createMessageTimeStampMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
 import { createStore } from "botframework-webchat";
+import createToastMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/toastMiddleware";
 import { createWebChatTelemetry } from "../../webchatcontainerstateful/webchatcontroller/webchattelemetry/WebChatLogger";
 import { defaultAttachmentProps } from "../../webchatcontainerstateful/common/defaultProps/defaultAttachmentProps";
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
@@ -35,9 +38,6 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
-import DOMPurify from "dompurify";
-import createMessageSequenceIdOverrideMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageSequenceIdOverrideMiddleware";
-import createToastMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/toastMiddleware";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, endChat: any) => {
@@ -109,6 +109,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
     const hyperlinkTextOverrideRenderer = new HyperlinkTextOverrideRenderer(hyperlinkTextOverride as boolean);
     const markdownRenderers = [hyperlinkTextOverrideRenderer];
     const renderMarkdown = (text: string): string => {
+
         if (props.webChatContainerProps?.webChatProps?.renderMarkdown) {
             text = props.webChatContainerProps?.webChatProps.renderMarkdown(text);
         } else {
@@ -119,7 +120,13 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         markdownRenderers.forEach((renderer) => {
             text = renderer.render(text);
         });
-        text = DOMPurify.sanitize(text);
+
+        const config = {
+            FORBID_TAGS: ["form", "button", "script", "div"],
+            FORBID_ATTR: ["action"]
+        };
+
+        text = DOMPurify.sanitize(text, config);
         return text;
     };
 
