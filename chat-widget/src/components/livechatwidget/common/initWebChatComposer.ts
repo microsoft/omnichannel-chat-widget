@@ -54,7 +54,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
     const disableMarkdownMessageFormatting = props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const markdown = createMarkdown(disableMarkdownMessageFormatting!, disableNewLineMarkdownSupport!);
-    // Initialize Web Chat"s redux store
+    // Initialize Web Chat's redux store
     let webChatStore = WebChatStoreLoader.store;
 
     if (!webChatStore) {
