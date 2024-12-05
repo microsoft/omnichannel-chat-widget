@@ -15,6 +15,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { downloadTranscript } from "./downloadtranscriptstateful/DownloadTranscriptStateful";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useChatSDKStore from "../../hooks/useChatSDKStore";
+import { ConversationState } from "../../contexts/common/ConversationState";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FooterStateful = (props: any) => {
@@ -64,10 +65,12 @@ export const FooterStateful = (props: any) => {
     };
 
     useEffect(() => {
-        if (state.appStates.isAudioMuted === null) {
-            dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: footerProps?.controlProps?.hideAudioNotificationButton ? true : footerProps?.controlProps?.audioNotificationButtonProps?.isAudioMuted ?? false  });
+        if (state.appStates.conversationState === ConversationState.Active) {
+            if (state.appStates.isAudioMuted === null) {
+                dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: footerProps?.controlProps?.hideAudioNotificationButton ? true : footerProps?.controlProps?.audioNotificationButtonProps?.isAudioMuted ?? false  });
+            }
         }
-    }, []);
+    }, [state.appStates.conversationState]);
 
     return (
         <>
