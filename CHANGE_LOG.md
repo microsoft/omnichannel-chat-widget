@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - Padding property to control the padding size choice input adaptive card form field
 
 ### Fixed
-
+- Audio button visibility state is tied to audio mute state 
 - Restriction of the elements allowed to be render in the UI, to avoid security vulnerabilities.
 - New Error Event to notify CX regarding Error in widget
 - Padding property to control the padding size choice input adaptive card form field
