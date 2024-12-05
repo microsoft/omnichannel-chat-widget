@@ -3,6 +3,7 @@ import React, { Dispatch, useEffect } from "react";
 
 import AudioNotificationStateful from "./audionotificationstateful/AudioNotificationStateful";
 import { Constants } from "../../common/Constants";
+import { ConversationState } from "../../contexts/common/ConversationState";
 import { Footer } from "@microsoft/omnichannel-chat-components";
 import { IFooterControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterControlProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -65,10 +66,12 @@ export const FooterStateful = (props: any) => {
     };
 
     useEffect(() => {
-        if (state.appStates.isAudioMuted === null) {
-            dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: footerProps?.controlProps?.audioNotificationButtonProps?.isAudioMuted ?? false });
+        if (state.appStates.conversationState === ConversationState.Active) {
+            if (state.appStates.isAudioMuted === null) {
+                dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: footerProps?.controlProps?.hideAudioNotificationButton ? true : footerProps?.controlProps?.audioNotificationButtonProps?.isAudioMuted ?? false  });
+            }
         }
-    }, []);
+    }, [state.appStates.conversationState]);
 
     return (
         <>
@@ -81,9 +84,7 @@ export const FooterStateful = (props: any) => {
             }
             <AudioNotificationStateful
                 audioSrc={audioNotificationProps?.audioSrc ?? NewMessageNotificationSoundBase64}
-                isAudioMuted={state.appStates.isAudioMuted === null ?
-                    footerProps?.controlProps?.hideAudioNotificationButton ?? false :
-                    state.appStates.isAudioMuted ?? false}
+                isAudioMuted={state.appStates.isAudioMuted ?? false}
             />
         </>
     );

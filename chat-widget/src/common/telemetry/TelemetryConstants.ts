@@ -57,7 +57,8 @@ export enum BroadcastEvent {
     UpdateSessionDataForTelemetry = "UpdateSessionDataForTelemetry",
     UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry",
     ContactIdNotFound = "ContactIdNotFound",
-    SyncMinimize = "SyncMinimize"
+    SyncMinimize = "SyncMinimize",
+    OnWidgetError = "OnWidgetError"
 }
 
 // Events being logged

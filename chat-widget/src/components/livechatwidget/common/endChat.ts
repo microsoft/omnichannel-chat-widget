@@ -1,5 +1,5 @@
 import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
-import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../common/utils";
 import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
 
@@ -53,6 +53,14 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, s
         const postchatContext: any = await getPostChatContext(facadeChatSDK, state, dispatch) ?? state?.domainStates?.postChatContext;
 
         if (postchatContext === undefined) {
+
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.OnWidgetError,
+                payload: {
+                    errorMessage: "Widget did not display post chat survey as getPostChatContext returned undefined."
+                }
+            });
+            
             // For Customer intiated conversations, just close chat widget
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {

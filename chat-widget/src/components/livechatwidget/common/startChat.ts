@@ -179,6 +179,13 @@ const initStartChat = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWid
                     exception: `Failed to setup startChat: ${error}`
                 }
             });
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.OnWidgetError,
+                payload: {
+                    errorMessage: error,
+                }
+            });
+
             isStartChatSuccessful = false;
             throw error;
         }

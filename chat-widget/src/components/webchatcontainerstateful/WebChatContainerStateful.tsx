@@ -161,6 +161,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         div[class="ac-textBlock"] *,
         div[class="ac-input-container"] * {white-space:${webChatContainerProps?.adaptiveCardStyles?.textWhiteSpace ?? defaultAdaptiveCardStyles.textWhiteSpace}}
 
+        div[class="ac-input-container"] input.ac-multichoiceInput,
+        div[class="ac-input-container"] select.ac-multichoiceInput {
+            ${webChatContainerProps?.adaptiveCardStyles?.choiceInputPadding ? `padding: ${webChatContainerProps.adaptiveCardStyles.choiceInputPadding} !important;` : ""}
+        }
+
         .ms_lcw_webchat_received_message>div.webchat__stacked-layout>div.webchat__stacked-layout__main>div.webchat__stacked-layout__content>div.webchat__stacked-layout__message-row>[class^=webchat]:not(.webchat__bubble--from-user)>.webchat__bubble__content {
             background-color: ${props.webChatContainerProps?.webChatStyles?.bubbleBackground ?? defaultWebChatContainerStatefulProps.webChatStyles?.bubbleBackground};
             color:${props.webChatContainerProps?.webChatStyles?.bubbleTextColor ?? defaultWebChatContainerStatefulProps.webChatStyles?.bubbleTextColor};

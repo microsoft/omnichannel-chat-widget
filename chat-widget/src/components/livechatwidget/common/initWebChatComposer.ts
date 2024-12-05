@@ -109,6 +109,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
     const hyperlinkTextOverrideRenderer = new HyperlinkTextOverrideRenderer(hyperlinkTextOverride as boolean);
     const markdownRenderers = [hyperlinkTextOverrideRenderer];
     const renderMarkdown = (text: string): string => {
+
         if (props.webChatContainerProps?.webChatProps?.renderMarkdown) {
             text = props.webChatContainerProps?.webChatProps.renderMarkdown(text);
         } else {
@@ -119,7 +120,13 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         markdownRenderers.forEach((renderer) => {
             text = renderer.render(text);
         });
-        text = DOMPurify.sanitize(text);
+
+        const config = {
+            FORBID_TAGS: ["form", "button", "script", "div"],
+            FORBID_ATTR: ["action"]
+        };
+
+        text = DOMPurify.sanitize(text, config);
         return text;
     };
 
