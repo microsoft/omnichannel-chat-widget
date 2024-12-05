@@ -40,7 +40,7 @@ import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontr
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, chatSDK: any, endChat: any) => {
+export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: any, endChat: any) => {
     // Add a hook to make all links open a new window
     postDomPurifyActivities();
     const localizedTexts = {
@@ -61,7 +61,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
         const conversationEndCallback = async () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const conversationDetails: any = await getConversationDetailsCall(chatSDK);
+            const conversationDetails: any = await getConversationDetailsCall(facadeChatSDK);
             if (conversationDetails?.participantType === ParticipantType.Bot) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ConversationEndedThreadEventReceived,

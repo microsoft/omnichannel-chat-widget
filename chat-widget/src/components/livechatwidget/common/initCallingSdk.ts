@@ -3,12 +3,12 @@ import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryCon
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const initCallingSdk = async (chatSDK: any, setVoiceVideoCallingSDK: any): Promise<boolean> => {
+export const initCallingSdk = async (facadeChatSDK: any, setVoiceVideoCallingSDK: any): Promise<boolean> => {
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((chatSDK as any).getVoiceVideoCalling) {
+        if ((facadeChatSDK.getChatSDK() as any).getVoiceVideoCalling) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const callingSDK = await (chatSDK as any).getVoiceVideoCalling();
+            const callingSDK = await (facadeChatSDK as any).getVoiceVideoCalling();
             setVoiceVideoCallingSDK(callingSDK);
             TelemetryHelper.logCallingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CallingSDKLoadSuccess

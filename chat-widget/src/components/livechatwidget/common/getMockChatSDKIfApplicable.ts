@@ -16,6 +16,5 @@ export const getMockChatSDKIfApplicable = (chatSDK: any, type?: string) => {
                 chatSDK = new MockChatSDK();
         }
     }
-
     return chatSDK;
 };
