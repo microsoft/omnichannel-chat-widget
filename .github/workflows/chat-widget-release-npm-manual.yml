@@ -33,7 +33,7 @@ jobs:
         run: |
           branch_name="release-chatwidget-bump-$(date +'%m-%d-%Y-%H-%M-%S')"
           git checkout -b "$branch_name"
-          echo "::set-output name=branch_name::$branch_name"
+          echo "branch_name=$branch_name" >> $GITHUB_OUTPUT
           git push --set-upstream origin "$branch_name"
 
       - name: Install jq
@@ -49,14 +49,14 @@ jobs:
             new_patch_version=$((patch_version_final))
             new_version=$(echo "$current_version" | awk -F. -v OFS=. -v patch="$new_patch_version" '{$3=patch; print}')
             jq --arg new_version "$new_version" '.version |= $new_version' chat-widget/package.json > temp.json && mv temp.json chat-widget/package.json
-            echo "::set-output name=version::$new_version"
+            echo "version=$new_version" >> $GITHUB_OUTPUT
           else
             current_version=$(jq -r '.version' chat-widget/package.json)
             major_version=$(echo "$current_version" | cut -d. -f1)
             minor_version=$(echo "$current_version" | cut -d. -f2)
             new_version="$((major_version)).$((minor_version + 1)).0"
             jq --arg new_version "$new_version" '.version |= $new_version' chat-widget/package.json > temp.json && mv temp.json chat-widget/package.json
-            echo "::set-output name=version::$new_version"
+            echo "version=$new_version" >> $GITHUB_OUTPUT
           fi
 
       - name: Update Changelog
@@ -84,14 +84,14 @@ jobs:
               new_patch_version=$((patch_version + 1))-0
               new_version=$(echo "$current_version" | awk -F. -v OFS=. -v patch="$new_patch_version" '{$3=patch; print}')
               jq --arg new_version "$new_version" '.version |= $new_version' chat-widget/package.json > temp.json && mv temp.json chat-widget/package.json
-              echo "::set-output name=version::$new_version"
+              echo "version=$new_version" >> $GITHUB_OUTPUT
             else
               current_version=$(jq -r '.version' chat-widget/package.json)
               patch_version=$(echo "$current_version" | cut -d. -f3)
               new_patch_version=$((patch_version + 1))-0
               new_version=$(echo "$current_version" | awk -F. -v OFS=. -v patch="$new_patch_version" '{$3=patch; print}')
               jq --arg new_version "$new_version" '.version |= $new_version' chat-widget/package.json > temp.json && mv temp.json chat-widget/package.json
-              echo "::set-output name=version::$new_version"
+              echo "version=$new_version" >> $GITHUB_OUTPUT
             fi
 
       - name: Search for 'Chat Widget' tag and add '##[Unreleased]'
