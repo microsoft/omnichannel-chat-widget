@@ -447,7 +447,7 @@ const liveChatWidgetCustom2Props: ILiveChatWidgetProps = {
                 width: "100%",
                 height: "100%",
                 justifyContent: "center",
-                backgroundImage: "url(https://lcwstorageaccountdev.blob.core.windows.net/internaltrialpoc/dev/assets/images/black.png)",
+                backgroundImage: "url(https://lcwstorageaccountdev.blob.core.windows.net/internaltrialpoc/dev/assets/images/Microsoft-logo_rgb_c-wht-768x344.png)",
                 backgroundSize: "100% 100%",
                 borderStyle: "",
                 borderRadius: 0,
@@ -671,7 +671,7 @@ const liveChatWidgetCustom3Props: ILiveChatWidgetProps = {
                 text: "Customer Support Chat"
             },
             headerIconProps: {
-                src: "https://lcwstorageaccountdev.blob.core.windows.net/internaltrialpoc/dev/assets/images/HP_Black_RGB_150_SM.png"
+                src: "https://lcwstorageaccountdev.blob.core.windows.net/internaltrialpoc/dev/assets/images/ms-symbollockup_mssymbol_19.png"
             }
         },
         styleProps: {
