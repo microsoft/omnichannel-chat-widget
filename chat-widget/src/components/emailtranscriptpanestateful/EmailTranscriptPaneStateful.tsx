@@ -3,6 +3,7 @@ import React, { Dispatch, useCallback, useEffect, useState } from "react";
 import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, formatTemplateString, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
 
 import { DimLayer } from "../dimlayer/DimLayer";
+import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { IChatTranscriptBody } from "./interfaces/IChatTranscriptBody";
 import { IEmailTranscriptPaneProps } from "./interfaces/IEmailTranscriptPaneProps";
 import { IInputValidationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/inputvalidationpane/interfaces/IInputValidationPaneControlProps";
@@ -22,8 +23,8 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
     const initialTabIndexMap: Map<string, number> = new Map();
     let elements: HTMLElement[] | null = [];
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
+    
+    const [facadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
     const [initialEmail, setInitialEmail] = useState("");
     const closeEmailTranscriptPane = () => {
         dispatch({ type: LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE, payload: false });
