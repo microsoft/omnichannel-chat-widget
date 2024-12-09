@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- For disconnected chats, perform a soft end chat.
 - Audio button visibility state is tied to audio mute state.
 - Restriction of the elements allowed to be render in the UI, to avoid security vulnerabilities.
 - New Error Event to notify CX regarding Error in widget
@@ -20,6 +21,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.2)
+- Uptake [@opentelemetry/api@1.9.0](https://www.npmjs.com/package/@opentelemetry/api/v/1.9.0)
+- Uptake [@azure/core-tracing@1.2.0](https://www.npmjs.com/package/@azure/core-tracing/v/1.2.0)
 
 ## [1.7.3] 2024-11-20
 
