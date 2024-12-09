@@ -1,11 +1,12 @@
-import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
 import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../common/utils";
 import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
+import EndChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/EndChatOptionalParams";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
@@ -130,14 +131,19 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
     skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
 
     if (!skipEndChatSDK && facadeChatSDK.getChatSDK().conversation) {
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+        const endChatOptionalParameters : EndChatOptionalParams = {
+            isSessionEnded : inMemoryState?.appStates?.chatDisconnectEventReceived
+        };
+
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatSDKCall
             });
-            await facadeChatSDK?.endChat();
+            await facadeChatSDK?.endChat(endChatOptionalParameters);
         } catch (ex) {
 
-            const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+            
             // if the chat was disconnected or ended by the agent, we don't want to log the error
             if (!inMemoryState?.appStates?.chatDisconnectEventReceived) {
                 TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
