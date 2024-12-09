@@ -27,6 +27,7 @@ import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
 import { isNullOrEmptyString } from "../utils";
+import EndChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/EndChatOptionalParams";
 
 export class FacadeChatSDK {
     private chatSDK: OmnichannelChatSDK;
@@ -210,8 +211,8 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("startChat", () => this.chatSDK.startChat(optionalParams));
     }
 
-    public async endChat(): Promise<void> {
-        return this.validateAndExecuteCall("endChat", () => this.chatSDK.endChat());
+    public async endChat(optionalParams : EndChatOptionalParams = {}): Promise<void> {
+        return this.validateAndExecuteCall("endChat", () => this.chatSDK.endChat(optionalParams));
     }
 
     public async getCurrentLiveChatContext(): Promise<object> {
