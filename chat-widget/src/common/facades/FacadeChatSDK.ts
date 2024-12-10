@@ -9,6 +9,7 @@ import ChatReconnectContext from "@microsoft/omnichannel-chat-sdk/lib/core/ChatR
 import ChatReconnectOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/ChatReconnectOptionalParams";
 import ChatTranscriptBody from "@microsoft/omnichannel-chat-sdk/lib/core/ChatTranscriptBody";
 import EmailLiveChatTranscriptOptionaParams from "@microsoft/omnichannel-chat-sdk/lib/core/EmailLiveChatTranscriptOptionalParams";
+import EndChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/EndChatOptionalParams";
 import FileMetadata from "@microsoft/omnichannel-amsclient/lib/FileMetadata";
 import GetAgentAvailabilityOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetAgentAvailabilityOptionalParams";
 import GetChatTokenOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetChatTokenOptionalParams";
@@ -27,7 +28,6 @@ import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
 import { isNullOrEmptyString } from "../utils";
-import EndChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/EndChatOptionalParams";
 
 export class FacadeChatSDK {
     private chatSDK: OmnichannelChatSDK;
@@ -127,7 +127,7 @@ export class FacadeChatSDK {
             return { result: true, message: "Token is valid" };
         }
 
-        if (this.getAuthToken) {
+        if (this.getAuthToken === undefined) {
             TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenFailed,
                 Description: "GetAuthToken function is not present",
@@ -211,7 +211,7 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("startChat", () => this.chatSDK.startChat(optionalParams));
     }
 
-    public async endChat(optionalParams : EndChatOptionalParams = {}): Promise<void> {
+    public async endChat(optionalParams: EndChatOptionalParams = {}): Promise<void> {
         return this.validateAndExecuteCall("endChat", () => this.chatSDK.endChat(optionalParams));
     }
 
