@@ -22,7 +22,6 @@ import IMessage from "@microsoft/omnichannel-ic3core/lib/model/IMessage";
 import IRawThread from "@microsoft/omnichannel-ic3core/lib/interfaces/IRawThread";
 import InitializeOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/InitializeOptionalParams";
 import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWorkItemDetails";
-import { MockChatSDK } from "../../components/webchatcontainerstateful/common/mockchatsdk";
 import OmnichannelMessage from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OmnichannelMessage";
 import OnNewMessageOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OnNewMessageOptionalParams";
 import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
@@ -31,14 +30,15 @@ import { TelemetryHelper } from "../telemetry/TelemetryHelper";
 import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
-    private chatSDK: OmnichannelChatSDK | MockChatSDK;
+    private chatSDK: OmnichannelChatSDK;
     private chatConfig: ChatConfig;
     private token: string | "" | null = "";
     private expiration = 0;
     private isAuthenticated: boolean;
     private getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
+    private isSDKMocked: boolean;
 
-    public getChatSDK(): OmnichannelChatSDK | MockChatSDK {
+    public getChatSDK(): OmnichannelChatSDK {
         return this.chatSDK;
     }
 
@@ -56,6 +56,7 @@ export class FacadeChatSDK {
         this.chatConfig = input.chatConfig;
         this.getAuthToken = input.getAuthToken;
         this.isAuthenticated = input.isAuthenticated;
+        this.isSDKMocked = input.isSDKMocked;
     }
 
     private convertExpiration(expiration: number): number {
@@ -122,7 +123,8 @@ export class FacadeChatSDK {
 
     private async tokenRing(): Promise<PingResponse> {
 
-        if (this.getChatSDK() instanceof MockChatSDK && (this.getChatSDK() as MockChatSDK).isMockModeOn === true) {
+        // this is needed for storybooks, specifically for reconnect pane which requires authentication bypass
+        if (this.isSDKMocked === true) {
             return { result: true, message: "Authentication not needed" };
         }
 

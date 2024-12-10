@@ -5,6 +5,7 @@ export interface IFacadeChatSDKInput {
     chatSDK: OmnichannelChatSDK, 
     chatConfig: ChatConfig, 
     isAuthenticated: boolean, 
+    isSDKMocked: boolean,
     getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
 }
 

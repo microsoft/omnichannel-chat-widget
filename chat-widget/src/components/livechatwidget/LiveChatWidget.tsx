@@ -12,6 +12,7 @@ import LiveChatWidgetStateful from "./livechatwidgetstateful/LiveChatWidgetState
 import { createReducer } from "../../contexts/createReducer";
 import { getLiveChatWidgetContextInitialState } from "../../contexts/common/LiveChatWidgetContextInitialState";
 import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
+import { isNullOrUndefined } from "../../common/utils";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
@@ -39,7 +40,9 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
                 "chatSDK": chatSDK,
                 "chatConfig": props.chatConfig,
                 "isAuthenticated": isAuthenticatedChat,
-                "getAuthToken": props?.getAuthToken
+                "getAuthToken": props?.getAuthToken,
+                //when type is not undefined, it means the SDK is mocked
+                "isSDKMocked": !isNullOrUndefined(props?.mock?.type)
             }
         ));
     }
