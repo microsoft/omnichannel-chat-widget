@@ -380,7 +380,7 @@ export const isThisSessionPopout = (href: string): boolean => {
     return false;
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getConversationDetailsCall = async (chatSDK: any, liveChatContext: any = null) => {
+export const getConversationDetailsCall = async (facadeChatSDK: any, liveChatContext: any = null) => {
     let conversationDetails: any = undefined; // eslint-disable-line @typescript-eslint/no-explicit-any
     const optionalParams: any = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -393,7 +393,7 @@ export const getConversationDetailsCall = async (chatSDK: any, liveChatContext: 
             Event: TelemetryEvent.GetConversationDetailsCallStarted,
             Description: "Conversation details call started"
         });
-        conversationDetails = await chatSDK.getConversationDetails(optionalParams);
+        conversationDetails = await facadeChatSDK.getConversationDetails(optionalParams);
     } catch (error) {
         checkContactIdError(error);
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
