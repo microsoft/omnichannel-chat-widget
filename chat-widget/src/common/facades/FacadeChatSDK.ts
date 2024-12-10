@@ -60,12 +60,12 @@ export class FacadeChatSDK {
     }
 
     private convertExpiration(expiration: number): number {
+        
         // Converting expiration to seconds, if contains decimals or is identified as milliseconds
-        const expStr = Number.isInteger(expiration);
-        if (!expStr || (expiration > 1000000000)) {
+        if (expiration.toString().length === 13) {
             return Math.floor(expiration / 1000);
         }
-
+        // If the epoch value is already in seconds, return it as is
         return expiration;
     }
 
@@ -80,8 +80,10 @@ export class FacadeChatSDK {
 
         // compare expiration time with current time
         if (now > this.expiration) {
+            console.log("Token is expired", now, this.expiration, now > this.expiration);
             return true;
         }
+
         return false;
     }
 
