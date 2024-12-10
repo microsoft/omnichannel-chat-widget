@@ -58,11 +58,12 @@ export class FacadeChatSDK {
     }
 
     private convertExpiration(expiration: number): number {
-        // if expiration is not an integer, then it is in milliseconds, convert it to seconds
+        // Converting expiration to seconds, if contains decimals or is identified as milliseconds
         const expStr = Number.isInteger(expiration);
-        if (!expStr) {
+        if (!expStr || (expiration > 1000000000)) {
             return Math.floor(expiration / 1000);
         }
+
         return expiration;
     }
 
@@ -74,6 +75,7 @@ export class FacadeChatSDK {
 
         // obtain current time in seconds
         const now = Math.floor(Date.now() / 1000);
+
         // compare expiration time with current time
         if (now > this.expiration) {
             return true;
