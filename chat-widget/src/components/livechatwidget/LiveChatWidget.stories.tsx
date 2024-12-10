@@ -830,6 +830,7 @@ const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,
+    getAuthToken: async () => { return Promise.resolve("ABC"); },
     chatConfig: {
         LiveChatConfigAuthSettings: {
             msdyn_javascriptclientfunction: "testAuth"
