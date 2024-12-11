@@ -183,6 +183,7 @@ export enum TelemetryEvent {
     SendTypingIndicatorSucceeded = "SendTypingIndicatorSucceeded",
     SendTypingIndicatorFailed = "SendTypingIndicatorFailed",
     WebChatEvent = "WebChatEvent",
+    FacadeChatSDKEvent = "FacadeChatSDKEvent",
 
     PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
     ChatAlreadyTriggered = "ChatAlreadyTriggered",
@@ -222,7 +223,13 @@ export enum TelemetryEvent {
     ChatDisconnectThreadEventReceived = "ChatDisconnectThreadEventReceived",
 
     HiddenAdaptiveCardMessageReceived = "HiddenAdaptiveCardMessageReceived",
-    EndingAdapterAfterDisconnectionError = "EndingAdapterAfterDisconnectionError"
+    EndingAdapterAfterDisconnectionError = "EndingAdapterAfterDisconnectionError",
+
+    //FacadeChatSDK events
+    NewTokenSuccess = "NewTokenSuccess",
+    NewTokenFailed = "NewTokenFailed",
+    NewTokenExpired = "NewTokenExpired",
+    TokenEmptyOrSame = "TokenEmptyOrSame"
 }
 
 export interface TelemetryInput {

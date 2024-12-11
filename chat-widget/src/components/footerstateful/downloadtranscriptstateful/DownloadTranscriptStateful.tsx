@@ -1,15 +1,17 @@
 import { Constants, TranscriptConstants } from "../../../common/Constants";
-import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
-import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
-import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
-import createChatTranscript from "../../../plugins/createChatTranscript";
-import DOMPurify from "dompurify";
 import { createFileAndDownload, isNullOrUndefined } from "../../../common/utils";
+
+import DOMPurify from "dompurify";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { IDownloadTranscriptProps } from "./interfaces/IDownloadTranscriptProps";
-import { executeReducer } from "../../../contexts/createReducer";
+import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
+import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import createChatTranscript from "../../../plugins/createChatTranscript";
+import { executeReducer } from "../../../contexts/createReducer";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -167,8 +169,8 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
     return str;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const downloadTranscript = async (chatSDK: any, downloadTranscriptProps: IDownloadTranscriptProps, state?: ILiveChatWidgetContext) => {
+
+export const downloadTranscript = async (facadeChatSDK: FacadeChatSDK, downloadTranscriptProps: IDownloadTranscriptProps, state?: ILiveChatWidgetContext) => {
 
     // Need to keep existing live chat context for scenarios when transcript is downloaded after endchat
     let liveChatContext = state?.domainStates?.liveChatContext;
@@ -177,7 +179,7 @@ export const downloadTranscript = async (chatSDK: any, downloadTranscriptProps: 
         liveChatContext = inMemoryState.domainStates.liveChatContext;
     }
 
-    let data = await chatSDK?.getLiveChatTranscript({liveChatContext});
+    let data = await facadeChatSDK?.getLiveChatTranscript({liveChatContext});
     if (typeof (data) === Constants.String) {
         data = JSON.parse(data);
     }
@@ -190,7 +192,7 @@ export const downloadTranscript = async (chatSDK: any, downloadTranscriptProps: 
             const transcriptOptions = {
                 ...webChatTranscript
             };
-            await createChatTranscript(data[Constants.ChatMessagesJson], chatSDK, false, transcriptOptions);
+            await createChatTranscript(data[Constants.ChatMessagesJson], facadeChatSDK, false, transcriptOptions);
         } else {
             // Legacy Transcript
             const chatTranscripts = window.btoa(encodeURIComponent(beautifyChatTranscripts(data[Constants.ChatMessagesJson], renderMarkDown, attachmentMessage)));
