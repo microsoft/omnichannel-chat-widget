@@ -312,7 +312,9 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("getLiveChatTranscript", () => this.chatSDK.getLiveChatTranscript(optionalParams));
     }
 
-    public async createChatAdapter(optionalParams: ChatAdapterOptionalParams = {}): Promise<unknown> {
+    // response from origin is unknown, but this definition breaks create adapter for shimAdapter, switching to any until type is returned from origin
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public async createChatAdapter(optionalParams: ChatAdapterOptionalParams = {}): Promise<any> {
         return this.validateAndExecuteCall("createChatAdapter", () => this.chatSDK.createChatAdapter(optionalParams));
     }
 
