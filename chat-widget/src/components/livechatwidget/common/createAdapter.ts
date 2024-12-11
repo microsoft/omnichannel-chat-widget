@@ -1,5 +1,6 @@
 import { BotAuthActivitySubscriber } from "./ActivitySubscriber/BotAuthActivitySubscriber";
 import { ChatAdapterShim } from "./ChatAdapterShim";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { HiddenAdaptiveCardActivitySubscriber } from "./ActivitySubscriber/HiddenAdaptiveCardActivitySubscriber";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
@@ -13,8 +14,7 @@ const defaultBotAuthConfig = {
     fetchBotAuthConfigRetryInterval: 1000
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createAdapter = async (facadeChatSDK: any, props?: ILiveChatWidgetProps) => {
+export const createAdapter = async (facadeChatSDK: FacadeChatSDK, props?: ILiveChatWidgetProps) => {
     const chatAdapterOptionalParams = {
         IC3Adapter: {
             options: {

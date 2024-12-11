@@ -3,6 +3,7 @@ import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryCon
 import { createFileAndDownload, isNullOrUndefined } from "../../../common/utils";
 
 import DOMPurify from "dompurify";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { IDownloadTranscriptProps } from "./interfaces/IDownloadTranscriptProps";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
@@ -168,8 +169,8 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
     return str;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const downloadTranscript = async (facadeChatSDK: any, downloadTranscriptProps: IDownloadTranscriptProps, state?: ILiveChatWidgetContext) => {
+
+export const downloadTranscript = async (facadeChatSDK: FacadeChatSDK, downloadTranscriptProps: IDownloadTranscriptProps, state?: ILiveChatWidgetContext) => {
 
     // Need to keep existing live chat context for scenarios when transcript is downloaded after endchat
     let liveChatContext = state?.domainStates?.liveChatContext;

@@ -1,8 +1,8 @@
 import { ConversationMode } from "../../../common/Constants";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { isNullOrUndefined } from "../../../common/utils";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isPostChatSurveyEnabled = async (facadeChatSDK: any) : Promise<boolean> => {
+export const isPostChatSurveyEnabled = async (facadeChatSDK: FacadeChatSDK) : Promise<boolean> => {
     const chatConfig = await facadeChatSDK.getLiveChatConfig();
     const postChatEnabled = chatConfig.LiveWSAndLiveChatEngJoin
         ?.msdyn_postconversationsurveyenable.toString().toLowerCase();

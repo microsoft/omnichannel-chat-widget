@@ -2,6 +2,7 @@ import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryCon
 
 import AuthSettings from "@microsoft/omnichannel-chat-sdk/lib/core/AuthSettings";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
+import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WidgetLoadCustomErrorString } from "../../../common/Constants";
 import { isNullOrEmptyString } from "../../../common/utils";
@@ -14,8 +15,7 @@ const getAuthClientFunction = (chatConfig: ChatConfig | undefined) => {
     return authClientFunction;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
+const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
 
     const authClientFunction = getAuthClientFunction(chatConfig);
     if (getAuthToken && authClientFunction) {

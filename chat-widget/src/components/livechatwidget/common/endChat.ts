@@ -7,6 +7,7 @@ import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import EndChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/EndChatOptionalParams";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
@@ -20,7 +21,7 @@ import { isPersistentEnabled } from "./reconnectChatHelper";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
+const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
     try {
         const { chatConfig } = props;
 
@@ -90,7 +91,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, s
         const endedByCustomer = appStates?.conversationEndedBy === "Customer";
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const commonParams: [ILiveChatWidgetProps, any, ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>, any, any, any] = [props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter];
+        const commonParams: [ILiveChatWidgetProps, FacadeChatSDK, ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>, any, any, any] = [props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter];
 
         if (persistentEnabled && endedByCustomer) {
             await endChat(...commonParams, true, false, true);
@@ -251,7 +252,7 @@ export const chatSDKStateCleanUp = (chatSDK: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const endVoiceVideoCallIfOngoing = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const endVoiceVideoCallIfOngoing = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     let callId = "";
     try {
         if (facadeChatSDK.getChatSDK().isVoiceVideoCallingEnabled()) {

@@ -21,8 +21,8 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useReducer(reducer, getLiveChatWidgetContextInitialState(props));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [facadeChatSDK, setFacadeChatSDK]: [any, (facade: any) => void] = useState(undefined);
+    
+    const [facadeChatSDK, setFacadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useState<FacadeChatSDK | undefined>(undefined);
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
 
     overridePropsOnMockIfApplicable(props);
@@ -32,7 +32,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = ((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction)?true : false;
+    const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction);
 
     if (!facadeChatSDK) {
         setFacadeChatSDK(new FacadeChatSDK(

@@ -4,6 +4,7 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryC
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 import { DataStoreManager } from "./contextDataStore/DataStoreManager";
+import { FacadeChatSDK } from "./facades/FacadeChatSDK";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
@@ -380,7 +381,7 @@ export const isThisSessionPopout = (href: string): boolean => {
     return false;
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getConversationDetailsCall = async (facadeChatSDK: any, liveChatContext: any = null) => {
+export const getConversationDetailsCall = async (facadeChatSDK: FacadeChatSDK, liveChatContext: any = null) => {
     let conversationDetails: any = undefined; // eslint-disable-line @typescript-eslint/no-explicit-any
     const optionalParams: any = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
 
