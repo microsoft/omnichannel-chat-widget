@@ -1,8 +1,9 @@
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
 import { ChatSDKMessage, IFileInfo, IRawMessage, OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { IFacadeChatSDKInput, PingResponse } from "./types/IFacadeChatSDKInput";
-import { LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
 import { getAuthClientFunction, handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatAdapterOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/ChatAdapterOptionalParams";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import ChatReconnectContext from "@microsoft/omnichannel-chat-sdk/lib/core/ChatReconnectContext";
@@ -36,7 +37,11 @@ export class FacadeChatSDK {
     private expiration = 0;
     private isAuthenticated: boolean;
     private getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
-    private isSDKMocked: boolean;
+    private sdkMocked: boolean;
+
+    public isSDKMocked(): boolean {
+        return this.sdkMocked;
+    }
 
     public getChatSDK(): OmnichannelChatSDK {
         return this.chatSDK;
@@ -56,7 +61,7 @@ export class FacadeChatSDK {
         this.chatConfig = input.chatConfig;
         this.getAuthToken = input.getAuthToken;
         this.isAuthenticated = input.isAuthenticated;
-        this.isSDKMocked = input.isSDKMocked;
+        this.sdkMocked = input.isSDKMocked;
     }
 
     private convertExpiration(expiration: number): number {
@@ -126,7 +131,7 @@ export class FacadeChatSDK {
     private async tokenRing(): Promise<PingResponse> {
 
         // this is needed for storybooks, specifically for reconnect pane which requires authentication bypass
-        if (this.isSDKMocked === true) {
+        if (this.sdkMocked === true) {
             return { result: true, message: "Authentication not needed" };
         }
 
@@ -204,10 +209,16 @@ export class FacadeChatSDK {
             return fn();
         }
 
+        const executionErrorMessage = `Authentication failed: Process to get a token failed for ${functionName}, ${pingResponse.message}`;
         //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
-        console.error("Authentication failed : Process to get a token failed for :" + functionName, pingResponse.message);
-
-        throw new Error("Authentication failed : Process to get a token failed for :" + functionName + " : " + pingResponse.message);
+        console.error(executionErrorMessage);
+        BroadcastService.postMessage({
+            eventName: BroadcastEvent.OnWidgetError,
+            payload: {
+                errorMessage: executionErrorMessage,
+            }
+        });
+        throw new Error(executionErrorMessage);
     }
 
     public async initialize(optionalParams: InitializeOptionalParams = {}): Promise<ChatConfig> {
