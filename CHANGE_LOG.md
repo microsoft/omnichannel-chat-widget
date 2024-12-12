@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-
+- Added Event broadcast from OOH pane when minimized so that iframe width height is adjusted
 - Padding property to control the padding size choice input adaptive card form field
 
 ### Fixed
