@@ -67,6 +67,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             text: "We're Offline"
         },
         onMinimizeClick: () => {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderMinimizeButtonClicked, Description: "Header Minimize button clicked." });
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
         ...outOfOfficeHeaderProps?.controlProps,
