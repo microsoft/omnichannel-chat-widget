@@ -31,7 +31,8 @@ export class TelemetryHelper {
             case ScenarioType.LOAD: return TelemetryHelper.conformToLoadContract(level, input);
             case ScenarioType.IC3_CLIENT: return TelemetryHelper.conformToIC3ClientContract(level, input);
             case ScenarioType.WEBCHAT: return TelemetryHelper.conformToWebChatContract(level, input);
-            case ScenarioType.OCCHATSDK: return TelemetryHelper.conformToOCChatSDKContract(level, input);
+            case ScenarioType.OCCHATSDK:
+            case ScenarioType.SDK: return TelemetryHelper.conformToOCChatSDKContract(level, input);
             case ScenarioType.ACTIONS: return TelemetryHelper.conformToActionsContract(level, input);
             case ScenarioType.CALLING: return TelemetryHelper.conformToCallingContract(level, input);
             case ScenarioType.ACS_ADAPTER: return TelemetryHelper.conformToACSAdapterContract(level, input);
@@ -191,6 +192,7 @@ export class TelemetryHelper {
                 event.TransactionId = payload.TransactionId;
                 event.ElapsedTimeInMilliseconds = payload.ElapsedTimeInMilliseconds;
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
+                event.Description = payload.Description;
             });
     }
 
