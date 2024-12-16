@@ -344,6 +344,11 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
 
         if (conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+            // reset the requestId to current initial requestId in sdk
+            if (state?.domainStates?.initialChatSdkRequestId) {
+                chatSDK.requestId = state?.domainStates?.initialChatSdkRequestId;
+            }
+
             return false;
         }
         return true;
