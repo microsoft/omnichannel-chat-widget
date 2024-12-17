@@ -358,10 +358,6 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
     }
 };
 
-const resetChatState = (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext) => {
-   
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getInitContextParamsForPopout = async (): Promise<any> => {
     return window.opener ? await getInitContextParamForPopoutFromOuterScope(window.opener) : null;
