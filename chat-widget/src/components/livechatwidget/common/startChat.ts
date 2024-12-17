@@ -338,17 +338,11 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
         chatSDK.requestId = requestIdFromCache;
         conversationDetails = await getConversationDetailsCall(chatSDK, liveChatContext);
 
-        if (Object.keys(conversationDetails).length === 0) {
-            return false;
-        }
-
-        if (conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {
+        if (Object.keys(conversationDetails).length === 0 || conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {           
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
-            // reset the requestId to current initial requestId in sdk
-            if (state?.domainStates?.initialChatSdkRequestId) {
-                chatSDK.requestId = state?.domainStates?.initialChatSdkRequestId;
+            if (currentRequestId) {
+                chatSDK.requestId = currentRequestId;
             }
-
             return false;
         }
         return true;
@@ -363,6 +357,10 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
         return false;
     }
 };
+
+const resetChatState = (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext) => {
+   
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getInitContextParamsForPopout = async (): Promise<any> => {
