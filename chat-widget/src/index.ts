@@ -9,3 +9,4 @@ export { default as LiveChatWidget } from "./components/livechatwidget/LiveChatW
 export { getMockChatSDKIfApplicable } from "./components/livechatwidget/common/getMockChatSDKIfApplicable";
 export { encodeComponentString, decodeComponentString, BroadcastService, useChatSDKStore, useChatContextStore };
 export { getWidgetCacheId, getWidgetEndChatEventName, ConversationState };
+export { createAttachmentMiddleware } from "./components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
