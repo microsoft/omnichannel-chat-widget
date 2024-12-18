@@ -203,8 +203,6 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
             logWidgetLoadComplete(WidgetLoadTelemetryMessage.PersistedStateRetrievedMessage);
-            // Set post chat context in state, load in background to do not block the load
-            setPostChatContextAndLoadSurvey(chatSDK, dispatch, true);
             return;
         }
 
@@ -217,8 +215,7 @@ const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAct
         }
 
         logWidgetLoadComplete();
-        // Set post chat context in state, load in background to do not block the load
-        setPostChatContextAndLoadSurvey(chatSDK, dispatch);
+
         // Updating chat session detail for telemetry
         await updateTelemetryData(chatSDK, dispatch);
     } catch (ex) {
