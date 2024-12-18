@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 - Padding property to control the padding size choice input adaptive card form field
 
 ### Fixed
-
+- Fixed resetting request id when getConversationDetails returns wrap or closed state
 - For disconnected chats, perform a soft end chat.
 - Audio button visibility state is tied to audio mute state.
 - Restriction of the elements allowed to be render in the UI, to avoid security vulnerabilities.

@@ -1,6 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { Constants, LiveWorkItemState, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
-import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isUndefinedOrEmpty } from "../../../common/utils";
+import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isNullOrUndefined, isUndefinedOrEmpty } from "../../../common/utils";
 import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
 import { handleStartChatError, logWidgetLoadComplete } from "./startChatErrorHandler";
@@ -338,12 +338,11 @@ const checkIfConversationStillValid = async (chatSDK: any, dispatch: Dispatch<IL
         chatSDK.requestId = requestIdFromCache;
         conversationDetails = await getConversationDetailsCall(chatSDK, liveChatContext);
 
-        if (Object.keys(conversationDetails).length === 0) {
-            return false;
-        }
-
-        if (conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {
+        if (Object.keys(conversationDetails).length === 0 || isNullOrUndefined(conversationDetails.state) || conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {           
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+            if (currentRequestId) {
+                chatSDK.requestId = currentRequestId;
+            }
             return false;
         }
         return true;
