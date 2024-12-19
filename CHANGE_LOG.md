@@ -7,11 +7,13 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- Added correct OCChatSDKTelemetryData type when telemetry event builder is alled for logSDKEvent 
+
+- Added correct OCChatSDKTelemetryData type when telemetry event builder is alled for logSDKEvent
 - Added Event broadcast from OOH pane when minimized so that iframe width height is adjusted
 - Padding property to control the padding size choice input adaptive card form field
 
 ### Fixed
+
 - Fixed resetting request id when getConversationDetails returns wrap or closed state
 - For disconnected chats, perform a soft end chat.
 - Audio button visibility state is tied to audio mute state.
@@ -21,6 +23,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.3)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.2)
 - Uptake [@opentelemetry/api@1.9.0](https://www.npmjs.com/package/@opentelemetry/api/v/1.9.0)
 - Uptake [@azure/core-tracing@1.2.0](https://www.npmjs.com/package/@azure/core-tracing/v/1.2.0)
