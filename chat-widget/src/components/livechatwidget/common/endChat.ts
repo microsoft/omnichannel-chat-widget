@@ -28,40 +28,20 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         // Use Case: If call is ongoing, end the call by simulating end call button click
         endVoiceVideoCallIfOngoing(chatSDK, dispatch);
 
-        const conversationDetails = await getConversationDetailsCall(chatSDK);
-
-        // Use Case: When post chat is not configured
-        if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
-            // If ended by customer, just close chat
-            if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
-                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.PrepareEndChat,
-                    Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithoutPostChat
-                });
-                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
-            }
-
-            // Use Case: If ended by Agent, stay chat in InActive state
-            return;
-        }
-
-        // Register post chat participant type
-        if (conversationDetails?.participantType === ParticipantType.Bot || conversationDetails?.participantType === ParticipantType.User) {
-            dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_PARTICIPANT_TYPE, payload: conversationDetails?.participantType });
-        }
-
-        // Use Case: Can render post chat scenarios
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const postchatContext: any = await getPostChatContext(chatSDK, state, dispatch) ?? state?.domainStates?.postChatContext;
-
-        if (postchatContext === undefined) {
-
-            BroadcastService.postMessage({
-                eventName: BroadcastEvent.OnWidgetError,
-                payload: {
-                    errorMessage: "Widget did not display post chat survey as getPostChatContext returned undefined."
-                }
-            });
+        const postchatContext: any = await getPostChatContext(chatSDK, state, dispatch);     
+       
+        
+        // Use Case: When post chat is not configured
+        if (postchatContext === undefined || !postchatContext?.participantJoined) {
+            if (!postchatContext) {                
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.OnWidgetError,
+                    payload: {
+                        errorMessage: "Widget did not display post chat survey as getPostChatContext returned undefined."
+                    }
+                });
+            }
             
             // For Customer intiated conversations, just close chat widget
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
@@ -77,6 +57,12 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
             return;
         }
+         // Use Case: Can render post chat scenarios
+         // Register post chat participant type
+        if (postchatContext?.participantType === ParticipantType.Bot || postchatContext?.participantType === ParticipantType.User) {
+            dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_PARTICIPANT_TYPE, payload: postchatContext?.participantType });
+        }
+
 
         // Log PrepareEndChat if conversation ended by customer (bot and agent cases are handled in LiveChatWidgetStateful.tsx)
         if (state?.appStates?.conversationEndedBy) {
@@ -99,7 +85,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
             await endChat(...commonParams, false, true, true);
 
             if (postchatContext) {
-                await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
+                await initiatePostChat(props, postchatContext?.participantType, state, dispatch, postchatContext);
                 return;
             }
         }
