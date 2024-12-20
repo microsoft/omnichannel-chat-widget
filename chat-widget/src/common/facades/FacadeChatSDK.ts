@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
-import { ChatSDKMessage, IFileInfo, IRawMessage, OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
+import { ChatAdapter, ChatSDKMessage, GetAgentAvailabilityResponse, GetLiveChatTranscriptResponse, GetVoiceVideoCallingResponse, IFileInfo, IRawMessage, MaskingRules, OmnichannelChatSDK, VoiceVideoCallingOptionalParams } from "@microsoft/omnichannel-chat-sdk";
 import { IFacadeChatSDKInput, PingResponse } from "./types/IFacadeChatSDKInput";
 import { getAuthClientFunction, handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 
@@ -26,6 +26,7 @@ import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWo
 import OmnichannelMessage from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OmnichannelMessage";
 import OnNewMessageOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OnNewMessageOptionalParams";
 import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
+import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
 import { isNullOrEmptyString } from "../utils";
@@ -65,7 +66,7 @@ export class FacadeChatSDK {
     }
 
     private convertExpiration(expiration: number): number {
-        
+
         // Converting expiration to seconds, if contains decimals or is identified as milliseconds
         if (expiration.toString().length === 13) {
             return Math.floor(expiration / 1000);
@@ -269,8 +270,7 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("getMessages", () => this.chatSDK.getMessages());
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async getDataMaskingRules(): Promise<any> {
+    public async getDataMaskingRules(): Promise<MaskingRules> {
         return this.validateAndExecuteCall("getDataMaskingRules", () => this.chatSDK.getDataMaskingRules());
     }
 
@@ -302,19 +302,16 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("downloadFileAttachment", () => this.chatSDK.downloadFileAttachment(fileMetadata));
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async emailLiveChatTranscript(body: ChatTranscriptBody, optionalParams: EmailLiveChatTranscriptOptionaParams = {}): Promise<any> {
+    public async emailLiveChatTranscript(body: ChatTranscriptBody, optionalParams: EmailLiveChatTranscriptOptionaParams = {}): Promise<void> {
         return this.validateAndExecuteCall("emailLiveChatTranscript", () => this.chatSDK.emailLiveChatTranscript(body, optionalParams));
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async getLiveChatTranscript(optionalParams: GetLiveChatTranscriptOptionalParams = {}): Promise<any> {
+    public async getLiveChatTranscript(optionalParams: GetLiveChatTranscriptOptionalParams = {}): Promise<GetLiveChatTranscriptResponse> {
         return this.validateAndExecuteCall("getLiveChatTranscript", () => this.chatSDK.getLiveChatTranscript(optionalParams));
     }
 
     // response from origin is unknown, but this definition breaks create adapter for shimAdapter, switching to any until type is returned from origin
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async createChatAdapter(optionalParams: ChatAdapterOptionalParams = {}): Promise<any> {
+    public async createChatAdapter(optionalParams: ChatAdapterOptionalParams = {}): Promise<ChatAdapter> {
         return this.validateAndExecuteCall("createChatAdapter", () => this.chatSDK.createChatAdapter(optionalParams));
     }
 
@@ -323,22 +320,17 @@ export class FacadeChatSDK {
         return this.chatSDK.isVoiceVideoCallingEnabled();
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async getVoiceVideoCalling(params: any = {}): Promise<any> {
+    public async getVoiceVideoCalling(params: VoiceVideoCallingOptionalParams = {}): Promise<GetVoiceVideoCallingResponse> {
         return this.validateAndExecuteCall("getVoiceVideoCalling", () => this.chatSDK.getVoiceVideoCalling(params));
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async getPostChatSurveyContext(): Promise<any> {
+    public async getPostChatSurveyContext(): Promise<PostChatContext> {
         return this.validateAndExecuteCall("getPostChatSurveyContext", () => this.chatSDK.getPostChatSurveyContext());
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async getAgentAvailability(optionalParams: GetAgentAvailabilityOptionalParams = {}): Promise<any> {
+    public async getAgentAvailability(optionalParams: GetAgentAvailabilityOptionalParams = {}): Promise<GetAgentAvailabilityResponse> {
         return this.validateAndExecuteCall("getAgentAvailability", () => this.chatSDK.getAgentAvailability(optionalParams));
     }
 
 
 }
-
-
