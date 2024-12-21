@@ -1,9 +1,11 @@
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
+
 import AuthSettings from "@microsoft/omnichannel-chat-sdk/lib/core/AuthSettings";
+import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
+import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { isNullOrEmptyString } from "../../../common/utils";
 import { WidgetLoadCustomErrorString } from "../../../common/Constants";
+import { isNullOrEmptyString } from "../../../common/utils";
 
 const getAuthClientFunction = (chatConfig: ChatConfig | undefined) => {
     let authClientFunction = undefined;
@@ -13,8 +15,7 @@ const getAuthClientFunction = (chatConfig: ChatConfig | undefined) => {
     return authClientFunction;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
+const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
 
     const authClientFunction = getAuthClientFunction(chatConfig);
     if (getAuthToken && authClientFunction) {
@@ -25,7 +26,7 @@ const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undef
             (chatSDK as any).setAuthTokenProvider(async () => {
                 return token;
             });
-            return true;
+            return {"result": true, "token": token};
         } else {
             // instead of returning false, it's more appropiate to thrown an error to force error handling on the caller side
             // this will help to avoid the error to be ignored and the chat to be started
@@ -33,7 +34,15 @@ const handleAuthentication = async (chatSDK: any, chatConfig: ChatConfig | undef
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
     }
-    return false;
+    return {
+        "result": false, 
+        "token": null,
+        "error": {
+            "message": "No auth client function or getAuthToken function provided",
+            "getAuthTokenPresent": getAuthToken ? true : false,
+            "authClientFunctionPresent": authClientFunction ? true : false
+        }
+    };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
