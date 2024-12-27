@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Adding input element to the blocked list of html rendered elements.
 - Fixed resetting request id when getConversationDetails returns wrap or closed state
 - For disconnected chats, perform a soft end chat.
 - Audio button visibility state is tied to audio mute state.
