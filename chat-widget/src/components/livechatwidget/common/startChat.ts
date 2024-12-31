@@ -83,7 +83,12 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, chatSDK: any, state
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
-    //Handle reconnect scenario
+
+    // This reset needs to be done before to load prechat, because the conversation state changes from close to prechat
+    if (state?.appStates.conversationState === ConversationState.Closed) {
+        // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
+        chatSDKStateCleanUp(chatSDK);
+    }
 
     // Getting prechat Survey Context
     const parseToJson = false;
@@ -121,6 +126,7 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
+
     await initStartChat(chatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 
@@ -128,11 +134,6 @@ const setPreChatAndInitiateChat = async (chatSDK: any, dispatch: Dispatch<ILiveC
 const initStartChat = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
     const persistentChatEnabled = await isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
-
-    if (state?.appStates.conversationState === ConversationState.Closed) {
-        // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
-        chatSDKStateCleanUp(chatSDK);
-    }
 
     try {
         // Clear disconnect state on start chat

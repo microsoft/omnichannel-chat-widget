@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix to reset chatsdk after a conversation with post survey with prechat present.
 - Fixed resetting request id when getConversationDetails returns wrap or closed state
 - For disconnected chats, perform a soft end chat.
 - Audio button visibility state is tied to audio mute state.
