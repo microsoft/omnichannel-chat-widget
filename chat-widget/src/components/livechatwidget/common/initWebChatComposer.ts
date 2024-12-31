@@ -122,10 +122,9 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         });
 
         const config = {
-            FORBID_TAGS: ["form", "button", "script", "div"],
+            FORBID_TAGS: ["form", "button", "script", "div", "input"],
             FORBID_ATTR: ["action"]
         };
-
         text = DOMPurify.sanitize(text, config);
         return text;
     };
