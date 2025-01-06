@@ -9,7 +9,8 @@ export const initCallingSdk = async (facadeChatSDK: FacadeChatSDK, setVoiceVideo
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((facadeChatSDK.getChatSDK() as any).getVoiceVideoCalling) {
             
-            const callingSDK = await facadeChatSDK.getVoiceVideoCalling();
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const callingSDK = await (facadeChatSDK.getChatSDK() as any).getVoiceVideoCalling();
             setVoiceVideoCallingSDK(callingSDK);
             TelemetryHelper.logCallingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CallingSDKLoadSuccess

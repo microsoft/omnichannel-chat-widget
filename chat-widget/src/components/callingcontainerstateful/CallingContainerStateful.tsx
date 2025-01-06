@@ -2,6 +2,7 @@ import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConsta
 import React, { Dispatch, useCallback, useEffect } from "react";
 
 import { CallingContainer } from "@microsoft/omnichannel-chat-components";
+import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { ICallingContainerControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/interfaces/ICallingContainerControlProps";
 import { ICallingContainerStatefulProps } from "./ICallingContainerStatefulProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -10,13 +11,12 @@ import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetAc
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
-import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 
 export const CallingContainerStateful = (props: ICallingContainerStatefulProps) => {
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: any) => void] = useFacadeSDKStore();
+    
+    const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { voiceVideoCallingSdk } = props as any;
 

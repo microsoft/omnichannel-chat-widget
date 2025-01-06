@@ -41,7 +41,8 @@ export const createAdapter = async (facadeChatSDK: FacadeChatSDK, props?: ILiveC
     };
     let adapter = await facadeChatSDK.createChatAdapter(chatAdapterOptionalParams);
     //so far, there is no need to convert to the shim adapter when using visual tests
-    if (facadeChatSDK.isSDKMocked() !== true) {
+    console.log("ELOPEZANAYA :: facadeChatSDK.isSDKMocked() ", facadeChatSDK?.isSDKMocked());
+    if (facadeChatSDK?.isSDKMocked() !== true) {
         const botAuthActivitySubscriberOptionalParams = {
             fetchBotAuthConfigRetries: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetries || defaultBotAuthConfig.fetchBotAuthConfigRetries,
             fetchBotAuthConfigRetryInterval: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetryInterval || defaultBotAuthConfig.fetchBotAuthConfigRetryInterval
