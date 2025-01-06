@@ -807,6 +807,7 @@ LiveChatWidgetAzureWithCurrentCall.args = liveChatWidgetCurrentCallProps;
 export const LiveChatWidgetPopoutStyle = LiveChatWidgetTemplate.bind({});
 
 const liveChatWidgetPopoutStyleProps: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,
@@ -835,6 +836,7 @@ LiveChatWidgetPopoutStyle.args = liveChatWidgetPopoutStyleProps;
 export const LiveChatWidgetReconnectChatPane = LiveChatWidgetTemplate.bind({});
 
 const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,
@@ -922,6 +924,7 @@ LiveChatWidgetFixedSizeSurveyEnabled.loaders = [() => {
 }];
 
 const liveChatWidgetFixedSizeSurveyEnabledProps: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDKSurveyEnabled() as any,
     telemetryConfig: dummyTelemetryConfig,
@@ -970,6 +973,7 @@ LiveChatWidgetCustomizedSurveyEnabled.loaders = [() => {
 }];
 
 const liveChatWidgetCustomizedSurveyEnabledProps: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDKSurveyEnabled() as any,
     telemetryConfig: dummyTelemetryConfig,
