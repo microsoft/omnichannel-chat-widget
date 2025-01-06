@@ -23,6 +23,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
     
     const [facadeChatSDK, setFacadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useState<FacadeChatSDK | undefined>(undefined);
+
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
 
     overridePropsOnMockIfApplicable(props);

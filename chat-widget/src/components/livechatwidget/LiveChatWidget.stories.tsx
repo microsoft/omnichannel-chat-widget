@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ILiveChatWidgetProps } from "./interfaces/ILiveChatWidgetProps";
+import { IMockProps } from "./interfaces/IMockProps";
 import { IconButton } from "@fluentui/react/lib/Button";
 import LiveChatWidget from "./LiveChatWidget";
 import { Meta } from "@storybook/react/types-6-0";
@@ -137,7 +138,12 @@ const sampleTypingIndicatorMiddleware = () => (_next: any) => (args: any) => {
     return output;
 };
 
+const mock : IMockProps = {
+    type : "Test" as any // eslint-disable-line @typescript-eslint/no-explicit-any
+};
+
 const liveChatWidgetCustom1Props: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     chatConfig: InitialMockChatConfig,
@@ -410,6 +416,7 @@ LiveChatWidgetCustom1.args = liveChatWidgetCustom1Props;
 export const LiveChatWidgetCustom2 = LiveChatWidgetTemplate.bind({});
 
 const liveChatWidgetCustom2Props: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,
@@ -651,6 +658,7 @@ const DemoSendBox = () => {
 };
 
 const liveChatWidgetCustom3Props: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,

@@ -23,6 +23,7 @@ import IMessage from "@microsoft/omnichannel-ic3core/lib/model/IMessage";
 import IRawThread from "@microsoft/omnichannel-ic3core/lib/interfaces/IRawThread";
 import InitializeOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/InitializeOptionalParams";
 import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWorkItemDetails";
+import { MockChatSDK } from "../../components/webchatcontainerstateful/common/mockchatsdk";
 import OmnichannelMessage from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OmnichannelMessage";
 import OnNewMessageOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OnNewMessageOptionalParams";
 import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
@@ -32,7 +33,7 @@ import { TelemetryHelper } from "../telemetry/TelemetryHelper";
 import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
-    private chatSDK: OmnichannelChatSDK;
+    private chatSDK: OmnichannelChatSDK | MockChatSDK;
     private chatConfig: ChatConfig;
     private token: string | "" | null = "";
     private expiration = 0;
@@ -44,7 +45,7 @@ export class FacadeChatSDK {
         return this.sdkMocked;
     }
 
-    public getChatSDK(): OmnichannelChatSDK {
+    public getChatSDK(): OmnichannelChatSDK | MockChatSDK {
         return this.chatSDK;
     }
 

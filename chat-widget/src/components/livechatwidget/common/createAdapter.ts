@@ -3,6 +3,7 @@ import { ChatAdapterShim } from "./ChatAdapterShim";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { HiddenAdaptiveCardActivitySubscriber } from "./ActivitySubscriber/HiddenAdaptiveCardActivitySubscriber";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { MockChatSDK } from "../../webchatcontainerstateful/common/mockchatsdk";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationLevel } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationLevel";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
@@ -41,8 +42,10 @@ export const createAdapter = async (facadeChatSDK: FacadeChatSDK, props?: ILiveC
     };
     let adapter = await facadeChatSDK.createChatAdapter(chatAdapterOptionalParams);
     //so far, there is no need to convert to the shim adapter when using visual tests
-    console.log("ELOPEZANAYA :: facadeChatSDK.isSDKMocked() ", facadeChatSDK?.isSDKMocked());
-    if (facadeChatSDK?.isSDKMocked() !== true) {
+    const isMocked = facadeChatSDK.getChatSDK() instanceof MockChatSDK;
+
+    if (isMocked !== true ) {
+
         const botAuthActivitySubscriberOptionalParams = {
             fetchBotAuthConfigRetries: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetries || defaultBotAuthConfig.fetchBotAuthConfigRetries,
             fetchBotAuthConfigRetryInterval: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetryInterval || defaultBotAuthConfig.fetchBotAuthConfigRetryInterval
