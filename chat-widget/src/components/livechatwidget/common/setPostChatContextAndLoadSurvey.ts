@@ -3,6 +3,7 @@ import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryCon
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
@@ -11,7 +12,7 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { isPostChatSurveyEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
+export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
     try {
         const postChatEnabled = await isPostChatSurveyEnabled(facadeChatSDK);
         if (postChatEnabled) {

@@ -9,6 +9,7 @@ import { ActivityStreamHandler } from "./ActivityStreamHandler";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
@@ -32,7 +33,7 @@ let widgetInstanceId: any | "";
 let popoutWidgetInstanceId: any | "";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps | undefined, facadeChatSDK: any) => {
+const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps | undefined, facadeChatSDK: FacadeChatSDK) => {
     const chatConfig = props?.chatConfig;
     const getAuthToken = props?.getAuthToken;
     const authClientFunction = getAuthClientFunction(chatConfig);
@@ -46,7 +47,7 @@ const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps | undef
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
+const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
     widgetInstanceId = getWidgetCacheIdfromProps(props);
 
@@ -82,7 +83,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setPreChatAndInitiateChat = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
+const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
 
     // This reset needs to be done before to load prechat, because the conversation state changes from close to prechat
     if (state?.appStates.conversationState === ConversationState.Closed) {
@@ -130,7 +131,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: any, dispatch: Dispatch<
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChat = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
+const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
     const persistentChatEnabled = await isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
@@ -235,17 +236,19 @@ const initStartChat = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWid
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createAdapterAndSubscribe = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, props?: ILiveChatWidgetProps) => {
+const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, props?: ILiveChatWidgetProps) => {
     // New adapter creation
     const newAdapter = await createAdapter(facadeChatSDK, props);
     setAdapter(newAdapter);
 
-    const chatToken = await facadeChatSDK.getChatToken();
+    const chatToken = await facadeChatSDK?.getChatToken();
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
-    newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken?.chatId, chatToken?.visitorId));
+    if (chatToken?.chatId && chatToken?.visitorId) {
+        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken.chatId, chatToken.visitorId));
+    }
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const canConnectToExistingChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
+const canConnectToExistingChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     // By pass this function in case of popout chat
     if (state?.appStates?.hideStartChatButton === true) {
         return false;
@@ -330,7 +333,7 @@ const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const checkIfConversationStillValid = async (facadeChatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
+const checkIfConversationStillValid = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, state: ILiveChatWidgetContext): Promise<boolean> => {
     const requestIdFromCache = state.domainStates?.liveChatContext?.requestId;
     const liveChatContext = state?.domainStates?.liveChatContext;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

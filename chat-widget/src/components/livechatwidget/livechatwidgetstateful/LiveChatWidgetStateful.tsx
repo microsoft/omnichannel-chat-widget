@@ -89,6 +89,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -96,7 +97,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useChatAdapterStore();
     const [webChatStyles, setWebChatStyles] = useState({ ...defaultWebChatContainerStatefulProps.webChatStyles, ...props.webChatContainerProps?.webChatStyles });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
+    const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;

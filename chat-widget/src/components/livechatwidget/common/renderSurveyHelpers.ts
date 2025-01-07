@@ -3,6 +3,7 @@ import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryCon
 
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
@@ -95,7 +96,7 @@ const isPostChatEnabled = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCo
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getPostChatContext = async (facadeChatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     try {
         const postChatEnabled = await isPostChatSurveyEnabled(facadeChatSDK);
         if (postChatEnabled) {

@@ -6,6 +6,7 @@ import { callingStateCleanUp, chatSDKStateCleanUp, closeChatStateCleanUp, endCha
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import { Dispatch } from "react";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
@@ -15,7 +16,7 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
+export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
     if (!ex) {
         logWidgetLoadFailed();
         return;
@@ -134,7 +135,7 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const forceEndChat = (facadeChatSDK: any) => {
+const forceEndChat = (facadeChatSDK: FacadeChatSDK) => {
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
         Event: TelemetryEvent.PrepareEndChat,
         Description: PrepareEndChatDescriptionConstants.WidgetLoadFailedAfterSessionInit
@@ -187,7 +188,7 @@ const handleUninitializedChatSDK = (ex: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleInvalidOrClosedConversation = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: any, props: ILiveChatWidgetProps | undefined, ex: any) => {
+const handleInvalidOrClosedConversation = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps | undefined, ex: any) => {
     logWidgetLoadCompleteWithError(ex);
 
     // Reset all internal states

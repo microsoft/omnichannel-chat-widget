@@ -131,7 +131,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
 const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
     skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
 
-    if (!skipEndChatSDK && facadeChatSDK.getChatSDK().conversation) {
+    if (!skipEndChatSDK && facadeChatSDK?.getChatSDK()?.conversation) {
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         const endChatOptionalParameters : EndChatOptionalParams = {
             isSessionEnded : inMemoryState?.appStates?.chatDisconnectEventReceived
@@ -300,8 +300,7 @@ const chatTokenCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // Need to keep liveChatContext until chat is fully closed to for transcript download/email
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getEndChatEventName = async (facadeChatSDK: any, props: ILiveChatWidgetProps) => {
+const getEndChatEventName = async (facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps) => {
     return getWidgetEndChatEventName(
         facadeChatSDK.getChatSDK()?.omnichannelConfig?.orgId,
         facadeChatSDK.getChatSDK()?.omnichannelConfig?.widgetId,
