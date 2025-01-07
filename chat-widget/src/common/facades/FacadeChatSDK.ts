@@ -65,8 +65,8 @@ export class FacadeChatSDK {
         this.sdkMocked = input.isSDKMocked;
     }
 
-    private convertExpiration(expiration: number): number {
-
+    //set default expiration to zero, for undefined or missed exp in jwt
+    private convertExpiration(expiration = 0): number {
         // Converting expiration to seconds, if contains decimals or is identified as milliseconds
         if (expiration.toString().length === 13) {
             return Math.floor(expiration / 1000);
