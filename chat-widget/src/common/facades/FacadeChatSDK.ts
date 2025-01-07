@@ -101,7 +101,7 @@ export class FacadeChatSDK {
             // decompose token
             const tokenParts = this.token?.split(".");
 
-            if (!tokenParts || tokenParts.length === 0) {
+            if (!tokenParts || tokenParts.length <= 1) {
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.NewTokenFailed,
                     Description: "Invalid token format",
@@ -113,9 +113,9 @@ export class FacadeChatSDK {
             const tokenDecoded = JSON.parse(atob(tokenParts[1]));
             // calculate expiration time
             this.expiration = this.convertExpiration(tokenDecoded.exp);
+
             // this is a control , in case the getAuthToken function returns same token
             if (this.expiration > 0 && (this.expiration < instant)) {
-
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.NewTokenExpired,
                     Description: "New token is already expired",
@@ -160,6 +160,7 @@ export class FacadeChatSDK {
 
         try {
             const ring = await handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
+
             if (ring.result === true && ring.token) {
                 await this.setToken(ring.token);
 
@@ -173,6 +174,7 @@ export class FacadeChatSDK {
                 });
                 return { result: true, message: "New Token obtained" };
             } else {
+
 
                 console.error("Failed to get token", ring);
 
@@ -199,8 +201,6 @@ export class FacadeChatSDK {
             });
             return { result: false, message: "Unexpected error while getting token" };
         }
-
-
     }
 
     private async validateAndExecuteCall<T>(functionName: string, fn: () => Promise<T>): Promise<T> {
