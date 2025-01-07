@@ -7,6 +7,7 @@
 import React, { Dispatch, useCallback } from "react";
 
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
+import { FacadeChatSDK } from "../../../../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
@@ -20,8 +21,8 @@ import useFacadeSDKStore from "../../../../../hooks/useFacadeChatSDKStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TypingIndicator = ({ activeTyping, visible }: any) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [facadeChatSDK]: [any, (facadeChatSDK: any) => void] = useFacadeSDKStore();
+    
+    const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const debounceTyping = useCallback(debounceLeading(() => (facadeChatSDK as any)?.sendTypingEvent()), []);
