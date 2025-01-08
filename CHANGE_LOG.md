@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Ability to call getAuthToken function to obtain a new JWT token when current token is already expired.
 - Added correct OCChatSDKTelemetryData type when telemetry event builder is alled for logSDKEvent
 - Added Event broadcast from OOH pane when minimized so that iframe width height is adjusted
 - Padding property to control the padding size choice input adaptive card form field

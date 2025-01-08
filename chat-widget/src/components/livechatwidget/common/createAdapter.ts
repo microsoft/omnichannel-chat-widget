@@ -1,20 +1,21 @@
+import { BotAuthActivitySubscriber } from "./ActivitySubscriber/BotAuthActivitySubscriber";
+import { ChatAdapterShim } from "./ChatAdapterShim";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
+import { HiddenAdaptiveCardActivitySubscriber } from "./ActivitySubscriber/HiddenAdaptiveCardActivitySubscriber";
+import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { MockChatSDK } from "../../webchatcontainerstateful/common/mockchatsdk";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationLevel } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationLevel";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
-import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
-import { ChatAdapterShim } from "./ChatAdapterShim";
 import { PauseActivitySubscriber } from "./ActivitySubscriber/PauseActivitySubscriber";
-import { BotAuthActivitySubscriber } from "./ActivitySubscriber/BotAuthActivitySubscriber";
-import { HiddenAdaptiveCardActivitySubscriber } from "./ActivitySubscriber/HiddenAdaptiveCardActivitySubscriber";
-import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 const defaultBotAuthConfig = {
     fetchBotAuthConfigRetries: 3,
     fetchBotAuthConfigRetryInterval: 1000
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createAdapter = async (chatSDK: any, props?: ILiveChatWidgetProps) => {
+export const createAdapter = async (facadeChatSDK: FacadeChatSDK, props?: ILiveChatWidgetProps) => {
     const chatAdapterOptionalParams = {
         IC3Adapter: {
             options: {
@@ -39,9 +40,12 @@ export const createAdapter = async (chatSDK: any, props?: ILiveChatWidgetProps) 
             }
         }
     };
-    let adapter = await chatSDK.createChatAdapter(chatAdapterOptionalParams);
+    let adapter = await facadeChatSDK.createChatAdapter(chatAdapterOptionalParams);
     //so far, there is no need to convert to the shim adapter when using visual tests
-    if (chatSDK.isMockModeOn !== true) {
+    const isMocked = facadeChatSDK.getChatSDK() instanceof MockChatSDK;
+
+    if (isMocked !== true ) {
+
         const botAuthActivitySubscriberOptionalParams = {
             fetchBotAuthConfigRetries: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetries || defaultBotAuthConfig.fetchBotAuthConfigRetries,
             fetchBotAuthConfigRetryInterval: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetryInterval || defaultBotAuthConfig.fetchBotAuthConfigRetryInterval

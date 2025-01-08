@@ -1,14 +1,16 @@
-import { Dispatch } from "react";
 import { Constants, ParticipantType, PostChatSurveyTelemetryMessage } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { addDelayInMs } from "../../../common/utils";
+
 import { ConversationState } from "../../../contexts/common/ConversationState";
+import { Dispatch } from "react";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
+import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
-import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { addDelayInMs } from "../../../common/utils";
 import { isPostChatSurveyEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,13 +96,13 @@ const isPostChatEnabled = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCo
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getPostChatContext = async (chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     try {
-        const postChatEnabled = await isPostChatSurveyEnabled(chatSDK);
+        const postChatEnabled = await isPostChatSurveyEnabled(facadeChatSDK);
         if (postChatEnabled) {
             if (state?.domainStates?.postChatContext === undefined) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const context: any = await chatSDK.getPostChatSurveyContext();
+                const context: any = await facadeChatSDK.getPostChatSurveyContext();
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed

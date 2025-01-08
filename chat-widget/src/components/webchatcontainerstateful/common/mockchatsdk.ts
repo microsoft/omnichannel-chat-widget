@@ -1,5 +1,5 @@
-import { ParticipantType } from "../../../common/Constants";
 import MockAdapter from "./mockadapter";
+import { ParticipantType } from "../../../common/Constants";
 
 export class MockChatSDK {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,6 +65,10 @@ export class MockChatSDK {
     }
 
     public getVoiceVideoCalling() {
+        return null;
+    }
+
+    public setAuthTokenProvider(){
         return null;
     }
 
