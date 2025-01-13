@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Refactored NetWorkReconnected to call only when there is an active chat
 - Fix to reset chatsdk after a conversation with post survey with prechat present.
 - Adding input element to the blocked list of html rendered elements.
 - Fixed resetting request id when getConversationDetails returns wrap or closed state
