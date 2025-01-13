@@ -338,7 +338,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         BroadcastService.getMessageByEventName(BroadcastEvent.NetworkReconnected).subscribe(async () => {
-            if (isThisSessionPopout(window?.location?.href)) {
+            const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+            if (isThisSessionPopout(window?.location?.href) || inMemoryState?.appStates?.conversationState !== ConversationState.Active) {
                 return;
             }
             const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
