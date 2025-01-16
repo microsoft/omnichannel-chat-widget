@@ -115,6 +115,7 @@ export enum TelemetryEvent {
     CloseChatCall = "CloseChatCall",
     CloseChatMethodException = "CloseChatMethodException",
     PrechatSurveyLoaded = "PrechatSurveyLoaded",
+    PrechatSurveyExpected = "PrechatSurveyExpected",
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
     StartChatEventRecevied = "StartChatEventReceived",
