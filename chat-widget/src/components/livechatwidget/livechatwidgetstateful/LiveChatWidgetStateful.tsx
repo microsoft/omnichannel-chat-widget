@@ -516,6 +516,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     eventName: BroadcastEvent.NewMessageNotification
                 });
             });
+
+            facadeChatSDK?.onAgentEndSession(() => {    
+                const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                if (inMemoryState?.appStates?.conversationState === ConversationState.Active) {
+                    if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
+                        setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
+                    }
+                    return;
+                }
+            });
         }
 
         if (state.appStates.conversationState === ConversationState.InActive) {
