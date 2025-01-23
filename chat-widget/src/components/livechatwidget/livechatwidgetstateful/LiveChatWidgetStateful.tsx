@@ -517,11 +517,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
             });
 
-            facadeChatSDK?.onAgentEndSession(() => {    
+            facadeChatSDK?.onAgentEndSession((event) => {                   
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-                if (inMemoryState?.appStates?.conversationState === ConversationState.Active) {
+                if ('participantsRemoved' in event && event.participantsRemoved[0].displayName == "Customer" && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
                     if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
-                        setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
+                        dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
                     }
                     return;
                 }
