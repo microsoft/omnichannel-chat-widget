@@ -49,6 +49,10 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             props.isCustomerVoiceSurveyCompact ?? true);
     }
 
+    if (props.copilotSurveyContext) {
+        surveyInviteLink = `${surveyInviteLink}&mcs_additionalcontext=${JSON.stringify(props.copilotSurveyContext)}`;
+    }
+
     const styleProps: IPostChatSurveyPaneStyleProps = {
         ...props.styleProps,
         generalStyleProps: generalStyleProps
