@@ -39,7 +39,7 @@ jobs:
         working-directory: chat-widget
         run: yarn test:visual
       - name: Upload VRT Tests failures screenshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: VRT Failure Screenshots
