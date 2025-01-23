@@ -516,6 +516,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     eventName: BroadcastEvent.NewMessageNotification
                 });
             });
+
+            facadeChatSDK?.onAgentEndSession((event) => {                   
+                const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                if ('participantsRemoved' in event && event.participantsRemoved[0].displayName == "Customer" && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
+                    return;
+                }
+            });
         }
 
         if (state.appStates.conversationState === ConversationState.InActive) {
