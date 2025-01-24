@@ -2,4 +2,5 @@ import { IPostChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components
 
 export interface IPostChatSurveyPaneStatefulProps extends IPostChatSurveyPaneProps {
     isCustomerVoiceSurveyCompact?: boolean;
+    copilotSurveyContext?: Record<string, string>;
 }
