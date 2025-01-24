@@ -519,8 +519,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             facadeChatSDK?.onAgentEndSession((event) => {                   
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-                if ('participantsRemoved' in event && event.participantsRemoved[0].displayName == "Customer" && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
-                    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
+                if ('participantsRemoved' in event && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
+                    setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
                     return;
                 }
             });
