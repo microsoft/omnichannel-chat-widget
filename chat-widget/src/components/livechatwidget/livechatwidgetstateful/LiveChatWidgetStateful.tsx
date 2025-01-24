@@ -521,6 +521,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 if ('participantsRemoved' in event && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
                     setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
+                    TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                        Event: TelemetryEvent.ParticipantsRemovedEvent,
+                        Description: "Participants removed event received."
+                    });
                     return;
                 }
             });
