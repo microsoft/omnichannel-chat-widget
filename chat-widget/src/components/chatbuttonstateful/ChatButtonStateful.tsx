@@ -1,5 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
+import { createTimer, setFocusOnElement } from "../../common/utils";
 
 import { ChatButton } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../common/Constants";
@@ -9,21 +10,33 @@ import { IChatButtonStatefulParams } from "./interfaces/IChatButtonStatefulParam
 import { IChatButtonStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonStyleProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
-import { setFocusOnElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
+
+let uiTimer : ITimer ;
 
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
+    // this is to ensure the telemetry is set only once and start the load timer
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLCWChatButtonStart
+        });
+    }, []);
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { buttonProps, outOfOfficeButtonProps, startChat } = props;
     //Setting OutOfOperatingHours Flag
     const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
     
     const ref = useRef(() => {return;});
+
     ref.current = async () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonClicked
@@ -72,6 +85,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     };
 
     useEffect(() => {
+        
         if (state.appStates.outsideOperatingHours) {
             setOutOfOperatingHours(true);
         }
@@ -85,6 +99,12 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         } else {
             dispatch({ type: LiveChatWidgetActionType.SET_FOCUS_CHAT_BUTTON, payload: true });
         }
+
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLCWChatButtonStart,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+
     }, []);
 
     return (
