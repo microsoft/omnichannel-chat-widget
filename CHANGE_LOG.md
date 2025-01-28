@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file.
 - Padding property to control the padding size choice input adaptive card form field
 
 ### Changed
-- export createAttachmentMiddleware to be imported by hosts
+- export renderingmiddlewares to be imported by hosts
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.2)
 - Uptake [@opentelemetry/api@1.9.0](https://www.npmjs.com/package/@opentelemetry/api/v/1.9.0)
 - Uptake [@azure/core-tracing@1.2.0](https://www.npmjs.com/package/@azure/core-tracing/v/1.2.0)
