@@ -9,17 +9,29 @@ import { Footer } from "@microsoft/omnichannel-chat-components";
 import { IFooterControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterControlProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { NewMessageNotificationSoundBase64 } from "../../assets/Audios";
 import { NotificationHandler } from "../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { createTimer } from "../../common/utils";
 import { downloadTranscript } from "./downloadtranscriptstateful/DownloadTranscriptStateful";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 
+let uiTimer : ITimer;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FooterStateful = (props: any) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXFooterStart
+        });
+    }, []);
+
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // hideFooterDisplay - the purpose of this is to keep the footer always "active",
     // but hide it visually in certain states (e.g., loading state) and show in some other states (e.g. active state).
@@ -72,7 +84,18 @@ export const FooterStateful = (props: any) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: footerProps?.controlProps?.hideAudioNotificationButton ? true : footerProps?.controlProps?.audioNotificationButtonProps?.isAudioMuted ?? false  });
             }
         }
+        
     }, [state.appStates.conversationState]);
+
+
+    useEffect(() => {
+        
+        console.log("ELOPEZ :: FooterStateful: uiTimer.milliSecondsElapsed: ", uiTimer.milliSecondsElapsed);
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXFFooterCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+    }, []);
 
     return (
         <>
@@ -92,3 +115,4 @@ export const FooterStateful = (props: any) => {
 };
 
 export default FooterStateful;
+

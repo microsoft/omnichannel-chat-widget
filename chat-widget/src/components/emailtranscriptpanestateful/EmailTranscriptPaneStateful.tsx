@@ -1,6 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
-import { findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, formatTemplateString, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
+import { createTimer, findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, formatTemplateString, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
 
 import { DimLayer } from "../dimlayer/DimLayer";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
@@ -9,6 +9,7 @@ import { IEmailTranscriptPaneProps } from "./interfaces/IEmailTranscriptPaneProp
 import { IInputValidationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/inputvalidationpane/interfaces/IInputValidationPaneControlProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { InputValidationPane } from "@microsoft/omnichannel-chat-components";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { NotificationHandler } from "../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
@@ -19,7 +20,17 @@ import { defaultMiddlewareLocalizedTexts } from "../webchatcontainerstateful/com
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 
+let uiTimer : ITimer;
+
 export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) => {
+    // this is to ensure the telemetry is set only once and start the load timer
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXEmailTranscriptPaneStart
+        });
+    }, []);
+
     const initialTabIndexMap: Map<string, number> = new Map();
     let elements: HTMLElement[] | null = [];
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -92,6 +103,12 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         setTabIndices(elements, initialTabIndexMap, false);
         setInitialEmail(state.appStates.preChatResponseEmail);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptLoaded });
+
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXEmailTranscriptPaneStart,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+
     }, [initialEmail]);
 
     return (

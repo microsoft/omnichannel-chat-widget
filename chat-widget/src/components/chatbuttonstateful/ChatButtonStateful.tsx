@@ -17,8 +17,7 @@ import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
-let uiTimer : ITimer ;
-
+let uiTimer : ITimer;
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
     // this is to ensure the telemetry is set only once and start the load timer
