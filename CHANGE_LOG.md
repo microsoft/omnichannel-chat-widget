@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.4] - 2025-01-28
+
 ### Added
 
 - Ability to call getAuthToken function to obtain a new JWT token when current token is already expired.
