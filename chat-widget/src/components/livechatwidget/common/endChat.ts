@@ -7,6 +7,7 @@ import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
 import EndChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/EndChatOptionalParams";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
@@ -16,19 +17,18 @@ import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { executeReducer } from "../../../contexts/createReducer";
-import { handleAuthentication } from "./authHelper";
 import { isPersistentEnabled } from "./reconnectChatHelper";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
+const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
     try {
         const { chatConfig } = props;
 
         // Use Case: If call is ongoing, end the call by simulating end call button click
-        endVoiceVideoCallIfOngoing(chatSDK, dispatch);
+        endVoiceVideoCallIfOngoing(facadeChatSDK, dispatch);
 
-        const conversationDetails = await getConversationDetailsCall(chatSDK);
+        const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
 
         // Use Case: When post chat is not configured
         if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
@@ -38,7 +38,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithoutPostChat
                 });
-                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+                await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             }
 
             // Use Case: If ended by Agent, stay chat in InActive state
@@ -52,7 +52,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 
         // Use Case: Can render post chat scenarios
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const postchatContext: any = await getPostChatContext(chatSDK, state, dispatch) ?? state?.domainStates?.postChatContext;
+        const postchatContext: any = await getPostChatContext(facadeChatSDK, state, dispatch) ?? state?.domainStates?.postChatContext;
 
         if (postchatContext === undefined) {
 
@@ -69,7 +69,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat
                 });
-                await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+                await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
                 return;
             }
 
@@ -91,7 +91,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
         const endedByCustomer = appStates?.conversationEndedBy === "Customer";
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const commonParams: [ILiveChatWidgetProps, any, ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>, any, any, any] = [props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter];
+        const commonParams: [ILiveChatWidgetProps, FacadeChatSDK, ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>, any, any, any] = [props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter];
 
         if (persistentEnabled && endedByCustomer) {
             await endChat(...commonParams, true, false, true);
@@ -118,7 +118,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.PrepareEndChatError
             });
-            await endChat(props, chatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+            await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
         }
     }
     finally {
@@ -128,10 +128,10 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: 
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
+const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any,
     skipEndChatSDK?: boolean, skipCloseChat?: boolean, postMessageToOtherTab?: boolean) => {
 
-    if (!skipEndChatSDK && chatSDK.conversation) {
+    if (!skipEndChatSDK && facadeChatSDK?.getChatSDK()?.conversation) {
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         const endChatOptionalParameters : EndChatOptionalParams = {
             isSessionEnded : inMemoryState?.appStates?.chatDisconnectEventReceived
@@ -141,9 +141,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatSDKCall
             });
-            //Get auth token again if chat continued for longer time, otherwise gets 401 error
-            await handleAuthentication(chatSDK, props.chatConfig, props.getAuthToken);
-            await chatSDK?.endChat(endChatOptionalParameters);
+            await facadeChatSDK?.endChat(endChatOptionalParameters);
         } catch (ex) {
 
             
@@ -155,7 +153,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
                         exception: ex
                     }
                 });
-            }else{
+            } else {
                 TelemetryHelper.logSDKEvent(LogLevel.WARN, {
                     Event: TelemetryEvent.DisconnectEndChatSDKCallFailed,
                     ExceptionDetails: {
@@ -167,6 +165,7 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             postMessageToOtherTab = false;
         } finally {
             endChatStateCleanUp(dispatch);
+            facadeChatSDK.destroy();
         }
     }
 
@@ -193,12 +192,12 @@ const endChat = async (props: ILiveChatWidgetProps, chatSDK: any, state: ILiveCh
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
             closeChatWidget(dispatch, props, state);
+            facadeChatSDK.destroy();
         }
-
     }
 
     if (postMessageToOtherTab) {
-        const endChatEventName = await getEndChatEventName(chatSDK, props);
+        const endChatEventName = await getEndChatEventName(facadeChatSDK, props);
         BroadcastService.postMessage({
             eventName: endChatEventName,
             payload: {
@@ -253,11 +252,11 @@ export const chatSDKStateCleanUp = (chatSDK: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const endVoiceVideoCallIfOngoing = async (chatSDK: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const endVoiceVideoCallIfOngoing = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     let callId = "";
     try {
-        if (chatSDK.isVoiceVideoCallingEnabled()) {
-            const voiceVideoCallingSdk = await chatSDK.getVoiceVideoCalling();
+        if (facadeChatSDK.getChatSDK().isVoiceVideoCallingEnabled()) {
+            const voiceVideoCallingSdk = await facadeChatSDK.getVoiceVideoCalling();
             if (voiceVideoCallingSdk && voiceVideoCallingSdk.isInACall()) {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 callId = (voiceVideoCallingSdk as any).callId;
@@ -301,11 +300,10 @@ const chatTokenCleanUp = async (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // Need to keep liveChatContext until chat is fully closed to for transcript download/email
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getEndChatEventName = async (chatSDK: any, props: ILiveChatWidgetProps) => {
+const getEndChatEventName = async (facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps) => {
     return getWidgetEndChatEventName(
-        chatSDK?.omnichannelConfig?.orgId,
-        chatSDK?.omnichannelConfig?.widgetId,
+        facadeChatSDK.getChatSDK()?.omnichannelConfig?.orgId,
+        facadeChatSDK.getChatSDK()?.omnichannelConfig?.widgetId,
         props?.controlProps?.widgetInstanceId ?? "");
 };
 

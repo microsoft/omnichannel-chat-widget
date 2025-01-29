@@ -2,6 +2,7 @@ import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConsta
 import React, { Dispatch, useCallback, useEffect } from "react";
 
 import { CallingContainer } from "@microsoft/omnichannel-chat-components";
+import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { ICallingContainerControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/interfaces/ICallingContainerControlProps";
 import { ICallingContainerStatefulProps } from "./ICallingContainerStatefulProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -9,16 +10,13 @@ import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetCon
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import useChatSDKStore from "../../hooks/useChatSDKStore";
+import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 
 export const CallingContainerStateful = (props: ICallingContainerStatefulProps) => {
 
-    //TODO : Close button confirmation implmentation is pending
-
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chatSDK: any = useChatSDKStore();
-
+    
+    const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { voiceVideoCallingSdk } = props as any;
 
@@ -43,7 +41,7 @@ export const CallingContainerStateful = (props: ICallingContainerStatefulProps) 
                     chatToken: state.domainStates.chatToken,
                     selfVideoHTMLElementId: controlProps.currentCallControlProps?.nonActionIds?.selfVideoTileId, // HTML element id where video stream of the agent will be rendered
                     remoteVideoHTMLElementId: controlProps.currentCallControlProps?.nonActionIds?.remoteVideoTileId, // HTML element id where video stream of the customer will be rendered
-                    OCClient: chatSDK?.OCClient
+                    OCClient: facadeChatSDK.getChatSDK()?.OCClient
                 });
             } catch (e) {
                 TelemetryHelper.logCallingEvent(LogLevel.ERROR, {

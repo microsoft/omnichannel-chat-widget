@@ -1,6 +1,7 @@
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 
 const overridePropsOnMockIfApplicable = (props: ILiveChatWidgetProps) => {
+    
     if (props?.mock?.type && props?.mock?.type.toLowerCase() === "designer") {
         if (!props.webChatContainerProps) {
             props.webChatContainerProps = {};

@@ -3,6 +3,8 @@ import React, { Dispatch, useEffect } from "react";
 
 import AudioNotificationStateful from "./audionotificationstateful/AudioNotificationStateful";
 import { Constants } from "../../common/Constants";
+import { ConversationState } from "../../contexts/common/ConversationState";
+import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { Footer } from "@microsoft/omnichannel-chat-components";
 import { IFooterControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterControlProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -14,8 +16,7 @@ import { NotificationScenarios } from "../webchatcontainerstateful/webchatcontro
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { downloadTranscript } from "./downloadtranscriptstateful/DownloadTranscriptStateful";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import useChatSDKStore from "../../hooks/useChatSDKStore";
-import { ConversationState } from "../../contexts/common/ConversationState";
+import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FooterStateful = (props: any) => {
@@ -24,15 +25,16 @@ export const FooterStateful = (props: any) => {
     // but hide it visually in certain states (e.g., loading state) and show in some other states (e.g. active state).
     // The reason for this approach is to make sure that state variables for audio notification work correctly after minimizing
     const { footerProps, downloadTranscriptProps, audioNotificationProps, hideFooterDisplay } = props;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chatSDK: any = useChatSDKStore();
+    
+    const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
+    
     const controlProps: IFooterControlProps = {
         id: "oc-lcw-footer",
         dir: state.domainStates.globalDir,
         onDownloadTranscriptClick: async () => {
             try {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.DownloadTranscriptButtonClicked, Description: "Download Transcript button clicked." });
-                await downloadTranscript(chatSDK, downloadTranscriptProps, state);
+                await downloadTranscript(facadeChatSDK, downloadTranscriptProps, state);
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.DownloadTranscriptFailed,

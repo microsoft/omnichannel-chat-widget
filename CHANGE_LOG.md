@@ -7,11 +7,20 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- Added correct OCChatSDKTelemetryData type when telemetry event builder is alled for logSDKEvent 
+
+- Ability to call getAuthToken function to obtain a new JWT token when current token is already expired.
+- Added correct OCChatSDKTelemetryData type when telemetry event builder is alled for logSDKEvent
 - Added Event broadcast from OOH pane when minimized so that iframe width height is adjusted
 - Padding property to control the padding size choice input adaptive card form field
+- Telemetry to identify expected prechat survey.
+- Added copilot survey context
+- Fix for persistent helper.
 
 ### Fixed
+
+- Refactored NetWorkReconnected to call only when there is an active chat
+- Fix to reset chatsdk after a conversation with post survey with prechat present.
+- Adding input element to the blocked list of html rendered elements.
 - Fixed resetting request id when getConversationDetails returns wrap or closed state
 - For disconnected chats, perform a soft end chat.
 - Audio button visibility state is tied to audio mute state.
@@ -21,6 +30,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - export renderingmiddlewares to be imported by hosts
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.6)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.4)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.3)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.2)
 - Uptake [@opentelemetry/api@1.9.0](https://www.npmjs.com/package/@opentelemetry/api/v/1.9.0)
 - Uptake [@azure/core-tracing@1.2.0](https://www.npmjs.com/package/@azure/core-tracing/v/1.2.0)

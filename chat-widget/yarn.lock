@@ -2298,10 +2298,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.295.tgz#d3c8d7ab186f422727ba112d6ebe5fe8e41051d9"
   integrity sha512-W+IzEBw8a6LOOfRJM02dTT7BDZijxm+Z7lhtOAz1+y9vQm1Kdz9jlAO+qCEKsfxtUOmKilW8DIRqFw2aUgKeGg==
 
-"@microsoft/ocsdk@^0.5.9":
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.9.tgz#71a123efcf8fdb2a6f9345c8ef8ea86711b80f88"
-  integrity sha512-ZlCc7fGhy8YeSAmJWpqUO7FWlCbNXkkQhvRiXWzruZASB5vZl9imKEMk88HEGQh+R8kHhIe0PbA+RDScsnV9Wg==
+"@microsoft/ocsdk@^0.5.10":
+  version "0.5.10"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.10.tgz#54dcd85e71bb122228843f2c6fbf639e66b3375f"
+  integrity sha512-3JWsSFYGSz9gA25AaEWETmDiJwfq5es/4MtNvEsppoFFZFtl/SGGcTVtqCgGmX4C5gTjkYjAddd4QXR3ZIFYWQ==
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@types/node" "^12.20.26"
@@ -2326,17 +2326,17 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.10.2":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.2.tgz#467641aecf7a5be3e93ce470e9e073073d7440bb"
-  integrity sha512-mz82hpfKIOQdU7vHuIu3Q07P+NfPaipncxroIDOEl0Yjt/KL/GUv7J3Tpu5KaiRxesTZkeZuoalTnQmTS0HXyA==
+"@microsoft/omnichannel-chat-sdk@^1.10.6":
+  version "1.10.6"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.6.tgz#79d97d5cf318785df9fc2bb997db073448d53146"
+  integrity sha512-zBX8JcVw2p5P7FJmHURRq1PoGYaux/+eW3KPXs+KMC2RX9ESaXEDVR4F3zLpC2+OZk5FV7P1LsvZbEstY3ymFQ==
   dependencies:
     "@azure/communication-chat" "1.5.2"
     "@azure/communication-common" "2.3.1"
-    "@microsoft/ocsdk" "^0.5.9"
+    "@microsoft/ocsdk" "^0.5.10"
     "@microsoft/omnichannel-amsclient" "^0.1.6"
     "@microsoft/omnichannel-ic3core" "^0.1.4"
-    acs_webchat-chat-adapter "^0.0.35-beta.30"
+    acs_webchat-chat-adapter "^0.0.35-beta.30.1"
 
 "@microsoft/omnichannel-ic3core@^0.1.4":
   version "0.1.4"
@@ -4540,7 +4540,7 @@ acorn@^8.2.4, acorn@^8.5.0, acorn@^8.7.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.2.tgz#1b2f25db02af965399b9776b0c2c391276d37c4a"
   integrity sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==
 
-acs_webchat-chat-adapter@^0.0.35-beta.30:
+acs_webchat-chat-adapter@^0.0.35-beta.30.1:
   version "0.0.35-beta.30.1"
   resolved "https://registry.yarnpkg.com/acs_webchat-chat-adapter/-/acs_webchat-chat-adapter-0.0.35-beta.30.1.tgz#218002f3d6417676a0465a97ec1d4c38d56dc963"
   integrity sha512-ki4tA5e6lmZxhyEfx3L8yygeTB58b/t7/+guISBMYw/r7zP7r5I9lGg5k9IykaoldcrI7PsnPTskszmbyk4BtQ==

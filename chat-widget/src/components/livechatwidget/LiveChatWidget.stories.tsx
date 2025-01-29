@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import { BroadcastServiceInitialize } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ILiveChatWidgetProps } from "./interfaces/ILiveChatWidgetProps";
+import { IMockProps } from "./interfaces/IMockProps";
 import { IconButton } from "@fluentui/react/lib/Button";
 import LiveChatWidget from "./LiveChatWidget";
 import { Meta } from "@storybook/react/types-6-0";
 import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
+import { ParticipantType } from "../../common/Constants";
 import { Story } from "@storybook/react";
 import { hooks } from "botframework-webchat";
-import { ParticipantType } from "../../common/Constants";
 
 export default {
     title: "Stateful Components/Live Chat Widget",
@@ -32,6 +33,23 @@ const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatW
 
 export const LiveChatWidgetFixedSize = LiveChatWidgetTemplate.bind({});
 
+const InitialMockChatConfig: ChatConfig = {
+    ChatWidgetLanguage: {
+        msdyn_localeid: "1033",
+        msdyn_languagename: "English - United States"
+    },
+    DataMaskingInfo: {},
+    LiveChatConfigAuthSettings: {},
+    LiveChatVersion: 2,
+    LiveWSAndLiveChatEngJoin: {
+        msdyn_postconversationsurveyenable: "true",
+        msdyn_postconversationsurveymode: "192350000",
+        OutOfOperatingHours: "false"
+    },
+    allowedFileExtensions: "",
+    maxUploadFileSize: ""
+};
+
 const liveChatWidgetFixedSizeProps: ILiveChatWidgetProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
@@ -43,7 +61,8 @@ const liveChatWidgetFixedSizeProps: ILiveChatWidgetProps = {
             left: "20px"
         }
     },
-    telemetryConfig: dummyTelemetryConfig
+    telemetryConfig: dummyTelemetryConfig,
+    chatConfig: InitialMockChatConfig
 };
 
 LiveChatWidgetFixedSize.args = liveChatWidgetFixedSizeProps;
@@ -119,9 +138,15 @@ const sampleTypingIndicatorMiddleware = () => (_next: any) => (args: any) => {
     return output;
 };
 
+const mock : IMockProps = {
+    type : "Test" as any // eslint-disable-line @typescript-eslint/no-explicit-any
+};
+
 const liveChatWidgetCustom1Props: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
+    chatConfig: InitialMockChatConfig,
     telemetryConfig: dummyTelemetryConfig,
     styleProps: {
         generalStyles: {
@@ -391,9 +416,11 @@ LiveChatWidgetCustom1.args = liveChatWidgetCustom1Props;
 export const LiveChatWidgetCustom2 = LiveChatWidgetTemplate.bind({});
 
 const liveChatWidgetCustom2Props: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,
+    chatConfig: InitialMockChatConfig,
     styleProps: {
         generalStyles: {
             width: "585px",
@@ -427,7 +454,7 @@ const liveChatWidgetCustom2Props: ILiveChatWidgetProps = {
                 width: "100%",
                 height: "100%",
                 justifyContent: "center",
-                backgroundImage: "url(https://charlwanconvcontroldev.blob.core.windows.net/botframework/abcd.png)",
+                backgroundImage: "url(https://lcwstorageaccountdev.blob.core.windows.net/internaltrialpoc/dev/assets/images/Microsoft-logo_rgb_c-wht-768x344.png)",
                 backgroundSize: "100% 100%",
                 borderStyle: "",
                 borderRadius: 0,
@@ -631,9 +658,11 @@ const DemoSendBox = () => {
 };
 
 const liveChatWidgetCustom3Props: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,
+    chatConfig: InitialMockChatConfig,
     styleProps: {
         generalStyles: {
             width: "700px",
@@ -650,7 +679,7 @@ const liveChatWidgetCustom3Props: ILiveChatWidgetProps = {
                 text: "Customer Support Chat"
             },
             headerIconProps: {
-                src: "https://charlwanconvcontroldev.blob.core.windows.net/botframework/hp.png"
+                src: "https://lcwstorageaccountdev.blob.core.windows.net/internaltrialpoc/dev/assets/images/ms-symbollockup_mssymbol_19.png"
             }
         },
         styleProps: {
@@ -778,9 +807,11 @@ LiveChatWidgetAzureWithCurrentCall.args = liveChatWidgetCurrentCallProps;
 export const LiveChatWidgetPopoutStyle = LiveChatWidgetTemplate.bind({});
 
 const liveChatWidgetPopoutStyleProps: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,
+    chatConfig: InitialMockChatConfig,
     controlProps: {
         hideStartChatButton: true,
         hideHeader: true
@@ -805,16 +836,23 @@ LiveChatWidgetPopoutStyle.args = liveChatWidgetPopoutStyleProps;
 export const LiveChatWidgetReconnectChatPane = LiveChatWidgetTemplate.bind({});
 
 const liveChatWidgetReconnectChatPaneProps: ILiveChatWidgetProps = {
+    mock,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     chatSDK: new MockChatSDK() as any,
     telemetryConfig: dummyTelemetryConfig,
+    getAuthToken: async () => { return Promise.resolve("ABC"); },
     chatConfig: {
         LiveChatConfigAuthSettings: {
             msdyn_javascriptclientfunction: "testAuth"
         },
         LiveWSAndLiveChatEngJoin: {
             msdyn_enablechatreconnect: "true"
-        }
+        },
+        ChatWidgetLanguage: undefined,
+        DataMaskingInfo: undefined,
+        LiveChatVersion: 0,
+        allowedFileExtensions: "",
+        maxUploadFileSize: ""
     },
     styleProps: {
         generalStyles: {
@@ -869,7 +907,8 @@ const MockChatConfig: ChatConfig = {
     LiveChatVersion: 2,
     LiveWSAndLiveChatEngJoin: {
         msdyn_postconversationsurveyenable: "true",
-        msdyn_postconversationsurveymode: "192350000"
+        msdyn_postconversationsurveymode: "192350000",
+        OutOfOperatingHours: "false"
     },
     allowedFileExtensions: "",
     maxUploadFileSize: ""
