@@ -2,7 +2,7 @@ import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { Constants } from "../../../../../common/Constants";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createMessageSequenceIdOverrideMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+export const createMessageSequenceIdOverrideMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
     if (isApplicable(action)) {
         return next(overrideSequenceIdWithOriginalMessageId(action));
     }
@@ -63,5 +63,3 @@ const extractOriginalMessageId = (action: any): number | undefined => {
 const lookupOriginalMessageId = (action: IWebChatAction) => {
     return action?.payload?.activity?.channelData?.metadata?.OriginalMessageId;
 };
-
-export default createMessageSequenceIdOverrideMiddleware;
