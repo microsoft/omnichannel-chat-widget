@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+
 - Additional telemetry to identify UX start/end scenarios
 
 ## [1.7.4] - 2025-01-28
