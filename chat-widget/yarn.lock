@@ -2326,17 +2326,17 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.10.5":
-  version "1.10.5"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.5.tgz#41cb5d9d9b7e7220b78820f43bcd42a166a6e95b"
-  integrity sha512-Vcrbq0vMGrtQ7HrK+2CeSF+YCHx7d86lbYopBFx2iZ2BDuSYdQ06d/fGfoEk6JMXUQkk/eeHc/1Vm3OrU6IF2w==
+"@microsoft/omnichannel-chat-sdk@^1.10.6":
+  version "1.10.6"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.6.tgz#79d97d5cf318785df9fc2bb997db073448d53146"
+  integrity sha512-zBX8JcVw2p5P7FJmHURRq1PoGYaux/+eW3KPXs+KMC2RX9ESaXEDVR4F3zLpC2+OZk5FV7P1LsvZbEstY3ymFQ==
   dependencies:
     "@azure/communication-chat" "1.5.2"
     "@azure/communication-common" "2.3.1"
     "@microsoft/ocsdk" "^0.5.10"
     "@microsoft/omnichannel-amsclient" "^0.1.6"
     "@microsoft/omnichannel-ic3core" "^0.1.4"
-    acs_webchat-chat-adapter "^0.0.35-beta.30"
+    acs_webchat-chat-adapter "^0.0.35-beta.30.1"
 
 "@microsoft/omnichannel-ic3core@^0.1.4":
   version "0.1.4"
@@ -4540,7 +4540,7 @@ acorn@^8.2.4, acorn@^8.5.0, acorn@^8.7.1:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.2.tgz#1b2f25db02af965399b9776b0c2c391276d37c4a"
   integrity sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==
 
-acs_webchat-chat-adapter@^0.0.35-beta.30:
+acs_webchat-chat-adapter@^0.0.35-beta.30.1:
   version "0.0.35-beta.30.1"
   resolved "https://registry.yarnpkg.com/acs_webchat-chat-adapter/-/acs_webchat-chat-adapter-0.0.35-beta.30.1.tgz#218002f3d6417676a0465a97ec1d4c38d56dc963"
   integrity sha512-ki4tA5e6lmZxhyEfx3L8yygeTB58b/t7/+guISBMYw/r7zP7r5I9lGg5k9IykaoldcrI7PsnPTskszmbyk4BtQ==
