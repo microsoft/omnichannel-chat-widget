@@ -49,6 +49,7 @@ import { DataStoreManager } from "../../../common/contextDataStore/DataStoreMana
 import DraggableChatWidget from "../../draggable/DraggableChatWidget";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
 import EmailTranscriptPaneStateful from "../../emailtranscriptpanestateful/EmailTranscriptPaneStateful";
+import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import HeaderStateful from "../../headerstateful/HeaderStateful";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
@@ -56,6 +57,7 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { IScrollBarProps } from "../interfaces/IScrollBarProps";
+import { ITimer } from "../../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import LoadingPaneStateful from "../../loadingpanestateful/LoadingPaneStateful";
 import OutOfOfficeHoursPaneStateful from "../../ooohpanestateful/OOOHPaneStateful";
@@ -89,9 +91,19 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
-import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
+
+let uiTimer : ITimer;
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLivechatwidgetStart
+        });
+    }, []);
+
+
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useChatAdapterStore();
@@ -666,6 +678,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: props.webChatContainerProps?.renderingMiddlewareProps });
     }, [props.webChatContainerProps?.renderingMiddlewareProps]);
+
+    useEffect(() => {
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLivechatwidgetCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+    }, []);
 
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {

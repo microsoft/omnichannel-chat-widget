@@ -89,10 +89,8 @@ export const FooterStateful = (props: any) => {
 
 
     useEffect(() => {
-        
-        console.log("ELOPEZ :: FooterStateful: uiTimer.milliSecondsElapsed: ", uiTimer.milliSecondsElapsed);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXFFooterCompleted,
+            Event: TelemetryEvent.UXFooterCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);

@@ -3,6 +3,7 @@
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
+import { createTimer, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import { Components } from "botframework-webchat";
@@ -10,6 +11,7 @@ import { Constants } from "../../common/Constants";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
@@ -23,8 +25,9 @@ import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/
 import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
 import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
-import { setFocusOnSendBox } from "../../common/utils";
 import { useChatContextStore } from "../..";
+
+let uiTimer : ITimer;
 
 const broadcastChannelMessageEvent = "message";
 const postActivity = (activity: any) => { 
@@ -52,6 +55,14 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 };
 
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXWebchatContainerCompleted
+        });
+    }, []);
+
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const {webChatContainerProps, contextDataStore} = props;
@@ -138,6 +149,13 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         };
 
         magicCodeBroadcastChannel.addEventListener(broadcastChannelMessageEvent, eventListener);
+    }, []);
+
+    useEffect(() => {
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXWebchatContainerCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
     }, []);
 
     return (

@@ -100,7 +100,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         }
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLCWChatButtonStart,
+            Event: TelemetryEvent.UXLCWChatButtonCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
 

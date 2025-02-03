@@ -105,7 +105,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptLoaded });
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXEmailTranscriptPaneStart,
+            Event: TelemetryEvent.UXEmailTranscriptPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
 
