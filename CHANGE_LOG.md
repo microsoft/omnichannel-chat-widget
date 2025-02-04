@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Telemetry to identify expected prechat survey.
 - Added copilot survey context
 - Fix for persistent helper.
+- Fixed handling silent customer removal from the thread
 
 ### Fixed
 
