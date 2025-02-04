@@ -3,7 +3,7 @@ import { WebChatActionType } from "../../enums/WebChatActionType";
 import { Constants } from "../../../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createMessageTimeStampMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+export const createMessageTimeStampMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
     if (isApplicable(action)) {
         return next(evaluateTagsAndOverrideTimeStamp(action));
     }
@@ -94,5 +94,3 @@ const tagLookup = (action: IWebChatAction, tag: string): string | null => {
     }
     return null;
 };
-
-export default createMessageTimeStampMiddleware;

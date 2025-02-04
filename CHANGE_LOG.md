@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.4] - 2025-01-28
+
 ### Added
 
 - Ability to call getAuthToken function to obtain a new JWT token when current token is already expired.
@@ -30,7 +32,7 @@ All notable changes to this project will be documented in this file.
 - Padding property to control the padding size choice input adaptive card form field
 
 ### Changed
-
+- export renderingmiddlewares to be imported by hosts
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.6)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.4)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.3)

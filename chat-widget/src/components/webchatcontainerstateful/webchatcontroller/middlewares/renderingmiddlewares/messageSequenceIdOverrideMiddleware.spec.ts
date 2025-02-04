@@ -2,7 +2,7 @@
 import { Constants } from "../../../../../common/Constants";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
-import createMessageSequenceIdOverrideMiddleware from "./messageSequenceIdOverrideMiddleware";
+import { createMessageSequenceIdOverrideMiddleware } from "./messageSequenceIdOverrideMiddleware";
 
 describe("messageSequenceIdOverrideMiddleware", () => {
 

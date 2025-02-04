@@ -11,3 +11,4 @@ export { getMockChatSDKIfApplicable } from "./components/livechatwidget/common/g
 export { getWidgetCacheId, getWidgetEndChatEventName, ConversationState };
 
 export { encodeComponentString, decodeComponentString, BroadcastService, useChatSDKStore, useChatContextStore, useFacadeChatSDKStore };
+export * from "./components/webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares";

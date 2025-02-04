@@ -4,7 +4,7 @@ import { INotificationPaneProps } from "@microsoft/omnichannel-chat-components/l
 import NotificationPaneStateful from "../../../../notificationpanestateful/NotificationPaneStateful";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createToastMiddleware = (notificationPaneProps: INotificationPaneProps | undefined, endChat: any) => {
+export const createToastMiddleware = (notificationPaneProps: INotificationPaneProps | undefined, endChat: any) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name
     const toastMiddleware = () => (next: any) => (card: any) => {
         const {notification} = card;
@@ -22,5 +22,3 @@ const createToastMiddleware = (notificationPaneProps: INotificationPaneProps | u
 
     return toastMiddleware;
 };
-
-export default createToastMiddleware;
