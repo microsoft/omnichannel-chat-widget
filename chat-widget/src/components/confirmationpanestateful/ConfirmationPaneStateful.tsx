@@ -18,8 +18,6 @@ let uiTimer : ITimer;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams) => {
-
-    console.log("ELOPEZANAYA :: 1");
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -80,8 +78,6 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
         elements = findParentFocusableElementsWithoutChildContainer(controlProps.id as string);
         setTabIndices(elements, initialTabIndexMap, false);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ConfirmationPaneLoaded });
-
-        console.log("ELOPEZANAYA :: close  :: ", uiTimer.milliSecondsElapsed);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXConfirmationPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
