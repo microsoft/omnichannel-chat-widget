@@ -9,14 +9,24 @@ import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/i
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IProactiveChatPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/proactivechatpane/interfaces/IProactiveChatPaneControlProps";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { ProactiveChatPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
+let uiTimer : ITimer;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ProactiveChatPaneStateful = (props: any) => {
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXProactiveChatPaneStart
+        });
+    }, []);
+
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { proactiveChatProps, startChat } = props;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,6 +109,10 @@ export const ProactiveChatPaneStateful = (props: any) => {
             handleProactiveChatInviteTimeout();
         }, proactiveChatProps?.ProactiveChatInviteTimeoutInMs ?? Constants.ProactiveChatInviteTimeoutInMs);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ProactiveChatPaneLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXProactiveChatCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
         return () => {
             clearTimeout(timeoutEvent);
         };

@@ -108,6 +108,7 @@ export enum TelemetryEvent {
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
+
     WidgetLoadStarted = "WidgetLoadStarted",
     WidgetLoadComplete = "WidgetLoadComplete",
     WidgetLoadFailed = "WidgetLoadFailed",
@@ -231,7 +232,40 @@ export enum TelemetryEvent {
     NewTokenSuccess = "NewTokenSuccess",
     NewTokenFailed = "NewTokenFailed",
     NewTokenExpired = "NewTokenExpired",
-    TokenEmptyOrSame = "TokenEmptyOrSame"
+    TokenEmptyOrSame = "TokenEmptyOrSame",
+
+    //UX Telemetry Events
+    UXFooterStart = "UXFooterStart",
+    UXFooterCompleted = "UXFooterCompleted",
+    UXHeaderStart = "UXHeaderStart",
+    UXHeaderCompleted = "UXHeaderCompleted",
+    UXLoadingPaneStart = "UXLoadingPaneStart",
+    UXLoadingPaneCompleted = "UXLoadingPaneCompleted",
+    UXNotificationPaneStart = "UXNotificationPaneStart",
+    UXNotificationPaneCompleted = "UXNotificationPaneCompleted",
+    UXOOHPaneStart = "UXOOHPaneStart",
+    UXOOHPaneCompleted = "UXOOHPaneCompleted",
+    UXPostChatLoadingPaneStart = "UXPostChatLoadingPaneStart",
+    UXPostChatLoadingPaneCompleted = "UXPostChatLoadingPaneCompleted",
+    UXPrechatPaneStart = "UXPrechatPaneStart",
+    UXPrechatPaneCompleted = "UXPrechatPaneCompleted",
+    UXProactiveChatPaneStart = "UXProactiveChatPaneStart",
+    UXProactiveChatCompleted = "UXProactiveChatCompleted",
+    UXReconnectChatPaneStart = "UXReconnectChatPaneStart",
+    UXReconnectChatCompleted = "UXReconnectChatCompleted",
+    UXStartChatErrorPaneStart = "UXStartChatErrorPaneStart",
+    UXStartChatErrorCompleted = "UXStartChatErrorCompleted",
+    UXEmailTranscriptPaneStart = "UXEmailTranscriptPaneStart",
+    UXEmailTranscriptPaneCompleted = "UXEmailTranscriptPaneCompleted",
+    UXWebchatContainerStart = "UXWebchatContainerStart",
+    UXWebchatContainerCompleted = "UXWebchatContainerCompleted",
+    UXLCWChatButtonStart = "UXLCWChatButtonStart",
+    UXLCWChatButtonCompleted = "UXLCWChatButtonCompleted",
+    UXConfirmationPaneStart = "UXConfirmationPaneStart",
+    UXConfirmationPaneCompleted = "UXConfirmationPaneCompleted",
+    UXLivechatwidgetStart = "UXLivechatwidgetStart",
+    UXLivechatwidgetCompleted = "UXLivechatwidgetCompleted"
+
 }
 
 export interface TelemetryInput {

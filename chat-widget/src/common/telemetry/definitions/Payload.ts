@@ -28,6 +28,21 @@ export interface LoadTelemetryData extends BaseTelemetryData {
     Description?: string;
 }
 
+export interface UITelemetryData extends BaseTelemetryData {
+    Event?: string;
+    ResourcePath?: string;
+    ElapsedTimeInMilliseconds?: number;
+    WidgetState?: string;
+    ChatState?: string;
+    ChatType?: string;
+    ExceptionDetails?: object;
+    OCChatSDKVersion?: string;
+    OCChatWidgetVersion?: string;
+    OCChatComponentsVersion?: string;
+    Description?: string;
+}
+
+
 export interface MessageProcessingErrorData extends BaseTelemetryData {
     Event: string;
     ExceptionDetails: object;

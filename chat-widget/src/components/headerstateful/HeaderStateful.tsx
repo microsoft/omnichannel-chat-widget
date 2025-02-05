@@ -1,21 +1,33 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
+
+import { ConfirmationState } from "../../common/Constants";
 import { ConversationState } from "../../contexts/common/ConversationState";
+import DraggableEventEmitter from "../draggable/DraggableEventEmitter";
 import { Header } from "@microsoft/omnichannel-chat-components";
 import { IHeaderControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderControlProps";
 import { IHeaderStatefulParams } from "./interfaces/IHeaderStatefulParams";
 import { IHeaderStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderStyleProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { createTimer } from "../../common/utils";
 import { defaultOutOfOfficeHeaderStyleProps } from "./common/styleProps/defaultOutOfOfficeHeaderStyleProps";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { ConfirmationState } from "../../common/Constants";
-import DraggableEventEmitter from "../draggable/DraggableEventEmitter";
+
+let uiTimer : ITimer;
 
 export const HeaderStateful = (props: IHeaderStatefulParams) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXHeaderStart
+        });
+    }, []);
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,6 +101,13 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         elementId: (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeControlProps.id as string : controlProps.id as string,
         targetWindow: props.draggableEventEmitterTargetWindow ?? window
     };
+
+    useEffect(() => {
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXHeaderCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+    }, []);
 
     if (props.draggable === true) {
         const styleProps = (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps;

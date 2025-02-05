@@ -1,20 +1,32 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
+import { createTimer, setFocusOnElement } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IReconnectChatPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/reconnectchatpane/interfaces/IReconnectChatPaneControlProps";
 import { IReconnectChatPaneStatefulParams } from "./interfaces/IReconnectChatPaneStatefulParams";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { ReconnectChatPane } from "@microsoft/omnichannel-chat-components";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { setFocusOnElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useFacadeChatSDKStore from "../../hooks/useFacadeChatSDKStore";
 
+let uiTimer : ITimer;
+
 export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParams) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXReconnectChatPaneStart,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+    }, []);
+
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     //const chatSDK: any = useChatSDKStore();
@@ -75,6 +87,9 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
     useEffect(() => {
         setFocusOnElement(document.getElementById(controlProps.id as string) as HTMLElement);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ReconnectChatPaneLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXReconnectChatCompleted
+        });
     }, []);
 
     return (

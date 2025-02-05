@@ -1,22 +1,35 @@
+import { ConfirmationState, NotificationPaneConstants } from "../../common/Constants";
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef } from "react";
+
+import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
+import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { INotificationPaneInternal } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/common/INotificationPaneInternal";
+import { INotificationPaneStatefulProps } from "./interfaces/INotificationPaneStatefulProps";
+import { ITimer } from "../../common/interfaces/ITimer";
+import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { NotificationPane } from "@microsoft/omnichannel-chat-components";
+import { NotificationScenarios } from "../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
+import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { createTimer } from "../../common/utils";
+import { defaultChatDisconnectControlProps } from "./defaultProps/defaultChatDisconnectControlProps";
+import { defaultChatDisconnectStyleProps } from "./defaultProps/defaultChatDisconnectStyleProps";
 import { hooks } from "botframework-webchat";
 import { useCallback } from "react";
-import { INotificationPaneStatefulProps } from "./interfaces/INotificationPaneStatefulProps";
-import { INotificationPaneInternal } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/common/INotificationPaneInternal";
-import { NotificationScenarios } from "../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
-import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
-import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
-import { ConfirmationState, NotificationPaneConstants } from "../../common/Constants";
-import { defaultChatDisconnectStyleProps } from "./defaultProps/defaultChatDisconnectStyleProps";
-import { defaultChatDisconnectControlProps } from "./defaultProps/defaultChatDisconnectControlProps";
+
+let uiTimer : ITimer;
 
 export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXNotificationPaneStart
+        });
+    }, []);
+
     const { notificationPaneProps, notificationScenarioType, endChat } = props;
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -146,6 +159,13 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
             break;
         // TODO additional scenarios to be added...
     }
+
+    useEffect(() => {
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXNotificationPaneCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+    }, []);
 
     return (
         <NotificationPane

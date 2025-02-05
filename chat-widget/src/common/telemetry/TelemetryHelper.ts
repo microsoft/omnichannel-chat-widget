@@ -1,5 +1,5 @@
 import { ACSAdapterContract, ActionsContract, BaseContract, CallingContract, ConfigValidationContract, IC3ClientContract, LoadContract, OCChatSDKContract, TelemetryContract, WebChatContract } from "./definitions/Contracts";
-import { ACSAdapterTelemetryData, ActionTelemetryData, CallingTelemetryData, ConfigValidationTelemetryData, FacadeChatSDKTelemetryData, IC3ClientTelemetryData, LoadTelemetryData, OCChatSDKTelemetryData, TelemetryData, WebChatTelemetryData } from "./definitions/Payload";
+import { ACSAdapterTelemetryData, ActionTelemetryData, CallingTelemetryData, ConfigValidationTelemetryData, FacadeChatSDKTelemetryData, IC3ClientTelemetryData, LoadTelemetryData, OCChatSDKTelemetryData, TelemetryData, UITelemetryData, WebChatTelemetryData } from "./definitions/Payload";
 import { LogLevel, ScenarioType, TelemetryEvent, TelemetryInput } from "./TelemetryConstants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -262,6 +262,18 @@ export class TelemetryHelper {
         };
         BroadcastService.postMessage(telemetryEvent);
     }
+
+    public static logUIEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
+        const telemetryEvent: ITelemetryEvent = {
+            eventName: payload?.Event ?? "",
+            logLevel: logLevel,
+            payload: {
+                ...payload
+            } as UITelemetryData
+        };
+        BroadcastService.postMessage(telemetryEvent);
+    }
+
 
     public static logActionEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
         const telemetryEvent: ITelemetryEvent = {

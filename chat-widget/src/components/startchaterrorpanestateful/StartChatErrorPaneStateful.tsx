@@ -1,25 +1,35 @@
+import { IImageProps, IStyle } from "@fluentui/react";
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-import { IStyle, IImageProps } from "@fluentui/react";
+import { createTimer, findAllFocusableElement } from "../../common/utils";
 
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILoadingPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneControlProps";
 import { ILoadingPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneStyleProps";
-import { LoadingPane } from "@microsoft/omnichannel-chat-components";
-import { findAllFocusableElement } from "../../common/utils";
-import useChatContextStore from "../../hooks/useChatContextStore";
-import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import { defaultStartChatErrorPaneGeneralStyleProps } from "./common/defaultStartChatErrorPaneGeneralStyleProps";
-import { defaultStartChatErrorPaneTitleStyleProps } from "./common/defaultStartChatErrorPaneTitleStyleProps";
-import { defaultStartChatErrorPaneSubtitleStyleProps } from "./common/defaultStartChatErrorPaneSubtitleStyleProps";
-import { defaultStartChatErrorPaneIconStyleProps } from "./common/defaultStartChatErrorPaneIconStyleProps";
-import { defaultStartChatErrorPaneIconImageStyleProps } from "./common/defaultStartChatErrorPaneIconImageProps";
 import { IStartChatErrorPaneProps } from "./interfaces/IStartChatErrorPaneProps";
+import { ITimer } from "../../common/interfaces/ITimer";
+import { LoadingPane } from "@microsoft/omnichannel-chat-components";
 import { StartChatErrorPaneConstants } from "../../common/Constants";
 import { StartChatFailureType } from "../../contexts/common/StartChatFailureType";
+import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { defaultStartChatErrorPaneGeneralStyleProps } from "./common/defaultStartChatErrorPaneGeneralStyleProps";
+import { defaultStartChatErrorPaneIconImageStyleProps } from "./common/defaultStartChatErrorPaneIconImageProps";
+import { defaultStartChatErrorPaneIconStyleProps } from "./common/defaultStartChatErrorPaneIconStyleProps";
+import { defaultStartChatErrorPaneSubtitleStyleProps } from "./common/defaultStartChatErrorPaneSubtitleStyleProps";
+import { defaultStartChatErrorPaneTitleStyleProps } from "./common/defaultStartChatErrorPaneTitleStyleProps";
+import useChatContextStore from "../../hooks/useChatContextStore";
+
+let uiTimer : ITimer;
 
 export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatErrorPaneProps) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXStartChatErrorPaneStart
+        });
+    }, []);
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     
     const generalStyleProps: IStyle = Object.assign({}, defaultStartChatErrorPaneGeneralStyleProps, startChatErrorPaneProps?.styleProps?.generalStyleProps);
@@ -69,6 +79,10 @@ export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatEr
             firstElement[0].focus();
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.StartChatErrorPaneLoaded, Description: "Start chat error pane loaded." });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.UXStartChatErrorCompleted, ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+        
+
     }, []);
     
     return (
