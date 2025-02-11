@@ -76,7 +76,7 @@
   "dependencies": {
     "@azure/core-tracing": "^1.2.0",
     "@microsoft/omnichannel-chat-components": "1.1.5",
-    "@microsoft/omnichannel-chat-sdk": "^1.10.6",
+    "@microsoft/omnichannel-chat-sdk": "^1.10.9",
     "@opentelemetry/api": "^1.9.0",
     "abort-controller-es5": "^2.0.1",
     "dompurify": "^2.5.4",
