@@ -1,4 +1,6 @@
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
+import { createTimer, findAllFocusableElement } from "../../common/utils";
 
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -6,14 +8,22 @@ import { ILoadingPaneControlProps } from "@microsoft/omnichannel-chat-components
 import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
 import { ILoadingPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneStyleProps";
 import { IStyle } from "@fluentui/react";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { LoadingPane } from "@microsoft/omnichannel-chat-components";
-import { defaultGeneralPostChatLoadingPaneStyleProps } from "./common/defaultgeneralPostChatLoadingPaneStyleProps";
-import { findAllFocusableElement } from "../../common/utils";
-import useChatContextStore from "../../hooks/useChatContextStore";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { defaultGeneralPostChatLoadingPaneStyleProps } from "./common/defaultgeneralPostChatLoadingPaneStyleProps";
+import useChatContextStore from "../../hooks/useChatContextStore";
 
+let uiTimer : ITimer;
 export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXPostChatLoadingPaneStart
+        });
+    }, []);
+
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPostChatLoadingPaneStyleProps, props.styleProps?.generalStyleProps);
@@ -41,6 +51,10 @@ export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
             firstElement[0].focus();
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PostChatSurveyLoadingPaneLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXPostChatLoadingPaneCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
     }, []);
     
     return (

@@ -1,7 +1,7 @@
 import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-import { extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
+import { createTimer, extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -10,6 +10,7 @@ import { IPreChatSurveyPaneControlProps } from "@microsoft/omnichannel-chat-comp
 import { IPreChatSurveyPaneStatefulParams } from "./interfaces/IPreChatSurveyPaneStatefulParams";
 import { IPreChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneStyleProps";
 import { IStyle } from "@fluentui/react";
+import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import MarkdownIt from "markdown-it";
 import { PreChatSurveyPane } from "@microsoft/omnichannel-chat-components";
@@ -19,8 +20,18 @@ import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyle
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
+let uiTimer : ITimer;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParams) => {
+
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXPrechatPaneStart
+        });
+    }, []);
+    
     // Set MarkDown global variable to be used for prechat adaptive cards
     window["markdownit"] = MarkdownIt;
 
@@ -143,6 +154,10 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
             firstElement[0].focus();
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSurveyLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXPrechatPaneCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
     }, []);
 
     return (
