@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Widget
 
-## [Unreleased]
+## [1.7.5] - 2025-02-12
 
 ### Added
 
