@@ -71,12 +71,14 @@ function Header(props: IHeaderProps) {
                             id={chatIconProps.id}
                             src={chatIconProps.src}
                             alt={chatIconProps.alt}
+                            tabIndex={-1}
                             styles={iconImageStyles} />)
                     }
                     {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.headerTitle) ||
                         <h1>
                             <Label
                                 id={titleProps.id}
+                                tabIndex={-1}
                                 styles={titleStyles}>
                                 {titleProps?.text}
                             </Label>
