@@ -444,6 +444,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.7] - 2025-02-24
+
 ### Fixed
 
 - Remove tabIndex attribute from Header icon and label.
@@ -451,8 +453,6 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Uptake [botframework-webchat@4.18.0](https://www.npmjs.com/package/botframework-webchat/v/4.18.0)
-
-
 
 ## [1.1.6] - 2024-04-24
 
