@@ -4,11 +4,11 @@ import { IImageStyles, ILabelStyles, IStackStyles, Image, Label, Stack, initiali
 
 import CloseButton from "../common/subcomponents/CloseButton";
 import { IHeaderProps } from "./interfaces/IHeaderProps";
+import { Ids } from "../../common/Constants";
 import MinimizeButton from "./subcomponents/MinimizeButton";
 import { decodeComponentString } from "../../common/decodeComponentString";
 import { defaultHeaderProps } from "./common/defaultProps/defaultHeaderProps";
 import { processCustomComponents } from "../../common/utils";
-import { Ids } from "../../common/Constants";
 
 initializeIcons();
 
