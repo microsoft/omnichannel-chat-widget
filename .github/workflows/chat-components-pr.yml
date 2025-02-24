@@ -27,6 +27,8 @@ jobs:
       - name: Build Storybook
         working-directory: chat-components
         run: yarn build-storybook
+        env :
+          NODE_OPTIONS: --openssl-legacy-provider
       - name: VRT Tests
         working-directory: chat-components
         run: yarn test:visual
