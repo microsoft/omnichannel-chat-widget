@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Add ability to override customer display name on downloading transcript using `downloadTranscriptProps.webChatTranscript.customerDisplayName`
+
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.11](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.11)
