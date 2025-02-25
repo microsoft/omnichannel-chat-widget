@@ -17,7 +17,7 @@ export interface IWebChatProps {
     children?: ReactNode;
     dir?: string;
     disabled?: boolean;
-    downscaleImageToDataURL?: (blob: Blob, maxWidth: number, maxHeight: number, type: string, quality: number) => string;
+    downscaleImageToDataURL?: (blob: Blob, maxWidth: number, maxHeight: number, type: string, quality: number) => Promise<URL>;
     grammars?: any;
     groupActivitiesMiddleware?: OneOrMany<GroupActivitiesMiddleware>;
     internalErrorBoxClass?: React.Component | Function; // eslint-disable-line @typescript-eslint/ban-types
