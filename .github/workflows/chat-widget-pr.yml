@@ -35,6 +35,8 @@ jobs:
         env :
           NODE_OPTIONS: --openssl-legacy-provider
         run : yarn build-storybook
+      - name : update browsers
+        run : yarn playwright install
       - name: VRT Tests
         working-directory: chat-widget
         run: yarn test:visual
