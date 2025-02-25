@@ -16,6 +16,7 @@ class TranscriptHTMLBuilder {
     private agentAvatarFontColor = "#000";
     private customerAvatarBackgroundColor = "#2266E3";
     private customerAvatarFontColor = "#FFF";
+    private customerDisplayName = "";
     private disableMarkdownMessageFormatting = false;
     private disableNewLineMarkdownSupport = false;
     private externalScripts: TranscriptHtmlScripts = {};
@@ -61,6 +62,10 @@ class TranscriptHTMLBuilder {
 
         if (this.options?.customerAvatarFontColor) {
             this.customerAvatarFontColor = this.options.customerAvatarFontColor;
+        }
+
+        if (this.options?.customerDisplayName) {
+            this.customerDisplayName = this.options.customerDisplayName;
         }
 
         if (this.options?.disableMarkdownMessageFormatting) {
@@ -549,7 +554,12 @@ class TranscriptHTMLBuilder {
                     const avatarMiddleware = () => (next) => (...args) => {
                         const [card] = args;
                         const {fromUser, activity} = card;
-                        const initials = getIconText(activity.from.name);
+                        let displayName = getIconText(activity.from.name);
+                        let customerDisplayName = '${this.customerDisplayName}';
+
+                        if (fromUser && customerDisplayName) {
+                            displayName = customerDisplayName;
+                        }
 
                         const avatarElement = React.createElement(
                             "div",
@@ -557,7 +567,7 @@ class TranscriptHTMLBuilder {
                             React.createElement(
                                 "p",
                                 null,
-                                \`\${initials}\`
+                                \`\${displayName}\`
                             )
                         );
 

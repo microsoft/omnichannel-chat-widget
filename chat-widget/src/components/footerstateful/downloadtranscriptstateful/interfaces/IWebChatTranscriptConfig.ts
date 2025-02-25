@@ -10,4 +10,5 @@ export interface IWebChatTranscriptConfig {
     agentAvatarFontColor?: string;
     customerAvatarBackgroundColor?: string;
     customerAvatarFontColor?: string;
+    customerDisplayName?: string;
 }
