@@ -85,6 +85,7 @@
     "markdown-it-attrs-es5": "^2.0.2",
     "markdown-it-for-inline": "^0.1.1",
     "md5-typescript": "^1.0.5",
+    "p-defer": "^4.0.1",
     "p-defer-es5": "^2.0.1",
     "sanitize-html": "2.12.1",
     "simple-update-in": "2.2.0",
