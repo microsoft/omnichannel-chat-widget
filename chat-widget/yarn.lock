@@ -2333,7 +2333,7 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.10.12":
+"@microsoft/omnichannel-chat-sdk@^1.10.11":
   version "1.10.12"
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.12.tgz#7a57cdd43066839af8f179d3dca08106516a57a7"
   integrity sha512-qA2ONWtmLdkk9HgruRnXn/51wVuJkb1RO/lMT+MtQqRjtw/61fjbCnp4eoHVdg7TIqz2QF/5uIcSCNj4dRslDw==
