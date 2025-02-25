@@ -71,6 +71,13 @@ export const LoadingPaneStateful = (props: any) => {
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
         
+        return () => {
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.LoadingPaneUnloaded,
+                Description: "Loading pane unmount."
+            });
+        };
+        
     }, []);
     
     return (

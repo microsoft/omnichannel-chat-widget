@@ -8,12 +8,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Added event broadcast from loading pane unmount to update ariaLiveAlert innertext
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.11](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.11)
 
 ## [1.7.5] - 2025-02-12
 
 ### Added
 
+- Added event broadcast from loading pane unmount to update ariaLiveAlert innertext.
 - Additional telemetry to identify UX start/end scenarios
 
 ## [1.7.4] - 2025-01-28
@@ -443,6 +445,22 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.8] - 2025-02-24
+
+### Changed
+
+- Uptake [botframework-webchat@4.18.1-main.20250213.c8c5744](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-main.20250213.c8c5744)
+
+## [1.1.7] - 2025-02-24
+
+### Fixed
+
+- Remove tabIndex attribute from Header icon and label.
+
+### Changed
+
+- Uptake [botframework-webchat@4.18.0](https://www.npmjs.com/package/botframework-webchat/v/4.18.0)
 
 ## [1.1.6] - 2024-04-24
 
