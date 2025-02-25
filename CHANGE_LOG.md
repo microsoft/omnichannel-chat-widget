@@ -12,12 +12,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Added event broadcast from loading pane unmount to update ariaLiveAlert innertext
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.11](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.11)
 
 ## [1.7.5] - 2025-02-12
 
 ### Added
 
+- Added event broadcast from loading pane unmount to update ariaLiveAlert innertext.
 - Additional telemetry to identify UX start/end scenarios
 
 ## [1.7.4] - 2025-01-28
