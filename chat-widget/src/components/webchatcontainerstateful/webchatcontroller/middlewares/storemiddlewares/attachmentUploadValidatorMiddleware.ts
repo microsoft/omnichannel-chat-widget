@@ -24,10 +24,7 @@ const validateAttachment = (action: IWebChatAction, allowedFileExtensions: strin
     const attachments = action?.payload?.activity?.attachments;
     const attachmentSizes = action?.payload?.activity?.channelData?.attachmentSizes;
 
-    console.log("AttachmentUploadValidatorMiddleware :: ", action?.payload);
-    
     if (!attachments || attachments.length === 0) {
-        console.log("AttachmentUploadValidatorMiddleware :: return action zero valero");
         return action;
     }
 
@@ -45,13 +42,10 @@ const validateAttachment = (action: IWebChatAction, allowedFileExtensions: strin
             }
         }
     }
-    console.log("AttachmentUploadValidatorMiddleware :: action?.payload ", action?.payload);
-    console.log("AttachmentUploadValidatorMiddleware :: action?.payload?.activity?.attachments? ", action?.payload?.activity?.attachments);
+
     if (action?.payload?.activity?.attachments?.length > 0) {
-        console.log("return expeccted acction :: action ");
         return action;
     } else {
-        console.log("return dummy action");
         return {
             type: "",
             payload: null
@@ -189,24 +183,16 @@ const getFileSizeErrorMessage = (fileName: string, maxUploadFileSize: string, ma
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
-
-    console.log("AttachmentUploadValidatorMiddleware", action.type);
     if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
         const {
             payload
         } = action;
 
-        console.log("AttachmentUploadValidatorMiddleware", payload);
-
         if (payload?.attachments &&
             payload?.activity?.attachments?.length === payload?.activity?.channelData?.attachmentSizes?.length) {
-            console.log("AttachmentUploadValidatorMiddleware :: going inside");
-
             return next(validateAttachment(action, allowedFileExtensions, maxFileSizeSupportedByDynamics, localizedTexts));
         }
     }
-
-    console.log("AttachmentUploadValidatorMiddleware :: return outside");
     return next(action);
 };
 
