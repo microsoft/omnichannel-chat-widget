@@ -69,13 +69,13 @@
     "swiper": "^9.0.5",
     "terser-webpack-plugin": "^4.2.3",
     "ts-loader": "^9.2.6",
-    "typescript": "4.6.4",
+    "typescript": "5.7.3",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "@azure/core-tracing": "^1.2.0",
-    "@microsoft/omnichannel-chat-components": "1.1.5",
+    "@microsoft/omnichannel-chat-components": "1.1.8",
     "@microsoft/omnichannel-chat-sdk": "^1.10.11",
     "@opentelemetry/api": "^1.9.0",
     "abort-controller-es5": "^2.0.1",

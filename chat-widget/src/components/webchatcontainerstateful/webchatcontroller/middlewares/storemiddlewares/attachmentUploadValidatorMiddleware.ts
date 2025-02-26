@@ -5,13 +5,14 @@
  ******/
 
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
+
+import { AMSConstants } from "../../../../../common/Constants";
+import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { NotificationHandler } from "../../notification/NotificationHandler";
 import { NotificationScenarios } from "../../enums/NotificationScenarios";
-import { WebChatActionType } from "../../enums/WebChatActionType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
-import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
-import { AMSConstants } from "../../../../../common/Constants";
+import { WebChatActionType } from "../../enums/WebChatActionType";
 
 const MBtoBRatio = 1000000;
 
@@ -22,6 +23,14 @@ const MBtoBRatio = 1000000;
 const validateAttachment = (action: IWebChatAction, allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts): IWebChatAction => {
     const attachments = action?.payload?.activity?.attachments;
     const attachmentSizes = action?.payload?.activity?.channelData?.attachmentSizes;
+
+    console.log("AttachmentUploadValidatorMiddleware :: ", action?.payload);
+    
+    if (!attachments || attachments.length === 0) {
+        console.log("AttachmentUploadValidatorMiddleware :: return action zero valero");
+        return action;
+    }
+
     if (attachments) {
         for (let i = 0; i < attachments.length; i++) {
             const maxUploadFileSize = getMaxUploadFileSize(maxFileSizeSupportedByDynamics, attachments[i].contentType);
@@ -36,10 +45,13 @@ const validateAttachment = (action: IWebChatAction, allowedFileExtensions: strin
             }
         }
     }
-
+    console.log("AttachmentUploadValidatorMiddleware :: action?.payload ", action?.payload);
+    console.log("AttachmentUploadValidatorMiddleware :: action?.payload?.activity?.attachments? ", action?.payload?.activity?.attachments);
     if (action?.payload?.activity?.attachments?.length > 0) {
+        console.log("return expeccted acction :: action ");
         return action;
     } else {
+        console.log("return dummy action");
         return {
             type: "",
             payload: null
@@ -177,16 +189,24 @@ const getFileSizeErrorMessage = (fileName: string, maxUploadFileSize: string, ma
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+
+    console.log("AttachmentUploadValidatorMiddleware", action.type);
     if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
         const {
             payload
         } = action;
 
-        if (payload?.activity?.attachments && payload?.activity?.channelData?.attachmentSizes &&
+        console.log("AttachmentUploadValidatorMiddleware", payload);
+
+        if (payload?.attachments &&
             payload?.activity?.attachments?.length === payload?.activity?.channelData?.attachmentSizes?.length) {
+            console.log("AttachmentUploadValidatorMiddleware :: going inside");
+
             return next(validateAttachment(action, allowedFileExtensions, maxFileSizeSupportedByDynamics, localizedTexts));
         }
     }
+
+    console.log("AttachmentUploadValidatorMiddleware :: return outside");
     return next(action);
 };
 
