@@ -69,28 +69,22 @@ const isDataTagsPresent = (card: any) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createActivityMiddleware = (renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties, userMessageStyleProps?: React.CSSProperties) => () => (next: any) => (...args: any) => {
     const [card] = args;
-    console.log("ELOPEZANAYA :: ActivityMiddleware => card ", card);
     if (card.activity) {
         if (card.activity.from?.role === DirectLineSenderRole.Channel) {
-            console.log("ELOPEZANAYA :: ActivityMiddleware => return 1");
             return () => false;
         }
 
         if (isTagIncluded(card, Constants.hiddenTag)) {
-            console.log("ELOPEZANAYA :: ActivityMiddleware => return 2");
             return () => false;
         }
 
         if (isTagIncluded(card, Constants.systemMessageTag)) {
-            console.log("ELOPEZANAYA :: ActivityMiddleware => return 3");
             return handleSystemMessage(next, args, card, renderMarkdown, systemMessageStyleProps);
         } 
         
         if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message) {
             
-            console.log("ELOPEZANAYA :: ActivityMiddleware => return 4");
-
             if (!card.activity.channelData.isHtmlEncoded && card.activity.channelId === Constants.webchatChannelId) {
                 card.activity.text = escapeHtml(card.activity.text);
                 card.activity.channelData.isHtmlEncoded = true;
@@ -107,6 +101,5 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             );
         }
     }
-    console.log("ELOPEZANAYA :: ActivityMiddleware => return 5");
     return next(...args);
 };

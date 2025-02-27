@@ -63,17 +63,13 @@ export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefi
     const attachmentMiddleware = () => (next: any) => (...args: any) => {
 
         const [card] = args;
-        console.log("ELOPEZANAYA :: AttachmentMiddleware => card ", card);
-
         if (!card?.activity) {
-            console.warn("ELOPEZANAYA ::  AttachmentMiddleware => No activity");
             return next(...args);
         }
 
         const { activity: { attachments }, attachment } : {activity: { attachments: any}, attachment: any} = card;
         // No attachment
         if (!attachments || !attachments.length || !attachment) {
-            console.warn("ELOPEZANAYA ::  AttachmentMiddleware => No attachment");
             return next(...args);
         }
 
@@ -125,14 +121,12 @@ export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefi
         }
 
         if (card.activity.channelData && card.activity.channelData.fileScan) {
-            console.log("ELOPEZANAYA ::  AttachmentMiddleware => fileScan :: ", card.activity.channelData.fileScan);
             const index = attachments.findIndex((attachment: any) => (attachment.name === card.attachment.name));
             const {activity: {channelData: {fileScan}}} = card;
 
             const scanResult = fileScan[index];
 
             if (scanResult?.status === FileScanStatus.INPROGRESS) {
-                console.log("ELOPEZANAYA ::  AttachmentMiddleware => scanResult :: ", scanResult);
                 return (
                     <ScanInProgressAttachment textCard={card} />
                 );
@@ -141,8 +135,6 @@ export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefi
             if (scanResult?.status === FileScanStatus.MALWARE) {
                 const localizedText = state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_IS_MALICIOUS ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_FILE_IS_MALICIOUS;
                 NotificationHandler.notifyError(NotificationScenarios.AttachmentError, (localizedText as string).replace("{0}", attachment.name));
-
-                console.log("ELOPEZANAYA ::  AttachmentMiddleware => scanResult 2 :: ", scanResult);
                 return (
                     <MaliciousAttachment textCard={card} />
                 );
@@ -157,14 +149,9 @@ export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefi
 
         const iconData = getFileAttachmentIconData(fileExtension);
 
-        console.log("ELOPEZANAYA :: AttachmentMiddleware =>imageExtension :: ", imageExtension);
         if (imageExtension) {
-            console.log("ELOPEZANAYA :: AttachmentMiddleware => returns  :: ");
-
             return genPreviewCardWithAttachment(card, iconData, next);
         }
-
-        console.log("ELOPEZANAYA :: AttachmentMiddleware => what Im doing");  
 
         if (audioExtension || videoExtension){
             if (enableInlinePlaying && card.activity.actionType && card.activity.actionType === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY &&  isInlineMediaSupported(attachment.name)) {

@@ -24,8 +24,6 @@ const validateAttachment = (action: IWebChatAction, allowedFileExtensions: strin
     const attachments = action?.payload?.activity?.attachments;
     const attachmentSizes = action?.payload?.activity?.channelData?.attachmentSizes;
 
-    console.log("ELOPEZANAYA :: validateAttachment :: Attachment validation started => ", action);
-
     if (!attachments || attachments.length === 0) {
         return action;
     }
@@ -46,10 +44,8 @@ const validateAttachment = (action: IWebChatAction, allowedFileExtensions: strin
     }
 
     if (action?.payload?.activity?.attachments?.length > 0) {
-        console.log("ELOPEZANAYA:: validateAttachment :: Attachment validation passed => ", action);
         return action;
     } else {
-        console.log("ELOPEZANAYA :: validateAttachment :: Attachment validation failed return empty => ", action);
         return {
             type: "",
             payload: null
@@ -187,22 +183,13 @@ const getFileSizeErrorMessage = (fileName: string, maxUploadFileSize: string, ma
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
-    
-    console.log("AttachmentUploadValidatorMiddleware => action :: ", action);
-    console.log("AttachmentUploadValidatorMiddleware => type :: ", action.type);
-    console.log("AttachmentUploadValidatorMiddleware => payload :: ", action.payload);
     if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
         const {
             payload
         } = action;
 
-        console.log("ELOPEZANAYA ::  AttachmentUploadValidatorMiddleware => evaluate => payload :: ", payload);
-
         if (payload?.activity.attachments && payload.activity.attachments.length > 0 &&
             payload?.activity?.attachments?.length === payload?.activity?.channelData?.attachmentSizes?.length) {
-
-            console.log("ELOPEZANAYA :: :: AttachmentUploadValidatorMiddleware => INSIDE => payload :: ", payload);
-
             return next(validateAttachment(action, allowedFileExtensions, maxFileSizeSupportedByDynamics, localizedTexts));
         }
     }
