@@ -80,12 +80,12 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
 
         if (isTagIncluded(card, Constants.systemMessageTag)) {
             return handleSystemMessage(next, args, card, renderMarkdown, systemMessageStyleProps);
-        } 
-        
+        }
+
         if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message) {
 
-                if (!card.activity.channelData.isHtmlEncoded && card.activity.channelId === Constants.webchatChannelId) {
+            if (!card.activity.channelData.isHtmlEncoded && card.activity.channelId === Constants.webchatChannelId) {
                 card.activity.text = escapeHtml(card.activity.text);
                 card.activity.channelData.isHtmlEncoded = true;
             }
