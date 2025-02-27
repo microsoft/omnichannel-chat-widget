@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { changeLanguageCodeFormatForWebChat, getConversationDetailsCall } from "../../../common/utils";
@@ -91,16 +93,16 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 state.domainStates.liveChatConfig?.maxUploadFileSize as string,
                 localizedTexts
             ),
-            channelDataMiddleware,
-            createConversationEndMiddleware(conversationEndCallback),
-            createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
-            createMessageTimeStampMiddleware,
-            createMessageSequenceIdOverrideMiddleware,
-            gifUploadMiddleware,
-            htmlPlayerMiddleware,
-            htmlTextMiddleware,
-            createMaxMessageSizeValidator(localizedTexts),
-            sanitizationMiddleware,
+            //channelDataMiddleware,
+            //createConversationEndMiddleware(conversationEndCallback),
+            //createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
+            //createMessageTimeStampMiddleware,
+            //createMessageSequenceIdOverrideMiddleware,
+            //gifUploadMiddleware,
+            //htmlPlayerMiddleware,
+            //htmlTextMiddleware,
+            //createMaxMessageSizeValidator(localizedTexts),
+            //sanitizationMiddleware,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );
@@ -123,8 +125,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         });
 
         const config = {
-            FORBID_TAGS: ["form", "button", "script", "div", "input"],
-            FORBID_ATTR: ["action"]
+            //FORBID_TAGS: ["form", "button", "script", "div", "input"],
+            //FORBID_ATTR: ["action"]
         };
         text = DOMPurify.sanitize(text, config);
         return text;
@@ -144,14 +146,14 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         store: webChatStore,
         activityMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityMiddleware ? undefined : createActivityMiddleware(renderMarkdown, state.domainStates.renderingMiddlewareProps?.systemMessageStyleProps, state.domainStates.renderingMiddlewareProps?.userMessageStyleProps),
         attachmentMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAttachmentMiddleware ? undefined : createAttachmentMiddleware(state.domainStates.renderingMiddlewareProps?.attachmentProps?.enableInlinePlaying ?? defaultAttachmentProps.enableInlinePlaying),
-        activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.activityStatusMiddleware,
-        toastMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableToastMiddleware ? undefined: createToastMiddleware(props.notificationPaneProps, endChat),
-        renderMarkdown,
-        avatarMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAvatarMiddleware ? undefined : createAvatarMiddleware(state.domainStates.renderingMiddlewareProps?.avatarStyleProps, state.domainStates.renderingMiddlewareProps?.avatarTextStyleProps),
-        groupActivitiesMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableGroupActivitiesMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.groupActivitiesMiddleware,
-        typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,
-        onTelemetry: createWebChatTelemetry(),
-        cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
+        //activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.activityStatusMiddleware,
+        //toastMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableToastMiddleware ? undefined: createToastMiddleware(props.notificationPaneProps, endChat),
+        // renderMarkdown,
+        //avatarMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAvatarMiddleware ? undefined : createAvatarMiddleware(state.domainStates.renderingMiddlewareProps?.avatarStyleProps, state.domainStates.renderingMiddlewareProps?.avatarTextStyleProps),
+        //groupActivitiesMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableGroupActivitiesMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.groupActivitiesMiddleware,
+        //typingIndicatorMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableTypingIndicatorMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.typingIndicatorMiddleware,
+        //onTelemetry: createWebChatTelemetry(),
+        //cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
         sendTypingIndicator: true,
         ...props.webChatContainerProps?.webChatProps
     };
