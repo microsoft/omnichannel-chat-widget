@@ -61,7 +61,6 @@ const genPreviewCardWithAttachment = (card: any, iconData: any, next: any) => {
 export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefined) => {
     // eslint-disable-next-line react/display-name
     const attachmentMiddleware = () => (next: any) => (...args: any) => {
-
         const [card] = args;
         if (!card?.activity) {
             return next(...args);
@@ -116,7 +115,6 @@ export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefi
         }
 
         if (!attachment.name) {
-            console.warn("AttachmentMiddleware => No attachment name");
             return next(...args);
         }
 
