@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { changeLanguageCodeFormatForWebChat, getConversationDetailsCall } from "../../../common/utils";
@@ -93,16 +91,16 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 state.domainStates.liveChatConfig?.maxUploadFileSize as string,
                 localizedTexts
             ),
-            //channelDataMiddleware,
-            //createConversationEndMiddleware(conversationEndCallback),
-            //createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
-            //createMessageTimeStampMiddleware,
-            //createMessageSequenceIdOverrideMiddleware,
-            //gifUploadMiddleware,
-            //htmlPlayerMiddleware,
-            //htmlTextMiddleware,
-            //createMaxMessageSizeValidator(localizedTexts),
-            //sanitizationMiddleware,
+            channelDataMiddleware,
+            createConversationEndMiddleware(conversationEndCallback),
+            createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
+            createMessageTimeStampMiddleware,
+            createMessageSequenceIdOverrideMiddleware,
+            gifUploadMiddleware,
+            htmlPlayerMiddleware,
+            htmlTextMiddleware,
+            createMaxMessageSizeValidator(localizedTexts),
+            sanitizationMiddleware,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );
