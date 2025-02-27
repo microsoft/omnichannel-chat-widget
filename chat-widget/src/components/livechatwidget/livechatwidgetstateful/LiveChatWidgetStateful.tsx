@@ -232,7 +232,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         state.domainStates.confirmationState = ConfirmationState.NotSet;
         setupClientDataStore();
         registerTelemetryLoggers(props, dispatch);
-        createInternetConnectionChangeHandler();
+        createInternetConnectionChangeHandler(state);
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_BUTTON_DISPLAY, payload: props.controlProps?.hideStartChatButton || false });
         dispatch({ type: LiveChatWidgetActionType.SET_E2VV_ENABLED, payload: false });
