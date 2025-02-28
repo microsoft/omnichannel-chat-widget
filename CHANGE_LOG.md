@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 
 - Add ability to override customer display name on downloading transcript using `downloadTranscriptProps.webChatTranscript.customerDisplayName`
 
+### Fixed
+
+- Fixed issue where cx was unable to change string messages 
+
 ### Changed
 
 - Added event broadcast from loading pane unmount to update ariaLiveAlert innertext

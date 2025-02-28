@@ -58,7 +58,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         };
         try {
             await facadeChatSDK?.emailLiveChatTranscript(chatTranscriptBody, {liveChatContext});
-            NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressSaved, defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string);
+            NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressSaved, state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS ?? defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EmailTranscriptSent,
                 Description: "Transcript sent to email successfully."
@@ -70,7 +70,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
                     exception: ex
                 }
             });
-            const message = formatTemplateString(defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR as string, [email]);
+            const message = formatTemplateString(state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR as string, [email]);
             NotificationHandler.notifyError(
                 NotificationScenarios.EmailTranscriptError,
                 props?.bannerMessageOnError ?? message);
