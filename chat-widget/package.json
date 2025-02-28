@@ -112,7 +112,7 @@
     "build-sample:dev": "yarn build && webpack --config ./webpack.dev.config.cjs",
     "test:visual:build": "yarn build-storybook && yarn test:visual",
     "lint": "yarn eslint . --max-warnings=0",
-    "postinstall": "yarn playwright install"
+    "pretest:visual": "yarn playwright install"
   },
   "resolutions": {
     "**/url-parse": "1.5.9",
