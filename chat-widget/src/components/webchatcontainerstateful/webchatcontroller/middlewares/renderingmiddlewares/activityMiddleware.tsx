@@ -80,8 +80,8 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
 
         if (isTagIncluded(card, Constants.systemMessageTag)) {
             return handleSystemMessage(next, args, card, renderMarkdown, systemMessageStyleProps);
-        } 
-        
+        }
+
         if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message) {
 

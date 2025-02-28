@@ -5,13 +5,14 @@
  ******/
 
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
+
+import { AMSConstants } from "../../../../../common/Constants";
+import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { NotificationHandler } from "../../notification/NotificationHandler";
 import { NotificationScenarios } from "../../enums/NotificationScenarios";
-import { WebChatActionType } from "../../enums/WebChatActionType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
-import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
-import { AMSConstants } from "../../../../../common/Constants";
+import { WebChatActionType } from "../../enums/WebChatActionType";
 
 const MBtoBRatio = 1000000;
 
@@ -22,6 +23,11 @@ const MBtoBRatio = 1000000;
 const validateAttachment = (action: IWebChatAction, allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts): IWebChatAction => {
     const attachments = action?.payload?.activity?.attachments;
     const attachmentSizes = action?.payload?.activity?.channelData?.attachmentSizes;
+
+    if (!attachments || attachments.length === 0) {
+        return action;
+    }
+
     if (attachments) {
         for (let i = 0; i < attachments.length; i++) {
             const maxUploadFileSize = getMaxUploadFileSize(maxFileSizeSupportedByDynamics, attachments[i].contentType);
@@ -182,7 +188,7 @@ const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string
             payload
         } = action;
 
-        if (payload?.activity?.attachments && payload?.activity?.channelData?.attachmentSizes &&
+        if (payload?.activity.attachments && payload.activity.attachments.length > 0 &&
             payload?.activity?.attachments?.length === payload?.activity?.channelData?.attachmentSizes?.length) {
             return next(validateAttachment(action, allowedFileExtensions, maxFileSizeSupportedByDynamics, localizedTexts));
         }

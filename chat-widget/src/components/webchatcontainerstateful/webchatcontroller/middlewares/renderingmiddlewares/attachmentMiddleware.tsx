@@ -8,21 +8,22 @@
 import { Constants, MimeTypes, WebChatMiddlewareConstants } from "../../../../../common/Constants";
 import React, { Dispatch } from "react";
 import { getFileAttachmentIconData, isInlineMediaSupported } from "../../../common/utils/FileAttachmentIconManager";
+
+import Attachment from "./attachments/Attachment";
 import { BroadcastEvent } from "../../../../../common/telemetry/TelemetryConstants";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import FileScanStatus from "./attachments/FileScanStatus";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
+import MaliciousAttachment from "./attachments/MaliciousAttachment";
+import { NotificationHandler } from "../../notification/NotificationHandler";
+import { NotificationScenarios } from "../../enums/NotificationScenarios";
+import ScanInProgressAttachment from "./attachments/ScanInProgressAttachment";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { defaultAttachmentAdaptiveCardStyles } from "./defaultStyles/defaultAtttachmentAdaptiveCardStyles";
 import { defaultAttachmentProps } from "../../../common/defaultProps/defaultAttachmentProps";
-import { useChatContextStore } from "../../../../..";
-import { NotificationHandler } from "../../notification/NotificationHandler";
-import { NotificationScenarios } from "../../enums/NotificationScenarios";
 import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
-import Attachment from "./attachments/Attachment";
-import ScanInProgressAttachment from "./attachments/ScanInProgressAttachment";
-import MaliciousAttachment from "./attachments/MaliciousAttachment";
-import FileScanStatus from "./attachments/FileScanStatus";
+import { useChatContextStore } from "../../../../..";
 
 /**
 * Patch card with different attachment data.
@@ -132,7 +133,6 @@ export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefi
             if (scanResult?.status === FileScanStatus.MALWARE) {
                 const localizedText = state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_IS_MALICIOUS ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_FILE_IS_MALICIOUS;
                 NotificationHandler.notifyError(NotificationScenarios.AttachmentError, (localizedText as string).replace("{0}", attachment.name));
-
                 return (
                     <MaliciousAttachment textCard={card} />
                 );
