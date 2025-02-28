@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
 
 - Added event broadcast from loading pane unmount to update ariaLiveAlert innertext
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.11](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.11)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.8](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.8)
+- uptake [dompurify](https://www.npmjs.com/package/dompurify/v/3.2.4)
+
 
 ## [1.7.5] - 2025-02-12
 

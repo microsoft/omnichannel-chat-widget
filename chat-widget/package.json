@@ -60,26 +60,28 @@
     "jest-dom": "^4.0.0",
     "jest-image-snapshot": "^4.5.1",
     "json": "^11.0.0",
-    "playwright": "^1.16.3",
+    "p-defer": "^4.0.1",
+    "playwright": "^1.20.0",
     "postcss": "^8.3.9",
     "react": "^17.0.2",
+    "react-docgen-typescript-plugin": "^1.0.8",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
     "storybook-addon-playwright": "^4.9.2",
     "swiper": "^9.0.5",
     "terser-webpack-plugin": "^4.2.3",
     "ts-loader": "^9.2.6",
-    "typescript": "4.6.4",
+    "typescript": "4.9.5",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
     "@azure/core-tracing": "^1.2.0",
-    "@microsoft/omnichannel-chat-components": "1.1.5",
+    "@microsoft/omnichannel-chat-components": "1.1.8",
     "@microsoft/omnichannel-chat-sdk": "^1.10.11",
     "@opentelemetry/api": "^1.9.0",
     "abort-controller-es5": "^2.0.1",
-    "dompurify": "^2.5.4",
+    "dompurify": "^3.2.4",
     "markdown-it": "^12.3.2",
     "markdown-it-attrs": "^4.1.6",
     "markdown-it-attrs-es5": "^2.0.2",
@@ -99,7 +101,7 @@
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
     "test:e2e": "cd automation_tests && yarn test",
     "test:e2e:build": "yarn build-sample && cd automation_tests && yarn test",
-    "test:visual": "jest -c jest.config.visual.cjs",
+    "test:visual": "jest -c jest.config.visual.cjs --verbose",
     "test:all": "yarn test:unit && yarn test:visual",
     "build:esm": "babel ./src --config-file ./babel.esm.config.json --out-dir lib/esm --extensions .ts,.js,.tsx --ignore **/*.test.ts,**/*.stories.tsx,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx",
     "build:cjs": "babel ./src --config-file ./babel.config.json --out-dir lib/cjs --extensions .ts,.js,.tsx --ignore **/*.test.ts,**/*.stories.tsx,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx",
@@ -109,7 +111,8 @@
     "build-sample": "yarn build && webpack --config ./webpack.config.cjs",
     "build-sample:dev": "yarn build && webpack --config ./webpack.dev.config.cjs",
     "test:visual:build": "yarn build-storybook && yarn test:visual",
-    "lint": "yarn eslint . --max-warnings=0"
+    "lint": "yarn eslint . --max-warnings=0",
+    "postinstall": "yarn playwright install"
   },
   "resolutions": {
     "**/url-parse": "1.5.9",
@@ -117,5 +120,11 @@
     "**/abort-controller-es5": "^2.0.1",
     "**/minimist": "1.2.6",
     "**/sanitize-html": "2.12.1"
+  },
+  "jest": {
+    "verbose": true,
+    "reporters": [
+      "default"
+    ]
   }
 }

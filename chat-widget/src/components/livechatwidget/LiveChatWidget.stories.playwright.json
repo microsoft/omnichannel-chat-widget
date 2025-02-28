@@ -2782,108 +2782,6 @@
           "id": "-Esmr55b0-d6",
           "index": 32,
           "title": "send markdown message"
-        },
-        {
-          "actionSets": [
-            {
-              "actions": [
-                {
-                  "name": "waitForTimeout",
-                  "args": {
-                    "timeout": 100
-                  }
-                }
-              ],
-              "title": "init"
-            },
-            {
-              "actions": [
-                {
-                  "name": "click",
-                  "args": {
-                    "selector": "#oc-lcw-chat-button"
-                  }
-                },
-                {
-                  "name": "waitForTimeout",
-                  "args": {
-                    "timeout": 200
-                  }
-                }
-              ],
-              "title": "click chat button"
-            },
-            {
-              "actions": [
-                {
-                  "name": "dragDropSelector",
-                  "args": {
-                    "selector": "#oc-lcw-header",
-                    "to": {
-                      "x": 500
-                    }
-                  }
-                }
-              ],
-              "title": "Drag chat widget right"
-            }
-          ],
-          "browserOptionsId": "9xghwRMzYZbk",
-          "browserType": "chromium",
-          "id": "5NRLEW2Uu7Ry",
-          "index": 33,
-          "title": "Drag chat widget right"
-        },
-        {
-          "actionSets": [
-            {
-              "actions": [
-                {
-                  "name": "waitForTimeout",
-                  "args": {
-                    "timeout": 100
-                  }
-                }
-              ],
-              "title": "init"
-            },
-            {
-              "actions": [
-                {
-                  "name": "click",
-                  "args": {
-                    "selector": "#oc-lcw-chat-button"
-                  }
-                },
-                {
-                  "name": "waitForTimeout",
-                  "args": {
-                    "timeout": 200
-                  }
-                }
-              ],
-              "title": "click chat button"
-            },
-            {
-              "actions": [
-                {
-                  "name": "dragDropSelector",
-                  "args": {
-                    "selector": "#oc-lcw-header",
-                    "to": {
-                      "x": 500
-                    }
-                  }
-                }
-              ],
-              "title": "Drag chat widget right"
-            }
-          ],
-          "browserOptionsId": "9xghwRMzYZbk",
-          "browserType": "firefox",
-          "id": "7mLRu9-jWdzO",
-          "index": 34,
-          "title": "Drag chat widget right"
         }
       ]
     },
@@ -6870,11 +6768,6 @@
           "title": "poschat survey custom"
         }
       ]
-    }
-  },
-  "browserOptions": {
-    "9xghwRMzYZbk": {
-      "cursor": true
     }
   }
 }
