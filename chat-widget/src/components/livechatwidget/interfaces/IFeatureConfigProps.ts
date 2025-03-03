@@ -1,3 +1,3 @@
 export interface IFeatureConfigProps {
-    isFacadeDisabled?: boolean ;
+    disableReauthentication? : boolean ;
 }

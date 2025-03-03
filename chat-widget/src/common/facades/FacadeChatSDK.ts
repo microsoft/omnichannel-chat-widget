@@ -18,7 +18,6 @@ import GetConversationDetailsOptionalParams from "@microsoft/omnichannel-chat-sd
 import GetLiveChatConfigOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetLiveChatConfigOptionalParams";
 import GetLiveChatTranscriptOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetLiveChatTranscriptOptionalParams";
 import IChatToken from "@microsoft/omnichannel-chat-sdk/lib/external/IC3Adapter/IChatToken";
-import { IFeatureConfigProps } from "../../components/livechatwidget/interfaces/IFeatureConfigProps";
 import IFileMetadata from "@microsoft/omnichannel-ic3core/lib/model/IFileMetadata";
 import IMessage from "@microsoft/omnichannel-ic3core/lib/model/IMessage";
 import IRawThread from "@microsoft/omnichannel-ic3core/lib/interfaces/IRawThread";
@@ -40,7 +39,7 @@ export class FacadeChatSDK {
     private isAuthenticated: boolean;
     private getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
     private sdkMocked: boolean;
-    private isFacaDisabled : boolean;
+    private disableReauthentication  : boolean;
 
     public isSDKMocked(): boolean {
         return this.sdkMocked;
@@ -59,13 +58,13 @@ export class FacadeChatSDK {
         return !isNullOrEmptyString(this.token);
     }
 
-    constructor(input: IFacadeChatSDKInput, isFacaDisabled: boolean) {
+    constructor(input: IFacadeChatSDKInput, disableReauthentication : boolean) {
         this.chatSDK = input.chatSDK;
         this.chatConfig = input.chatConfig;
         this.getAuthToken = input.getAuthToken;
         this.isAuthenticated = input.isAuthenticated;
         this.sdkMocked = input.isSDKMocked;
-        this.isFacaDisabled = isFacaDisabled;
+        this.disableReauthentication  = disableReauthentication ;
     }
 
     //set default expiration to zero, for undefined or missed exp in jwt
@@ -134,7 +133,7 @@ export class FacadeChatSDK {
 
     private async tokenRing(): Promise<PingResponse> {
 
-        if (this.isFacaDisabled === true){
+        if (this.disableReauthentication  === true){
             // facade feature is disabled, so we are bypassing the re authentication and let it fail.
             return { result: true, message: "Facade is disabled" };
         }
