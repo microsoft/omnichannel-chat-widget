@@ -1,6 +1,5 @@
 import { FacadeChatSDK } from "./FacadeChatSDK";
 import { IFacadeChatSDKInput } from "./types/IFacadeChatSDKInput";
-import { IFeatureConfigProps } from "../../components/livechatwidget/interfaces/IFeatureConfigProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 
