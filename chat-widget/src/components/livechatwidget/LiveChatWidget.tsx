@@ -26,6 +26,8 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
 
+    const isFacadeDisabled = props.featureConfigProps?.isFacadeDisabled === true;
+
     overridePropsOnMockIfApplicable(props);
 
     if (!props.chatConfig) {
@@ -44,7 +46,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
                 "getAuthToken": props?.getAuthToken,
                 //when type is not undefined, it means the SDK is mocked
                 "isSDKMocked": !isNullOrUndefined(props?.mock?.type), 
-            }, props.featureConfigProps));
+            }, isFacadeDisabled));
     }
 
     return (

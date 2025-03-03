@@ -51,7 +51,7 @@ describe("FacadeChatSDK", () => {
             isAuthenticated: true,
             isSDKMocked: false
         };
-        facadeChatSDK = new FacadeChatSDK(input, {isFacadeDisabled : false} as IFeatureConfigProps);
+        facadeChatSDK = new FacadeChatSDK(input, false);
     });
 
     describe("convertExpiration", () => {
@@ -156,7 +156,7 @@ describe("FacadeChatSDK", () => {
                 isAuthenticated: true,
                 isSDKMocked: false
             };
-            facadeChatSDK = new FacadeChatSDK(input, {isFacadeDisabled: true} as IFeatureConfigProps);
+            facadeChatSDK = new FacadeChatSDK(input, true);
 
             const result = await facadeChatSDK["tokenRing"]();
             expect(result).toEqual({ result: true, message: "Facade is disabled" });

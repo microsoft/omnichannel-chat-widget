@@ -40,7 +40,7 @@ export class FacadeChatSDK {
     private isAuthenticated: boolean;
     private getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
     private sdkMocked: boolean;
-    private featuresConfigProps: IFeatureConfigProps;
+    private isFacaDisabled : boolean;
 
     public isSDKMocked(): boolean {
         return this.sdkMocked;
@@ -59,13 +59,13 @@ export class FacadeChatSDK {
         return !isNullOrEmptyString(this.token);
     }
 
-    constructor(input: IFacadeChatSDKInput, featuresConfigProps: IFeatureConfigProps) {
+    constructor(input: IFacadeChatSDKInput, isFacaDisabled: boolean) {
         this.chatSDK = input.chatSDK;
         this.chatConfig = input.chatConfig;
         this.getAuthToken = input.getAuthToken;
         this.isAuthenticated = input.isAuthenticated;
         this.sdkMocked = input.isSDKMocked;
-        this.featuresConfigProps = featuresConfigProps;
+        this.isFacaDisabled = isFacaDisabled;
     }
 
     //set default expiration to zero, for undefined or missed exp in jwt
@@ -134,7 +134,7 @@ export class FacadeChatSDK {
 
     private async tokenRing(): Promise<PingResponse> {
 
-        if (this.featuresConfigProps?.isFacadeDisabled === true){
+        if (this.isFacaDisabled === true){
             // facade feature is disabled, so we are bypassing the re authentication and let it fail.
             return { result: true, message: "Facade is disabled" };
         }
