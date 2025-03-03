@@ -1,5 +1,6 @@
 import { FacadeChatSDK } from "./FacadeChatSDK";
 import { IFacadeChatSDKInput } from "./types/IFacadeChatSDKInput";
+import { IFeatureConfigProps } from "../../components/livechatwidget/interfaces/IFeatureConfigProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 
@@ -50,7 +51,7 @@ describe("FacadeChatSDK", () => {
             isAuthenticated: true,
             isSDKMocked: false
         };
-        facadeChatSDK = new FacadeChatSDK(input);
+        facadeChatSDK = new FacadeChatSDK(input, {isFacadeDisabled : false} as IFeatureConfigProps);
     });
 
     describe("convertExpiration", () => {
@@ -133,6 +134,34 @@ describe("FacadeChatSDK", () => {
             const result = await facadeChatSDK["tokenRing"]();
             expect(result).toEqual({ result: true, message: "Token is valid" });
         });
+
+        it("should return true if Facade is disabled", async () => {
+
+            const input: IFacadeChatSDKInput = {
+                chatSDK: new OmnichannelChatSDK({
+                    orgId: "your-org-id",
+                    orgUrl: "https://your-org-url",
+                    widgetId: "your-widget-id"
+                }),
+                chatConfig: {
+                    ChatWidgetLanguage: undefined,
+                    DataMaskingInfo: undefined,
+                    LiveChatConfigAuthSettings: undefined,
+                    LiveChatVersion: 0,
+                    LiveWSAndLiveChatEngJoin: undefined,
+                    allowedFileExtensions: "",
+                    maxUploadFileSize: ""
+                },
+                getAuthToken: jest.fn(),
+                isAuthenticated: true,
+                isSDKMocked: false
+            };
+            facadeChatSDK = new FacadeChatSDK(input, {isFacadeDisabled: true} as IFeatureConfigProps);
+
+            const result = await facadeChatSDK["tokenRing"]();
+            expect(result).toEqual({ result: true, message: "Facade is disabled" });
+        });
+
 
         it("should return false if getAuthToken is undefined", async () => {
             facadeChatSDK["getAuthToken"] = undefined;
