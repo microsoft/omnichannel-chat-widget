@@ -71,5 +71,5 @@ export interface ILiveChatWidgetProps {
     initialCustomContext?: any;
     draggableChatWidgetProps?: IDraggableChatWidgetProps;
     mock?: IMockProps;
-    featureConfigProps: IFeatureConfigProps;
+    featureConfigProps?: IFeatureConfigProps;
 }

@@ -1,3 +1,3 @@
 export interface IFeatureConfigProps {
-    disableReauthentication? : boolean ;
+    disableReauthentication?: boolean;
 }
