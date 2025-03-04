@@ -3,29 +3,30 @@ import { IAudioNotificationProps } from "../../footerstateful/audionotifications
 import { ICallingContainerProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/interfaces/ICallingContainerProps";
 import { IChatButtonProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonProps";
 import { IConfirmationPaneStatefulProps } from "../../confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps";
+import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
 import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
+import { IDraggableChatWidgetProps } from "./IDraggableChatWidgetProps";
 import { IEmailTranscriptPaneProps } from "../../emailtranscriptpanestateful/interfaces/IEmailTranscriptPaneProps";
+import { IFeatureConfigProps } from "./IFeatureConfigProps";
 import { IFooterProps } from "@microsoft/omnichannel-chat-components/lib/types/components/footer/interfaces/IFooterProps";
 import { IHeaderProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderProps";
 import { ILiveChatWidgetComponentOverrides } from "./ILiveChatWidgetComponentOverrides";
+import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetControlProps } from "./ILiveChatWidgetControlProps";
 import { ILiveChatWidgetStyleProps } from "./ILiveChatWidgetStyleProps";
 import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
+import { IMockProps } from "./IMockProps";
+import { INotificationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/INotificationPaneProps";
 import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneProps";
+import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestateful/interfaces/IPostChatSurveyPaneStatefulProps";
 import { IPreChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneProps";
 import { IProactiveChatPaneStatefulProps } from "../../proactivechatpanestateful/interfaces/IProactiveChatPaneStatefulProps";
 import { IReconnectChatPaneStatefulProps } from "../../reconnectchatpanestateful/interfaces/IReconnectChatPaneStatefulProps";
+import { IScrollBarProps } from "./IScrollBarProps";
 import { IStartChatErrorPaneProps } from "../../startchaterrorpanestateful/interfaces/IStartChatErrorPaneProps";
 import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetryConfig";
 import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
-import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
-import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
-import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestateful/interfaces/IPostChatSurveyPaneStatefulProps";
-import { IScrollBarProps } from "./IScrollBarProps";
-import { IDraggableChatWidgetProps } from "./IDraggableChatWidgetProps";
-import { INotificationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/INotificationPaneProps";
-import { IMockProps } from "./IMockProps";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -70,4 +71,5 @@ export interface ILiveChatWidgetProps {
     initialCustomContext?: any;
     draggableChatWidgetProps?: IDraggableChatWidgetProps;
     mock?: IMockProps;
+    featureConfigProps?: IFeatureConfigProps;
 }

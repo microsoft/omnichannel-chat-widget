@@ -26,6 +26,8 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
 
+    const disableReauthentication = props.featureConfigProps?.disableReauthentication === true;
+
     overridePropsOnMockIfApplicable(props);
 
     if (!props.chatConfig) {
@@ -43,9 +45,8 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
                 "isAuthenticated": isAuthenticatedChat,
                 "getAuthToken": props?.getAuthToken,
                 //when type is not undefined, it means the SDK is mocked
-                "isSDKMocked": !isNullOrUndefined(props?.mock?.type)
-            }
-        ));
+                "isSDKMocked": !isNullOrUndefined(props?.mock?.type),
+            }, disableReauthentication));
     }
 
     return (

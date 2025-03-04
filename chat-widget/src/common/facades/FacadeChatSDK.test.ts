@@ -50,7 +50,7 @@ describe("FacadeChatSDK", () => {
             isAuthenticated: true,
             isSDKMocked: false
         };
-        facadeChatSDK = new FacadeChatSDK(input);
+        facadeChatSDK = new FacadeChatSDK(input, false);
     });
 
     describe("convertExpiration", () => {
@@ -133,6 +133,34 @@ describe("FacadeChatSDK", () => {
             const result = await facadeChatSDK["tokenRing"]();
             expect(result).toEqual({ result: true, message: "Token is valid" });
         });
+
+        it("should return true if Facade is disabled", async () => {
+
+            const input: IFacadeChatSDKInput = {
+                chatSDK: new OmnichannelChatSDK({
+                    orgId: "your-org-id",
+                    orgUrl: "https://your-org-url",
+                    widgetId: "your-widget-id"
+                }),
+                chatConfig: {
+                    ChatWidgetLanguage: undefined,
+                    DataMaskingInfo: undefined,
+                    LiveChatConfigAuthSettings: undefined,
+                    LiveChatVersion: 0,
+                    LiveWSAndLiveChatEngJoin: undefined,
+                    allowedFileExtensions: "",
+                    maxUploadFileSize: ""
+                },
+                getAuthToken: jest.fn(),
+                isAuthenticated: true,
+                isSDKMocked: false
+            };
+            facadeChatSDK = new FacadeChatSDK(input, true);
+
+            const result = await facadeChatSDK["tokenRing"]();
+            expect(result).toEqual({ result: true, message: "Facade is disabled" });
+        });
+
 
         it("should return false if getAuthToken is undefined", async () => {
             facadeChatSDK["getAuthToken"] = undefined;
