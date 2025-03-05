@@ -21,7 +21,8 @@ All notable changes to this project will be documented in this file.
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.11](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.11)
 - Uptake [@microsoft/omnichannel-chat-components@1.1.8](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.8)
 - uptake [dompurify](https://www.npmjs.com/package/dompurify/v/3.2.4)
-
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.13](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.13)
+- Disable polling of on new message for notifications to improve overall performance
 
 ## [1.7.5] - 2025-02-12
 
