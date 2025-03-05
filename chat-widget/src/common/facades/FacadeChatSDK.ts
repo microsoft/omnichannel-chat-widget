@@ -95,27 +95,64 @@ export class FacadeChatSDK {
         return false;
     }
 
+    private extractExpFromToken(token: string): number {
+        
+        const tokenParts = token.split(".");
+        const last3digits = token.slice(-3);
+
+        // token must have 3 parts as JWT format
+        if (tokenParts.length !== 3) {
+            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.NewTokenFailed,
+                Description: "Invalid token format",
+                ExceptionDetails: {message : "Invalid token format, must be in JWT format", token: last3digits},
+            });
+            throw new Error("Invalid token format, must be in JWT format");
+        }
+
+        const payload = tokenParts[1];
+        // Replace base64url characters with base64 characters
+        const base64Payload = payload.replace(/-/g, "+").replace(/_/g, "/");
+        // Add padding if necessary
+        const paddedPayload = base64Payload.padEnd(base64Payload.length + (4 - base64Payload.length % 4) % 4, "=");
+        const decodedPayload = Buffer.from(paddedPayload, "base64").toString("utf-8");
+
+        // check if decoded payload is valid JSON
+        try {
+            const jsonPayload = JSON.parse(decodedPayload);
+            // check if exp is present in payload
+            if (jsonPayload) {
+                if (jsonPayload.exp) {
+                    return jsonPayload.exp;
+                }
+                return 0;
+            }
+            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.NewTokenFailed,
+                Description: "Invalid token payload",
+                ExceptionDetails: {message : "Token payload is not valid JSON", token: last3digits},
+            }); 
+
+            throw new Error("Invalid token payload, payload is not valid JSON");
+
+        } catch (e) {
+            console.error("Failed to decode token", e);
+            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.NewTokenFailed,
+                Description: "Failed to decode token",
+                ExceptionDetails: {message : "Failed to decode token", token: last3digits},
+            }); 
+            throw new Error("Failed to decode token");
+        }
+    }
+
     private async setToken(token: string): Promise<void> {
         // token must be not null, and must be new
         if (!isNullOrEmptyString(token) && token !== this.token) {
             const instant = Math.floor(Date.now() / 1000);
             this.token = token;
-            // decompose token
-            const tokenParts = this.token?.split(".");
-
-            if (!tokenParts || tokenParts.length <= 1) {
-                TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.NewTokenFailed,
-                    Description: "Invalid token format",
-                    ExceptionDetails: "Token must be in JWT format"
-                });
-                throw new Error("Invalid token format, must be in JWT format");
-            }
-            // decode token
-            const tokenDecoded = JSON.parse(atob(tokenParts[1]));
             // calculate expiration time
-            this.expiration = this.convertExpiration(tokenDecoded.exp);
-
+            this.expiration = this.convertExpiration(this.extractExpFromToken(token) || 0);
             // this is a control , in case the getAuthToken function returns same token
             if (this.expiration > 0 && (this.expiration < instant)) {
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
@@ -181,10 +218,6 @@ export class FacadeChatSDK {
                 });
                 return { result: true, message: "New Token obtained" };
             } else {
-
-
-                console.error("Failed to get token", ring);
-
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.NewTokenFailed,
                     Description: ring.error?.message,
@@ -196,11 +229,8 @@ export class FacadeChatSDK {
                     message: ring.error?.message || "Failed to get token"
                 };
             }
-
         } catch (e: unknown) {
-
             console.error("Unexpected error while getting token", e);
-
             TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenFailed,
                 Description: "Unexpected error while getting token",
@@ -212,7 +242,6 @@ export class FacadeChatSDK {
 
     private async validateAndExecuteCall<T>(functionName: string, fn: () => Promise<T>): Promise<T> {
         const pingResponse = await this.tokenRing();
-
         if (pingResponse.result === true) {
             return fn();
         }
@@ -285,7 +314,7 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("sendMessage", () => this.chatSDK.sendMessage(message));
     }
 
-    public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: OnNewMessageOptionalParams = {disablePolling: false}): Promise<void> {
+    public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: OnNewMessageOptionalParams = { disablePolling: false }): Promise<void> {
         return this.validateAndExecuteCall("onNewMessage", () => this.chatSDK.onNewMessage(onNewMessageCallback, optionalParams));
     }
 
@@ -341,3 +370,7 @@ export class FacadeChatSDK {
 
 
 }
+
+
+
+

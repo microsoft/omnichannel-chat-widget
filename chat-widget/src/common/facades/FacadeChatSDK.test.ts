@@ -4,13 +4,10 @@ import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 
 // mock BroadcastService
-jest.mock("@microsoft/omnichannel-chat-components", ()=>
-    ({
-        BroadcastService: {
-            postMessage: jest.fn()
-        }
-    })
-);
+jest.mock("@microsoft/omnichannel-chat-components", () =>({
+    BroadcastService: {
+        postMessage: jest.fn()
+    }}));
 
 jest.mock("../../components/livechatwidget/common/authHelper");
 // function to mimic a jwt token with exp time from now to 5 min in the future in seconds
@@ -191,4 +188,5 @@ describe("FacadeChatSDK", () => {
             await expect(facadeChatSDK["validateAndExecuteCall"]("testFunction", mockFn)).rejects.toThrow("Authentication failed: Process to get a token failed for testFunction, Token is invalid");
         });
     });
+    
 });
