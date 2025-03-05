@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/omnichannel-chat-widget",
-  "version": "1.7.6-0",
+  "version": "1.7.7-0",
   "description": "Microsoft Omnichannel Chat Widget",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",

@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.6] - 2025-03-04
+
 ### Added
 
 - Add ability to override customer display name on downloading transcript using `downloadTranscriptProps.webChatTranscript.customerDisplayName`
