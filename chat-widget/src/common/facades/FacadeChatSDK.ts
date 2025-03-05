@@ -285,7 +285,7 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("sendMessage", () => this.chatSDK.sendMessage(message));
     }
 
-    public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: OnNewMessageOptionalParams | unknown = {}): Promise<void> {
+    public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: OnNewMessageOptionalParams = {disablePolling: false}): Promise<void> {
         return this.validateAndExecuteCall("onNewMessage", () => this.chatSDK.onNewMessage(onNewMessageCallback, optionalParams));
     }
 
