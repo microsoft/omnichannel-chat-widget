@@ -2276,10 +2276,10 @@
   resolved "https://registry.yarnpkg.com/@mdx-js/util/-/util-1.6.22.tgz#219dfd89ae5b97a8801f015323ffa4b62f45718b"
   integrity sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==
 
-"@microsoft/botframework-webchat-adapter-azure-communication-chat@^0.0.1-beta.1":
-  version "0.0.1-beta.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta.1.tgz#a8e1139428c61593818bda5c664e3a62c331ea47"
-  integrity sha512-4oLW+1P8YymCGwUV2xokX2PiH2LNag8apVvjZu++jLmmRnzFUiYwvdWx5+k8XmphlBq1vF4GC9xUqPQm09Qi/g==
+"@microsoft/botframework-webchat-adapter-azure-communication-chat@^0.0.1-beta.2":
+  version "0.0.1-beta.2"
+  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta.2.tgz#7b5a31ddc5c2311317367c0a39b04d84293623ce"
+  integrity sha512-ulBtPe0ZukOPLb6eR22H+7tWv7OOzVnK3nQYghFUSruZPPCgX0ei35sztlJAFTmHWhlvg4RSsEKWQbrYCDfh0g==
   dependencies:
     "@azure/communication-chat" "^1.5.4"
     "@azure/communication-common" "^2.3.1"
@@ -2321,14 +2321,14 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.10.11":
-  version "1.10.11"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.11.tgz#72117d980ed13fe6f908c25bd749d1a4f13ce6f9"
-  integrity sha512-jA0ogVEwjp7ciNXiE5dpreCkDyQFNxNT/Fe6D6Fvikykpzzl2GqmR5vVEHh8aVUubLN/vWcwXO31kn6wbKtf9Q==
+"@microsoft/omnichannel-chat-sdk@^1.10.13":
+  version "1.10.13"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.13.tgz#abe863248614feb35b9d2441fc6078ca1245db6c"
+  integrity sha512-GjVIYDkRZejf9z8qNxURtxquHODsc7gK5Akl37QB8bp0oHyaDyR+0/SUgD+2mPfLI9JfOovclKhoTJyxBQWxZA==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
-    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.1"
+    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.2"
     "@microsoft/ocsdk" "^0.5.11"
     "@microsoft/omnichannel-amsclient" "^0.1.8"
     "@microsoft/omnichannel-ic3core" "^0.1.4"
