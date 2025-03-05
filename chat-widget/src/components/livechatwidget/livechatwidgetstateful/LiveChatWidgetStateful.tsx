@@ -527,7 +527,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.NewMessageNotification
                 });
-            });
+            }, {disablePolling: true});
 
             facadeChatSDK?.onAgentEndSession((event) => {                   
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
