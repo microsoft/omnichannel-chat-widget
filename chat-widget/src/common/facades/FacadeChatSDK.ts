@@ -88,34 +88,77 @@ export class FacadeChatSDK {
 
         // compare expiration time with current time
         if (now > this.expiration) {
-            console.log("Token is expired", now, this.expiration, now > this.expiration);
+            console.error("Token is expired", now, this.expiration, now > this.expiration);
             return true;
         }
 
         return false;
     }
 
+    private enforceBase64Encoding(payload: string): string {
+        //base64url when present, switches the "-" and "_" characters with "+" and "/"
+        const base64Payload = payload.replace(/-/g, "+").replace(/_/g, "/");
+        // since base64 encoding requires padding, we need to add padding to the payload
+        return base64Payload.padEnd(base64Payload.length + (4 - base64Payload.length % 4) % 4, "=");
+    }
+
+    private extractExpFromToken(token: string): number {
+        
+        const tokenParts = token.split(".");
+        const last3digits = token.slice(-3);
+
+        // token must have 3 parts as JWT format
+        if (tokenParts.length !== 3) {
+            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.NewTokenFailed,
+                Description: "Invalid token format",
+                ExceptionDetails: {message : "Invalid token format, must be in JWT format", token: last3digits},
+            });
+            throw new Error("Invalid token format, must be in JWT format");
+        }
+
+        const payload = this.enforceBase64Encoding(tokenParts[1]);
+        // decode payload
+        const decodedPayload = Buffer.from(payload, "base64").toString("utf-8");
+        
+        // check if decoded payload is valid JSON
+        try {
+            const jsonPayload = JSON.parse(decodedPayload);
+            // check if exp is present in payload
+            if (jsonPayload) {
+                if (jsonPayload.exp) {
+                    return jsonPayload.exp;
+                }
+                return 0;
+            }
+            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.NewTokenFailed,
+                Description: "Invalid token payload",
+                ExceptionDetails: {message : "Token payload is not valid JSON", token: last3digits},
+            }); 
+
+            throw new Error("Invalid token payload, payload is not valid JSON");
+
+        } catch (e) {
+            console.error("Failed to decode token", e);
+            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.NewTokenFailed,
+                Description: "Failed to decode token",
+                ExceptionDetails: {message : "Failed to decode token", token: last3digits},
+            }); 
+            throw new Error("Failed to decode token");
+        }
+    }
+
     private async setToken(token: string): Promise<void> {
+        
         // token must be not null, and must be new
         if (!isNullOrEmptyString(token) && token !== this.token) {
+            const last3digits = token.slice(-3);
             const instant = Math.floor(Date.now() / 1000);
             this.token = token;
-            // decompose token
-            const tokenParts = this.token?.split(".");
-
-            if (!tokenParts || tokenParts.length <= 1) {
-                TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.NewTokenFailed,
-                    Description: "Invalid token format",
-                    ExceptionDetails: "Token must be in JWT format"
-                });
-                throw new Error("Invalid token format, must be in JWT format");
-            }
-            // decode token
-            const tokenDecoded = JSON.parse(atob(tokenParts[1]));
             // calculate expiration time
-            this.expiration = this.convertExpiration(tokenDecoded.exp);
-
+            this.expiration = this.convertExpiration(this.extractExpFromToken(token) || 0);
             // this is a control , in case the getAuthToken function returns same token
             if (this.expiration > 0 && (this.expiration < instant)) {
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
@@ -123,10 +166,11 @@ export class FacadeChatSDK {
                     Description: "New token is already expired",
                     ExceptionDetails: {
                         "Instant": instant,
-                        "Expiration": this.expiration
+                        "Expiration": this.expiration,
+                        "Token": last3digits,
                     }
                 });
-                throw new Error("New token is already expired, with epoch time " + this.expiration);
+                throw new Error(`New token is already expired, with epoch time ${this.expiration} , last 3 digits of token: ${last3digits}`);
             }
         }
     }
@@ -177,14 +221,9 @@ export class FacadeChatSDK {
                     Data: {
                         "Token_Expiration": this.expiration
                     }
-
                 });
                 return { result: true, message: "New Token obtained" };
             } else {
-
-
-                console.error("Failed to get token", ring);
-
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.NewTokenFailed,
                     Description: ring.error?.message,
@@ -196,11 +235,8 @@ export class FacadeChatSDK {
                     message: ring.error?.message || "Failed to get token"
                 };
             }
-
         } catch (e: unknown) {
-
             console.error("Unexpected error while getting token", e);
-
             TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenFailed,
                 Description: "Unexpected error while getting token",
@@ -212,7 +248,6 @@ export class FacadeChatSDK {
 
     private async validateAndExecuteCall<T>(functionName: string, fn: () => Promise<T>): Promise<T> {
         const pingResponse = await this.tokenRing();
-
         if (pingResponse.result === true) {
             return fn();
         }
@@ -285,7 +320,7 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("sendMessage", () => this.chatSDK.sendMessage(message));
     }
 
-    public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: OnNewMessageOptionalParams = {disablePolling: false}): Promise<void> {
+    public async onNewMessage(onNewMessageCallback: CallableFunction, optionalParams: OnNewMessageOptionalParams = { disablePolling: false }): Promise<void> {
         return this.validateAndExecuteCall("onNewMessage", () => this.chatSDK.onNewMessage(onNewMessageCallback, optionalParams));
     }
 
@@ -338,6 +373,4 @@ export class FacadeChatSDK {
     public async getAgentAvailability(optionalParams: GetAgentAvailabilityOptionalParams = {}): Promise<GetAgentAvailabilityResponse> {
         return this.validateAndExecuteCall("getAgentAvailability", () => this.chatSDK.getAgentAvailability(optionalParams));
     }
-
-
 }
