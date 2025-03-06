@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
+
 ## [1.7.6] - 2025-03-04
 
 ### Added
@@ -15,7 +19,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
 - Fixed issue where cx was unable to change string messages 
 
 ### Changed
