@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed issue where cx was unable to change string messages 
+- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
 
 ### Changed
 
