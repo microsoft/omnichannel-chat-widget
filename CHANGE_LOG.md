@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.14)
+
 ### Fixed
 
 - Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
