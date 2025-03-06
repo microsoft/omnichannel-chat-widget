@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Convert base64url tokens into base64 for exp validation.
+
 ## [1.7.6] - 2025-03-04
 
 ### Added
