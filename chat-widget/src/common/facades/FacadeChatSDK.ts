@@ -88,11 +88,18 @@ export class FacadeChatSDK {
 
         // compare expiration time with current time
         if (now > this.expiration) {
-            console.log("Token is expired", now, this.expiration, now > this.expiration);
+            console.error("Token is expired", now, this.expiration, now > this.expiration);
             return true;
         }
 
         return false;
+    }
+
+    private enforceBase64Encoding(payload: string): string {
+        //base64url when present, switches the "-" and "_" characters with "+" and "/"
+        const base64Payload = payload.replace(/-/g, "+").replace(/_/g, "/");
+        // since base64 encoding requires padding, we need to add padding to the payload
+        return base64Payload.padEnd(base64Payload.length + (4 - base64Payload.length % 4) % 4, "=");
     }
 
     private extractExpFromToken(token: string): number {
@@ -110,13 +117,10 @@ export class FacadeChatSDK {
             throw new Error("Invalid token format, must be in JWT format");
         }
 
-        const payload = tokenParts[1];
-        // Replace base64url characters with base64 characters
-        const base64Payload = payload.replace(/-/g, "+").replace(/_/g, "/");
-        // Add padding if necessary
-        const paddedPayload = base64Payload.padEnd(base64Payload.length + (4 - base64Payload.length % 4) % 4, "=");
-        const decodedPayload = Buffer.from(paddedPayload, "base64").toString("utf-8");
-
+        const payload = this.enforceBase64Encoding(tokenParts[1]);
+        // decode payload
+        const decodedPayload = Buffer.from(payload, "base64").toString("utf-8");
+        
         // check if decoded payload is valid JSON
         try {
             const jsonPayload = JSON.parse(decodedPayload);
@@ -148,7 +152,6 @@ export class FacadeChatSDK {
 
     private async setToken(token: string): Promise<void> {
         
-        console.log("Setting token", token);
         // token must be not null, and must be new
         if (!isNullOrEmptyString(token) && token !== this.token) {
             const last3digits = token.slice(-3);
