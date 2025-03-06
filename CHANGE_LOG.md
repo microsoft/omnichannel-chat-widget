@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
 - Convert base64url tokens into base64 for exp validation.
 
 ## [1.7.6] - 2025-03-04

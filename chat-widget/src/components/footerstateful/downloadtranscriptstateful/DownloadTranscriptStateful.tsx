@@ -12,6 +12,9 @@ import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcon
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import createChatTranscript from "../../../plugins/createChatTranscript";
 import { executeReducer } from "../../../contexts/createReducer";
+import IChatToken from "@microsoft/omnichannel-chat-sdk/lib/external/IC3Adapter/IChatToken";
+import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
+import { ConversationState } from "../../../contexts/common/ConversationState";
 
 const processDisplayName = (displayName: string): string => {
     // if displayname matches "teamsvisitor:<some alphanumeric string>", we replace it with "Customer"
@@ -177,6 +180,17 @@ export const downloadTranscript = async (facadeChatSDK: FacadeChatSDK, downloadT
     if (!liveChatContext) {
         const inMemoryState = executeReducer(state as ILiveChatWidgetContext, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         liveChatContext = inMemoryState.domainStates.liveChatContext;
+        if (inMemoryState?.appStates?.conversationState !== ConversationState.Active && !liveChatContext) {
+            const chatToken = (state?.domainStates?.chatToken || inMemoryState.domainStates.chatToken) as IChatToken;
+            if (chatToken && Object.keys(chatToken).length > 0) {
+                liveChatContext = {
+                    chatToken: chatToken,
+                    requestId: chatToken.requestId || uuidv4(),
+                };
+            } else {
+                liveChatContext = await facadeChatSDK?.getCurrentLiveChatContext();
+            }
+        }
     }
 
     let data = await facadeChatSDK?.getLiveChatTranscript({liveChatContext});
