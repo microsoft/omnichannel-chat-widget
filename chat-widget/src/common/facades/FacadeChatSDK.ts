@@ -373,10 +373,4 @@ export class FacadeChatSDK {
     public async getAgentAvailability(optionalParams: GetAgentAvailabilityOptionalParams = {}): Promise<GetAgentAvailabilityResponse> {
         return this.validateAndExecuteCall("getAgentAvailability", () => this.chatSDK.getAgentAvailability(optionalParams));
     }
-
-
 }
-
-
-
-
