@@ -147,8 +147,11 @@ export class FacadeChatSDK {
     }
 
     private async setToken(token: string): Promise<void> {
+        
+        console.log("Setting token", token);
         // token must be not null, and must be new
         if (!isNullOrEmptyString(token) && token !== this.token) {
+            const last3digits = token.slice(-3);
             const instant = Math.floor(Date.now() / 1000);
             this.token = token;
             // calculate expiration time
@@ -160,10 +163,11 @@ export class FacadeChatSDK {
                     Description: "New token is already expired",
                     ExceptionDetails: {
                         "Instant": instant,
-                        "Expiration": this.expiration
+                        "Expiration": this.expiration,
+                        "Token": last3digits,
                     }
                 });
-                throw new Error("New token is already expired, with epoch time " + this.expiration);
+                throw new Error(`New token is already expired, with epoch time ${this.expiration} , last 3 digits of token: ${last3digits}`);
             }
         }
     }
@@ -214,7 +218,6 @@ export class FacadeChatSDK {
                     Data: {
                         "Token_Expiration": this.expiration
                     }
-
                 });
                 return { result: true, message: "New Token obtained" };
             } else {

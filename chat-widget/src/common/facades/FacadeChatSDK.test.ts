@@ -15,11 +15,39 @@ function getJWTToken() {
     const now = Math.floor(Date.now() / 1000);
     const expiration = now + 300; // 5 minutes in the future (300 seconds)
     const tokenPayload = {
+        sub: "user_id+2",
+        name: "hey@hey.com",
+        data: "http://example.com/?id=123-45\\456&name=John+Doe&age=30",
+        special: "+/=?\\",
+        html: "<div><h1>Hello, World!</h1><p>This is a <strong>test</strong> HTML snippet.</p></div>",
+        lwicontexts: "{\"BingConsent\":{\"value\":\"true\",\"isDisplayable\":true},\"HostingApp\":{\"value\":\"M365AdminPortal\",\"isDisplayable\":true},\"ClientContext0\":{\"value\":\"{\\\"profile\\\":{\\\"billing\\\":{\\\"list\\\":{\\\"Subscriptions\\\":[{\\\"NextSubscriptionState\\\":\\\"InGracePeriod\\\",\\\"Channel\\\":\\\"Direct\\\",\\\"IsLifecycleExpired\\\":false,\\\"TotalLicenseQuantity\\\":1,\\\"IsInGracePeriod\\\":false,\\\"Name\\\":null,\\\"SubscriptionEndDate\\\":\\\"2025-08-08T00:00:00Z\\\",\\\"SubscriptionStartDate\\\":\\\"2023-08-08T00:00:00Z\\\",\\\"SubscriptionState\\\":1,\"isDisplayable\":true}}",
         exp: expiration
     };
     const tokenPayloadBase64 = Buffer.from(JSON.stringify(tokenPayload)).toString("base64");
     return {
         token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${tokenPayloadBase64}.signature`,
+        expiration: expiration
+    };
+}
+
+function getJWTTokenBase64Url() {
+    const now = Math.floor(Date.now() / 1000);
+    const expiration = now + 300; // 5 minutes in the future (300 seconds)
+    const tokenPayload = {
+        sub: "user_id+2",
+        name: "hey@hey.com",
+        data: "http://example.com/?id=123-45\\456&name=John+Doe&age=30",
+        special: "+/=?\\",
+        html: "<div><h1>Hello, World!</h1><p>This is a <strong>test</strong> HTML snippet.</p></div>",
+        lwicontexts: "{\"BingConsent\":{\"value\":\"true\",\"isDisplayable\":true},\"HostingApp\":{\"value\":\"M365AdminPortal\",\"isDisplayable\":true},\"ClientContext0\":{\"value\":\"{\\\"profile\\\":{\\\"billing\\\":{\\\"list\\\":{\\\"Subscriptions\\\":[{\\\"NextSubscriptionState\\\":\\\"InGracePeriod\\\",\\\"Channel\\\":\\\"Direct\\\",\\\"IsLifecycleExpired\\\":false,\\\"TotalLicenseQuantity\\\":1,\\\"IsInGracePeriod\\\":false,\\\"Name\\\":null,\\\"SubscriptionEndDate\\\":\\\"2025-08-08T00:00:00Z\\\",\\\"SubscriptionStartDate\\\":\\\"2023-08-08T00:00:00Z\\\",\\\"SubscriptionState\\\":1,\"isDisplayable\":true}}",
+        exp: expiration
+    };
+
+    // Convert payload to JSON string and then to Base64URL
+    const tokenPayloadBase64 = Buffer.from(JSON.stringify(tokenPayload)).toString("base64");
+    const base64url = tokenPayloadBase64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    return {
+        token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${base64url}.signature`,
         expiration: expiration
     };
 }
@@ -99,6 +127,14 @@ describe("FacadeChatSDK", () => {
             expect(facadeChatSDK["expiration"]).toBe(jwt.expiration);
         });
 
+        it("Base64url JWT should be valid", async () => {
+            const jwt = getJWTTokenBase64Url();
+            await facadeChatSDK["setToken"](jwt.token);
+            expect(facadeChatSDK["token"]).toBe(jwt.token);
+            expect(facadeChatSDK["expiration"]).toBe(jwt.expiration);
+           
+        });
+
         it("should throw error for invalid token format", async () => {
             const token = "any-thing";
             await expect(facadeChatSDK["setToken"](token)).rejects.toThrow("Invalid token format, must be in JWT format");
@@ -109,6 +145,7 @@ describe("FacadeChatSDK", () => {
             jest.spyOn(Date, "now").mockReturnValue(1609459201000); // mock current time to be after token expiration
             await expect(facadeChatSDK["setToken"](token)).rejects.toThrow("New token is already expired, with epoch time 1609459200");
         });
+
     });
 
     describe("tokenRing", () => {
@@ -172,6 +209,7 @@ describe("FacadeChatSDK", () => {
             expect(result).toEqual({ result: true, message: "New Token obtained" });
             expect(facadeChatSDK["token"]).toBe(newToken.token);
         });
+
     });
 
     describe("validateAndExecuteCall", () => {
