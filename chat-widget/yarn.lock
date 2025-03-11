@@ -2293,14 +2293,14 @@
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.295.tgz#d3c8d7ab186f422727ba112d6ebe5fe8e41051d9"
   integrity sha512-W+IzEBw8a6LOOfRJM02dTT7BDZijxm+Z7lhtOAz1+y9vQm1Kdz9jlAO+qCEKsfxtUOmKilW8DIRqFw2aUgKeGg==
 
-"@microsoft/ocsdk@^0.5.11":
-  version "0.5.11"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.11.tgz#14976e67e5be9af5da32fed22552932edbc6f027"
-  integrity sha512-0DkU00KkETsxnA15KySOfRa3jzx6wJoRZTxn026cB0+2DD9wUAXIVd7HObKqhCb8awwT4QhsCRblQZpcyyL4xQ==
+"@microsoft/ocsdk@^0.5.12":
+  version "0.5.12"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.12.tgz#d22e878a7324d8e19257e95f781ce5e11ef0bf50"
+  integrity sha512-JAmBMbLVuF+9OswFCeEoOfoTVBHjnRZNkF59iKLfypbMWcwqFpC5fzkZm4Kov4jgSnehQuGG27Aq0Vi9Y3Ww8Q==
   dependencies:
     "@babel/runtime" "^7.15.4"
-    "@types/node" "^12.20.26"
-    axios "^1.7.4"
+    "@types/node" "^22.13.10"
+    axios "^1.8.2"
     axios-retry "^3.9.1"
 
 "@microsoft/omnichannel-amsclient@^0.1.8":
@@ -2321,24 +2321,24 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.10.14":
-  version "1.10.14"
-  resolved "https://registry.npmjs.org/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.14.tgz#f99b2abe5fbdf00ee0ba9f5f932fe4b90331f217"
-  integrity sha512-d7TW7xjVjWg7bPeSLXvFspx3xCaRgPmhkMPINpyO/sekDc25PKZTzbvTwlXhS9SqCyLh9/BDEc5Zg1oyghVcdQ==
+"@microsoft/omnichannel-chat-sdk@^1.10.15":
+  version "1.10.15"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.15.tgz#4de3e952540c58b3ffab55ef53f3cb40e18dd8f7"
+  integrity sha512-kEVXGpGwCVFre3RNSI0dPpFb48APoNwzMLb7ageIFOm8rePFJCTVxbjSxSPwN/MfbCwEc2xGbpGF059Kttmkjg==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
     "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.2"
-    "@microsoft/ocsdk" "^0.5.11"
+    "@microsoft/ocsdk" "^0.5.12"
     "@microsoft/omnichannel-amsclient" "^0.1.8"
-    "@microsoft/omnichannel-ic3core" "^0.1.4"
+    "@microsoft/omnichannel-ic3core" "^0.1.5"
 
-"@microsoft/omnichannel-ic3core@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-ic3core/-/omnichannel-ic3core-0.1.4.tgz#b5aa1a294f06cca9b123621291b44e8d48eb5594"
-  integrity sha512-c73D5akRwDe+0MWhTD0ZpjP3gosOX904NeiciVCfeB1MMniN+qWUkstq4yWe8D7m5oS8RsXdu2cZaAiwSNevzg==
+"@microsoft/omnichannel-ic3core@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-ic3core/-/omnichannel-ic3core-0.1.5.tgz#0418e1f66be0cc7afce43a94ade2bc1b86f9025d"
+  integrity sha512-m0GlbACnZYaBE6lcDCkd9gYS+6SIdNlmlWrUjoXgO/XEBeLO5+5f2sWHAY63xc3Fm6vNvQwevsqVOZ0w+ai2ug==
   dependencies:
-    axios "^1.7.4"
+    axios "^1.8.2"
     buffer "^6.0.3"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
@@ -3903,15 +3903,17 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/node@^12.20.26":
-  version "12.20.55"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.55.tgz#c329cbd434c42164f846b909bd6f85b5537f6240"
-  integrity sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==
-
 "@types/node@^14.0.10 || ^16.0.0", "@types/node@^14.14.20 || ^16.0.0":
   version "16.18.14"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.14.tgz#5465ce598486a703caddbefe8603f8a2cffa3461"
   integrity sha512-wvzClDGQXOCVNU4APPopC2KtMYukaF1MN/W3xAmslx22Z4/IF1/izDMekuyoUlwfnDHYCIZGaj7jMwnJKBTxKw==
+
+"@types/node@^22.13.10":
+  version "22.13.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.13.10.tgz#df9ea358c5ed991266becc3109dc2dc9125d77e4"
+  integrity sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==
+  dependencies:
+    undici-types "~6.20.0"
 
 "@types/normalize-package-data@^2.4.0", "@types/normalize-package-data@^2.4.1":
   version "2.4.1"
@@ -5064,10 +5066,10 @@ axios-retry@^3.9.1:
     "@babel/runtime" "^7.15.4"
     is-retry-allowed "^2.2.0"
 
-axios@^1.7.4:
-  version "1.7.4"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.4.tgz#4c8ded1b43683c8dd362973c393f3ede24052aa2"
-  integrity sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==
+axios@^1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.8.2.tgz#fabe06e241dfe83071d4edfbcaa7b1c3a40f7979"
+  integrity sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
@@ -15362,6 +15364,11 @@ unbox-primitive@^1.0.2:
     has-bigints "^1.0.2"
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
+
+undici-types@~6.20.0:
+  version "6.20.0"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.20.0.tgz#8171bf22c1f588d1554d55bf204bc624af388433"
+  integrity sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==
 
 unfetch@^4.2.0:
   version "4.2.0"
