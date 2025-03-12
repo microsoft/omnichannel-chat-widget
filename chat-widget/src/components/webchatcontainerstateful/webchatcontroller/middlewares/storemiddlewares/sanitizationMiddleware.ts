@@ -16,7 +16,7 @@ const sanitizationMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) 
         try {
             let text = action.payload?.text;
             if (text) {
-                text = DOMPurify.sanitize(text) ?? " ";
+                text = DOMPurify.sanitize(text, {ADD_ATTR: ["target"]}) ?? " ";
             }
         } catch (e) {
             const copyDataForTelemetry = {

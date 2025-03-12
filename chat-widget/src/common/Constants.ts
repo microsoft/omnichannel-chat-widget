@@ -114,6 +114,7 @@ export class Constants {
     public static readonly Title = "title";
     public static readonly Target = "target";
     public static readonly Blank = "_blank";
+    public static readonly TargetSelf = "_self";
     public static readonly TargetRelationship = "rel";
     public static readonly TargetRelationshipAttributes = "noopener noreferrer";
 

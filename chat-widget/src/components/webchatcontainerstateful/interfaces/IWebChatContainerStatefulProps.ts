@@ -12,6 +12,8 @@ export interface IWebChatContainerStatefulProps {
     containerStyles?: IStyle;
     disableNewLineMarkdownSupport?: boolean;
     disableMarkdownMessageFormatting?: boolean;
+    opensMarkdownLinksInSameTab?: boolean;
+    honorsTargetInHTMLLinks?: boolean;
     webChatStyles?: StyleOptions;
     webChatProps?: IWebChatProps;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
