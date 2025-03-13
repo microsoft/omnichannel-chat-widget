@@ -65,6 +65,11 @@ export interface ILiveChatWidgetProps {
     contextDataStore?: IContextDataStore;
     getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
     scrollBarProps?: IScrollBarProps;
+    sendBoxTextBox?: {
+        // Customer can increase minHeight as a work-around to avoid bug when some languages (like Arabic, Chinese,
+        // Hebrew, etc) will show a scrollbar in the textarea element when placeholder is visible
+        minHeight?: string;
+    }
     useSessionStorage?: boolean;
     allowSdkChatSupport?: boolean; // to avoid any performance impact
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -122,6 +122,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     //Scrollbar styles
     const scrollbarProps: IScrollBarProps = Object.assign({}, defaultScrollBarProps, props?.scrollBarProps);
+    const sendBoxTextBox = props?.sendBoxTextBox;
 
     // In case the broadcast channel is already initialized elsewhere; One tab can only hold 1 instance
     if (props?.controlProps?.skipBroadcastChannelInit !== true) {
@@ -795,7 +796,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 height: .75em;
                 margin-left: .25em;
             }
-          }
+            textarea.webchat__send-box-text-box__html-text-area {
+                min-height: ${sendBoxTextBox?.minHeight || "auto"};
+            }
             `}</style>
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer
