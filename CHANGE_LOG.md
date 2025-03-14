@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 - Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
 - Convert base64url tokens into base64 for exp validation.
 
+### Added
+
+- Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
+
 ## [1.7.6] - 2025-03-04
 
 ### Added
