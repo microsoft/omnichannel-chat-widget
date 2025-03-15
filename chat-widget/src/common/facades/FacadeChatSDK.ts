@@ -117,12 +117,10 @@ export class FacadeChatSDK {
             throw new Error("Invalid token format, must be in JWT format");
         }
 
-        const payload = this.enforceBase64Encoding(tokenParts[1]);
-        // decode payload
-        const decodedPayload = Buffer.from(payload, "base64").toString("utf-8");
-        
-        // check if decoded payload is valid JSON
         try {
+            const payload = this.enforceBase64Encoding(tokenParts[1]);
+            // decode payload
+            const decodedPayload = atob(payload);
             const jsonPayload = JSON.parse(decodedPayload);
             // check if exp is present in payload
             if (jsonPayload) {
