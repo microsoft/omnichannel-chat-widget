@@ -136,9 +136,11 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
     function postDomPurifyActivities() {
         DOMPurify.addHook("afterSanitizeAttributes", function (node) {
-            const target = node.getAttribute("target");
-            if (target && target !== Constants.Blank && target !== Constants.TargetSelf) {
-                node.setAttribute("target", Constants.Blank);
+            const target = node.getAttribute(Constants.Target);
+            if (target === Constants.TargetSelf) {
+                node.setAttribute(Constants.Target, Constants.TargetTop);
+            } else if (!target) {
+                node.setAttribute(Constants.Target, Constants.Blank);
             }
         });
     }

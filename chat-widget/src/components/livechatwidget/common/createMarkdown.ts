@@ -46,7 +46,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         // Put a transparent pixel instead of the "open in new window" icon, so developers can easily modify the icon in CSS.
         const TRANSPARENT_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
-        const targetValue = opensMarkdownLinksInSameTab ? Constants.TargetSelf : Constants.Blank;
+        const targetValue = opensMarkdownLinksInSameTab ? Constants.TargetTop : Constants.Blank;
         if (~targetAttrIndex) {
             tokens[idx].attrs[targetAttrIndex][1] = targetValue;  
         } else {
