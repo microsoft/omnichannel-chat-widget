@@ -19,7 +19,7 @@ const convertTextToHtmlNode = (text: string): any => {
     const element = document.createElement(HtmlAttributeNames.div);
     try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        text = DOMPurify.sanitize(text);
+        text = DOMPurify.sanitize(text, {ADD_ATTR: ["target"]});
         element.innerHTML = text;
     } catch (e) {
         const errorMessage = `Failed to purify and set innertHTML with text: ${text}`;
@@ -35,7 +35,7 @@ const convertTextToHtmlNode = (text: string): any => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const processHTMLText = (action: IWebChatAction, text: string): IWebChatAction => {
+const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTMLLinks: boolean): IWebChatAction => {
     const htmlNode = convertTextToHtmlNode(text);
     const aNodes = htmlNode.getElementsByTagName(HtmlAttributeNames.aTagName);
     if (aNodes?.length > 0) {
@@ -47,9 +47,8 @@ const processHTMLText = (action: IWebChatAction, text: string): IWebChatAction =
                     continue;
                 }
 
-                // Add target to 'a' node if target is missing or does not equal to blank
-                if (!aNode.target || aNode.target !== Constants.blank)
-                {
+                // Add target to 'a' node if target is missing or if honorsTargetInHTMLLinks is false
+                if (!aNode.target || !honorsTargetInHTMLLinks) {
                     aNode.target = Constants.blank;
                 }
 
@@ -90,12 +89,12 @@ const processHTMLText = (action: IWebChatAction, text: string): IWebChatAction =
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const htmlTextMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+const htmlTextMiddleware = (honorsTargetInHTMLLinks: boolean) => ({ dispatch }: { dispatch: any}) => (next: any) => (action: IWebChatAction) => {
     if (action.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY) {
         try {
             const text = action.payload?.activity?.text;
             if (text) {
-                action = processHTMLText(action, text);
+                action = processHTMLText(action, text, honorsTargetInHTMLLinks);
             }
         } catch (e) {
             let errorMessage = "Failed to validate action.";

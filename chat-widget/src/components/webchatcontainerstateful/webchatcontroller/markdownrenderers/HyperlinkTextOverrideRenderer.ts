@@ -11,7 +11,7 @@ class HyperlinkTextOverrideRenderer {
         const htmlNode = document.createElement(HtmlAttributeNames.div);
 
         try {
-            text = DOMPurify.sanitize(text); // eslint-disable-line @typescript-eslint/no-explicit-any
+            text = DOMPurify.sanitize(text, {ADD_ATTR: ["target"]}); // eslint-disable-line @typescript-eslint/no-explicit-any
             htmlNode.innerHTML = text;
         } catch {
             return htmlNode;
