@@ -6,6 +6,7 @@ import { IWebChatProps } from "./IWebChatProps";
 import { StyleOptions } from "botframework-webchat-api";
 import { IAdaptiveCardStyles } from "./IAdaptiveCardStyles";
 import { IBotAuthConfig } from "./IBotAuthConfig";
+import { ISendBox } from "../../livechatwidget/interfaces/ISendBox";
 
 export interface IWebChatContainerStatefulProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,4 +25,5 @@ export interface IWebChatContainerStatefulProps {
     botAuthConfig?: IBotAuthConfig;
     hyperlinkTextOverride?: boolean;
     adaptiveCardStyles?: IAdaptiveCardStyles;
+    sendBoxTextBox?: ISendBox;
 }
