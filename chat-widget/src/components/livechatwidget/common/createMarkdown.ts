@@ -5,7 +5,7 @@ import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/co
 import { addSlackMarkdownIt } from "./helpers/markdownHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean, opensMarkdownLinksInSameTab: boolean) => {
+export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean, opensMarkdownLinksInSameTab?: boolean) => {
     let markdown: MarkdownIt;
 
     if (!disableMarkdownMessageFormatting) {

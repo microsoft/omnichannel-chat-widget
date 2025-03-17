@@ -88,12 +88,12 @@ const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTM
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const htmlTextMiddleware = (honorsTargetInHTMLLinks: boolean) => ({ dispatch }: { dispatch: any}) => (next: any) => (action: IWebChatAction) => {
+const htmlTextMiddleware = (honorsTargetInHTMLLinks?: boolean) => ({ dispatch }: { dispatch: any}) => (next: any) => (action: IWebChatAction) => {
     if (action.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY) {
         try {
             const text = action.payload?.activity?.text;
             if (text) {
-                action = processHTMLText(action, text, honorsTargetInHTMLLinks);
+                action = processHTMLText(action, text, honorsTargetInHTMLLinks ?? false);
             }
         } catch (e) {
             let errorMessage = "Failed to validate action.";
