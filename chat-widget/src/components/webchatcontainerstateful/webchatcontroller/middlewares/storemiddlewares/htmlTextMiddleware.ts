@@ -18,7 +18,6 @@ const convertTextToHtmlNode = (text: string): any => {
     if (!text) return "";
     const element = document.createElement(HtmlAttributeNames.div);
     try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         text = DOMPurify.sanitize(text, {ADD_ATTR: ["target"]});
         element.innerHTML = text;
     } catch (e) {
