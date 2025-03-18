@@ -39,6 +39,7 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
+import { Constants } from "../../../common/Constants";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -53,8 +54,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
     
     const disableNewLineMarkdownSupport = props.webChatContainerProps?.disableNewLineMarkdownSupport ?? defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport;
     const disableMarkdownMessageFormatting = props.webChatContainerProps?.disableMarkdownMessageFormatting ?? defaultWebChatContainerStatefulProps.disableMarkdownMessageFormatting;
+    const opensMarkdownLinksInSameTab = props.webChatContainerProps?.opensMarkdownLinksInSameTab;
+    const honorsTargetInHTMLLinks = props.webChatContainerProps?.honorsTargetInHTMLLinks;
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const markdown = createMarkdown(disableMarkdownMessageFormatting!, disableNewLineMarkdownSupport!);
+    const markdown = createMarkdown(disableMarkdownMessageFormatting!, disableNewLineMarkdownSupport!, opensMarkdownLinksInSameTab);
     // Initialize Web Chat's redux store
     let webChatStore = WebChatStoreLoader.store;
 
@@ -98,7 +101,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createMessageSequenceIdOverrideMiddleware,
             gifUploadMiddleware,
             htmlPlayerMiddleware,
-            htmlTextMiddleware,
+            htmlTextMiddleware(honorsTargetInHTMLLinks),
             createMaxMessageSizeValidator(localizedTexts),
             sanitizationMiddleware,
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -124,7 +127,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
         const config = {
             FORBID_TAGS: ["form", "button", "script", "div", "input"],
-            FORBID_ATTR: ["action"]
+            FORBID_ATTR: ["action"],
+            ADD_ATTR: ["target"]
         };
         text = DOMPurify.sanitize(text, config);
         return text;
@@ -132,8 +136,12 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
     function postDomPurifyActivities() {
         DOMPurify.addHook("afterSanitizeAttributes", function (node) {
-            // set all elements owning target to target=_blank
-            if ("target" in node) { node.setAttribute("target", "_blank"); }
+            const target = node.getAttribute(Constants.Target);
+            if (target === Constants.TargetSelf) {
+                node.setAttribute(Constants.Target, Constants.TargetTop);
+            } else if (!target) {
+                node.setAttribute(Constants.Target, Constants.Blank);
+            }
         });
     }
     // Initialize the remaining Web Chat props

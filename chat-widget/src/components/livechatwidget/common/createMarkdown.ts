@@ -5,7 +5,7 @@ import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/co
 import { addSlackMarkdownIt } from "./helpers/markdownHelper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean) => {
+export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean, opensMarkdownLinksInSameTab?: boolean) => {
     let markdown: MarkdownIt;
 
     if (!disableMarkdownMessageFormatting) {
@@ -46,11 +46,13 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         // Put a transparent pixel instead of the "open in new window" icon, so developers can easily modify the icon in CSS.
         const TRANSPARENT_GIF = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
+        const targetValue = opensMarkdownLinksInSameTab ? Constants.TargetTop : Constants.Blank;
         if (~targetAttrIndex) {
-            tokens[idx].attrs[targetAttrIndex][1] = Constants.Blank;
+            tokens[idx].attrs[targetAttrIndex][1] = targetValue;  
         } else {
-            tokens[idx].attrPush([Constants.Target, Constants.Blank]);
+            tokens[idx].attrPush([Constants.Target, targetValue]);
         }
+
         const relAttrIndex = tokens[idx].attrIndex(Constants.TargetRelationship);
         if (~relAttrIndex) {
             tokens[idx].attrs[relAttrIndex][1] = Constants.TargetRelationshipAttributes;

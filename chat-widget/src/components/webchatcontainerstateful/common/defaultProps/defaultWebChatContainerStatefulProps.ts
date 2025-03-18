@@ -11,6 +11,8 @@ export const defaultWebChatContainerStatefulProps: IWebChatContainerStatefulProp
     containerStyles: defaultWebChatStatefulContainerStyles,
     disableNewLineMarkdownSupport: false,
     disableMarkdownMessageFormatting: false,
+    opensMarkdownLinksInSameTab: false,
+    honorsTargetInHTMLLinks: false,
     hyperlinkTextOverride: false,
     directLine: new MockAdapter(),
     adaptiveCardStyles: defaultAdaptiveCardStyles
