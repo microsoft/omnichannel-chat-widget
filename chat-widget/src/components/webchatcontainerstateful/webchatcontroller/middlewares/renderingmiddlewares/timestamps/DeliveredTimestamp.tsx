@@ -25,13 +25,26 @@ export const DeliveredTimestamp = ({ args, role, name }: any) => {
         }
     } = args;
 
+    const getTimeElement = (timestamp: string): string | JSX.Element => {
+        const timeString = getTimestampHourMinute(timestamp);
+        const isAmPmFormat = timeString.toLowerCase().includes("am") || timeString.toLowerCase().includes("pm");
+
+        // For clients that use languages that are written right-to-left, but still use AM/PM time format, we need to
+        // make sure the "rtl" direction doesn't produce "PM 1:23", but remains "1:23 PM"
+        if (dir === "rtl" && isAmPmFormat) {
+            return <span dir="ltr">{getTimestampHourMinute(timestamp)}</span>;
+        } else {
+            return timeString;
+        }
+    };
+
     return (
         <Stack style={contentStyles} dir={dir}>
             {role === DirectLineSenderRole.Bot && <>
-                <span dir={dir} aria-hidden="false">{name}{" - "}{getTimestampHourMinute(timestamp)}</span>
+                <span dir={dir} aria-hidden="false">{name}{" - "}{getTimeElement(timestamp)}</span>
             </>}
             {role === DirectLineSenderRole.User && <>
-                <span aria-hidden="false" dir={dir}> {getTimestampHourMinute(timestamp)}{" - "}
+                <span aria-hidden="false" dir={dir}> {getTimeElement(timestamp)}{" - "}
                     {state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_DELIVERED ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_DELIVERED}</span>
             </>}
         </Stack>
