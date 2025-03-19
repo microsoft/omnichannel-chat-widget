@@ -33,9 +33,9 @@ export const DeliveredTimestamp = ({ args, role, name }: any) => {
         // make sure the "rtl" direction doesn't produce "PM 1:23", but remains "1:23 PM"
         if (dir === "rtl" && isAmPmFormat) {
             return <span dir="ltr">{getTimestampHourMinute(timestamp)}</span>;
-        } else {
-            return timeString;
         }
+
+        return timeString;
     };
 
     return (
