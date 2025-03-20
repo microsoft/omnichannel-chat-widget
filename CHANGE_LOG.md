@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
 - Added `opensMarkdownLinksInSameTab` and `honorsTargetInHTMLLinks` props to open hyperlinks in same tab or new tab
 
 ### Changed
@@ -21,10 +22,7 @@ All notable changes to this project will be documented in this file.
 - Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
 - Convert base64url tokens into base64 for exp validation.
 - Fix "AM/PM" timestamp direction for RTL languages
-
-### Added
-
-- Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
+- A11Y fix for keyboard auto-focus on chat restore.
 
 ## [1.7.6] - 2025-03-04
 

@@ -148,11 +148,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 }
             }
         }
-        // Move focus to the first button
-        const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${controlProps.id}`);
-        if (firstElement && firstElement[0]) {
-            firstElement[0].focus();
-        }
+
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSurveyLoaded });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXPrechatPaneCompleted,
@@ -160,6 +156,16 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         });
     }, []);
 
+    // Set focus to the first element
+    useEffect(() => {
+        if (!state.appStates.isMinimized) {
+            const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${controlProps.id}`);
+            if (firstElement && firstElement[0]) {
+                firstElement[0].focus();
+            }
+        }
+    }, [state.appStates.isMinimized]);
+    
     return (
         <PreChatSurveyPane
             controlProps={controlProps}
