@@ -158,6 +158,13 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         });
     }, []);
 
+    // Set focus to the sendbox
+    useEffect(() => {
+        if (!state.appStates.isMinimized) {
+            setFocusOnSendBox();
+        }
+    }, [state.appStates.isMinimized]);
+
     return (
         <><style>{`
         .webchat__stacked-layout__content .ac-pushButton {
