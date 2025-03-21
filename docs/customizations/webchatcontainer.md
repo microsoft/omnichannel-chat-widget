@@ -59,6 +59,8 @@ For more information on WebChat customization, please go to WebChat's official [
 | botMagicCode  | [IBotMagicCodeConfig](#ibotmagiccodeconfig) | No | Sets the necessary config needed to bypass extra login adaptive card for the built-in SSO experience. For more details of this feature, see [here](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Features.md#disable-bot-magic-code) | -
 | hyperlinkTextOverride  | boolean | No | By default, this being enabled prevents possible XSS attacks using hyper links. The hyper link will always be set to the text that shows on DOM, no matter what its original value is. Setting this to true disables this behaviors | false
 | adaptiveCardStyles  | [IAdaptiveCardStyles](#iadaptivecardstyles) | No | Sets certain style options of adaptive cards rendered inside WebChat. If your desired effect cannot be achieved by props offered in this interface, try modifying `adaptiveCardsHostConfig` in [IWebChatProps](#iwebchatprops) | [defaultAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles.ts)
+| opensMarkdownLinksInSameTab | boolean | No | Determines if markdown links should open in the same tab. By default, links open in a new tab | false |
+| honorsTargetInHTMLLinks | boolean | No | Specifies whether to override the target attribute in HTML links. By default, the target is set to "_blank," which opens links in a new tab. | false |
 
 ### [StyleOptions](https://github.com/microsoft/BotFramework-WebChat/blob/main/packages/api/src/StyleOptions.ts)
 
