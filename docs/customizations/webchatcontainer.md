@@ -13,6 +13,7 @@
   - [IBotAuthConfig](#ibotauthconfig)
   - [IAdaptiveCardStyles](#iadaptivecardstyles)
   - [IAttachmentProps](#iattachmentprops)
+  - [ISendBox](#isendbox)
 - [WebChat Middlewares](#webchat-middlewares)
   - [ActivityMiddleware](#activitymiddleware)
     - [Changing max bubble width](#changing-max-bubble-width)
@@ -59,6 +60,9 @@ For more information on WebChat customization, please go to WebChat's official [
 | botMagicCode  | [IBotMagicCodeConfig](#ibotmagiccodeconfig) | No | Sets the necessary config needed to bypass extra login adaptive card for the built-in SSO experience. For more details of this feature, see [here](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Features.md#disable-bot-magic-code) | -
 | hyperlinkTextOverride  | boolean | No | By default, this being enabled prevents possible XSS attacks using hyper links. The hyper link will always be set to the text that shows on DOM, no matter what its original value is. Setting this to true disables this behaviors | false
 | adaptiveCardStyles  | [IAdaptiveCardStyles](#iadaptivecardstyles) | No | Sets certain style options of adaptive cards rendered inside WebChat. If your desired effect cannot be achieved by props offered in this interface, try modifying `adaptiveCardsHostConfig` in [IWebChatProps](#iwebchatprops) | [defaultAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles.ts)
+| opensMarkdownLinksInSameTab | boolean | No | Determines if markdown links should open in the same tab. By default, links open in a new tab | false |
+| honorsTargetInHTMLLinks | boolean | No | Specifies whether to override the target attribute in HTML links. By default, the target is set to "_blank," which opens links in a new tab. | false |
+| sendBoxTextBox | [ISendBox](#isendbox) | No | Styling for the send box textarea element, specifically for adjusting the minHeight | - |
 
 ### [StyleOptions](https://github.com/microsoft/BotFramework-WebChat/blob/main/packages/api/src/StyleOptions.ts)
 
@@ -202,6 +206,12 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 | webChatAttachmentId | string | No | Id of attachment elements | "oc-lcw-webchat-attachment" |
 | adaptiveCardAttachmentId | string | No | Id of Adaptive Cards elements | "ms_lcw_webchat_adaptive_card" |
 | enableInlinePlaying | boolean | No | Whether to enable inline playing for video and audio atttachments | true |
+
+### [ISendBox](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ISendBox.ts)
+
+| Property | Type | Required | Description | Default |
+| - | - | - | - | - |
+| textArea.minHeight | string | No | Sets the minimum height of the textarea element | - |
 
 ## WebChat Middlewares
 
