@@ -62,7 +62,7 @@ For more information on WebChat customization, please go to WebChat's official [
 | adaptiveCardStyles  | [IAdaptiveCardStyles](#iadaptivecardstyles) | No | Sets certain style options of adaptive cards rendered inside WebChat. If your desired effect cannot be achieved by props offered in this interface, try modifying `adaptiveCardsHostConfig` in [IWebChatProps](#iwebchatprops) | [defaultAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles.ts)
 | opensMarkdownLinksInSameTab | boolean | No | Determines if markdown links should open in the same tab. By default, links open in a new tab | false |
 | honorsTargetInHTMLLinks | boolean | No | Specifies whether to override the target attribute in HTML links. By default, the target is set to "_blank," which opens links in a new tab. | false |
-| sendBoxTextBox | [ISendBox](#isendbox) | No | Styling for the send box textarea element, specifically for adjusting the minHeight | N/A
+| sendBoxTextBox | [ISendBox](#isendbox) | No | Styling for the send box textarea element, specifically for adjusting the minHeight | - |
 
 ### [StyleOptions](https://github.com/microsoft/BotFramework-WebChat/blob/main/packages/api/src/StyleOptions.ts)
 
@@ -211,7 +211,7 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 | Property | Type | Required | Description | Default |
 | - | - | - | - | - |
-| textArea.minHeight | string | No | Specifies the minimum height of the textarea element | N/A |
+| textArea.minHeight | string | No | Sets the minimum height of the textarea element | - |
 
 ## WebChat Middlewares
 
