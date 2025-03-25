@@ -156,6 +156,7 @@ export class HtmlIdNames {
 export class HtmlClassNames {
     public static readonly webChatBannerCloseButton = "webchat__toast__dismissButton";
     public static readonly webChatBannerExpandButton = "webchat__toaster__expandIcon";
+    public static readonly webChatHistoryContainer = "webchat__basic-transcript";
 }
 
 export class HtmlElementSelectors {

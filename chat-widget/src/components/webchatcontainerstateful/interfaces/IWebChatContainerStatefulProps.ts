@@ -28,4 +28,5 @@ export interface IWebChatContainerStatefulProps {
     hyperlinkTextOverride?: boolean;
     adaptiveCardStyles?: IAdaptiveCardStyles;
     sendBoxTextBox?: ISendBox;
+    webChatHistoryMobileAccessibilityLabel?: string;
 }
