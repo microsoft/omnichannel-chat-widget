@@ -3,11 +3,11 @@
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
-import { createTimer, setFocusOnSendBox } from "../../common/utils";
+import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import { Components } from "botframework-webchat";
-import { Constants } from "../../common/Constants";
+import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
@@ -79,7 +79,13 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     };
 
     useEffect(() => {
-        setFocusOnSendBox();
+        if (getDeviceType() !== "standard" && webChatContainerProps?.webChatHistoryMobileAccessibilityLabel !== undefined) {
+            const chatHistoryElement = document.querySelector(`.${HtmlClassNames.webChatHistoryContainer}`);
+
+            if (chatHistoryElement) {
+                chatHistoryElement.setAttribute(HtmlAttributeNames.ariaLabel, webChatContainerProps.webChatHistoryMobileAccessibilityLabel);
+            }
+        }
         dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: webChatContainerProps?.renderingMiddlewareProps });
         dispatch({ type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {

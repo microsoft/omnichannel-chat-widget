@@ -468,3 +468,14 @@ export const setOcUserAgent = (chatSDK: any): void => { // eslint-disable-line @
         }
     }
 };
+
+export function getDeviceType(): string {
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (/android/.test(userAgent)) {
+        return "android";
+    } else if (/iphone|ipad|ipod/.test(userAgent)) {
+        return "ios";
+    } else {
+        return "standard";
+    }
+}
