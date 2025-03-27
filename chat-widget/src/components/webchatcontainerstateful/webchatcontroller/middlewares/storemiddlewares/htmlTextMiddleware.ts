@@ -63,9 +63,6 @@ const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTM
                     }
                 }
             }
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            action = updateIn(action, [Constants.payload, Constants.activity, Constants.text], () => htmlNode.innerHTML);
         }
         catch (e) {
             let errorMessage = "Failed to apply action: ";
@@ -83,7 +80,7 @@ const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTM
             });
         }
     }
-    
+    action = updateIn(action, [Constants.payload, Constants.activity, Constants.text], () => htmlNode.innerHTML);
     return action;
 };
 
