@@ -27,11 +27,6 @@ class TranscriptHTMLBuilder {
 
         if (!this.options || !this.options.messages) {
             this.options.messages = [];
-        }  else {
-            this.options.messages = this.options.messages.filter((message: { content: string; }) => {
-                message.content = DOMPurify.sanitize(message.content);
-                return message.content.length > 0;
-            });
         }
 
         if (this.options?.pageTitle) {
@@ -705,7 +700,10 @@ const createChatTranscript = async (transcript: string, facadeChatSDK: FacadeCha
         });
     };
 
-    let messages = transcriptMessages;
+    let messages = transcriptMessages.filter((message: { content: string; }) => {
+        message.content = DOMPurify.sanitize(message.content);
+        return message.content.length > 0;
+    });
 
     if (renderAttachments) {
         messages = await Promise.all(transcriptMessages.map(async (message: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
