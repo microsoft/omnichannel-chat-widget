@@ -4,6 +4,7 @@ import { FacadeChatSDK } from "../common/facades/FacadeChatSDK";
 import TranscriptHtmlScripts from "../components/footerstateful/downloadtranscriptstateful/interfaces/TranscriptHtmlScripts";
 import { createFileAndDownload } from "../common/utils";
 import defaultLibraryScripts from "../components/footerstateful/downloadtranscriptstateful/common/defaultLibraryScripts";
+import DOMPurify from "dompurify";
 
 class TranscriptHTMLBuilder {
     private options: any; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -26,6 +27,11 @@ class TranscriptHTMLBuilder {
 
         if (!this.options || !this.options.messages) {
             this.options.messages = [];
+        }  else {
+            this.options.messages = this.options.messages.filter((message: { content: string; }) => {
+                message.content = DOMPurify.sanitize(message.content);
+                return message.content.length > 0;
+            });
         }
 
         if (this.options?.pageTitle) {
