@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Fix "AM/PM" timestamp direction for RTL languages
 - A11Y fix for keyboard auto-focus on chat restore.
 - A11Y fix - added prop to update the web chat history accessibility label for mobile.
+- Fixed script tag message issue for chat transcript and download transcript.
 
 ## [1.7.6] - 2025-03-04
 
