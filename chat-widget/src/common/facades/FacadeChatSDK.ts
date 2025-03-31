@@ -314,7 +314,7 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("getDataMaskingRules", () => this.chatSDK.getDataMaskingRules());
     }
 
-    public async sendMessage(message: ChatSDKMessage): Promise<void> {
+    public async sendMessage(message: ChatSDKMessage): Promise<void | OmnichannelMessage> {
         return this.validateAndExecuteCall("sendMessage", () => this.chatSDK.sendMessage(message));
     }
 
