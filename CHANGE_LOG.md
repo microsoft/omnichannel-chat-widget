@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Add support for Font Family config property in prechatpane
+- Add support fpr Font Family config property in prechatpane 
 - Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
 - Added `opensMarkdownLinksInSameTab` and `honorsTargetInHTMLLinks` props to open hyperlinks in same tab or new tab
 - Added documentation for few properties - opensMarkdownLinksInSameTab, honorsTargetInHTMLLinks, minHeight
@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- No internet connect message override fix
 - Enable automatic send of attachment after file is selected.
 - Switch to use atob instead of Buffer to decode payload token
 - Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
