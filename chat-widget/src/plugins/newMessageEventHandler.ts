@@ -29,11 +29,13 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 text: (activity as any)?.text,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                attachment: (activity as any)?.attachments?.length >= 1 ? (activity as any)?.attachments : []
+                attachment: (activity as any)?.attachments?.length >= 1 ? (activity as any)?.attachments : [],
+                role : activity?.from?.role,
             };
         };
 
         if (activity?.type === Constants.message) {
+            console.log("LOPEZ :: Message activity", activity);
             const payload = {
                 // To identify hidden contents vs empty content
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,6 +91,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 BroadcastService.postMessage(newMessageReceivedEvent);
 
                 if (!isHistoryMessage) {
+
+                    console.log("LOPEZ :: New message received", payload);
+
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.MessageReceived,
                         Description: "New message received",
