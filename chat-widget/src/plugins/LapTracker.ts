@@ -64,14 +64,14 @@ class LapTracker {
         }
     }*/
 
-    private saveStateToLocalStorage(): void {
+    /*private saveStateToLocalStorage(): void {
         const conversationState = {
             isABotConversation: this.isABotConversation,
             firstMessageReceived: this.firstMessageReceived,
         };
         localStorage?.setItem("conversationState", JSON.stringify(conversationState));
         console.log("LOPEZ :: saveStateToLocalStorage ::: ", conversationState);
-    }
+    }*/
 
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
@@ -80,25 +80,34 @@ class LapTracker {
             return;
         }
 
+        if (!this.isABotConversation){
+            console.log("LOPEZ :: startTracking :: LapTracker is not  a BotConversation, ignoring startTracking call");
+            return;
+        }
+
         console.log("LOPEZ :: LapTracker :: startTracking: ", this.isStarted, this.isABotConversation);
+        
         this.isStarted = true;
         this.isEnded = false;
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
+        console.log("LOPEZ ::::::::: TRACKING IS ON :::::::::::::::::::: ");
         console.log("LOPEZ :: startTracking :::: LapTracker started at: ", this.startTrackingMessage);
     }
 
     private stopTracking(payload: MessagePayload): void {
-        if (this.isEnded) {
+        
+        if (this.isEnded && !this.isStarted) {
             console.log("LOPEZ :: stopTracking :: LapTracker already ended, ignoring stopTracking call");
             return;
         }
+
         this.isEnded = true;
         this.isStarted = false;
-
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
 
         const elapsedTime = (this.stopTrackingMessage?.checkTime ?? 0) - (this.startTrackingMessage?.checkTime ?? 0);
 
+        console.log("LOPEZ ::::::::: TRACKING IS OFF :::::::::::::::::::: ");
         console.log("LOPEZ ::stopTracking::LapTracker stopped after : ", elapsedTime);
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageLapTrack,
@@ -114,15 +123,17 @@ class LapTracker {
     // Public Methods
     public register(): void {
         console.log("LOPEZ :: LapTracker registered");
+        // Listener for new messages received
         this.sb1 = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageReceived).subscribe(async (msg) => {
             const { payload } = msg;
             console.log("LOPEZ :: NewMessageReceived:: LapTracker event received: ", this.isABotConversation, this.isStarted);
 
             if (!this.firstMessageReceived) {
                 this.firstMessageReceived = true;
+
                 if (payload?.role === "bot") {
                     this.isABotConversation = true;
-                    this.saveStateToLocalStorage();
+                    //this.saveStateToLocalStorage();
                     console.log("LOPEZ :: NewMessageReceived ::: First message from bot: ", msg, this.isABotConversation, this.isStarted);
                     return;
                 }
@@ -134,14 +145,12 @@ class LapTracker {
             }
         });
 
+        // Listener for new messages sent
         this.sb2 = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageSent).subscribe(async (msg) => {
             console.log("LOPEZ :: NewMessageSent:: LapTracker event received: ", this.isABotConversation, this.isStarted, msg);
             const { payload } = msg;
-
-            if (this.isABotConversation && !this.isStarted) {
-                console.log("LOPEZ :: LapTracker :: NewMessageSent :: startTracking: ", msg);
-                this.startTracking(payload);
-            }
+            console.log("LOPEZ :: LapTracker :: NewMessageSent :: startTracking: ", msg);
+            this.startTracking(payload);
         });
     }
 
@@ -161,7 +170,7 @@ class LapTracker {
         this.sb2?.unsubscribe();
         this.sb3?.unsubscribe();
 
-        this.saveStateToLocalStorage();
+        //this.saveStateToLocalStorage();
         console.log("LOPEZ :: LapTracker deRegistered: ", this.isABotConversation, this.isStarted, this.isEnded, this.firstMessageReceived);
     }
 }
