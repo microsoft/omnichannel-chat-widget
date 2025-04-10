@@ -13,7 +13,6 @@ type MessagePayload = {
     text: string;
 };
 
-
 type TrackingMessage = {
 
     id: string;
@@ -25,8 +24,6 @@ type TrackingMessage = {
     checkTime?: number;
     type: string;
 }
-
-
 
 class LapTracker {
     private isABotConversation = false;
@@ -61,6 +58,7 @@ class LapTracker {
         const storedConversationState = localStorage?.getItem("conversationState");
         if (storedConversationState) {
             const parsedState = JSON.parse(storedConversationState);
+            console.log("LOPEZ :: loadStateFromLocalStorage :: ", parsedState);
             this.isABotConversation = parsedState.isABotConversation;
             this.firstMessageReceived = parsedState.firstMessageReceived;
         }
@@ -72,26 +70,26 @@ class LapTracker {
             firstMessageReceived: this.firstMessageReceived,
         };
         localStorage?.setItem("conversationState", JSON.stringify(conversationState));
-        console.log("LOPEZ :: LapTracker saved state: ", conversationState);
+        console.log("LOPEZ :: saveStateToLocalStorage ::: ", conversationState);
     }
 
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
         if (this.isStarted) {
-            console.log("LOPEZ :: LapTracker already started, ignoring startTracking call");
+            console.log("LOPEZ :: startTracking :: LapTracker already started, ignoring startTracking call");
             return;
         }
 
-        console.log("LOPEZ :: LapTracker :: startTracking: ", this.isStarted, this.isEnded);
+        console.log("LOPEZ :: LapTracker :: startTracking: ", this.isStarted, this.isABotConversation);
         this.isStarted = true;
         this.isEnded = false;
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
-        console.log("LOPEZ :: LapTracker started at: ", this.startTrackingMessage);
+        console.log("LOPEZ :: startTracking :::: LapTracker started at: ", this.startTrackingMessage);
     }
 
     private stopTracking(payload: MessagePayload): void {
         if (this.isEnded) {
-            console.log("LOPEZ :: LapTracker already ended, ignoring stopTracking call");
+            console.log("LOPEZ :: stopTracking :: LapTracker already ended, ignoring stopTracking call");
             return;
         }
         this.isEnded = true;
@@ -99,19 +97,16 @@ class LapTracker {
 
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
 
+        const elapsedTime = (this.stopTrackingMessage?.checkTime ?? 0) - (this.startTrackingMessage?.checkTime ?? 0);
 
-        const elapsedTime = (this.startTrackingMessage?.checkTime ?? 0) - (this.stopTrackingMessage?.checkTime ?? 0);
-
-        console.log("LOPEZ ::LapTracker stopped at: ", this.stopTrackingMessage, elapsedTime);
-
+        console.log("LOPEZ ::stopTracking::LapTracker stopped after : ", elapsedTime);
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageLapTrack,
             Description: "New message received",
             Data: {
-                elapsedTime: elapsedTime,
+                elapsedTime,
                 userMessage: this.startTrackingMessage,
                 botMessage: this.stopTrackingMessage
-
             }
         });
     }
@@ -119,10 +114,9 @@ class LapTracker {
     // Public Methods
     public register(): void {
         console.log("LOPEZ :: LapTracker registered");
-
         this.sb1 = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageReceived).subscribe(async (msg) => {
             const { payload } = msg;
-            console.log("LOPEZ :: NewMessageReceived:: LapTracker event received: ", payload);
+            console.log("LOPEZ :: NewMessageReceived:: LapTracker event received: ", this.isABotConversation, this.isStarted);
 
             if (!this.firstMessageReceived) {
                 this.firstMessageReceived = true;
@@ -141,7 +135,7 @@ class LapTracker {
         });
 
         this.sb2 = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageSent).subscribe(async (msg) => {
-            console.log("LOPEZ :: NewMessageSent:: LapTracker event received: ", msg);
+            console.log("LOPEZ :: NewMessageSent:: LapTracker event received: ", this.isABotConversation, this.isStarted, msg);
             const { payload } = msg;
 
             if (this.isABotConversation && !this.isStarted) {
@@ -149,11 +143,6 @@ class LapTracker {
                 this.startTracking(payload);
             }
         });
-
-        this.sb3 = BroadcastService.getMessageByEventName(BroadcastEvent.HistoryMessageReceived).subscribe(async (msg) => {
-            console.log("LOPEZ :: ConversationEnded:: TRACKING HISTORY ", msg);
-        });
-
     }
 
     public deregister(): void {
