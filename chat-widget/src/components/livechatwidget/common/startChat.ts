@@ -21,7 +21,7 @@ import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
-import { registerLapMessageTracker } from "../../../plugins/LapTracker";
+import { lapTracker } from "../../../plugins/LapTracker";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
@@ -204,7 +204,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 
         // Set app state to Active
         if (isStartChatSuccessful) {
-            registerLapMessageTracker();
+            lapTracker.register();
             ActivityStreamHandler.uncork();
             // Update start chat failure app state if chat loads successfully
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });

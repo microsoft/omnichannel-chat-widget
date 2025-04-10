@@ -18,6 +18,7 @@ import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontro
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { executeReducer } from "../../../contexts/createReducer";
 import { isPersistentEnabled } from "./reconnectChatHelper";
+import { lapTracker } from "../../../plugins/LapTracker";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -142,6 +143,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
                 Event: TelemetryEvent.EndChatSDKCall
             });
             await facadeChatSDK?.endChat(endChatOptionalParameters);
+            lapTracker.deregister();
         } catch (ex) {
 
             
