@@ -7,13 +7,15 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-- Add support fpr Font Family config property in prechatpane 
+
+- Add support for Font Family config property in prechatpane
 - Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
 - Added `opensMarkdownLinksInSameTab` and `honorsTargetInHTMLLinks` props to open hyperlinks in same tab or new tab
 - Added documentation for few properties - opensMarkdownLinksInSameTab, honorsTargetInHTMLLinks, minHeight
 
 ### Changed
 
+- Uptake [@microsoft/omnichannel-chat-sdk@1.10.17](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.17)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.16)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.15)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.14)
