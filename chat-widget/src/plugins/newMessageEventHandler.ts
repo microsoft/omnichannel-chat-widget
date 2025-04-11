@@ -45,9 +45,15 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 userId: userId,
                 tags: activity?.channelData?.tags,
                 messageType: "",
+                Id: activity?.id,
+                role: activity?.from?.role,
             };
 
             if (activity?.from?.role === Constants.userMessageTag) {
+
+                console.log("LOPEZ :::::::::::  SEND * PAYLOAD ::::::::::::::::::::::", payload);
+                console.log("LOPEZ :::::::::::  SEND * ACTIVITTY ::::::::::::::::::::::", activity);
+
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 payload.messageType = Constants.userMessageTag;
                 const newMessageSentEvent: ICustomEvent = {
@@ -100,7 +106,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                         Data: payload
                     });
                 } else {
+                    console.log("LOPEZ :: History message received :: 1 ::", payload);
                     if (!isHistoryMessageReceivedEventRasied) {
+                        console.log("LOPEZ :: History message received :: 2 ::", payload);
                         isHistoryMessageReceivedEventRasied = true;
                         TelemetryHelper.logActionEvent(LogLevel.INFO, {
                             Event: TelemetryEvent.RehydrateMessageReceived,

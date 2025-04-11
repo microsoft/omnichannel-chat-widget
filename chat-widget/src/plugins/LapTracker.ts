@@ -34,6 +34,7 @@ class LapTracker {
     private sb3?: Subscription;
     private startTrackingMessage?: TrackingMessage;
     private stopTrackingMessage?: TrackingMessage;
+    private inPause = false;
 
     constructor() {
         //this.loadStateFromLocalStorage();
@@ -75,15 +76,13 @@ class LapTracker {
 
     private handleAgentMessage(payload: MessagePayload): void {
         console.log("LOPEZ :: handleSystemMessage: ", payload);
-
-
         if (payload?.tags?.includes("public")) {
             console.log("LOPEZ :: handleSystemMessage: Public message detected , so we stop tracking any activity");
             this.deregister();
         }
-
         return;
     }
+
 
     private stopTracking(payload: MessagePayload): void {
 
@@ -159,7 +158,32 @@ class LapTracker {
             console.log("LOPEZ :: NewMessageSent:: Broadcast :: ", this.isABotConversation, this.isStarted, msg);
             const { payload } = msg;
             console.log("LOPEZ :: LapTracker :: NewMessageSent :: startTracking: ", msg);
+
+            // in the case of a reload, tracker will be paused, until last history message is received
+            // this is because we dont have a way to identidy send messages as part of the history
+            if (this.inPause) return;
             this.startTracking(payload);
+        });
+
+        this.sb3 = BroadcastService.getMessageByEventName(BroadcastEvent.HistoryMessageReceived).subscribe(async (msg) => {
+            console.log("LOPEZ :: HistoryMessageReceived:: Broadcast :: ", this.isABotConversation, this.isStarted, msg);
+            const { payload } = msg;
+            console.log("LOPEZ :: LapTracker :: HistoryMessageReceived :: startTracking: ", msg);
+
+            // recovering from a previous state
+            if (payload?.role === "bot") {
+                if (payload.tags?.includes("system") && payload.tags?.includes("agentassignmentready")) {
+                    // at this point this is the first messagge in the chat, so we know we have reached limit and we can start tracking
+                    this.inPause = false;
+                    return;
+                }
+
+                this.isABotConversation = true;
+                this.firstMessageReceived = true;
+                // here we notice we are receiving old messages, it means its a reload case
+                this.inPause = true;
+
+            }
         });
     }
 
