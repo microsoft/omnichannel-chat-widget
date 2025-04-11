@@ -1,8 +1,6 @@
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
-
+import { BroadcastEvent } from "../common/telemetry/TelemetryConstants";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Subscription } from "rxjs";
-import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 
 type MessagePayload = {
     id: string;
@@ -53,25 +51,6 @@ class LapTracker {
             checkTime: new Date().getTime()
         };
     }
-    // Utility Functions
-    /*private loadStateFromLocalStorage(): void {
-        const storedConversationState = localStorage?.getItem("conversationState");
-        if (storedConversationState) {
-            const parsedState = JSON.parse(storedConversationState);
-            console.log("LOPEZ :: loadStateFromLocalStorage :: ", parsedState);
-            this.isABotConversation = parsedState.isABotConversation;
-            this.firstMessageReceived = parsedState.firstMessageReceived;
-        }
-    }*/
-
-    /*private saveStateToLocalStorage(): void {
-        const conversationState = {
-            isABotConversation: this.isABotConversation,
-            firstMessageReceived: this.firstMessageReceived,
-        };
-        localStorage?.setItem("conversationState", JSON.stringify(conversationState));
-        console.log("LOPEZ :: saveStateToLocalStorage ::: ", conversationState);
-    }*/
 
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
@@ -80,13 +59,13 @@ class LapTracker {
             return;
         }
 
-        if (!this.isABotConversation){
+        if (!this.isABotConversation) {
             console.log("LOPEZ :: startTracking :: LapTracker is not  a BotConversation, ignoring startTracking call");
             return;
         }
 
         console.log("LOPEZ :: LapTracker :: startTracking: ", this.isStarted, this.isABotConversation);
-        
+
         this.isStarted = true;
         this.isEnded = false;
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
@@ -94,8 +73,20 @@ class LapTracker {
         console.log("LOPEZ :: startTracking :::: LapTracker started at: ", this.startTrackingMessage);
     }
 
+    private handleAgentMessage(payload: MessagePayload): void {
+        console.log("LOPEZ :: handleSystemMessage: ", payload);
+
+
+        if (payload?.tags?.includes("public")) {
+            console.log("LOPEZ :: handleSystemMessage: Public message detected , so we stop tracking any activity");
+            this.deregister();
+        }
+
+        return;
+    }
+
     private stopTracking(payload: MessagePayload): void {
-        
+
         if (this.isEnded && !this.isStarted) {
             console.log("LOPEZ :: stopTracking :: LapTracker already ended, ignoring stopTracking call");
             return;
@@ -109,7 +100,7 @@ class LapTracker {
 
         console.log("LOPEZ ::::::::: TRACKING IS OFF :::::::::::::::::::: ");
         console.log("LOPEZ ::stopTracking::LapTracker stopped after : ", elapsedTime);
-        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+        /*TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageLapTrack,
             Description: "New message received",
             Data: {
@@ -117,7 +108,33 @@ class LapTracker {
                 userMessage: this.startTrackingMessage,
                 botMessage: this.stopTrackingMessage
             }
-        });
+        });*/
+    }
+
+    private isMessageFromValidSender(payload: MessagePayload): boolean {
+        if (payload?.tags?.includes("public")) {
+            console.log("LOPEZ :: NewMessageReceived:: LapTracker event received: Public message detected , so we stop tracking any activity");
+            this.handleAgentMessage(payload);
+            return false;
+        }
+
+        return true;
+    }
+
+    private isReadyToStartTracking(payload: MessagePayload): boolean {
+        if (!this.firstMessageReceived) {
+            this.firstMessageReceived = true;
+            if (payload?.role === "bot") {
+                this.isABotConversation = true;
+                //this.saveStateToLocalStorage();
+                console.log("LOPEZ :: NewMessageReceived ::: First message from bot: ", payload, this.isABotConversation, this.isStarted);
+                // return false to do not start tracking yet , until next interaction
+                // this is because this is the first message from the bot and we need to wait for the user to send a message
+                return false;
+            }
+        }
+
+        return true;
     }
 
     // Public Methods
@@ -126,18 +143,10 @@ class LapTracker {
         // Listener for new messages received
         this.sb1 = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageReceived).subscribe(async (msg) => {
             const { payload } = msg;
-            console.log("LOPEZ :: NewMessageReceived:: LapTracker event received: ", this.isABotConversation, this.isStarted);
+            console.log("LOPEZ :: NewMessageReceived :: Broadcast ::  ", this.isABotConversation, this.isStarted);
 
-            if (!this.firstMessageReceived) {
-                this.firstMessageReceived = true;
-
-                if (payload?.role === "bot") {
-                    this.isABotConversation = true;
-                    //this.saveStateToLocalStorage();
-                    console.log("LOPEZ :: NewMessageReceived ::: First message from bot: ", msg, this.isABotConversation, this.isStarted);
-                    return;
-                }
-            }
+            if (!this.isMessageFromValidSender(payload)) return;
+            if (!this.isReadyToStartTracking(payload)) return;
 
             if (this.isABotConversation && this.isStarted) {
                 console.log("LOPEZ :: LapTracker :: NewMessageReceived :: stopTracking: ", msg);
@@ -147,7 +156,7 @@ class LapTracker {
 
         // Listener for new messages sent
         this.sb2 = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageSent).subscribe(async (msg) => {
-            console.log("LOPEZ :: NewMessageSent:: LapTracker event received: ", this.isABotConversation, this.isStarted, msg);
+            console.log("LOPEZ :: NewMessageSent:: Broadcast :: ", this.isABotConversation, this.isStarted, msg);
             const { payload } = msg;
             console.log("LOPEZ :: LapTracker :: NewMessageSent :: startTracking: ", msg);
             this.startTracking(payload);
