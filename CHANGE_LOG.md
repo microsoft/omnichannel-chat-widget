@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.7] - 2025-04-16
+
 ### Added
 
 - Add support for Font Family config property in prechatpane
