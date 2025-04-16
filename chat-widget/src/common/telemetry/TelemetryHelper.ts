@@ -20,6 +20,8 @@ export interface TelemetryEventWrapper {
     ElapsedTimeInMilliseconds?: number;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Data?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    CustomProperties?: any;
 }
 
 export class TelemetryHelper {
