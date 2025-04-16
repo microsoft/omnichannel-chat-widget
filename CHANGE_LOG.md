@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed missing payload in new message recieved telemetry
 - No internet connect message override fix
 - Enable automatic send of attachment after file is selected.
 - Switch to use atob instead of Buffer to decode payload token
