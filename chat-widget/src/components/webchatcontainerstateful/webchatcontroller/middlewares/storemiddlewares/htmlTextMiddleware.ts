@@ -97,7 +97,6 @@ const htmlTextMiddleware = (honorsTargetInHTMLLinks?: boolean) => ({ dispatch }:
             const text = action.payload?.activity?.text;
             if (text) {
                 action = processHTMLText(action, text, honorsTargetInHTMLLinks ?? false);
-                console.log("processed HTMLText: ", text);
             }
         } catch (e) {
             let errorMessage = "Failed to validate action.";
