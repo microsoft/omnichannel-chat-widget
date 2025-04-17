@@ -28,7 +28,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed transcript with attachments issue and blockquote issue
 - Fixed missing payload in new message recieved telemetry
 - No internet connect message override fix
 - Enable automatic send of attachment after file is selected.
