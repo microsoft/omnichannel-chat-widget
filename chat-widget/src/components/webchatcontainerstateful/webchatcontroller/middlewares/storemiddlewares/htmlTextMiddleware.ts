@@ -84,7 +84,7 @@ const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTM
    
     // if empty div tag after sanitization
     if (htmlNode.tagName?.toLowerCase() === HtmlAttributeNames.div && htmlNode.children.length === 0 && htmlNode.innerHTML.trim() === "") {
-        action = updateIn(action, [Constants.payload, Constants.activity, Constants.text], () => htmlNode.innerHTML);
+        action = updateIn(action, [Constants.payload, Constants.activity, Constants.text], () => "");
     }
    
     return action;
