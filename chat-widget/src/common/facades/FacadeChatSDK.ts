@@ -193,7 +193,7 @@ export class FacadeChatSDK {
             return { result: true, message: "Token is valid" };
         }
 
-        if (this.getAuthToken === undefined) {
+        if (this.getAuthToken === undefined && this.chatSDK.chatSDKConfig?.getAuthToken === undefined) {
             TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenFailed,
                 Description: "GetAuthToken function is not present",
