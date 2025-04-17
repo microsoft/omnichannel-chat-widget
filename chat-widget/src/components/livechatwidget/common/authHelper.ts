@@ -33,7 +33,16 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
             TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken });
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
+    } else if (chatSDK && chatSDK.chatSDKConfig?.getAuthToken) {
+        const token = await chatSDK.chatSDKConfig?.getAuthToken();
+        if (!isNullOrEmptyString(token)) {           
+            return {"result": true, "token": token};
+        } else {
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken, Description: "getAuthToken in chat SDK returns empty string" });
+            throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
+        }
     }
+
     return {
         "result": false, 
         "token": null,
