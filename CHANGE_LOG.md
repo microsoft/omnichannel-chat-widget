@@ -6,9 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.7] - 2025-04-16
+
 ### Added
 
-- Add support fpr Font Family config property in prechatpane
+- Add support for Font Family config property in prechatpane
 - Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
 - Added `opensMarkdownLinksInSameTab` and `honorsTargetInHTMLLinks` props to open hyperlinks in same tab or new tab
 - Added documentation for few properties - opensMarkdownLinksInSameTab, honorsTargetInHTMLLinks, minHeight
@@ -22,9 +24,12 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed transcript with attachments issue and blockquote issue
+- Fixed missing payload in new message recieved telemetry
+- No internet connect message override fix
 - Enable automatic send of attachment after file is selected.
 - Switch to use atob instead of Buffer to decode payload token
-- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
+- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey
 - Convert base64url tokens into base64 for exp validation.
 - Fix "AM/PM" timestamp direction for RTL languages
 - A11Y fix for keyboard auto-focus on chat restore.
@@ -40,7 +45,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed issue where cx was unable to change string messages 
+- Fixed issue where cx was unable to change string messages
 
 ### Changed
 
@@ -84,6 +89,7 @@ All notable changes to this project will be documented in this file.
 - Padding property to control the padding size choice input adaptive card form field
 
 ### Changed
+
 - export renderingmiddlewares to be imported by hosts
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.6)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.4)

@@ -103,7 +103,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.MessageReceived,
                         Description: "New message received",
-                        Data: payload
+                        CustomProperties: payload
                     });
                 } else {
                     console.log("LOPEZ :: History message received :: 1 ::", payload);
@@ -113,7 +113,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                         TelemetryHelper.logActionEvent(LogLevel.INFO, {
                             Event: TelemetryEvent.RehydrateMessageReceived,
                             Description: "History message received",
-                            Data: payload
+                            CustomProperties: payload
                         });
                     }
                 }
