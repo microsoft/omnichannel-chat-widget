@@ -63,6 +63,7 @@ const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTM
                     }
                 }
             }
+            action = updateIn(action, [Constants.payload, Constants.activity, Constants.text], () => htmlNode.innerHTML);
         }
         catch (e) {
             let errorMessage = "Failed to apply action: ";
@@ -80,7 +81,12 @@ const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTM
             });
         }
     }
-    action = updateIn(action, [Constants.payload, Constants.activity, Constants.text], () => htmlNode.innerHTML);
+   
+    // if empty div tag after sanitization
+    if (htmlNode.tagName?.toLowerCase() === HtmlAttributeNames.div && htmlNode.children.length === 0 && htmlNode.innerHTML.trim() === "") {
+        action = updateIn(action, [Constants.payload, Constants.activity, Constants.text], () => htmlNode.innerHTML);
+    }
+   
     return action;
 };
 
@@ -91,6 +97,7 @@ const htmlTextMiddleware = (honorsTargetInHTMLLinks?: boolean) => ({ dispatch }:
             const text = action.payload?.activity?.text;
             if (text) {
                 action = processHTMLText(action, text, honorsTargetInHTMLLinks ?? false);
+                console.log("processed HTMLText: ", text);
             }
         } catch (e) {
             let errorMessage = "Failed to validate action.";
