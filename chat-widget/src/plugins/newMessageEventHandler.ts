@@ -61,7 +61,11 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 };
                 BroadcastService.postMessage(newMessageSentEvent);
 
-                noBS.sendMessage(payload);
+                console.log("LOPEZ :: NMS :: bff :: NO_BS_TRACKER  :: MessageSent : ", activity);
+                if (!activity?.channelData?.fromList) {
+                    console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: MessageSent ");
+                    noBS.sendMessage(payload);
+                }
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.MessageSent,
@@ -98,7 +102,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 BroadcastService.postMessage(newMessageReceivedEvent);
 
                 if (!isHistoryMessage) {
-                    console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: sendMessage : ", activity);
+                    console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: MessageReceived : ", activity);
                     noBS.receivedMessage(payload);
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.MessageReceived,

@@ -71,6 +71,7 @@ export class NoBsLapTracker {
             console.log("LOPEZ :::: NO_BS_TRACKER ::handleSystemMessage: Public message detected , so we stop tracking any activity");
             this.deregister();
         }
+
         return;
     }
 
@@ -124,7 +125,7 @@ export class NoBsLapTracker {
     public sendMessage(payload: any): void {
         // in the case of a reload, tracker will be paused, until last history message is received
         // this is because we dont have a way to identidy send messages as part of the history
-        if (this.inPause) return;
+        //if (this.inPause) return;
         this.startTracking(payload);
     }
 
@@ -144,20 +145,10 @@ export class NoBsLapTracker {
         // recovering from a previous state
         this.handleAgentMessage(payload);
 
-        if (!this.isActive) return;
-        
-        if (payload?.role === "bot" && payload.text?.length > 0) {
-            if (payload.tags?.includes("system") && payload.tags?.includes("agentassignmentready")) {
-                // at this point this is the first messagge in the chat, so we know we have reached limit and we can start tracking
-                //this.inPause = false;
-                console.log("LOPEZ :: NO_BS_TRACKER :: historyMessage:: inPause: ", this.inPause);
-                return;
+        if (this.isActive){
+            if (payload.role === "bot") {
+                this.isABotConversation = true;
             }
-            this.isABotConversation = true;
-            this.firstMessageReceived = true;
-            // here we notice we are receiving old messages, it means its a reload case
-            //this.inPause = true;
-            console.log("LOPEZ :: NO_BS_TRACKER :: historyMessage:: inPause: ", this.inPause);
         }
     }
 
