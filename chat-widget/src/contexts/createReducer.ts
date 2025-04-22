@@ -1,5 +1,7 @@
 /* eslint-disable indent */
 
+import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../common/Constants";
+
 import { ConversationState } from "./common/ConversationState";
 import { IInternalTelemetryData } from "../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetAction } from "./common/ILiveChatWidgetAction";
@@ -7,7 +9,6 @@ import { ILiveChatWidgetContext } from "./common/ILiveChatWidgetContext";
 import { ILiveChatWidgetLocalizedTexts } from "./common/ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
-import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../common/Constants";
 import { PostChatSurveyMode } from "../components/postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { StartChatFailureType } from "./common/StartChatFailureType";
 
@@ -705,6 +706,21 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             
         case LiveChatWidgetActionType.GET_IN_MEMORY_STATE:
             return inMemory;
+        case LiveChatWidgetActionType.CHAT_STARTED_AT: 
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    chatStartedAt: action.payload as number
+                }
+            };
+            return {
+                ...state,
+                appStates: {
+                    ...state.appStates,
+                    chatStartedAt: action.payload as number
+                }
+            };
 
         default:
             return state;

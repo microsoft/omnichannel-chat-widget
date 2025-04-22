@@ -2,23 +2,27 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../common/telemetry/Te
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../common/Constants";
+import { FirstResponseLatencyTracker } from "../firstresponselatency/FirstResponseLatencyTracker";
 import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
-import { NoBsLapTracker } from "./NoBSLapTracker";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../common/telemetry/TelemetryManager";
+import { isHistoryMessage } from "../firstresponselatency/util";
 
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
 
-    const noBS = new NoBsLapTracker();
+    // Hooking the message tracker in the listener, a bit invasive but easier to control.
+    const firstResponseLatencyTracker = new FirstResponseLatencyTracker();
+    // epoch time in utc for when start to listen.
+    // We dont longer have a mechanism to know if a message is history or new, so any message older than the time we start listening will be considered a history message.
+    // this is a workaround for the fact that we dont have a way to identify if a message is history or new, and it will provide consistency across different scenarios
+    const startTime = ( new Date().getTime() - 2000); // 2 seconds in the past, to account for any delay in the message being sent and received
+    let isHistoryMessageReceivedEventRasied = false;
 
     const onNewAdapterActivityHandler = (activity: IActivity) => {
-        const isActivityMessage: boolean = activity?.type === Constants.message;
-        const isHistoryMessage: boolean = isActivityMessage && (activity?.channelData?.tags?.includes(Constants.historyMessageTag) || activity?.channelData?.fromList);
-        raiseMessageEvent(activity, isHistoryMessage);
+        const historyMessage: boolean = isHistoryMessage(activity, startTime);
+        raiseMessageEvent(activity, historyMessage);
     };
-
-    let isHistoryMessageReceivedEventRasied = false;
 
     const raiseMessageEvent = (activity: IActivity, isHistoryMessage: boolean) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,7 +38,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 text: (activity as any)?.text,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 attachment: (activity as any)?.attachments?.length >= 1 ? (activity as any)?.attachments : [],
-                role : activity?.from?.role,
+                role: activity?.from?.role,
             };
         };
 
@@ -60,11 +64,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     payload: polyfillMessagePayloadForEvent(payload)
                 };
                 BroadcastService.postMessage(newMessageSentEvent);
-
-                console.log("LOPEZ :: NMS :: bff :: NO_BS_TRACKER  :: MessageSent : ", activity);
-                if (!activity?.channelData?.fromList) {
-                    console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: MessageSent ");
-                    noBS.sendMessage(payload);
+                if (!isHistoryMessage) {
+                    firstResponseLatencyTracker.startClock(payload);
                 }
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -100,19 +101,19 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     payload: polyfillMessagePayloadForEvent(payload)
                 };
                 BroadcastService.postMessage(newMessageReceivedEvent);
-
                 if (!isHistoryMessage) {
-                    console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: MessageReceived : ", activity);
-                    noBS.receivedMessage(payload);
+                    firstResponseLatencyTracker.stopClock(payload);
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.MessageReceived,
                         Description: "New message received",
                         CustomProperties: payload
                     });
                 } else {
+                    
                     if (!isHistoryMessageReceivedEventRasied) {
                         console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: REHYDRATE : ", activity);
-                        noBS.historyMessage(payload);
+                        // this is needed for reload scenarios, it helps to identify the last message received before the reload
+                        //firstResponseLatencyTracker.historyMessage(payload);
                         isHistoryMessageReceivedEventRasied = true;
                         TelemetryHelper.logActionEvent(LogLevel.INFO, {
                             Event: TelemetryEvent.RehydrateMessageReceived,

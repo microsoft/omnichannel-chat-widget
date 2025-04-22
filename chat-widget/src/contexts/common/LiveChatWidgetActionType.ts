@@ -285,4 +285,10 @@ export enum LiveChatWidgetActionType {
         null payload, simply returns the existing inMemory state
     */
     GET_IN_MEMORY_STATE,
+
+    /*
+        Parameters:
+        Epoch time of chat started time
+    */
+    CHAT_STARTED_AT
 }

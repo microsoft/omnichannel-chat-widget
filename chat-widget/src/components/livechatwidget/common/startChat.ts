@@ -181,6 +181,10 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
             await facadeChatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
+            // in utc, no need to convert to local time since the message id is in utc as well
+            dispatch({ type: LiveChatWidgetActionType.CHAT_STARTED_AT, payload: new Date().getTime() });
+            
+            
         } catch (error) {
             checkContactIdError(error);
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {

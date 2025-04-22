@@ -1,39 +1,20 @@
 
 
-type MessagePayload = {
-    id: string;
-    role: string;
-    timestamp: string;
-    tags: string[];
-    messageType: string;
-    text: string;
-};
-
-type TrackingMessage = {
-
-    id: string;
-    role: string;
-    timestamp: string;
-    tags: string[];
-    messageType: string;
-    text: string;
-    checkTime?: number;
-    type: string;
-}
-
-export class NoBsLapTracker {
+export class FirstResponseLatencyTracker {
+    
     private isABotConversation = false;
     private isStarted = false;
     private isEnded = false;
-    private firstMessageReceived = false;
 
     private startTrackingMessage?: TrackingMessage;
     private stopTrackingMessage?: TrackingMessage;
-    private inPause = false;
     private isActive = false;
 
     constructor() {
+        // this is a workaround to ensure in reload we track effectively the messages
+        // we do have a mechanism in place to prevent log agent messages.
         this.isActive = true;
+        this.isABotConversation = true;
     }
 
     private createTrackingMessage(payload: MessagePayload, type: string): TrackingMessage {
@@ -51,38 +32,48 @@ export class NoBsLapTracker {
 
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
+        //  this prevents to initiate tracking for multiple incoming messages
         if (this.isStarted) {
             return;
         }
-
+        // this is to ensure we track only messages where bot is engaged
         if (!this.isABotConversation) {
             return;
         }
 
+        // control of states to prevent clashing of messages
         this.isStarted = true;
         this.isEnded = false;
+
+        // The idea  of using types is to enrich telemetry data 
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
         console.log("LOPEZ ::::::::: :: NO_BS_TRACKER ::TRACKING IS ON :::::::::::::::::::: ");
         console.log("LOPEZ :: :: NO_BS_TRACKER ::startTracking :::: LapTracker started at: ", this.startTrackingMessage);
     }
 
     private handleAgentMessage(payload: MessagePayload): void {
+        // this tag so far is only present in agent messages
         if (payload?.tags?.includes("public")) {
             console.log("LOPEZ :::: NO_BS_TRACKER ::handleSystemMessage: Public message detected , so we stop tracking any activity");
             this.deregister();
         }
-
         return;
     }
 
-
     private stopTracking(payload: MessagePayload): void {
+        // this prevents execution for multiple incoming messages from the bot.
         if (this.isEnded && !this.isStarted) {
             return;
         }
+
+        // control of states to prevent clashing of messages
         this.isEnded = true;
         this.isStarted = false;
+
+        // The idea  of using types is to enrich telemetry data 
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
+
+        // calculating elapsed time
         const elapsedTime = (this.stopTrackingMessage?.checkTime ?? 0) - (this.startTrackingMessage?.checkTime ?? 0);
 
         console.log("LOPEZ :: NO_BS_TRACKER ::::::::: TRACKING IS OFF :::::::::::::::::::: ");
@@ -98,7 +89,10 @@ export class NoBsLapTracker {
         });*/
     }
 
+    // mechanism to ensure we track only allowed conversations
     private isMessageFromValidSender(payload: MessagePayload): boolean {
+
+        // agent scenario
         if (payload?.tags?.includes("public")) {
             this.handleAgentMessage(payload);
             return false;
@@ -107,48 +101,45 @@ export class NoBsLapTracker {
         return true;
     }
 
-    private isReadyToStartTracking(payload: MessagePayload): boolean {
-        if (!this.firstMessageReceived) {
-            this.firstMessageReceived = true;
-            if (payload?.role === "bot") {
-                this.isABotConversation = true;
-                // return false to do not start tracking yet , until next interaction
-                // this is because this is the first message from the bot and we need to wait for the user to send a message
-                return false;
-            }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public startClock(payload: any): void {
+        try {
+            // in the case of a reload, tracker will be paused, until last history message is received
+            // this is because we dont have a way to identidy send messages as part of the history
+            //if (this.inPause) return;
+            this.startTracking(payload);
+        } catch (e) {
+            console.error("LOPEZ :: NO_BS_TRACKER ::: sendMessage: ", e);
         }
-
-        return true;
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public sendMessage(payload: any): void {
-        // in the case of a reload, tracker will be paused, until last history message is received
-        // this is because we dont have a way to identidy send messages as part of the history
-        //if (this.inPause) return;
-        this.startTracking(payload);
-    }
+    public stopClock(payload: any): void {
+        try {
+            if (!this.isMessageFromValidSender(payload)) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public receivedMessage(payload: any): void {
-
-        if (!this.isMessageFromValidSender(payload)) return;
-        if (!this.isReadyToStartTracking(payload)) return;
-
-        if (this.isABotConversation && this.isStarted) {
-            this.stopTracking(payload);
+            if (this.isABotConversation && this.isStarted) {
+                this.stopTracking(payload);
+            }
+        } catch (e) {
+            console.error("LOPEZ :: NO_BS_TRACKER ::: receivedMessage: ", e);
         }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public historyMessage(payload: any): void {
-        // recovering from a previous state
-        this.handleAgentMessage(payload);
+        try {
+            console.log("LOPEZ :: NO_BS_TRACKER ::: historyMessage: ", payload);
+            // recovering from a previous state
+            this.handleAgentMessage(payload);
 
-        if (this.isActive){
-            if (payload.role === "bot") {
-                this.isABotConversation = true;
+            if (this.isActive) {
+                if (payload.role === "bot") {
+                    this.isABotConversation = true;
+                }
             }
+        } catch (e) {
+            console.error("LOPEZ :: NO_BS_TRACKER ::: historyMessage: ", e);
         }
     }
 
@@ -159,9 +150,7 @@ export class NoBsLapTracker {
         this.isEnded = false;
         this.startTrackingMessage = undefined;
         this.stopTrackingMessage = undefined;
-        this.firstMessageReceived = false;
         this.isActive = false;
-        console.log("LOPEZ :: NO_BS_TRACKER ::: deRegistered: ", this.isABotConversation, this.isStarted, this.isEnded, this.firstMessageReceived);
     }
 }
 
