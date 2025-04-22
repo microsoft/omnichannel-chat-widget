@@ -4,18 +4,22 @@ import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
+import { NoBsLapTracker } from "./NoBSLapTracker";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../common/telemetry/TelemetryManager";
 
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
+
+    const noBS = new NoBsLapTracker();
+
     const onNewAdapterActivityHandler = (activity: IActivity) => {
         const isActivityMessage: boolean = activity?.type === Constants.message;
         const isHistoryMessage: boolean = isActivityMessage && (activity?.channelData?.tags?.includes(Constants.historyMessageTag) || activity?.channelData?.fromList);
-
         raiseMessageEvent(activity, isHistoryMessage);
     };
 
     let isHistoryMessageReceivedEventRasied = false;
+
     const raiseMessageEvent = (activity: IActivity, isHistoryMessage: boolean) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const polyfillMessagePayloadForEvent = (payload: any) => {
@@ -35,7 +39,6 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         };
 
         if (activity?.type === Constants.message) {
-            console.log("LOPEZ :: Message activity", activity);
             const payload = {
                 // To identify hidden contents vs empty content
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,10 +53,6 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             };
 
             if (activity?.from?.role === Constants.userMessageTag) {
-
-                console.log("LOPEZ :::::::::::  SEND * PAYLOAD ::::::::::::::::::::::", payload);
-                console.log("LOPEZ :::::::::::  SEND * ACTIVITTY ::::::::::::::::::::::", activity);
-
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 payload.messageType = Constants.userMessageTag;
                 const newMessageSentEvent: ICustomEvent = {
@@ -61,6 +60,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     payload: polyfillMessagePayloadForEvent(payload)
                 };
                 BroadcastService.postMessage(newMessageSentEvent);
+
+                noBS.sendMessage(payload);
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.MessageSent,
@@ -97,18 +98,17 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                 BroadcastService.postMessage(newMessageReceivedEvent);
 
                 if (!isHistoryMessage) {
-
-                    console.log("LOPEZ :: New message received", payload);
-
+                    console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: sendMessage : ", activity);
+                    noBS.receivedMessage(payload);
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.MessageReceived,
                         Description: "New message received",
                         CustomProperties: payload
                     });
                 } else {
-                    console.log("LOPEZ :: History message received :: 1 ::", payload);
                     if (!isHistoryMessageReceivedEventRasied) {
-                        console.log("LOPEZ :: History message received :: 2 ::", payload);
+                        console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: REHYDRATE : ", activity);
+                        noBS.historyMessage(payload);
                         isHistoryMessageReceivedEventRasied = true;
                         TelemetryHelper.logActionEvent(LogLevel.INFO, {
                             Event: TelemetryEvent.RehydrateMessageReceived,

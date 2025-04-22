@@ -85,7 +85,6 @@ class LapTracker {
 
 
     private stopTracking(payload: MessagePayload): void {
-
         if (this.isEnded && !this.isStarted) {
             console.log("LOPEZ :: stopTracking :: LapTracker already ended, ignoring stopTracking call");
             return;
