@@ -1,6 +1,7 @@
 import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
-import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { MessagePayload, TrackingMessage } from "./Constants";
+
+import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 
 export class FirstResponseLatencyTracker {
     
@@ -71,7 +72,6 @@ export class FirstResponseLatencyTracker {
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
         // calculating elapsed time
         const elapsedTime = (this.stopTrackingMessage?.checkTime ?? 0) - (this.startTrackingMessage?.checkTime ?? 0);
-        console.log("First Response Latency cycle completed", elapsedTime);
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageLapTrack,
             Description: "First response latency tracking",
@@ -100,7 +100,6 @@ export class FirstResponseLatencyTracker {
             //if (this.inPause) return;
             this.startTracking(payload);
         } catch (e) {
-            console.error("FRL : error while trying to start the tracker", e);
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.MessageStartLapTrackError,
                 Description: "Error while starting the clock",
