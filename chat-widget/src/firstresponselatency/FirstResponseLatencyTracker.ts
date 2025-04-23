@@ -95,6 +95,10 @@ export class FirstResponseLatencyTracker {
 
     public startClock(payload: MessagePayload): void {
         try {
+
+            if (!payload || !payload.Id) {
+                throw new Error("Invalid payload");
+            }
             // in the case of a reload, tracker will be paused, until last history message is received
             // this is because we dont have a way to identidy send messages as part of the history
             //if (this.inPause) return;
@@ -113,6 +117,11 @@ export class FirstResponseLatencyTracker {
 
     public stopClock(payload: MessagePayload): void {
         try {
+            
+            if (!payload || !payload.Id) {
+                throw new Error("Invalid payload");
+            }
+
             if (!this.isMessageFromValidSender(payload)) return;
 
             if (this.isABotConversation && this.isStarted) {
