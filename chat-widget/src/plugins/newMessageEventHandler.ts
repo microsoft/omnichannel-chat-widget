@@ -66,7 +66,6 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
         if (!isHistoryMessageReceivedEventRasied) {
             // this is needed for reload scenarios, it helps to identify the last message received before the reload
-            //firstResponseLatencyTracker.historyMessage(payload);
             isHistoryMessageReceivedEventRasied = true;
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.RehydrateMessageReceived,

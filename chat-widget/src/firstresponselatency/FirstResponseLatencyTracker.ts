@@ -1,6 +1,6 @@
+import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
+import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { MessagePayload, TrackingMessage } from "./Constants";
-
-
 
 export class FirstResponseLatencyTracker {
     
@@ -49,13 +49,11 @@ export class FirstResponseLatencyTracker {
 
         // The idea  of using types is to enrich telemetry data 
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
-        console.log("LOPEZ :: :: NO_BS_TRACKER ::startTracking :::: LapTracker started at: ", this.startTrackingMessage);
     }
 
     private handleAgentMessage(payload: MessagePayload): void {
         // this tag so far is only present in agent messages
         if (payload?.tags?.includes("public")) {
-            console.log("LOPEZ :::: NO_BS_TRACKER ::handleSystemMessage: Public message detected , so we stop tracking any activity");
             this.deregister();
         }
         return;
@@ -73,47 +71,50 @@ export class FirstResponseLatencyTracker {
 
         // The idea  of using types is to enrich telemetry data 
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
-
         // calculating elapsed time
         const elapsedTime = (this.stopTrackingMessage?.checkTime ?? 0) - (this.startTrackingMessage?.checkTime ?? 0);
-        console.log("LOPEZ :: NO_BS_TRACKER :: stopTracking::LapTracker stopped after : ", elapsedTime);
-        /*TelemetryHelper.logActionEvent(LogLevel.INFO, {
+        console.log("First Response Latency cycle completed", elapsedTime);
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageLapTrack,
-            Description: "New message received",
+            Description: "First response latency tracking",
             Data: {
                 elapsedTime,
                 userMessage: this.startTrackingMessage,
                 botMessage: this.stopTrackingMessage
             }
-        });*/
+        });
     }
 
     // mechanism to ensure we track only allowed conversations
     private isMessageFromValidSender(payload: MessagePayload): boolean {
-
         // agent scenario
         if (payload?.tags?.includes("public")) {
             this.handleAgentMessage(payload);
             return false;
         }
-
         return true;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public startClock(payload: any): void {
+    public startClock(payload: MessagePayload): void {
         try {
             // in the case of a reload, tracker will be paused, until last history message is received
             // this is because we dont have a way to identidy send messages as part of the history
             //if (this.inPause) return;
             this.startTracking(payload);
         } catch (e) {
-            console.error("LOPEZ :: NO_BS_TRACKER ::: startClock: ", e);
+            console.error("FRL : error while trying to start the tracker", e);
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.MessageStartLapTrackError,
+                Description: "Error while starting the clock",
+                ExceptionDetails: e,
+                CustomProperties: {
+                    payload: payload
+                }
+            });
         }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public stopClock(payload: any): void {
+    public stopClock(payload: MessagePayload): void {
         try {
             if (!this.isMessageFromValidSender(payload)) return;
 
@@ -121,24 +122,15 @@ export class FirstResponseLatencyTracker {
                 this.stopTracking(payload);
             }
         } catch (e) {
-            console.error("LOPEZ :: NO_BS_TRACKER ::: stopClock: ", e);
-        }
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public historyMessage(payload: any): void {
-        try {
-            console.log("LOPEZ :: NO_BS_TRACKER ::: historyMessage: ", payload);
-            // recovering from a previous state
-            this.handleAgentMessage(payload);
-
-            if (this.isActive) {
-                if (payload.role === "bot") {
-                    this.isABotConversation = true;
+            console.error("FRL : error while trying to stop the tracker", e);
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.MessageStopLapTrackError,
+                Description: "Error while stopping the clock",
+                ExceptionDetails: e,
+                CustomProperties: {
+                    payload: payload
                 }
-            }
-        } catch (e) {
-            console.error("LOPEZ :: NO_BS_TRACKER ::: historyMessage: ", e);
+            });
         }
     }
 
