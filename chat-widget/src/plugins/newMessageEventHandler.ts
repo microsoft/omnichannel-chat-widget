@@ -33,7 +33,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             eventName: BroadcastEvent.NewMessageSent,
             payload: polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId)
         };
-        
+
         BroadcastService.postMessage(newMessageSentEvent);
 
         if (!isHistoryMessage(activity, startTime)) {
@@ -57,7 +57,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     };
 
     const historyMessageStrategy = (payload: MessagePayload) => {
-        
+
         const newMessageReceivedEvent: ICustomEvent = {
             eventName: BroadcastEvent.HistoryMessageReceived,
             payload: payload
@@ -93,12 +93,12 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     const receivedMessageStrategy = (activity: IActivity) => {
 
         if (!isValidMessage(activity)) return;
-        
+
         const isHistoryMessageReceived = isHistoryMessage(activity, startTime);
         const payload = buildMessagePayload(activity, userId);
         payload.messageType = Constants.userMessageTag;
 
-        if (isHistoryMessageReceived){
+        if (isHistoryMessageReceived) {
             historyMessageStrategy(polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId));
             return;
         }
