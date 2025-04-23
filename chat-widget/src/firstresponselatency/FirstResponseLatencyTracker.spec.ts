@@ -67,6 +67,9 @@ describe("FirstResponseLatencyTracker", () => {
             tags: [],
             messageType: "userMessage",
             text: "Hello",
+            type: "",
+            userId: "",
+            isChatComplete: false
         };
 
         const stopPayload: MessagePayload = {
@@ -76,6 +79,9 @@ describe("FirstResponseLatencyTracker", () => {
             tags: [],
             messageType: "botMessage",
             text: "Hi there!",
+            type: "",
+            userId: "",
+            isChatComplete: false
         };
 
         tracker.startClock(startPayload);
