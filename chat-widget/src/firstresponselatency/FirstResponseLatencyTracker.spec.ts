@@ -1,0 +1,151 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { FirstResponseLatencyTracker } from "./FirstResponseLatencyTracker";
+import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
+import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
+import { MessagePayload } from "./Constants";
+
+jest.mock("../common/telemetry/TelemetryHelper");
+
+describe("FirstResponseLatencyTracker", () => {
+    let tracker: FirstResponseLatencyTracker;
+
+    beforeEach(() => {
+        tracker = new FirstResponseLatencyTracker();
+        jest.clearAllMocks();
+    });
+
+    it("should start tracking when startClock is called with a valid payload", () => {
+        const payload: MessagePayload = {
+            Id: "123",
+            role: "user",
+            timestamp: Date.now().toString(),
+            tags: [],
+            messageType: "userMessage",
+            text: "Hello",
+            type: "",
+            userId: "",
+            isChatComplete: false
+        };
+
+        tracker.startClock(payload);
+
+        expect((tracker as any).isStarted).toBe(true);
+        expect((tracker as any).startTrackingMessage).toEqual(
+            expect.objectContaining({
+                Id: "123",
+                role: "user",
+                text: "Hello",
+            })
+        );
+    });
+
+    it("should not start tracking if the conversation is not a bot conversation", () => {
+        const payload: MessagePayload = {
+            Id: "123",
+            role: "user",
+            timestamp: Date.now().toString(),
+            tags: [],
+            messageType: "userMessage",
+            text: "Hello",
+            type: "userMessage",
+            isChatComplete: false,
+            userId: "userId",
+
+        };
+
+        (tracker as any).isABotConversation = false;
+        tracker.startClock(payload);
+
+        expect((tracker as any).isStarted).toBe(false);
+    });
+
+    it("should stop tracking when stopClock is called with a valid payload", () => {
+        const startPayload: MessagePayload = {
+            Id: "123",
+            role: "user",
+            timestamp: Date.now().toString(),
+            tags: [],
+            messageType: "userMessage",
+            text: "Hello",
+        };
+
+        const stopPayload: MessagePayload = {
+            Id: "456",
+            role: "bot",
+            timestamp: Date.now().toString(),
+            tags: [],
+            messageType: "botMessage",
+            text: "Hi there!",
+        };
+
+        tracker.startClock(startPayload);
+        tracker.stopClock(stopPayload);
+
+        expect((tracker as any).isEnded).toBe(true);
+        expect((tracker as any).stopTrackingMessage).toEqual(
+            expect.objectContaining({
+                Id: "456",
+                role: "bot",
+                text: "Hi there!",
+            })
+        );
+        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(LogLevel.INFO, expect.objectContaining({
+            Event: TelemetryEvent.MessageLapTrack,
+        }));
+    });
+
+    it("should not stop tracking if the message is from an invalid sender", () => {
+        const payload: MessagePayload = {
+            Id: "123",
+            role: "user",
+            timestamp: Date.now().toString(),
+            tags: ["public"], // Indicates an agent message
+            messageType: "userMessage",
+            text: "Hello",
+            type: "",
+            userId: "",
+            isChatComplete: false
+        };
+
+        tracker.stopClock(payload);
+
+        expect((tracker as any).isEnded).toBe(false);
+        expect((tracker as any).stopTrackingMessage).toBeUndefined();
+    });
+
+    it("should reset state when deregister is called", () => {
+        (tracker as any).isABotConversation = true;
+        (tracker as any).isStarted = true;
+        (tracker as any).isEnded = true;
+        (tracker as any).startTrackingMessage = { Id: "123" } as any;
+        (tracker as any).stopTrackingMessage = { Id: "456" } as any;
+
+        (tracker as any).deregister();
+
+        expect((tracker as any).isABotConversation).toBe(false);
+        expect((tracker as any).isStarted).toBe(false);
+        expect((tracker as any).isEnded).toBe(false);
+        expect((tracker as any).startTrackingMessage).toBeUndefined();
+        expect((tracker as any).stopTrackingMessage).toBeUndefined();
+    });
+
+    it("should log an error if startClock throws an exception", () => {
+        const payload: MessagePayload = null as unknown as MessagePayload; // Invalid payload to trigger an error
+
+        tracker.startClock(payload);
+
+        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(LogLevel.ERROR, expect.objectContaining({
+            Event: TelemetryEvent.MessageStartLapTrackError,
+        }));
+    });
+
+    it("should log an error if stopClock throws an exception", () => {
+        const payload: MessagePayload = null as unknown as MessagePayload; // Invalid payload to trigger an error
+
+        tracker.stopClock(payload);
+
+        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(LogLevel.ERROR, expect.objectContaining({
+            Event: TelemetryEvent.MessageStopLapTrackError,
+        }));
+    });
+});

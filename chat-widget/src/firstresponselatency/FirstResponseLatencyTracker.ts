@@ -10,12 +10,10 @@ export class FirstResponseLatencyTracker {
 
     private startTrackingMessage?: TrackingMessage;
     private stopTrackingMessage?: TrackingMessage;
-    private isActive = false;
 
     constructor() {
         // this is a workaround to ensure in reload we track effectively the messages
         // we do have a mechanism in place to prevent log agent messages.
-        this.isActive = true;
         this.isABotConversation = true;
     }
 
@@ -141,7 +139,6 @@ export class FirstResponseLatencyTracker {
         this.isEnded = false;
         this.startTrackingMessage = undefined;
         this.stopTrackingMessage = undefined;
-        this.isActive = false;
     }
 }
 
