@@ -139,16 +139,11 @@ describe("FirstResponseLatencyTracker", () => {
 
     it("should log an error if startClock throws an exception", () => {
         const payload: MessagePayload = null as unknown as MessagePayload;
-    
-        const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-    
         tracker.startClock(payload);
-    
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(LogLevel.ERROR, expect.objectContaining({
             Event: TelemetryEvent.MessageStartLapTrackError,
         }));
     
-        consoleErrorSpy.mockRestore();
     });
 
     it("should log an error if stopClock throws an exception", () => {
