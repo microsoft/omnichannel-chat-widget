@@ -1,7 +1,7 @@
+import { MessagePayload, ScenarioType } from "./Constants";
+
 import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
-
-import { MessagePayload, ScenarioType } from "./Constants";
 
 export const isHistoryMessage = (activity: IActivity, startTime: number) => {
     try {
@@ -13,6 +13,11 @@ export const isHistoryMessage = (activity: IActivity, startTime: number) => {
             if (activity?.id) {
                 /// activity.id is an string that contains epoch time in milliseconds
                 const activityId = parseInt(activity?.id);
+
+                // if the activity id is not a number, we default to new message
+                if (isNaN(activityId)) {
+                    return false;
+                }
 
                 // if the activity id is less than the start time, it means that the message is a history message
                 if (activityId < startTime) {

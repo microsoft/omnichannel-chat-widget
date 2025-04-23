@@ -1,7 +1,8 @@
-import { isHistoryMessage, buildMessagePayload, polyfillMessagePayloadForEvent, getScenarioType } from "./util";
+import { MessagePayload, ScenarioType } from "./Constants";
+import { buildMessagePayload, getScenarioType, isHistoryMessage, polyfillMessagePayloadForEvent } from "./util";
+
 import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
-import { MessagePayload, ScenarioType } from "./Constants";
 
 describe("util.ts", () => {
     describe("isHistoryMessage", () => {
@@ -49,14 +50,11 @@ describe("util.ts", () => {
         it("should return false and log an error if activity ID is invalid", () => {
             const activity: IActivity = {
                 type: Constants.message,
-                id: "invalid-id",
+                id: "null",
             } as IActivity;
 
-            const consoleSpy = jest.spyOn(console, "error").mockImplementation();
             const result = isHistoryMessage(activity, Date.now());
             expect(result).toBe(false);
-            expect(consoleSpy).toHaveBeenCalledWith("Error in parsing activity id: ", expect.any(Error));
-            consoleSpy.mockRestore();
         });
     });
 
@@ -65,9 +63,9 @@ describe("util.ts", () => {
             const activity: IActivity = {
                 type: Constants.message,
                 id: "123",
-                timestamp: Date.now(),
+                timestamp: Date.now().toString(),
                 channelData: { tags: ["tag1", "tag2"] },
-                from: { role: "user" },
+                from: { id: "user123", role: "user" },
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 text: "Hello",
             } as IActivity;
@@ -92,9 +90,9 @@ describe("util.ts", () => {
             const activity: IActivity = {
                 type: Constants.message,
                 id: "123",
-                timestamp: Date.now(),
+                timestamp: Date.now().toString(),
                 channelData: { tags: ["tag1", "tag2"] },
-                from: { role: "user" },
+                from: { id: "user123", role: "user" },
             } as IActivity;
 
             const userId = "user123";
@@ -111,7 +109,7 @@ describe("util.ts", () => {
                 id: "123",
                 channelData: { tags: ["tag1"] },
                 conversation: { id: "conv123" },
-                from: { role: "bot" },
+                from: { id: "bot123", role: "bot" },
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 text: "Hello",
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -121,7 +119,7 @@ describe("util.ts", () => {
             const payload: MessagePayload = {
                 text: "",
                 type: Constants.message,
-                timestamp: Date.now(),
+                timestamp: Date.now().toString(),
                 userId: "user123",
                 tags: [],
                 messageType: "",
