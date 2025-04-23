@@ -143,7 +143,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             });
             await facadeChatSDK?.endChat(endChatOptionalParameters);
         } catch (ex) {
-            
+
             // if the chat was disconnected or ended by the agent, we don't want to log the error
             if (!inMemoryState?.appStates?.chatDisconnectEventReceived) {
                 TelemetryHelper.logSDKEvent(LogLevel.ERROR, {

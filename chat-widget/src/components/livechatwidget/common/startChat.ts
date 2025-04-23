@@ -398,4 +398,3 @@ const getInitContextParamForPopoutFromOuterScope = async (scope: any): Promise<a
     return payload;
 };
 export { prepareStartChat, initStartChat, setPreChatAndInitiateChat, checkIfConversationStillValid };
-
