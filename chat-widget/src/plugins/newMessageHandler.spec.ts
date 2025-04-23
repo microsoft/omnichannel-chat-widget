@@ -1,4 +1,3 @@
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../common/Constants";
 import { ScenarioType } from "../firstresponselatency/Constants";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
@@ -8,6 +7,7 @@ jest.mock("@microsoft/omnichannel-chat-components");
 jest.mock("../common/telemetry/TelemetryHelper");
 
 describe("createOnNewAdapterActivityHandler", () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let onNewAdapterActivityHandler: (activity: any) => void;
 
     beforeEach(() => {
