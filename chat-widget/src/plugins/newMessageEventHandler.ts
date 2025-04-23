@@ -1,4 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
+import { MessagePayload, ScenarioType } from "../firstresponselatency/Constants";
+import { buildMessagePayload, getScenarioType, isHistoryMessage, polyfillMessagePayloadForEvent } from "../firstresponselatency/util";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../common/Constants";
@@ -7,8 +9,6 @@ import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../common/telemetry/TelemetryManager";
-import { buildMessagePayload, getScenarioType, isHistoryMessage, polyfillMessagePayloadForEvent } from "../firstresponselatency/util";
-import { MessagePayload, ScenarioType } from "../firstresponselatency/Constants";
 
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
 
