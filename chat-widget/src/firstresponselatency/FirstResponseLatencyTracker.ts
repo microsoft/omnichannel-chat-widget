@@ -75,7 +75,7 @@ export class FirstResponseLatencyTracker {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageLapTrack,
             Description: "First response latency tracking",
-            Data: {
+            CustomProperties: {
                 elapsedTime,
                 userMessage: this.startTrackingMessage,
                 botMessage: this.stopTrackingMessage
