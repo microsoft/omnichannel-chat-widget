@@ -55,7 +55,6 @@ export interface ILiveChatWidgetContext {
         chatDisconnectEventReceived: boolean; // true when customer disconnect event is received
         selectedSurveyMode: string | null; // selected survey mode
         postChatParticipantType: undefined | ParticipantType; // participant type to render post chat survey
-        chatStartedAt: number | null; // timestamp when chat started
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

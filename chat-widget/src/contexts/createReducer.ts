@@ -703,25 +703,9 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     postChatParticipantType: action.payload as ParticipantType
                 }
             };
-            
+
         case LiveChatWidgetActionType.GET_IN_MEMORY_STATE:
             return inMemory;
-        case LiveChatWidgetActionType.CHAT_STARTED_AT: 
-            inMemory = {
-                ...inMemory,
-                appStates: {
-                    ...inMemory.appStates,
-                    chatStartedAt: action.payload as number
-                }
-            };
-            return {
-                ...state,
-                appStates: {
-                    ...state.appStates,
-                    chatStartedAt: action.payload as number
-                }
-            };
-
         default:
             return state;
     }

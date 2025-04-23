@@ -21,7 +21,6 @@ import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
-import { lapTracker } from "../../../plugins/LapTracker";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
@@ -181,10 +180,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
             await facadeChatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
-            // in utc, no need to convert to local time since the message id is in utc as well
-            dispatch({ type: LiveChatWidgetActionType.CHAT_STARTED_AT, payload: new Date().getTime() });
-            
-            
         } catch (error) {
             checkContactIdError(error);
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -208,7 +203,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 
         // Set app state to Active
         if (isStartChatSuccessful) {
-            lapTracker.register();
             ActivityStreamHandler.uncork();
             // Update start chat failure app state if chat loads successfully
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });

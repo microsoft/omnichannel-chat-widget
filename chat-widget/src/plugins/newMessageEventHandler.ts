@@ -10,7 +10,6 @@ import { TelemetryManager } from "../common/telemetry/TelemetryManager";
 import { buildMessagePayload, getScenarioType, isHistoryMessage, polyfillMessagePayloadForEvent } from "../firstresponselatency/util";
 import { MessagePayload, ScenarioType } from "../firstresponselatency/Constants";
 
-
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
 
     // Hooking the message tracker in the listener, a bit invasive but easier to control.
@@ -140,7 +139,3 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     };
     return onNewAdapterActivityHandler;
 };
-
-
-
-
