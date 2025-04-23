@@ -1,3 +1,5 @@
+import { MessagePayload, TrackingMessage } from "./Constants";
+
 
 
 export class FirstResponseLatencyTracker {
@@ -19,9 +21,9 @@ export class FirstResponseLatencyTracker {
 
     private createTrackingMessage(payload: MessagePayload, type: string): TrackingMessage {
         return {
-            id: payload.id,
+            Id: payload.Id,
             role: payload.role,
-            timestamp: payload.timestamp,
+            timestamp: payload?.timestamp,
             tags: payload.tags,
             messageType: payload.messageType,
             text: payload.text,
@@ -47,7 +49,6 @@ export class FirstResponseLatencyTracker {
 
         // The idea  of using types is to enrich telemetry data 
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
-        console.log("LOPEZ ::::::::: :: NO_BS_TRACKER ::TRACKING IS ON :::::::::::::::::::: ");
         console.log("LOPEZ :: :: NO_BS_TRACKER ::startTracking :::: LapTracker started at: ", this.startTrackingMessage);
     }
 
@@ -75,8 +76,6 @@ export class FirstResponseLatencyTracker {
 
         // calculating elapsed time
         const elapsedTime = (this.stopTrackingMessage?.checkTime ?? 0) - (this.startTrackingMessage?.checkTime ?? 0);
-
-        console.log("LOPEZ :: NO_BS_TRACKER ::::::::: TRACKING IS OFF :::::::::::::::::::: ");
         console.log("LOPEZ :: NO_BS_TRACKER :: stopTracking::LapTracker stopped after : ", elapsedTime);
         /*TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageLapTrack,
@@ -109,7 +108,7 @@ export class FirstResponseLatencyTracker {
             //if (this.inPause) return;
             this.startTracking(payload);
         } catch (e) {
-            console.error("LOPEZ :: NO_BS_TRACKER ::: sendMessage: ", e);
+            console.error("LOPEZ :: NO_BS_TRACKER ::: startClock: ", e);
         }
     }
 
@@ -122,7 +121,7 @@ export class FirstResponseLatencyTracker {
                 this.stopTracking(payload);
             }
         } catch (e) {
-            console.error("LOPEZ :: NO_BS_TRACKER ::: receivedMessage: ", e);
+            console.error("LOPEZ :: NO_BS_TRACKER ::: stopClock: ", e);
         }
     }
 

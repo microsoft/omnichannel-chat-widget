@@ -7,7 +7,9 @@ import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../common/telemetry/TelemetryManager";
-import { isHistoryMessage } from "../firstresponselatency/util";
+import { buildMessagePayload, getScenarioType, isHistoryMessage, polyfillMessagePayloadForEvent } from "../firstresponselatency/util";
+import { MessagePayload, ScenarioType } from "../firstresponselatency/Constants";
+
 
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
 
@@ -16,115 +18,129 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     // epoch time in utc for when start to listen.
     // We dont longer have a mechanism to know if a message is history or new, so any message older than the time we start listening will be considered a history message.
     // this is a workaround for the fact that we dont have a way to identify if a message is history or new, and it will provide consistency across different scenarios
-    const startTime = ( new Date().getTime() - 2000); // 2 seconds in the past, to account for any delay in the message being sent and received
+    const startTime = (new Date().getTime());
     let isHistoryMessageReceivedEventRasied = false;
 
     const onNewAdapterActivityHandler = (activity: IActivity) => {
-        const historyMessage: boolean = isHistoryMessage(activity, startTime);
-        raiseMessageEvent(activity, historyMessage);
+        raiseMessageEvent(activity,);
     };
 
-    const raiseMessageEvent = (activity: IActivity, isHistoryMessage: boolean) => {
+    const userSendMessageStrategy = (activity: IActivity) => {
+
+        const payload = buildMessagePayload(activity, userId);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const polyfillMessagePayloadForEvent = (payload: any) => {
-            return {
-                ...payload,
-                channelData: activity?.channelData,
-                chatId: activity?.conversation?.id,
-                conversationId: TelemetryManager.InternalTelemetryData?.conversationId,
-                id: activity?.id,
-                isChatComplete: false,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                text: (activity as any)?.text,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                attachment: (activity as any)?.attachments?.length >= 1 ? (activity as any)?.attachments : [],
-                role: activity?.from?.role,
-            };
+        payload.messageType = Constants.userMessageTag;
+        const newMessageSentEvent: ICustomEvent = {
+            eventName: BroadcastEvent.NewMessageSent,
+            payload: polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId)
         };
+        
+        BroadcastService.postMessage(newMessageSentEvent);
 
-        if (activity?.type === Constants.message) {
-            const payload = {
-                // To identify hidden contents vs empty content
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                text: (activity as any)?.text?.length >= 1 ? `*contents hidden (${(activity as any)?.text?.length} chars)*` : "",
-                type: activity?.type,
-                timestamp: activity?.timestamp,
-                userId: userId,
-                tags: activity?.channelData?.tags,
-                messageType: "",
-                Id: activity?.id,
-                role: activity?.from?.role,
-            };
+        if (!isHistoryMessage(activity, startTime)) {
+            firstResponseLatencyTracker.startClock(payload);
+        }
 
-            if (activity?.from?.role === Constants.userMessageTag) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                payload.messageType = Constants.userMessageTag;
-                const newMessageSentEvent: ICustomEvent = {
-                    eventName: BroadcastEvent.NewMessageSent,
-                    payload: polyfillMessagePayloadForEvent(payload)
-                };
-                BroadcastService.postMessage(newMessageSentEvent);
-                if (!isHistoryMessage) {
-                    firstResponseLatencyTracker.startClock(payload);
-                }
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.MessageSent,
+            Description: "New message sent"
+        });
+    };
 
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.MessageSent,
-                    Description: "New message sent"
-                });
-            }
-            else {
-                if (activity?.channelData?.tags?.includes(Constants.systemMessageTag)) {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    payload.messageType = Constants.systemMessageTag;
-                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                        Event: TelemetryEvent.SystemMessageReceived,
-                        Description: "System message received"
-                    });
-                }
-                else {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const messageHasNoText = !(activity as any)?.text;
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const messageHasNoTags = !(activity as any)?.channelData || !activity?.channelData?.tags || activity?.channelData?.tags?.length === 0;
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const messageHasNoAttachments = !(activity as any)?.attachments || (activity as any)?.attachments.length === 0;
+    const systemMessageStrategy = (activity: IActivity) => {
+        const payload = buildMessagePayload(activity, userId);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        payload.messageType = Constants.systemMessageTag;
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.SystemMessageReceived,
+            Description: "System message received"
+        });
+    };
 
-                    if (messageHasNoTags && messageHasNoText && messageHasNoAttachments) {
-                        return;
-                    }
-                    payload.messageType = Constants.userMessageTag;
-                }
+    const historyMessageStrategy = (payload: MessagePayload) => {
+        
+        const newMessageReceivedEvent: ICustomEvent = {
+            eventName: BroadcastEvent.HistoryMessageReceived,
+            payload: payload
+        };
+        BroadcastService.postMessage(newMessageReceivedEvent);
 
-                const newMessageReceivedEvent: ICustomEvent = {
-                    eventName: isHistoryMessage ? BroadcastEvent.HistoryMessageReceived : BroadcastEvent.NewMessageReceived,
-                    payload: polyfillMessagePayloadForEvent(payload)
-                };
-                BroadcastService.postMessage(newMessageReceivedEvent);
-                if (!isHistoryMessage) {
-                    firstResponseLatencyTracker.stopClock(payload);
-                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                        Event: TelemetryEvent.MessageReceived,
-                        Description: "New message received",
-                        CustomProperties: payload
-                    });
-                } else {
-                    
-                    if (!isHistoryMessageReceivedEventRasied) {
-                        console.log("LOPEZ :: NMS :: NO_BS_TRACKER  :: REHYDRATE : ", activity);
-                        // this is needed for reload scenarios, it helps to identify the last message received before the reload
-                        //firstResponseLatencyTracker.historyMessage(payload);
-                        isHistoryMessageReceivedEventRasied = true;
-                        TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                            Event: TelemetryEvent.RehydrateMessageReceived,
-                            Description: "History message received",
-                            CustomProperties: payload
-                        });
-                    }
-                }
-            }
+        if (!isHistoryMessageReceivedEventRasied) {
+            // this is needed for reload scenarios, it helps to identify the last message received before the reload
+            //firstResponseLatencyTracker.historyMessage(payload);
+            isHistoryMessageReceivedEventRasied = true;
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.RehydrateMessageReceived,
+                Description: "History message received",
+                CustomProperties: payload
+            });
         }
     };
 
+    const isValidMessage = (activity: IActivity) => {
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const messageHasNoText = !(activity as any)?.text;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const messageHasNoTags = !(activity as any)?.channelData || !activity?.channelData?.tags || activity?.channelData?.tags?.length === 0;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const messageHasNoAttachments = !(activity as any)?.attachments || (activity as any)?.attachments.length === 0;
+
+        if (messageHasNoTags && messageHasNoText && messageHasNoAttachments) {
+            return false;
+        }
+        return true;
+    };
+
+    const receivedMessageStrategy = (activity: IActivity) => {
+
+        if (!isValidMessage(activity)) return;
+        
+        const isHistoryMessageReceived = isHistoryMessage(activity, startTime);
+        const payload = buildMessagePayload(activity, userId);
+        payload.messageType = Constants.userMessageTag;
+
+        if (isHistoryMessageReceived){
+            historyMessageStrategy(polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId));
+            return;
+        }
+
+        firstResponseLatencyTracker.stopClock(payload);
+
+        const newMessageReceivedEvent: ICustomEvent = {
+            eventName: BroadcastEvent.NewMessageReceived,
+            payload: polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId)
+        };
+
+        BroadcastService.postMessage(newMessageReceivedEvent);
+
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.MessageReceived,
+            Description: "New message received",
+            CustomProperties: payload
+        });
+
+    };
+
+    const raiseMessageEvent = (activity: IActivity) => {
+        if (activity?.type === Constants.message) {
+            const scenarioType = getScenarioType(activity);
+            switch (scenarioType) {
+                case ScenarioType.UserSendMessageStrategy:
+                    userSendMessageStrategy(activity);
+                    break;
+                case ScenarioType.SystemMessageStrategy:
+                    systemMessageStrategy(activity);
+                    break;
+                case ScenarioType.ReceivedMessageStrategy:
+                    receivedMessageStrategy(activity);
+                    break;
+            }
+        }
+    };
     return onNewAdapterActivityHandler;
 };
+
+
+
+

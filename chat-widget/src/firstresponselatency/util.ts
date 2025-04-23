@@ -1,7 +1,9 @@
 import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
 
-export const isHistoryMessage = (activity: IActivity, startTime : number) => {
+import { MessagePayload, ScenarioType } from "./Constants";
+
+export const isHistoryMessage = (activity: IActivity, startTime: number) => {
     try {
         if (activity?.type === Constants.message) {
             // this is an old piece of code, probably no longer relevant
@@ -23,7 +25,50 @@ export const isHistoryMessage = (activity: IActivity, startTime : number) => {
         }
     } catch (e) {
         // if there is an error in parsing the activity id, we will consider it a new message
+        console.error("Error in parsing activity id: ", e);
         return false;
     }
     return false;
+};
+
+export const buildMessagePayload = (activity: IActivity, userId: string): MessagePayload => {
+    return {
+        // To identify hidden contents vs empty content
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        text: (activity as any)?.text?.length >= 1 ? `*contents hidden (${(activity as any)?.text?.length} chars)*` : "",
+        type: activity?.type,
+        timestamp: activity?.timestamp,
+        userId: userId,
+        tags: activity?.channelData?.tags,
+        messageType: "",
+        Id: activity?.id,
+        role: activity?.from?.role,
+        isChatComplete: false,
+    };
+};
+
+export const polyfillMessagePayloadForEvent = (activity: IActivity, payload: MessagePayload, conversationId?: string): MessagePayload => {
+    return {
+        ...payload,
+        channelData: activity?.channelData,
+        chatId: activity?.conversation?.id,
+        conversationId: conversationId,
+        Id: activity?.id,
+        isChatComplete: false,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        text: (activity as any)?.text,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        attachment: (activity as any)?.attachments?.length >= 1 ? (activity as any)?.attachments : [],
+        role: activity?.from?.role,
+    };
+};
+
+export const getScenarioType = (activity: IActivity): ScenarioType => {
+    if (activity?.from?.role === Constants.userMessageTag) {
+        return ScenarioType.UserSendMessageStrategy;
+    }
+    if (activity?.channelData?.tags?.includes(Constants.systemMessageTag)) {
+        return ScenarioType.SystemMessageStrategy;
+    }
+    return ScenarioType.ReceivedMessageStrategy;
 };
