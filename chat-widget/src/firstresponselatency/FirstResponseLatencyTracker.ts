@@ -137,13 +137,11 @@ export class FirstResponseLatencyTracker {
                     payload: payload
                 }
             });
-
             //reset state
             this.startTrackingMessage = undefined;
             this.stopTrackingMessage = undefined;
             this.isStarted = false;
             this.isEnded = false;
-
         }
     }
 
@@ -156,4 +154,3 @@ export class FirstResponseLatencyTracker {
         this.stopTrackingMessage = undefined;
     }
 }
-
