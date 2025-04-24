@@ -431,7 +431,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true) {
-                console.log("ELOPEZ :: startChat event received, maximizing chat...");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
