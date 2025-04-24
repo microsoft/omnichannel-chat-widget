@@ -4,7 +4,7 @@ import { MessagePayload, TrackingMessage } from "./Constants";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 
 export class FirstResponseLatencyTracker {
-    
+
     private isABotConversation = false;
     private isStarted = false;
     private isEnded = false;
@@ -117,7 +117,7 @@ export class FirstResponseLatencyTracker {
 
     public stopClock(payload: MessagePayload): void {
         try {
-            
+
             if (!payload || !payload.Id) {
                 throw new Error("Invalid payload");
             }
@@ -136,12 +136,14 @@ export class FirstResponseLatencyTracker {
                 CustomProperties: {
                     payload: payload
                 }
-                //reset state
-                this.startTrackingMessage = undefined;
-                this.stopTrackingMessage = undefined;
-                this.isStarted = false;
-                this.isEnded = false;
             });
+
+            //reset state
+            this.startTrackingMessage = undefined;
+            this.stopTrackingMessage = undefined;
+            this.isStarted = false;
+            this.isEnded = false;
+
         }
     }
 
