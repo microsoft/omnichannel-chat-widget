@@ -136,6 +136,11 @@ export class FirstResponseLatencyTracker {
                 CustomProperties: {
                     payload: payload
                 }
+                //reset state
+                this.startTrackingMessage = undefined;
+                this.stopTrackingMessage = undefined;
+                this.isStarted = false;
+                this.isEnded = false;
             });
         }
     }
