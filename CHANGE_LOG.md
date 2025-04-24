@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Fallback logic to check token from oc-chat-sdk for validity check
 - Fixed transcript with attachments issue and blockquote issue
+- Sanitize `OutOfOfficeHoursPaneStateful`'s `TitleText`
 
 ## [1.7.7] - 2025-04-16
 
