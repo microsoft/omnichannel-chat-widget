@@ -18,10 +18,10 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     // We dont longer have a mechanism to know if a message is history or new, so any message older than the time we start listening will be considered a history message.
     // this is a workaround for the fact that we dont have a way to identify if a message is history or new, and it will provide consistency across different scenarios
     const startTime = (new Date().getTime());
-    let isHistoryMessageReceivedEventRasied = false;
+    let isHistoryMessageReceivedEventRaised = false;
 
     const onNewAdapterActivityHandler = (activity: IActivity) => {
-        raiseMessageEvent(activity,);
+        raiseMessageEvent(activity);
     };
 
     const userSendMessageStrategy = (activity: IActivity) => {
@@ -64,9 +64,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         };
         BroadcastService.postMessage(newMessageReceivedEvent);
 
-        if (!isHistoryMessageReceivedEventRasied) {
+        if (!isHistoryMessageReceivedEventRaised) {
             // this is needed for reload scenarios, it helps to identify the last message received before the reload
-            isHistoryMessageReceivedEventRasied = true;
+            isHistoryMessageReceivedEventRaised = true;
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.RehydrateMessageReceived,
                 Description: "History message received",

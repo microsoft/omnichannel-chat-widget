@@ -23,15 +23,13 @@ export const isHistoryMessage = (activity: IActivity, startTime: number) => {
                 if (activityId < startTime) {
                     return true;
                 }
-                // anything else will be considered a new message
-                return false;
             }
+            // anything else will be considered a new message
             return false;
         }
     } catch (e) {
         // if there is an error in parsing the activity id, we will consider it a new message
         console.error("Error in parsing activity id: ", e);
-        return false;
     }
     return false;
 };

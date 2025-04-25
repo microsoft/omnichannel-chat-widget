@@ -55,7 +55,6 @@ export class FirstResponseLatencyTracker {
         if (payload?.tags?.includes("public")) {
             this.deregister();
         }
-        return;
     }
 
     private stopTracking(payload: MessagePayload): void {
