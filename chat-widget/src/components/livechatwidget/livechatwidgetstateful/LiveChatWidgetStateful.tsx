@@ -91,15 +91,25 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
+import AppInsightsManager from "../../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../../common/telemetry/appInsights/AppInsightsScenarioMarker";
+import { AppInsightsEvent } from "../../../common/telemetry/appInsights/AppInsightsEvent";
 
 let uiTimer : ITimer;
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
+        if (props?.appInsightsConfig?.appInsightsDisabled === false) {
+            AppInsightsManager.initialize(props?.appInsightsConfig?.instrumentationKeyOrConnectionString);
+            console.log("App Insights initialized: ");
+        }
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXLivechatwidgetStart
+        });
+        AppInsightsManager.logEvent(AppInsightsScenarioMarker.startScenario(AppInsightsEvent.UXLivechatwidgetLoading), {
+            Description: "Live chat widget loading started."
         });
     }, []);
 
@@ -296,6 +306,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.CustomContextReceived,
                 Description: "CustomContext received."
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.startScenario(AppInsightsEvent.CustomContextReceived), {
+                Description: "CustomContext received."
+            });
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
         });
 
@@ -408,6 +421,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.StartChatEventRecevied,
                 Description: "Start chat event received."
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.startScenario(AppInsightsEvent.StartChatEventReceived));
 
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
@@ -696,6 +710,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXLivechatwidgetCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+        AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.UXLivechatwidgetLoading), {
+            Description: "Live chat widget loading completed."
         });
     }, []);
 

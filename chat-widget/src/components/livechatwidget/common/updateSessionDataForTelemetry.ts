@@ -8,6 +8,7 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { getConversationDetailsCall } from "../../../common/utils";
+import AppInsightsManager from "../../../common/telemetry/appInsights/AppInsightsManager";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateTelemetryData = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>) => {
@@ -32,6 +33,7 @@ const updateConversationDataForTelemetry = async (facadeChatSDK: FacadeChatSDK, 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const liveWorkItem: any = await getConversationDetailsCall(facadeChatSDK);
         const telemetryData = TelemetryHelper.addConversationDataToTelemetry(liveWorkItem, TelemetryManager.InternalTelemetryData);
+        AppInsightsManager.addConvDataToAppInsights(liveWorkItem);
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
         BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateConversationDataForTelemetry, payload: {liveWorkItem}});
     }

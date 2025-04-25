@@ -5,6 +5,7 @@ import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
 import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../../common/Constants";
 import { StartChatFailureType } from "./StartChatFailureType";
+import { IAppInsightsConfig } from "../../common/telemetry/appInsights/IAppInsightsConfig";
 
 export interface ILiveChatWidgetContext {
     domainStates: {
@@ -18,6 +19,7 @@ export interface ILiveChatWidgetContext {
         postChatContext: any;
         middlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts | undefined;
         telemetryInternalData: IInternalTelemetryData;
+        appInsightsConfig: IAppInsightsConfig;
         globalDir: "rtl" | "ltr";
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         liveChatContext: any;

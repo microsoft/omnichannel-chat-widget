@@ -27,6 +27,7 @@ import { IStartChatErrorPaneProps } from "../../startchaterrorpanestateful/inter
 import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetryConfig";
 import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
+import { IAppInsightsConfig } from "../../../common/telemetry/appInsights/IAppInsightsConfig";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -59,6 +60,7 @@ export interface ILiveChatWidgetProps {
     startChatErrorPaneProps?: IStartChatErrorPaneProps;
     styleProps?: ILiveChatWidgetStyleProps;
     telemetryConfig: ITelemetryConfig;
+    appInsightsConfig?: IAppInsightsConfig;
     notificationPaneProps?: INotificationPaneProps;
     webChatContainerProps?: IWebChatContainerStatefulProps;
     liveChatContextFromCache?: ILiveChatWidgetContext;

@@ -6,6 +6,7 @@ import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
 import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
 import { StartChatFailureType } from "./StartChatFailureType";
+import { defaultAppInsightsConfig } from "../../common/telemetry/appInsights/defaultsAppInsightsConfig";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
@@ -39,6 +40,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             chatToken: undefined,
             postChatContext: undefined,
             telemetryInternalData: {},
+            appInsightsConfig: defaultAppInsightsConfig,
             globalDir: "ltr",
             liveChatContext: undefined,
             customContext: undefined,
