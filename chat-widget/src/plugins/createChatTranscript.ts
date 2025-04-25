@@ -193,7 +193,7 @@ class TranscriptHTMLBuilder {
                 <script>
                     class Translator {
                         static convertTranscriptMessageToActivity(message) {
-                            const {created, OriginalMessageId, id, isControlMessage, content, tags, from, attachments, amsMetadata, amsReferences} = message;
+                            const {created, OriginalMessageId, id, isControlMessage, content, tags, from, attachments, amsMetadata, amsReferences, amsreferences} = message;
                             
                             //it's required to convert the id to a number, otherwise the webchat will not render the messages in the correct order
                             // if the OrginalMessageId is not present, we can use the id as the sequence id, which is always present.
@@ -240,7 +240,7 @@ class TranscriptHTMLBuilder {
                             }
 
                             // Attachments
-                            if (amsReferences && amsMetadata) {
+                            if ((amsReferences || amsreferences) && amsMetadata) {
                                 const metadata = JSON.parse(amsMetadata);
                                 const { fileName } = metadata[0];
                                 const text = \`${this.attachmentMessage}\${fileName}\`;
@@ -264,7 +264,7 @@ class TranscriptHTMLBuilder {
                             // Message
                             if (content) {
                                 // Adaptive card formatting
-                                if (content.includes('"text"') && content.includes('"attachments"') && content.includes('"suggestedActions"')) {
+                                if (content.includes('"attachments"') || content.includes('"suggestedActions"')) {
                                     try {
                                         const partialActivity = JSON.parse(content);
                                         return {
@@ -707,7 +707,7 @@ const createChatTranscript = async (transcript: string, facadeChatSDK: FacadeCha
 
     if (renderAttachments) {
         messages = await Promise.all(transcriptMessages.map(async (message: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
-            const {amsReferences, amsMetadata } = message;
+            const { amsReferences = message.amsreferences, amsMetadata } = message;
             if (amsReferences && amsMetadata) {
                 const references = JSON.parse(amsReferences);
                 const metadata = JSON.parse(amsMetadata);

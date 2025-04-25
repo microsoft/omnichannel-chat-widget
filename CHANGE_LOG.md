@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+
+- Fixed issues found in transcript download after bridge removal
 - When a Start chat event is received, generally from LCW:SDK, if there is an existent session, it wont create  new chat unless the chat is closed.(any other state will present the widget with the session messages).
 - Fallback logic to check token from oc-chat-sdk for validity check
 - Fixed transcript with attachments issue and blockquote issue
