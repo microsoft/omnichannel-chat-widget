@@ -413,10 +413,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             inMemoryState.domainStates.customContext = msg?.payload?.customContext;
 
-            // Only initiate new chat if widget runtime state is one of the followings
-            if (inMemoryState.appStates?.conversationState === ConversationState.Closed ||
-                inMemoryState.appStates?.conversationState === ConversationState.InActive ||
-                inMemoryState.appStates?.conversationState === ConversationState.Postchat) {
+
+            /*
+            * If the conversation is in closed state then we start a new chat, 
+            * else if the conversation is in active state then we maximize the chat
+            *  If the conversation is in inactive or postchat state then we maximize the chat.
+            * 
+            * To start a new chat, it needs to be called via the close button or close chat via SDK.
+            **/ 
+            if (inMemoryState.appStates?.conversationState === ConversationState.Closed) {
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
