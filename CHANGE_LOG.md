@@ -8,7 +8,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+
 - Fixed issues found in transcript download after bridge removal
+- When a Start chat event is received, generally from LCW:SDK, if there is an existent session, it wont create  new chat unless the chat is closed.(any other state will present the widget with the session messages).
 - Fallback logic to check token from oc-chat-sdk for validity check
 - Fixed transcript with attachments issue and blockquote issue
 - Sanitize `OutOfOfficeHoursPaneStateful`'s `TitleText`
@@ -35,7 +37,7 @@ All notable changes to this project will be documented in this file.
 - No internet connect message override fix
 - Enable automatic send of attachment after file is selected.
 - Switch to use atob instead of Buffer to decode payload token
-- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey 
+- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey
 - Convert base64url tokens into base64 for exp validation.
 - Fix "AM/PM" timestamp direction for RTL languages
 - A11Y fix for keyboard auto-focus on chat restore.
@@ -51,7 +53,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed issue where cx was unable to change string messages 
+- Fixed issue where cx was unable to change string messages
 
 ### Changed
 
@@ -95,6 +97,7 @@ All notable changes to this project will be documented in this file.
 - Padding property to control the padding size choice input adaptive card form field
 
 ### Changed
+
 - export renderingmiddlewares to be imported by hosts
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.6](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.6)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.4)
