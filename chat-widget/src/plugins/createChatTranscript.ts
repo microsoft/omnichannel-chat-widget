@@ -702,7 +702,7 @@ const createChatTranscript = async (transcript: string, facadeChatSDK: FacadeCha
 
     let messages = transcriptMessages.filter((message: { content: string; }) => {
         message.content = DOMPurify.sanitize(message.content);
-        return message.content.length > 0;
+        return message;
     });
 
     if (renderAttachments) {

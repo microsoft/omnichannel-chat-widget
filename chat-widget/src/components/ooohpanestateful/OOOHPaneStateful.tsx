@@ -13,6 +13,7 @@ import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import DOMPurify from "dompurify";
 
 let uiTimer : ITimer;
 export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
@@ -52,6 +53,10 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
         });
     }, []);
     
+    if (controlProps?.titleText) {
+        controlProps.titleText = DOMPurify.sanitize(controlProps.titleText);
+    }
+
     return (
         <OutOfOfficeHoursPane
             componentOverrides={props.componentOverrides}

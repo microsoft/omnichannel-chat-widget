@@ -2430,10 +2430,10 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.10.16":
-  version "1.10.16"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.16.tgz#36a48b1d8d06c7cb6ac2b9ec16c25dfc02883061"
-  integrity sha512-2mUxtNEWw8nPTzkHTO62gZN0z/CqfpFcyPkbuJox6MdiC68ZWlqgPvcLjfNg/wwJzzRat5agWng5KZ7LXnR3jQ==
+"@microsoft/omnichannel-chat-sdk@^1.10.17":
+  version "1.10.17"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.10.17.tgz#ae50b3ef2c283c6cde4713c69d1a76315a9cbce3"
+  integrity sha512-ionRFzYQY2h3dAD3lUwnltlUFGvoj/jfCzYlywqOusPDPKQQmHfpEob6ALY0yJ/wOeJZyJkHMn6d8Y/B/j3j1Q==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"

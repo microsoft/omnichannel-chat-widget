@@ -75,6 +75,7 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 font-size: ${props.styleProps?.customTextStyleProps?.fontSize} !important;
                 height: ${props.styleProps?.customTextStyleProps?.height};
                 padding-top: ${props.styleProps?.customTextStyleProps?.paddingTop};
+                font-family: ${props.styleProps?.customTextStyleProps?.fontFamily};
                 overflow-wrap: break-word;
                 white-space: normal !important;
             }
