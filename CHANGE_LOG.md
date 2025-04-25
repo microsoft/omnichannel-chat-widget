@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+
+- Fixed issues found in transcript download after bridge removal
 - Fallback logic to check token from oc-chat-sdk for validity check
 - Fixed transcript with attachments issue and blockquote issue
 - Sanitize `OutOfOfficeHoursPaneStateful`'s `TitleText`

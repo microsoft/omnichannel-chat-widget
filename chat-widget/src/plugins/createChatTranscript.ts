@@ -709,7 +709,7 @@ const createChatTranscript = async (transcript: string, facadeChatSDK: FacadeCha
         messages = await Promise.all(transcriptMessages.map(async (message: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             const { amsReferences = message.amsreferences, amsMetadata } = message;
             if (amsReferences && amsMetadata) {
-                const references = JSON.parse(amsReferences);            
+                const references = JSON.parse(amsReferences);
                 const metadata = JSON.parse(amsMetadata);
                 const fileMetadata = {
                     id: references[0],
