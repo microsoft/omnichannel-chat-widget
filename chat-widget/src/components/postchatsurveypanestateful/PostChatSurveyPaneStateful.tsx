@@ -64,6 +64,34 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         ...props.controlProps
     };
 
+    const isValidSurveyURL = (url: string) => {
+        try {
+            const objectUrl = new URL(url);
+            if (!objectUrl.origin || objectUrl.origin === "null") {
+                return false;
+            }
+        } catch (error) {
+            return false;
+        }
+        return true;
+    };
+
+    if (controlProps.surveyURL) {
+        if (!isValidSurveyURL(controlProps.surveyURL)) {
+            TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.PostChatSurveyUrlValidationFailed,
+                Description: `${controlProps.surveyURL} is not a valid Survey URL`
+            });
+
+            controlProps.surveyURL = "";
+        } else {
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.PostChatSurveyUrlValidationCompleted,
+                Description: `${controlProps.surveyURL} is a valid Survey URL`
+            });
+        }
+    }
+
     // Move focus to the first button
     useEffect(() => {
         const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${controlProps.id}`);
