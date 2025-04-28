@@ -111,6 +111,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         AppInsightsManager.logEvent(AppInsightsScenarioMarker.startScenario(AppInsightsEvent.UXLivechatwidgetLoading), {
             Description: "Live chat widget loading started."
         });
+
+        return () => {
+            AppInsightsManager.unloadAppInsights();
+        };
     }, []);
 
 

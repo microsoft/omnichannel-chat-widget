@@ -1,41 +1,27 @@
 import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWorkItemDetails";
+import { TelemetryManager } from "../TelemetryManager";
 
-export declare interface ICustomProperties {
-    [key: string]: string;
-}
 
 class AppInsightsManager {
-  private static appInsights: ApplicationInsights;
-  private static baseProps : IInternalAppInsightsData;
+  private static appInsights: ApplicationInsights | null = null;
+  private static baseProps : IInternalAppInsightsData = {};
 
   /**
    * Initializes the App Insights instance with either an Instrumentation Key or a Connection String
-   * @param instrumentationKeyOrConnectionString - Either the instrumentation key or connection string for App Insights
+   * @param keyOrConnString - Either the instrumentation key or connection string for App Insights
    */
-  public static initialize(instrumentationKeyOrConnectionString? : string): void {
-      console.log("instrumentationKeyOrConnectionString: ", instrumentationKeyOrConnectionString);
-      if (!instrumentationKeyOrConnectionString) {
-          console.error("Error: Please provide an Instrumentation Key or Connection String");
+  public static initialize(keyOrConnString? : string): void {
+      
+      if (this.appInsights || !keyOrConnString) {
           return;
       }
+    
+      const isConnString = keyOrConnString.includes("IngestionEndpoint");
       try {
-      // Check if the provided string is a connection string or instrumentation key
-          if (instrumentationKeyOrConnectionString.includes("IngestionEndpoint")) {
-              // connection string
-              this.appInsights = new ApplicationInsights({
-                  config: {
-                      connectionString: instrumentationKeyOrConnectionString,
-                  },
-              });
-          } else {
-              //instrumentation key
-              this.appInsights = new ApplicationInsights({
-                  config: {
-                      instrumentationKey: instrumentationKeyOrConnectionString,
-                  },
-              });
-          }
+          this.appInsights = new ApplicationInsights({
+              config: isConnString ? { connectionString: keyOrConnString } : { instrumentationKey: keyOrConnString }
+          });
       
           this.appInsights.loadAppInsights();
           console.log("App Insights initialized successfully.");
@@ -51,16 +37,15 @@ class AppInsightsManager {
    * @param properties - Optional properties with the event
    */
   public static logEvent(eventName: string, properties?: ICustomProperties): void {
-      if (this.appInsights) {
-          const eventProps = {
-              ...this.baseProps,
-              ...properties
-          };
-          this.appInsights.trackEvent({ name: eventName, properties: eventProps });
-          console.log("AppInsightsEvent:", eventName, eventProps);
-      } else {
-          console.error("App Insights is not initialized.");
-      }
+      if (!this.appInsights) return;
+      const eventProps = {
+          channelId: "lcw",
+          lcwRuntimeId: TelemetryManager.InternalTelemetryData?.lcwRuntimeId,
+          ...this.baseProps,
+          ...properties
+      };
+      this.appInsights.trackEvent({ name: eventName, properties: eventProps });
+      console.log("AppInsightsEvent:", eventName, eventProps);
   }
 
   /**
@@ -69,25 +54,35 @@ class AppInsightsManager {
    * @param properties - Optional properties with the exception
    */
   public static logError(exception: Error, properties?: ICustomProperties): void {
-      if (this.appInsights) {
-          const exceptionProps = {
-              ...this.baseProps,
-              ...properties
-          };
-          this.appInsights.trackException({ exception }, exceptionProps);
-          console.log("AppInsightsException:", exception, exceptionProps);
-      } else {
-          console.error("App Insights is not initialized.");
-      }
+      if (!this.appInsights) return;
+      const exceptionProps = {
+          channelId: "lcw",
+          lcwRuntimeId: TelemetryManager.InternalTelemetryData?.lcwRuntimeId,
+          ...this.baseProps,
+          ...properties
+      };
+      this.appInsights.trackException({ exception }, exceptionProps);
+      console.log("AppInsightsException:", exception, exceptionProps);
   }
 
   public static addConvDataToAppInsights(liveWorkItem: LiveWorkItemDetails): void {
       this.baseProps = {
           ...this.baseProps,
-          conversationId : liveWorkItem?.conversationId
+          conversationId: liveWorkItem?.conversationId,
       };
   }
 
+  public static unloadAppInsights(): void {
+      if (this.appInsights) {
+          this.appInsights.unload();
+          this.appInsights = null;
+          console.log("App Insights unloaded successfully.");
+      } 
+  }
+
+  public static isInitialized(): boolean {
+      return !!this.appInsights;
+  }
 }
 
 export default AppInsightsManager;
@@ -95,5 +90,8 @@ export default AppInsightsManager;
 
 export interface IInternalAppInsightsData {
     conversationId?: string,
-    channelId?: "lcw",
+}
+
+export interface ICustomProperties {
+    [key: string]: string;
 }
