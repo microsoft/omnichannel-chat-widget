@@ -7,7 +7,7 @@ export enum AppInsightsEvent {
     ProactiveChatAccepted = "ProactiveChatAccepted",
     ProactiveChatClosed = "ProactiveChatClosed",
 
-    UXLiveChatWidgetLoading = "LiveChatWidgetLoading", // started, completed, failed
+    UXLiveChatWidgetLoading = "LiveChatWidgetLoading",
     StartChatEventReceived = "StartChatEventReceived",
     StartChatMethodException = "StartChatException",
     StartChatError = "StartChatError", 
@@ -15,7 +15,7 @@ export enum AppInsightsEvent {
     NetworkDisconnected = "NetworkDisconnected",
     NetworkReconnected = "NetworkReconnected",
 
-    LCWChatButtonShow = "LCWChatButtonShow",
+    LCWChatButtonShow = "ChatButtonShow",
     GetAuthTokenCalled = "GetAuthTokenCalled",
     ReceivedNullOrEmptyToken = "ReceivedNullOrEmptyToken",
     NewTokenFailed = "NewTokenFailed",
@@ -25,23 +25,21 @@ export enum AppInsightsEvent {
     MessageSent = "MessageSent",
     SystemMessageReceived = "SystemMessageReceived",
     MessageReceived = "MessageReceived",
-    RehydrateMessageReceived = "RehydrateMessageReceived",
+    RehydrateMessageReceived = "HistoryMessageReceived",
     PrechatSurveyLoaded = "PrechatSurveyLoaded",
-    PrechatSubmitted = "PrechatSubmitted",
-    PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
-    ParseAdaptiveCardFailed = "ParseAdaptiveCardFailed",
+    PrechatSubmitted = "PrechatSurveySubmitted",
+    PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatFailed",
     PostChatSurveyLoaded = "PostChatSurveyLoaded",
-    EmailTranscriptSent = "EmailTranscriptSent", // started, Failed 
+    EmailTranscriptSent = "EmailTranscriptSent",
    
+    //pending
     EndChatSDKCall = "EndChatSDKCall",
     PrepareEndChat = "PrepareEndChat",
     EndChatFailed = "EndChatFailed", 
     DisconnectEndChatSDKCallFailed = "DisconnectEndChatSDKCallFailed",
-    EndingAdapterAfterDisconnectionError = "EndingAdapterAfterDisconnectionError",
     ParticipantsRemovedEvent = "ParticipantsRemovedEvent",
     EndChatEventReceived = "EndChatEventReceived",
     ChatDisconnectThreadEventReceived = "ChatDisconnectThreadEventReceived",
-    CustomContextReceived = "CustomContextReceived",
     ConversationEndedThreadEventReceived = "ConversationEndedThreadEventReceived",
     CloseChatMethodException = "CloseChatMethodException",
     ConfirmationConfirmButtonClicked = "ConfirmationConfirmButtonClicked",
