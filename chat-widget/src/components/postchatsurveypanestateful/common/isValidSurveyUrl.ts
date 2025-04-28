@@ -1,3 +1,5 @@
+import { isNullOrEmptyString } from "../../../common/utils";
+
 const validRootDomains = [
     "microsoft.com",
     "microsoft.us",
@@ -6,6 +8,10 @@ const validRootDomains = [
 ];
 
 const isValidSurveyUrl = (url: string) => {
+    if (isNullOrEmptyString(url)) {
+        return false;
+    }
+
     try {
         const objectUrl = new URL(url);
         if (!objectUrl.origin || objectUrl.origin === "null") {
