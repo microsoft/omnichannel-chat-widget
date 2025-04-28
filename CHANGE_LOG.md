@@ -37,7 +37,7 @@ All notable changes to this project will be documented in this file.
 - No internet connect message override fix
 - Enable automatic send of attachment after file is selected.
 - Switch to use atob instead of Buffer to decode payload token
-- Fixed downloadTranscript issue for persistent chat after end chat on po chat survey
+- Fixed downloadTranscript issue for persistent chat after end chat on post chat survey
 - Convert base64url tokens into base64 for exp validation.
 - Fix "AM/PM" timestamp direction for RTL languages
 - A11Y fix for keyboard auto-focus on chat restore.
