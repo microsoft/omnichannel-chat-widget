@@ -19,6 +19,9 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultMiddlewareLocalizedTexts } from "../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
+import AppInsightsManager from "../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../common/telemetry/appInsights/AppInsightsScenarioMarker";
+import { AppInsightsEvent } from "../../common/telemetry/appInsights/AppInsightsEvent";
 
 let uiTimer : ITimer;
 
@@ -63,10 +66,20 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
                 Event: TelemetryEvent.EmailTranscriptSent,
                 Description: "Transcript sent to email successfully."
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.EmailTranscriptSent), {
+                description: "Transcript sent to email successfully."
+            });
         } catch (ex) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.EmailTranscriptFailed,
                 ExceptionDetails: {
+                    exception: ex
+                }
+            });
+
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.EmailTranscriptSent), {
+                exceptionDetails: {
+                    message: "Transcript sent to email failed.",
                     exception: ex
                 }
             });

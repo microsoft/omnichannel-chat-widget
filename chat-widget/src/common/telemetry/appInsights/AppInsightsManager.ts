@@ -1,4 +1,4 @@
-import { ApplicationInsights } from "@microsoft/applicationinsights-web";
+import { ApplicationInsights, SeverityLevel } from "@microsoft/applicationinsights-web";
 import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWorkItemDetails";
 import { TelemetryManager } from "../TelemetryManager";
 
@@ -39,7 +39,8 @@ class AppInsightsManager {
   public static logEvent(eventName: string, properties?: ICustomProperties): void {
       if (!this.appInsights) return;
       const eventProps = {
-          channelId: "lcw",
+          SeverityLevel: SeverityLevel.Information,
+          channelId: TelemetryManager.InternalTelemetryData?.channelId,
           lcwRuntimeId: TelemetryManager.InternalTelemetryData?.lcwRuntimeId,
           ...this.baseProps,
           ...properties
@@ -56,7 +57,8 @@ class AppInsightsManager {
   public static logError(exception: Error, properties?: ICustomProperties): void {
       if (!this.appInsights) return;
       const exceptionProps = {
-          channelId: "lcw",
+          severityLevel: SeverityLevel.Error,
+          channelId: TelemetryManager.InternalTelemetryData?.channelId,
           lcwRuntimeId: TelemetryManager.InternalTelemetryData?.lcwRuntimeId,
           ...this.baseProps,
           ...properties
@@ -93,5 +95,6 @@ export interface IInternalAppInsightsData {
 }
 
 export interface ICustomProperties {
-    [key: string]: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
 }

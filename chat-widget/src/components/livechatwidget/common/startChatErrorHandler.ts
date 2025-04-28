@@ -14,6 +14,9 @@ import { StartChatFailureType } from "../../../contexts/common/StartChatFailureT
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
+import AppInsightsManager from "../../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../../common/telemetry/appInsights/AppInsightsScenarioMarker";
+import { AppInsightsEvent } from "../../../common/telemetry/appInsights/AppInsightsEvent";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
@@ -102,6 +105,13 @@ const logWidgetLoadFailed = (ex?: ChatSDKError) => {
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
     });
+
+    AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.UXLiveChatWidgetLoading),{
+        exceptionDetails: {
+            message: "Widget load complete with error",
+            exception: exDetails
+        }
+    });
 };
 
 export const logWidgetLoadComplete = (additionalMessage?: string) => {
@@ -115,6 +125,7 @@ export const logWidgetLoadComplete = (additionalMessage?: string) => {
         Description: descriptionString,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
     });
+    AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.UXLiveChatWidgetLoading));
 };
 
 const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
@@ -131,6 +142,13 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
         Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+    });
+
+    AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.UXLiveChatWidgetLoading),{
+        exceptionDetails: {
+            message: "Widget load complete with error",
+            exception: exDetails
+        }
     });
 };
 

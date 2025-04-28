@@ -16,6 +16,9 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import { AppInsightsEvent } from "../../common/telemetry/appInsights/AppInsightsEvent";
+import AppInsightsManager from "../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../common/telemetry/appInsights/AppInsightsScenarioMarker";
 
 let uiTimer : ITimer;
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
@@ -103,7 +106,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             Event: TelemetryEvent.UXLCWChatButtonCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
-
+        AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.LCWChatButtonShow));
     }, []);
 
     return (

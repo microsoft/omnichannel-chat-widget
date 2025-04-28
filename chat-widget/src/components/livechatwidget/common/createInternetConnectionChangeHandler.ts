@@ -9,6 +9,9 @@ import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { executeReducer } from "../../../contexts/createReducer";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import AppInsightsManager from "../../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../../common/telemetry/appInsights/AppInsightsScenarioMarker";
+import { AppInsightsEvent } from "../../../common/telemetry/appInsights/AppInsightsEvent";
 
 const isInternetConnected = async () => {
     try {
@@ -28,11 +31,13 @@ export const createInternetConnectionChangeHandler = async (state: ILiveChatWidg
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.NetworkDisconnected
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.NetworkDisconnected));
             NotificationHandler.notifyError(NotificationScenarios.InternetConnection, inMemoryState?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION as string);
         } else {
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.NetworkReconnected
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.NetworkReconnected));
             NotificationHandler.notifySuccess(NotificationScenarios.InternetConnection, inMemoryState?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE as string);
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.NetworkReconnected,

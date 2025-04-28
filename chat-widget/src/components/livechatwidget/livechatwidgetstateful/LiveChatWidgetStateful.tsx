@@ -108,9 +108,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXLivechatwidgetStart
         });
-        AppInsightsManager.logEvent(AppInsightsScenarioMarker.startScenario(AppInsightsEvent.UXLivechatwidgetLoading), {
-            Description: "Live chat widget loading started."
-        });
+        AppInsightsManager.logEvent(AppInsightsScenarioMarker.startScenario(AppInsightsEvent.UXLiveChatWidgetLoading));
 
         return () => {
             AppInsightsManager.unloadAppInsights();
@@ -322,6 +320,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
                 Description: "Start proactive chat event received."
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.StartProactiveChatEventReceived));
+
             if (canStartProactiveChat.current === true) {
                 startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
             } else {
@@ -715,9 +715,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             Event: TelemetryEvent.UXLivechatwidgetCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
-        AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.UXLivechatwidgetLoading), {
-            Description: "Live chat widget loading completed."
-        });
+        AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.UXLiveChatWidgetLoading));
     }, []);
 
     const initiateEndChatOnBrowserUnload = () => {

@@ -30,6 +30,9 @@ import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatCo
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
 import { isNullOrEmptyString } from "../utils";
+import AppInsightsManager from "../telemetry/appInsights/AppInsightsManager";
+import { AppInsightsEvent } from "../telemetry/appInsights/AppInsightsEvent";
+import AppInsightsScenarioMarker from "../telemetry/appInsights/AppInsightsScenarioMarker";
 
 export class FacadeChatSDK {
     private chatSDK: OmnichannelChatSDK;
@@ -114,6 +117,9 @@ export class FacadeChatSDK {
                 Description: "Invalid token format",
                 ExceptionDetails: {message : "Invalid token format, must be in JWT format", token: last3digits},
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.NewTokenFailed), {
+                exceptionDetails: { message: "Invalid token format, must be in JWT format" }
+            });
             throw new Error("Invalid token format, must be in JWT format");
         }
 
@@ -134,6 +140,9 @@ export class FacadeChatSDK {
                 Description: "Invalid token payload",
                 ExceptionDetails: {message : "Token payload is not valid JSON", token: last3digits},
             }); 
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.NewTokenFailed), {
+                exceptionDetails: { message: "Invalid token payload, payload is not valid JSON" }
+            });
 
             throw new Error("Invalid token payload, payload is not valid JSON");
 
@@ -144,6 +153,9 @@ export class FacadeChatSDK {
                 Description: "Failed to decode token",
                 ExceptionDetails: {message : "Failed to decode token", token: last3digits},
             }); 
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.NewTokenFailed), {
+                exceptionDetails: { message: "Failed to decode token" }
+            });
             throw new Error("Failed to decode token");
         }
     }
@@ -166,6 +178,10 @@ export class FacadeChatSDK {
                         "Instant": instant,
                         "Expiration": this.expiration,
                         "Token": last3digits,
+                    }
+                });
+                AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.NewTokenExpired), {
+                    exceptionDetails: { message: "New token is already expired"
                     }
                 });
                 throw new Error(`New token is already expired, with epoch time ${this.expiration} , last 3 digits of token: ${last3digits}`);
@@ -199,6 +215,9 @@ export class FacadeChatSDK {
                 Description: "GetAuthToken function is not present",
                 ExceptionDetails: "Missing function : " + getAuthClientFunction(this.chatConfig)
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.NewTokenFailed), {
+                exceptionDetails: { message: "GetAuthToken function is not present" }
+            });
 
             return { result: false, message: "GetAuthToken function is not present" };
         }
@@ -220,6 +239,9 @@ export class FacadeChatSDK {
                         "Token_Expiration": this.expiration
                     }
                 });
+                AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.NewTokenSuccess), {
+                    description: "New Token obtained"
+                });
                 return { result: true, message: "New Token obtained" };
             } else {
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
@@ -227,6 +249,9 @@ export class FacadeChatSDK {
                     Description: ring.error?.message,
                     ExceptionDetails: ring.error
 
+                });
+                AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.NewTokenFailed), {
+                    exceptionDetails: { message: ring.error?.message }
                 });
                 return {
                     result: false,
@@ -239,6 +264,11 @@ export class FacadeChatSDK {
                 Event: TelemetryEvent.NewTokenFailed,
                 Description: "Unexpected error while getting token",
                 ExceptionDetails: e
+            });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.NewTokenFailed), {
+                exceptionDetails: { message: "Unexpected error while getting token", 
+                    exception: e 
+                }
             });
             return { result: false, message: "Unexpected error while getting token" };
         }

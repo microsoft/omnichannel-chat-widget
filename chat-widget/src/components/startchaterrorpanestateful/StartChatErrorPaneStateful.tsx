@@ -19,6 +19,9 @@ import { defaultStartChatErrorPaneIconStyleProps } from "./common/defaultStartCh
 import { defaultStartChatErrorPaneSubtitleStyleProps } from "./common/defaultStartChatErrorPaneSubtitleStyleProps";
 import { defaultStartChatErrorPaneTitleStyleProps } from "./common/defaultStartChatErrorPaneTitleStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import AppInsightsManager from "../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../common/telemetry/appInsights/AppInsightsScenarioMarker";
+import { AppInsightsEvent } from "../../common/telemetry/appInsights/AppInsightsEvent";
 
 let uiTimer : ITimer;
 
@@ -81,8 +84,10 @@ export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatEr
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.StartChatErrorPaneLoaded, Description: "Start chat error pane loaded." });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.UXStartChatErrorCompleted, ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
-        
 
+        AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.StartChatError), {
+            exceptionDetails: { mesage: errorUIControlProps.titleText ?? AppInsightsEvent.StartChatError }
+        });
     }, []);
     
     return (

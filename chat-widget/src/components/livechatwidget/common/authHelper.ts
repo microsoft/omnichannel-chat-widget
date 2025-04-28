@@ -6,6 +6,10 @@ import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WidgetLoadCustomErrorString } from "../../../common/Constants";
 import { isNullOrEmptyString } from "../../../common/utils";
+import AppInsightsManager from "../../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../../common/telemetry/appInsights/AppInsightsScenarioMarker";
+import { AppInsightsEvent } from "../../../common/telemetry/appInsights/AppInsightsEvent";
+import { Exception } from "@microsoft/applicationinsights-web";
 
 const getAuthClientFunction = (chatConfig: ChatConfig | undefined) => {
     let authClientFunction = undefined;
@@ -20,6 +24,7 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
     const authClientFunction = getAuthClientFunction(chatConfig);
     if (getAuthToken && authClientFunction) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
+        AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.GetAuthTokenCalled));
         const token = await getAuthToken(authClientFunction);
         if (!isNullOrEmptyString(token)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,6 +36,9 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
             // instead of returning false, it's more appropiate to thrown an error to force error handling on the caller side
             // this will help to avoid the error to be ignored and the chat to be started
             TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.ReceivedNullOrEmptyToken),{
+                exceptionDetails: { message: WidgetLoadCustomErrorString.AuthenticationFailedErrorString }
+            });
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
     } else if (chatSDK?.chatSDKConfig?.getAuthToken) {

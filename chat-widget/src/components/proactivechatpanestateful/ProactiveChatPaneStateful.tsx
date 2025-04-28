@@ -15,6 +15,9 @@ import { ProactiveChatPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import AppInsightsManager from "../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../common/telemetry/appInsights/AppInsightsScenarioMarker";
+import { AppInsightsEvent } from "../../common/telemetry/appInsights/AppInsightsEvent";
 
 let uiTimer : ITimer;
 
@@ -48,6 +51,9 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
                 Description: "Proactive chat invitation timed out."
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.ProactiveChatRejected), {
+                description: AppInsightsEvent.ProactiveChatRejectedDescription,
+            });
         }
     };
 
@@ -60,6 +66,8 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 Event: TelemetryEvent.ProactiveChatAccepted,
                 Description: "Proactive chat accepted."
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.ProactiveChatAccepted));
+
             if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
                 // TODO: BroadcastService: replace with the sdk broadcast service, when in place
                 const startPopoutChatEvent: ICustomEvent = {
@@ -69,6 +77,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
                     }
                 };
                 BroadcastService.postMessage(startPopoutChatEvent);
+                AppInsightsManager.logEvent(AppInsightsScenarioMarker.startScenario(AppInsightsEvent.ProactiveChatStartPopoutChat));
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             } else if (state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True") {
                 dispatch({ type: LiveChatWidgetActionType.SET_OUTSIDE_OPERATING_HOURS, payload: true });
@@ -78,6 +87,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
                     eventName: BroadcastEvent.ProactiveChatStartChat,
                 };
                 BroadcastService.postMessage(proactiveChatStarted);
+                AppInsightsManager.logEvent(AppInsightsScenarioMarker.startScenario(AppInsightsEvent.ProactiveChatStartChat));
                 await startChat();
             }
         },
@@ -87,6 +97,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 Event: TelemetryEvent.ProactiveChatClosed,
                 Description: "Proactive chat closed."
             });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.ProactiveChatClosed));
             dispatch({
                 type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
                     proactiveChatBodyTitle: "",

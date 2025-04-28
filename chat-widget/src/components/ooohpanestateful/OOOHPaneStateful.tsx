@@ -14,6 +14,9 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import DOMPurify from "dompurify";
+import AppInsightsManager from "../../common/telemetry/appInsights/AppInsightsManager";
+import { AppInsightsEvent } from "../../common/telemetry/appInsights/AppInsightsEvent";
+import AppInsightsScenarioMarker from "../../common/telemetry/appInsights/AppInsightsScenarioMarker";
 
 let uiTimer : ITimer;
 export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
@@ -51,6 +54,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
             Event: TelemetryEvent.UXOOHPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
+        AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.OutOfOfficePaneLoaded));
     }, []);
     
     if (controlProps?.titleText) {

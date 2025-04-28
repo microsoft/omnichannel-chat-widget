@@ -6,6 +6,9 @@ import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../common/telemetry/TelemetryManager";
+import AppInsightsManager from "../common/telemetry/appInsights/AppInsightsManager";
+import { AppInsightsEvent } from "../common/telemetry/appInsights/AppInsightsEvent";
+import AppInsightsScenarioMarker from "../common/telemetry/appInsights/AppInsightsScenarioMarker";
 
 export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
     const onNewAdapterActivityHandler = (activity: IActivity) => {
@@ -58,6 +61,10 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     Event: TelemetryEvent.MessageSent,
                     Description: "New message sent"
                 });
+
+                AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.MessageSent), {
+                    description: "New message sent"
+                });
             }
             else {
                 if (activity?.channelData?.tags?.includes(Constants.systemMessageTag)) {
@@ -66,6 +73,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.SystemMessageReceived,
                         Description: "System message received"
+                    });
+                    AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.SystemMessageReceived),{
+                        description: "System message received"
                     });
                 }
                 else {
@@ -94,6 +104,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                         Description: "New message received",
                         CustomProperties: payload
                     });
+                    AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.MessageReceived), {
+                        description: "New message received"
+                    });
                 } else {
                     if (!isHistoryMessageReceivedEventRasied) {
                         isHistoryMessageReceivedEventRasied = true;
@@ -101,6 +114,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
                             Event: TelemetryEvent.RehydrateMessageReceived,
                             Description: "History message received",
                             CustomProperties: payload
+                        });
+                        AppInsightsManager.logEvent(AppInsightsScenarioMarker.completeScenario(AppInsightsEvent.RehydrateMessageReceived), {
+                            description: "History message received"
                         });
                     }
                 }

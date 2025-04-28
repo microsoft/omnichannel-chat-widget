@@ -24,6 +24,9 @@ import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
+import AppInsightsManager from "../../../common/telemetry/appInsights/AppInsightsManager";
+import AppInsightsScenarioMarker from "../../../common/telemetry/appInsights/AppInsightsScenarioMarker";
+import { AppInsightsEvent } from "../../../common/telemetry/appInsights/AppInsightsEvent";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -193,6 +196,9 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 payload: {
                     errorMessage: error,
                 }
+            });
+            AppInsightsManager.logEvent(AppInsightsScenarioMarker.failScenario(AppInsightsEvent.StartChatMethodException), {
+                exception: `Failed to setup startChat: ${error}`
             });
 
             isStartChatSuccessful = false;
