@@ -24,7 +24,6 @@ class AppInsightsManager {
           });
       
           this.appInsights.loadAppInsights();
-          console.log("App Insights initialized successfully.");
       } catch (error) {
           console.error("Error initializing App Insights: ", error);
           return;
@@ -38,15 +37,8 @@ class AppInsightsManager {
    */
   public static logEvent(eventName: string, properties?: ICustomProperties): void {
       if (!this.appInsights) return;
-      const eventProps = {
-          SeverityLevel: SeverityLevel.Information,
-          channelId: TelemetryManager.InternalTelemetryData?.channelId,
-          lcwRuntimeId: TelemetryManager.InternalTelemetryData?.lcwRuntimeId,
-          ...this.baseProps,
-          ...properties
-      };
+      const eventProps = this.createCustomProps(SeverityLevel.Information, properties);
       this.appInsights.trackEvent({ name: eventName, properties: eventProps });
-      console.log("AppInsightsEvent:", eventName, eventProps);
   }
 
   /**
@@ -56,15 +48,18 @@ class AppInsightsManager {
    */
   public static logError(exception: Error, properties?: ICustomProperties): void {
       if (!this.appInsights) return;
-      const exceptionProps = {
-          severityLevel: SeverityLevel.Error,
+      const exceptionProps = this.createCustomProps(SeverityLevel.Error, properties);
+      this.appInsights.trackException({ exception }, exceptionProps);
+  }
+
+  private static createCustomProps(severityLevel: SeverityLevel, properties?: ICustomProperties): ICustomProperties {
+      return {
+          severityLevel,
           channelId: TelemetryManager.InternalTelemetryData?.channelId,
           lcwRuntimeId: TelemetryManager.InternalTelemetryData?.lcwRuntimeId,
           ...this.baseProps,
-          ...properties
+          ...properties,
       };
-      this.appInsights.trackException({ exception }, exceptionProps);
-      console.log("AppInsightsException:", exception, exceptionProps);
   }
 
   public static addConvDataToAppInsights(liveWorkItem: LiveWorkItemDetails): void {
@@ -78,15 +73,9 @@ class AppInsightsManager {
       if (this.appInsights) {
           this.appInsights.unload();
           this.appInsights = null;
-          console.log("App Insights unloaded successfully.");
       } 
   }
-
-  public static isInitialized(): boolean {
-      return !!this.appInsights;
-  }
 }
-
 export default AppInsightsManager;
 
 
