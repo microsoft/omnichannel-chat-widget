@@ -1,8 +1,8 @@
 const validRootDomains = [
-    'microsoft.com',
-    'microsoft.us',
-    'appsplatform.us',
-    'powervirtualagents.cn'
+    "microsoft.com",
+    "microsoft.us",
+    "appsplatform.us",
+    "powervirtualagents.cn"
 ];
 
 const isValidSurveyUrl = (url: string) => {
