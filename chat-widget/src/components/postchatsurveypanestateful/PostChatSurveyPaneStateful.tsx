@@ -15,6 +15,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPostChatSurveyPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralPostChatSurveyPaneStyleProps";
 import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
+import isValidSurveyUrl from "./common/isValidSurveyUrl";
 
 const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, showMultiLingual = false) => {
     const surveyLink = `${surveyInviteLink}
@@ -64,20 +65,8 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         ...props.controlProps
     };
 
-    const isValidSurveyURL = (url: string) => {
-        try {
-            const objectUrl = new URL(url);
-            if (!objectUrl.origin || objectUrl.origin === "null") {
-                return false;
-            }
-        } catch (error) {
-            return false;
-        }
-        return true;
-    };
-
     if (controlProps.surveyURL) {
-        if (!isValidSurveyURL(controlProps.surveyURL)) {
+        if (!isValidSurveyUrl(controlProps.surveyURL)) {
             TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.PostChatSurveyUrlValidationFailed,
                 Description: `${controlProps.surveyURL} is not a valid Survey URL`
