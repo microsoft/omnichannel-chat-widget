@@ -8,7 +8,7 @@ describe("isValidSurveyURL unit tests", () => {
     });
 
     act(() => {
-        it("isValidSurveyUrl() should return 'true' on valid urls", () => {
+        it("isValidSurveyUrl() should return 'true' on valid production urls", () => {
             const urls = [
                 'https://tip.customervoice.microsoft.com',
                 'https://customervoice.microsoft.com',
@@ -23,7 +23,20 @@ describe("isValidSurveyURL unit tests", () => {
 
             for (const url of urls) {
                 const result = isValidSurveyUrl(url);
+                console.log(url);
+                console.log(result);
                 expect(result).toBe(true);
+            }
+        });
+
+        it("isValidSurveyUrl() should return 'false' on malicious URLs", () => {
+            const urls = [
+                'https://attacker-server.com/customervoice.microsoft.com'
+            ];
+
+            for (const url of urls) {
+                const result = isValidSurveyUrl(url);
+                expect(result).toBe(false);
             }
         });
     });
