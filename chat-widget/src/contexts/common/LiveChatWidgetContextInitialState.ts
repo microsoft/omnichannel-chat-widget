@@ -32,11 +32,12 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         initialStateFromCache.domainStates.liveChatConfig = props.chatConfig;
 
         console.log("LOPEZ :: OOO from props => : ", props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours);
+        console.log("LOPEZ :: OOO from props => : ", props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours);
 
         // Out of office hours may change from second to another, so we need to alway evaluate it from the props config
         if (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours) {
             const liveChatConfig = initialStateFromCache.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin;
-            if (liveChatConfig) {
+            if (liveChatConfig) {                                                             
                 liveChatConfig.OutOfOperatingHours = props.chatConfig.LiveWSAndLiveChatEngJoin.OutOfOperatingHours === "True";
                 console.log("Out of operating hours: ", liveChatConfig.OutOfOperatingHours);
             }
