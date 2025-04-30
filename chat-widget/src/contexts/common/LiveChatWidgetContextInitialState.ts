@@ -1,11 +1,12 @@
+import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
+import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
+
 import { ConversationState } from "./ConversationState";
 import { ILiveChatWidgetContext } from "./ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces/ILiveChatWidgetProps";
-import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
-import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
-import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
-import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
 import { StartChatFailureType } from "./StartChatFailureType";
+import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
+import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
@@ -26,6 +27,21 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat) {
             initialStateFromCache.appStates.conversationState = ConversationState.Closed;
         }
+
+        // we are always setting the chatConfig from the props to avoid any issues with the cache
+        initialStateFromCache.domainStates.liveChatConfig = props.chatConfig;
+
+        console.log("LOPEZ :: OOO from props => : ", props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours);
+
+        // Out of office hours may change from second to another, so we need to alway evaluate it from the props config
+        if (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours) {
+            const liveChatConfig = initialStateFromCache.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin;
+            if (liveChatConfig) {
+                liveChatConfig.OutOfOperatingHours = props.chatConfig.LiveWSAndLiveChatEngJoin.OutOfOperatingHours === "True";
+                console.log("Out of operating hours: ", liveChatConfig.OutOfOperatingHours);
+            }
+        }
+
         return initialStateFromCache;
     }
 
