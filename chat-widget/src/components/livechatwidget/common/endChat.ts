@@ -191,7 +191,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
-            closeChatWidget(dispatch, props, state);
+            closeChatWidget(dispatch);
             facadeChatSDK.destroy();
         }
     }
@@ -278,16 +278,7 @@ export const endVoiceVideoCallIfOngoing = async (facadeChatSDK: FacadeChatSDK, d
     }
 };
 
-const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>, props: ILiveChatWidgetProps, state: ILiveChatWidgetContext) => {
-    if (state?.appStates?.hideStartChatButton) {
-        // Only close chat if header is enabled for popout
-        // TODO : This condition needs to be removed eventually when the filler UX is ready for popout, removing this condition would show a blank screen for OOB Widget
-        if (props?.controlProps?.hideHeader === undefined || props?.controlProps?.hideHeader === false) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-        }
-        return;
-    }
-
+const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // Embedded chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
 };
