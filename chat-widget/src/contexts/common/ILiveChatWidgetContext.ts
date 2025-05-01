@@ -1,9 +1,10 @@
+import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../../common/Constants";
+
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { ConversationState } from "./ConversationState";
 import { IInternalTelemetryData } from "../../common/telemetry/interfaces/IInternalTelemetryData";
 import { ILiveChatWidgetLocalizedTexts } from "./ILiveChatWidgetLocalizedTexts";
 import { IRenderingMiddlewareProps } from "../../components/webchatcontainerstateful/interfaces/IRenderingMiddlewareProps";
-import { ConfirmationState, ConversationEndEntity, ParticipantType } from "../../common/Constants";
 import { StartChatFailureType } from "./StartChatFailureType";
 
 export interface ILiveChatWidgetContext {

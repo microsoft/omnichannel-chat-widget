@@ -1,11 +1,12 @@
+import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
+import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
+
 import { ConversationState } from "./ConversationState";
 import { ILiveChatWidgetContext } from "./ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces/ILiveChatWidgetProps";
-import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
-import { getWidgetCacheIdfromProps, isNullOrUndefined } from "../../common/utils";
-import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
-import { ConfirmationState, Constants, ConversationEndEntity, StorageType } from "../../common/Constants";
 import { StartChatFailureType } from "./StartChatFailureType";
+import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
+import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
