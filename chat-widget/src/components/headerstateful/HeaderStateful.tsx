@@ -18,7 +18,7 @@ import { defaultOutOfOfficeHeaderStyleProps } from "./common/styleProps/defaultO
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
-let uiTimer : ITimer;
+let uiTimer: ITimer;
 
 export const HeaderStateful = (props: IHeaderStatefulParams) => {
 
@@ -34,7 +34,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
     const { headerProps, outOfOfficeHeaderProps, endChat } = props;
     //Setting OutOfOperatingHours Flag
-    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
+    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True" || state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "true");
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
 
@@ -80,6 +80,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         },
         onMinimizeClick: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderMinimizeButtonClicked, Description: "Header Minimize button clicked." });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
         ...outOfOfficeHeaderProps?.controlProps,
@@ -87,10 +88,9 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     };
 
     useEffect(() => {
-        if (state.appStates.outsideOperatingHours) {
-            setOutOfOperatingHours(true);
-        }
-    }, []);
+        console.log("LOPEZ :: HEADER : 1 => ", state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours);
+        setOutOfOperatingHours(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True" || state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "true");
+    }, [state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours]);
 
     useEffect(() => {
         localConfirmationPaneState.current = state?.domainStates?.confirmationState;
@@ -118,8 +118,8 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         };
 
         const selectors = Object.assign({}, (styleProps as any)?.generalStyleProps?.selectors || {}, draggableSelectors); // eslint-disable-line @typescript-eslint/no-explicit-any
-        const generalStyleProps = Object.assign({}, styleProps?.generalStyleProps, {selectors});
-        const draggableStyleProps = Object.assign({}, styleProps, {generalStyleProps});
+        const generalStyleProps = Object.assign({}, styleProps?.generalStyleProps, { selectors });
+        const draggableStyleProps = Object.assign({}, styleProps, { generalStyleProps });
 
         return (
             <DraggableEventEmitter {...draggableEventEmitterProps}>

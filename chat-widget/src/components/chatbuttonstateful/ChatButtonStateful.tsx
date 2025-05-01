@@ -17,7 +17,7 @@ import { TelemetryTimers } from "../../common/telemetry/TelemetryManager";
 import { defaultOutOfOfficeChatButtonStyleProps } from "./common/styleProps/defaultOutOfOfficeChatButtonStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
-let uiTimer : ITimer;
+let uiTimer: ITimer;
 export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
     // this is to ensure the telemetry is set only once and start the load timer
@@ -27,20 +27,20 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             Event: TelemetryEvent.UXLCWChatButtonStart
         });
     }, []);
-    
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { buttonProps, outOfOfficeButtonProps, startChat } = props;
     //Setting OutOfOperatingHours Flag
-    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
-    
-    const ref = useRef(() => {return;});
+    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True" || state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "true");
+
+    const ref = useRef(() => { return; });
 
     ref.current = async () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonClicked
         });
-        
+
         if (state.appStates.isMinimized) {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
@@ -84,10 +84,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     };
 
     useEffect(() => {
-        
-        if (state.appStates.outsideOperatingHours) {
-            setOutOfOperatingHours(true);
-        }
+        setOutOfOperatingHours(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True" || state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "true");
+
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonShow,
             ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed
