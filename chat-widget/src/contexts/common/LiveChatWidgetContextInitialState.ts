@@ -20,8 +20,6 @@ const outOfOfficeStateStrategy = (initialStateFromCache: ILiveChatWidgetContext,
             if (liveChatConfig.OutOfOperatingHours === true) {
                 initialStateFromCache.appStates.conversationState = ConversationState.OutOfOffice;
             }
-            console.log("Lopez :: SET Operation hours :: config ::", liveChatConfig.OutOfOperatingHours);
-            console.log("Lopez :: SET Operation hours  :: appstate ::", initialStateFromCache.appStates.outsideOperatingHours);
         }
     }
 };
