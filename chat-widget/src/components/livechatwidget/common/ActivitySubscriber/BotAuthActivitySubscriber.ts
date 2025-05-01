@@ -6,6 +6,7 @@ import { IActivitySubscriber } from "./IActivitySubscriber";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../../../../common/telemetry/TelemetryHelper";
 import { IBotAuthActivitySubscriberOptionalParams } from "../../interfaces/IBotAuthActivitySubscriberOptionalParams";
+import { TelemetryManager } from "../../../../common/telemetry/TelemetryManager";
 
 const supportedSignInCardContentTypes = ["application/vnd.microsoft.card.signin", "application/vnd.microsoft.card.oauth"];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
@@ -111,7 +112,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
         this.signInCardSeen.add(signInId);
         const sasUrl = await extractSasUrl(attachment);
-        const event: ICustomEvent = { eventName: BroadcastEvent.SigninCardReceived, payload: { sasUrl } };
+        const event: ICustomEvent = { eventName: BroadcastEvent.SigninCardReceived, payload: { sasUrl, conversationId: TelemetryManager.InternalTelemetryData?.conversationId } };
 
         if (!sasUrl) {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
