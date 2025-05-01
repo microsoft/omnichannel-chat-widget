@@ -13,8 +13,8 @@ const outOfOfficeStateStrategy = (initialStateFromCache: ILiveChatWidgetContext,
     if (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours) {
         const liveChatConfig = initialStateFromCache.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin;
         if (liveChatConfig) {
-            liveChatConfig.OutOfOperatingHours = 
-            initialStateFromCache.appStates.outsideOperatingHours = liveChatConfig.OutOfOperatingHours;
+            liveChatConfig.OutOfOperatingHours =
+                initialStateFromCache.appStates.outsideOperatingHours = liveChatConfig.OutOfOperatingHours;
 
             // this is needed to prevent the case of some errors preventing the ooo pane to show.
             if (liveChatConfig.OutOfOperatingHours === true) {
@@ -77,8 +77,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         },
         appStates: {
             conversationState: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toString().toLowerCase() === "true")
-                   ? ConversationState.OutOfOffice 
-                   : ConversationState.Closed,
+                ? ConversationState.OutOfOffice
+                : ConversationState.Closed,
             isMinimized: undefined,
             previousElementIdOnFocusBeforeModalOpen: null,
             startChatFailed: false,

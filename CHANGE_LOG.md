@@ -7,7 +7,12 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+<<<<<<< HEAD
 - Added conversation Id to signin card event- Problems with state transitions from OOH to business hours and vice versa
+=======
+
+- Added conversation Id to signin card event
+>>>>>>> origin/main
 - Fixed issues found in transcript download after bridge removal
 - When a Start chat event is received, generally from LCW:SDK, if there is an existent session, it wont create  new chat unless the chat is closed.(any other state will present the widget with the session messages).
 - Fallback logic to check token from oc-chat-sdk for validity check
@@ -19,6 +24,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Adding new `First Response Latency` track mechanism for `copilot + c2` conversations
 - Add support for Font Family config property in prechatpane
 - Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
 - Added `opensMarkdownLinksInSameTab` and `honorsTargetInHTMLLinks` props to open hyperlinks in same tab or new tab
@@ -26,6 +32,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Adding new logic to identify `history messages` by comparing epoch times
+- Code cleanup by adding strategy pattern on newMessaheHandler component
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.17](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.17)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.16)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.15)
