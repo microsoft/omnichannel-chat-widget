@@ -225,6 +225,8 @@ export enum TelemetryEvent {
     PostChatContextCallFailed = "PostChatContextCallFailed",
     PostChatSurveyLoadingPaneLoaded = "PostChatSurveyLoadingPaneLoaded",
     PostChatSurveyLoaded = "PostChatSurveyLoaded",
+    PostChatSurveyUrlValidationCompleted = "PostChatSurveyUrlValidationCompleted",
+    PostChatSurveyUrlValidationFailed = "PostChatSurveyUrlValidationFailed",
 
     // Chat disconnected
     ChatDisconnectThreadEventReceived = "ChatDisconnectThreadEventReceived",
