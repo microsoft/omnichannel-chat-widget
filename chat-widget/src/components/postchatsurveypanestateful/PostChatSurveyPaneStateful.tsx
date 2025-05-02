@@ -18,12 +18,13 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 import isValidSurveyUrl from "./common/isValidSurveyUrl";
 
 const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, showMultiLingual = false) => {
-    const surveyLink = `${surveyInviteLink}
-            &embed=${isEmbed.toString()}
-            &compact=${compact.toString() ?? "true"}
-            &lang=${locale ?? "en-us"}
-            &showmultilingual=${showMultiLingual.toString() ?? "false"}`;
-    return surveyLink;
+    const surveyLinkParams = new URLSearchParams({
+        embed: isEmbed.toString(),
+        compact: (compact ?? true).toString(),
+        lang: locale ?? "en-us",
+        showmultilingual: (showMultiLingual ?? false).toString(),
+    });
+    return `${surveyInviteLink}&${surveyLinkParams.toString()}`;
 };
 
 export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulProps) => {

@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Fixed transcript with attachments issue and blockquote issue
 - Sanitize `OutOfOfficeHoursPaneStateful`'s `TitleText`
 - Add domain restrictions on post-chat survey URLs
+- Fixed post chat survey invite link space issue
 
 ## [1.7.7] - 2025-04-16
 
