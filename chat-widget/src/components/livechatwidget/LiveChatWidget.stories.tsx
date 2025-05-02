@@ -706,6 +706,9 @@ const liveChatWidgetCustom3Props: ILiveChatWidgetProps = {
         }
     },
     webChatContainerProps: {
+        adaptiveCardStyles: {
+            background: "#e2ebf6"
+        },
         webChatStyles: {
             backgroundColor: "white",
             bubbleBackground: "#e2ebf6",
