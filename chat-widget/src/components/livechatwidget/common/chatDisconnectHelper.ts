@@ -27,7 +27,12 @@ const handleChatDisconnect = (props: ILiveChatWidgetProps, state: ILiveChatWidge
             break;
         case false:
             if (hideSendBoxOnConversationEnd !== false) {
-                setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: false }; });
+                // this should be enable only for those that dint disable the sandbox
+                if (props?.webChatContainerProps?.webChatStyles?.hideSendBox !== true){
+                    setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: false }; });
+                } 
+
+                
             }
             break;
         default:
