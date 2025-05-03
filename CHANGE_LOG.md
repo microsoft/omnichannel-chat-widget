@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Removing condition preventing to close the widget during pop-out + hide header condition
 - Added conversation Id to signin card event
 - Fixed issues found in transcript download after bridge removal
 - When a Start chat event is received, generally from LCW:SDK, if there is an existent session, it wont create  new chat unless the chat is closed.(any other state will present the widget with the session messages).
@@ -15,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Fixed transcript with attachments issue and blockquote issue
 - Sanitize `OutOfOfficeHoursPaneStateful`'s `TitleText`
 - Add domain restrictions on post-chat survey URLs
+- Fixed post chat survey invite link space issue
 
 ## [1.7.7] - 2025-04-16
 
