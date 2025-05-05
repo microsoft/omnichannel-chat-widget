@@ -25,7 +25,8 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXHeaderStart
+            Event: TelemetryEvent.UXHeaderStart,
+            LogToAppInsights: false
         });
     }, []);
 
@@ -45,12 +46,20 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
         onMinimizeClick: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderMinimizeButtonClicked, Description: "Header Minimize button clicked." });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                Event: TelemetryEvent.HeaderMinimizeButtonClicked, 
+                Description: "Header Minimize button clicked.",
+                LogToAppInsights: true
+            });
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
         },
         onCloseClick: async () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                Event: TelemetryEvent.HeaderCloseButtonClicked, 
+                Description: "Header Close button clicked.",
+                LogToAppInsights: true
+            });
 
             if (localConfirmationPaneState.current !== ConfirmationState.Ok) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
@@ -79,7 +88,11 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             text: "We're Offline"
         },
         onMinimizeClick: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderMinimizeButtonClicked, Description: "Header Minimize button clicked." });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                Event: TelemetryEvent.HeaderMinimizeButtonClicked, 
+                Description: "Header Minimize button clicked.",
+                LogToAppInsights: true
+            });
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
         ...outOfOfficeHeaderProps?.controlProps,
@@ -105,7 +118,8 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXHeaderCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: false
         });
     }, []);
 

@@ -23,7 +23,8 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXReconnectChatPaneStart,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: false
         });
     }, []);
 
@@ -63,21 +64,24 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
         onContinueChat: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ReconnectChatContinueConversation,
-                Description: "Reconnect chat continue conversation button clicked."
+                Description: "Reconnect chat continue conversation button clicked.",
+                LogToAppInsights: true
             });
             startChat(true);
         },
         onStartNewChat: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ReconnectChatStartNewConversation,
-                Description: "Reconnect chat start new conversation button clicked."
+                Description: "Reconnect chat start new conversation button clicked.",
+                LogToAppInsights: true
             });
             startChat(false);
         },
         onMinimize: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ReconnectChatMinimize,
-                Description: "Reconnect chat minimized."
+                Description: "Reconnect chat minimized.",
+                LogToAppInsights: true
             });
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
@@ -86,9 +90,13 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
 
     useEffect(() => {
         setFocusOnElement(document.getElementById(controlProps.id as string) as HTMLElement);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ReconnectChatPaneLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
+            Event: TelemetryEvent.ReconnectChatPaneLoaded,
+            LogToAppInsights: false
+        });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXReconnectChatCompleted
+            Event: TelemetryEvent.UXReconnectChatCompleted,
+            LogToAppInsights: false
         });
     }, []);
 

@@ -22,7 +22,8 @@ const FormatEgressTagsMiddleware = () => (next: (arg0: any) => any) => (activity
                         Event: TelemetryEvent.FormatTagsMiddlewareJSONStringifyFailed,
                         ExceptionDetails: {
                             exception: exception
-                        }
+                        },
+                        LogToAppInsights: false
                     });
                 }
             }

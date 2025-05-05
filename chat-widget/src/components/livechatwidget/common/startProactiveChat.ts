@@ -21,6 +21,7 @@ export const startProactiveChat = (dispatch: Dispatch<ILiveChatWidgetAction>, no
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
         Event: TelemetryEvent.IncomingProactiveChatScreenLoaded,
         ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
-        Description: "Incoming proactive chat loaded."
+        Description: "Incoming proactive chat loaded.",
+        LogToAppInsights: true
     });
 };

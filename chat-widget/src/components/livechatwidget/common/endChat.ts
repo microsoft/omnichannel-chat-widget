@@ -36,7 +36,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithoutPostChat
+                    Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithoutPostChat,
+                    LogToAppInsights: true
                 });
                 await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             }
@@ -67,7 +68,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat
+                    Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat,
+                    LogToAppInsights: true
                 });
                 await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
                 return;
@@ -82,7 +84,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
         if (state?.appStates?.conversationEndedBy) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: `${PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat} ${state?.appStates?.conversationEndedBy}.`
+                Description: `${PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithInvalidPostChat} ${state?.appStates?.conversationEndedBy}.`,
+                LogToAppInsights: true
             });
         }
 
@@ -109,14 +112,16 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             Event: TelemetryEvent.EndChatFailed,
             ExceptionDetails: {
                 exception: JSON.stringify(error)
-            }
+            },
+            LogToAppInsights: true
         });
 
         //Close chat widget for any failure in embedded to allow to show start chat button
         if (props.controlProps?.hideStartChatButton === false) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: PrepareEndChatDescriptionConstants.PrepareEndChatError
+                Description: PrepareEndChatDescriptionConstants.PrepareEndChatError,
+                LogToAppInsights: true
             });
             await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
         }
@@ -139,7 +144,8 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
 
         try {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.EndChatSDKCall
+                Event: TelemetryEvent.EndChatSDKCall,
+                LogToAppInsights: true
             });
             await facadeChatSDK?.endChat(endChatOptionalParameters);
         } catch (ex) {
@@ -150,14 +156,16 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
                     Event: TelemetryEvent.EndChatSDKCallFailed,
                     ExceptionDetails: {
                         exception: ex
-                    }
+                    },
+                    LogToAppInsights: true
                 });
             } else {
                 TelemetryHelper.logSDKEvent(LogLevel.WARN, {
                     Event: TelemetryEvent.DisconnectEndChatSDKCallFailed,
                     ExceptionDetails: {
                         exception: ex
-                    }
+                    },
+                    LogToAppInsights: true
                 });
             }
 
@@ -177,14 +185,16 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             closeChatStateCleanUp(dispatch);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CloseChatCall,
-                Description: "Chat was closed succesfully"
+                Description: "Chat was closed succesfully",
+                LogToAppInsights: true
             });
         } catch (error) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.CloseChatMethodException,
                 ExceptionDetails: {
                     exception: `Failed to endChat: ${error}`
-                }
+                },
+                LogToAppInsights: true
             });
         } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
@@ -262,6 +272,7 @@ export const endVoiceVideoCallIfOngoing = async (facadeChatSDK: FacadeChatSDK, d
                 voiceVideoCallingSdk.stopCall();
                 TelemetryHelper.logCallingEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.EndCallButtonClick,
+                    LogToAppInsights: true
                 }, callId);
                 callingStateCleanUp(dispatch);
             }
@@ -272,7 +283,8 @@ export const endVoiceVideoCallIfOngoing = async (facadeChatSDK: FacadeChatSDK, d
             Event: TelemetryEvent.EndCallButtonClickException,
             ExceptionDetails: {
                 exception: `Failed to End Call:  ${error}`
-            }
+            },
+            LogToAppInsights: true
         }, callId);
     }
 };

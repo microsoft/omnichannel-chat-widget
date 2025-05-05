@@ -22,7 +22,8 @@ const handleChatDisconnect = (props: ILiveChatWidgetProps, state: ILiveChatWidge
             NotificationHandler.notifyWarning(NotificationScenarios.ChatDisconnect, chatDisconnectMessage as string);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
-                Description: "Chat disconnected due to timeout, left or removed."
+                Description: "Chat disconnected due to timeout, left or removed.",
+                LogToAppInsights: true
             });
             break;
         case false:

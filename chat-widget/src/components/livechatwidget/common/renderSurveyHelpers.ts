@@ -61,7 +61,8 @@ const renderSurvey = async (postChatContext: any, dispatch: Dispatch<ILiveChatWi
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const embedModePostChatWorkflow = async (postChatContext: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     TelemetryHelper.logActionEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.EmbedModePostChatWorkflowStarted
+        Event: TelemetryEvent.EmbedModePostChatWorkflowStarted,
+        LogToAppInsights: false,
     });
     if (postChatContext) {
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
@@ -75,7 +76,8 @@ const embedModePostChatWorkflow = async (postChatContext: any, dispatch: Dispatc
             Event: TelemetryEvent.AppStatesException,
             ExceptionDetails: {
                 exception: error
-            }
+            },
+            LogToAppInsights: false,
         });
     }
 };
@@ -105,7 +107,8 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallSucceed,
-                    Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
+                    Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed,
+                    LogToAppInsights: false,
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
                 return context;
@@ -114,7 +117,8 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
     } catch (error) {
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.PostChatContextCallFailed,
-            Description: PostChatSurveyTelemetryMessage.PostChatContextCallFailed
+            Description: PostChatSurveyTelemetryMessage.PostChatContextCallFailed,
+            LogToAppInsights: false,
         });
     }
 };

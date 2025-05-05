@@ -11,6 +11,7 @@ import { defaultAriaConfig } from "../../../common/telemetry/defaultConfigs/defa
 import { defaultInternalTelemetryData } from "../../../common/telemetry/defaultConfigs/defaultTelemetryInternalData";
 import { defaultTelemetryConfiguration } from "../../../common/telemetry/defaultConfigs/defaultTelemetryConfiguration";
 import { newGuid } from "../../../common/utils";
+import { defaultAppInsightsConfig } from "../../../common/telemetry/defaultConfigs/defaultAppInsightsConfig";
 
 export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     const telemetryConfig: ITelemetryConfig = { ...defaultTelemetryConfiguration, ...props.telemetryConfig };
@@ -20,7 +21,8 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
         let telemetryData: IInternalTelemetryData = {
             ...defaultInternalTelemetryData,
             telemetryConfig: Object.assign({}, defaultTelemetryConfiguration, telemetryConfig),
-            ariaConfig: Object.assign({}, defaultAriaConfig, telemetryConfig?.ariaConfigurations)
+            ariaConfig: Object.assign({}, defaultAriaConfig, telemetryConfig?.ariaConfigurations),
+            appInsightsConfig: Object.assign({}, defaultAppInsightsConfig, props.appInsightsConfig)
         };
 
         if (props.chatConfig) {

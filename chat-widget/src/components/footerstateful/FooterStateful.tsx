@@ -28,7 +28,8 @@ export const FooterStateful = (props: any) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXFooterStart
+            Event: TelemetryEvent.UXFooterStart,
+            LogToAppInsights: false
         });
     }, []);
 
@@ -45,14 +46,19 @@ export const FooterStateful = (props: any) => {
         dir: state.domainStates.globalDir,
         onDownloadTranscriptClick: async () => {
             try {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.DownloadTranscriptButtonClicked, Description: "Download Transcript button clicked." });
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                    Event: TelemetryEvent.DownloadTranscriptButtonClicked, 
+                    Description: "Download Transcript button clicked.",
+                    LogToAppInsights: true
+                });
                 await downloadTranscript(facadeChatSDK, downloadTranscriptProps, state);
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.DownloadTranscriptFailed,
                     ExceptionDetails: {
                         exception: ex
-                    }
+                    },
+                    LogToAppInsights: true
                 });
                 NotificationHandler.notifyError(
                     NotificationScenarios.DownloadTranscriptError,
@@ -60,7 +66,11 @@ export const FooterStateful = (props: any) => {
             }
         },
         onEmailTranscriptClick: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptButtonClicked, Description: "Email Transcript button clicked." });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                Event: TelemetryEvent.EmailTranscriptButtonClicked, 
+                Description: "Email Transcript button clicked.",
+                LogToAppInsights: true 
+            });
             const emailTranscriptButtonId = footerProps?.controlProps?.emailTranscriptButtonProps?.id ?? `${controlProps.id}-emailtranscript-button`;
             if (emailTranscriptButtonId) {
                 dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: emailTranscriptButtonId });
@@ -68,7 +78,11 @@ export const FooterStateful = (props: any) => {
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE, payload: true });
         },
         onAudioNotificationClick: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.AudioToggleButtonClicked, Description: "Audio button clicked." });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                Event: TelemetryEvent.AudioToggleButtonClicked, 
+                Description: "Audio button clicked.",
+                LogToAppInsights: true
+            });
             dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: !state.appStates.isAudioMuted });
         },
         ...footerProps?.controlProps,
@@ -91,7 +105,8 @@ export const FooterStateful = (props: any) => {
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXFooterCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: false
         });
     }, []);
 

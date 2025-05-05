@@ -46,6 +46,7 @@ const extractSasUrl = async (attachment: any) => {
 const fetchBotAuthConfig = async (retries: number, interval: number): Promise<any> => {
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
         Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
+        LogToAppInsights: false,
     });
 
     const botAuthConfigRequestEvent: ICustomEvent = { eventName: BroadcastEvent.BotAuthConfigRequest };
@@ -100,7 +101,8 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
         if (!signInId) {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.BotAuthActivityUndefinedSignInId
+                Event: TelemetryEvent.BotAuthActivityUndefinedSignInId,
+                LogToAppInsights: false,
             });
             return activity;
         }
@@ -118,6 +120,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.BotAuthActivityEmptySasUrl,
                 Description: "SaS Url is empty",
+                LogToAppInsights: false,
             });
             return activity;
         } else {
@@ -128,16 +131,19 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             if (response === false) {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.SetBotAuthProviderHideCard,
+                    LogToAppInsights: false,
                 });
             } else {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.SetBotAuthProviderDisplayCard,
+                    LogToAppInsights: false,
                 });
                 return activity;
             }
         } catch {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.SetBotAuthProviderNotFound,
+                LogToAppInsights: false,
             });
             //this is to ensure listener continues waiting for response
             if (this.signInCardSeen.has(signInId)) {

@@ -27,7 +27,8 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXEmailTranscriptPaneStart
+            Event: TelemetryEvent.UXEmailTranscriptPaneStart,
+            LogToAppInsights: false
         });
     }, []);
 
@@ -61,14 +62,16 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
             NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressSaved, state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS ?? defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EmailTranscriptSent,
-                Description: "Transcript sent to email successfully."
+                Description: "Transcript sent to email successfully.",
+                LogToAppInsights: true
             });
         } catch (ex) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.EmailTranscriptFailed,
                 ExceptionDetails: {
                     exception: ex
-                }
+                },
+                LogToAppInsights: true
             });
             const message = formatTemplateString(state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR as string, [email]);
             NotificationHandler.notifyError(
@@ -82,7 +85,11 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         dir: state.domainStates.globalDir,
         onSend,
         onCancel: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptCancelButtonClicked, Description: "Email Transcript cancel button clicked." });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                Event: TelemetryEvent.EmailTranscriptCancelButtonClicked, 
+                Description: "Email Transcript cancel button clicked.", 
+                LogToAppInsights: true 
+            });
             closeEmailTranscriptPane();
         },
         checkInput: function (input: string) {
@@ -102,11 +109,15 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         elements = findParentFocusableElementsWithoutChildContainer(controlProps.id as string);
         setTabIndices(elements, initialTabIndexMap, false);
         setInitialEmail(state.appStates.preChatResponseEmail);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
+            Event: TelemetryEvent.EmailTranscriptLoaded, 
+            LogToAppInsights: false
+        });
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXEmailTranscriptPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: false
         });
 
     }, [initialEmail]);

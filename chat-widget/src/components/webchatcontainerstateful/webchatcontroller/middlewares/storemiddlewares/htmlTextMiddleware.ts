@@ -27,7 +27,8 @@ const convertTextToHtmlNode = (text: string): any => {
             ExceptionDetails: {
                 ErrorData: errorMessage,
                 Exception: e
-            }
+            },
+            LogToAppInsights: false
         });
     }
     return element;
@@ -77,7 +78,8 @@ const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTM
                 ExceptionDetails: {
                     ErrorData: errorMessage,
                     Exception: e
-                }
+                },
+                LogToAppInsights: false
             });
         }
     }
@@ -110,7 +112,8 @@ const htmlTextMiddleware = (honorsTargetInHTMLLinks?: boolean) => ({ dispatch }:
                 ExceptionDetails: {
                     ErrorData: errorMessage,
                     Exception: e
-                }
+                },
+                LogToAppInsights: false
             });
         }
     }

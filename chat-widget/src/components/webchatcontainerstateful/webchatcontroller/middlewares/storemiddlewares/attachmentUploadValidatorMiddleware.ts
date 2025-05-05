@@ -94,7 +94,8 @@ const buildErrorMessage = (fileName: string, supportedFileExtension: boolean, su
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
             Description: "Attachment validation failed",
-            ExceptionDetails: { ErrorDetails: "File provided is null" }
+            ExceptionDetails: { ErrorDetails: "File provided is null" },
+            LogToAppInsights: true
         });
         return localizedTexts.MIDDLEWARE_BANNER_FILE_NULL_ERROR ?? "";
     }
@@ -109,7 +110,8 @@ const buildErrorMessage = (fileName: string, supportedFileExtension: boolean, su
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
             Description: "Attachment validation failed",
-            ExceptionDetails: { ErrorDetails: "File provided is empty" }
+            ExceptionDetails: { ErrorDetails: "File provided is empty" },
+            LogToAppInsights: true
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_IS_EMPTY_ERROR || "";
         if (errorMessage?.includes("{2}")) errorMessage = errorMessage.replace("{2}", textEllipsis(fileName));
@@ -117,7 +119,8 @@ const buildErrorMessage = (fileName: string, supportedFileExtension: boolean, su
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
             Description: "Attachment validation failed",
-            ExceptionDetails: { ErrorDetails: `Unexpected error: supportedFileExtension=${supportedFileExtension} supportedFileSize=${supportedFileSize} fileIsEmpty=${!fileIsEmpty}` }
+            ExceptionDetails: { ErrorDetails: `Unexpected error: supportedFileExtension=${supportedFileExtension} supportedFileSize=${supportedFileSize} fileIsEmpty=${!fileIsEmpty}` },
+            LogToAppInsights: true
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_ERROR_MESSAGE ?? "";
     }
@@ -139,7 +142,8 @@ const getFileSizeAndFileExtensionErrorMessage = (fileName: string, maxUploadFile
     TelemetryHelper.logActionEvent(LogLevel.ERROR, {
         Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
         Description: "Attachment validation failed",
-        ExceptionDetails: { ErrorDetails: `${exceptionDetails} Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize} AMS file size limit=${AMSConstants.maxSupportedFileSize}` }
+        ExceptionDetails: { ErrorDetails: `${exceptionDetails} Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize} AMS file size limit=${AMSConstants.maxSupportedFileSize}` },
+        LogToAppInsights: true
     });
     if (errorMessage?.includes("{0}")) errorMessage = errorMessage.replace("{0}", maxUploadFileSize);
     return errorMessage ? (errorMessage.includes("{2}") ? errorMessage.replace("{2}", textEllipsis(fileName)) : errorMessage) : "";
@@ -152,7 +156,8 @@ const getFileExtensionErrorMessage = (fileName: string, localizedTexts: ILiveCha
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
             Description: "Attachment validation failed",
-            ExceptionDetails: { ErrorDetails: "File provided without file extension" }
+            ExceptionDetails: { ErrorDetails: "File provided without file extension" },
+            LogToAppInsights: true
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_WITHOUT_EXTENSION;
         return errorMessage ? (errorMessage.includes("{2}") ? errorMessage.replace("{2}", textEllipsis(fileName)) : errorMessage) : "";
@@ -161,7 +166,8 @@ const getFileExtensionErrorMessage = (fileName: string, localizedTexts: ILiveCha
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
             Description: "Attachment validation failed",
-            ExceptionDetails: { ErrorDetails: `${fileExtension} files extension is not supported.` }
+            ExceptionDetails: { ErrorDetails: `${fileExtension} files extension is not supported.` },
+            LogToAppInsights: true
         });
         errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_EXTENSION_ERROR;
         if(errorMessage?.includes("{0}")) errorMessage = errorMessage.replace("{0}", fileExtension); //keeping backwards compatibility for this localized string
@@ -174,7 +180,8 @@ const getFileSizeErrorMessage = (fileName: string, maxUploadFileSize: string, ma
     TelemetryHelper.logActionEvent(LogLevel.ERROR, {
         Event: TelemetryEvent.AttachmentUploadValidatorMiddlewareFailed,
         Description: "Attachment validation failed",
-        ExceptionDetails: { ErrorDetails: `File exceeds the allowed limit of ${maxUploadFileSize}MB. Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize} AMS file size limit=${AMSConstants.maxSupportedFileSize}` }
+        ExceptionDetails: { ErrorDetails: `File exceeds the allowed limit of ${maxUploadFileSize}MB. Dynamics file size limit=${maxFileSizeSupportedByDynamics} AMS image size limit=${AMSConstants.maxSupportedImageSize} AMS file size limit=${AMSConstants.maxSupportedFileSize}` },
+        LogToAppInsights: true
     });
     let errorMessage = localizedTexts.MIDDLEWARE_BANNER_FILE_SIZE_ERROR;
     if (errorMessage?.includes("{0}")) errorMessage = errorMessage.replace("{0}", maxUploadFileSize);

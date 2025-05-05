@@ -26,12 +26,14 @@ export const createInternetConnectionChangeHandler = async (state: ILiveChatWidg
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         if (!connected) {
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
-                Event: TelemetryEvent.NetworkDisconnected
+                Event: TelemetryEvent.NetworkDisconnected,
+                LogToAppInsights: true
             });
             NotificationHandler.notifyError(NotificationScenarios.InternetConnection, inMemoryState?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION as string);
         } else {
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
-                Event: TelemetryEvent.NetworkReconnected
+                Event: TelemetryEvent.NetworkReconnected,
+                LogToAppInsights: true
             });
             NotificationHandler.notifySuccess(NotificationScenarios.InternetConnection, inMemoryState?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_INTERNET_BACK_ONLINE as string);
             BroadcastService.postMessage({

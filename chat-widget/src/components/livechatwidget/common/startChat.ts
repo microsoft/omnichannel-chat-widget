@@ -105,7 +105,10 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
             return;
         } else {
 
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSurveyExpected });
+            TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
+                Event: TelemetryEvent.PrechatSurveyExpected,
+                LogToAppInsights: true
+            });
 
             dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
@@ -153,6 +156,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.WidgetLoadStarted,
             Description: "Widget loading started",
+            LogToAppInsights: true
         });
 
         // Auth token retrieval needs to happen during start chat to support pop-out chat
@@ -186,7 +190,8 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 Event: TelemetryEvent.StartChatMethodException,
                 ExceptionDetails: {
                     exception: `Failed to setup startChat: ${error}`
-                }
+                },
+                LogToAppInsights: true
             });
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.OnWidgetError,
@@ -296,7 +301,8 @@ const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined,
     if (customContextLocal) {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.SettingCustomContext,
-            Description: "Setting custom context for unauthenticated chat"
+            Description: "Setting custom context for unauthenticated chat",
+            LogToAppInsights: false,
         });
 
         optionalParams = Object.assign({}, optionalParams, {
@@ -363,7 +369,8 @@ const checkIfConversationStillValid = async (facadeChatSDK: FacadeChatSDK, dispa
             Event: TelemetryEvent.GetConversationDetailsException,
             ExceptionDetails: {
                 exception: `Conversation is not valid: ${error}`
-            }
+            },
+            LogToAppInsights: false,
         });
         return false;
     }

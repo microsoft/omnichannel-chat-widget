@@ -59,7 +59,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXWebchatContainerCompleted
+            Event: TelemetryEvent.UXWebchatContainerCompleted,
+            LogToAppInsights: false
         });
     }, []);
 
@@ -89,7 +90,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: webChatContainerProps?.renderingMiddlewareProps });
         dispatch({ type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.WebChatLoaded
+            Event: TelemetryEvent.WebChatLoaded,
+            LogToAppInsights: false
+
         });
 
         if (props.webChatContainerProps?.renderingMiddlewareProps?.disableThirdPartyCookiesAlert !== true && !contextDataStore) {
@@ -113,7 +116,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         if (!(window as any).BroadcastChannel) { // eslint-disable-line @typescript-eslint/no-explicit-any
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.SuppressBotMagicCodeFailed,
-                Description: "BroadcastChannel not supported by default on current browser"
+                Description: "BroadcastChannel not supported by default on current browser",
+                LogToAppInsights: false
             });
 
             return;
@@ -140,7 +144,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 magicCodeResponseBroadcastChannel.postMessage(response);
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.SuppressBotMagicCodeSucceeded
+                    Event: TelemetryEvent.SuppressBotMagicCodeSucceeded,
+                    LogToAppInsights: false
                 });
 
                 BotMagicCodeStore.botOAuthSignInId = "";
@@ -149,7 +154,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             } else {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.SuppressBotMagicCodeFailed,
-                    Description: "Signin does not match"
+                    Description: "Signin does not match",
+                    LogToAppInsights: false
                 });
             }
         };
@@ -160,7 +166,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXWebchatContainerCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: false
         });
     }, []);
 

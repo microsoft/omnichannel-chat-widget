@@ -99,7 +99,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLivechatwidgetStart
+            Event: TelemetryEvent.UXLivechatwidgetStart,
+            LogToAppInsights: true
         });
     }, []);
 
@@ -294,7 +295,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(BroadcastEvent.SetCustomContext).subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CustomContextReceived,
-                Description: "CustomContext received."
+                Description: "CustomContext received.",
+                LogToAppInsights: false
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
         });
@@ -303,14 +305,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
-                Description: "Start proactive chat event received."
+                Description: "Start proactive chat event received.",
+                LogToAppInsights: true
             });
             if (canStartProactiveChat.current === true) {
                 startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
             } else {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatAlreadyTriggered,
-                    Description: "Start proactive chat method called, when chat was already triggered."
+                    Description: "Start proactive chat method called, when chat was already triggered.",
+                    LogToAppInsights: true
                 });
             }
         });
@@ -342,7 +346,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
                         TelemetryHelper.logActionEvent(LogLevel.INFO, {
                             Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
-                            Description: "Chat disconnected due to timeout, left or removed."
+                            Description: "Chat disconnected due to timeout, left or removed.",
+                            LogToAppInsights: true
                         });
                     }
                     callInProgress.current = false;
@@ -362,7 +367,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const desc = "Chat disconnected due to timeout, user went offline or blocked the device (including closing laptop)";
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
-                    Description: desc
+                    Description: desc,
+                    LogToAppInsights: true
                 });
 
                 BroadcastService.postMessage({
@@ -399,7 +405,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomContextReceived,
-                    Description: "CustomContext received through startChat event."
+                    Description: "CustomContext received through startChat event.",
+                    LogToAppInsights: false
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }
@@ -447,7 +454,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
-                Description: "Received InitiateEndChat BroadcastEvent."
+                Description: "Received InitiateEndChat BroadcastEvent.",
+                LogToAppInsights: true
             });
 
             // This is to ensure to get latest state from cache in multitab
@@ -466,7 +474,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 const skipCloseChat = false;
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceived
+                    Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceived,
+                    LogToAppInsights: true
                 });
                 endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
             }
@@ -491,7 +500,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
+                    Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat.",
+                    LogToAppInsights: true
                 });
                 endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 endChatStateCleanUp(dispatch);
@@ -541,7 +551,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
                     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.ParticipantsRemovedEvent,
-                        Description: "Participants removed event received."
+                        Description: "Participants removed event received.",
+                        LogToAppInsights: true
                     });
                     return;
                 }
@@ -615,7 +626,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: PrepareEndChatDescriptionConstants.CustomerCloseChatOnFailureOrPostChat
+                Description: PrepareEndChatDescriptionConstants.CustomerCloseChatOnFailureOrPostChat,
+                LogToAppInsights: true
             });
             endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
             return;
@@ -625,7 +637,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state?.appStates?.conversationState === ConversationState.InActive) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
-                Description: PrepareEndChatDescriptionConstants.CustomerCloseInactiveChat
+                Description: PrepareEndChatDescriptionConstants.CustomerCloseInactiveChat,
+                LogToAppInsights: true
             });
             endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             return;
@@ -685,7 +698,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             } catch (e) {
                 TelemetryHelper.logWebChatEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.EndingAdapterAfterDisconnectionError,
-                    Description: WidgetLoadCustomErrorString.CloseAdapterAfterDisconnectionErrorString
+                    Description: WidgetLoadCustomErrorString.CloseAdapterAfterDisconnectionErrorString,
+                    LogToAppInsights: true
                 });
             }
         }
@@ -700,18 +714,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXLivechatwidgetCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: true
         });
     }, []);
 
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BrowserUnloadEventStarted,
-            Description: "Browser unload event received."
+            Description: "Browser unload event received.",
+            LogToAppInsights: true
         });
         TelemetryHelper.logSDKEvent(LogLevel.INFO, {
             Event: TelemetryEvent.PrepareEndChat,
-            Description: PrepareEndChatDescriptionConstants.BrowserUnload
+            Description: PrepareEndChatDescriptionConstants.BrowserUnload,
+            LogToAppInsights: true
         });
         endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, false);
         // Clean local storage

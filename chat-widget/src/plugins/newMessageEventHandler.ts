@@ -42,7 +42,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageSent,
-            Description: "New message sent"
+            Description: "New message sent",
+            LogToAppInsights: true
         });
     };
 
@@ -52,7 +53,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         payload.messageType = Constants.systemMessageTag;
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.SystemMessageReceived,
-            Description: "System message received"
+            Description: "System message received",
+            LogToAppInsights: true
         });
     };
 
@@ -70,7 +72,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.RehydrateMessageReceived,
                 Description: "History message received",
-                CustomProperties: payload
+                CustomProperties: payload,
+                LogToAppInsights: true
             });
         }
     };
@@ -115,7 +118,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageReceived,
             Description: "New message received",
-            CustomProperties: payload
+            CustomProperties: payload,
+            LogToAppInsights: true
         });
 
     };

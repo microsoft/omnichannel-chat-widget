@@ -72,7 +72,8 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         // Set app state to failing start chat if hideErrorUI is not turned on
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.ErrorUIPaneLoaded,
-            Description: "Error UI Pane Loaded"
+            Description: "Error UI Pane Loaded",
+            LogToAppInsights: true
         });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
     } else {
@@ -100,7 +101,8 @@ const logWidgetLoadFailed = (ex?: ChatSDKError) => {
     TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
         Event: TelemetryEvent.WidgetLoadFailed,
         ExceptionDetails: exDetails,
-        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
+        LogToAppInsights: true
     });
 };
 
@@ -113,7 +115,8 @@ export const logWidgetLoadComplete = (additionalMessage?: string) => {
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
         Event: TelemetryEvent.WidgetLoadComplete,
         Description: descriptionString,
-        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
+        LogToAppInsights: true
     });
 };
 
@@ -130,7 +133,8 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
         Event: TelemetryEvent.WidgetLoadComplete,
         Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
-        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
+        LogToAppInsights: true
     });
 };
 
@@ -138,10 +142,12 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
 const forceEndChat = (facadeChatSDK: FacadeChatSDK) => {
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
         Event: TelemetryEvent.PrepareEndChat,
-        Description: PrepareEndChatDescriptionConstants.WidgetLoadFailedAfterSessionInit
+        Description: PrepareEndChatDescriptionConstants.WidgetLoadFailedAfterSessionInit,
+        LogToAppInsights: true
     });
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.EndChatSDKCall
+        Event: TelemetryEvent.EndChatSDKCall,
+        LogToAppInsights: true
     });
     facadeChatSDK?.getChatSDK().endChat();
 };

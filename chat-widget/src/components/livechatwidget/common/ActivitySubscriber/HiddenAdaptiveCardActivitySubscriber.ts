@@ -40,7 +40,8 @@ export class HiddenAdaptiveCardActivitySubscriber implements IActivitySubscriber
                 if (allInvisible) {
                     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.HiddenAdaptiveCardMessageReceived,
-                        Description: "All elements in AdaptiveCard are invisible"
+                        Description: "All elements in AdaptiveCard are invisible",
+                        LogToAppInsights: true
                     });
                     return true;
                 }

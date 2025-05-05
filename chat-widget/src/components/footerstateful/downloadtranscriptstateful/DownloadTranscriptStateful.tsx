@@ -218,7 +218,8 @@ export const downloadTranscript = async (facadeChatSDK: FacadeChatSDK, downloadT
             Event: TelemetryEvent.DownloadTranscriptResponseNullOrUndefined,
             ExceptionDetails: {
                 exception: "Download transcript failed: response null or undefined."
-            }
+            },
+            LogToAppInsights: true
         });
         NotificationHandler.notifyError(
             NotificationScenarios.DownloadTranscriptError,

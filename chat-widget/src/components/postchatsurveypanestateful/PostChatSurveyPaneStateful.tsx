@@ -70,14 +70,16 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         if (!isValidSurveyUrl(controlProps.surveyURL)) {
             TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.PostChatSurveyUrlValidationFailed,
-                Description: `${controlProps.surveyURL} is not a valid Survey URL`
+                Description: `${controlProps.surveyURL} is not a valid Survey URL`,
+                LogToAppInsights: true
             });
 
             controlProps.surveyURL = "";
         } else {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PostChatSurveyUrlValidationCompleted,
-                Description: `${controlProps.surveyURL} is a valid Survey URL`
+                Description: `${controlProps.surveyURL} is a valid Survey URL`,
+                LogToAppInsights: false
             });
         }
     }
@@ -88,7 +90,10 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         if (firstElement && firstElement[0]) {
             firstElement[0].focus();
         }
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PostChatSurveyLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
+            Event: TelemetryEvent.PostChatSurveyLoaded,
+            LogToAppInsights: true
+        });
 
         //Customer Voice Telemetry Events
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,11 +102,20 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
 
             if (!data) return;
             if (data === CustomerVoiceEvents.ResponsePageLoaded) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceResponsePageLoaded });
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                    Event: TelemetryEvent.CustomerVoiceResponsePageLoaded,
+                    LogToAppInsights: true
+                });
             } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted });
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                    Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted,
+                    LogToAppInsights: true
+                });
             } else if (data === CustomerVoiceEvents.FormResponseError) {
-                TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.CustomerVoiceFormResponseError });
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, { 
+                    Event: TelemetryEvent.CustomerVoiceFormResponseError,
+                    LogToAppInsights: true
+                });
             }
         });
     }, []);

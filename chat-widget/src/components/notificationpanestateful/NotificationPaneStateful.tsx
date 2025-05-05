@@ -26,7 +26,8 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXNotificationPaneStart
+            Event: TelemetryEvent.UXNotificationPaneStart,
+            LogToAppInsights: false
         });
     }, []);
 
@@ -38,7 +39,11 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     const localConfirmationPaneState = useRef(state?.domainStates?.confirmationState);
 
     const onCloseChatClick = async () => {
-        TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.NotificationCloseChatButtonClicked, Description: "Notification Close Chat button clicked." });
+        TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+            Event: TelemetryEvent.NotificationCloseChatButtonClicked, 
+            Description: "Notification Close Chat button clicked.", 
+            LogToAppInsights: false
+        });
 
         if (localConfirmationPaneState.current !== ConfirmationState.Ok) {
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
@@ -57,7 +62,11 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     const {useDismissNotification} = hooks;
     const dismissNotification = useDismissNotification();
     const handleDismissNotification = useCallback(() => {
-        TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.NotificationDismissButtonClicked, Description: `${notificationScenarioType} Notification Dismiss button clicked.` });
+        TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+            Event: TelemetryEvent.NotificationDismissButtonClicked, 
+            Description: `${notificationScenarioType} Notification Dismiss button clicked.`, 
+            LogToAppInsights: false
+        });
         dismissNotification(notificationScenarioType ?? "");
     }, [notificationScenarioType]); 
 
@@ -163,7 +172,8 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXNotificationPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: false
         });
     }, []);
 
