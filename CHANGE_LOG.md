@@ -18,6 +18,9 @@ All notable changes to this project will be documented in this file.
 - Add domain restrictions on post-chat survey URLs
 - Fixed post chat survey invite link space issue
 
+### Added
+- Added application insights support 
+
 ## [1.7.7] - 2025-04-16
 
 ### Added
