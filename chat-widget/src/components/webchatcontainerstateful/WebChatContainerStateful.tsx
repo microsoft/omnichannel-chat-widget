@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
@@ -7,7 +8,6 @@ import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/util
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import { Components } from "botframework-webchat";
-import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
@@ -237,8 +237,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             color: ${webChatContainerProps?.renderingMiddlewareProps?.sentMessageAnchorStyles?.color ?? defaultSentMessageAnchorStyles?.color};
         }
 
+        // we had a nasty bug long time ago with crashing borders messing with the sendbox, so if customer adds this value, they need to deal with that
         .webchat__bubble:not(.webchat__bubble--from-user) .webchat__bubble__content {
-            border-radius: 0 !important; /* Override border-radius */
+            border-radius: ${webChatContainerProps?.webChatStyles?.bubbleBorderRadius?? 0 } !important; /* Override border-radius */
         }
 
         .webchat__stacked-layout_container>div {
