@@ -28,13 +28,10 @@ const handleChatDisconnect = (props: ILiveChatWidgetProps, state: ILiveChatWidge
         case false:
             // this means customr on purpose wants to hide the send box, so we should not override it
             if (props?.webChatContainerProps?.webChatStyles?.hideSendBox === true ) return;
+
             if (hideSendBoxOnConversationEnd !== false) {
                 // this should be enable only for those that dint disable the sandbox
-                if (props?.webChatContainerProps?.webChatStyles?.hideSendBox !== true){
                     setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: false }; });
-                } 
-
-                
             }
             break;
         default:
