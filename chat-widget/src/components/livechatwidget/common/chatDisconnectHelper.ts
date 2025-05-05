@@ -26,7 +26,7 @@ const handleChatDisconnect = (props: ILiveChatWidgetProps, state: ILiveChatWidge
             });
             break;
         case false:
-            // this means customr on purpose wants to hide the send box, so we should not override it
+            // this means customr on purpose wants to hide the send box,  we should not override it
             if (props?.webChatContainerProps?.webChatStyles?.hideSendBox === true ) return;
             if (hideSendBoxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: false }; });
