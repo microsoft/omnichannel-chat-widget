@@ -81,15 +81,14 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         onMinimizeClick: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderMinimizeButtonClicked, Description: "Header Minimize button clicked." });
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
         },
         ...outOfOfficeHeaderProps?.controlProps,
         hideCloseButton: state.appStates.conversationState === ConversationState.OutOfOffice || outOfOfficeHeaderProps?.controlProps?.hideCloseButton
     };
 
     useEffect(() => {
-        if (state.appStates.outsideOperatingHours) {
-            setOutOfOperatingHours(true);
-        }
+        setOutOfOperatingHours(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toString().toLowerCase() === "true");
     }, []);
 
     useEffect(() => {
