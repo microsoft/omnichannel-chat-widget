@@ -12,7 +12,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     const logger = (): ApplicationInsights | null => {
         if (!appInsights && appInsightsKey) {
             try {
-      
+
                 const config = {
                     ...appInsightsKey.includes("IngestionEndpoint") ? { connectionString: appInsightsKey } : { instrumentationKey: appInsightsKey },
                     disableCookiesUsage: disableCookiesUsage,
@@ -45,17 +45,22 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                         }
                     });
                 }
-                
-                if (telemetryInput.payload.LogToAppInsights === true) {
+                const _logger = logger();
+                if(!_logger) {
+                    console.log("Unable to initialize Application Insights logger");
+                    return;
+                }
+                if (telemetryInput.payload.LogToAppInsights === true && eventName?.trim()) {
+                    let trackingEventName: string;
                     if (logLevel === LogLevel.ERROR) {
-                        logger() ? logger()?.trackEvent({ name: ScenarioMarker.failScenario(eventName ?? ""), properties: eventProperties }) : console.log("Unable to initialize Application Insights logger");
+                        trackingEventName = ScenarioMarker.failScenario(eventName);
+                    } else if (eventName?.toLowerCase().includes("complete")) {
+                        trackingEventName = ScenarioMarker.completeScenario(eventName);
                     } else {
-                        if (eventName?.toLowerCase().includes("complete")) {
-                            logger() ? logger()?.trackEvent({ name: ScenarioMarker.completeScenario(eventName ?? ""), properties: eventProperties }) : console.log("Unable to initialize Application Insights logger");
-                        } else {
-                            logger() ? logger()?.trackEvent({ name: ScenarioMarker.startScenario(eventName ?? ""), properties: eventProperties }) : console.log("Unable to initialize Application Insights logger");
-                        }
+                        trackingEventName = ScenarioMarker.startScenario(eventName);
                     }
+
+                    _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
                 }
             } catch (error) {
                 console.error("Error in logging telemetry to Application Insights:", error);
