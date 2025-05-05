@@ -8,6 +8,21 @@ import { StartChatFailureType } from "./StartChatFailureType";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
+const outOfOfficeStateStrategy = (initialStateFromCache: ILiveChatWidgetContext, props: ILiveChatWidgetProps) => {
+    // Out of office hours may change from second to another, so we need to alway evaluate it from the props config
+    if (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours) {
+        const liveChatConfig = initialStateFromCache.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin;
+        if (liveChatConfig) {
+            liveChatConfig.OutOfOperatingHours =
+                initialStateFromCache.appStates.outsideOperatingHours = liveChatConfig.OutOfOperatingHours;
+
+            // this is needed to prevent the case of some errors preventing the ooo pane to show.
+            if (liveChatConfig.OutOfOperatingHours === true) {
+                initialStateFromCache.appStates.conversationState = ConversationState.OutOfOffice;
+            }
+        }
+    }
+};
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
     const widgetCacheId = getWidgetCacheIdfromProps(props);
@@ -27,6 +42,12 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat) {
             initialStateFromCache.appStates.conversationState = ConversationState.Closed;
         }
+
+        // we are always setting the chatConfig from the props to avoid any issues with the cache
+        initialStateFromCache.domainStates.liveChatConfig = props.chatConfig;
+
+        // Out of office hours may change from second to another, so we need to alway evaluate it from the props config
+        outOfOfficeStateStrategy(initialStateFromCache, props);
         return initialStateFromCache;
     }
 
@@ -52,12 +73,13 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             startChatFailureType: StartChatFailureType.Generic
         },
         appStates: {
-            conversationState: ConversationState.Closed,
+            conversationState: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toString().toLowerCase() === "true")
+                ? ConversationState.OutOfOffice
+                : ConversationState.Closed,
             isMinimized: undefined,
             previousElementIdOnFocusBeforeModalOpen: null,
             startChatFailed: false,
-            outsideOperatingHours: false,
-            preChatResponseEmail: "",
+            outsideOperatingHours: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toString().toLowerCase() === "true"),            preChatResponseEmail: "",
             isAudioMuted: null,
             newMessage: false,
             hideStartChatButton: false,
