@@ -22,6 +22,7 @@ export interface TelemetryEventWrapper {
     Data?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     CustomProperties?: any;
+    LogToAppInsights?: boolean;
 }
 
 export class TelemetryHelper {
@@ -259,7 +260,8 @@ export class TelemetryHelper {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
             payload: {
-                ...payload
+                ...payload,
+                LogToAppInsights: payload.LogToAppInsights ?? false
             } as LoadTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
@@ -270,7 +272,8 @@ export class TelemetryHelper {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
             payload: {
-                ...payload
+                ...payload,
+                LogToAppInsights: payload.LogToAppInsights ?? false
             } as UITelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
@@ -282,7 +285,8 @@ export class TelemetryHelper {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
             payload: {
-                ...payload
+                ...payload,
+                LogToAppInsights: payload.LogToAppInsights ?? false
             } as ActionTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
@@ -296,6 +300,7 @@ export class TelemetryHelper {
                 ...payload,
                 TransactionId: newGuid(),
                 RequestId: TelemetryManager.InternalTelemetryData?.currentRequestId,
+                LogToAppInsights: payload.LogToAppInsights ?? false
             } as OCChatSDKTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
@@ -306,7 +311,8 @@ export class TelemetryHelper {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
             payload: {
-                ...payload
+                ...payload,
+                LogToAppInsights: payload.LogToAppInsights ?? false
             } as ConfigValidationTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
@@ -319,7 +325,8 @@ export class TelemetryHelper {
             payload: {
                 ...payload,
                 type: TelemetryEvent.WebChatEvent,
-                scenarioType: ScenarioType.WEBCHAT
+                scenarioType: ScenarioType.WEBCHAT,
+                LogToAppInsights: payload.LogToAppInsights ?? false
             } as WebChatTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
@@ -330,7 +337,8 @@ export class TelemetryHelper {
             eventName: payload?.Event ?? TelemetryEvent.FacadeChatSDKEvent,
             logLevel: logLevel,
             payload: {
-                ...payload
+                ...payload,
+                LogToAppInsights: payload.LogToAppInsights ?? false
             } as FacadeChatSDKTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);

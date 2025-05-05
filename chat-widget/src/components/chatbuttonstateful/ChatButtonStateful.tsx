@@ -24,7 +24,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLCWChatButtonStart
+            Event: TelemetryEvent.UXLCWChatButtonStart,
+            LogToAppInsights: true
         });
     }, []);
     
@@ -38,7 +39,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
     ref.current = async () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.LCWChatButtonClicked
+            Event: TelemetryEvent.LCWChatButtonClicked,
+            LogToAppInsights: true
         });
         
         if (state.appStates.isMinimized) {
@@ -73,7 +75,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         subtitleText: "No agents available",
         onClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.LCWChatButtonClicked
+                Event: TelemetryEvent.LCWChatButtonClicked,
+                LogToAppInsights: true
             });
 
             state.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
@@ -90,7 +93,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonShow,
-            ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
+            LogToAppInsights: true
         });
 
         if (state.uiStates.focusChatButton) {
@@ -101,7 +105,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXLCWChatButtonCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: true
         });
 
     }, []);

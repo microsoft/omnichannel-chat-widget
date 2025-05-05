@@ -21,7 +21,8 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXConfirmationPaneStart
+            Event: TelemetryEvent.UXConfirmationPaneStart,
+            LogToAppInsights: false
         });
     }, []);
 
@@ -36,20 +37,23 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
         onConfirm: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConfirmationConfirmButtonClicked,
-                Description: "Confirmation pane Confirm button clicked"
+                Description: "Confirmation pane Confirm button clicked",
+                LogToAppInsights: true
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
             setTabIndices(elements, initialTabIndexMap, true);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedByCustomer,
-                Description: "Conversation is ended by customer."
+                Description: "Conversation is ended by customer.",
+                LogToAppInsights: true
             });
         },
         onCancel: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConfirmationCancelButtonClicked,
-                Description: "Confirmation pane Cancel button clicked."
+                Description: "Confirmation pane Cancel button clicked.",
+                LogToAppInsights: true
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Cancel });
@@ -77,10 +81,14 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
 
         elements = findParentFocusableElementsWithoutChildContainer(controlProps.id as string);
         setTabIndices(elements, initialTabIndexMap, false);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ConfirmationPaneLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
+            Event: TelemetryEvent.ConfirmationPaneLoaded,
+            LogToAppInsights: false
+        });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXConfirmationPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: false
         });
 
     }, []);

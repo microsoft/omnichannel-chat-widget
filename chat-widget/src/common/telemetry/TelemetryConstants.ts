@@ -105,7 +105,7 @@ export enum TelemetryEvent {
     EndChatSucceeded = "EndChatSucceeded",
     EndChatFailed = "EndChatFailed",
     SettingCustomContext = "SettingCustomContext",
-    WebChatLoaded = "WebChatLoaded",
+    WebChatLoaded = "WebChatLoadingCompleted",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
 
@@ -136,7 +136,7 @@ export enum TelemetryEvent {
     ConfirmationConfirmButtonClicked = "ConfirmationConfirmButtonClicked",
     LoadingPaneLoaded = "LoadingPaneLoaded",
     LoadingPaneUnloaded = "LoadingPaneUnloaded",
-    StartChatErrorPaneLoaded = "StartChatErrorPaneLoaded",
+    StartChatErrorPaneLoaded = "StartChatErrorPaneLoadingCompleted",
     EmailTranscriptLoaded = "EmailTranscriptLoaded",
     OutOfOfficePaneLoaded = "OutOfOfficePaneLoaded",
     ConfirmationPaneLoaded = "ConfirmationPaneLoaded",
@@ -224,7 +224,7 @@ export enum TelemetryEvent {
     PostChatContextCallSucceed = "PostChatContextCallSucceed",
     PostChatContextCallFailed = "PostChatContextCallFailed",
     PostChatSurveyLoadingPaneLoaded = "PostChatSurveyLoadingPaneLoaded",
-    PostChatSurveyLoaded = "PostChatSurveyLoaded",
+    PostChatSurveyLoaded = "PostChatSurveyLoadingCompleted",
     PostChatSurveyUrlValidationCompleted = "PostChatSurveyUrlValidationCompleted",
     PostChatSurveyUrlValidationFailed = "PostChatSurveyUrlValidationFailed",
 
