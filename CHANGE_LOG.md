@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
-- Added addtional span around time part of bubble timestamp
+- Added additional span around time part of bubble timestamp
 - Removing condition preventing to close the widget during pop-out + hide header condition
 - Added conversation Id to signin card event
 - Fixed issues found in transcript download after bridge removal
