@@ -81,7 +81,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             isMinimized: undefined,
             previousElementIdOnFocusBeforeModalOpen: null,
             startChatFailed: false,
-            outsideOperatingHours: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toString().toLowerCase() === "true"),
+            outsideOperatingHours: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours != null &&
+                props.chatConfig.LiveWSAndLiveChatEngJoin.OutOfOperatingHours.toString().toLowerCase() === "true"),
             preChatResponseEmail: "",
             isAudioMuted: null,
             newMessage: false,
