@@ -76,13 +76,11 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             startChatFailureType: StartChatFailureType.Generic
         },
         appStates: {
-            conversationState: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toString().toLowerCase() === "true")
-                ? ConversationState.OutOfOffice
-                : ConversationState.Closed,
+            conversationState: ConversationState.Closed,
             isMinimized: undefined,
             previousElementIdOnFocusBeforeModalOpen: null,
             startChatFailed: false,
-            outsideOperatingHours: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toString().toLowerCase() === "true"),
+            outsideOperatingHours: false,
             preChatResponseEmail: "",
             isAudioMuted: null,
             newMessage: false,
