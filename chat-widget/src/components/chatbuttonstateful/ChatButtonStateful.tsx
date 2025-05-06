@@ -33,7 +33,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     const { buttonProps, outOfOfficeButtonProps, startChat } = props;
     //Setting OutOfOperatingHours Flag
     //Setting OutOfOperatingHours Flag - to string conversion to normalize the value (could be boolean from other states or string directly from config)
-    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true");
+    console.log("LOPEZ :: ChatButtonStateful :: 1", state.appStates.outsideOperatingHours );
+    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.appStates.outsideOperatingHours);
     
     const ref = useRef(() => {return;});
 
@@ -85,8 +86,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     };
 
     useEffect(() => {
-        
-        setOutOfOperatingHours(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true");
+        console.log("LOPEZ :: ChatButtonStateful useEffect", state.appStates.outsideOperatingHours);
+        setOutOfOperatingHours(state.appStates.outsideOperatingHours);
         
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonShow,

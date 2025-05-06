@@ -10,21 +10,9 @@ import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontain
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
-    const outOfOfficeStateStrategy = (initialStateFromCache: ILiveChatWidgetContext, props: ILiveChatWidgetProps) => {
-        // Out of office hours may change from second to another, so we need to alway evaluate it from the props config
-        if (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours) {
-            const liveChatConfig = initialStateFromCache.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin;
-            if (liveChatConfig) {
-                liveChatConfig.OutOfOperatingHours = initialStateFromCache.appStates.outsideOperatingHours;
-
-                initialStateFromCache.appStates.outsideOperatingHours = liveChatConfig?.OutOfOperatingHours.toString().toLowerCase() === "true";
-
-                // this is needed to prevent the case of some errors preventing the ooo pane to show.
-                if (initialStateFromCache.appStates.outsideOperatingHours === true) {
-                    initialStateFromCache.appStates.conversationState = ConversationState.OutOfOffice;
-                }
-            }
-        }
+    const isOutsideOperatingHours = (): boolean => {
+        console.log("LOPEZ :: isOutsideOperatingHours", props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours);
+        return props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";
     };
 
     const widgetCacheId = getWidgetCacheIdfromProps(props);
@@ -49,8 +37,9 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         initialStateFromCache.domainStates.liveChatConfig = props.chatConfig;
 
         // Out of office hours may change from second to another, so we need to alway evaluate it from the props config
-        outOfOfficeStateStrategy(initialStateFromCache, props);
+        initialStateFromCache.appStates.outsideOperatingHours = isOutsideOperatingHours();
 
+        console.log("LOPEZ :: getLiveChatWidgetContextInitialState - initialStateFromCache", initialStateFromCache.appStates.outsideOperatingHours);
 
         return initialStateFromCache;
     }
@@ -77,14 +66,13 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             startChatFailureType: StartChatFailureType.Generic
         },
         appStates: {
-            conversationState: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours != null &&
-                props.chatConfig.LiveWSAndLiveChatEngJoin.OutOfOperatingHours.toString().toLowerCase() === "true")?ConversationState.OutOfOffice: 
+            conversationState: isOutsideOperatingHours() ? 
+                ConversationState.OutOfOffice: 
                 ConversationState.Closed,
             isMinimized: undefined,
             previousElementIdOnFocusBeforeModalOpen: null,
             startChatFailed: false,
-            outsideOperatingHours: (props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours != null &&
-                props.chatConfig.LiveWSAndLiveChatEngJoin.OutOfOperatingHours.toString().toLowerCase() === "true"),
+            outsideOperatingHours: isOutsideOperatingHours(),
             preChatResponseEmail: "",
             isAudioMuted: null,
             newMessage: false,

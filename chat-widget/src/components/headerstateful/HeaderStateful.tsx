@@ -34,7 +34,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
     const { headerProps, outOfOfficeHeaderProps, endChat } = props;
     //Setting OutOfOperatingHours Flag
-    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true");
+    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.appStates.outsideOperatingHours);
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
 
@@ -87,10 +87,9 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     };
 
     useEffect(() => {
-        const isOutOfOperatingHours = state?.appStates?.outsideOperatingHours
-        ? state.appStates.outsideOperatingHours.toString().toLowerCase() === "true"
-        : false;
-        setOutOfOperatingHours(isOutOfOperatingHours);
+        console.log("LOPEZ :: HeaderStateful :: 1", state.appStates.outsideOperatingHours);
+        
+        setOutOfOperatingHours(state.appStates.outsideOperatingHours);
     }, []);
 
     useEffect(() => {
@@ -133,6 +132,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         );
     }
 
+    console.log("LOPEZ :: HeaderStateful :: 2", outOfOperatingHours);
     return (
         <Header
             componentOverrides={headerProps?.componentOverrides}
