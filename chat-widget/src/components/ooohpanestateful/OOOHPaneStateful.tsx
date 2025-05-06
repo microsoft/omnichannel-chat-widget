@@ -44,7 +44,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
     useEffect(() => {
         console.log("LOPEZ :: OutOfOfficeHoursPaneStateful :: 1", state.domainStates.widgetElementId);
 
-        if (!state.domainStates.widgetElementId !== null && state.domainStates.widgetElementId !== undefined && state.domainStates.widgetElementId.trim() !== "") {
+        if (state.domainStates.widgetElementId !== null && state.domainStates.widgetElementId !== undefined && state.domainStates.widgetElementId.trim() !== "") {
             const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${state.domainStates.widgetElementId}`);
             if (firstElement && firstElement[0]) {
                 firstElement[0].focus();
