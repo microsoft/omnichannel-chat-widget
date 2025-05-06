@@ -2,6 +2,7 @@ import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConsta
 import React, { Dispatch, useEffect } from "react";
 import { createTimer, findAllFocusableElement } from "../../common/utils";
 
+import DOMPurify from "dompurify";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IOOOHPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneControlProps";
@@ -13,7 +14,6 @@ import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
-import DOMPurify from "dompurify";
 
 let uiTimer : ITimer;
 export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
@@ -42,10 +42,15 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
 
     // Move focus to the first button
     useEffect(() => {
-        const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${state.domainStates.widgetElementId}`);
-        if (firstElement && firstElement[0]) {
-            firstElement[0].focus();
+        console.log("LOPEZ :: OutOfOfficeHoursPaneStateful :: 1", state.domainStates.widgetElementId);
+
+        if (!state.domainStates.widgetElementId !== null && state.domainStates.widgetElementId !== undefined && state.domainStates.widgetElementId.trim() !== "") {
+            const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${state.domainStates.widgetElementId}`);
+            if (firstElement && firstElement[0]) {
+                firstElement[0].focus();
+            }
         }
+        
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.OutOfOfficePaneLoaded });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXOOHPaneCompleted,
