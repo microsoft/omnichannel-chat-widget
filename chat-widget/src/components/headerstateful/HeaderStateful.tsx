@@ -87,9 +87,10 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     };
 
     useEffect(() => {
-        if (state.appStates.outsideOperatingHours) {
-            setOutOfOperatingHours(true);
-        }
+        const isOutOfOperatingHours = state?.appStates?.outsideOperatingHours
+        ? state.appStates.outsideOperatingHours.toString().toLowerCase() === "true"
+        : false;
+        setOutOfOperatingHours(isOutOfOperatingHours);
     }, []);
 
     useEffect(() => {
