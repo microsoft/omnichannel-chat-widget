@@ -1,9 +1,8 @@
 import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
-import { LogLevel, TelemetryInput } from "../TelemetryConstants";
+import { LogLevel, TelemetryEvent, TelemetryInput } from "../TelemetryConstants";
 import ScenarioMarker from "../ScenarioMarker";
-
-
+import { TelemetryHelper } from "../TelemetryHelper";
 
 export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: boolean): IChatSDKLogger => {
 
@@ -21,8 +20,17 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                 // Initialize Application Insights 
                 appInsights = new ApplicationInsights({ config });
                 appInsights.loadAppInsights();
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.AppInsightsInitialized,
+                    Description: "Application Insights initialized successfully."
+                });
             } catch (error) {
                 console.error("Error initializing Application Insights: ", error);
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.AppInsightsInitFailed,
+                    Description: "Error initializing Application Insights",
+                    ExceptionDetails: error
+                });
                 return null;
             }
         }

@@ -270,7 +270,10 @@ export enum TelemetryEvent {
     UXConfirmationPaneStart = "UXConfirmationPaneStart",
     UXConfirmationPaneCompleted = "UXConfirmationPaneCompleted",
     UXLivechatwidgetStart = "UXLivechatwidgetStart",
-    UXLivechatwidgetCompleted = "UXLivechatwidgetCompleted"
+    UXLivechatwidgetCompleted = "UXLivechatwidgetCompleted",
+
+    AppInsightsInitialized = "AppInsightsInitialized",
+    AppInsightsInitFailed = "AppInsightsInitFailed",
 
 }
 
