@@ -32,12 +32,10 @@ export const createTrackingForFirstMessage = () => {
     }
     );
 
-
-
+    
     const newMessageListener = BroadcastService.getMessageByEventName("NewMessageReceived").subscribe((message) => {
         const payload = message.payload as MessagePayload;
 
-        console.log("NewMessageReceived", payload);
         // we only care for bot, so we need to check if the message is from the bot
         // pending to add typing message indicator signal detection
         if (isMessageFromValidSender(payload)) {
