@@ -32,8 +32,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { buttonProps, outOfOfficeButtonProps, startChat } = props;
     //Setting OutOfOperatingHours Flag
-    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
-    
+    //Setting OutOfOperatingHours Flag - to string conversion to normalize the value (could be boolean from other states or string directly from config)
+    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.appStates.outsideOperatingHours);
     const ref = useRef(() => {return;});
 
     ref.current = async () => {
@@ -84,10 +84,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     };
 
     useEffect(() => {
+        setOutOfOperatingHours(state.appStates.outsideOperatingHours);
         
-        if (state.appStates.outsideOperatingHours) {
-            setOutOfOperatingHours(true);
-        }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonShow,
             ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed
