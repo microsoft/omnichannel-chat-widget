@@ -277,7 +277,7 @@ const customSubtitle = encodeComponentString(
 );
 
 const customSpinner = (
-    <img src={LoadingSpinnerBase64} />
+    <img src={LoadingSpinnerBase64} alt="Loading spinner" />
 );
 
 const customSpinnerText = (
