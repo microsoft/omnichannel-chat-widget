@@ -2,6 +2,7 @@ import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants
 import { MessagePayload, TrackingMessage } from "./Constants";
 
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
 export class FirstResponseLatencyTracker {
 
@@ -143,6 +144,15 @@ export class FirstResponseLatencyTracker {
             this.isEnded = false;
         }
     }
+    
+    private offlineNetworkListener = BroadcastService.getMessageByEventName("NetworkDisconnected").subscribe(() => {
+        this.deregister();
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.MessageStopLapTrackError,
+            Description: "Tracker Stopped due to network disconnection",
+        });
+    }
+    );
 
     private deregister(): void {
         // Reset State
@@ -151,5 +161,6 @@ export class FirstResponseLatencyTracker {
         this.isEnded = false;
         this.startTrackingMessage = undefined;
         this.stopTrackingMessage = undefined;
+        this.offlineNetworkListener.unsubscribe();
     }
 }

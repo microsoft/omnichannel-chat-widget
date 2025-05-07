@@ -72,11 +72,25 @@ export const createTrackingForFirstMessage = () => {
     }
     );
 
+    const offlineNetworkListener = BroadcastService.getMessageByEventName("NetworkDisconnected").subscribe(() => {
+        startTracking = false;
+        stopTracking = false;
+        disconnectListener();
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.BotFirstMessageLapTrackError,
+            Description: "Tracker Stopped due to network disconnection",
+        });
+    }
+    );
+
+    // this is to ensure that we are not tracking messages that are not part of the current conversation
+
     const disconnectListener = () => {
         historyListener.unsubscribe();
         rehydrateListener.unsubscribe();
         newMessageListener.unsubscribe();
         widgetLoadListener.unsubscribe();
+        offlineNetworkListener.unsubscribe();
     };
 
 };
