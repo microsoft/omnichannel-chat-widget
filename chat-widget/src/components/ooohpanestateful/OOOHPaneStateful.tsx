@@ -42,8 +42,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
 
     // Move focus to the first button
     useEffect(() => {
-        console.log("LOPEZ :: OutOfOfficeHoursPaneStateful :: 1", state.domainStates.widgetElementId);
-
+        
         if (state.domainStates.widgetElementId !== null && state.domainStates.widgetElementId !== undefined && state.domainStates.widgetElementId.trim() !== "") {
             const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${state.domainStates.widgetElementId}`);
             if (firstElement && firstElement[0]) {

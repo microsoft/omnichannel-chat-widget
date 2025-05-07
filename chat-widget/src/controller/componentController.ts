@@ -55,7 +55,6 @@ export const shouldShowPostChatLoadingPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowOutOfOfficeHoursPane = (state: ILiveChatWidgetContext) => {
-    console.log("LOPEZ :: shouldShowOutOfOfficeHoursPane", state.appStates.isMinimized, state.appStates.conversationState);
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState === ConversationState.OutOfOffice);
 };

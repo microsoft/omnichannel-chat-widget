@@ -86,9 +86,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         hideCloseButton: state.appStates.conversationState === ConversationState.OutOfOffice || outOfOfficeHeaderProps?.controlProps?.hideCloseButton
     };
 
-    useEffect(() => {
-        console.log("LOPEZ :: HeaderStateful :: 1", state.appStates.outsideOperatingHours);
-        
+    useEffect(() => {        
         setOutOfOperatingHours(state.appStates.outsideOperatingHours);
     }, []);
 
@@ -132,7 +130,6 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         );
     }
 
-    console.log("LOPEZ :: HeaderStateful :: 2", outOfOperatingHours);
     return (
         <Header
             componentOverrides={headerProps?.componentOverrides}

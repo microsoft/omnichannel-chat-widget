@@ -11,7 +11,6 @@ import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontain
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
     const isOutsideOperatingHours = (): boolean => {
-        console.log("LOPEZ :: isOutsideOperatingHours", props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours);
         return props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";
     };
 
@@ -41,8 +40,6 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         initialStateFromCache.appStates.conversationState = isOutsideOperatingHours() ?
             ConversationState.OutOfOffice :
             initialStateFromCache.appStates.conversationState;
-
-        console.log("LOPEZ :: getLiveChatWidgetContextInitialState - initialStateFromCache", initialStateFromCache.appStates.outsideOperatingHours);
 
         return initialStateFromCache;
     }
