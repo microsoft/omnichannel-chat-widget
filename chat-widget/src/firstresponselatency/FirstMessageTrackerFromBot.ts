@@ -1,9 +1,9 @@
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { MessagePayload, TrackingMessage } from "./Constants";
-import { createTrackingMessage } from "./util";
-import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
+import { MessagePayload, TrackingMessage } from "./Constants";
 
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
+import { createTrackingMessage } from "./util";
 
 // This tracker is event based, this is since we are tracking events coming from different sources
 //  with different timeline, therefore this is a functional approach to track the events, instead of a class based approach
@@ -16,6 +16,14 @@ export const createTrackingForFirstMessage = () => {
     let stopTime = 0;
     let stopTrackingMessage: TrackingMessage;
 
+    const isMessageFromValidSender = (payload: MessagePayload): boolean => {
+        // agent scenario
+        if (payload?.tags?.includes("public")) {
+            return false;
+        }
+        return true;
+    };
+
     const widgetLoadListener = BroadcastService.getMessageByEventName("WidgetLoadComplete").subscribe(() => {
     
         if (startTracking) return;
@@ -24,12 +32,15 @@ export const createTrackingForFirstMessage = () => {
     }
     );
 
+
+
     const newMessageListener = BroadcastService.getMessageByEventName("NewMessageReceived").subscribe((message) => {
         const payload = message.payload as MessagePayload;
 
+        console.log("NewMessageReceived", payload);
         // we only care for bot, so we need to check if the message is from the bot
         // pending to add typing message indicator signal detection
-        if (payload.role === "bot") {
+        if (isMessageFromValidSender(payload)) {
             if (startTracking && !stopTracking) {
                 stopTime = new Date().getTime();
                 const elapsedTime = stopTime - startTime;
