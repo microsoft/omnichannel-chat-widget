@@ -38,6 +38,9 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
 
         // Out of office hours may change from second to another, so we need to alway evaluate it from the props config
         initialStateFromCache.appStates.outsideOperatingHours = isOutsideOperatingHours();
+        initialStateFromCache.appStates.conversationState = isOutsideOperatingHours() ?
+            ConversationState.OutOfOffice :
+            initialStateFromCache.appStates.conversationState;
 
         console.log("LOPEZ :: getLiveChatWidgetContextInitialState - initialStateFromCache", initialStateFromCache.appStates.outsideOperatingHours);
 
