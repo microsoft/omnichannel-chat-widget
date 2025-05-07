@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+
+- Fix to load OOH from config always
+- Enhancements to OOH scenarios
 - Added additional span around time part of bubble timestamp
 - Removing condition preventing to close the widget during pop-out + hide header condition
 - Added conversation Id to signin card event
