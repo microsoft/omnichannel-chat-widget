@@ -1,0 +1,6773 @@
+{
+  "version": "4",
+  "stories": {
+    "stateful-components-live-chat-widget--live-chat-widget-fixed-size": {
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "5_f_414qOBbs",
+          "title": "init"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "8EV7u6Umgr39",
+          "title": "confirm close chat"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 200
+              }
+            }
+          ],
+          "id": "H1ZJxEqRBZvy",
+          "title": "click chat button"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-footer-email-transcript-button"
+              }
+            }
+          ],
+          "id": "9pSXN_A3t6ov",
+          "title": "click email transcript"
+        },
+        {
+          "actions": [
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": "s"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+              }
+            }
+          ],
+          "id": "xYEVDXWlweA8",
+          "title": "send invalid email"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 200
+              }
+            }
+          ],
+          "id": "KREewqfeQDam",
+          "title": "click chat button"
+        },
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 2000
+              }
+            }
+          ],
+          "id": "SnzCrgzICoU8",
+          "title": "wait for loading"
+        },
+        {
+          "actions": [
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": "s"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": ".webchat__send-button"
+              }
+            }
+          ],
+          "id": "oQp-CmBM-CAE",
+          "title": "Send Message"
+        },
+        {
+          "actions": [
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": ":"
+              }
+            },
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": "r"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": ".webchat__send-button"
+              }
+            }
+          ],
+          "id": "rW-hxL3XJl6v",
+          "title": "Receive Message"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-confirmation-pane-cancelbutton"
+              }
+            }
+          ],
+          "id": "yWMNja656eGb",
+          "title": "cancel close chat"
+        },
+        {
+          "actions": [
+            {
+              "name": "keyboard.type",
+              "args": {
+                "text": "*strong* _italic_ _*italic&strong*_ *_strong&italic_* ~strikethrough~ ~*strikethrough&strong*~ ~_*strikethrough&strong&italic*_~ https://abc.com [abc](https://abc.com)"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": ".webchat__send-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 500
+              }
+            }
+          ],
+          "id": "8LC8YS6pFfhr",
+          "title": "Send Markdown Message"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "jU8T_bpar3RW",
+          "title": "click close button"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+              }
+            }
+          ],
+          "id": "ck6M4AVhWqB4",
+          "title": "Click minimize button"
+        },
+        {
+          "actions": [
+            {
+              "name": "dragDropSelector",
+              "args": {
+                "selector": "#oc-lcw-header",
+                "to": {
+                  "x": 500
+                }
+              }
+            }
+          ],
+          "id": "XTm_IQOBluoN",
+          "title": "Drag chat widget right"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "cD6cyOyStrwi",
+          "index": 0,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "bwcaMZpcvaTF",
+          "index": 1,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "3t6_0lpRnsnc",
+          "index": 2,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "OyTfA2_hIN9f",
+          "index": 6,
+          "title": "Chat Container"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "M2-mGwV0coaW",
+          "index": 7,
+          "title": "Chat Container"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "-qhdEx6LV_9F",
+          "index": 8,
+          "title": "Chat Container"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "iFV7CZrWOhwP",
+          "index": 9,
+          "title": "Send Message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "UgcUtpJaxcKY",
+          "index": 10,
+          "title": "Send Message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "7mOv1A3gXq7C",
+          "index": 11,
+          "title": "Send Message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "KAPlIcAImvM1",
+          "index": 12,
+          "title": "Receive Message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "bWg0rWPMT0uF",
+          "index": 13,
+          "title": "Receive Message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "bLR9XHHj0DcR",
+          "index": 14,
+          "title": "Receive Message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 10000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "gqYqqd8NSDEL",
+          "index": 15,
+          "title": "click close button"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "RzuDhPIkeUfa",
+          "index": 16,
+          "title": "click close button"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "bUB4jAiB2t8F",
+          "index": 17,
+          "title": "click close button"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-cancelbutton"
+                  }
+                }
+              ],
+              "title": "cancel close chat"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "xBu3fvfgmp1y",
+          "index": 18,
+          "title": "cancel close chat"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-cancelbutton"
+                  }
+                }
+              ],
+              "title": "cancel close chat"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "0ZGDesyalqS7",
+          "index": 19,
+          "title": "cancel close chat"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1500
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-cancelbutton"
+                  }
+                }
+              ],
+              "title": "cancel close chat"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "CGhytA9rPU9w",
+          "index": 20,
+          "title": "cancel close chat"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "confirm close chat"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "fp5-rw47Mk3n",
+          "index": 21,
+          "title": "confirm close chat"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "confirm close chat"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "HwEq9u6cPhAf",
+          "index": 22,
+          "title": "confirm close chat"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "click close button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "confirm close chat"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "c9qC6pxx-HH2",
+          "index": 23,
+          "title": "confirm close chat"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Click minimize button"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "nxmWwj8Ggdk1",
+          "index": 24,
+          "title": "minimize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Click minimize button"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "eS3uo06wIyMT",
+          "index": 25,
+          "title": "minimize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Click minimize button"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "fOqzHCz3JqJo",
+          "index": 26,
+          "title": "minimize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Click minimize button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "thadxgVRz5Lt",
+          "index": 27,
+          "title": "maximize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Click minimize button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "JiXfXPPz8Q2_",
+          "index": 28,
+          "title": "maximize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "r"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive Message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Click minimize button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "fiFcz_DUw1mm",
+          "index": 29,
+          "title": "maximize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-email-transcript-button"
+                  }
+                }
+              ],
+              "title": "click email transcript"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "-a6KCgSdhVwI",
+          "index": 30,
+          "title": "email transcript"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-email-transcript-button"
+                  }
+                }
+              ],
+              "title": "click email transcript"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "L2pWXHml8LYi",
+          "index": 31,
+          "title": "email transcript"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-email-transcript-button"
+                  }
+                }
+              ],
+              "title": "click email transcript"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "3ItE6OqvqXPl",
+          "index": 32,
+          "title": "email transcript"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "*strong* _italic_ _*italic&strong*_ *_strong&italic_* ~strikethrough~ ~*strikethrough&strong*~ ~_*strikethrough&strong&italic*_~ https://abc.com [abc](https://abc.com)"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "Send Markdown Message"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "xnzhgpdq-N5n",
+          "index": 30,
+          "title": "send markdown message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "*strong* _italic_ _*italic&strong*_ *_strong&italic_* ~strikethrough~ ~*strikethrough&strong*~ ~_*strikethrough&strong&italic*_~ https://abc.com [abc](https://abc.com)"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "Send Markdown Message"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "p_aEms9CHqxe",
+          "index": 31,
+          "title": "send markdown message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "*strong* _italic_ _*italic&strong*_ *_strong&italic_* ~strikethrough~ ~*strikethrough&strong*~ ~_*strikethrough&strong&italic*_~ https://abc.com [abc](https://abc.com)"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 500
+                  }
+                }
+              ],
+              "title": "Send Markdown Message"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "-Esmr55b0-d6",
+          "index": 32,
+          "title": "send markdown message"
+        }
+      ]
+    },
+    "stateful-components-live-chat-widget--live-chat-widget-custom-1": {
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "ZLgC19R3GHNn",
+          "title": "Init"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 200
+              }
+            }
+          ],
+          "id": "QjTNt4QC9ElP",
+          "title": "Click chat button"
+        },
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 2000
+              }
+            }
+          ],
+          "id": "B3dMe-CYc4Rj",
+          "title": "Wait for loading"
+        },
+        {
+          "actions": [
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": "s"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": ".webchat__send-button"
+              }
+            }
+          ],
+          "id": "OUiQmCwn5gai",
+          "title": "Send message"
+        },
+        {
+          "actions": [
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": ":"
+              }
+            },
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": "s"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": ".webchat__send-button"
+              }
+            }
+          ],
+          "id": "n3g3j9Bw9WjA",
+          "title": "Receive message"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+              }
+            }
+          ],
+          "id": "Q3KV_SxUk-qL",
+          "title": "Click close button"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "uHnGFih67M9Z",
+          "index": 0,
+          "title": "Init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "k-GFD6Said1c",
+          "index": 1,
+          "title": "Init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "9XLh7m7-e6jH",
+          "index": 2,
+          "title": "Init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "GkmjDq3KzLMW",
+          "index": 3,
+          "title": "loading pane"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "6NZxw09qiGht",
+          "index": 4,
+          "title": "loading pane"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "rT2i5j8yYz8T",
+          "index": 5,
+          "title": "loading pane"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "xzh38qhA0oPO",
+          "index": 6,
+          "title": "chat container"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "XaEACWjXEy9m",
+          "index": 7,
+          "title": "chat container"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "rEW43LJkWWb4",
+          "index": 8,
+          "title": "chat container"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "JfshHobT1X9w",
+          "index": 9,
+          "title": "send message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "rYzLEWQNydsw",
+          "index": 10,
+          "title": "send message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "MMczL-bs5qQG",
+          "index": 11,
+          "title": "send message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive message"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "PTyNzD39uSa0",
+          "index": 12,
+          "title": "receive message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive message"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "kyZB6E-FlrkW",
+          "index": 13,
+          "title": "receive message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive message"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "esgM2Pn7lMxv",
+          "index": 14,
+          "title": "receive message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click close button"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "rqCN6GcpycEz",
+          "index": 15,
+          "title": "click close button"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click close button"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "J6ZG2eqq3UXI",
+          "index": 16,
+          "title": "click close button"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Click chat button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait for loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".webchat__send-button"
+                  }
+                }
+              ],
+              "title": "Receive message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click close button"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "tjxEqbK46hqf",
+          "index": 17,
+          "title": "click close button"
+        }
+      ]
+    },
+    "stateful-components-live-chat-widget--live-chat-widget-custom-3": {
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-footer-left-group>form>textarea"
+              }
+            },
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": "s"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-footer-left-group>form>input"
+              }
+            }
+          ],
+          "id": "64jcZ6y4VNVA",
+          "title": "send message"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-footer-left-group>form>textarea"
+              }
+            },
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": ":"
+              }
+            },
+            {
+              "name": "keyboard.press",
+              "args": {
+                "key": "s"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-footer-left-group>form>input"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 200
+              }
+            }
+          ],
+          "id": "SVaGZ1lKUlJd",
+          "title": "receive message"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 3000
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-footer-left-group>form>textarea"
+              }
+            }
+          ],
+          "id": "wWaFhxthFk3q",
+          "title": "go to chat screen"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 3000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                }
+              ],
+              "title": "go to chat screen"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                }
+              ],
+              "title": "send message"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "UaggJ7ZBOnlX",
+          "index": 0,
+          "title": "send message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 3000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                }
+              ],
+              "title": "go to chat screen"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                }
+              ],
+              "title": "send message"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "GNwj_fwvHlc8",
+          "index": 1,
+          "title": "send message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 3000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                }
+              ],
+              "title": "go to chat screen"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                }
+              ],
+              "title": "send message"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "c1z415Aq9iiq",
+          "index": 2,
+          "title": "send message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 3000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                }
+              ],
+              "title": "go to chat screen"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                }
+              ],
+              "title": "send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "receive message"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "FE27aD8z_yc0",
+          "index": 3,
+          "title": "receive message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 3000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                }
+              ],
+              "title": "go to chat screen"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                }
+              ],
+              "title": "send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "receive message"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "FKz4EVJQugQk",
+          "index": 4,
+          "title": "receive message"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 3000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                }
+              ],
+              "title": "go to chat screen"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                }
+              ],
+              "title": "send message"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>textarea"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": ":"
+                  }
+                },
+                {
+                  "name": "keyboard.press",
+                  "args": {
+                    "key": "s"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-footer-left-group>form>input"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "receive message"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "S-BR5UxElceE",
+          "index": 5,
+          "title": "receive message"
+        }
+      ]
+    },
+    "stateful-components-live-chat-widget--live-chat-widget-reconnect-chat-pane": {
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            }
+          ],
+          "id": "MFeCByMA2xKn",
+          "title": "Load"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(1)"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 2000
+              }
+            }
+          ],
+          "id": "5MaiV0l26Voo",
+          "title": "ContinueConversation"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(2)"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 2000
+              }
+            }
+          ],
+          "id": "N3ydKB4XN0tR",
+          "title": "StartNewConversation"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+              }
+            }
+          ],
+          "id": "SmLoSGg-hTv3",
+          "title": "Minimize"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Load"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "6ZVyXW5OKxLG",
+          "index": 0,
+          "title": "Load"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Load"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "pChvcAsCoSYf",
+          "index": 1,
+          "title": "Load"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Load"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "5n9c44q9pfoK",
+          "index": 2,
+          "title": "Load"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Minimize"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "9hjyBEiiCHlX",
+          "index": 3,
+          "title": "Minimize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Minimize"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "GU3WDBNn6xp8",
+          "index": 4,
+          "title": "Minimize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>#lcw-header-minimize-button"
+                  }
+                }
+              ],
+              "title": "Minimize"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "iR03-0cHncZ-",
+          "index": 5,
+          "title": "Minimize"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(1)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "ContinueConversation"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "2q2ZlSr9cko4",
+          "index": 6,
+          "title": "ContinueConversation"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(1)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "ContinueConversation"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "uyV5kHzoqtEZ",
+          "index": 7,
+          "title": "ContinueConversation"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(1)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "ContinueConversation"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "dNkCAFwN4rIu",
+          "index": 8,
+          "title": "ContinueConversation"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "StartNewConversation"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "1h3wqUmJMbxU",
+          "index": 9,
+          "title": "StartNewConversation"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "StartNewConversation"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "XfjffWdMK9hW",
+          "index": 10,
+          "title": "StartNewConversation"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "StartNewConversation"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "ZygAALpVY-En",
+          "index": 11,
+          "title": "StartNewConversation"
+        }
+      ]
+    },
+    "stateful-components-live-chat-widget--live-chat-widget-fixed-size-survey-enabled": {
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "Tc9vRI3wnNyy",
+          "title": "Init"
+        },
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 2000
+              }
+            }
+          ],
+          "id": "iArsTqi8CA_u",
+          "title": "Wait For Loading"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": ".ac-input-required"
+              }
+            },
+            {
+              "name": "keyboard.type",
+              "args": {
+                "text": "test"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": ".ac-pushButton"
+              }
+            }
+          ],
+          "id": "1L8NKwwAVRkl",
+          "title": "Submit Prechat"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 2000
+              }
+            }
+          ],
+          "id": "Kfrh05VitiTo",
+          "title": "Click Chat Button"
+        },
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 10000
+              }
+            }
+          ],
+          "id": "R1zGOdrhKBnV",
+          "title": "Wait For Post Chat Loading"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            }
+          ],
+          "id": "f1cQ-UHU0pOZ",
+          "title": "Confirm Close Chat"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "uvNSZOsZ08PN",
+          "title": "Click Close Chat"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "VDtR9DhCyBZk",
+          "index": 1,
+          "title": "prechat survey"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "_Oj9Ieevv_Gi",
+          "index": 2,
+          "title": "prechat survey"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "FXQNWfzqKsST",
+          "index": 3,
+          "title": "prechat survey"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Confirm Close Chat"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "ANIG34iGmwTP",
+          "index": 4,
+          "title": "postchat loading"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Confirm Close Chat"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "X-Hu5r6byExT",
+          "index": 5,
+          "title": "postchat loading"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Confirm Close Chat"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "vfcNhVqHnPld",
+          "index": 6,
+          "title": "postchat loading"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Confirm Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 10000
+                  }
+                }
+              ],
+              "title": "Wait For Post Chat Loading"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "Cgxy54RCtFcf",
+          "index": 7,
+          "title": "postchat survey"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Confirm Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 10000
+                  }
+                }
+              ],
+              "title": "Wait For Post Chat Loading"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "8Nj3SVAxQUDz",
+          "index": 8,
+          "title": "postchat survey"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 200
+                  }
+                }
+              ],
+              "title": "Confirm Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 10000
+                  }
+                }
+              ],
+              "title": "Wait For Post Chat Loading"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "DGR5ReUVHNZ6",
+          "index": 9,
+          "title": "postchat survey"
+        }
+      ]
+    },
+    "stateful-components-live-chat-widget--live-chat-widget-customized-survey-enabled": {
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 100
+              }
+            }
+          ],
+          "id": "_TKaKFaHXnmw",
+          "title": "Init"
+        },
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 2000
+              }
+            }
+          ],
+          "id": "uZAKJZsNoL7e",
+          "title": "Wait For Loading"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": ".ac-input-required"
+              }
+            },
+            {
+              "name": "keyboard.type",
+              "args": {
+                "text": "test"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+              }
+            },
+            {
+              "name": "click",
+              "args": {
+                "selector": ".ac-pushButton"
+              }
+            }
+          ],
+          "id": "GDk0vFxSA7T5",
+          "title": "Submit Prechat"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-chat-button"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            }
+          ],
+          "id": "2tw_O9RxX09D",
+          "title": "Click Chat Button"
+        },
+        {
+          "actions": [
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 10000
+              }
+            }
+          ],
+          "id": "XiV4xoiCKc4V",
+          "title": "Wait For PostChat Loading"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+              }
+            },
+            {
+              "name": "waitForTimeout",
+              "args": {
+                "timeout": 1000
+              }
+            }
+          ],
+          "id": "dX4OAfCTvIFR",
+          "title": "Click Confirm Close"
+        },
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+              }
+            }
+          ],
+          "id": "r4pMVqEcicma",
+          "title": "Click Close Chat"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "-wjctBkOUPtl",
+          "index": 1,
+          "title": "prechat survey custom"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "Bik1ccrAmzaj",
+          "index": 2,
+          "title": "prechat survey custom"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "e5PCKYw_HE2k",
+          "index": 3,
+          "title": "prechat survey custom"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Confirm Close"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "iX6QRVPKhsx_",
+          "index": 4,
+          "title": "postchat loading custom"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Confirm Close"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "LMMRPR43XCy9",
+          "index": 5,
+          "title": "postchat loading custom"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Confirm Close"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "kZzUiArf8EAL",
+          "index": 6,
+          "title": "postchat loading custom"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Confirm Close"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 10000
+                  }
+                }
+              ],
+              "title": "Wait For PostChat Loading"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "GFXUr4jcb-ao",
+          "index": 6,
+          "title": "poschat survey custom"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Confirm Close"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 10000
+                  }
+                }
+              ],
+              "title": "Wait For PostChat Loading"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "R1mEFFrNA9eE",
+          "index": 7,
+          "title": "poschat survey custom"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Init"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-chat-button"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 1000
+                  }
+                }
+              ],
+              "title": "Click Chat Button"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-input-required"
+                  }
+                },
+                {
+                  "name": "keyboard.type",
+                  "args": {
+                    "text": "test"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "css=[aria-label=\"*Agree to Terms and Conditions\"]"
+                  }
+                },
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": ".ac-pushButton"
+                  }
+                }
+              ],
+              "title": "Submit Prechat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 2000
+                  }
+                }
+              ],
+              "title": "Wait For Loading"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#lcw-header-right-group>div>div>button:nth-child(2)"
+                  }
+                }
+              ],
+              "title": "Click Close Chat"
+            },
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "#oc-lcw-confirmation-pane-confirmbutton"
+                  }
+                },
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 100
+                  }
+                }
+              ],
+              "title": "Click Confirm Close"
+            },
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 10000
+                  }
+                }
+              ],
+              "title": "Wait For PostChat Loading"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "53tErs50NRtf",
+          "index": 8,
+          "title": "poschat survey custom"
+        }
+      ]
+    }
+  }
+}

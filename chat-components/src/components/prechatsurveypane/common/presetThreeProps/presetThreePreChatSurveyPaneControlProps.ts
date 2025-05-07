@@ -1,0 +1,13 @@
+import { IPreChatSurveyPaneControlProps } from "../../interfaces/IPreChatSurveyPaneControlProps";
+
+export const presetThreePreChatSurveyPaneControlProps: IPreChatSurveyPaneControlProps = {
+    id: "lcw-prechat-survey-pane-preset3",
+    dir: "auto",
+    hidePreChatSurveyPane: false,
+    adaptiveCardHostConfig: "{\"fontFamily\":\"Segoe UI, Helvetica Neue, sans-serif\",\"containerStyles\":{\"default\":{\"foregroundColors\":{\"default\":{\"default\":\"#C3F60F\"}},\"backgroundColor\":\"#6A1E7A\"}},\"actions\":{\"actionsOrientation\":\"Vertical\",\"actionAlignment\":\"stretch\"}}",
+    payload: "{\"$schema\":\"http://adaptivecards.io/schemas/adaptive-card.json\",\"type\":\"AdaptiveCard\",\"version\":\"1.5\",\"body\":[{\"type\":\"TextBlock\",\"weight\":\"bolder\",\"text\":\"Please answer below questions.\"},{\"type\":\"Input.Text\",\"id\":\"1e5e4e7a-8f0b-ec11-b6e6-000d3a305d38\",\"label\":\"Name\",\"maxLength\":100,\"isRequired\":true,\"errorMessage\":\"Name is required\"},{\"type\":\"Input.Text\",\"id\":\"c7ed0164-e6a9-4cf6-ab03-819f60d0289f\",\"label\":\"Company Name\",\"style\":\"text\",\"maxLength\":100,\"isRequired\":true,\"errorMessage\":\"Company Name is required\"},{\"type\":\"Input.Text\",\"id\":\"7f8f5d6d-995e-ec11-8f8f-000d3a31376e\",\"label\":\"How are you feeling today?\",\"style\":\"text\",\"isMultiline\":true,\"maxLength\":250},{\"type\":\"Input.Text\",\"id\":\"03d7114a-5e87-4718-b60d-0e6802176875\",\"label\":\"Comments\",\"style\":\"text\",\"isMultiline\":true,\"maxLength\":250,\"isRequired\":true,\"errorMessage\":\"Comments are required\"},{\"type\":\"Input.ChoiceSet\",\"id\":\"e4bdf7cb-995e-ec11-8f8f-000d3a31376e\",\"label\":\"Please Select One of the following\",\"isMultiSelect\":false,\"isRequired\":true,\"errorMessage\":\"A choice is required\",\"style\":\"compact\",\"choices\":[{\"title\":\"one\",\"value\":\"1\"},{\"title\":\"two\",\"value\":\"2\"},{\"title\":\"three\",\"value\":\"3\"}]},{\"type\":\"Input.Toggle\",\"id\":\"b26011d2-995e-ec11-8f8f-000d3a31376e\",\"title\":\"consent\",\"valueOn\":\"True\",\"valueOff\":\"False\",\"value\":\"false\"},{\"type\":\"TextBlock\",\"text\":\"Fields marked with * are mandatory.\",\"wrap\":true}],\"actions\":[{\"type\":\"Action.Submit\",\"title\":\"Submit\",\"data\":{\"Type\":\"InputSubmit\"}}]}",
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onSubmit: function (values) {
+        console.log("on submit");
+    }
+};

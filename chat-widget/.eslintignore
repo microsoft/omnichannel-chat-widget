@@ -1,0 +1,11 @@
+# third party files
+node_modules
+
+# output
+lib
+dist
+
+# storybook related
+.storybook
+storybook-static
+storybook-build

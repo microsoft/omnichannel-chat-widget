@@ -1,0 +1,49 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-calling-container-default--current-call-mode": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "SyoJ07IM8PnD",
+          "index": 0,
+          "title": "current-call-mode"
+        },
+        {
+          "browserType": "firefox",
+          "id": "PRbbU821TaVr",
+          "index": 1,
+          "title": "current-call-mode"
+        },
+        {
+          "browserType": "webkit",
+          "id": "eKpp9gE68fSf",
+          "index": 2,
+          "title": "current-call-mode"
+        }
+      ]
+    },
+    "stateless-components-calling-container-default--incoming-call": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "7LMBg6ymFyx1",
+          "index": 0,
+          "title": "incoming-call-mode"
+        },
+        {
+          "browserType": "firefox",
+          "id": "Scrmvg6Ez9RJ",
+          "index": 1,
+          "title": "incoming-call-mode"
+        },
+        {
+          "browserType": "webkit",
+          "id": "JGysQE2GQJ3U",
+          "index": 2,
+          "title": "incoming-call-mode"
+        }
+      ]
+    }
+  }
+}

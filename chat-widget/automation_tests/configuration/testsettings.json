@@ -1,0 +1,12 @@
+{
+  "OrgUrl": "DEFAULT-VISUAL-TEST-ORG-URL",
+  "OrgId": "DEFAULT-VISUAL-TEST-ORG-ID",
+  "AppId": "DEFAULT-VISUAL-TEST-APP-ID",
+  "browsers": ["chromium"],
+  "devices": [],
+  "launchBrowserSettings": {
+    "headless": false,
+    "slowMo": 10,
+    "args": ["--disable-web-security"]
+  }
+}

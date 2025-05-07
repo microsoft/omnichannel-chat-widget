@@ -1,0 +1,93 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-header--default": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "rozenyFF79E5",
+          "index": 0,
+          "title": "default"
+        },
+        {
+          "browserType": "firefox",
+          "id": "UUGC06fz7S68",
+          "index": 1,
+          "title": "default"
+        },
+        {
+          "browserType": "webkit",
+          "id": "x3qPBHS7y4uN",
+          "index": 2,
+          "title": "default"
+        }
+      ]
+    },
+    "stateless-components-header--azure-header": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "NVIkLkbj6LwD",
+          "index": 0,
+          "title": "azure-header"
+        },
+        {
+          "browserType": "firefox",
+          "id": "ltyu4n_2Bfr4",
+          "index": 1,
+          "title": "azure-header"
+        },
+        {
+          "browserType": "webkit",
+          "id": "pCkMIWG4Pg-F",
+          "index": 2,
+          "title": "azure-header"
+        }
+      ]
+    },
+    "stateless-components-header--customized-header": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "mmACIr9gLCyp",
+          "index": 0,
+          "title": "custom"
+        },
+        {
+          "browserType": "firefox",
+          "id": "rGxGu_QGchdi",
+          "index": 1,
+          "title": "custom"
+        },
+        {
+          "browserType": "webkit",
+          "id": "KrRcFyekqvB7",
+          "index": 2,
+          "title": "custom"
+        }
+      ]
+    },
+    "stateless-components-header--customized-header-rtl": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "pmIvvQW6OiVM",
+          "index": 0,
+          "title": "custom-image-rtl"
+        },
+        {
+          "browserType": "firefox",
+          "id": "gj_xpRy7KCMh",
+          "index": 1,
+          "title": "custom-image-rtl"
+        },
+        {
+          "browserType": "webkit",
+          "id": "4bI3DUoEhFPJ",
+          "index": 2,
+          "title": "custom-image-rtl"
+        }
+      ]
+    }
+  }
+}

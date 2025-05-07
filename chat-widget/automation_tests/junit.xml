@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="1" failures="0" time="16.168">
+  <testsuite name="live chat button" errors="0" failures="0" skipped="0" timestamp="2022-05-25T23:26:02" time="14.745" tests="1">
+    <testcase classname="live chat button chat button visible" name="live chat button chat button visible" time="7.942">
+    </testcase>
+  </testsuite>
+</testsuites>

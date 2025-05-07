@@ -1,0 +1,129 @@
+name:  🚂 Release to NPM a new Chat-Components version 🚂
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        type: choice
+        description: Choose a type of release to build.
+        options:
+          - Patch
+          - Minor
+
+permissions: write-all
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main and pull upstream master
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Git Pull main branch 
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull origin main
+
+      - name: Create and checkout new branch
+        id: create_branch
+        run: |
+          branch_name="release-chat-components-bump-$(date +'%m-%d-%Y-%H-%M-%S')"
+          git checkout -b "$branch_name"
+          echo "::set-output name=branch_name::$branch_name"
+          git push --set-upstream origin "$branch_name"
+
+      - name: Install jq
+        run: sudo apt-get install jq
+
+      - name: Bump Version in package.json
+        id: bump_version_step
+        run: |
+          if [ "${{ github.event.inputs.name }}" == "Patch" ]; then
+            current_version=$(jq -r '.version' chat-components/package.json)
+            patch_version=$(echo "$current_version" | cut -d. -f3)
+            patch_version_final=$(echo "$patch_version" | cut -d- -f1)
+            new_patch_version=$((patch_version_final))
+            new_version=$(echo "$current_version" | awk -F. -v OFS=. -v patch="$new_patch_version" '{$3=patch; print}')
+            jq --arg new_version "$new_version" '.version |= $new_version' chat-components/package.json > temp.json && mv temp.json chat-components/package.json
+            echo "::set-output name=version::$new_version"
+          else
+            current_version=$(jq -r '.version' chat-components/package.json)
+            major_version=$(echo "$current_version" | cut -d. -f1)
+            minor_version=$(echo "$current_version" | cut -d. -f2)
+            new_version="$((major_version)).$((minor_version + 1)).0"
+            jq --arg new_version "$new_version" '.version |= $new_version' chat-components/package.json > temp.json && mv temp.json chat-components/package.json
+            echo "::set-output name=version::$new_version"
+          fi
+
+      - name: Update Changelog
+        run: |
+            version="${{ steps.bump_version_step.outputs.version }}"
+            awk -v version="$version" 'BEGIN { count = 0 } /\[Unreleased\]/ { count++ } count == 2 && !done { sub(/\[Unreleased\]/, "[" version "]", $0); done=1 } 1' CHANGE_LOG.md > temp && mv temp CHANGE_LOG.md
+  
+      - name: Commit Changes
+        run: |
+          git config --global user.email "noreply@github.com"
+          git config --global user.name "noreply@github.com"
+          git add chat-components/package.json CHANGE_LOG.md
+          git commit -m "Bump version to ${{ steps.bump_version_step.outputs.version }}"
+          git tag -a "c-v${{ steps.bump_version_step.outputs.version }}" -m "Version ${{ steps.bump_version_step.outputs.version }}"
+          git push origin "c-v${{ steps.bump_version_step.outputs.version }}"
+  
+      - name: Bump Version in package.json
+        id: bump_version_step_minor
+        run: |
+            if [ "${{ github.event.inputs.name }}" == "Patch" ]; then
+              current_version=$(jq -r '.version' chat-components/package.json)
+              patch_version=$(echo "$current_version" | cut -d. -f3)
+              new_patch_version=$((patch_version + 1))-0
+              new_version=$(echo "$current_version" | awk -F. -v OFS=. -v patch="$new_patch_version" '{$3=patch; print}')
+              jq --arg new_version "$new_version" '.version |= $new_version' chat-components/package.json > temp.json && mv temp.json chat-components/package.json
+              echo "::set-output name=version::$new_version"
+            else
+              current_version=$(jq -r '.version' chat-components/package.json)
+              patch_version=$(echo "$current_version" | cut -d. -f3)
+              new_patch_version=$((patch_version + 1))-0
+              new_version=$(echo "$current_version" | awk -F. -v OFS=. -v patch="$new_patch_version" '{$3=patch; print}')
+              jq --arg new_version "$new_version" '.version |= $new_version' chat-components/package.json > temp.json && mv temp.json chat-components/package.json
+              echo "::set-output name=version::$new_version"
+            fi
+
+      - name: Search for 'Chat-Components' tag and add '##[Unreleased]'
+        run: |
+          # Find the line number where 'Food' tag is located in the file
+          line_number=$(grep -n 'Chat-Components' CHANGE_LOG.md | cut -d':' -f1)
+          
+          if [ -n "$line_number" ]; then
+          # Increment line number by 1 to add '##[Unreleased]' below the 'Chat-Components' tag
+            new_line_number=$((line_number + 1))
+            sed -i "${new_line_number}i## [Unreleased] \n" CHANGE_LOG.md
+           # git add CHANGELOG.md
+           # git commit -m "Bump"
+          else
+            echo "Tag 'Chat-Components' not found in CHANGE_LOG.md"
+          fi
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update report
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          base: main
+          branch: ${{ steps.create_branch.outputs.branch_name }}
+          delete-branch: true
+          title: 'Bump version for chat-components to ${{ steps.bump_version_step.outputs.version }}'
+          body: |
+            Update report
+            - 'Bump version to ${{ steps.bump_version_step.outputs.version }}'
+          labels: |
+            bump-release-version
+            automated pr
+            chat-components
+          draft: false

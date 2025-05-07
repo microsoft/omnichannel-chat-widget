@@ -1,0 +1,132 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-outofofficehours-pane--oooh-pane-default": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "I0iA3hj8Tif8",
+          "index": 0,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Default"
+        },
+        {
+          "browserType": "firefox",
+          "id": "CJAN2dH5rUYT",
+          "index": 1,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Default"
+        },
+        {
+          "browserType": "webkit",
+          "id": "dyKXzL-G_JbE",
+          "index": 2,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Default"
+        }
+      ]
+    },
+    "stateless-components-outofofficehours-pane--oooh-pane-preset-1": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "z-avLrRkcEpt",
+          "index": 0,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane RTL"
+        },
+        {
+          "browserType": "firefox",
+          "id": "lLhX6o1sWWfs",
+          "index": 1,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane RTL"
+        },
+        {
+          "browserType": "webkit",
+          "id": "PTa0xiHpuv3n",
+          "index": 2,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane RTL"
+        }
+      ]
+    },
+    "stateless-components-outofofficehours-pane--oooh-pane-preset-2": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "qtYQpdsCzufj",
+          "index": 0,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Preset 2"
+        },
+        {
+          "browserType": "firefox",
+          "id": "bnh34kahRIeM",
+          "index": 1,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Preset 2"
+        },
+        {
+          "browserType": "webkit",
+          "id": "8CaT4NwhymdC",
+          "index": 2,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Preset 2"
+        }
+      ]
+    },
+    "stateless-components-outofofficehours-pane--oooh-pane-preset-3": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "xS1IlWOZBIvu",
+          "index": 0,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Preset 3"
+        },
+        {
+          "browserType": "firefox",
+          "id": "Yl6h-LB-nTew",
+          "index": 1,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Preset 3"
+        },
+        {
+          "browserType": "webkit",
+          "id": "lrBdQghV00TW",
+          "index": 2,
+          "screenshotOptionsId": "0a0IT3Nsxftn",
+          "title": "OutOfOfficeHours Pane Preset 3"
+        }
+      ]
+    },
+    "stateless-components-outofofficehours-pane--oooh-pane-preset-4": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "7pu_1bfSttcj",
+          "index": 0,
+          "title": "OutOfOffice Link Support"
+        },
+        {
+          "browserType": "firefox",
+          "id": "S5ylLJaS3ubQ",
+          "index": 1,
+          "title": "OutOfOffice Link Support"
+        },
+        {
+          "browserType": "webkit",
+          "id": "-cQt0mvJfS_-",
+          "index": 2,
+          "title": "OutOfOffice Link Support"
+        }
+      ]
+    }
+  },
+  "screenshotOptions": {
+    "0a0IT3Nsxftn": {
+      "fullPage": true
+    }
+  }
+}

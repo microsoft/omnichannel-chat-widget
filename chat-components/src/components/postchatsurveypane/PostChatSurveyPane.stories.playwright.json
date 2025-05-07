@@ -1,0 +1,127 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-postchatsurvey-pane--post-chat-survey-pane-default": {
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 5000
+                  }
+                }
+              ],
+              "title": "Timeout"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "wkk5e_EUKdDs",
+          "index": 3,
+          "title": "PostChatSurveyPane - Default Timeout"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 5000
+                  }
+                }
+              ],
+              "title": "Timeout"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "b6l5xMVsib2J",
+          "index": 4,
+          "title": "PostChatSurveyPane - Default Timeout"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 5000
+                  }
+                }
+              ],
+              "title": "Timeout"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "LcP-lSk98OrA",
+          "index": 5,
+          "title": "PostChatSurveyPane - Default Timeout"
+        }
+      ]
+    },
+    "stateless-components-postchatsurvey-pane--post-chat-survey-pane-preset-one": {
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 5000
+                  }
+                }
+              ],
+              "title": "Timeout"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "GXZK9GugAoRd",
+          "index": 3,
+          "title": "PostChatSurveyPane - Preset One Timeout"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 5000
+                  }
+                }
+              ],
+              "title": "Timeout"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "6oVILLNwur0H",
+          "index": 4,
+          "title": "PostChatSurveyPane - Preset One Timeout"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "waitForTimeout",
+                  "args": {
+                    "timeout": 5000
+                  }
+                }
+              ],
+              "title": "Timeout"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "65LVQcOIig6z",
+          "index": 5,
+          "title": "PostChatSurveyPane - Preset One Timeout"
+        }
+      ]
+    }
+  }
+}

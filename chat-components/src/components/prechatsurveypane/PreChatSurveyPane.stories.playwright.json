@@ -1,0 +1,164 @@
+{
+  "version": "4",
+  "stories": {
+    "stateless-components-prechatsurvey-pane--pre-chat-survey-pane-default": {
+      "actionSets": [
+        {
+          "actions": [
+            {
+              "name": "click",
+              "args": {
+                "selector": "html>body>div:nth-child(5)>div>div>div>div>div:nth-child(13)>div:nth-child(1)>div>button>div"
+              }
+            }
+          ],
+          "id": "3_shDde9a7kn",
+          "title": "onClick"
+        }
+      ],
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "cPJ5ZPtKaTqA",
+          "index": 0,
+          "title": "PreChatSurvey Pane - Default"
+        },
+        {
+          "browserType": "firefox",
+          "id": "flz5rVU7BthV",
+          "index": 1,
+          "title": "PreChatSurvey Pane - Default"
+        },
+        {
+          "browserType": "webkit",
+          "id": "J1E8S6sU-Wju",
+          "index": 2,
+          "title": "PreChatSurvey Pane - Default"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div:nth-child(13)>div:nth-child(1)>div>button>div"
+                  }
+                }
+              ],
+              "title": "onClick"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "zWGtevZVc9n3",
+          "index": 3,
+          "title": "PreChatSurvey Pane - OnClick"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div:nth-child(13)>div:nth-child(1)>div>button>div"
+                  }
+                }
+              ],
+              "title": "onClick"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "LTU8hHgudtji",
+          "index": 4,
+          "title": "PreChatSurvey Pane - OnClick"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [
+                {
+                  "name": "click",
+                  "args": {
+                    "selector": "html>body>div:nth-child(5)>div>div>div>div>div:nth-child(13)>div:nth-child(1)>div>button>div"
+                  }
+                }
+              ],
+              "title": "onClick"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "VwuuKYKnMrsi",
+          "index": 5,
+          "title": "PreChatSurvey Pane - OnClick"
+        }
+      ]
+    },
+    "stateless-components-prechatsurvey-pane--pre-chat-survey-pane-preset-1": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "AlxJ_IZBEyMz",
+          "index": 0,
+          "title": "PreChatSurvey Pane - RTL"
+        },
+        {
+          "browserType": "firefox",
+          "id": "Wq13n1z5rVGN",
+          "index": 1,
+          "title": "PreChatSurvey Pane - RTL"
+        },
+        {
+          "browserType": "webkit",
+          "id": "oLzTfT9iAlz_",
+          "index": 2,
+          "title": "PreChatSurvey Pane - RTL"
+        }
+      ]
+    },
+    "stateless-components-prechatsurvey-pane--pre-chat-survey-pane-preset-2": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "jxOBfZd-HXrE",
+          "index": 0,
+          "title": "PreChatSurvey Pane - Preset 2"
+        },
+        {
+          "browserType": "firefox",
+          "id": "pw9jerfsv2Q0",
+          "index": 1,
+          "title": "PreChatSurvey Pane - Preset 2"
+        },
+        {
+          "browserType": "webkit",
+          "id": "fq5l5D_2hOAX",
+          "index": 2,
+          "title": "PreChatSurvey Pane - Preset 2"
+        }
+      ]
+    },
+    "stateless-components-prechatsurvey-pane--pre-chat-survey-pane-preset-3": {
+      "screenshots": [
+        {
+          "browserType": "chromium",
+          "id": "yuhfs0eBKEkO",
+          "index": 0,
+          "title": "PreChatSurvey Pane - Fixed"
+        },
+        {
+          "browserType": "firefox",
+          "id": "dstN9OQzk6Mt",
+          "index": 1,
+          "title": "PreChatSurvey Pane - Fixed"
+        },
+        {
+          "browserType": "webkit",
+          "id": "ycg6y175bQjg",
+          "index": 2,
+          "title": "PreChatSurvey Pane - Fixed"
+        }
+      ]
+    }
+  }
+}
