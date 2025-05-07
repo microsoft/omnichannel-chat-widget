@@ -204,6 +204,7 @@ export enum TelemetryEvent {
     MessageSent = "MessageSent",
     MessageReceived = "MessageReceived",
     MessageLapTrack = "MessageLapTrack",
+    BotFirstMessageLapTrack = "BotFirstMessageLapTrack",
     MessageStartLapTrackError = "MessageStartLapTrackError",
     MessageStopLapTrackError = "MessageStopLapTrackError",
     SystemMessageReceived = "SystemMessageReceived",
