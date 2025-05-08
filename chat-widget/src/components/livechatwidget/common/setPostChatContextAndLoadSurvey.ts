@@ -21,8 +21,7 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallSucceed,
-                    Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed,
-                    LogToAppInsights: false,
+                    Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
             }
@@ -32,8 +31,7 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
             Event: TelemetryEvent.PostChatContextCallFailed,
             ExceptionDetails: {
                 exception: ex
-            },
-            LogToAppInsights: false,
+            }
         });
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -23,8 +23,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXProactiveChatPaneStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXProactiveChatPaneStart
         });
     }, []);
 
@@ -113,13 +112,11 @@ export const ProactiveChatPaneStateful = (props: any) => {
             handleProactiveChatInviteTimeout();
         }, proactiveChatProps?.ProactiveChatInviteTimeoutInMs ?? Constants.ProactiveChatInviteTimeoutInMs);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.ProactiveChatPaneLoaded,
-            LogToAppInsights: false
+            Event: TelemetryEvent.ProactiveChatPaneLoaded
         });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXProactiveChatCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
         return () => {
             clearTimeout(timeoutEvent);

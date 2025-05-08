@@ -60,8 +60,7 @@ const getChatReconnectContext = async (facadeChatSDK: FacadeChatSDK, chatConfig:
     try {
         TelemetryHelper.logSDKEvent(LogLevel.INFO, {
             Event: TelemetryEvent.GetChatReconnectContextSDKCallStarted,
-            Description: "Reconnect context SDK call started",
-            LogToAppInsights: false
+            Description: "Reconnect context SDK call started"
         });
 
         const chatReconnectOptionalParams: IReconnectChatOptionalParams = {
@@ -88,8 +87,7 @@ const getChatReconnectContext = async (facadeChatSDK: FacadeChatSDK, chatConfig:
             Event: TelemetryEvent.GetChatReconnectContextSDKCallFailed,
             ExceptionDetails: {
                 exception: error
-            },
-            LogToAppInsights: false
+            }
         });
 
         // when auth token is not available, propagate the error to stop the execution and ensure error pane is loaded

@@ -78,8 +78,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         } else {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PostChatSurveyUrlValidationCompleted,
-                Description: `${controlProps.surveyURL} is a valid Survey URL`,
-                LogToAppInsights: false
+                Description: `${controlProps.surveyURL} is a valid Survey URL`
             });
         }
     }

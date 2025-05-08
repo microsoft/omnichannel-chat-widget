@@ -295,8 +295,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(BroadcastEvent.SetCustomContext).subscribe((msg: ICustomEvent) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.CustomContextReceived,
-                Description: "CustomContext received.",
-                LogToAppInsights: false
+                Description: "CustomContext received."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload });
         });
@@ -405,8 +404,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (msg?.payload?.customContext) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomContextReceived,
-                    Description: "CustomContext received through startChat event.",
-                    LogToAppInsights: false
+                    Description: "CustomContext received through startChat event."
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }

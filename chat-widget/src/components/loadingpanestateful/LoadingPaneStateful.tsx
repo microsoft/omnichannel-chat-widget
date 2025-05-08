@@ -23,8 +23,7 @@ export const LoadingPaneStateful = (props: any) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLoadingPaneStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXLoadingPaneStart
         });
     }, []);
     
@@ -67,21 +66,18 @@ export const LoadingPaneStateful = (props: any) => {
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
             Event: TelemetryEvent.LoadingPaneLoaded, 
-            Description: "Loading pane loaded.",
-            LogToAppInsights: false
+            Description: "Loading pane loaded."
         });
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXLoadingPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
         
         return () => {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LoadingPaneUnloaded,
-                Description: "Loading pane unmount.",
-                LogToAppInsights: false
+                Description: "Loading pane unmount."
             });
         };
         

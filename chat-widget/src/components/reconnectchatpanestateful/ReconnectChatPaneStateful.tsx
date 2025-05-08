@@ -23,8 +23,7 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXReconnectChatPaneStart,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
 

@@ -59,8 +59,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXWebchatContainerCompleted,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXWebchatContainerCompleted
         });
     }, []);
 
@@ -90,8 +89,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: webChatContainerProps?.renderingMiddlewareProps });
         dispatch({ type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.WebChatLoaded,
-            LogToAppInsights: false
+            Event: TelemetryEvent.WebChatLoaded
 
         });
 
@@ -116,8 +114,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         if (!(window as any).BroadcastChannel) { // eslint-disable-line @typescript-eslint/no-explicit-any
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.SuppressBotMagicCodeFailed,
-                Description: "BroadcastChannel not supported by default on current browser",
-                LogToAppInsights: false
+                Description: "BroadcastChannel not supported by default on current browser"
             });
 
             return;
@@ -144,8 +141,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 magicCodeResponseBroadcastChannel.postMessage(response);
 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.SuppressBotMagicCodeSucceeded,
-                    LogToAppInsights: false
+                    Event: TelemetryEvent.SuppressBotMagicCodeSucceeded
                 });
 
                 BotMagicCodeStore.botOAuthSignInId = "";
@@ -154,8 +150,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             } else {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.SuppressBotMagicCodeFailed,
-                    Description: "Signin does not match",
-                    LogToAppInsights: false
+                    Description: "Signin does not match"
                 });
             }
         };
@@ -166,8 +161,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXWebchatContainerCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
 

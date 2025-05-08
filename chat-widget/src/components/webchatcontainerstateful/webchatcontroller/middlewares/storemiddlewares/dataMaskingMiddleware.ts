@@ -22,8 +22,7 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
             Event: TelemetryEvent.InvalidConfiguration,
             ExceptionDetails: {
                 ErrorDetails: "Invalid data masking rules"
-            },
-            LogToAppInsights: false
+            }
         });
         return action;
     }
@@ -55,16 +54,14 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                     ExceptionDetails: {
                         RuleId: ruleId,
                         Exception: err
-                    },
-                    LogToAppInsights: false
+                    }
                 });
             }
 
             if (ruleApplied) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.DataMaskingRuleApplied,
-                    Description: `Data Masking Rule Id: ${ruleId} applied.`,
-                    LogToAppInsights: false
+                    Description: `Data Masking Rule Id: ${ruleId} applied.`
                 });
             }
 
@@ -74,8 +71,7 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                     ExceptionDetails: {
                         RuleId: ruleId,
                         Exception: "The data masking rule matches empty strings."
-                    },
-                    LogToAppInsights: false
+                    }
                 });
             }
         }

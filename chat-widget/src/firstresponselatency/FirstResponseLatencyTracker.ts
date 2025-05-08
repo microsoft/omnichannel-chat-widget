@@ -78,8 +78,7 @@ export class FirstResponseLatencyTracker {
                 elapsedTime,
                 userMessage: this.startTrackingMessage,
                 botMessage: this.stopTrackingMessage
-            },
-            LogToAppInsights: false
+            }
         });
     }
 
@@ -110,8 +109,7 @@ export class FirstResponseLatencyTracker {
                 ExceptionDetails: e,
                 CustomProperties: {
                     payload: payload
-                },
-                LogToAppInsights: false
+                }
             });
         }
     }
@@ -136,8 +134,7 @@ export class FirstResponseLatencyTracker {
                 ExceptionDetails: e,
                 CustomProperties: {
                     payload: payload
-                },
-                LogToAppInsights: false
+                }
             });
             //reset state
             this.startTrackingMessage = undefined;

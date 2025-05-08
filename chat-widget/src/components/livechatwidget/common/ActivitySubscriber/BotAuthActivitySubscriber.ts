@@ -45,8 +45,7 @@ const extractSasUrl = async (attachment: any) => {
 
 const fetchBotAuthConfig = async (retries: number, interval: number): Promise<any> => {
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
-        LogToAppInsights: false,
+        Event: TelemetryEvent.SetBotAuthProviderFetchConfig
     });
 
     const botAuthConfigRequestEvent: ICustomEvent = { eventName: BroadcastEvent.BotAuthConfigRequest };
@@ -101,8 +100,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
 
         if (!signInId) {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.BotAuthActivityUndefinedSignInId,
-                LogToAppInsights: false,
+                Event: TelemetryEvent.BotAuthActivityUndefinedSignInId
             });
             return activity;
         }
@@ -119,8 +117,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
         if (!sasUrl) {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.BotAuthActivityEmptySasUrl,
-                Description: "SaS Url is empty",
-                LogToAppInsights: false,
+                Description: "SaS Url is empty"
             });
             return activity;
         } else {
@@ -130,20 +127,17 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             const response = await fetchBotAuthConfig(this.fetchBotAuthConfigRetries, this.fetchBotAuthConfigRetryInterval);
             if (response === false) {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.SetBotAuthProviderHideCard,
-                    LogToAppInsights: false,
+                    Event: TelemetryEvent.SetBotAuthProviderHideCard
                 });
             } else {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.SetBotAuthProviderDisplayCard,
-                    LogToAppInsights: false,
+                    Event: TelemetryEvent.SetBotAuthProviderDisplayCard
                 });
                 return activity;
             }
         } catch {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.SetBotAuthProviderNotFound,
-                LogToAppInsights: false,
+                Event: TelemetryEvent.SetBotAuthProviderNotFound
             });
             //this is to ensure listener continues waiting for response
             if (this.signInCardSeen.has(signInId)) {

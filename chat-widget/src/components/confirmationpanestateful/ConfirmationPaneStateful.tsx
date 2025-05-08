@@ -21,8 +21,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXConfirmationPaneStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXConfirmationPaneStart
         });
     }, []);
 
@@ -83,12 +82,10 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
         setTabIndices(elements, initialTabIndexMap, false);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
             Event: TelemetryEvent.ConfirmationPaneLoaded,
-            LogToAppInsights: false
         });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXConfirmationPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
 
     }, []);

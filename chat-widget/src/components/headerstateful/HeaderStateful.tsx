@@ -25,8 +25,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXHeaderStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXHeaderStart
         });
     }, []);
 
@@ -118,8 +117,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXHeaderCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
 

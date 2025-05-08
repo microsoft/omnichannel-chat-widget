@@ -27,8 +27,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXEmailTranscriptPaneStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXEmailTranscriptPaneStart
         });
     }, []);
 
@@ -110,14 +109,12 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         setTabIndices(elements, initialTabIndexMap, false);
         setInitialEmail(state.appStates.preChatResponseEmail);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.EmailTranscriptLoaded, 
-            LogToAppInsights: false
+            Event: TelemetryEvent.EmailTranscriptLoaded
         });
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXEmailTranscriptPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
 
     }, [initialEmail]);

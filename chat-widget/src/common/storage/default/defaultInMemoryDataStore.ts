@@ -22,8 +22,7 @@ export const defaultInitializeInMemoryDataStore = (widgetId: string) => {
                 TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.InMemoryDataStoreFailed,
                     ExceptionDetails: error,
-                    Description: "Unable to register default in-memory cache.",
-                    LogToAppInsights: false
+                    Description: "Unable to register default in-memory cache."
                 });
             }
         });
@@ -50,8 +49,7 @@ export const inMemoryDataStore = () => {
                 TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.InMemoryDataStoreFailed,
                     ExceptionDetails: error,
-                    Description: "Unable to set data in default in-memory cache.",
-                    LogToAppInsights: false
+                    Description: "Unable to set data in default in-memory cache."
                 });
             }
         },
@@ -62,8 +60,7 @@ export const inMemoryDataStore = () => {
                 TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.InMemoryDataStoreFailed,
                     ExceptionDetails: error,
-                    Description: "Unable to remove data from default in-memory cache.",
-                    LogToAppInsights: false
+                    Description: "Unable to remove data from default in-memory cache."
                 });
             }
         }

@@ -37,8 +37,7 @@ const sanitizationMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) 
                 ExceptionDetails: {
                     ErrorData: errorMessage,
                     Exception: e
-                },
-                LogToAppInsights: false
+                }
             });
         }
     }

@@ -28,8 +28,7 @@ export const FooterStateful = (props: any) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXFooterStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXFooterStart
         });
     }, []);
 
@@ -105,8 +104,7 @@ export const FooterStateful = (props: any) => {
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXFooterCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
 

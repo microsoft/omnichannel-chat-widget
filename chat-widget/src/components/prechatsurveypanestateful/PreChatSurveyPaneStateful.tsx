@@ -28,8 +28,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXPrechatPaneStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXPrechatPaneStart
         });
     }, []);
     
@@ -156,13 +155,11 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         }
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.PrechatSurveyLoaded,
-            LogToAppInsights: false
+            Event: TelemetryEvent.PrechatSurveyLoaded
         });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXPrechatPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
 

@@ -301,8 +301,7 @@ const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined,
     if (customContextLocal) {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.SettingCustomContext,
-            Description: "Setting custom context for unauthenticated chat",
-            LogToAppInsights: false,
+            Description: "Setting custom context for unauthenticated chat"
         });
 
         optionalParams = Object.assign({}, optionalParams, {
@@ -369,8 +368,7 @@ const checkIfConversationStillValid = async (facadeChatSDK: FacadeChatSDK, dispa
             Event: TelemetryEvent.GetConversationDetailsException,
             ExceptionDetails: {
                 exception: `Conversation is not valid: ${error}`
-            },
-            LogToAppInsights: false,
+            }
         });
         return false;
     }

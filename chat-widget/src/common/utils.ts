@@ -392,8 +392,7 @@ export const getConversationDetailsCall = async (facadeChatSDK: FacadeChatSDK, l
     try {
         TelemetryHelper.logSDKEvent(LogLevel.INFO, {
             Event: TelemetryEvent.GetConversationDetailsCallStarted,
-            Description: "Conversation details call started",
-            LogToAppInsights: false
+            Description: "Conversation details call started"
         });
         conversationDetails = await facadeChatSDK.getConversationDetails(optionalParams);
     } catch (error) {
@@ -402,8 +401,7 @@ export const getConversationDetailsCall = async (facadeChatSDK: FacadeChatSDK, l
             Event: TelemetryEvent.GetConversationDetailsCallFailed,
             ExceptionDetails: {
                 exception: `Get Conversation Details Call Failed : ${error}`
-            },
-            LogToAppInsights: false,
+            }
         });
     }
 

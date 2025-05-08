@@ -17,8 +17,7 @@ export const isCookieAllowed = () => {
             console.warn("Third party cookies blocked.");
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.ThirdPartyCookiesBlocked,
-                Description: "Third party cookies are blocked. Cannot access local storage or session storage.",
-                LogToAppInsights: false
+                Description: "Third party cookies are blocked. Cannot access local storage or session storage."
             });
             (window as any).TPCWarningLogged = true;
         }
@@ -56,8 +55,7 @@ export const defaultClientDataStoreProvider = (cacheTtlinMins = 0, storageType: 
                     TelemetryHelper.logConfigDataEvent(LogLevel.ERROR, {
                         Event: TelemetryEvent.ClientDataStoreProviderFailed,
                         ExceptionDetails: error,
-                        Description: "Unable to store data in localStorage.",
-                        LogToAppInsights: false
+                        Description: "Unable to store data in localStorage."
                     });
                 }
             } else {

@@ -26,8 +26,7 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXNotificationPaneStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXNotificationPaneStart
         });
     }, []);
 
@@ -41,8 +40,7 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     const onCloseChatClick = async () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, { 
             Event: TelemetryEvent.NotificationCloseChatButtonClicked, 
-            Description: "Notification Close Chat button clicked.", 
-            LogToAppInsights: false
+            Description: "Notification Close Chat button clicked."
         });
 
         if (localConfirmationPaneState.current !== ConfirmationState.Ok) {
@@ -64,8 +62,7 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     const handleDismissNotification = useCallback(() => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, { 
             Event: TelemetryEvent.NotificationDismissButtonClicked, 
-            Description: `${notificationScenarioType} Notification Dismiss button clicked.`, 
-            LogToAppInsights: false
+            Description: `${notificationScenarioType} Notification Dismiss button clicked.`
         });
         dismissNotification(notificationScenarioType ?? "");
     }, [notificationScenarioType]); 
@@ -172,8 +169,7 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXNotificationPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
 

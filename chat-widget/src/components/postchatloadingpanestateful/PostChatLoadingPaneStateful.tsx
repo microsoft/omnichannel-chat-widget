@@ -20,8 +20,7 @@ export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXPostChatLoadingPaneStart,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXPostChatLoadingPaneStart
         });
     }, []);
 
