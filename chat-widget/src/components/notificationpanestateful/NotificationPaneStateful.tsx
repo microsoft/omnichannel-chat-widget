@@ -38,10 +38,7 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     const localConfirmationPaneState = useRef(state?.domainStates?.confirmationState);
 
     const onCloseChatClick = async () => {
-        TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.NotificationCloseChatButtonClicked, 
-            Description: "Notification Close Chat button clicked."
-        });
+        TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.NotificationCloseChatButtonClicked, Description: "Notification Close Chat button clicked." });
 
         if (localConfirmationPaneState.current !== ConfirmationState.Ok) {
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
@@ -60,10 +57,7 @@ export const NotificationPaneStateful = (props: INotificationPaneStatefulProps) 
     const {useDismissNotification} = hooks;
     const dismissNotification = useDismissNotification();
     const handleDismissNotification = useCallback(() => {
-        TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.NotificationDismissButtonClicked, 
-            Description: `${notificationScenarioType} Notification Dismiss button clicked.`
-        });
+        TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.NotificationDismissButtonClicked, Description: `${notificationScenarioType} Notification Dismiss button clicked.` });
         dismissNotification(notificationScenarioType ?? "");
     }, [notificationScenarioType]); 
 

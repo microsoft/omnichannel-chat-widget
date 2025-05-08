@@ -26,8 +26,7 @@ const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: 
     if (card.activity?.channelData?.tags?.includes(Constants.averageWaitTimeMessageTag) && loggedSystemMessages.indexOf(card.activity?.channelData?.clientmessageid) < 0) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.AverageWaitTimeMessageRecieved,
-            Description: "Average wait time message was received",
-            LogToAppInsights: true
+            Description: "Average wait time message was received"
         });
         loggedSystemMessages.push(card.activity.channelData.clientmessageid);
     }
@@ -35,8 +34,7 @@ const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: 
     if (card.activity?.channelData?.tags?.includes(Constants.queuePositionMessageTag) && loggedSystemMessages.indexOf(card.activity?.channelData?.clientmessageid) < 0) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.QueuePositionMessageRecieved,
-            Description: "Queue position message was received",
-            LogToAppInsights: true
+            Description: "Queue position message was received"
         });
         loggedSystemMessages.push(card.activity.channelData.clientmessageid);
     }

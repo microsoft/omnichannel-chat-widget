@@ -45,7 +45,7 @@ const extractSasUrl = async (attachment: any) => {
 
 const fetchBotAuthConfig = async (retries: number, interval: number): Promise<any> => {
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.SetBotAuthProviderFetchConfig
+        Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
     });
 
     const botAuthConfigRequestEvent: ICustomEvent = { eventName: BroadcastEvent.BotAuthConfigRequest };
@@ -117,7 +117,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
         if (!sasUrl) {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.BotAuthActivityEmptySasUrl,
-                Description: "SaS Url is empty"
+                Description: "SaS Url is empty",
             });
             return activity;
         } else {
@@ -127,17 +127,17 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             const response = await fetchBotAuthConfig(this.fetchBotAuthConfigRetries, this.fetchBotAuthConfigRetryInterval);
             if (response === false) {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.SetBotAuthProviderHideCard
+                    Event: TelemetryEvent.SetBotAuthProviderHideCard,
                 });
             } else {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.SetBotAuthProviderDisplayCard
+                    Event: TelemetryEvent.SetBotAuthProviderDisplayCard,
                 });
                 return activity;
             }
         } catch {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.SetBotAuthProviderNotFound
+                Event: TelemetryEvent.SetBotAuthProviderNotFound,
             });
             //this is to ensure listener continues waiting for response
             if (this.signInCardSeen.has(signInId)) {
