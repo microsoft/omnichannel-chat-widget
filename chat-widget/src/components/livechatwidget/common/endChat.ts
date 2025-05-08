@@ -160,7 +160,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
                     LogToAppInsights: true
                 });
             } else {
-                TelemetryHelper.logSDKEvent(LogLevel.WARN, {
+                TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.DisconnectEndChatSDKCallFailed,
                     ExceptionDetails: {
                         exception: ex

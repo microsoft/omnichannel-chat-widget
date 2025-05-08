@@ -129,8 +129,8 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
     }
 
-    TelemetryHelper.logLoadingEvent(LogLevel.WARN, {
-        Event: TelemetryEvent.WidgetLoadComplete,
+    TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
+        Event: TelemetryEvent.WidgetLoadFailed,
         Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,

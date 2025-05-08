@@ -106,8 +106,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
         } else {
 
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-                Event: TelemetryEvent.PrechatSurveyExpected,
-                LogToAppInsights: true
+                Event: TelemetryEvent.PrechatSurveyExpected
             });
 
             dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });

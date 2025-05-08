@@ -27,7 +27,8 @@ export const StartChatErrorPaneStateful = (startChatErrorPaneProps: IStartChatEr
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXStartChatErrorPaneStart
+            Event: TelemetryEvent.UXStartChatErrorPaneStart,
+            LogToAppInsights: true
         });
     }, []);
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();

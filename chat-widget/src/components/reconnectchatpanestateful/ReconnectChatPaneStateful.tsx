@@ -90,12 +90,10 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
     useEffect(() => {
         setFocusOnElement(document.getElementById(controlProps.id as string) as HTMLElement);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.ReconnectChatPaneLoaded,
-            LogToAppInsights: false
+            Event: TelemetryEvent.ReconnectChatPaneLoaded
         });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXReconnectChatCompleted,
-            LogToAppInsights: false
+            Event: TelemetryEvent.UXReconnectChatCompleted
         });
     }, []);
 

@@ -42,32 +42,13 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
             try {
                 const eventName = telemetryInput?.payload?.Event;
                 const telemetryInfo = telemetryInput?.telemetryInfo?.telemetryInfo;
-                const eventProperties: ICustomProperties = {};
-                if (telemetryInfo) {
-                    const allowedKeys = ["LogLevel", "Description", "ExceptionDetails", "ChannelId", "LCWRuntimeId", "ConversationId"];
+                const eventProperties = setEventProperties(telemetryInfo);
 
-                    allowedKeys.forEach((key) => {
-                        const value = telemetryInfo[key];
-                        if (value !== undefined && value !== null && value !== "") {
-                            eventProperties[key] = value;
-                        }
-                    });
-                }
                 const _logger = logger();
-                if(!_logger) {
-                    console.log("Unable to initialize Application Insights logger");
-                    return;
-                }
-                if (telemetryInput.payload.LogToAppInsights === true && eventName?.trim()) {
-                    let trackingEventName: string;
-                    if (logLevel === LogLevel.ERROR) {
-                        trackingEventName = ScenarioMarker.failScenario(eventName);
-                    } else if (eventName?.toLowerCase().includes("complete")) {
-                        trackingEventName = ScenarioMarker.completeScenario(eventName);
-                    } else {
-                        trackingEventName = ScenarioMarker.startScenario(eventName);
-                    }
+                if (!_logger) return;
 
+                if (telemetryInput.payload.LogToAppInsights === true && eventName) {
+                    const trackingEventName = getTrackingEventName(logLevel, eventName);
                     _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
                 }
             } catch (error) {
@@ -81,6 +62,32 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function setEventProperties(telemetryInfo?: any): ICustomProperties {
+        const eventProperties: ICustomProperties = {};
+        if (telemetryInfo) {
+            const allowedKeys = ["LogLevel", "Description", "ExceptionDetails", "ChannelId", "LCWRuntimeId", "ConversationId"];
+    
+            allowedKeys.forEach((key) => {
+                const value = telemetryInfo[key];
+                if (value !== undefined && value !== null && value !== "") {
+                    eventProperties[key] = value;
+                }
+            });
+        }
+        return eventProperties;
+    }
+
+    function getTrackingEventName(logLevel: LogLevel, eventName: string): string {
+        if (logLevel === LogLevel.ERROR) {
+            return ScenarioMarker.failScenario(eventName);
+        }
+        if (eventName?.toLowerCase().includes("complete")) {
+            return ScenarioMarker.completeScenario(eventName);
+        }
+        return ScenarioMarker.startScenario(eventName);
+    }
+
     return aiLogger;
 };
 
@@ -88,4 +95,14 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
 export interface ICustomProperties {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
+}
+
+
+export enum AppInsightsTelemetryKey {
+    LogLevel = "LogLevel",
+    Description = "Description",
+    ExceptionDetails = "ExceptionDetails",
+    ChannelId = "ChannelId",
+    LCWRuntimeId = "LCWRuntimeId",
+    ConversationId = "ConversationId",
 }

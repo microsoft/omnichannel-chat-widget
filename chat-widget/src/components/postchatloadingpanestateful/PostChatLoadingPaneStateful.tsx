@@ -51,13 +51,11 @@ export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
             firstElement[0].focus();
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.PostChatSurveyLoadingPaneLoaded,
-            LogToAppInsights: false
+            Event: TelemetryEvent.PostChatSurveyLoadingPaneLoaded
         });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXPostChatLoadingPaneCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: false
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
     
