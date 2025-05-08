@@ -20,6 +20,7 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
+import { createTrackingForFirstMessage } from "../../../firstresponselatency/FirstMessageTrackerFromBot";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
@@ -203,6 +204,8 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 
         // Set app state to Active
         if (isStartChatSuccessful) {
+            createTrackingForFirstMessage();
+            
             ActivityStreamHandler.uncork();
             // Update start chat failure app state if chat loads successfully
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
@@ -226,6 +229,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         }
 
         logWidgetLoadComplete();
+
         // Set post chat context in state, load in background to do not block the load
         setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch);
         // Updating chat session detail for telemetry

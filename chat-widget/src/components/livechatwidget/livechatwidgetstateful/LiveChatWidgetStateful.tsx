@@ -91,7 +91,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
-import { createTrackingForFirstMessage } from "../../../firstresponselatency/FirstMessageTrackerFromBot";
 
 let uiTimer : ITimer;
 
@@ -156,7 +155,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
-        createTrackingForFirstMessage();
+        
         const isReconnectTriggered = async (): Promise<boolean> => {
             if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
                 const noValidReconnectId = await handleChatReconnect(facadeChatSDK, props, dispatch, setAdapter, initStartChat, state);

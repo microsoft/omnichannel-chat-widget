@@ -1,8 +1,8 @@
 import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
 import { MessagePayload, TrackingMessage } from "./Constants";
 
-import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 
 export class FirstResponseLatencyTracker {
 
@@ -12,6 +12,8 @@ export class FirstResponseLatencyTracker {
 
     private startTrackingMessage?: TrackingMessage;
     private stopTrackingMessage?: TrackingMessage;
+    private isReady = false;
+
 
     constructor() {
         // this is a workaround to ensure in reload we track effectively the messages
@@ -34,6 +36,11 @@ export class FirstResponseLatencyTracker {
 
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
+
+
+        console.log("LOPEZ :: FirstResponseLatencyTracker - startTracking", this.isReady);
+        if (!this.isReady) return;
+            
         //  this prevents to initiate tracking for multiple incoming messages
         if (this.isStarted) {
             return;
@@ -154,6 +161,17 @@ export class FirstResponseLatencyTracker {
     }
     );
 
+    private fmltrackingListener = BroadcastService.getMessageByEventName("FMLTrackingCompleted").subscribe(() => {
+        console.log("LOPEZ :: FMLTrackingCompleted event received");
+        this.isReady = true;
+        BroadcastService.postMessage({
+            eventName: "FMLTrackingCompletedAck",
+            payload: null
+        });
+    }
+    );
+
+
     private deregister(): void {
         // Reset State
         this.isABotConversation = false;
@@ -162,5 +180,6 @@ export class FirstResponseLatencyTracker {
         this.startTrackingMessage = undefined;
         this.stopTrackingMessage = undefined;
         this.offlineNetworkListener.unsubscribe();
+        this.fmltrackingListener.unsubscribe();
     }
 }

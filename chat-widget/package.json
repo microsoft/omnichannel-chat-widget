@@ -109,6 +109,7 @@
     "verify": "yarn install && yarn build-storybook && yarn test:all && yarn build && yarn storybook",
     "testpack": "yarn build && yarn pack",
     "build-sample": "yarn build && webpack --config ./webpack.config.cjs",
+    "watch": "webpack --config ./webpack.config.cjs --watch --progress",
     "build-sample:dev": "yarn build && webpack --config ./webpack.dev.config.cjs",
     "test:visual:build": "yarn build-storybook && yarn test:visual",
     "lint": "yarn eslint . --max-warnings=0",
