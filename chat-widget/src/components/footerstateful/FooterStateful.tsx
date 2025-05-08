@@ -46,14 +46,19 @@ export const FooterStateful = (props: any) => {
         onDownloadTranscriptClick: async () => {
             try {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-                    Event: TelemetryEvent.DownloadTranscriptButtonClicked, 
-                    Description: "Download Transcript button clicked.",
+                    Event: TelemetryEvent.DownloadTranscriptActionStarted,
+                    Description: "Download transcript action started.",
                     LogToAppInsights: true
                 });
                 await downloadTranscript(facadeChatSDK, downloadTranscriptProps, state);
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                    Event: TelemetryEvent.DownloadTranscriptActionCompleted,
+                    Description: "Download transcript action completed.",
+                    LogToAppInsights: true
+                });
             } catch (ex) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.DownloadTranscriptFailed,
+                    Event: TelemetryEvent.DownloadTranscriptActionFailed,
                     ExceptionDetails: {
                         exception: ex
                     },
@@ -66,8 +71,8 @@ export const FooterStateful = (props: any) => {
         },
         onEmailTranscriptClick: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-                Event: TelemetryEvent.EmailTranscriptButtonClicked, 
-                Description: "Email Transcript button clicked.",
+                Event: TelemetryEvent.EmailTranscriptActionStarted, 
+                Description: "Email Transcript action started.",
                 LogToAppInsights: true 
             });
             const emailTranscriptButtonId = footerProps?.controlProps?.emailTranscriptButtonProps?.id ?? `${controlProps.id}-emailtranscript-button`;
@@ -77,11 +82,7 @@ export const FooterStateful = (props: any) => {
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE, payload: true });
         },
         onAudioNotificationClick: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-                Event: TelemetryEvent.AudioToggleButtonClicked, 
-                Description: "Audio button clicked.",
-                LogToAppInsights: true
-            });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.AudioToggleButtonClicked, Description: "Audio button clicked." });
             dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: !state.appStates.isAudioMuted });
         },
         ...footerProps?.controlProps,

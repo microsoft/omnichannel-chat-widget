@@ -60,13 +60,13 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
             await facadeChatSDK?.emailLiveChatTranscript(chatTranscriptBody, {liveChatContext});
             NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressSaved, state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS ?? defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.EmailTranscriptSent,
+                Event: TelemetryEvent.EmailTranscriptActionCompleted,
                 Description: "Transcript sent to email successfully.",
                 LogToAppInsights: true
             });
         } catch (ex) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                Event: TelemetryEvent.EmailTranscriptFailed,
+                Event: TelemetryEvent.EmailTranscriptActionFailed,
                 ExceptionDetails: {
                     exception: ex
                 },
@@ -84,11 +84,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         dir: state.domainStates.globalDir,
         onSend,
         onCancel: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-                Event: TelemetryEvent.EmailTranscriptCancelButtonClicked, 
-                Description: "Email Transcript cancel button clicked.", 
-                LogToAppInsights: true 
-            });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptCancelButtonClicked, Description: "Email Transcript cancel button clicked." });
             closeEmailTranscriptPane();
         },
         checkInput: function (input: string) {

@@ -90,7 +90,6 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         dispatch({ type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.WebChatLoaded
-
         });
 
         if (props.webChatContainerProps?.renderingMiddlewareProps?.disableThirdPartyCookiesAlert !== true && !contextDataStore) {

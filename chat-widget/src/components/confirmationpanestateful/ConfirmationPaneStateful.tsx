@@ -36,23 +36,20 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
         onConfirm: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConfirmationConfirmButtonClicked,
-                Description: "Confirmation pane Confirm button clicked",
-                LogToAppInsights: true
+                Description: "Confirmation pane Confirm button clicked"
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
             setTabIndices(elements, initialTabIndexMap, true);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedByCustomer,
-                Description: "Conversation is ended by customer.",
-                LogToAppInsights: true
+                Description: "Conversation is ended by customer."
             });
         },
         onCancel: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConfirmationCancelButtonClicked,
-                Description: "Confirmation pane Cancel button clicked.",
-                LogToAppInsights: true
+                Description: "Confirmation pane Cancel button clicked."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Cancel });
@@ -80,9 +77,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
 
         elements = findParentFocusableElementsWithoutChildContainer(controlProps.id as string);
         setTabIndices(elements, initialTabIndexMap, false);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.ConfirmationPaneLoaded,
-        });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ConfirmationPaneLoaded });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXConfirmationPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed

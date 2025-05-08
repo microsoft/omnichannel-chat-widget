@@ -69,15 +69,13 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             if (conversationDetails?.participantType === ParticipantType.Bot) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ConversationEndedThreadEventReceived,
-                    Description: "Conversation end by bot or timeout event received.",
-                    LogToAppInsights: true
+                    Description: "Conversation end by bot or timeout event received."
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Bot });
             } else {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ConversationEndedThreadEventReceived,
-                    Description: "Conversation end by agent or timeout event received.",
-                    LogToAppInsights: true
+                    Description: "Conversation end by agent or timeout event received."
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Agent });
             }

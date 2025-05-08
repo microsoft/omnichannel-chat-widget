@@ -19,10 +19,7 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
 
     const authClientFunction = getAuthClientFunction(chatConfig);
     if (getAuthToken && authClientFunction) {
-        TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.GetAuthTokenCalled,
-            LogToAppInsights: true
-        });
+        TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
         const token = await getAuthToken(authClientFunction);
         if (!isNullOrEmptyString(token)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,20 +30,13 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
         } else {
             // instead of returning false, it's more appropiate to thrown an error to force error handling on the caller side
             // this will help to avoid the error to be ignored and the chat to be started
-            TelemetryHelper.logActionEvent(LogLevel.ERROR, { 
-                Event: TelemetryEvent.ReceivedNullOrEmptyToken,
-                LogToAppInsights: true
-            });
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken });
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
     } else if (chatSDK?.chatSDKConfig?.getAuthToken) {
         const token = await chatSDK.chatSDKConfig?.getAuthToken();
         if (isNullOrEmptyString(token)) {
-            TelemetryHelper.logActionEvent(LogLevel.ERROR, { 
-                Event: TelemetryEvent.ReceivedNullOrEmptyToken, 
-                Description: "getAuthToken in chat SDK returns empty string",
-                LogToAppInsights: true
-            });
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken, Description: "getAuthToken in chat SDK returns empty string" });
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
         return { "result": true, token };

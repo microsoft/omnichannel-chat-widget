@@ -63,24 +63,21 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
         onContinueChat: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ReconnectChatContinueConversation,
-                Description: "Reconnect chat continue conversation button clicked.",
-                LogToAppInsights: true
+                Description: "Reconnect chat continue conversation button clicked."
             });
             startChat(true);
         },
         onStartNewChat: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ReconnectChatStartNewConversation,
-                Description: "Reconnect chat start new conversation button clicked.",
-                LogToAppInsights: true
+                Description: "Reconnect chat start new conversation button clicked."
             });
             startChat(false);
         },
         onMinimize: () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ReconnectChatMinimize,
-                Description: "Reconnect chat minimized.",
-                LogToAppInsights: true
+                Description: "Reconnect chat minimized."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
         },
@@ -89,9 +86,7 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
 
     useEffect(() => {
         setFocusOnElement(document.getElementById(controlProps.id as string) as HTMLElement);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.ReconnectChatPaneLoaded
-        });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ReconnectChatPaneLoaded });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXReconnectChatCompleted
         });

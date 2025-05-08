@@ -105,30 +105,29 @@ export enum TelemetryEvent {
     EndChatSucceeded = "EndChatSucceeded",
     EndChatFailed = "EndChatFailed",
     SettingCustomContext = "SettingCustomContext",
-    WebChatLoaded = "WebChatLoadingCompleted",
-    LCWChatButtonClicked = "LCWChatButtonClicked",
-    LCWChatButtonShow = "LCWChatButtonShow",
+    WebChatLoaded = "WebChatLoaded",
+    LCWChatButtonClickActionStarted = "LCWChatButtonClickActionStarted",
+    LCWChatButtonClickActionCompleted = "LCWChatButtonClickActionCompleted",
+    LCWChatButtonShow = "LCWChatButtonShowCompleted",
 
-    WidgetLoadStarted = "WidgetLoadStarted",
-    WidgetLoadComplete = "WidgetLoadComplete",
-    WidgetLoadFailed = "WidgetLoadFailed",
+    WidgetStartChatStarted = "WidgetStartChatStarted",
+    WidgetStartChatCompleted = "WidgetStartChatCompleted",
+    WidgetStartChatFailed = "WidgetStartChatCompleted",
     StartChatMethodException = "StartChatMethodException",
     CloseChatCall = "CloseChatCall",
     CloseChatMethodException = "CloseChatMethodException",
     PrechatSurveyLoaded = "PrechatSurveyLoaded",
     PrechatSurveyExpected = "PrechatSurveyExpected",
-    PrechatSubmitted = "PrechatSubmitted",
+    PrechatSubmitCompleted = "PrechatSubmitCompleted",
     StartChatSDKCall = "StartChatCall",
-    StartChatEventRecevied = "StartChatEventReceived",
+    StartChatEventReceived = "StartChatEventReceivedCompleted",
     EndChatSDKCall = "EndChatSDKCall",
     PrepareEndChat = "PrepareEndChat",
-    EndChatEventReceived = "EndChatEventReceived",
+    EndChatEventReceived = "EndChatEventReceivedCompleted",
     WindowClosed = "WindowClosed",
     OnNewMessageFailed = "OnNewMessageFailed",
     OnNewMessageAudioNotificationFailed = "OnNewMessageAudioNotificationFailed",
     DownloadTranscriptResponseNullOrUndefined = "DownloadTranscriptResponseNullOrUndefined",
-    EmailTranscriptSent = "EmailTranscriptSent",
-    EmailTranscriptFailed = "EmailTranscriptFailed",
     ErrorUIPaneLoaded = "ErrorUIPaneLoaded",
     DownloadTranscriptFailed = "DownloadTranscriptFailed",
     StartChatFailed = "StartChatFailed",
@@ -136,18 +135,24 @@ export enum TelemetryEvent {
     ConfirmationConfirmButtonClicked = "ConfirmationConfirmButtonClicked",
     LoadingPaneLoaded = "LoadingPaneLoaded",
     LoadingPaneUnloaded = "LoadingPaneUnloaded",
-    StartChatErrorPaneLoaded = "StartChatErrorPaneLoadingCompleted",
+    StartChatErrorPaneLoaded = "StartChatErrorPaneLoaded",
     EmailTranscriptLoaded = "EmailTranscriptLoaded",
     OutOfOfficePaneLoaded = "OutOfOfficePaneLoaded",
     ConfirmationPaneLoaded = "ConfirmationPaneLoaded",
     ProactiveChatPaneLoaded = "ProactiveChatPaneLoaded",
     ReconnectChatPaneLoaded = "ReconnectChatPaneLoaded",
-    HeaderCloseButtonClicked = "HeaderCloseButtonClicked",
-    HeaderMinimizeButtonClicked = "HeaderMinimizeButtonClicked",
+    CloseChatActionStarted = "CloseChatActionStarted",
+    CloseChatActionCompleted = "CloseChatActionCompleted",
+    MinimizeChatActionStarted = "MinimizeChatActionStarted",
+    MinimizeChatActionCompleted = "MinimizeChatActionCompleted",
     NotificationCloseChatButtonClicked = "NotificationCloseChatButtonClicked",
     NotificationDismissButtonClicked = "NotificationDismissButtonClicked",
-    DownloadTranscriptButtonClicked = "DownloadTranscriptButtonClicked",
-    EmailTranscriptButtonClicked = "EmailTranscriptButtonClicked",
+    DownloadTranscriptActionStarted = "DownloadTranscriptActionStarted",
+    DownloadTranscriptActionCompleted = "DownloadTranscriptActionCompleted",
+    DownloadTranscriptActionFailed = "DownloadTranscriptActionFailed",
+    EmailTranscriptActionStarted = "EmailTranscriptActionStarted",
+    EmailTranscriptActionCompleted = "EmailTranscriptActionCompleted",
+    EmailTranscriptActionFailed = "EmailTranscriptActionFailed",
     EmailTranscriptCancelButtonClicked = "EmailTranscriptCancelButtonClicked",
     AudioToggleButtonClicked = "AudioToggleButtonClicked",
     SuppressBotMagicCodeSucceeded = "SuppressBotMagicCodeSucceeded",
@@ -159,7 +164,7 @@ export enum TelemetryEvent {
     GetAuthTokenFailed = "GetAuthTokenFailed",
     ReceivedNullOrEmptyToken = "ReceivedNullOrEmptyToken",
     CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
-    CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",
+    CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitCompleted",
     CustomerVoiceFormResponseError = "CustomerVoiceFormResponseError",
     BotAuthActivityEmptySasUrl = "BotAuthActivityEmptySasUrl",
     SetBotAuthProviderFetchConfig = "SetBotAuthProviderFetchConfig",
@@ -191,25 +196,25 @@ export enum TelemetryEvent {
 
     PreChatSurveyStartChatMethodFailed = "PreChatSurveyStartChatMethodFailed",
     ChatAlreadyTriggered = "ChatAlreadyTriggered",
-    StartProactiveChatEventReceived = "StartProactiveChatEventReceived",
+    StartProactiveChatEventReceived = "StartProactiveChatEventReceivedCompleted",
     StartProactiveChatMethodFailed = "StartProactiveChatMethodFailed",
     ProactiveChatAccepted = "ProactiveChatAccepted",
-    ProactiveChatRejected = "ProactiveChatRejected",
+    ProactiveChatTimeOutCompleted = "ProactiveChatTimeOutCompleted",
     IncomingProactiveChatScreenLoaded = "IncomingProactiveChatScreenLoaded",
     ProactiveChatClosed = "ProactiveChatClosed",
     ReconnectChatContinueConversation = "ReconnectChatContinueConversation",
     ReconnectChatStartNewConversation = "ReconnectChatStartNewConversation",
     ReconnectChatMinimize = "ReconnectChatMinimize",
 
-    MessageSent = "MessageSent",
-    MessageReceived = "MessageReceived",
+    MessageSentCompleted = "MessageSentCompleted",
+    MessageReceivedCompleted = "MessageReceivedCompleted",
     MessageLapTrack = "MessageLapTrack",
     MessageStartLapTrackError = "MessageStartLapTrackError",
     MessageStopLapTrackError = "MessageStopLapTrackError",
-    SystemMessageReceived = "SystemMessageReceived",
-    RehydrateMessageReceived = "RehydrateMessageReceived",
+    SystemMessageReceivedCompleted = "SystemMessageReceivedCompleted",
+    RehydrateMessageReceivedCompleted = "RehydrateMessageReceivedCompleted",
 
-    CustomContextReceived = "CustomContextReceived",
+    CustomContextReceived = "CustomContextReceivedCompleted",
 
     // Internet connection
     NetworkDisconnected = "NetworkDisconnected",
@@ -221,10 +226,11 @@ export enum TelemetryEvent {
     PostChatWorkflowFromCustomer = "PostChatWorkflowFromCustomer",
     PostChatWorkflowFromAgent = "PostChatWorkflowFromAgent",
     PostChatWorkflowFromBot = "PostChatWorkflowFromBot",
-    PostChatContextCallSucceed = "PostChatContextCallSucceed",
+    PostChatContextCallStarted = "PostChatContextCallStarted",
+    PostChatContextCallCompleted = "PostChatContextCallCompleted",
     PostChatContextCallFailed = "PostChatContextCallFailed",
     PostChatSurveyLoadingPaneLoaded = "PostChatSurveyLoadingPaneLoaded",
-    PostChatSurveyLoaded = "PostChatSurveyLoadingCompleted",
+    PostChatSurveyLoaded = "PostChatSurveyLoaded",
     PostChatSurveyUrlValidationCompleted = "PostChatSurveyUrlValidationCompleted",
     PostChatSurveyUrlValidationFailed = "PostChatSurveyUrlValidationFailed",
 
@@ -235,9 +241,9 @@ export enum TelemetryEvent {
     EndingAdapterAfterDisconnectionError = "EndingAdapterAfterDisconnectionError",
 
     //FacadeChatSDK events
-    NewTokenSuccess = "NewTokenSuccess",
-    NewTokenFailed = "NewTokenFailed",
-    NewTokenExpired = "NewTokenExpired",
+    NewTokenValidationStarted = "NewTokenValidationStarted",
+    NewTokenValidationCompleted = "NewTokenValidationCompleted",
+    NewTokenValidationFailed = "NewTokenValidationFailed",
     TokenEmptyOrSame = "TokenEmptyOrSame",
 
     //UX Telemetry Events
@@ -295,8 +301,8 @@ export class TelemetryConstants {
                 return ScenarioType.CONFIG_VALIDATION;
 
             case TelemetryEvent.WebChatLoaded:
-            case TelemetryEvent.WidgetLoadComplete:
-            case TelemetryEvent.WidgetLoadFailed:
+            case TelemetryEvent.WidgetStartChatCompleted:
+            case TelemetryEvent.WidgetStartChatFailed:
             case TelemetryEvent.IncomingProactiveChatScreenLoaded:
             case TelemetryEvent.LCWChatButtonShow:
             case TelemetryEvent.PrechatSurveyLoaded:
@@ -310,28 +316,28 @@ export class TelemetryConstants {
             case TelemetryEvent.ThirdPartyCookiesBlocked:
                 return ScenarioType.LOAD;
 
-            case TelemetryEvent.PrechatSubmitted:
-            case TelemetryEvent.LCWChatButtonClicked:
+            case TelemetryEvent.PrechatSubmitCompleted:
+            case TelemetryEvent.LCWChatButtonClickActionStarted:
             case TelemetryEvent.ProactiveChatAccepted:
-            case TelemetryEvent.ProactiveChatRejected:
+            case TelemetryEvent.ProactiveChatTimeOutCompleted:
             case TelemetryEvent.ProactiveChatClosed:
             case TelemetryEvent.ProcessingHTMLTextMiddlewareFailed:
             case TelemetryEvent.DataMaskingRuleApplied:
             case TelemetryEvent.ConversationEndedThreadEventReceived:
             case TelemetryEvent.InvalidConfiguration:
             case TelemetryEvent.DownloadTranscriptResponseNullOrUndefined:
-            case TelemetryEvent.EmailTranscriptSent:
-            case TelemetryEvent.EmailTranscriptFailed:
+            case TelemetryEvent.EmailTranscriptActionCompleted:
+            case TelemetryEvent.EmailTranscriptActionFailed:
             case TelemetryEvent.DownloadTranscriptFailed:
             case TelemetryEvent.ConfirmationCancelButtonClicked:
             case TelemetryEvent.ConfirmationConfirmButtonClicked:
             case TelemetryEvent.PreChatSurveyStartChatMethodFailed:
-            case TelemetryEvent.HeaderCloseButtonClicked:
-            case TelemetryEvent.HeaderMinimizeButtonClicked:
+            case TelemetryEvent.CloseChatActionStarted:
+            case TelemetryEvent.MinimizeChatActionCompleted:
             case TelemetryEvent.NotificationCloseChatButtonClicked:
             case TelemetryEvent.NotificationDismissButtonClicked:
-            case TelemetryEvent.MessageSent:
-            case TelemetryEvent.MessageReceived:
+            case TelemetryEvent.MessageSentCompleted:
+            case TelemetryEvent.MessageReceivedCompleted:
             case TelemetryEvent.CustomContextReceived:
             case TelemetryEvent.BrowserUnloadEventStarted:
             case TelemetryEvent.NetworkDisconnected:
@@ -350,7 +356,7 @@ export class TelemetryConstants {
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
-            case TelemetryEvent.StartChatEventRecevied:
+            case TelemetryEvent.StartChatEventReceived:
             case TelemetryEvent.StartChatMethodException:
             case TelemetryEvent.CloseChatMethodException:
             case TelemetryEvent.StartProactiveChatEventReceived:
@@ -362,7 +368,7 @@ export class TelemetryConstants {
             case TelemetryEvent.EndChatEventReceived:
             case TelemetryEvent.EndChatSDKCallFailed:
             case TelemetryEvent.PostChatContextCallFailed:
-            case TelemetryEvent.PostChatContextCallSucceed:
+            case TelemetryEvent.PostChatContextCallCompleted:
             case TelemetryEvent.GetConversationDetailsException:
             case TelemetryEvent.PrepareEndChat:
                 return ScenarioType.SDK;

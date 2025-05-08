@@ -61,8 +61,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 Description: "Adaptive Card JSON Parse Failed.",
                 ExceptionDetails: {
                     exception: ex
-                },
-                LogToAppInsights: true
+                }
             });
         }
     };
@@ -76,7 +75,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onSubmit: async (values: { index: number, label: any, id: any, value: string }[]) => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-                Event: TelemetryEvent.PrechatSubmitted,
+                Event: TelemetryEvent.PrechatSubmitCompleted, 
                 LogToAppInsights: true
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
@@ -113,8 +112,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                     Description: "PreChat survey start chat failed.",
                     ExceptionDetails: {
                         exception: `PreChat survey start chat failed: ${ex}`
-                    },
-                    LogToAppInsights: true
+                    }
                 });
             }
         },

@@ -25,6 +25,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXLCWChatButtonStart,
+            Description: "Chat button loading started",
             LogToAppInsights: true
         });
     }, []);
@@ -39,7 +40,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
     ref.current = async () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.LCWChatButtonClicked,
+            Event: TelemetryEvent.LCWChatButtonClickActionStarted,
+            Description: "Chat button click action started",
             LogToAppInsights: true
         });
         
@@ -53,6 +55,12 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         } else {
             await startChat();
         }
+
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.LCWChatButtonClickActionCompleted,
+            Description: "Chat button click action completed",
+            LogToAppInsights: true
+        });
     };
 
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);
@@ -75,13 +83,19 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         subtitleText: "No agents available",
         onClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.LCWChatButtonClicked,
+                Event: TelemetryEvent.LCWChatButtonClickActionStarted,
+                Description: "Chat button click action started",
                 LogToAppInsights: true
             });
 
             state.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
-        },
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.LCWChatButtonClickActionCompleted,
+                Description: "Chat button click action completed",
+                LogToAppInsights: true
+            });
+        }, 
         unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
         ...outOfOfficeButtonProps?.controlProps
     };
@@ -91,10 +105,14 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         if (state.appStates.outsideOperatingHours) {
             setOutOfOperatingHours(true);
         }
+        TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+            Event: TelemetryEvent.MinimizeChatActionCompleted, 
+            Description: "Header Minimize action completed.",
+            LogToAppInsights: true
+        });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonShow,
-            ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
-            LogToAppInsights: true
+            ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed
         });
 
         if (state.uiStates.focusChatButton) {
@@ -105,6 +123,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXLCWChatButtonCompleted,
+            Description: "Chat button loading completed",
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
             LogToAppInsights: true
         });

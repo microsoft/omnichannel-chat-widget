@@ -153,8 +153,8 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         TelemetryTimers.WidgetLoadTimer = createTimer();
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.WidgetLoadStarted,
-            Description: "Widget loading started",
+            Event: TelemetryEvent.WidgetStartChatStarted,
+            Description: "Widget start chat started. Custom context: " + state?.domainStates?.customContext,
             LogToAppInsights: true
         });
 
@@ -189,8 +189,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 Event: TelemetryEvent.StartChatMethodException,
                 ExceptionDetails: {
                     exception: `Failed to setup startChat: ${error}`
-                },
-                LogToAppInsights: true
+                }
             });
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.OnWidgetError,

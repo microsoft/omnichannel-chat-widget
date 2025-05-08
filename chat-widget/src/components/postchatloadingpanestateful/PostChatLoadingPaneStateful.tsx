@@ -50,9 +50,7 @@ export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
         if (firstElement && firstElement[0]) {
             firstElement[0].focus();
         }
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.PostChatSurveyLoadingPaneLoaded
-        });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PostChatSurveyLoadingPaneLoaded });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXPostChatLoadingPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed

@@ -23,7 +23,8 @@ export const ProactiveChatPaneStateful = (props: any) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXProactiveChatPaneStart
+            Event: TelemetryEvent.UXProactiveChatPaneStart,
+            LogToAppInsights: true
         });
     }, []);
 
@@ -44,7 +45,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.ProactiveChatRejected,
+                Event: TelemetryEvent.ProactiveChatTimeOutCompleted,
                 ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
                 Description: "Proactive chat invitation timed out.",
                 LogToAppInsights: true
@@ -59,8 +60,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
             setTimeoutRemoved(true);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ProactiveChatAccepted,
-                Description: "Proactive chat accepted.",
-                LogToAppInsights: true
+                Description: "Proactive chat accepted."
             });
             if (state.appStates.proactiveChatStates.proactiveChatInNewWindow) {
                 // TODO: BroadcastService: replace with the sdk broadcast service, when in place
@@ -87,8 +87,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
             setTimeoutRemoved(true);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ProactiveChatClosed,
-                Description: "Proactive chat closed.",
-                LogToAppInsights: true
+                Description: "Proactive chat closed."
             });
             dispatch({
                 type: LiveChatWidgetActionType.SET_PROACTIVE_CHAT_PARAMS, payload: {
@@ -116,7 +115,8 @@ export const ProactiveChatPaneStateful = (props: any) => {
         });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXProactiveChatCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: true
         });
         return () => {
             clearTimeout(timeoutEvent);

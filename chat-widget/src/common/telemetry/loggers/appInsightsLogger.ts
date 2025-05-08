@@ -66,7 +66,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     function setEventProperties(telemetryInfo?: any): ICustomProperties {
         const eventProperties: ICustomProperties = {};
         if (telemetryInfo) {
-            const allowedKeys = ["LogLevel", "Description", "ExceptionDetails", "ChannelId", "LCWRuntimeId", "ConversationId"];
+            const allowedKeys = ["LogLevel", "Description", "ExceptionDetails", "ChannelId", "LCWRuntimeId", "ConversationId", "ChatId"];
     
             allowedKeys.forEach((key) => {
                 const value = telemetryInfo[key];

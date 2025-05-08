@@ -18,7 +18,7 @@ import { getWidgetCacheIdfromProps } from "../../../common/utils";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
     if (!ex) {
-        logWidgetLoadFailed();
+        logWidgetLoadFailed(); //
         return;
     }
 
@@ -72,8 +72,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         // Set app state to failing start chat if hideErrorUI is not turned on
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.ErrorUIPaneLoaded,
-            Description: "Error UI Pane Loaded",
-            LogToAppInsights: true
+            Description: "Error UI Pane Loaded"
         });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
     } else {
@@ -92,14 +91,14 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
 const logWidgetLoadFailed = (ex?: ChatSDKError) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const exDetails: any = {
-        Exception: `Widget load complete with error: ${ex}`
+        Exception: `Widget start chat failed with error: ${ex}`
     };
     if (ex?.httpResponseStatusCode) {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
     }
     
     TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-        Event: TelemetryEvent.WidgetLoadFailed,
+        Event: TelemetryEvent.WidgetStartChatFailed,
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
         LogToAppInsights: true
@@ -107,13 +106,13 @@ const logWidgetLoadFailed = (ex?: ChatSDKError) => {
 };
 
 export const logWidgetLoadComplete = (additionalMessage?: string) => {
-    let descriptionString = "Widget load complete";
+    let descriptionString = "Widget start chat complete";
     if (additionalMessage) {
         descriptionString += `. ${additionalMessage}`;
     }
 
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.WidgetLoadComplete,
+        Event: TelemetryEvent.WidgetStartChatCompleted,
         Description: descriptionString,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
         LogToAppInsights: true
@@ -123,15 +122,15 @@ export const logWidgetLoadComplete = (additionalMessage?: string) => {
 const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const exDetails: any = {
-        Exception: `Widget load complete with error: ${ex}`
+        Exception: `Widget start chat failed with error: ${ex}`
     };
     if (ex?.httpResponseStatusCode) {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
     }
 
     TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-        Event: TelemetryEvent.WidgetLoadFailed,
-        Description: "Widget load complete with error",
+        Event: TelemetryEvent.WidgetStartChatFailed,
+        Description: "Widget start chat failed with error",
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
         LogToAppInsights: true
@@ -142,12 +141,10 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
 const forceEndChat = (facadeChatSDK: FacadeChatSDK) => {
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
         Event: TelemetryEvent.PrepareEndChat,
-        Description: PrepareEndChatDescriptionConstants.WidgetLoadFailedAfterSessionInit,
-        LogToAppInsights: true
+        Description: PrepareEndChatDescriptionConstants.WidgetLoadFailedAfterSessionInit
     });
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.EndChatSDKCall,
-        LogToAppInsights: true
+        Event: TelemetryEvent.EndChatSDKCall
     });
     facadeChatSDK?.getChatSDK().endChat();
 };

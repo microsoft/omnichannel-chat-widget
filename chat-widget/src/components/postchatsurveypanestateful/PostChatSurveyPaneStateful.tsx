@@ -70,8 +70,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         if (!isValidSurveyUrl(controlProps.surveyURL)) {
             TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.PostChatSurveyUrlValidationFailed,
-                Description: `${controlProps.surveyURL} is not a valid Survey URL`,
-                LogToAppInsights: true
+                Description: `${controlProps.surveyURL} is not a valid Survey URL`
             });
 
             controlProps.surveyURL = "";
@@ -89,10 +88,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         if (firstElement && firstElement[0]) {
             firstElement[0].focus();
         }
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.PostChatSurveyLoaded,
-            LogToAppInsights: true
-        });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PostChatSurveyLoaded });
 
         //Customer Voice Telemetry Events
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -101,13 +97,10 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
 
             if (!data) return;
             if (data === CustomerVoiceEvents.ResponsePageLoaded) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-                    Event: TelemetryEvent.CustomerVoiceResponsePageLoaded,
-                    LogToAppInsights: true
-                });
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceResponsePageLoaded });
             } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-                    Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted,
+                    Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted, 
                     LogToAppInsights: true
                 });
             } else if (data === CustomerVoiceEvents.FormResponseError) {
