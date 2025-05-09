@@ -40,13 +40,12 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     const aiLogger: IChatSDKLogger = {
         log: (logLevel: LogLevel, telemetryInput: TelemetryInput): void => {
             try {
+                const _logger = logger();
+                if (!_logger) return;
                 const eventName = telemetryInput?.payload?.Event;
                 const telemetryInfo = telemetryInput?.telemetryInfo?.telemetryInfo;
                 const eventProperties = setEventProperties(telemetryInfo);
-
-                const _logger = logger();
-                if (!_logger) return;
-
+                
                 if (telemetryInput.payload.LogToAppInsights === true && eventName) {
                     const trackingEventName = getTrackingEventName(logLevel, eventName);
                     _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
@@ -92,7 +91,6 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
         }
         return ScenarioMarker.startScenario(eventName);
     }
-
     return aiLogger;
 };
 
@@ -100,14 +98,4 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
 export interface ICustomProperties {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
-}
-
-
-export enum AppInsightsTelemetryKey {
-    LogLevel = "LogLevel",
-    Description = "Description",
-    ExceptionDetails = "ExceptionDetails",
-    ChannelId = "ChannelId",
-    LCWRuntimeId = "LCWRuntimeId",
-    ConversationId = "ConversationId",
 }

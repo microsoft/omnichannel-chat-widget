@@ -24,7 +24,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLCWChatButtonStart,
+            Event: TelemetryEvent.UXLCWChatButtonLoadingStart,
             Description: "Chat button loading started",
             LogToAppInsights: true
         });
@@ -117,7 +117,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         }
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLCWChatButtonCompleted,
+            Event: TelemetryEvent.UXLCWChatButtonLoadingCompleted,
             Description: "Chat button loading completed",
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
             LogToAppInsights: true
