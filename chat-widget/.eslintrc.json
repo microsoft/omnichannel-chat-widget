@@ -6,6 +6,11 @@
         "jest": true,
         "jquery": true
     },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",

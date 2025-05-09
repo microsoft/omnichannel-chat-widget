@@ -3,7 +3,6 @@ const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-    devtool: "source-map",
     entry: "./samples/javascript-sample/SampleWidget.js",
     mode: "production",
     output: {
@@ -19,20 +18,28 @@ module.exports = {
         compress: true,
         port: 9000,
     },
+    cache: { // enforcing caching to avoid re build for unchanged files
+        type: "filesystem",
+    },
+    devtool: "eval-cheap-source-map", // this is the fastest source map option for development
     optimization: {
         minimize: true,
-        minimizer: [new TerserPlugin()],
+        minimizer: [new TerserPlugin({ parallel: true })], // this trick is to build faster
     },
     module: {
         rules: [
             {
                 test: /\.m?js$/,
-                use: {
-                    loader: "babel-loader",
-                    options: {
-                        presets: ["@babel/preset-env"]
-                    }
-                }
+              
+                use: [
+                    "thread-loader", // the idea is to use any core possible to divide the build
+                    {
+                        loader: "babel-loader",
+                        options: {
+                            presets: ["@babel/preset-env"],
+                            cacheDirectory: true
+                        }
+                    }]
             }
         ]
     }
