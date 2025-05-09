@@ -30,7 +30,7 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-              
+
                 use: [
                     "thread-loader", // the idea is to use any core possible to divide the build
                     {

@@ -57,7 +57,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     };
 
     const historyMessageStrategy = (payload: MessagePayload) => {
-        
+
         const newMessageReceivedEvent: ICustomEvent = {
             eventName: BroadcastEvent.HistoryMessageReceived,
             payload: payload
@@ -111,7 +111,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         };
 
         BroadcastService.postMessage(newMessageReceivedEvent);
-        
+
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageReceived,
             Description: "New message received",
