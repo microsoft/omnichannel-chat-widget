@@ -83,7 +83,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         subtitleText: "No agents available",
         onClick: async () => {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.LCWChatButtonClickActionStarted,
+                Event: TelemetryEvent.LCWChatButtonActionStarted,
                 Description: "Chat button click action started",
                 LogToAppInsights: true
             });
@@ -91,7 +91,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             state.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.LCWChatButtonClickActionCompleted,
+                Event: TelemetryEvent.LCWChatButtonActionCompleted,
                 Description: "Chat button click action completed",
                 LogToAppInsights: true
             });

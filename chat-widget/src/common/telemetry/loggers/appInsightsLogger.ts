@@ -67,11 +67,16 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
         const eventProperties: ICustomProperties = {};
         if (telemetryInfo) {
             const allowedKeys = ["LogLevel", "Description", "ExceptionDetails", "ChannelId", "LCWRuntimeId", "ConversationId", "ChatId"];
-    
+            // rename keys before sending to app insights
+            const renameKeys: { [key: string]: string } = {
+                "ConversationId": "LiveWorkItemId",
+                "ChatId": "ChatThreadId"
+            };
             allowedKeys.forEach((key) => {
                 const value = telemetryInfo[key];
+                const finalKey = renameKeys[key] || key;
                 if (value !== undefined && value !== null && value !== "") {
-                    eventProperties[key] = value;
+                    eventProperties[finalKey] = value;
                 }
             });
         }

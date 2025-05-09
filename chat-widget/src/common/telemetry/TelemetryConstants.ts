@@ -106,7 +106,7 @@ export enum TelemetryEvent {
     EndChatFailed = "EndChatFailed",
     SettingCustomContext = "SettingCustomContext",
     WebChatLoaded = "WebChatLoaded",
-    LCWChatButtonClickActionStarted = "LCWChatButtonClickActionStarted",
+    LCWChatButtonActionCompleted = "LCWChatButtonActionCompleted",
     LCWChatButtonActionStarted = "LCWChatButtonActionStarted",
     LCWChatButtonShow = "LCWChatButtonShowCompleted",
 
@@ -317,7 +317,7 @@ export class TelemetryConstants {
                 return ScenarioType.LOAD;
 
             case TelemetryEvent.PrechatSubmitCompleted:
-            case TelemetryEvent.LCWChatButtonClickActionStarted:
+            case TelemetryEvent.LCWChatButtonActionStarted:
             case TelemetryEvent.ProactiveChatAccepted:
             case TelemetryEvent.ProactiveChatTimeOutCompleted:
             case TelemetryEvent.ProactiveChatClosed:
