@@ -48,7 +48,10 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                 
                 if (telemetryInput.payload.LogToAppInsights === true && eventName) {
                     const trackingEventName = getTrackingEventName(logLevel, eventName);
-                    _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
+                    _logger.trackEvent({ 
+                        name: trackingEventName.startsWith("UX") ? trackingEventName.substring(2) : trackingEventName, 
+                        properties: eventProperties 
+                    });
                 }
             } catch (error) {
                 console.error("Error in logging telemetry to Application Insights:", error);

@@ -197,7 +197,6 @@ export class FacadeChatSDK {
             return { result: true, message: "Token is valid" };
         }
 
-        // new token validationStarted, completed and failed
         TelemetryHelper.logFacadeChatSDKEvent(LogLevel.INFO, {
             Event: TelemetryEvent.NewTokenValidationStarted,
             Description: "Token validation started.",

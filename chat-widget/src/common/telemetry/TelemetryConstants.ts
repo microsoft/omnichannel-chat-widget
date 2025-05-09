@@ -108,11 +108,11 @@ export enum TelemetryEvent {
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonActionCompleted = "LCWChatButtonActionCompleted",
     LCWChatButtonActionStarted = "LCWChatButtonActionStarted",
-    LCWChatButtonShow = "LCWChatButtonShowCompleted",
+    LCWChatButtonShow = "LCWChatButtonShow",
 
     WidgetStartChatStarted = "WidgetStartChatStarted",
     WidgetStartChatCompleted = "WidgetStartChatCompleted",
-    WidgetStartChatFailed = "WidgetStartChatCompleted",
+    WidgetStartChatFailed = "WidgetStartChatFailed",
     StartChatMethodException = "StartChatMethodException",
     CloseChatCall = "CloseChatCall",
     CloseChatMethodException = "CloseChatMethodException",

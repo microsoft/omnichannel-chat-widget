@@ -104,9 +104,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         elements = findParentFocusableElementsWithoutChildContainer(controlProps.id as string);
         setTabIndices(elements, initialTabIndexMap, false);
         setInitialEmail(state.appStates.preChatResponseEmail);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.EmailTranscriptLoaded
-        });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptLoaded });
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXEmailTranscriptPaneCompleted,
