@@ -58,7 +58,9 @@ export enum BroadcastEvent {
     UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry",
     ContactIdNotFound = "ContactIdNotFound",
     SyncMinimize = "SyncMinimize",
-    OnWidgetError = "OnWidgetError"
+    OnWidgetError = "OnWidgetError",
+    FMLTrackingCompletedAck = "FMLTrackingCompletedAck",
+    FMLTrackingCompleted = "FMLTrackingCompleted"
 }
 
 // Events being logged

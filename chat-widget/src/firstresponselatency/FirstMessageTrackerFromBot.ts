@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
 import { MessagePayload, TrackingMessage } from "./Constants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -24,14 +24,14 @@ export const createTrackingForFirstMessage = () => {
         return true;
     };
 
-    const widgetLoadListener = BroadcastService.getMessageByEventName("WidgetLoadComplete").subscribe(() => {
+    const widgetLoadListener = BroadcastService.getMessageByEventName(TelemetryEvent.WidgetLoadComplete).subscribe(() => {
         if (startTracking) return;
         startTracking = true;
         startTime = new Date().getTime();
     }
     );
 
-    const newMessageListener = BroadcastService.getMessageByEventName("NewMessageReceived").subscribe((message) => {
+    const newMessageListener = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageReceived).subscribe((message) => {
         const payload = message.payload as MessagePayload;
 
         // we only care for bot, so we need to check if the message is from the bot
@@ -70,7 +70,7 @@ export const createTrackingForFirstMessage = () => {
                 clearInterval(interval);
             } else {
                 BroadcastService.postMessage({
-                    eventName: "FMLTrackingCompleted",
+                    eventName: BroadcastEvent.FMLTrackingCompleted,
                     payload: null
                 });
             }
@@ -78,7 +78,7 @@ export const createTrackingForFirstMessage = () => {
     };
 
     const ackListener = () => {
-        const listen = BroadcastService.getMessageByEventName("FMLTrackingCompletedAck").subscribe(() => {
+        const listen = BroadcastService.getMessageByEventName(BroadcastEvent.FMLTrackingCompletedAck).subscribe(() => {
             flag = true;
             listen.unsubscribe();
         });
@@ -86,7 +86,7 @@ export const createTrackingForFirstMessage = () => {
     
     // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
     // No need to keep listerning for tracking, enforcing disconnection for the listners
-    const rehydrateListener = BroadcastService.getMessageByEventName("RehydrateMessageReceived").subscribe(() => {
+    const rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceived).subscribe(() => {
         startTracking = false;
         stopTracking = false;
         disconnectListener();
@@ -95,14 +95,14 @@ export const createTrackingForFirstMessage = () => {
 
     // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
     // No need to keep listerning for tracking, enforcing disconnection for the listners
-    const historyListener = BroadcastService.getMessageByEventName("HistoryMessageReceived").subscribe(() => {
+    const historyListener = BroadcastService.getMessageByEventName(BroadcastEvent.HistoryMessageReceived).subscribe(() => {
         startTracking = false;
         stopTracking = false;
         disconnectListener();
     }
     );
 
-    const offlineNetworkListener = BroadcastService.getMessageByEventName("NetworkDisconnected").subscribe(() => {
+    const offlineNetworkListener = BroadcastService.getMessageByEventName(TelemetryEvent.NetworkDisconnected).subscribe(() => {
         startTracking = false;
         stopTracking = false;
         disconnectListener();

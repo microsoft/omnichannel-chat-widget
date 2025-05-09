@@ -99,6 +99,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     showPrechat = await shouldSetPreChatIfPersistentChat(facadeChatSDK.getChatSDK(), state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode, showPrechat as boolean);
 
     if (showPrechat) {
+
         const isOutOfOperatingHours = state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";
         if (isOutOfOperatingHours) {
             state?.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
@@ -206,7 +207,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 
         // Set app state to Active
         if (isStartChatSuccessful) {
-
             ActivityStreamHandler.uncork();
             // Update start chat failure app state if chat loads successfully
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
@@ -230,7 +230,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         }
 
         logWidgetLoadComplete();
-
         // Set post chat context in state, load in background to do not block the load
         setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch);
         // Updating chat session detail for telemetry

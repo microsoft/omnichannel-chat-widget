@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
 import { MessagePayload, TrackingMessage } from "./Constants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -141,7 +141,7 @@ export class FirstResponseLatencyTracker {
         }
     }
 
-    private offlineNetworkListener = BroadcastService.getMessageByEventName("NetworkDisconnected").subscribe(() => {
+    private offlineNetworkListener = BroadcastService.getMessageByEventName(TelemetryEvent.NetworkDisconnected).subscribe(() => {
         this.isStarted = false;
         this.isEnded = false;
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -151,24 +151,24 @@ export class FirstResponseLatencyTracker {
     }
     );
 
-    private fmltrackingListener = BroadcastService.getMessageByEventName("FMLTrackingCompleted").subscribe(() => {
+    private fmltrackingListener = BroadcastService.getMessageByEventName(BroadcastEvent.FMLTrackingCompleted).subscribe(() => {
         this.isReady = true;
         BroadcastService.postMessage({
-            eventName: "FMLTrackingCompletedAck",
+            eventName: BroadcastEvent.FMLTrackingCompletedAck,
             payload: null
         });
     }
     );
     // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
     // No need to keep listerning for tracking, enforcing disconnection for the listners
-    private rehydrateListener = BroadcastService.getMessageByEventName("RehydrateMessageReceived").subscribe(() => {
+    private rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceived).subscribe(() => {
         this.isReady = true;
     }
     );
 
     // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
     // No need to keep listerning for tracking, enforcing disconnection for the listners
-    private historyListener = BroadcastService.getMessageByEventName("HistoryMessageReceived").subscribe(() => {
+    private historyListener = BroadcastService.getMessageByEventName(BroadcastEvent.HistoryMessageReceived).subscribe(() => {
         this.isReady = true;
     }
     );
