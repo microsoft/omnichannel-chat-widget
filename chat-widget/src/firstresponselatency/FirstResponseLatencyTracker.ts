@@ -9,13 +9,14 @@ export class FirstResponseLatencyTracker {
     private isABotConversation = false;
     private isStarted = false;
     private isEnded = false;
-
     private startTrackingMessage?: TrackingMessage;
     private stopTrackingMessage?: TrackingMessage;
     private isReady = false;
 
-
     constructor() {
+        console.log("LOPEZ IS HERE");
+    
+
         // this is a workaround to ensure in reload we track effectively the messages
         // we do have a mechanism in place to prevent log agent messages.
         this.isABotConversation = true;
@@ -37,10 +38,7 @@ export class FirstResponseLatencyTracker {
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
 
-
-        console.log("LOPEZ :: FirstResponseLatencyTracker - startTracking", this.isReady);
         if (!this.isReady) return;
-            
         //  this prevents to initiate tracking for multiple incoming messages
         if (this.isStarted) {
             return;
@@ -49,11 +47,9 @@ export class FirstResponseLatencyTracker {
         if (!this.isABotConversation) {
             return;
         }
-
         // control of states to prevent clashing of messages
         this.isStarted = true;
         this.isEnded = false;
-
         // The idea  of using types is to enrich telemetry data 
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
     }
@@ -102,13 +98,9 @@ export class FirstResponseLatencyTracker {
 
     public startClock(payload: MessagePayload): void {
         try {
-
             if (!payload || !payload.Id) {
                 throw new Error("Invalid payload");
             }
-            // in the case of a reload, tracker will be paused, until last history message is received
-            // this is because we dont have a way to identidy send messages as part of the history
-            //if (this.inPause) return;
             this.startTracking(payload);
         } catch (e) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -151,7 +143,7 @@ export class FirstResponseLatencyTracker {
             this.isEnded = false;
         }
     }
-    
+
     private offlineNetworkListener = BroadcastService.getMessageByEventName("NetworkDisconnected").subscribe(() => {
         this.deregister();
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -162,7 +154,6 @@ export class FirstResponseLatencyTracker {
     );
 
     private fmltrackingListener = BroadcastService.getMessageByEventName("FMLTrackingCompleted").subscribe(() => {
-        console.log("LOPEZ :: FMLTrackingCompleted event received");
         this.isReady = true;
         BroadcastService.postMessage({
             eventName: "FMLTrackingCompletedAck",
@@ -170,7 +161,19 @@ export class FirstResponseLatencyTracker {
         });
     }
     );
+    // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
+    // No need to keep listerning for tracking, enforcing disconnection for the listners
+    private rehydrateListener = BroadcastService.getMessageByEventName("RehydrateMessageReceived").subscribe(() => {
+        this.isReady = true;
+    }
+    );
 
+    // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
+    // No need to keep listerning for tracking, enforcing disconnection for the listners
+    private historyListener = BroadcastService.getMessageByEventName("HistoryMessageReceived").subscribe(() => {
+        this.isReady = true;
+    }
+    );
 
     private deregister(): void {
         // Reset State
@@ -181,5 +184,7 @@ export class FirstResponseLatencyTracker {
         this.stopTrackingMessage = undefined;
         this.offlineNetworkListener.unsubscribe();
         this.fmltrackingListener.unsubscribe();
+        this.rehydrateListener.unsubscribe();
+        this.historyListener.unsubscribe();
     }
 }
