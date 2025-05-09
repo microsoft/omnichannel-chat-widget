@@ -76,7 +76,6 @@ export const getScenarioType = (activity: IActivity): ScenarioType => {
     return ScenarioType.ReceivedMessageStrategy;
 };
 
-
 export const createTrackingMessage = (payload: MessagePayload, type: string): TrackingMessage => {
     return {
         Id: payload.Id,
