@@ -18,7 +18,7 @@ import { getWidgetCacheIdfromProps } from "../../../common/utils";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
     if (!ex) {
-        logWidgetLoadFailed(); //
+        logWidgetLoadFailed();
         return;
     }
 

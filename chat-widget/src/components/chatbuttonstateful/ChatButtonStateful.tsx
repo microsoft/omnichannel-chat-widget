@@ -40,7 +40,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
     ref.current = async () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.LCWChatButtonClickActionStarted,
+            Event: TelemetryEvent.LCWChatButtonActionStarted,
             Description: "Chat button click action started",
             LogToAppInsights: true
         });
@@ -57,7 +57,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         }
 
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.LCWChatButtonClickActionCompleted,
+            Event: TelemetryEvent.LCWChatButtonActionCompleted,
             Description: "Chat button click action completed",
             LogToAppInsights: true
         });
@@ -105,11 +105,6 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         if (state.appStates.outsideOperatingHours) {
             setOutOfOperatingHours(true);
         }
-        TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-            Event: TelemetryEvent.MinimizeChatActionCompleted, 
-            Description: "Header Minimize action completed.",
-            LogToAppInsights: true
-        });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonShow,
             ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed

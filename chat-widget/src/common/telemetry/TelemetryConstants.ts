@@ -107,7 +107,7 @@ export enum TelemetryEvent {
     SettingCustomContext = "SettingCustomContext",
     WebChatLoaded = "WebChatLoaded",
     LCWChatButtonClickActionStarted = "LCWChatButtonClickActionStarted",
-    LCWChatButtonClickActionCompleted = "LCWChatButtonClickActionCompleted",
+    LCWChatButtonActionStarted = "LCWChatButtonActionStarted",
     LCWChatButtonShow = "LCWChatButtonShowCompleted",
 
     WidgetStartChatStarted = "WidgetStartChatStarted",

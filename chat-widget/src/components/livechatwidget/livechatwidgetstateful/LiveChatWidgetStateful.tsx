@@ -496,7 +496,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
-                    Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat.",
+                    Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
                 });
                 endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
                 endChatStateCleanUp(dispatch);
