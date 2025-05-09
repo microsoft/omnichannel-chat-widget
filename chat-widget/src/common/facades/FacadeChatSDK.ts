@@ -208,9 +208,10 @@ export class FacadeChatSDK {
         this.expiration = 0;
 
         try {
+
             const ring = await handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
 
-            if (ring.result === true && ring.token) {
+            if (ring?.result === true && ring?.token) {
                 await this.setToken(ring.token);
 
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.INFO, {
@@ -224,13 +225,13 @@ export class FacadeChatSDK {
             } else {
                 TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.NewTokenFailed,
-                    Description: ring.error?.message,
-                    ExceptionDetails: ring.error
+                    Description: ring?.error?.message,
+                    ExceptionDetails: ring?.error
 
                 });
                 return {
                     result: false,
-                    message: ring.error?.message || "Failed to get token"
+                    message: ring?.error?.message || "Failed to get token"
                 };
             }
         } catch (e: unknown) {
