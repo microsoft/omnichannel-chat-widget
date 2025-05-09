@@ -91,7 +91,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
 const logWidgetLoadFailed = (ex?: ChatSDKError) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const exDetails: any = {
-        Exception: `Widget start chat failed with error: ${ex}`
+        Exception: `Widget load complete with error: ${ex}`
     };
     if (ex?.httpResponseStatusCode) {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
@@ -106,7 +106,7 @@ const logWidgetLoadFailed = (ex?: ChatSDKError) => {
 };
 
 export const logWidgetLoadComplete = (additionalMessage?: string) => {
-    let descriptionString = "Widget start chat complete";
+    let descriptionString = "Widget load complete";
     if (additionalMessage) {
         descriptionString += `. ${additionalMessage}`;
     }
@@ -122,7 +122,7 @@ export const logWidgetLoadComplete = (additionalMessage?: string) => {
 const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const exDetails: any = {
-        Exception: `Widget start chat failed with error: ${ex}`
+        Exception: `Widget load complete with error: ${ex}`
     };
     if (ex?.httpResponseStatusCode) {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
@@ -130,7 +130,7 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
 
     TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
         Event: TelemetryEvent.WidgetStartChatFailed,
-        Description: "Widget start chat failed with error",
+        Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
         LogToAppInsights: true
