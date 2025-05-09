@@ -29,7 +29,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.AppInsightsInitFailed,
                     Description: "Error initializing Application Insights",
-                    ExceptionDetails: error
+                    ExceptionDetails: {message : "Token payload is not valid JSON", key: appInsightsKey.slice(-3)}
                 });
                 return null;
             }
