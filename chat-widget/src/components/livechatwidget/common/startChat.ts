@@ -99,7 +99,6 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     showPrechat = await shouldSetPreChatIfPersistentChat(facadeChatSDK.getChatSDK(), state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode, showPrechat as boolean);
 
     if (showPrechat) {
-
         const isOutOfOperatingHours = state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";
         if (isOutOfOperatingHours) {
             state?.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
@@ -133,7 +132,6 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
     createTrackingForFirstMessage();
-
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 
