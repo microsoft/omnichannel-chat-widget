@@ -1,4 +1,4 @@
-import { MessagePayload, ScenarioType } from "./Constants";
+import { MessagePayload, ScenarioType, TrackingMessage } from "./Constants";
 
 import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
@@ -74,4 +74,17 @@ export const getScenarioType = (activity: IActivity): ScenarioType => {
         return ScenarioType.SystemMessageStrategy;
     }
     return ScenarioType.ReceivedMessageStrategy;
+};
+
+export const createTrackingMessage = (payload: MessagePayload, type: string): TrackingMessage => {
+    return {
+        Id: payload.Id,
+        role: payload.role,
+        timestamp: payload?.timestamp,
+        tags: payload.tags,
+        messageType: payload.messageType,
+        text: payload.text,
+        type: type,
+        checkTime: new Date().getTime()
+    };
 };

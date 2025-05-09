@@ -20,6 +20,7 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
+import { createTrackingForFirstMessage } from "../../../firstresponselatency/FirstMessageTrackerFromBot";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
@@ -130,6 +131,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
+    createTrackingForFirstMessage();
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 

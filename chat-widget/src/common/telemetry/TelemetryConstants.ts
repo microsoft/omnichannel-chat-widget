@@ -58,7 +58,9 @@ export enum BroadcastEvent {
     UpdateConversationDataForTelemetry = "UpdateConversationDataForTelemetry",
     ContactIdNotFound = "ContactIdNotFound",
     SyncMinimize = "SyncMinimize",
-    OnWidgetError = "OnWidgetError"
+    OnWidgetError = "OnWidgetError",
+    FMLTrackingCompletedAck = "FMLTrackingCompletedAck",
+    FMLTrackingCompleted = "FMLTrackingCompleted"
 }
 
 // Events being logged
@@ -204,6 +206,8 @@ export enum TelemetryEvent {
     MessageSent = "MessageSent",
     MessageReceived = "MessageReceived",
     MessageLapTrack = "MessageLapTrack",
+    BotFirstMessageLapTrack = "BotFirstMessageLapTrackError",
+    BotFirstMessageLapTrackError = "BotFirstMessageLapTrack",
     MessageStartLapTrackError = "MessageStartLapTrackError",
     MessageStopLapTrackError = "MessageStopLapTrackError",
     SystemMessageReceived = "SystemMessageReceived",

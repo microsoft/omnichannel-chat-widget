@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Adding new `First Message for Bot latency` tracker
 - Adding new `First Response Latency` track mechanism for `copilot + c2` conversations
 - Add support for Font Family config property in prechatpane
 - Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
