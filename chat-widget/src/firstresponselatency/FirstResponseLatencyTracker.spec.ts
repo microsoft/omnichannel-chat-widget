@@ -14,6 +14,7 @@ describe("FirstResponseLatencyTracker", () => {
     beforeEach(() => {
         tracker = new FirstResponseLatencyTracker();
         jest.clearAllMocks();
+        tracker["isReady"] = true; // Set isReady to true for testing
     });
 
     it("should start tracking when startClock is called with a valid payload", () => {

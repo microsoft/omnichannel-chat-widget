@@ -14,9 +14,6 @@ export class FirstResponseLatencyTracker {
     private isReady = false;
 
     constructor() {
-        console.log("LOPEZ IS HERE");
-    
-
         // this is a workaround to ensure in reload we track effectively the messages
         // we do have a mechanism in place to prevent log agent messages.
         this.isABotConversation = true;
@@ -145,7 +142,8 @@ export class FirstResponseLatencyTracker {
     }
 
     private offlineNetworkListener = BroadcastService.getMessageByEventName("NetworkDisconnected").subscribe(() => {
-        this.deregister();
+        this.isStarted = false;
+        this.isEnded = false;
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageStopLapTrackError,
             Description: "Tracker Stopped due to network disconnection",
