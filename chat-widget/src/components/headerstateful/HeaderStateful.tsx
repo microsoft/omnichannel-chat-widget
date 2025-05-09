@@ -34,7 +34,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
     const { headerProps, outOfOfficeHeaderProps, endChat } = props;
     //Setting OutOfOperatingHours Flag
-    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "True");
+    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.appStates.outsideOperatingHours);
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
 
@@ -108,10 +108,8 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         hideCloseButton: state.appStates.conversationState === ConversationState.OutOfOffice || outOfOfficeHeaderProps?.controlProps?.hideCloseButton
     };
 
-    useEffect(() => {
-        if (state.appStates.outsideOperatingHours) {
-            setOutOfOperatingHours(true);
-        }
+    useEffect(() => {        
+        setOutOfOperatingHours(state.appStates.outsideOperatingHours);
     }, []);
 
     useEffect(() => {

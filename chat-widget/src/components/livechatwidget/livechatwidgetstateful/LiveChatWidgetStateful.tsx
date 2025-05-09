@@ -818,8 +818,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     userID={userID}
                     styleOptions={{
                         ...webChatStyles,
-                        bubbleBackground: props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background,
-                        bubbleTextColor: props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color
+                        bubbleBackground: props.webChatContainerProps?.webChatStyles?.bubbleBackground ?? ( props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background),
+                        bubbleTextColor: props.webChatContainerProps?.webChatStyles?.bubbleTextColor ?? (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color)
                     }}
                     directLine={directLine}>
                     <Stack

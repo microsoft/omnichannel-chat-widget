@@ -10,6 +10,10 @@ import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontain
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
+    const isOutsideOperatingHours = (): boolean => {
+        return props.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";
+    };
+
     const widgetCacheId = getWidgetCacheIdfromProps(props);
     const cacheTtlInMins = props?.controlProps?.cacheTtlInMins ?? Constants.CacheTtlInMinutes;
     const storageType = props?.useSessionStorage === true ? StorageType.sessionStorage : StorageType.localStorage;
@@ -27,6 +31,17 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat) {
             initialStateFromCache.appStates.conversationState = ConversationState.Closed;
         }
+
+        // we are always setting the chatConfig from the props to avoid any issues with the cache
+        initialStateFromCache.domainStates.liveChatConfig = props.chatConfig;
+
+        // Cache the result of isOutsideOperatingHours() to ensure consistency
+        const outsideOperatingHours = isOutsideOperatingHours();
+        initialStateFromCache.appStates.outsideOperatingHours = outsideOperatingHours;
+        initialStateFromCache.appStates.conversationState = outsideOperatingHours ?
+            ConversationState.OutOfOffice :
+            initialStateFromCache.appStates.conversationState;
+
         return initialStateFromCache;
     }
 
@@ -52,11 +67,13 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             startChatFailureType: StartChatFailureType.Generic
         },
         appStates: {
-            conversationState: ConversationState.Closed,
+            conversationState: isOutsideOperatingHours() ? 
+                ConversationState.OutOfOffice: 
+                ConversationState.Closed,
             isMinimized: undefined,
             previousElementIdOnFocusBeforeModalOpen: null,
             startChatFailed: false,
-            outsideOperatingHours: false,
+            outsideOperatingHours: isOutsideOperatingHours(),
             preChatResponseEmail: "",
             isAudioMuted: null,
             newMessage: false,
@@ -72,7 +89,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             conversationEndedBy: ConversationEndEntity.NotSet,
             chatDisconnectEventReceived: false,
             selectedSurveyMode: null,
-            postChatParticipantType: undefined
+            postChatParticipantType: undefined,
         },
         uiStates: {
             showConfirmationPane: false,
