@@ -99,9 +99,15 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             if (data === CustomerVoiceEvents.ResponsePageLoaded) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceResponsePageLoaded });
             } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted });
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                    Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted, 
+                    LogToAppInsights: true
+                });
             } else if (data === CustomerVoiceEvents.FormResponseError) {
-                TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.CustomerVoiceFormResponseError });
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, { 
+                    Event: TelemetryEvent.CustomerVoiceFormResponseError,
+                    LogToAppInsights: true
+                });
             }
         });
     }, []);

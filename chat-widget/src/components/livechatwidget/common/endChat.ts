@@ -179,6 +179,11 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
                 Event: TelemetryEvent.CloseChatCall,
                 Description: "Chat was closed succesfully"
             });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                Event: TelemetryEvent.CloseChatActionCompleted, 
+                Description: "Header Close action completed.",
+                LogToAppInsights: true
+            });
         } catch (error) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.CloseChatMethodException,

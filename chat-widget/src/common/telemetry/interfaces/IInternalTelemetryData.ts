@@ -1,9 +1,11 @@
+import { IAppInsightsConfig } from "./IAppInsightsConfig";
 import { IAriaConfigurations } from "./IAriaConfigurations";
 import { ITelemetryConfig } from "./ITelemetryConfig";
 
 export interface IInternalTelemetryData {
     telemetryConfig?: ITelemetryConfig,
     ariaConfig?: IAriaConfigurations,
+    appInsightsConfig?: IAppInsightsConfig;
     widgetId?: string;
     chatId?: string;
     conversationId?: string;

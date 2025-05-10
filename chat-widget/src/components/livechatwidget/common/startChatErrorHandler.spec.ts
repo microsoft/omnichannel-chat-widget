@@ -36,7 +36,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: Error: ${WidgetLoadCustomErrorString.AuthenticationFailedErrorString}`
             })
@@ -56,7 +56,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade , {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: Error: ${WidgetLoadCustomErrorString.NetworkErrorString}`
             })
@@ -97,7 +97,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.PersistentChatConversationRetrievalFailure}`,
@@ -140,7 +140,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ConversationInitializationFailure}`,
@@ -183,7 +183,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ChatTokenRetrievalFailure}`,
@@ -226,7 +226,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ChatTokenRetrievalFailure}`,
                 HttpResponseStatusCode: 401
@@ -247,7 +247,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.UninitializedChatSDK}`
@@ -269,7 +269,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(1);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.InvalidConversation}`
@@ -294,7 +294,7 @@ describe("startChatErrorHandler unit test", () => {
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
         expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(1);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ClosedConversation}`

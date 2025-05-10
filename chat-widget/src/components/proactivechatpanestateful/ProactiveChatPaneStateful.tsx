@@ -23,7 +23,8 @@ export const ProactiveChatPaneStateful = (props: any) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXProactiveChatPaneStart
+            Event: TelemetryEvent.UXProactiveChatPaneStart,
+            LogToAppInsights: true
         });
     }, []);
 
@@ -44,9 +45,10 @@ export const ProactiveChatPaneStateful = (props: any) => {
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.ProactiveChatRejected,
+                Event: TelemetryEvent.ProactiveChatTimeOutCompleted,
                 ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
-                Description: "Proactive chat invitation timed out."
+                Description: "Proactive chat invitation timed out.",
+                LogToAppInsights: true
             });
         }
     };
@@ -111,7 +113,8 @@ export const ProactiveChatPaneStateful = (props: any) => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ProactiveChatPaneLoaded });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXProactiveChatCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            LogToAppInsights: true
         });
         return () => {
             clearTimeout(timeoutEvent);

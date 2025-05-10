@@ -41,8 +41,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         }
 
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.MessageSent,
-            Description: "New message sent"
+            Event: TelemetryEvent.MessageSentCompleted, 
+            Description: "New message sent",
+            LogToAppInsights: true
         });
     };
 
@@ -51,8 +52,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         payload.messageType = Constants.systemMessageTag;
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.SystemMessageReceived,
-            Description: "System message received"
+            Event: TelemetryEvent.SystemMessageReceivedCompleted,
+            Description: "System message received",
+            LogToAppInsights: true
         });
     };
 
@@ -68,9 +70,10 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             // this is needed for reload scenarios, it helps to identify the last message received before the reload
             isHistoryMessageReceivedEventRaised = true;
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.RehydrateMessageReceived,
+                Event: TelemetryEvent.RehydrateMessageReceivedCompleted,
                 Description: "History message received",
-                CustomProperties: payload
+                CustomProperties: payload,
+                LogToAppInsights: true
             });
         }
     };
@@ -113,9 +116,10 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         BroadcastService.postMessage(newMessageReceivedEvent);
 
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.MessageReceived,
+            Event: TelemetryEvent.MessageReceivedCompleted,
             Description: "New message received",
-            CustomProperties: payload
+            CustomProperties: payload,
+            LogToAppInsights: true
         });
 
     };
