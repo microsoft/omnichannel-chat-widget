@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Remove overloading calls to handleAuthentication
 - Fix to load OOH from config always
 - Enhancements to OOH scenarios
 - Added additional span around time part of bubble timestamp
