@@ -175,7 +175,7 @@ export class FacadeChatSDK {
 
     private async corroborateTokenIsSet(chatSDK: OmnichannelChatSDK): Promise<void> {
 
-        // if getAuthToken is not set, it's because handleAuthentication is not going to be called
+        // if getAuthToken is not set, it's because handleAuthentication hasnt being called
         // so we need to call it 
         if (this.isAuthenticated && chatSDK?.chatSDKConfig?.getAuthToken === undefined) {
             handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
