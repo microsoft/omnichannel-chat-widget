@@ -275,8 +275,8 @@ export enum TelemetryEvent {
     UXLCWChatButtonLoadingCompleted = "UXLCWChatButtonLoadingCompleted",
     UXConfirmationPaneStart = "UXConfirmationPaneStart",
     UXConfirmationPaneCompleted = "UXConfirmationPaneCompleted",
-    UXLivechatwidgetStart = "UXLivechatwidgetStart",
-    UXLivechatwidgetCompleted = "UXLivechatwidgetCompleted",
+    UXLiveChatWidgetStart = "UXLiveChatWidgetStart",
+    UXLiveChatWidgetCompleted = "UXLiveChatWidgetCompleted",
 
     AppInsightsInitialized = "AppInsightsInitialized",
     AppInsightsInitFailed = "AppInsightsInitFailed",

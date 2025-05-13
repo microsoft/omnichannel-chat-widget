@@ -38,6 +38,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     };
 
     const aiLogger: IChatSDKLogger = {
+        type: "appInsightsLogger",
         log: (logLevel: LogLevel, telemetryInput: TelemetryInput): void => {
             try {
                 const _logger = logger();
@@ -46,10 +47,10 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                 const telemetryInfo = telemetryInput?.telemetryInfo?.telemetryInfo;
                 const eventProperties = setEventProperties(telemetryInfo);
                 
-                if (telemetryInput.payload.LogToAppInsights === true && eventName) {
+                if (eventName) {
                     const trackingEventName = getTrackingEventName(logLevel, eventName);
                     _logger.trackEvent({ 
-                        name: trackingEventName.startsWith("UX") ? trackingEventName.substring(2) : trackingEventName, 
+                        name: trackingEventName,
                         properties: eventProperties 
                     });
                 }
@@ -86,13 +87,14 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     }
 
     function getTrackingEventName(logLevel: LogLevel, eventName: string): string {
+        const event = eventName.startsWith("UX") ? eventName.substring(2) : eventName;
         if (logLevel === LogLevel.ERROR) {
-            return ScenarioMarker.failScenario(eventName);
+            return ScenarioMarker.failScenario(event);
         }
-        if (eventName?.toLowerCase().includes("complete")) {
-            return ScenarioMarker.completeScenario(eventName);
+        if (event?.toLowerCase().includes("complete")) {
+            return ScenarioMarker.completeScenario(event);
         }
-        return ScenarioMarker.startScenario(eventName);
+        return ScenarioMarker.startScenario(event);
     }
     return aiLogger;
 };

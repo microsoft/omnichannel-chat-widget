@@ -98,9 +98,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         uiTimer = createTimer();
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLivechatwidgetStart,
-            LogToAppInsights: true
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLiveChatWidgetStart
         });
     }, []);
 
@@ -302,10 +301,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         BroadcastService.getMessageByEventName(BroadcastEvent.StartProactiveChat).subscribe((msg: ICustomEvent) => {
 
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
-                Description: "Start proactive chat event received.",
-                LogToAppInsights: true
+                Description: "Start proactive chat event received."
             });
             if (canStartProactiveChat.current === true) {
                 startProactiveChat(dispatch, msg?.payload?.notificationConfig, msg?.payload?.enablePreChat, msg?.payload?.inNewWindow);
@@ -399,18 +397,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
 
             if (msg?.payload?.customContext) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomContextReceived,
-                    Description: "CustomContext received through startChat event.",
-                    LogToAppInsights: true
+                    Description: "CustomContext received through startChat event."
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }
 
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventReceived,
-                Description: "Start chat event received.",
-                LogToAppInsights: true
+                Description: "Start chat event received."
             });
 
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
@@ -449,10 +445,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
-            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
-                Description: "Received InitiateEndChat BroadcastEvent.",
-                LogToAppInsights: true
+                Description: "Received InitiateEndChat BroadcastEvent."
             });
 
             // This is to ensure to get latest state from cache in multitab
@@ -703,10 +698,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [props.webChatContainerProps?.renderingMiddlewareProps]);
 
     useEffect(() => {
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLivechatwidgetCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: true
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLiveChatWidgetCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
 

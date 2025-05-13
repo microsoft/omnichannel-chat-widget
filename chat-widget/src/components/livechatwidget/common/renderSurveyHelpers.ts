@@ -103,20 +103,18 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
             if (state?.domainStates?.postChatContext === undefined) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
-                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallCompleted,
-                    Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed,
-                    LogToAppInsights: true,
+                    Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
                 return context;
             }
         }
     } catch (error) {
-        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+        TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.ERROR, {
             Event: TelemetryEvent.PostChatContextCallFailed,
             Description: PostChatSurveyTelemetryMessage.PostChatContextCallFailed,
-            LogToAppInsights: true
         });
     }
 };

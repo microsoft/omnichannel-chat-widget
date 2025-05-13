@@ -90,6 +90,9 @@ export const RegisterLoggers = () => {
             telemetryInput.telemetryInfo = { telemetryInfo: TelemetryHelper.buildTelemetryEvent(logLevel, telemetryInput) };
             //Do not log events without an Event Name
             if (telemetryInput?.payload?.Event) {
+                if (logger.type === "appInsightsLogger" && telemetryEvent?.payload?.LogToAll !== true) {
+                    return; // skip logging to AppInsights
+                }
                 logger.log(logLevel, telemetryInput);
             }
         });

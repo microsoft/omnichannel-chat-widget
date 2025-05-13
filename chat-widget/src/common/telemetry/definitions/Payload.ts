@@ -12,7 +12,6 @@ export interface ConfigValidationTelemetryData extends BaseTelemetryData {
     CloudType?: string;
     ExceptionDetails?: object;
     Domain?: string;
-    LogToAppInsights?: boolean;
 }
 
 export interface LoadTelemetryData extends BaseTelemetryData {
@@ -27,7 +26,6 @@ export interface LoadTelemetryData extends BaseTelemetryData {
     OCChatWidgetVersion?: string;
     OCChatComponentsVersion?: string;
     Description?: string;
-    LogToAppInsights?: boolean;
 }
 
 export interface UITelemetryData extends BaseTelemetryData {
@@ -42,14 +40,12 @@ export interface UITelemetryData extends BaseTelemetryData {
     OCChatWidgetVersion?: string;
     OCChatComponentsVersion?: string;
     Description?: string;
-    LogToAppInsights?: boolean;
 }
 
 
 export interface MessageProcessingErrorData extends BaseTelemetryData {
     Event: string;
     ExceptionDetails: object;
-    LogToAppInsights?: boolean;
 }
 
 export interface OCChatSDKTelemetryData extends BaseTelemetryData {
@@ -59,7 +55,6 @@ export interface OCChatSDKTelemetryData extends BaseTelemetryData {
     TransactionId: string;
     ExceptionDetails?: object;
     Description?: string;
-    LogToAppInsights?: boolean;
 }
 
 export interface IC3ClientTelemetryData extends BaseTelemetryData {
@@ -72,7 +67,6 @@ export interface IC3ClientTelemetryData extends BaseTelemetryData {
     ExceptionDetails?: object;
     ShouldBubbleToHost?: boolean;
     Description?: string;
-    LogToAppInsights?: boolean;
 }
 
 export interface WebChatTelemetryData extends BaseTelemetryData {
@@ -88,7 +82,6 @@ export interface WebChatTelemetryData extends BaseTelemetryData {
     Event?: string;
     name?: string;
     type?: string;
-    LogToAppInsights?: boolean;
 }
 
 export interface ACSAdapterTelemetryData extends BaseTelemetryData {
@@ -101,7 +94,6 @@ export interface ACSAdapterTelemetryData extends BaseTelemetryData {
     ErrorCode?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ExceptionDetails?: any;
-    LogToAppInsights?: boolean;
 }
 
 export interface ActionTelemetryData extends BaseTelemetryData {
@@ -112,7 +104,6 @@ export interface ActionTelemetryData extends BaseTelemetryData {
     Description?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     CustomProperties?: any;
-    LogToAppInsights?: boolean;
 }
 
 export interface CallingTelemetryData extends BaseTelemetryData {
@@ -121,7 +112,6 @@ export interface CallingTelemetryData extends BaseTelemetryData {
     ElapsedTimeInMilliseconds?: number;
     ExceptionDetails?: object;
     Description?: string;
-    LogToAppInsights?: boolean;
 }
 
 export interface FacadeChatSDKTelemetryData extends BaseTelemetryData {
@@ -129,7 +119,6 @@ export interface FacadeChatSDKTelemetryData extends BaseTelemetryData {
     ElapsedTimeInMilliseconds?: number;
     ExceptionDetails?: object;
     Description?: string;
-    LogToAppInsights?: boolean;
 }
 
 export type TelemetryData = ConfigValidationTelemetryData | OCChatSDKTelemetryData |

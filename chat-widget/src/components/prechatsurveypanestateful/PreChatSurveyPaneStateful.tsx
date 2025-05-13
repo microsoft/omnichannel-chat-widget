@@ -27,9 +27,9 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
 
     useEffect(() => {
         uiTimer = createTimer();
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXPrechatPaneStart,
-            LogToAppInsights: true
+            Description: "PreChat survey pane loading started.",
         });
     }, []);
     
@@ -74,9 +74,9 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         payload: getAdaptiveCardPayload(state.domainStates.preChatSurveyResponse, requiredFieldMissingMessage!),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onSubmit: async (values: { index: number, label: any, id: any, value: string }[]) => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.PrechatSubmitCompleted, 
-                LogToAppInsights: true
+                Description: "PreChat survey submitted."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
@@ -154,10 +154,10 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         }
 
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSurveyLoaded });
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXPrechatPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            LogToAppInsights: true
+            Description: "PreChat survey pane loading completed."
         });
     }, []);
 

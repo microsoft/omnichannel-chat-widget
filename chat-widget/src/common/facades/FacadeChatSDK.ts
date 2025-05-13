@@ -109,11 +109,10 @@ export class FacadeChatSDK {
 
         // token must have 3 parts as JWT format
         if (tokenParts.length !== 3) {
-            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Invalid token format",
-                ExceptionDetails: {message : "Invalid token format, must be in JWT format", token: last3digits},
-                LogToAppInsights: true
+                ExceptionDetails: {message : "Invalid token format, must be in JWT format", token: last3digits}
             });
             throw new Error("Invalid token format, must be in JWT format");
         }
@@ -130,22 +129,20 @@ export class FacadeChatSDK {
                 }
                 return 0;
             }
-            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Invalid token payload",
-                ExceptionDetails: {message : "Token payload is not valid JSON", token: last3digits},
-                LogToAppInsights: true
+                ExceptionDetails: {message : "Token payload is not valid JSON", token: last3digits}
             }); 
 
             throw new Error("Invalid token payload, payload is not valid JSON");
 
         } catch (e) {
             console.error("Failed to decode token", e);
-            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Failed to decode token",
-                ExceptionDetails: {message : "Failed to decode token", token: last3digits},
-                LogToAppInsights: true
+                ExceptionDetails: {message : "Failed to decode token", token: last3digits}
             }); 
             throw new Error("Failed to decode token");
         }
@@ -162,15 +159,14 @@ export class FacadeChatSDK {
             this.expiration = this.convertExpiration(this.extractExpFromToken(token) || 0);
             // this is a control , in case the getAuthToken function returns same token
             if (this.expiration > 0 && (this.expiration < instant)) {
-                TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+                TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                     Event: TelemetryEvent.NewTokenValidationFailed,
                     Description: "New token is already expired",
                     ExceptionDetails: {
                         "Instant": instant,
                         "Expiration": this.expiration,
                         "Token": last3digits,
-                    },
-                    LogToAppInsights: true
+                    }
                 });
                 throw new Error(`New token is already expired, with epoch time ${this.expiration} , last 3 digits of token: ${last3digits}`);
             }
@@ -197,18 +193,16 @@ export class FacadeChatSDK {
             return { result: true, message: "Token is valid" };
         }
 
-        TelemetryHelper.logFacadeChatSDKEvent(LogLevel.INFO, {
+        TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.NewTokenValidationStarted,
-            Description: "Token validation started.",
-            LogToAppInsights: true
+            Description: "Token validation started."
         });
 
         if (this.getAuthToken === undefined && this.chatSDK.chatSDKConfig?.getAuthToken === undefined) {
-            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "GetAuthToken function is not present",
-                ExceptionDetails: "Missing function : " + getAuthClientFunction(this.chatConfig),
-                LogToAppInsights: true
+                ExceptionDetails: "Missing function : " + getAuthClientFunction(this.chatConfig)
             });
 
             return { result: false, message: "GetAuthToken function is not present" };
@@ -224,21 +218,19 @@ export class FacadeChatSDK {
             if (ring.result === true && ring.token) {
                 await this.setToken(ring.token);
 
-                TelemetryHelper.logFacadeChatSDKEvent(LogLevel.INFO, {
+                TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.NewTokenValidationCompleted, 
                     Description: "New Token obtained",
                     Data: {
                         "Token_Expiration": this.expiration
-                    },
-                    LogToAppInsights: true
+                    }
                 });
                 return { result: true, message: "New Token obtained" };
             } else {
-                TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+                TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                     Event: TelemetryEvent.NewTokenValidationFailed,
                     Description: ring.error?.message,
-                    ExceptionDetails: ring.error,
-                    LogToAppInsights: true
+                    ExceptionDetails: ring.error
                 });
                 return {
                     result: false,
@@ -247,11 +239,10 @@ export class FacadeChatSDK {
             }
         } catch (e: unknown) {
             console.error("Unexpected error while getting token", e);
-            TelemetryHelper.logFacadeChatSDKEvent(LogLevel.ERROR, {
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Unexpected error while getting token",
-                ExceptionDetails: e,
-                LogToAppInsights: true
+                ExceptionDetails: e
             });
             return { result: false, message: "Unexpected error while getting token" };
         }
