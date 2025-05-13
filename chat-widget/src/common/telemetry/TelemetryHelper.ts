@@ -258,7 +258,9 @@ export class TelemetryHelper {
         const telemetryEvent: ITelemetryEvent = {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
-            payload: payload as LoadTelemetryData
+            payload: {
+                ...payload
+            } as LoadTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
     }
@@ -267,7 +269,9 @@ export class TelemetryHelper {
         const telemetryEvent: ITelemetryEvent = {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
-            payload: payload as UITelemetryData
+            payload: {
+                ...payload
+            } as UITelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
     }
@@ -277,7 +281,9 @@ export class TelemetryHelper {
         const telemetryEvent: ITelemetryEvent = {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
-            payload: payload as ActionTelemetryData
+            payload: {
+                ...payload
+            } as ActionTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
     }
@@ -289,7 +295,7 @@ export class TelemetryHelper {
             payload: {
                 ...payload,
                 TransactionId: newGuid(),
-                RequestId: TelemetryManager.InternalTelemetryData?.currentRequestId
+                RequestId: TelemetryManager.InternalTelemetryData?.currentRequestId,
             } as OCChatSDKTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
@@ -299,7 +305,9 @@ export class TelemetryHelper {
         const telemetryEvent: ITelemetryEvent = {
             eventName: payload?.Event ?? "",
             logLevel: logLevel,
-            payload: payload as ConfigValidationTelemetryData
+            payload: {
+                ...payload
+            } as ConfigValidationTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
     }
@@ -321,7 +329,9 @@ export class TelemetryHelper {
         const telemetryEvent: ITelemetryEvent = {
             eventName: payload?.Event ?? TelemetryEvent.FacadeChatSDKEvent,
             logLevel: logLevel,
-            payload: payload as FacadeChatSDKTelemetryData
+            payload: {
+                ...payload
+            } as FacadeChatSDKTelemetryData
         };
         BroadcastService.postMessage(telemetryEvent);
     }

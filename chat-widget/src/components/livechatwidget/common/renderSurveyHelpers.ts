@@ -114,7 +114,7 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
     } catch (error) {
         TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.ERROR, {
             Event: TelemetryEvent.PostChatContextCallFailed,
-            Description: PostChatSurveyTelemetryMessage.PostChatContextCallFailed,
+            Description: PostChatSurveyTelemetryMessage.PostChatContextCallFailed
         });
     }
 };
