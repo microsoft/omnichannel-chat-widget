@@ -4651,7 +4651,7 @@ abort-controller-es5@2.0.1, abort-controller-es5@^2.0.1:
     mkdirp "^1.0.4"
     read-pkg-up "^9.1.0"
 
-abort-controller@3.0.0:
+abort-controller@3.0.0, abort-controller@^3:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/abort-controller/-/abort-controller-3.0.0.tgz#eaf54d53b62bae4138e809ca225c8439a6efb392"
   integrity sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==
@@ -14456,10 +14456,22 @@ sane@^4.0.3:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sanitize-html@2.12.1, sanitize-html@2.14.0:
+sanitize-html@2.12.1:
   version "2.12.1"
   resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.12.1.tgz#280a0f5c37305222921f6f9d605be1f6558914c7"
   integrity sha512-Plh+JAn0UVDpBRP/xEjsk+xDCoOvMBwQUf/K+/cBAVuTbtX8bj2VB7S1sL1dssVpykqp0/KPSesHrqXtokVBpA==
+  dependencies:
+    deepmerge "^4.2.2"
+    escape-string-regexp "^4.0.0"
+    htmlparser2 "^8.0.0"
+    is-plain-object "^5.0.0"
+    parse-srcset "^1.0.2"
+    postcss "^8.3.11"
+
+sanitize-html@2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.14.0.tgz#bd2a7b97ee1d86a7f0e0babf3a4468f639c3a429"
+  integrity sha512-CafX+IUPxZshXqqRaG9ZClSlfPVjSxI0td7n07hk8QO2oO+9JDnlcL8iM8TWeOXOIBFgIOx6zioTzM53AOMn3g==
   dependencies:
     deepmerge "^4.2.2"
     escape-string-regexp "^4.0.0"
@@ -15419,19 +15431,12 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-swiper@8.4.7:
+swiper@8.4.7, swiper@^8.2.6:
   version "8.4.7"
   resolved "https://registry.yarnpkg.com/swiper/-/swiper-8.4.7.tgz#0301d385c3efc8efe8b66a64187edcb30e3067ee"
   integrity sha512-VwO/KU3i9IV2Sf+W2NqyzwWob4yX9Qdedq6vBtS0rFqJ6Fa5iLUJwxQkuD4I38w0WDJwmFl8ojkdcRFPHWD+2g==
   dependencies:
     dom7 "^4.0.4"
-    ssr-window "^4.0.2"
-
-swiper@^9.0.5:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-9.1.0.tgz#1a804254aa5b52724038ea1b4007193742a6bbf3"
-  integrity sha512-Ck8CywwfUghkbUAHbxTAWyeUAcNrIDNJ6EnKFBGGcHDjeqbh0Jq08RbmD5fMu1a0oOv1eIkUGVkqNJy/asm+yA==
-  dependencies:
     ssr-window "^4.0.2"
 
 symbol-observable@1.0.1:

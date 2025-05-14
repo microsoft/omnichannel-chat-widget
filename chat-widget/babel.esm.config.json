@@ -9,8 +9,13 @@
                 "firefox": 92,
                 "safari": 14
             },
-            "modules": false
+            "modules": "auto"
         }],
         ["@babel/preset-react"]
+    ],
+     "plugins": [
+        
+        "@babel/plugin-transform-classes",
+        "@babel/plugin-proposal-class-properties"
     ]
 }

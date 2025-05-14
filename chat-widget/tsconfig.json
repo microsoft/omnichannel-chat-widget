@@ -23,7 +23,9 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src",

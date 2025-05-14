@@ -1,3 +1,4 @@
+
 module.exports = {
     //Adding jasmine testRunner for issue with fail method in unit tests: https://github.com/facebook/jest/issues/11698
     testRunner: "jest-jasmine2",
@@ -11,5 +12,7 @@ module.exports = {
     "transform": {
         "^.+\\.(js|jsx|ts|tsx|mjs)$": "babel-jest",
         ".+\\.(css|scss|png|jpg|svg|gif)$": "jest-transform-stub"
-    }
+    },
+    setupFiles: ["<rootDir>/jest.setup.js"] // Add this line
+
 };
