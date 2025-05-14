@@ -9,7 +9,7 @@
                 "firefox": 92,
                 "safari": 14
             },
-            "modules": "commonjs"
+            "modules": false
         }],
         ["@babel/preset-react"]
     ],
