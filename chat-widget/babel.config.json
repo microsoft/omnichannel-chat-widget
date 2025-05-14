@@ -9,13 +9,14 @@
                 "firefox": 92,
                 "safari": 14
             },
-            "modules": false
+            "modules": "commonjs"
         }],
         ["@babel/preset-react"]
     ],
      "plugins": [
-        "@babel/plugin-transform-classes",
-        "@babel/plugin-proposal-class-properties"
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-transform-classes"
+
 
     ]
 }

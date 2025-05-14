@@ -13,6 +13,6 @@ module.exports = {
         "^.+\\.(js|jsx|ts|tsx|mjs)$": "babel-jest",
         ".+\\.(css|scss|png|jpg|svg|gif)$": "jest-transform-stub"
     },
-    setupFiles: ["<rootDir>/jest.setup.js"] // Add this line
+    setupFiles: ["./jest.setup.js"]
 
 };
