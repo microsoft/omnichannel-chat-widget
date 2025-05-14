@@ -509,6 +509,8 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Components
 
+## [Unreleased]
+
 ## [1.1.9] - 2025-05-14
 
 ### Changed
