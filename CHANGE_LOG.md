@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 
 - Adding new logic to identify `history messages` by comparing epoch times
 - Code cleanup by adding strategy pattern on newMessaheHandler component
+- Uptake [@microsoft/omnichannel-chat-components@1.1.9](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.9)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.17](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.17)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.16)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.15)
