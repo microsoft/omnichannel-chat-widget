@@ -511,6 +511,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.9] - 2025-05-14
+
+### Changed
+
+- Uptake [botframework-webchat@4.18.2-main.20250505.488ce72](https://www.npmjs.com/package/botframework-webchat/v/4.18.2-main.20250505.488ce72)
+
 ## [1.1.8] - 2025-02-24
 
 ### Changed
