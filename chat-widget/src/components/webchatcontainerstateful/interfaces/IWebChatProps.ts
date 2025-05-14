@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { ActivityMiddleware, ActivityStatusMiddleware, AttachmentForScreenReaderMiddleware, AttachmentMiddleware, AvatarMiddleware, CardActionMiddleware, GroupActivitiesMiddleware, ScrollToEndButtonMiddleware, ToastMiddleware, TypingIndicatorMiddleware, WebSpeechPonyfillFactory } from "botframework-webchat-api";
+import { ComponentType, ReactNode } from "react";
 import { DirectLineActivity, OneOrMany } from "botframework-webchat-core";
-
-import { ReactNode } from "react";
 
 export interface IWebChatProps {
     // "core" props: language-neutral, SHOULD work on React Native (if we work on that later)
@@ -20,7 +19,7 @@ export interface IWebChatProps {
     downscaleImageToDataURL?: (blob: Blob, maxWidth: number, maxHeight: number, type: string, quality: number) => Promise<URL>;
     grammars?: any;
     groupActivitiesMiddleware?: OneOrMany<GroupActivitiesMiddleware>;
-    internalErrorBoxClass?: React.Component | Function; // eslint-disable-line @typescript-eslint/ban-types
+    internalErrorBoxClass?: ComponentType<any>;
     internalRenderErrorBox?: any;
     locale?: string;
     onTelemetry?: any;
