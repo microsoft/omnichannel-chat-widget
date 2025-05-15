@@ -150,13 +150,9 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         //Start widget load timer
         TelemetryTimers.WidgetLoadTimer = createTimer();
 
-        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.LCWChatButtonActionCompleted,
-            Description: "Chat button action completed"
-        });
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.WidgetStartChatStarted,
-            Description: "Widget start chat started. Custom context: " + state?.domainStates?.customContext
+            Description: "Widget start chat started."
         });
 
         // Auth token retrieval needs to happen during start chat to support pop-out chat

@@ -99,6 +99,7 @@ const logWidgetLoadFailed = (ex?: ChatSDKError) => {
     
     TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
         Event: TelemetryEvent.WidgetStartChatFailed,
+        Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
     });

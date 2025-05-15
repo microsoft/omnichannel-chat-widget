@@ -53,6 +53,11 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         } else {
             await startChat();
         }
+
+        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.LCWChatButtonActionCompleted,
+            Description: "Chat button action completed"
+        });
     };
 
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);

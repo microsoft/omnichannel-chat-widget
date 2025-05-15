@@ -53,10 +53,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                 
                 if (eventName) {
                     const trackingEventName = getTrackingEventName(logLevel, eventName);
-                    _logger.trackEvent({ 
-                        name: trackingEventName,
-                        properties: eventProperties 
-                    });
+                    _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
                 }
             } catch (error) {
                 console.error("Error in logging telemetry to Application Insights:", error);

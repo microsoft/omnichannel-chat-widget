@@ -262,7 +262,7 @@ export enum TelemetryEvent {
     UXPrechatPaneStart = "UXPrechatPaneStart",
     UXPrechatPaneCompleted = "UXPrechatPaneCompleted",
     UXProactiveChatPaneStart = "UXProactiveChatPaneStart",
-    UXProactiveChatCompleted = "UXProactiveChatCompleted",
+    UXProactiveChatPaneCompleted = "UXProactiveChatPaneCompleted",
     UXReconnectChatPaneStart = "UXReconnectChatPaneStart",
     UXReconnectChatCompleted = "UXReconnectChatCompleted",
     UXStartChatErrorPaneStart = "UXStartChatErrorPaneStart",
