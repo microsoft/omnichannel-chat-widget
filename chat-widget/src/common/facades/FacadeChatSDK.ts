@@ -173,9 +173,20 @@ export class FacadeChatSDK {
         }
     }
 
+    private async corroborateTokenIsSet(chatSDK: OmnichannelChatSDK): Promise<void> {
+
+        // if getAuthToken is not set, it's because handleAuthentication hasnt being called
+        // so we need to call it 
+        if (this.isAuthenticated && chatSDK?.chatSDKConfig?.getAuthToken === undefined) {
+            handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
+        }
+    }
     private async tokenRing(): Promise<PingResponse> {
 
         if (this.disableReauthentication === true) {
+            // Since we are not validating the token anymore, we at least need to check if the token is set
+            // no need to validate anything other that the token is set
+            await this.corroborateTokenIsSet(this.chatSDK);
             // facade feature is disabled, so we are bypassing the re authentication and let it fail.
             return { result: true, message: "Facade is disabled" };
         }
@@ -213,9 +224,10 @@ export class FacadeChatSDK {
         this.expiration = 0;
 
         try {
+
             const ring = await handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
 
-            if (ring.result === true && ring.token) {
+            if (ring?.result === true && ring?.token) {
                 await this.setToken(ring.token);
 
                 TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
@@ -230,11 +242,11 @@ export class FacadeChatSDK {
                 TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                     Event: TelemetryEvent.NewTokenValidationFailed,
                     Description: ring.error?.message,
-                    ExceptionDetails: ring.error
+                    ExceptionDetails: ring?.error
                 });
                 return {
                     result: false,
-                    message: ring.error?.message || "Failed to get token"
+                    message: ring?.error?.message || "Failed to get token"
                 };
             }
         } catch (e: unknown) {

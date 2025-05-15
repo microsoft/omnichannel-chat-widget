@@ -1,7 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { Constants, LiveWorkItemState, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
+import { Constants, LiveWorkItemState, WidgetLoadTelemetryMessage } from "../../../common/Constants";
 import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isNullOrUndefined, isUndefinedOrEmpty } from "../../../common/utils";
-import { getAuthClientFunction, handleAuthentication } from "./authHelper";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
 import { handleStartChatError, logWidgetLoadComplete } from "./startChatErrorHandler";
 
@@ -20,6 +19,7 @@ import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
+import { createTrackingForFirstMessage } from "../../../firstresponselatency/FirstMessageTrackerFromBot";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
@@ -32,19 +32,7 @@ let widgetInstanceId: any | "";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let popoutWidgetInstanceId: any | "";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setAuthenticationIfApplicable = async (props: ILiveChatWidgetProps | undefined, facadeChatSDK: FacadeChatSDK) => {
-    const chatConfig = props?.chatConfig;
-    const getAuthToken = props?.getAuthToken;
-    const authClientFunction = getAuthClientFunction(chatConfig);
-    if (getAuthToken && authClientFunction) {
-        // set auth token to chat sdk before start chat
-        const authSuccess = await handleAuthentication(facadeChatSDK.getChatSDK(), chatConfig, getAuthToken);
-        if (!authSuccess.result) {
-            throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
-        }
-    }
-};
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
@@ -72,11 +60,6 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Faca
     // Setting Proactive chat settings
     const isProactiveChat = state.appStates.conversationState === ConversationState.ProactiveChat;
     const isPreChatEnabledInProactiveChat = state.appStates.proactiveChatStates.proactiveChatEnablePrechat;
-
-    // Setting auth settings to OC API to retrieve existing persistent chat session before start chat if any
-    if (isPersistentEnabled(props.chatConfig)) {
-        await setAuthenticationIfApplicable(props, facadeChatSDK);
-    }
 
     //Setting PreChat and intiate chat
     await setPreChatAndInitiateChat(facadeChatSDK, dispatch, setAdapter, isProactiveChat, isPreChatEnabledInProactiveChat, state, props);
@@ -130,6 +113,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
+    createTrackingForFirstMessage();
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 
@@ -154,9 +138,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             Event: TelemetryEvent.WidgetStartChatStarted,
             Description: "Widget start chat started."
         });
-
-        // Auth token retrieval needs to happen during start chat to support pop-out chat
-        await setAuthenticationIfApplicable(props, facadeChatSDK);
 
         //Check if chat retrieved from cache
         if (persistedState || params?.liveChatContext) {

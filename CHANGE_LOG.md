@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Remove overloading calls to handleAuthentication
 - Fix to load OOH from config always
 - Enhancements to OOH scenarios
 - Added additional span around time part of bubble timestamp
@@ -28,6 +29,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Adding new `First Message for Bot latency` tracker
 - Adding new `First Response Latency` track mechanism for `copilot + c2` conversations
 - Add support for Font Family config property in prechatpane
 - Add sendbox textarea minHeight property as work-around for an issue on Android where some languages' placeholders are smaller than the text, creating an unnecessary scrollbar
@@ -38,6 +40,7 @@ All notable changes to this project will be documented in this file.
 
 - Adding new logic to identify `history messages` by comparing epoch times
 - Code cleanup by adding strategy pattern on newMessaheHandler component
+- Uptake [@microsoft/omnichannel-chat-components@1.1.9](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.9)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.17](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.17)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.16)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.10.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.10.15)
@@ -511,6 +514,12 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.9] - 2025-05-14
+
+### Changed
+
+- Uptake [botframework-webchat@4.18.2-main.20250505.488ce72](https://www.npmjs.com/package/botframework-webchat/v/4.18.2-main.20250505.488ce72)
 
 ## [1.1.8] - 2025-02-24
 

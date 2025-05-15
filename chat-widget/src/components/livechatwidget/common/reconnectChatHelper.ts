@@ -66,12 +66,7 @@ const getChatReconnectContext = async (facadeChatSDK: FacadeChatSDK, chatConfig:
         const chatReconnectOptionalParams: IReconnectChatOptionalParams = {
             reconnectId: props.reconnectChatPaneProps?.reconnectId
         };
-        // Get auth token for getting chat reconnect context
-        if (isAuthenticatedChat) {
-            // handle authentication will throw error if auth token is not available, so no need to check for response
-            await handleAuthentication(facadeChatSDK.getChatSDK(), chatConfig, props.getAuthToken);
-        }
-
+        
         const reconnectChatContext = await facadeChatSDK?.getChatReconnectContext(chatReconnectOptionalParams);
         if (isAuthenticatedChat) {
             // remove auth token after reconnectId is fetched

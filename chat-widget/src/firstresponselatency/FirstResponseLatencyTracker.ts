@@ -1,6 +1,7 @@
-import { LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
 import { MessagePayload, TrackingMessage } from "./Constants";
 
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 
 export class FirstResponseLatencyTracker {
@@ -8,9 +9,9 @@ export class FirstResponseLatencyTracker {
     private isABotConversation = false;
     private isStarted = false;
     private isEnded = false;
-
     private startTrackingMessage?: TrackingMessage;
     private stopTrackingMessage?: TrackingMessage;
+    private isReady = false;
 
     constructor() {
         // this is a workaround to ensure in reload we track effectively the messages
@@ -33,6 +34,8 @@ export class FirstResponseLatencyTracker {
 
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
+
+        if (!this.isReady) return;
         //  this prevents to initiate tracking for multiple incoming messages
         if (this.isStarted) {
             return;
@@ -41,11 +44,9 @@ export class FirstResponseLatencyTracker {
         if (!this.isABotConversation) {
             return;
         }
-
         // control of states to prevent clashing of messages
         this.isStarted = true;
         this.isEnded = false;
-
         // The idea  of using types is to enrich telemetry data 
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
     }
@@ -94,13 +95,9 @@ export class FirstResponseLatencyTracker {
 
     public startClock(payload: MessagePayload): void {
         try {
-
             if (!payload || !payload.Id) {
                 throw new Error("Invalid payload");
             }
-            // in the case of a reload, tracker will be paused, until last history message is received
-            // this is because we dont have a way to identidy send messages as part of the history
-            //if (this.inPause) return;
             this.startTracking(payload);
         } catch (e) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -144,6 +141,38 @@ export class FirstResponseLatencyTracker {
         }
     }
 
+    private offlineNetworkListener = BroadcastService.getMessageByEventName(TelemetryEvent.NetworkDisconnected).subscribe(() => {
+        this.isStarted = false;
+        this.isEnded = false;
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.MessageStopLapTrackError,
+            Description: "Tracker Stopped due to network disconnection",
+        });
+    }
+    );
+
+    private fmltrackingListener = BroadcastService.getMessageByEventName(BroadcastEvent.FMLTrackingCompleted).subscribe(() => {
+        this.isReady = true;
+        BroadcastService.postMessage({
+            eventName: BroadcastEvent.FMLTrackingCompletedAck,
+            payload: null
+        });
+    }
+    );
+    // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
+    // No need to keep listerning for tracking, enforcing disconnection for the listners
+    private rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceived).subscribe(() => {
+        this.isReady = true;
+    }
+    );
+
+    // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
+    // No need to keep listerning for tracking, enforcing disconnection for the listners
+    private historyListener = BroadcastService.getMessageByEventName(BroadcastEvent.HistoryMessageReceived).subscribe(() => {
+        this.isReady = true;
+    }
+    );
+
     private deregister(): void {
         // Reset State
         this.isABotConversation = false;
@@ -151,5 +180,9 @@ export class FirstResponseLatencyTracker {
         this.isEnded = false;
         this.startTrackingMessage = undefined;
         this.stopTrackingMessage = undefined;
+        this.offlineNetworkListener.unsubscribe();
+        this.fmltrackingListener.unsubscribe();
+        this.rehydrateListener.unsubscribe();
+        this.historyListener.unsubscribe();
     }
 }
