@@ -66,6 +66,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         } catch (ex) {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.EmailTranscriptActionFailed,
+                Description: "Email transcript failed.",
                 ExceptionDetails: {
                     exception: ex
                 }

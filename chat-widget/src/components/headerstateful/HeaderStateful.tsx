@@ -72,7 +72,10 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
                 const postMessageToOtherTabs = true;
                 await endChat(adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTabs);
             }
-
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.CloseChatActionCompleted,
+                Description: "Header Close action completed."
+            });
             const closeButtonId = props.headerProps?.controlProps?.closeButtonProps?.id ?? `${controlProps.id}-close-button`;
             if (closeButtonId) {
                 dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: closeButtonId });

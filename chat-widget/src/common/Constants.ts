@@ -365,3 +365,8 @@ export class PostChatSurveyTelemetryMessage {
     public static readonly PostChatContextCallSucceed = "Postchat context call succeed.";
     public static readonly PostChatContextCallStarted = "Postchat context call started.";
 }
+
+export class AppInsightsTelemetryMessage {
+    public static readonly AppInsightsInitialized = "Application Insights initialized successfully.";
+    public static readonly AppInsightsInitError = "Error initializing Application Insights";
+}

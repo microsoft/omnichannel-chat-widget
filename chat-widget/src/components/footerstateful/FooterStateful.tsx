@@ -58,6 +58,7 @@ export const FooterStateful = (props: any) => {
             } catch (ex) {
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
                     Event: TelemetryEvent.DownloadTranscriptActionFailed,
+                    Description: "Download transcript action failed.",
                     ExceptionDetails: {
                         exception: ex
                     }

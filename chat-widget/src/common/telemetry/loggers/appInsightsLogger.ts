@@ -3,6 +3,7 @@ import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
 import { LogLevel, TelemetryEvent, TelemetryInput } from "../TelemetryConstants";
 import ScenarioMarker from "../ScenarioMarker";
 import { TelemetryHelper } from "../TelemetryHelper";
+import { AppInsightsTelemetryMessage } from "../../Constants";
 
 export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: boolean): IChatSDKLogger => {
 
@@ -22,14 +23,17 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                 appInsights.loadAppInsights();
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.AppInsightsInitialized,
-                    Description: "Application Insights initialized successfully."
+                    Description: AppInsightsTelemetryMessage.AppInsightsInitialized
                 });
             } catch (error) {
-                console.error("Error initializing Application Insights: ", error);
+                console.error(AppInsightsTelemetryMessage.AppInsightsInitError, error);
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.AppInsightsInitFailed,
-                    Description: "Error initializing Application Insights",
-                    ExceptionDetails: {message : "Token payload is not valid JSON", key: appInsightsKey.slice(-3)}
+                    Description: AppInsightsTelemetryMessage.AppInsightsInitError,
+                    ExceptionDetails: {
+                        message : `${AppInsightsTelemetryMessage.AppInsightsInitError} with key ending: ${appInsightsKey.slice(-3)}`,
+                        exception: error
+                    }
                 });
                 return null;
             }
@@ -72,6 +76,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
             const allowedKeys = ["LogLevel", "Description", "ExceptionDetails", "ChannelId", "LCWRuntimeId", "ConversationId", "ChatId"];
             // rename keys before sending to app insights
             const renameKeys: { [key: string]: string } = {
+                "LCWRuntimeId": "ClientSessionId",
                 "ConversationId": "LiveWorkItemId",
                 "ChatId": "ChatThreadId"
             };
@@ -87,11 +92,16 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     }
 
     function getTrackingEventName(logLevel: LogLevel, eventName: string): string {
-        const event = eventName.startsWith("UX") ? eventName.substring(2) : eventName;
+        // Remove "UX" or "LCW" prefix if present
+        const event = eventName.replace(/^(UX|LCW)/, "");
+
         if (logLevel === LogLevel.ERROR) {
             return ScenarioMarker.failScenario(event);
         }
-        if (event?.toLowerCase().includes("complete")) {
+        if (logLevel === LogLevel.WARN) {
+            return ScenarioMarker.warnScenario(event);
+        }
+        if (event.toLowerCase().includes("complete")) {
             return ScenarioMarker.completeScenario(event);
         }
         return ScenarioMarker.startScenario(event);

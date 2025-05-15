@@ -29,7 +29,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXPrechatPaneStart,
-            Description: "PreChat survey pane loading started.",
+            Description: "Prechat survey pane loading started.",
         });
     }, []);
     
@@ -76,7 +76,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         onSubmit: async (values: { index: number, label: any, id: any, value: string }[]) => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.PrechatSubmitCompleted, 
-                Description: "PreChat survey submitted."
+                Description: "Prechat survey submitted."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
@@ -157,7 +157,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXPrechatPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            Description: "PreChat survey pane loading completed."
+            Description: "Prechat survey pane loading completed."
         });
     }, []);
 

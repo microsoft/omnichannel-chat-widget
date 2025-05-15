@@ -99,7 +99,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLiveChatWidgetStart
+            Event: TelemetryEvent.UXLiveChatWidgetStart,
+            Description: "Live chat widget loading started.",
         });
     }, []);
 
@@ -700,6 +701,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXLiveChatWidgetCompleted,
+            Description: "Live chat widget loading completed.",
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
