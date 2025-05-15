@@ -1,4 +1,5 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
+
 import { createCardActionMiddleware } from "./cardActionMiddleware";
 
 describe("cardActionMiddleware test", () => {
