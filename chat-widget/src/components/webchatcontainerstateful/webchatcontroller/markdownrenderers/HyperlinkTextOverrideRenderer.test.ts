@@ -1,6 +1,7 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
 import { act, cleanup } from "@testing-library/react";
+
 import HyperlinkTextOverrideRenderer from "./HyperlinkTextOverrideRenderer";
 
 describe("HyperlinkTextOverrideRenderer unit tests", () => {
