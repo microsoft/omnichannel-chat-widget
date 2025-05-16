@@ -23,6 +23,7 @@ jobs:
         run: yarn install
       - name: Validate using DangerJS
         run: yarn danger ci
+        working-directory: chat-widget
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install playwright jest packages
