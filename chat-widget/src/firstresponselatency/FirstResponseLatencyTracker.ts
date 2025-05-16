@@ -161,7 +161,7 @@ export class FirstResponseLatencyTracker {
     );
     // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
     // No need to keep listerning for tracking, enforcing disconnection for the listners
-    private rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceived).subscribe(() => {
+    private rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceivedCompleted).subscribe(() => {
         this.isReady = true;
     }
     );

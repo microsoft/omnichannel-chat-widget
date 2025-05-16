@@ -111,7 +111,7 @@ export const ProactiveChatPaneStateful = (props: any) => {
         }, proactiveChatProps?.ProactiveChatInviteTimeoutInMs ?? Constants.ProactiveChatInviteTimeoutInMs);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ProactiveChatPaneLoaded });
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.UXProactiveChatCompleted,
+            Event: TelemetryEvent.UXProactiveChatPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
             Description: "Proactive chat pane loading completed."
         });
