@@ -15,11 +15,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockFacade = { getChatSDK: jest.fn()};
 
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, undefined, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(1);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: "Widget load complete with error: undefined"
             })
@@ -32,11 +32,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: Error: ${WidgetLoadCustomErrorString.AuthenticationFailedErrorString}`
             })
@@ -52,11 +52,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new Error(WidgetLoadCustomErrorString.NetworkErrorString);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade , {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: Error: ${WidgetLoadCustomErrorString.NetworkErrorString}`
             })
@@ -72,11 +72,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new ChatSDKError(ChatSDKErrorName.WidgetUseOutsideOperatingHour);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(1);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("INFO", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("INFO", expect.objectContaining({
             Description: `Widget load complete. ${WidgetLoadTelemetryMessage.OOOHMessage}`
         }));
         expect(dispatch).toHaveBeenCalledTimes(2);
@@ -93,11 +93,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new ChatSDKError(ChatSDKErrorName.PersistentChatConversationRetrievalFailure, 429);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.PersistentChatConversationRetrievalFailure}`,
@@ -114,12 +114,12 @@ describe("startChatErrorHandler unit test", () => {
         const dispatch = jest.fn();
         const mockEx = new ChatSDKError(ChatSDKErrorName.PersistentChatConversationRetrievalFailure, 400);
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         const mockFacade = { getChatSDK: jest.fn()};
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.PersistentChatConversationRetrievalFailure}`,
                 HttpResponseStatusCode: 400
@@ -136,11 +136,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new ChatSDKError(ChatSDKErrorName.ConversationInitializationFailure, 429);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ConversationInitializationFailure}`,
@@ -158,11 +158,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new ChatSDKError(ChatSDKErrorName.ConversationInitializationFailure, 400);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ConversationInitializationFailure}`,
                 HttpResponseStatusCode: 400
@@ -179,11 +179,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new ChatSDKError(ChatSDKErrorName.ChatTokenRetrievalFailure, 429);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ChatTokenRetrievalFailure}`,
@@ -201,11 +201,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new ChatSDKError(ChatSDKErrorName.ChatTokenRetrievalFailure, 400);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ChatTokenRetrievalFailure}`,
                 HttpResponseStatusCode: 400
@@ -222,11 +222,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new ChatSDKError(ChatSDKErrorName.ChatTokenRetrievalFailure, 401);
         const mockFacade = { getChatSDK: jest.fn()};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ChatTokenRetrievalFailure}`,
                 HttpResponseStatusCode: 401
@@ -243,11 +243,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockEx = new ChatSDKError(ChatSDKErrorName.UninitializedChatSDK);
         const mockFacade = { getChatSDK: (jest.fn())};
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.UninitializedChatSDK}`
@@ -265,11 +265,11 @@ describe("startChatErrorHandler unit test", () => {
         const mockFacade = { getChatSDK: ()=>{ return {}; }};
         
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(1);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.InvalidConversation}`
@@ -288,13 +288,13 @@ describe("startChatErrorHandler unit test", () => {
         const mockFacade = { getChatSDK: ()=> { return {}; }};
 
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
 
 
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(1);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("WARN", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             Description: "Widget load complete with error",
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ClosedConversation}`
@@ -315,11 +315,11 @@ describe("startChatErrorHandler unit test", () => {
         };
 
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledWith("ERROR", expect.objectContaining({
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
             ExceptionDetails: expect.objectContaining({
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ScriptLoadFailure}`,
                 HttpResponseStatusCode: 405
@@ -345,11 +345,11 @@ describe("startChatErrorHandler unit test", () => {
         };
 
         spyOn(BroadcastService, "postMessage").and.callFake(() => false);
-        spyOn(TelemetryHelper, "logLoadingEvent").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
         spyOn(TelemetryHelper, "logSDKEvent").and.callFake(() => false);
         handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, true);
 
-        expect(TelemetryHelper.logLoadingEvent).toHaveBeenCalledTimes(2);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
         expect(TelemetryHelper.logSDKEvent).toHaveBeenCalledWith("INFO", expect.objectContaining({
             Event: TelemetryEvent.EndChatSDKCall
         }));

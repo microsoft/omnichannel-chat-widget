@@ -17,17 +17,21 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
         const postChatEnabled = await isPostChatSurveyEnabled(facadeChatSDK);
         if (postChatEnabled) {
             if (!persistedChat) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
+                    Event: TelemetryEvent.PostChatContextCallStarted,
+                    Description: PostChatSurveyTelemetryMessage.PostChatContextCallStarted
+                });
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
-                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.PostChatContextCallSucceed,
+                TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
+                    Event: TelemetryEvent.PostChatContextCallCompleted,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
             }
         }
     } catch (ex) {
-        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+        TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.ERROR, {
             Event: TelemetryEvent.PostChatContextCallFailed,
             ExceptionDetails: {
                 exception: ex

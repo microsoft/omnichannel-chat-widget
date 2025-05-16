@@ -24,7 +24,7 @@ export const createTrackingForFirstMessage = () => {
         return true;
     };
 
-    const widgetLoadListener = BroadcastService.getMessageByEventName(TelemetryEvent.WidgetLoadComplete).subscribe(() => {
+    const widgetLoadListener = BroadcastService.getMessageByEventName(TelemetryEvent.WidgetStartChatCompleted).subscribe(() => {
         if (startTracking) return;
         startTracking = true;
         startTime = new Date().getTime();
@@ -86,7 +86,7 @@ export const createTrackingForFirstMessage = () => {
     
     // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
     // No need to keep listerning for tracking, enforcing disconnection for the listners
-    const rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceived).subscribe(() => {
+    const rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceivedCompleted).subscribe(() => {
         startTracking = false;
         stopTracking = false;
         disconnectListener();

@@ -45,11 +45,20 @@ export const FooterStateful = (props: any) => {
         dir: state.domainStates.globalDir,
         onDownloadTranscriptClick: async () => {
             try {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.DownloadTranscriptButtonClicked, Description: "Download Transcript button clicked." });
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                    Event: TelemetryEvent.DownloadTranscriptActionStarted,
+                    Description: "Download transcript action started."
+                });
+
                 await downloadTranscript(facadeChatSDK, downloadTranscriptProps, state);
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                    Event: TelemetryEvent.DownloadTranscriptActionCompleted,
+                    Description: "Download transcript action completed."
+                });
             } catch (ex) {
-                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.DownloadTranscriptFailed,
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
+                    Event: TelemetryEvent.DownloadTranscriptActionFailed,
+                    Description: "Download transcript action failed.",
                     ExceptionDetails: {
                         exception: ex
                     }
@@ -60,7 +69,10 @@ export const FooterStateful = (props: any) => {
             }
         },
         onEmailTranscriptClick: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.EmailTranscriptButtonClicked, Description: "Email Transcript button clicked." });
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.EmailTranscriptActionStarted, 
+                Description: "Email Transcript action started."
+            });
             const emailTranscriptButtonId = footerProps?.controlProps?.emailTranscriptButtonProps?.id ?? `${controlProps.id}-emailtranscript-button`;
             if (emailTranscriptButtonId) {
                 dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: emailTranscriptButtonId });

@@ -335,4 +335,54 @@ export class TelemetryHelper {
         };
         BroadcastService.postMessage(telemetryEvent);
     }
+
+      public static logLoadingEventToAllTelemetry = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
+          const telemetryEvent: ITelemetryEvent = {
+              eventName: payload?.Event ?? "",
+              logLevel: logLevel,
+              payload: {
+                  ...payload,
+                  LogToAll: true,
+              } as LoadTelemetryData
+          };
+          BroadcastService.postMessage(telemetryEvent);
+      }
+
+        public static logActionEventToAllTelemetry = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
+            const telemetryEvent: ITelemetryEvent = {
+                eventName: payload?.Event ?? "",
+                logLevel: logLevel,
+                payload: {
+                    ...payload,
+                    LogToAll: true
+                } as ActionTelemetryData
+            };
+            BroadcastService.postMessage(telemetryEvent);
+        }
+
+         public static logFacadeChatSDKEventToAllTelemetry = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
+             const telemetryEvent: ITelemetryEvent = {
+                 eventName: payload?.Event ?? TelemetryEvent.FacadeChatSDKEvent,
+                 logLevel: logLevel,
+                 payload: {
+                     ...payload,
+                     LogToAll: true,
+                 } as FacadeChatSDKTelemetryData
+             };
+             BroadcastService.postMessage(telemetryEvent);
+         }
+
+         public static logSDKEventToAllTelemetry = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
+             const telemetryEvent: ITelemetryEvent = {
+                 eventName: payload?.Event ?? "",
+                 logLevel: logLevel,
+                 payload: {
+                     ...payload,
+                     TransactionId: newGuid(),
+                     RequestId: TelemetryManager.InternalTelemetryData?.currentRequestId,
+                     LogToAll: true,
+                 } as OCChatSDKTelemetryData
+             };
+             BroadcastService.postMessage(telemetryEvent);
+         }
 }

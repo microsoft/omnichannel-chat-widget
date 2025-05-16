@@ -45,12 +45,24 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
         onMinimizeClick: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderMinimizeButtonClicked, Description: "Header Minimize button clicked." });
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.MinimizeChatActionStarted, 
+                Description: "Header Minimize action started."
+            });
+
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
+
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.MinimizeChatActionCompleted, 
+                Description: "Header Minimize action completed."
+            });
         },
         onCloseClick: async () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderCloseButtonClicked, Description: "Header Close button clicked." });
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.CloseChatActionStarted, 
+                Description: "Header Close action started."
+            });
 
             if (localConfirmationPaneState.current !== ConfirmationState.Ok) {
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: true });
@@ -60,7 +72,10 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
                 const postMessageToOtherTabs = true;
                 await endChat(adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTabs);
             }
-
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.CloseChatActionCompleted,
+                Description: "Header Close action completed."
+            });
             const closeButtonId = props.headerProps?.controlProps?.closeButtonProps?.id ?? `${controlProps.id}-close-button`;
             if (closeButtonId) {
                 dispatch({ type: LiveChatWidgetActionType.SET_PREVIOUS_FOCUSED_ELEMENT_ID, payload: closeButtonId });
@@ -79,8 +94,17 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             text: "We're Offline"
         },
         onMinimizeClick: () => {
-            TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.HeaderMinimizeButtonClicked, Description: "Header Minimize button clicked." });
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.MinimizeChatActionStarted, 
+                Description: "Header Minimize action started."
+            });
+
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
+
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.MinimizeChatActionCompleted, 
+                Description: "Header Minimize action completed."
+            });
         },
         ...outOfOfficeHeaderProps?.controlProps,
         hideCloseButton: state.appStates.conversationState === ConversationState.OutOfOffice || outOfOfficeHeaderProps?.controlProps?.hideCloseButton
