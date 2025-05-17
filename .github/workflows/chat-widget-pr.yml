@@ -31,7 +31,7 @@ jobs:
         run: yarn danger ci
         working-directory: chat-widget
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_DANGERJS }}
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
         run: yarn install
