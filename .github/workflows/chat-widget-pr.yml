@@ -25,13 +25,11 @@ jobs:
       - name: Install packages
         working-directory: chat-widget
         run: yarn install
-      - name: Set danger env
-        run: echo "DANGER_GITHUB_API_TOKEN=$(echo FIRST_HALF + SECOND_HALF)" >> $GITHUB_ENV
       - name: Validate using DangerJS
         run: yarn danger ci
         working-directory: chat-widget
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_DANGERJS }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_DANGER_JS }}
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
         run: yarn install
