@@ -21,6 +21,9 @@ jobs:
       - name: Install packages
         working-directory: chat-widget
         run: yarn install
+      - name: Fetch base branch
+        working-directory: chat-widget
+        run: git fetch origin main:main
       - name: Validate using DangerJS
         run: yarn danger local --dangerfile dangerfile.js --base main
         working-directory: chat-widget
