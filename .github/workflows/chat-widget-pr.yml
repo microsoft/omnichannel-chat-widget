@@ -25,6 +25,8 @@ jobs:
       - name: Install packages
         working-directory: chat-widget
         run: yarn install
+      - name: Set danger env
+        run: echo "DANGER_GITHUB_API_TOKEN=$(echo FIRST_HALF + SECOND_HALF)" >> $GITHUB_ENV
       - name: Validate using DangerJS
         run: yarn danger ci
         working-directory: chat-widget
