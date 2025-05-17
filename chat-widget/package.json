@@ -63,7 +63,7 @@
     "jest-dom": "^4.0.0",
     "jest-image-snapshot": "^4.5.1",
     "json": "^11.0.0",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^16.0.0",
     "p-defer": "^4.0.1",
     "playwright": "^1.20.0",
     "postcss": "^8.3.9",
@@ -127,7 +127,13 @@
     "pretest:visual": "yarn playwright install",
     "prepare": "husky",
     "clean": "rimraf lib",
-    "dev": "concurrently \"yarn build:esm:watch\" \"webpack --config ./webpack.config.cjs --watch\""
+    "dev": "concurrently \"yarn build:esm:watch\" \"webpack --config ./webpack.config.cjs --watch\"",
+    "lint-staged": {
+      "*.{js,ts,tsx}": [
+        "eslint --fix",
+        "git add"
+      ]
+    }
   },
   "resolutions": {
     "**/url-parse": "1.5.9",
