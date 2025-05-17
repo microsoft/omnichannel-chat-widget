@@ -27,7 +27,8 @@ jobs:
         working-directory: chat-widget
         run: git fetch origin main:main
       - name: Validate using DangerJS
-        run: yarn danger local --dangerfile dangerfile.js --base main
+        run: yarn danger local --dangerfile dang1erfile.js --base main
+        shell: bash
         working-directory: chat-widget
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
