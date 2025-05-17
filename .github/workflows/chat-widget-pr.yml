@@ -22,7 +22,7 @@ jobs:
         working-directory: chat-widget
         run: yarn install
       - name: Validate using DangerJS
-        run: yarn danger local --dangerfile dangerfile.js
+        run: yarn danger local --dangerfile dangerfile.js --base main
         working-directory: chat-widget
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
