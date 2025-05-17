@@ -13,5 +13,8 @@ console.log("modified_files", danger?.github?.pr?.title);
 
 // right now just checking for changelog, we could add more checks later
 if (!hasChangelog && !isEngineeringEnhancement) {
+    console.log("********  ERROR    ***************");
+    console.error("Please add a changelog entry for your changes.");
     fail("Please add a changelog entry for your changes.");
 }
+
