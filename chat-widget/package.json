@@ -122,11 +122,8 @@
     "build-sample:dev": "yarn build && webpack --config ./webpack.dev.config.cjs",
     "test:visual:build": "yarn build-storybook && yarn test:visual",
     "lint": "yarn eslint . --max-warnings=0",
-    "prepush": "yarn lint-staged && yarn danger:prepush",
+    "prepush": "yarn lint && yarn danger:prepush",
     "danger:prepush": "yarn danger local --dangerfile dangerfile.js --base main",
-    "lint-staged": {
-      "*.{js,ts,tsx}": "yarn eslint . --max-warnings=0 "
-    },
     "pretest:visual": "yarn playwright install",
     "prepare": "husky",
     "clean": "rimraf lib",
