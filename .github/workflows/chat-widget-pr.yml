@@ -29,6 +29,8 @@ jobs:
       - name: Validate using DangerJS
         working-directory: chat-widget
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           yarn danger local --dangerfile dangerfile.js --base main
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
