@@ -17,7 +17,7 @@ if (!hasChangelog && !isEngineeringEnhancement) {
 }
 
 function printErrorMessage(message , rule) {
-    console.log(`********  ERROR  ${rule}  ***************`);
-    console.error(message);
+    console.log(`********  ERROR : ${rule}  ***************`);
+    console.log(message);
     fail(message);
 }
