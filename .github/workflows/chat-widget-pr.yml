@@ -7,10 +7,6 @@ on:
     types: [edited, assigned, opened, synchronize, reopened]
     paths:
       - 'chat-widget/**'
-
-permissions:
-  contents: read
-  pull-requests: write
       
 jobs: 
   build:
