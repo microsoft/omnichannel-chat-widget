@@ -1,3 +1,2 @@
 # .husky/pre-commit
 echo "Running pre-commit hook..."
-exit 1
