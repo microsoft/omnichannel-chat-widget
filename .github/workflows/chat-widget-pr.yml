@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          yarn danger local --dangerfile dangerfile.js --base main
+          yarn danger ci --dangerfile dangerfile.js --base main
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
