@@ -1,1 +1,1 @@
-yarn lint-commit
+yarn lint-staged
