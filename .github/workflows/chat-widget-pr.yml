@@ -30,8 +30,8 @@ jobs:
         working-directory: chat-widget
         shell: bash
         run: |
-          set -e
           yarn danger local --dangerfile dangerfile.js --base main
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
         run: yarn install
