@@ -128,12 +128,12 @@
     "prepare": "husky",
     "clean": "rimraf lib",
     "dev": "concurrently \"yarn build:esm:watch\" \"webpack --config ./webpack.config.cjs --watch\"",
-    "lint-staged": {
-      "*.{js,ts,tsx}": [
-        "eslint --fix",
-        "git add"
-      ]
-    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "resolutions": {
     "**/url-parse": "1.5.9",
