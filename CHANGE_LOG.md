@@ -34,7 +34,7 @@ All notable changes to this project will be documented in this file.
 - Added documentation for few properties - opensMarkdownLinksInSameTab, honorsTargetInHTMLLinks, minHeight
 
 ### Changed
-
+- upgrade React to v18 and additional adjustments
 - Adding new logic to identify `history messages` by comparing epoch times
 - Code cleanup by adding strategy pattern on newMessaheHandler component
 - Uptake [@microsoft/omnichannel-chat-components@1.1.9](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.9)
@@ -512,6 +512,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- upgrade react to v18 , and additional libs around the React
 ## [1.1.9] - 2025-05-14
 
 ### Changed

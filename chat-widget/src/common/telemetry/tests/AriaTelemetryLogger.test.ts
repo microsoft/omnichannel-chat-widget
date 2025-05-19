@@ -1,7 +1,9 @@
-import "@testing-library/jest-dom/extend-expect";
-import { cleanup } from "@testing-library/react";
+import "@testing-library/jest-dom";
+
 import { LogLevel, ScenarioType, TelemetryEvent } from "../TelemetryConstants";
+
 import { ariaTelemetryLogger } from "../loggers/ariaTelemetryLogger";
+import { cleanup } from "@testing-library/react";
 
 describe("AriaTelemetryLogger unit tests", () => {
     afterEach(() => {
