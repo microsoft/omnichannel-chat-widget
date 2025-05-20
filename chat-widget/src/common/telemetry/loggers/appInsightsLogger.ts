@@ -5,6 +5,16 @@ import ScenarioMarker from "../ScenarioMarker";
 import { TelemetryHelper } from "../TelemetryHelper";
 import { AppInsightsTelemetryMessage } from "../../Constants";
 
+enum AllowedKeys {
+  LogLevel = "LogLevel",
+  Description = "Description",
+  ExceptionDetails = "ExceptionDetails",
+  ChannelId = "ChannelId",
+  LCWRuntimeId = "ClientSessionId",
+  ConversationId = "LiveWorkItemId",
+  ChatId = "ChatThreadId"
+}
+
 export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: boolean): IChatSDKLogger => {
 
     let appInsights: ApplicationInsights | null = null;
@@ -70,20 +80,13 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     function setEventProperties(telemetryInfo?: any): ICustomProperties {
         const eventProperties: ICustomProperties = {};
         if (telemetryInfo) {
-            const allowedKeys = ["LogLevel", "Description", "ExceptionDetails", "ChannelId", "LCWRuntimeId", "ConversationId", "ChatId"];
-            // rename keys before sending to app insights
-            const renameKeys: { [key: string]: string } = {
-                "LCWRuntimeId": "ClientSessionId",
-                "ConversationId": "LiveWorkItemId",
-                "ChatId": "ChatThreadId"
-            };
-            allowedKeys.forEach((key) => {
+            for (const key in AllowedKeys) {
+                const finalKey = AllowedKeys[key as keyof typeof AllowedKeys]; // get renamed keys for LCWRuntimeId, ConversationId, ChatId
                 const value = telemetryInfo[key];
-                const finalKey = renameKeys[key] || key;
                 if (value !== undefined && value !== null && value !== "") {
                     eventProperties[finalKey] = value;
                 }
-            });
+            }
         }
         return eventProperties;
     }
@@ -105,7 +108,6 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     }
     return aiLogger;
 };
-
 
 export interface ICustomProperties {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

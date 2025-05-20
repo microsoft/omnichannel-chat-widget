@@ -242,147 +242,137 @@ export class TelemetryHelper {
         return telemetryDataLocal;
     }
 
-    public static logCallingEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper, callId?: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private static postTelemetryEvent (eventName: string, logLevel: LogLevel, payload: any): void {
         const telemetryEvent: ITelemetryEvent = {
-            eventName: payload?.Event ?? "",
-            logLevel: logLevel,
+            eventName,
+            logLevel,
             payload: {
+                ...payload
+            }
+        };
+        BroadcastService.postMessage(telemetryEvent);
+    }
+
+    public static logCallingEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper, callId?: string) => {
+        TelemetryHelper.postTelemetryEvent(
+            payload?.Event ?? "",
+            logLevel,
+            {
                 ...payload,
                 CallId: callId
             } as CallingTelemetryData
-        };
-        BroadcastService.postMessage(telemetryEvent);
+        );
     }
 
     public static logLoadingEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-        const telemetryEvent: ITelemetryEvent = {
-            eventName: payload?.Event ?? "",
-            logLevel: logLevel,
-            payload: {
-                ...payload
-            } as LoadTelemetryData
-        };
-        BroadcastService.postMessage(telemetryEvent);
+        TelemetryHelper.postTelemetryEvent(
+            payload?.Event ?? "",
+            logLevel,
+            payload as LoadTelemetryData
+        );
     }
 
     public static logUIEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-        const telemetryEvent: ITelemetryEvent = {
-            eventName: payload?.Event ?? "",
-            logLevel: logLevel,
-            payload: {
-                ...payload
-            } as UITelemetryData
-        };
-        BroadcastService.postMessage(telemetryEvent);
+        TelemetryHelper.postTelemetryEvent(
+            payload?.Event ?? "",
+            logLevel,
+            payload as UITelemetryData);
     }
 
 
     public static logActionEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-        const telemetryEvent: ITelemetryEvent = {
-            eventName: payload?.Event ?? "",
-            logLevel: logLevel,
-            payload: {
-                ...payload
-            } as ActionTelemetryData
-        };
-        BroadcastService.postMessage(telemetryEvent);
+        TelemetryHelper.postTelemetryEvent(
+            payload?.Event ?? "",
+            logLevel,
+            payload as ActionTelemetryData);
     }
 
     public static logSDKEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-        const telemetryEvent: ITelemetryEvent = {
-            eventName: payload?.Event ?? "",
-            logLevel: logLevel,
-            payload: {
+        TelemetryHelper.postTelemetryEvent(
+            payload?.Event ?? "",
+            logLevel,
+            {
                 ...payload,
                 TransactionId: newGuid(),
-                RequestId: TelemetryManager.InternalTelemetryData?.currentRequestId,
+                RequestId: TelemetryManager.InternalTelemetryData?.currentRequestId
             } as OCChatSDKTelemetryData
-        };
-        BroadcastService.postMessage(telemetryEvent);
+        );
     }
 
     public static logConfigDataEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-        const telemetryEvent: ITelemetryEvent = {
-            eventName: payload?.Event ?? "",
-            logLevel: logLevel,
-            payload: {
-                ...payload
-            } as ConfigValidationTelemetryData
-        };
-        BroadcastService.postMessage(telemetryEvent);
+        TelemetryHelper.postTelemetryEvent(
+            payload?.Event ?? "",
+            logLevel,
+            payload as ConfigValidationTelemetryData
+        );
     }
 
     public static logWebChatEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-        const telemetryEvent: ITelemetryEvent = {
-            eventName: TelemetryEvent.WebChatEvent,
-            logLevel: logLevel,
-            payload: {
+        TelemetryHelper.postTelemetryEvent(
+            TelemetryEvent.WebChatEvent,
+            logLevel,
+            {
                 ...payload,
                 type: TelemetryEvent.WebChatEvent,
                 scenarioType: ScenarioType.WEBCHAT
             } as WebChatTelemetryData
-        };
-        BroadcastService.postMessage(telemetryEvent);
+        );
     }
 
     public static logFacadeChatSDKEvent = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-        const telemetryEvent: ITelemetryEvent = {
-            eventName: payload?.Event ?? TelemetryEvent.FacadeChatSDKEvent,
-            logLevel: logLevel,
-            payload: {
-                ...payload
-            } as FacadeChatSDKTelemetryData
-        };
-        BroadcastService.postMessage(telemetryEvent);
+        TelemetryHelper.postTelemetryEvent(
+            payload?.Event ?? TelemetryEvent.FacadeChatSDKEvent,
+            logLevel,
+            payload as FacadeChatSDKTelemetryData
+        );
     }
 
       public static logLoadingEventToAllTelemetry = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-          const telemetryEvent: ITelemetryEvent = {
-              eventName: payload?.Event ?? "",
-              logLevel: logLevel,
-              payload: {
-                  ...payload,
+          TelemetryHelper.postTelemetryEvent(
+              payload?.Event ?? "",
+              logLevel,
+              {
+                  ...(payload as LoadTelemetryData),
                   LogToAll: true,
-              } as LoadTelemetryData
-          };
-          BroadcastService.postMessage(telemetryEvent);
+              }
+          );
       }
 
         public static logActionEventToAllTelemetry = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-            const telemetryEvent: ITelemetryEvent = {
-                eventName: payload?.Event ?? "",
-                logLevel: logLevel,
-                payload: {
-                    ...payload,
+            TelemetryHelper.postTelemetryEvent(
+                payload?.Event ?? "",
+                logLevel,
+                {
+                    ...(payload as ActionTelemetryData),
                     LogToAll: true
-                } as ActionTelemetryData
-            };
-            BroadcastService.postMessage(telemetryEvent);
+                }
+            );
         }
 
          public static logFacadeChatSDKEventToAllTelemetry = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-             const telemetryEvent: ITelemetryEvent = {
-                 eventName: payload?.Event ?? TelemetryEvent.FacadeChatSDKEvent,
-                 logLevel: logLevel,
-                 payload: {
-                     ...payload,
-                     LogToAll: true,
-                 } as FacadeChatSDKTelemetryData
-             };
-             BroadcastService.postMessage(telemetryEvent);
+             TelemetryHelper.postTelemetryEvent(
+                 payload?.Event ?? TelemetryEvent.FacadeChatSDKEvent,
+                 logLevel,
+                 {
+                     ...(payload as FacadeChatSDKTelemetryData),
+                     LogToAll: true
+                 }
+             );
          }
 
          public static logSDKEventToAllTelemetry = (logLevel: LogLevel, payload: TelemetryEventWrapper) => {
-             const telemetryEvent: ITelemetryEvent = {
-                 eventName: payload?.Event ?? "",
-                 logLevel: logLevel,
-                 payload: {
-                     ...payload,
-                     TransactionId: newGuid(),
-                     RequestId: TelemetryManager.InternalTelemetryData?.currentRequestId,
-                     LogToAll: true,
-                 } as OCChatSDKTelemetryData
-             };
-             BroadcastService.postMessage(telemetryEvent);
+             TelemetryHelper.postTelemetryEvent(
+                 payload?.Event ?? "",
+                 logLevel,
+                 {
+                     ...({
+                         ...payload,
+                         TransactionId: newGuid(),
+                         RequestId: TelemetryManager.InternalTelemetryData?.currentRequestId
+                     } as OCChatSDKTelemetryData),
+                     LogToAll: true
+                 }
+             );
          }
 }
