@@ -5,10 +5,10 @@ module.exports = {
   "addons": [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
-    '@storybook/addon-a11y',
-    '@storybook/addon-knobs',
-    'storybook-addon-playwright/preset',
-    'storybook-addon-playwright/register'
+    "@storybook/addon-a11y",
+    "@storybook/addon-knobs",
+    "storybook-addon-playwright/preset",
+    "storybook-addon-playwright/register"
   ],
   "webpackFinal": async (config, { configType }) => {
     config.module.rules.push({

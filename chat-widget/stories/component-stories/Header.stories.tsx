@@ -1,13 +1,11 @@
 import { CloseChatButtonIconBase64, MinimizeChatButtonIconBase64, ModernChatIconBase64 } from "@microsoft/omnichannel-chat-components";
 import { FontIcon, IStackStyles, Stack, mergeStyles } from "@fluentui/react";
+import { Meta, Story } from "@storybook/react";
 
 import CommandButton from "./common/commandbutton/CommandButton";
 import { Header } from "@microsoft/omnichannel-chat-components";
 import { ICommandButtonProps } from "./common/interfaces/ICommandButtonProps";
 import { IHeaderProps } from "@microsoft/omnichannel-chat-components/lib/types/components/header/interfaces/IHeaderProps";
-import { Meta } from "@storybook/react/types-6-0";
-import React from "react";
-import { Story } from "@storybook/react";
 
 export default {
     title: "Stateless Components/Header",

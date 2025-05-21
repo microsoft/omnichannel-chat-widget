@@ -1,18 +1,17 @@
-import React from "react";
+import { Meta, StoryFn } from "@storybook/react";
 
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
-import { Meta } from "@storybook/react/types-6-0";
-import { Story } from "@storybook/react";
-import { LiveChatWidget } from "../src";
 import { ILiveChatWidgetProps } from "../src/components/livechatwidget/interfaces/ILiveChatWidgetProps";
+import { LiveChatWidget } from "../src";
 import { MockChatSDK } from "../src/components/webchatcontainerstateful/common/mockchatsdk";
+import React from "react";
 
 export default {
     title: "Stateful Components/Live Chat Widget",
     component: LiveChatWidget,
 } as Meta;
 
-const LiveChatWidgetTemplate: Story<ILiveChatWidgetProps> = (args) => <LiveChatWidget {...args}></LiveChatWidget>;
+const LiveChatWidgetTemplate: StoryFn<ILiveChatWidgetProps> = (args) => <LiveChatWidget {...args}></LiveChatWidget>;
 
 /*
     Live Chat Widget Default

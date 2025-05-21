@@ -1,23 +1,33 @@
-import type { StorybookConfig } from "@storybook/react-webpack5";
+import type { StorybookConfig } from '@storybook/react';
 
 const config: StorybookConfig = {
-  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
-  addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-onboarding",
-    "@storybook/addon-interactions",
+  stories: [
+    '../src/**/*.stories.tsx',
   ],
-  framework: {
-    name: "@storybook/react-webpack5",
-    options: {
-      builder: {
-        useSWC: true,
-      },
-    },
+  addons: [
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-a11y',
+    '@storybook/addon-knobs',
+    'storybook-addon-playwright/preset',
+  ],
+    framework: {
+    name: '@storybook/react-webpack5',
+    options: {},
   },
-  docs: {
-    autodocs: "tag",
+  webpackFinal: async (config, { configType }) => {
+    config.module?.rules?.push({
+      test: /\.(js|jsx)$/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env'],
+        },
+      },
+    });
+    // config.resolve.modules = ["node_modules", path.resolve(__dirname, "../src")];
+    return config;
   },
 };
+
 export default config;
