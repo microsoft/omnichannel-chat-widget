@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:
       - '**'
-    types: [created, edited, assigned, opened, synchronize, reopened]
+    types: [ edited, assigned, opened, synchronize, reopened]
     paths:
       - 'chat-components/**'
       
@@ -31,7 +31,7 @@ jobs:
         run: yarn build-storybook
       - name: VRT Tests
         working-directory: chat-components
-        run: yarn test:visual
+        run: yarn test:visual --forceExit
       - name: Upload VRT Tests failures screenshots
         uses: actions/upload-artifact@v4
         if: failure()

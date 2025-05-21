@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- upgrade React to v18 and additional adjustments
 - Adding new logic to identify `history messages` by comparing epoch times
 - Code cleanup by adding strategy pattern on newMessaheHandler component
 - Uptake [@microsoft/omnichannel-chat-components@1.1.9](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.9)
@@ -512,6 +513,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- upgrade react to v18 , and additional libs around the React
+
 ## [1.1.9] - 2025-05-14
 
 ### Changed
@@ -522,6 +525,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Uptake [botframework-webchat@4.18.1-main.20250213.4c7400a](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-main.20250213.4c7400a)
 - Uptake [botframework-webchat@4.18.1-main.20250213.c8c5744](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-main.20250213.c8c5744)
 
 ## [1.1.7] - 2025-02-24
