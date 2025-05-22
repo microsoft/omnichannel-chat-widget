@@ -22,8 +22,9 @@ let uiTimer : ITimer;
 export const ProactiveChatPaneStateful = (props: any) => {
     useEffect(() => {
         uiTimer = createTimer();
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXProactiveChatPaneStart
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXProactiveChatPaneStart,
+            Description: "Proactive chat pane loading started."
         });
     }, []);
 
@@ -43,8 +44,8 @@ export const ProactiveChatPaneStateful = (props: any) => {
                 }
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.ProactiveChatRejected,
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.ProactiveChatTimeOutCompleted,
                 ElapsedTimeInMilliseconds: TelemetryTimers.LcwLoadToChatButtonTimer.milliSecondsElapsed,
                 Description: "Proactive chat invitation timed out."
             });
@@ -109,9 +110,10 @@ export const ProactiveChatPaneStateful = (props: any) => {
             handleProactiveChatInviteTimeout();
         }, proactiveChatProps?.ProactiveChatInviteTimeoutInMs ?? Constants.ProactiveChatInviteTimeoutInMs);
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ProactiveChatPaneLoaded });
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXProactiveChatCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXProactiveChatPaneCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            Description: "Proactive chat pane loading completed."
         });
         return () => {
             clearTimeout(timeoutEvent);

@@ -97,8 +97,9 @@ const logWidgetLoadFailed = (ex?: ChatSDKError) => {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
     }
     
-    TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
-        Event: TelemetryEvent.WidgetLoadFailed,
+    TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
+        Event: TelemetryEvent.WidgetStartChatFailed,
+        Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
     });
@@ -110,8 +111,8 @@ export const logWidgetLoadComplete = (additionalMessage?: string) => {
         descriptionString += `. ${additionalMessage}`;
     }
 
-    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.WidgetLoadComplete,
+    TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+        Event: TelemetryEvent.WidgetStartChatCompleted,
         Description: descriptionString,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
     });
@@ -126,8 +127,8 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
     }
 
-    TelemetryHelper.logLoadingEvent(LogLevel.WARN, {
-        Event: TelemetryEvent.WidgetLoadComplete,
+    TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
+        Event: TelemetryEvent.WidgetStartChatFailed,
         Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed

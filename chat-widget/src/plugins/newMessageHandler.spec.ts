@@ -34,7 +34,7 @@ describe("createOnNewAdapterActivityHandler", () => {
         };
 
         onNewAdapterActivityHandler(activity);
-        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
+        expect(TelemetryHelper.logActionEventToAllTelemetry).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
             Event: expect.any(String),
         }));
     });
@@ -46,7 +46,7 @@ describe("createOnNewAdapterActivityHandler", () => {
             channelData: { tags: [Constants.systemMessageTag] }
         };
         onNewAdapterActivityHandler(activity);
-        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
+        expect(TelemetryHelper.logActionEventToAllTelemetry).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
             Event: expect.any(String),
         }));
     });
@@ -55,7 +55,7 @@ describe("createOnNewAdapterActivityHandler", () => {
         const activity = { type: Constants.message, text: "Received message" };
 
         onNewAdapterActivityHandler(activity);
-        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
+        expect(TelemetryHelper.logActionEventToAllTelemetry).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
             Event: expect.any(String),
         }));
     });
@@ -65,6 +65,6 @@ describe("createOnNewAdapterActivityHandler", () => {
 
         onNewAdapterActivityHandler(activity);
 
-        expect(TelemetryHelper.logActionEvent).not.toHaveBeenCalled();
+        expect(TelemetryHelper.logActionEventToAllTelemetry).not.toHaveBeenCalled();
     });
 });

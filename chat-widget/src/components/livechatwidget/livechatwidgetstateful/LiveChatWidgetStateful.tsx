@@ -98,8 +98,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         uiTimer = createTimer();
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLivechatwidgetStart
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLiveChatWidgetStart,
+            Description: "Live chat widget loading started.",
         });
     }, []);
 
@@ -301,7 +302,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         BroadcastService.getMessageByEventName(BroadcastEvent.StartProactiveChat).subscribe((msg: ICustomEvent) => {
 
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
                 Description: "Start proactive chat event received."
             });
@@ -397,15 +398,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
 
             if (msg?.payload?.customContext) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomContextReceived,
                     Description: "CustomContext received through startChat event."
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }
 
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.StartChatEventRecevied,
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.StartChatEventReceived,
                 Description: "Start chat event received."
             });
 
@@ -445,7 +446,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
-            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent."
             });
@@ -698,8 +699,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [props.webChatContainerProps?.renderingMiddlewareProps]);
 
     useEffect(() => {
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXLivechatwidgetCompleted,
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLiveChatWidgetCompleted,
+            Description: "Live chat widget loading completed.",
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
