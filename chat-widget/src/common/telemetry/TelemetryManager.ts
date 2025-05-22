@@ -11,6 +11,7 @@ import { ariaTelemetryLogger } from "./loggers/ariaTelemetryLogger";
 import { consoleLogger } from "./loggers/consoleLogger";
 import { defaultAriaConfig } from "./defaultConfigs/defaultAriaConfig";
 import { TelemetryHelper } from "./TelemetryHelper";
+import { appInsightsLogger } from "./loggers/appInsightsLogger";
 
 export class TelemetryTimers {
     public static LcwLoadToChatButtonTimer: ITimer;
@@ -32,7 +33,8 @@ export const disposeLoggers = () => {
 export const RegisterLoggers = () => {
     const registerLoggers = () => {
         if (TelemetryManager.InternalTelemetryData?.telemetryConfig?.disableConsoleLog === false ||
-            TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryDisabled === false) {
+            TelemetryManager.InternalTelemetryData?.telemetryConfig?.telemetryDisabled === false ||
+            TelemetryManager.InternalTelemetryData?.appInsightsConfig?.appInsightsDisabled === false) {
             BroadcastService.getAnyMessage()
                 .subscribe((event: ICustomEvent) => {
                     if ((event as ITelemetryEvent).payload && ((event as ITelemetryEvent).eventName in TelemetryEvent)) {
@@ -60,6 +62,15 @@ export const RegisterLoggers = () => {
                     loggers.push(logger);
                 });
             }
+
+            if (TelemetryManager.InternalTelemetryData?.appInsightsConfig?.appInsightsDisabled === false) {
+                if (TelemetryManager.InternalTelemetryData?.appInsightsConfig.appInsightsKey) {
+                    loggers.push(appInsightsLogger(
+                        TelemetryManager.InternalTelemetryData?.appInsightsConfig.appInsightsKey,
+                        TelemetryManager.InternalTelemetryData?.ariaConfig?.disableCookieUsage ?? (defaultAriaConfig.disableCookieUsage as boolean),
+                    ));
+                }
+            }
         }
     };
 
@@ -79,6 +90,9 @@ export const RegisterLoggers = () => {
             telemetryInput.telemetryInfo = { telemetryInfo: TelemetryHelper.buildTelemetryEvent(logLevel, telemetryInput) };
             //Do not log events without an Event Name
             if (telemetryInput?.payload?.Event) {
+                if (logger.type === "appInsightsLogger" && telemetryEvent?.payload?.LogToAll !== true) {
+                    return; // skip logging to AppInsights
+                }
                 logger.log(logLevel, telemetryInput);
             }
         });

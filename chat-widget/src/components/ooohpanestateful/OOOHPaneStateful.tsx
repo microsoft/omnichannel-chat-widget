@@ -20,8 +20,9 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
 
     useEffect(() => {
         uiTimer = createTimer();
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXOOHPaneStart
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXOutOfOfficeHoursPaneStart,
+            Description: "Out of office hours pane loading started."
         });
     }, []);
 
@@ -51,8 +52,9 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
         }
         
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.OutOfOfficePaneLoaded });
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXOOHPaneCompleted,
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXOutOfOfficeHoursPaneCompleted,
+            Description: "Out of office hours pane loading completed.",
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);

@@ -134,9 +134,9 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         //Start widget load timer
         TelemetryTimers.WidgetLoadTimer = createTimer();
 
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.WidgetLoadStarted,
-            Description: "Widget loading started",
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.WidgetStartChatStarted,
+            Description: "Widget start chat started."
         });
 
         //Check if chat retrieved from cache

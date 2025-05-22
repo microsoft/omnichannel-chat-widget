@@ -40,8 +40,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             firstResponseLatencyTracker.startClock(payload);
         }
 
-        TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.MessageSent,
+        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.MessageSentCompleted, 
             Description: "New message sent"
         });
     };
@@ -50,8 +50,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         const payload = buildMessagePayload(activity, userId);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         payload.messageType = Constants.systemMessageTag;
-        TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.SystemMessageReceived,
+        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.SystemMessageReceivedCompleted,
             Description: "System message received"
         });
     };
@@ -67,8 +67,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         if (!isHistoryMessageReceivedEventRaised) {
             // this is needed for reload scenarios, it helps to identify the last message received before the reload
             isHistoryMessageReceivedEventRaised = true;
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.RehydrateMessageReceived,
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.RehydrateMessageReceivedCompleted,
                 Description: "History message received",
                 CustomProperties: payload
             });
@@ -112,8 +112,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
         BroadcastService.postMessage(newMessageReceivedEvent);
 
-        TelemetryHelper.logActionEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.MessageReceived,
+        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.MessageReceivedCompleted,
             Description: "New message received",
             CustomProperties: payload
         });
