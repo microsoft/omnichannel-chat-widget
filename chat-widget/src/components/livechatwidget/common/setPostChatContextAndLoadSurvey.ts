@@ -33,6 +33,7 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
     } catch (ex) {
         TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.ERROR, {
             Event: TelemetryEvent.PostChatContextCallFailed,
+            Description: PostChatSurveyTelemetryMessage.PostChatContextCallFailed,
             ExceptionDetails: {
                 exception: ex
             }
