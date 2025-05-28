@@ -1,43 +1,37 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import * as ReactDOM from "react-dom";
-
-import { act, cleanup } from "@testing-library/react";
-
-import LoadingPane from "./LoadingPane";
 import { ILoadingPaneProps } from "./interfaces/ILoadingPaneProps";
+import LoadingPane from "./LoadingPane";
 import React from "react";
+import { cleanup } from "@testing-library/react";
 import { defaultLoadingPaneProps } from "./common/defaultProps/defaultLoadingPaneProps";
+import { render } from "@testing-library/react";
 
 describe("Loading Pane component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
-        it("renders loading pane", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <LoadingPane {...defaultLoadingPaneProps} />, container);
-            expect(container.childElementCount).toBe(1);
-        });
+    it("renders loading pane", () => {
+        const { container } = render(
+            <LoadingPane {...defaultLoadingPaneProps} />
+        );
+        expect(container.childElementCount).toBe(1);
     });
 
-    act(() => {
-        it("hide loading pane", () => {
-            const loadingPanePropsHide: ILoadingPaneProps = {
-                ...defaultLoadingPaneProps,
-                controlProps: {
-                    ...defaultLoadingPaneProps.controlProps,
-                    hideLoadingPane: true
-                }
-            };
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <LoadingPane {...loadingPanePropsHide} />, container);
-            expect(container.childElementCount).toBe(0);
-        });
+    it("hide loading pane", () => {
+        const loadingPanePropsHide: ILoadingPaneProps = {
+            ...defaultLoadingPaneProps,
+            controlProps: {
+                ...defaultLoadingPaneProps.controlProps,
+                hideLoadingPane: true
+            }
+        };
+        const { container } = render(
+            <LoadingPane {...loadingPanePropsHide} />
+        );
+        expect(container.childElementCount).toBe(0);
     });
 });

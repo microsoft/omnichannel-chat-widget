@@ -127,7 +127,7 @@ const render = async () => {
         chatConfig: chatConfig // mandatory
     };
 
-    ReactDOM.render(
+    ReactDOM.createRoot(
         <LiveChatWidget {...liveChatWidgetProps}/>,
         document.getElementById("my-container")
     );

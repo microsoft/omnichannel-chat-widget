@@ -1,12 +1,14 @@
-import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
-import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
 import * as OcChatSdkPackageinfo from "@microsoft/omnichannel-chat-sdk/package.json";
 import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/package.json";
-import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
-import { defaultProps } from "../src/common/defaultProps";
+
+import React, { useEffect, useState } from "react";
+
 import { CoffeeChatIconBase64 } from "../src/common/assets";
+import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
+import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
+import ReactDOM from "react-dom";
+import { defaultProps } from "../src/common/defaultProps";
 
 const getOmnichannelChatConfig = () => {
     // add your own OC setting, hard-coded just for sample, should be replaced with a better handling
@@ -117,7 +119,7 @@ const App = () => {
     );
 };
 
-ReactDOM.render(
+ReactDOM.createRoot(
     <App />,
     document.getElementById("root")
 );

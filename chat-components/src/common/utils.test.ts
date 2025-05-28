@@ -1,7 +1,9 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import { act, cleanup } from "@testing-library/react";
-import { generateEventName, getValidatedURL, getHours, getMinutes, getSeconds, uuidv4, replaceURLWithAnchor } from "./utils";
+import { generateEventName, getHours, getMinutes, getSeconds, getValidatedURL, replaceURLWithAnchor, uuidv4 } from "./utils";
+
+import {act} from "react";
+import { cleanup } from "@testing-library/react";
 
 describe("utils unit test", () => {
     afterEach(() => {

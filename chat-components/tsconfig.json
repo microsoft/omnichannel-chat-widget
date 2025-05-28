@@ -23,7 +23,8 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "types" : ["jest", "node"],
   },
   "include": [
     "src",

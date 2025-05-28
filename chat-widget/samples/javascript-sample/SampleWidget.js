@@ -12,8 +12,8 @@ import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-com
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
 import { version as chatWidgetVersion } from "../../package.json";
 import { getCustomizationJson } from "./getCustomizationJson";
-import { memoryDataStore } from "./Common/MemoryDataStore";
 import getMockChatSDKIfApplicable from "./getMockChatSDKIfApplicable";
+import { memoryDataStore } from "./Common/MemoryDataStore";
 
 let liveChatWidgetProps;
 
@@ -54,7 +54,7 @@ const main = async () => {
             }
         };
 
-        ReactDOM.render(
+        ReactDOM.createRoot(
             <LiveChatWidget {...liveChatWidgetProps} />,
             document.getElementById("oc-lcw-container")
         );

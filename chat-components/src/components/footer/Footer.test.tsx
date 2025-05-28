@@ -1,8 +1,6 @@
 import "@testing-library/jest-dom/extend-expect";
 
-import * as ReactDOM from "react-dom";
-
-import { act, cleanup } from "@testing-library/react";
+import { cleanup, render } from "@testing-library/react";
 
 import Footer from "./Footer";
 import { IFooterControlProps } from "./interfaces/IFooterControlProps";
@@ -19,36 +17,30 @@ const footerControlPropsRtl: IFooterControlProps = {
 describe("Footer component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
-        it("renders footer", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <Footer controlProps={defaultFooterProps.controlProps} styleProps={footerStyles}>
-                </Footer>, container);
-        });
+    it("renders footer", () => {
+        const { container } = render(
+            <Footer controlProps={defaultFooterProps.controlProps} styleProps={footerStyles}>
+            </Footer>);
+        expect(container.childElementCount).toBe(1);
+
     });
 
-    act(() => {
-        it("renders rtl footer", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <Footer controlProps={footerControlPropsRtl} styleProps={footerStyles}>
-                </Footer>, container);
-            expect(container.childElementCount).toBe(1);
-        });
+    it("renders rtl footer", () => {
+        const { container } = render(
+            <Footer controlProps={footerControlPropsRtl} styleProps={footerStyles}>
+            </Footer>);
+
+        expect(container.childElementCount).toBe(1);
     });
 
-    act(() => {
-        it("default footer has more one child element", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <Footer controlProps={defaultFooterProps.controlProps} styleProps={footerStyles}>
-                </Footer>, container);
-            expect(container.firstElementChild?.childElementCount).toBeGreaterThan(1);
-        });
+    it("default footer has more one child element", () => {
+        const { container } = render(
+            <Footer controlProps={defaultFooterProps.controlProps} styleProps={footerStyles}>
+            </Footer>);
+        expect(container.firstElementChild?.childElementCount).toBeGreaterThan(1);
     });
 });

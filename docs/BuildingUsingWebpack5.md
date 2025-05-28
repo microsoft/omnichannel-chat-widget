@@ -86,7 +86,7 @@ const App = () => (
   <h1>My Sample app!</h1>
 );
 
-ReactDOM.render(
+ReactDOM.createRoot(
   <App />,
   document.getElementById("root")
 );
@@ -283,7 +283,7 @@ const App = () => {
     );
 };
 
-ReactDOM.render(
+ReactDOM.createRoot(
     <App />,
     document.getElementById("root")
 );
