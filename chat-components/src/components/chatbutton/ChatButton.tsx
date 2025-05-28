@@ -1,8 +1,8 @@
+import { ElementType, EventNames, HiddenTextStyles, Ids, KeyCodes } from "../../common/Constants";
 import { IIconStyles, ILabelStyles, IStackStyles, Icon, Label, Stack } from "@fluentui/react";
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType, EventNames, HiddenTextStyles, Ids, KeyCodes } from "../../common/Constants";
 import type { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";
@@ -124,7 +124,6 @@ function ChatButton(props: IChatButtonProps) {
         }        
     }, []);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleInputKeyDown = (e: any) => {
         if (e.code === KeyCodes.ENTER || e.code === KeyCodes.SPACE) {
             handleInitiateChatClick();

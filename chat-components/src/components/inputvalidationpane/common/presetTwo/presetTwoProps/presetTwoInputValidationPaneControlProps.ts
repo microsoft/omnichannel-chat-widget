@@ -1,5 +1,6 @@
-import { IInputValidationPaneControlProps } from "../../../interfaces/IInputValidationPaneControlProps";
 import { AriaLabels, Ids, Regex, Texts } from "../../../../../common/Constants";
+
+import { IInputValidationPaneControlProps } from "../../../interfaces/IInputValidationPaneControlProps";
 
 export const presetTwoInputValidationPaneControlProps: IInputValidationPaneControlProps = {
     id: Ids.DefaultInputValidationPaneId,
@@ -31,7 +32,6 @@ export const presetTwoInputValidationPaneControlProps: IInputValidationPaneContr
     cancelButtonText: Texts.CancelButtonText,
     cancelButtonAriaLabel: AriaLabels.Cancel,
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSend: function (input: string) {
         console.log("on send");
     },

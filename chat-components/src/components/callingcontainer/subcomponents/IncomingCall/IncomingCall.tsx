@@ -1,15 +1,15 @@
 import * as React from "react";
 
+import { ElementType, EventNames, Ids, KeyCodes } from "../../../../common/Constants";
 import { IStackStyles, IStackTokens, Label, Stack } from "@fluentui/react";
+import { useCallback, useEffect } from "react";
 
 import CommandButton from "../../../common/commandbutton/CommandButton";
-import { ElementType, EventNames, Ids, KeyCodes } from "../../../../common/Constants";
 import { ICustomEvent } from "../../../../interfaces/ICustomEvent";
 import { IIncomingCallProps } from "./interfaces/IIncomingCallProps";
 import { decodeComponentString } from "../../../../common/decodeComponentString";
 import { defaultIncomingCallProps } from "./common/defaultProps/defaultIncomingCallProps";
 import { processCustomComponents } from "../../../../common/utils";
-import { useCallback, useEffect } from "react";
 
 function IncomingCall(props: IIncomingCallProps) {
 
@@ -128,7 +128,6 @@ function IncomingCall(props: IIncomingCallProps) {
     useEffect(() => {
         // Setting focus to decline call button when incoming call alert appears
         if (declineCallButtonId) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const declineCallButton: any = document.getElementById(declineCallButtonId);
             if (declineCallButton) {
                 declineCallButton.focus();

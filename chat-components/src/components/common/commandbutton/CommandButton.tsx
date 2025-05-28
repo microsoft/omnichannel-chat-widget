@@ -1,9 +1,10 @@
-import { DefaultButton, IButtonStyles, IconButton, IIconProps } from "@fluentui/react";
+import { ButtonTypes, ElementType, EventNames } from "../../../common/Constants";
+import { DefaultButton, IButtonStyles, IIconProps, IconButton } from "@fluentui/react";
 import React, { useCallback } from "react";
+
+import { BroadcastService } from "../../../services/BroadcastService";
 import { ICommandButtonProps } from "../interfaces/ICommandButtonProps";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
-import { BroadcastService } from "../../../services/BroadcastService";
-import { ElementType, EventNames, ButtonTypes } from "../../../common/Constants";
 
 function CommandButton(props: ICommandButtonProps) {
     //imageIconProps > iconName
@@ -13,7 +14,6 @@ function CommandButton(props: ICommandButtonProps) {
 
     let iconStyles = {};
     if (props.type === ButtonTypes.Icon) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         iconStyles = { ...((props?.styles as any)?.icon as any) };
     }
 
@@ -22,19 +22,15 @@ function CommandButton(props: ICommandButtonProps) {
         root: {
             selectors: {
                 ":hover .ms-Button-icon": {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...((props?.hoverStyles as any)?.icon as any)
                 },
                 ":active .ms-Button-icon": {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...((props?.hoverStyles as any)?.icon as any)
                 },
                 ":focus .ms-Button-icon": {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...((props?.focusStyles as any)?.icon as any)
                 }
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props?.styles as any)
         },
         rootHovered: props.hoverStyles,

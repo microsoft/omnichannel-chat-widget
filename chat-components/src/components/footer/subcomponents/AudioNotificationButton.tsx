@@ -1,9 +1,10 @@
-import { IButtonStyles, IconButton, IIconProps } from "@fluentui/react";
+import { AriaLabels, ButtonTypes, ElementType, EventNames, IconNames } from "../../../common/Constants";
+import { IButtonStyles, IIconProps, IconButton } from "@fluentui/react";
 import React, { useCallback, useEffect, useState } from "react";
+
+import { BroadcastService } from "../../../services/BroadcastService";
 import { ICommandButtonProps } from "../../common/interfaces/ICommandButtonProps";
 import { ICustomEvent } from "../../../interfaces/ICustomEvent";
-import { BroadcastService } from "../../../services/BroadcastService";
-import { AriaLabels, ButtonTypes, ElementType, EventNames, IconNames } from "../../../common/Constants";
 
 function AudioNotificationButton(props: ICommandButtonProps) {
     const { disabled } = props;
@@ -12,7 +13,6 @@ function AudioNotificationButton(props: ICommandButtonProps) {
 
     let iconStyles = {};
     if (props.type === ButtonTypes.Icon) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         iconStyles = { ...((props?.styles as any).icon as any) };
     }
 
@@ -21,19 +21,15 @@ function AudioNotificationButton(props: ICommandButtonProps) {
         root: {
             selectors: {
                 ":hover .ms-Button-icon": {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...((props?.hoverStyles as any).icon as any)
                 },
                 ":active .ms-Button-icon": {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...((props?.hoverStyles as any).icon as any)
                 },
                 ":focus .ms-Button-icon": {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     ...((props?.focusStyles as any).icon as any)
                 }
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props?.styles as any)
         },
         rootHovered: props.hoverStyles,

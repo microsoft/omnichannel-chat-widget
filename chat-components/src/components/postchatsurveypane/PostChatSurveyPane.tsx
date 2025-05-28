@@ -31,7 +31,6 @@ function PostChatSurveyPane(props: IPostChatSurveyPaneProps) {
                 role={props.controlProps?.role}>
                 <iframe 
                     id={elementId + "-Iframe"}
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     src={getValidatedURL(inputUrl!)}
                     title={props.controlProps?.title ?? defaultPostChatSurveyPaneControlProps.title}
                     style={iframeStyles}

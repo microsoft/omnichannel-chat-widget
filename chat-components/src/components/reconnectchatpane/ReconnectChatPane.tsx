@@ -1,8 +1,8 @@
 import { DefaultButton, IButtonStyles, IStackStyles, Icon, Label, Stack } from "@fluentui/react";
+import { ElementType, EventNames } from "../../common/Constants";
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType, EventNames } from "../../common/Constants";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { IReconnectChatPaneProps } from "./interfaces/IReconnectChatPaneProps";
 import { KeyCodes } from "../../common/Constants";
@@ -10,16 +10,16 @@ import { decodeComponentString } from "../../common/decodeComponentString";
 import { defaultReconnectChatPaneButtonGroupStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneButtonGroupStyles";
 import { defaultReconnectChatPaneContinueChatButtonHoveredStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneContinueChatButtonHoveredStyles";
 import { defaultReconnectChatPaneContinueChatButtonStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneContinueChatButtonStyles";
+import { defaultReconnectChatPaneContinueChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneContinueChatButtonFocusedStyles";
 import { defaultReconnectChatPaneControlProps } from "./common/default/defaultProps/defaultReconnectChatPaneControlProps";
 import { defaultReconnectChatPaneGeneralStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneGeneralStyles";
 import { defaultReconnectChatPaneIconStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneIconStyles";
+import { defaultReconnectChatPaneStartChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneStartChatButtonFocusedStyles";
 import { defaultReconnectChatPaneStartNewChatButtonHoveredStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneStartNewChatButtonHoveredStyles";
 import { defaultReconnectChatPaneStartNewChatButtonStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneStartNewChatButtonStyles";
 import { defaultReconnectChatPaneSubtitleStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneSubtitleStyles";
 import { defaultReconnectChatPaneTitleStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneTitleStyles";
 import { defaultReconnectChatPaneWrapperStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneWrapperStyles";
-import { defaultReconnectChatPaneContinueChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneContinueChatButtonFocusedStyles";
-import { defaultReconnectChatPaneStartChatFocusedStyles } from "./common/default/defaultStyles/defaultReconnectChatPaneStartChatButtonFocusedStyles";
 
 function ReconnectChatPane(props: IReconnectChatPaneProps) {
 
@@ -49,7 +49,6 @@ function ReconnectChatPane(props: IReconnectChatPaneProps) {
         }
     }, []);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleEscKeyDown = useCallback((e: any) => {
         if (e.code === KeyCodes.ESCAPE && props.controlProps?.onMinimize) {
             const customEvent: ICustomEvent = {

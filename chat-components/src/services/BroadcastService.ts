@@ -1,18 +1,14 @@
-import { Subject } from "rxjs";
-import { ICustomEvent } from "../interfaces/ICustomEvent";
-import { filter } from "rxjs/operators";
 import { BroadcastChannel } from "broadcast-channel";
+import { ICustomEvent } from "../interfaces/ICustomEvent";
+import { Subject } from "rxjs";
+import { filter } from "rxjs/operators";
 
 const newMessage = new Subject<ICustomEvent>();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const broadcastServicePubList: Record<string, any> = {};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const broadcastServiceSubList: Record<string, any> = {};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let pubChannel: any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let subChannel: any;
 
 export const BroadcastServiceInitialize = (channelName: string) => {
@@ -32,7 +28,6 @@ export const BroadcastServiceInitialize = (channelName: string) => {
         subChannel = newSubChannel;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     subChannel.onmessage = (message: any) => {
         newMessage.next(message);
     };

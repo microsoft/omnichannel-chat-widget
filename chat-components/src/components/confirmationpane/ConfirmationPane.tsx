@@ -1,23 +1,23 @@
 import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+import { ElementType, EventNames, KeyCodes } from "../../common/Constants";
 import { IButtonStyles, IStackStyles, Label, Stack } from "@fluentui/react";
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
-import { ElementType, EventNames, KeyCodes } from "../../common/Constants";
 import { IConfirmationPaneProps } from "./interfaces/IConfirmationPaneProps";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";
 import { defaultConfirmationPaneButtonGroupStyles } from "./common/defaultStyles/defaultConfirmationPaneButtonGroupStyles";
+import { defaultConfirmationPaneCancelButtonFocusedStyles } from "./common/defaultStyles/defaultConfirmationPaneCancelButtonFocusedStyles";
 import { defaultConfirmationPaneCancelButtonHoveredStyles } from "./common/defaultStyles/defaultConfirmationPaneCancelButtonHoveredStyles";
 import { defaultConfirmationPaneCancelButtonStyles } from "./common/defaultStyles/defaultConfirmationPaneCancelButtonStyles";
+import { defaultConfirmationPaneConfirmButtonFocusedStyles } from "./common/defaultStyles/defaultConfirmationPaneConfirmButtonFocusedStyles";
 import { defaultConfirmationPaneConfirmButtonHoveredStyles } from "./common/defaultStyles/defaultConfirmationPaneConfirmButtonHoveredStyles";
 import { defaultConfirmationPaneConfirmButtonStyles } from "./common/defaultStyles/defaultConfirmationPaneConfirmButtonStyles";
 import { defaultConfirmationPaneControlProps } from "./common/defaultProps/defaultConfirmationPaneControlProps";
 import { defaultConfirmationPaneGeneralStyles } from "./common/defaultStyles/defaultConfirmationPaneGeneralStyles";
 import { defaultConfirmationPaneSubtitleStyles } from "./common/defaultStyles/defaultConfirmationPaneSubtitleStyles";
 import { defaultConfirmationPaneTitleStyles } from "./common/defaultStyles/defaultConfirmationPaneTitleStyles";
-import { defaultConfirmationPaneConfirmButtonFocusedStyles } from "./common/defaultStyles/defaultConfirmationPaneConfirmButtonFocusedStyles";
-import { defaultConfirmationPaneCancelButtonFocusedStyles } from "./common/defaultStyles/defaultConfirmationPaneCancelButtonFocusedStyles";
 
 function ConfirmationPane(props: IConfirmationPaneProps) {
 
@@ -47,7 +47,6 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
         }
     }, []);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleEscKeyDown = useCallback((e: any) => {
         if (e.code === KeyCodes.ESCAPE) {
             handleCancelClick();

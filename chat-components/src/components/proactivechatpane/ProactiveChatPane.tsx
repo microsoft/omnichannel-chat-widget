@@ -2,9 +2,9 @@ import { IButtonStyles, IStackStyles, Label, Stack } from "@fluentui/react";
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
+import CloseButton from "../common/subcomponents/CloseButton";
 import { DefaultButton } from "@fluentui/react/lib/Button";
 import { ICustomEvent } from "../../interfaces/ICustomEvent";
-import CloseButton from "../common/subcomponents/CloseButton";
 import { IProactiveChatPaneProps } from "./interfaces/IProactiveChatPaneProps";
 import { KeyCodes } from "../../common/Constants";
 import { decodeComponentString } from "../../common/decodeComponentString";
@@ -13,13 +13,13 @@ import { defaultProactiveChatPaneBodyTitleStyles } from "./common/default/defaul
 import { defaultProactiveChatPaneControlProps } from "./common/default/defaultProps/defaultProactiveChatPaneControlProps";
 import { defaultProactiveChatPaneGeneralStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneGeneralStyles";
 import { defaultProactiveChatPaneHeaderContainerStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneHeaderContainerStyles";
+import { defaultProactiveChatPaneProps } from "./common/default/defaultProps/defaultProactiveChatPaneProps";
 import { defaultProactiveChatPaneStartButtonHoveredStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneStartButtonHoveredStyles";
 import { defaultProactiveChatPaneStartButtonStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneStartButtonStyles";
 import { defaultProactiveChatPaneSubtitleStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneSubtitleStyles";
 import { defaultProactiveChatPaneTextContainerStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneTextContainerStyles";
 import { defaultProactiveChatPaneTitleStyles } from "./common/default/defaultStyles/defaultProactiveChatPaneTitleStyles";
 import { generateEventName } from "../../common/utils";
-import { defaultProactiveChatPaneProps } from "./common/default/defaultProps/defaultProactiveChatPaneProps";
 
 function ProactiveChatPane(props: IProactiveChatPaneProps) {
 
@@ -40,7 +40,6 @@ function ProactiveChatPane(props: IProactiveChatPaneProps) {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleEscKeyDown = useCallback((e: any) => {
         if (e.code === KeyCodes.ESCAPE) {
             close(elementId as string, "KeyDown");

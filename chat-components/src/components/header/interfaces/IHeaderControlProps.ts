@@ -14,21 +14,21 @@ export interface IHeaderControlProps {
      * appear in order as added into the array
      */
     leftGroup?: {
-        children: ReactNode[] | string[] // eslint-disable-line @typescript-eslint/no-explicit-any
+        children: ReactNode[] | string[]
     };
     /**
      * control group appearing at middle of header control
      * appear in order as added into the array
      */
     middleGroup?: {
-        children: ReactNode[] | string[] // eslint-disable-line @typescript-eslint/no-explicit-any
+        children: ReactNode[] | string[]
     };
     /**
      * Control group appearing at right side of header control
      * appear in order as added into the array
      */
     rightGroup?: {
-        children: ReactNode[] | string[] // eslint-disable-line @typescript-eslint/no-explicit-any
+        children: ReactNode[] | string[]
     };
     /**
      * hide header icon

@@ -1,3 +1,4 @@
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
 import ConfirmationPane from "./ConfirmationPane";
 import { IConfirmationPaneProps } from "./interfaces/IConfirmationPaneProps";
 import { Meta } from "@storybook/react/types-6-0";
@@ -6,7 +7,6 @@ import { Story } from "@storybook/react";
 import { defaultConfirmationPaneProps } from "./common/defaultProps/defaultConfirmationPaneProps";
 import { encodeComponentString } from "../../common/encodeComponentString";
 import { useArgs } from "@storybook/client-api";
-import { BroadcastServiceInitialize } from "../../services/BroadcastService";
 
 export default {
     title: "Stateless Components/Confirmation Pane",
@@ -239,7 +239,6 @@ const confirmationPanePreset3Props: IConfirmationPaneProps = {
 };
 
 export const ConfirmationPanePreset3: Story<IConfirmationPaneProps> = (args) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, updateArgs] = useArgs();
 
     const switchToColumnLayout = () => {

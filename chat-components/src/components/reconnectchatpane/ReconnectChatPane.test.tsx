@@ -55,7 +55,6 @@ describe("Reconnect Chat Pane component", () => {
         try {
             screen.getByText(Texts.ReconnectChatPaneTitleText);
             fail("Title should not be in the document");
-            // eslint-disable-next-line no-empty
         } catch (ex) {
         }
 
@@ -79,7 +78,6 @@ describe("Reconnect Chat Pane component", () => {
         try {
             screen.getByText(Texts.ReconnectChatPaneSubtitleText);
             fail("Subitle should not be in the document");
-            // eslint-disable-next-line no-empty
         } catch (ex) {
         }
 
@@ -102,7 +100,6 @@ describe("Reconnect Chat Pane component", () => {
         try {
             screen.getByRole("img");
             fail("Icon should not be in the document");
-            // eslint-disable-next-line no-empty
         } catch (ex) {
         }
     });
@@ -120,7 +117,6 @@ describe("Reconnect Chat Pane component", () => {
         try {
             screen.getByText(Texts.ReconnectChatPaneContinueChatButtonText);
             fail("Continue chat button should not be in the document");
-            // eslint-disable-next-line no-empty
         } catch (ex) {
         }
 
@@ -144,7 +140,6 @@ describe("Reconnect Chat Pane component", () => {
         try {
             screen.getByText(Texts.ReconnectChatPaneStartNewChatButtonText);
             fail("Start new chat button should be in the document");
-            // eslint-disable-next-line no-empty
         } catch (ex) {
         }
 

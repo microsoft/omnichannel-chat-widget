@@ -22,7 +22,6 @@ export const generateEventName = (controlId?: string, prefix?: string, suffix?: 
 };
 
 //Broadcast Error
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const broadcastError = (elementId: string, error: any, propName: string, elementType: ElementType) => {
     const onJSONParseErrorEventName = generateEventName(elementId, propName, "JSONParseError");
     const onJSONParseErrorEvent: ICustomEvent = {
@@ -66,7 +65,6 @@ export const getSeconds = (time: number) => {
     return ("0" + Math.floor((time / 1000) % 60)).slice(-2);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const addNoreferrerNoopenerTag = (htmlNode: any) => {
     const aNodes = htmlNode.getElementsByTagName("a");
     if (aNodes?.length > 0) {
