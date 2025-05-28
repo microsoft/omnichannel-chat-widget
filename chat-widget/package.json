@@ -50,6 +50,7 @@
     "botframework-directlinejs": "^0.15.0",
     "concurrently": "^9.1.2",
     "copyfiles": "^2.4.1",
+    "danger": "^13.0.4",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.2",
@@ -63,7 +64,7 @@
     "jest-dom": "^4.0.0",
     "jest-image-snapshot": "^4.5.1",
     "json": "^11.0.0",
-    "lint-staged": "^15.5.2",
+    "lint-staged": "^16.0.0",
     "p-defer": "^4.0.1",
     "playwright": "^1.20.0",
     "postcss": "^8.3.9",
@@ -123,10 +124,18 @@
     "build-sample:dev": "yarn build && webpack --config ./webpack.dev.config.cjs",
     "test:visual:build": "yarn build-storybook && yarn test:visual",
     "lint": "yarn eslint . --max-warnings=0",
+    "prepush": "yarn lint && yarn danger:prepush",
+    "danger:prepush": "yarn danger local --dangerfile dangerfile.js --base main",
     "pretest:visual": "yarn playwright install",
-    "prepare": "husky install",
+    "prepare": "husky",
     "clean": "rimraf lib",
     "dev": "concurrently \"yarn build:esm:watch\" \"webpack --config ./webpack.config.cjs --watch\""
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "resolutions": {
     "**/url-parse": "1.5.9",

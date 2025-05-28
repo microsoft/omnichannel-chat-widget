@@ -516,6 +516,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.11] - 2025-05-22
+
+### Changed
+
+- Rollback to [botframework-webchat@4.18.2-main.20250505.488ce72](https://www.npmjs.com/package/botframework-webchat/v/4.18.2-main.20250505.488ce72)
+
+## [1.1.10] - 2025-05-20
+
+### Changed
+
 - upgrade react to v18 , and additional libs around the React
 
 ## [1.1.9] - 2025-05-14
