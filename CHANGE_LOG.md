@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Sanitize `OutOfOfficeHoursPaneStateful`'s `TitleText`
 - Add domain restrictions on post-chat survey URLs
 - Fixed post chat survey invite link space issue
+- Added dynamic loading for app insights lib
 
 ### Added
 - Added application insights support 
