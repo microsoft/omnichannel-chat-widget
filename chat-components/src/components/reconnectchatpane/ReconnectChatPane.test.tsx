@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
