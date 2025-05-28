@@ -1,8 +1,8 @@
-import React from "react";
-import { Meta } from "@storybook/react/types-6-0";
-import { Story } from "@storybook/react";
+import { Meta, StoryFn } from "@storybook/react";
+
 import CallingContainer from "./CallingContainer";
 import { ICallingContainerProps } from "./interfaces/ICallingContainerProps";
+import React from "react";
 import { defaultCallingContainerProps } from "./common/defaultProps/defaultCallingContainerProps";
 
 export default {
@@ -10,7 +10,7 @@ export default {
     component: CallingContainer
 } as Meta;
 
-const Template: Story<ICallingContainerProps> = (args) => <CallingContainer {...args}></CallingContainer>;
+const Template: StoryFn<ICallingContainerProps> = (args) => <CallingContainer {...args}></CallingContainer>;
 
 /* Calling container - Incoming Call Mode */
 export const currentCallMode = Template.bind({});
