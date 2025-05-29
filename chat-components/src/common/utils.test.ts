@@ -1,14 +1,16 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import { act, cleanup } from "@testing-library/react";
-import { generateEventName, getValidatedURL, getHours, getMinutes, getSeconds, uuidv4, replaceURLWithAnchor } from "./utils";
+import { generateEventName, getHours, getMinutes, getSeconds, getValidatedURL, replaceURLWithAnchor, uuidv4 } from "./utils";
+
+import { act } from "react";
+import { cleanup } from "@testing-library/react";
 
 describe("utils unit test", () => {
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
-    
+
     act(() => {
         it("uuidv4 should generate valid GUID", () => {
             const random = uuidv4();
@@ -66,7 +68,7 @@ describe("utils unit test", () => {
             const zeroHours = getHours(0);
             expect(zeroHours).toBe("00");
 
-            const fiveHours = getHours(5.501*60*60*1000);
+            const fiveHours = getHours(5.501 * 60 * 60 * 1000);
             expect(fiveHours).toBe("05");
         });
     });
@@ -76,7 +78,7 @@ describe("utils unit test", () => {
             const zeroMinutes = getMinutes(0);
             expect(zeroMinutes).toBe("00");
 
-            const thirtyMinutes = getMinutes(5.501*60*60*1000);
+            const thirtyMinutes = getMinutes(5.501 * 60 * 60 * 1000);
             expect(thirtyMinutes).toBe("30");
         });
     });
@@ -86,7 +88,7 @@ describe("utils unit test", () => {
             const zeroSeconds = getSeconds(0);
             expect(zeroSeconds).toBe("00");
 
-            const threeSeconds = getSeconds(5.501*60*60*1000);
+            const threeSeconds = getSeconds(5.501 * 60 * 60 * 1000);
             expect(threeSeconds).toBe("03");
         });
     });

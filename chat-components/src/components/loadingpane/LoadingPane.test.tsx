@@ -1,31 +1,24 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import * as ReactDOM from "react-dom";
+import { cleanup, render } from "@testing-library/react";
 
-import { act, cleanup } from "@testing-library/react";
-
-import LoadingPane from "./LoadingPane";
 import { ILoadingPaneProps } from "./interfaces/ILoadingPaneProps";
+import LoadingPane from "./LoadingPane";
 import React from "react";
 import { defaultLoadingPaneProps } from "./common/defaultProps/defaultLoadingPaneProps";
 
 describe("Loading Pane component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
         it("renders loading pane", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <LoadingPane {...defaultLoadingPaneProps} />, container);
+            const {container } = render(<LoadingPane {...defaultLoadingPaneProps} />);
             expect(container.childElementCount).toBe(1);
         });
-    });
 
-    act(() => {
         it("hide loading pane", () => {
             const loadingPanePropsHide: ILoadingPaneProps = {
                 ...defaultLoadingPaneProps,
@@ -34,10 +27,7 @@ describe("Loading Pane component", () => {
                     hideLoadingPane: true
                 }
             };
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <LoadingPane {...loadingPanePropsHide} />, container);
+            const {container} = render(<LoadingPane {...loadingPanePropsHide} />);
             expect(container.childElementCount).toBe(0);
         });
-    });
 });

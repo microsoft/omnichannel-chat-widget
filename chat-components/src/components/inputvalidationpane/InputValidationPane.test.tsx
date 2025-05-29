@@ -1,15 +1,15 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
 import * as ReactDOM from "react-dom";
 
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
-import InputValidationPane from "./InputValidationPane";
-import { IInputValidationPaneProps } from "./interfaces/IInputValidationPaneProps";
-import React from "react";
-import { defaultInputValidationPaneProps } from "./common/default/defaultProps/defaultInputValidationPaneProps";
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import { IInputValidationPaneProps } from "./interfaces/IInputValidationPaneProps";
+import InputValidationPane from "./InputValidationPane";
+import React from "react";
 import { Texts } from "../../common/Constants";
+import { defaultInputValidationPaneProps } from "./common/default/defaultProps/defaultInputValidationPaneProps";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -18,20 +18,15 @@ beforeAll(() => {
 describe("Input Validation Pane component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
     
-    act(() => {
         it("renders input validation pane", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <InputValidationPane {...defaultInputValidationPaneProps}/>, container);
+            const {container } = render(<InputValidationPane {...defaultInputValidationPaneProps}/>);
             expect(container.childElementCount).toBe(1);
         });
-    });
 
-    act(() => {
         it("hide input validation pane", () => {
             const inputValidationPanePropsHide: IInputValidationPaneProps = {
                 ...defaultInputValidationPaneProps,
@@ -40,14 +35,9 @@ describe("Input Validation Pane component", () => {
                     hideInputValidationPane: true
                 }
             };
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <InputValidationPane {...inputValidationPanePropsHide}/>, container);
+            const {container} = render(<InputValidationPane {...inputValidationPanePropsHide}/>);
             expect(container.childElementCount).toBe(0);
         });
-    });
-
-    act(() => {
         it("hide title", () => {
             const inputValidationPanePropsHide: IInputValidationPaneProps = {
                 ...defaultInputValidationPaneProps,
@@ -71,9 +61,7 @@ describe("Input Validation Pane component", () => {
                 fail("Subtitle should be in the document");
             }
         });
-    });
 
-    act(() => {
         it("hide subtitle", () => {
             const inputValidationPanePropsHide: IInputValidationPaneProps = {
                 ...defaultInputValidationPaneProps,
@@ -97,9 +85,7 @@ describe("Input Validation Pane component", () => {
                 fail("Title should be in the document");
             }
         });
-    });
 
-    act(() => {
         it("hide input textfield", () => {
             const inputValidationPanePropsHide: IInputValidationPaneProps = {
                 ...defaultInputValidationPaneProps,
@@ -116,9 +102,7 @@ describe("Input Validation Pane component", () => {
             } catch (ex) {
             }
         });
-    });
 
-    act(() => {
         it("hide send button", () => {
             const inputValidationPanePropsHide: IInputValidationPaneProps = {
                 ...defaultInputValidationPaneProps,
@@ -136,9 +120,7 @@ describe("Input Validation Pane component", () => {
             } catch (ex) {
             }
         });
-    });
 
-    act(() => {
         it("hide cancel button", () => {
             const inputValidationPanePropsHide: IInputValidationPaneProps = {
                 ...defaultInputValidationPaneProps,
@@ -156,9 +138,7 @@ describe("Input Validation Pane component", () => {
             } catch (ex) {
             }
         });
-    });
 
-    act(() => {
         it("input validation pane send button clicked", () => {
             const handleSendClick = jest.fn();
 
@@ -178,9 +158,7 @@ describe("Input Validation Pane component", () => {
             fireEvent.click(sendButton);
             expect(handleSendClick).toHaveBeenCalledTimes(1);
         });
-    });
 
-    act(() => {
         it("input validation pane send button disabled", () => {
             const handleSendClick = jest.fn();
 
@@ -198,9 +176,7 @@ describe("Input Validation Pane component", () => {
             fireEvent.click(sendButton);
             expect(handleSendClick).toHaveBeenCalledTimes(0);
         });
-    });
 
-    act(() => {
         it("input validation pane cancel button clicked", () => {
             const handleCancelClick = jest.fn();
 
@@ -218,9 +194,7 @@ describe("Input Validation Pane component", () => {
             fireEvent.click(cancelButton);
             expect(handleCancelClick).toHaveBeenCalledTimes(1);
         });
-    });
 
-    act(() => {
         it("input validation pane input textfield key up", () => {
             const handleInputKeyUp = jest.fn();
 
@@ -242,9 +216,7 @@ describe("Input Validation Pane component", () => {
             });
             expect(handleInputKeyUp).toHaveBeenCalledTimes(1);
         });
-    });
 
-    act(() => {
         it("input validation pane email textfield value changed", () => {
 
             const inputValidationPaneProps: IInputValidationPaneProps = {
@@ -262,6 +234,5 @@ describe("Input Validation Pane component", () => {
             
             const sendButton = screen.getByText(Texts.SaveButtonText);
             expect(sendButton).not.toBeDisabled();
-        });
     });
 });

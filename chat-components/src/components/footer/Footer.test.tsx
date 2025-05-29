@@ -1,8 +1,6 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import * as ReactDOM from "react-dom";
-
-import { act, cleanup } from "@testing-library/react";
+import { cleanup, render } from "@testing-library/react";
 
 import Footer from "./Footer";
 import { IFooterControlProps } from "./interfaces/IFooterControlProps";
@@ -19,36 +17,28 @@ const footerControlPropsRtl: IFooterControlProps = {
 describe("Footer component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
         it("renders footer", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <Footer controlProps={defaultFooterProps.controlProps} styleProps={footerStyles}>
-                </Footer>, container);
+            const {container} = render(<Footer controlProps={defaultFooterProps.controlProps} styleProps={footerStyles}>
+                </Footer>);
+            expect(container.childElementCount).toBe(1);    
         });
-    });
 
-    act(() => {
         it("renders rtl footer", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <Footer controlProps={footerControlPropsRtl} styleProps={footerStyles}>
-                </Footer>, container);
+            const {container} = render(<Footer controlProps={footerControlPropsRtl} styleProps={footerStyles}>
+                </Footer>);
+            
             expect(container.childElementCount).toBe(1);
         });
-    });
 
-    act(() => {
         it("default footer has more one child element", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
+
+            const {container} = render(
                 <Footer controlProps={defaultFooterProps.controlProps} styleProps={footerStyles}>
-                </Footer>, container);
+                </Footer>);
             expect(container.firstElementChild?.childElementCount).toBeGreaterThan(1);
         });
-    });
 });
