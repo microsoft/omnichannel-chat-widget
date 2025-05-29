@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.1.12](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.12)
+
 ### Fixed
 
 - Remove overloading calls to handleAuthentication
@@ -23,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - Fixed post chat survey invite link space issue
 
 ### Added
+
 - Added application insights support 
 
 ## [1.7.7] - 2025-04-16
