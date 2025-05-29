@@ -1,15 +1,13 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import * as ReactDOM from "react-dom";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-
-import ProactiveChatPane from "./ProactiveChatPane";
-import { IProactiveChatPaneProps } from "./interfaces/IProactiveChatPaneProps";
-import React from "react";
-import { defaultProactiveChatPaneProps } from "./common/default/defaultProps/defaultProactiveChatPaneProps";
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import { IProactiveChatPaneProps } from "./interfaces/IProactiveChatPaneProps";
+import ProactiveChatPane from "./ProactiveChatPane";
+import React from "react";
 import { Texts } from "../../common/Constants";
+import { defaultProactiveChatPaneProps } from "./common/default/defaultProps/defaultProactiveChatPaneProps";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -18,20 +16,17 @@ beforeAll(() => {
 describe("Proactive Chat Pane component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
     
-    act(() => {
         it("renders proactive chat pane", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <ProactiveChatPane {...defaultProactiveChatPaneProps}/>, container);
+            const {container} = render(
+                <ProactiveChatPane {...defaultProactiveChatPaneProps}/>);
+
             expect(container.childElementCount).toBe(1);
         });
-    });
 
-    act(() => {
         it("hide proactive chat pane", () => {
             const proactiveChatPanePropsHide: IProactiveChatPaneProps = {
                 ...defaultProactiveChatPaneProps,
@@ -40,14 +35,12 @@ describe("Proactive Chat Pane component", () => {
                     hideProactiveChatPane: true
                 }
             };
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <ProactiveChatPane {...proactiveChatPanePropsHide}/>, container);
+            const {container} = render(
+                <ProactiveChatPane {...proactiveChatPanePropsHide}/>);
+            
             expect(container.childElementCount).toBe(0);
         });
-    });
 
-    act(() => {
         it("hide title", () => {
             const proactiveChatPanePropsHide: IProactiveChatPaneProps = {
                 ...defaultProactiveChatPaneProps,
@@ -71,9 +64,7 @@ describe("Proactive Chat Pane component", () => {
                 fail("Subtitle should be in the document");
             }
         });
-    });
 
-    act(() => {
         it("hide subtitle", () => {
             const proactiveChatPanePropsHide: IProactiveChatPaneProps = {
                 ...defaultProactiveChatPaneProps,
@@ -97,9 +88,7 @@ describe("Proactive Chat Pane component", () => {
                 fail("Title should be in the document");
             }
         });
-    });
 
-    act(() => {
         it("hide close button", () => {
             const proactiveChatPanePropsHide: IProactiveChatPaneProps = {
                 ...defaultProactiveChatPaneProps,
@@ -117,9 +106,7 @@ describe("Proactive Chat Pane component", () => {
             } catch (ex) {
             }
         });
-    });
 
-    act(() => {
         it("hide body title", () => {
             const proactiveChatPanePropsHide: IProactiveChatPaneProps = {
                 ...defaultProactiveChatPaneProps,
@@ -143,9 +130,7 @@ describe("Proactive Chat Pane component", () => {
                 fail("Title should be in the document");
             }
         });
-    });
 
-    act(() => {
         it("hide start button", () => {
             const proactiveChatPanePropsHide: IProactiveChatPaneProps = {
                 ...defaultProactiveChatPaneProps,
@@ -163,9 +148,7 @@ describe("Proactive Chat Pane component", () => {
             } catch (ex) {
             }
         });
-    });
 
-    act(() => {
         it("proactive chat pane close button clicked", () => {
             const handleCloseClick = jest.fn();
 
@@ -185,9 +168,7 @@ describe("Proactive Chat Pane component", () => {
             fireEvent.click(closeButton);
             expect(handleCloseClick).toHaveBeenCalledTimes(1);
         });
-    });
 
-    act(() => {
         it("proactive chat pane start button clicked", () => {
             const handleStartClick = jest.fn();
 
@@ -205,5 +186,5 @@ describe("Proactive Chat Pane component", () => {
             fireEvent.click(startButton);
             expect(handleStartClick).toHaveBeenCalledTimes(1);
         });
-    });
+
 });

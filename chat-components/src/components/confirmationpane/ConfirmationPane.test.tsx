@@ -1,15 +1,13 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import * as ReactDOM from "react-dom";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
 import ConfirmationPane from "./ConfirmationPane";
 import { IConfirmationPaneProps } from "./interfaces/IConfirmationPaneProps";
 import React from "react";
-import { defaultConfirmationPaneProps } from "./common/defaultProps/defaultConfirmationPaneProps";
-import { BroadcastServiceInitialize } from "../../services/BroadcastService";
 import { Texts } from "../../common/Constants";
+import { defaultConfirmationPaneProps } from "./common/defaultProps/defaultConfirmationPaneProps";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -18,20 +16,17 @@ beforeAll(() => {
 describe("Confirmation Pane component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
     
-    act(() => {
         it("renders confirmation pane", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <ConfirmationPane {...defaultConfirmationPaneProps}/>, container);
+            const {container} = render(
+                <ConfirmationPane {...defaultConfirmationPaneProps}/>);
+            
             expect(container.childElementCount).toBe(1);
         });
-    });
 
-    act(() => {
         it("hide confirmation pane", () => {
             const confirmationPanePropsHide: IConfirmationPaneProps = {
                 ...defaultConfirmationPaneProps,
@@ -40,14 +35,10 @@ describe("Confirmation Pane component", () => {
                     hideConfirmationPane: true
                 }
             };
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <ConfirmationPane {...confirmationPanePropsHide}/>, container);
+            const {container} = render(
+                <ConfirmationPane {...confirmationPanePropsHide}/>);
             expect(container.childElementCount).toBe(0);
         });
-    });
-
-    act(() => {
         it("hide title", () => {
             const confirmationPanePropsHide: IConfirmationPaneProps = {
                 ...defaultConfirmationPaneProps,
@@ -71,9 +62,7 @@ describe("Confirmation Pane component", () => {
                 fail("Subtitle should be in the document");
             }
         });
-    });
 
-    act(() => {
         it("hide subtitle", () => {
             const confirmationPanePropsHide: IConfirmationPaneProps = {
                 ...defaultConfirmationPaneProps,
@@ -97,9 +86,7 @@ describe("Confirmation Pane component", () => {
                 fail("Title should be in the document");
             }
         });
-    });
 
-    act(() => {
         it("hide confirm button", () => {
             const confirmationPanePropsHide: IConfirmationPaneProps = {
                 ...defaultConfirmationPaneProps,
@@ -123,9 +110,6 @@ describe("Confirmation Pane component", () => {
                 fail("Cancel button should be in the document");
             }
         });
-    });
-
-    act(() => {
         it("hide cancel button", () => {
             const confirmationPanePropsHide: IConfirmationPaneProps = {
                 ...defaultConfirmationPaneProps,
@@ -149,9 +133,7 @@ describe("Confirmation Pane component", () => {
                 fail("Confirm button should be in the document");
             }
         });
-    });
 
-    act(() => {
         it("confirmation pane button clicked", () => {
             const handleConfirmClick = jest.fn();
             const handleCancelClick = jest.fn();
@@ -175,5 +157,4 @@ describe("Confirmation Pane component", () => {
             fireEvent.click(cancelButton);
             expect(handleCancelClick).toHaveBeenCalledTimes(1);
         });
-    });
 });

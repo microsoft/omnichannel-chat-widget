@@ -1,31 +1,26 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import * as ReactDOM from "react-dom";
+import { cleanup, render } from "@testing-library/react";
 
-import { act, cleanup } from "@testing-library/react";
-
-import OOOHPane from "./OOOHPane";
 import { IOOOHPaneProps } from "./interfaces/IOOOHPaneProps";
+import OOOHPane from "./OOOHPane";
 import React from "react";
 import { defaultOOOHPaneProps } from "./common/defaultProps/defaultOOOHPaneProps";
 
 describe("OOOH Pane component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
         it("renders oooh pane", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <OOOHPane {...defaultOOOHPaneProps} />, container);
+            const {container} = render(
+                <OOOHPane {...defaultOOOHPaneProps} />);
+
             expect(container.childElementCount).toBe(1);
         });
-    });
 
-    act(() => {
         it("hide oooh pane", () => {
             const ooohPanePropsHide: IOOOHPaneProps = {
                 ...defaultOOOHPaneProps,
@@ -34,10 +29,9 @@ describe("OOOH Pane component", () => {
                     hideOOOHPane: true
                 }
             };
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <OOOHPane {...ooohPanePropsHide} />, container);
+            const {container} = render(
+                <OOOHPane {...ooohPanePropsHide} />);
+
             expect(container.childElementCount).toBe(0);
-        });
     });
 });
