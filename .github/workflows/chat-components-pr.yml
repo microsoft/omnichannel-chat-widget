@@ -24,6 +24,9 @@ jobs:
       - name: Unit Tests
         working-directory: chat-components
         run: yarn test:unit
+      - name: Install Playwright browsers
+        working-directory: chat-components
+        run: yarn playwright install
       - name: Build Storybook
         working-directory: chat-components
         env :
