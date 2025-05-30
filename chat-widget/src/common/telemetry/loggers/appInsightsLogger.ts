@@ -24,7 +24,6 @@ enum AllowedKeys {
   ElapsedTimeInMilliseconds = "DurationInMilliseconds"
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let initializationPromise: Promise<void> | null = null;
 
 export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: boolean): IChatSDKLogger => {
