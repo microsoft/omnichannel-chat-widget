@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.1.12](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.12)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.11.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.0)
+
 ### Fixed
 
 - Remove overloading calls to handleAuthentication
@@ -24,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Reset `unreadMessageCount` on attempt to reconnect to conversation that's already been closed
 
 ### Added
+
 - Added application insights support 
 
 ## [1.7.7] - 2025-04-16
@@ -516,6 +522,13 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.12] - 2025-05-29
+
+### Changed
+
+- Uptake [botframework-webchat@4.18.1-main.20250213.4c7400a](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-main.20250213.4c7400a)
+
 
 ## [1.1.11] - 2025-05-22
 

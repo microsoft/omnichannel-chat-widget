@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/omnichannel-chat-components",
-  "version": "1.1.12-0",
+  "version": "1.1.13-0",
   "description": "Microsoft Omnichannel Chat Components",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",
@@ -33,20 +33,22 @@
     "@storybook/react": "^6.4.8",
     "@storybook/testing-react": "^1.2.1",
     "@testing-library/jest-dom": "^5.15.0",
-    "@testing-library/react": "^12.1.2",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.3.0",
     "@types/core-js": "^2.5.5",
     "@types/jest": "^27.0.2",
     "@types/jest-image-snapshot": "^4.3.1",
     "@types/react": "^18.3.13",
     "@types/react-dom": "^18.3.6",
     "@types/styled-components": "^5.1.15",
-    "@typescript-eslint/eslint-plugin": "^5.3.0",
-    "@typescript-eslint/parser": "^5.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.33.0",
+    "@typescript-eslint/parser": "^8.33.0",
     "babel-jest": "^27.3.1",
     "babel-loader": "^8.2.2",
     "botframework-directlinejs": "^0.15.0",
     "copyfiles": "^2.4.1",
-    "eslint": "^7.32.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.27.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-node": "^11.1.0",
@@ -63,12 +65,12 @@
     "react-dom": "^18.3.1",
     "react-test-renderer": "^18.3.1",
     "storybook-addon-playwright": "^4.9.2",
-    "typescript": "^4.4.4"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "@fluentui/react": "^8.46.0",
     "adaptivecards": "^2.10.0",
-    "botframework-webchat": "4.18.1-main.20250505.488ce72",
+    "botframework-webchat": "4.18.1-main.20250515.4c7400a",
     "broadcast-channel": "^4.5.0",
     "jest-transform-stub": "^2.0.0",
     "rxjs": "^5.0.3",
@@ -76,7 +78,7 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook",
     "build": "yarn eslint . && yarn build:esm && yarn build:cjs && tsc",
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
     "test:visual": "jest -c jest.config.visual.cjs",
@@ -93,6 +95,7 @@
     "**/url-parse": "1.5.9",
     "**/markdown-it": "12.3.2",
     "**/minimist": "1.2.6",
-    "**/sanitize-html": "2.12.1"
+    "**/sanitize-html": "2.12.1",
+    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0"
   }
 }

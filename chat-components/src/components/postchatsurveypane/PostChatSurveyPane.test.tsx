@@ -1,8 +1,6 @@
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import * as ReactDOM from "react-dom";
-
-import { act, cleanup } from "@testing-library/react";
+import { cleanup, render } from "@testing-library/react";
 
 import PostChatSurveyPane from "./PostChatSurveyPane";
 import React from "react";
@@ -11,16 +9,12 @@ import { defaultPostChatSurveyPaneProps } from "./common/defaultProps/defaultPos
 describe("PostChatSurvey Pane component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
         it("renders Postchatsurvey pane", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <PostChatSurveyPane {...defaultPostChatSurveyPaneProps} />, container);
+            const {container} = render(<PostChatSurveyPane {...defaultPostChatSurveyPaneProps} />);
             expect(container.childElementCount).toBe(1);
         });
-    });
 });
