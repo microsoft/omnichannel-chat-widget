@@ -332,6 +332,8 @@ const checkIfConversationStillValid = async (facadeChatSDK: FacadeChatSDK, dispa
 
         if (Object.keys(conversationDetails).length === 0 || isNullOrUndefined(conversationDetails.state) || conversationDetails.state === LiveWorkItemState.Closed || conversationDetails.state === LiveWorkItemState.WrapUp) {           
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+            dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
+
             if (currentRequestId) {
                 facadeChatSDK.getChatSDK().requestId = currentRequestId;
             }
