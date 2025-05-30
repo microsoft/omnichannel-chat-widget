@@ -39,7 +39,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
     ref.current = async () => {
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.LCWChatButtonActionStarted,
+            Event: TelemetryEvent.LCWChatButtonClicked,
             Description: "Chat button click action started"
         });
         

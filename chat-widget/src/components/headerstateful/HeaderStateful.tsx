@@ -46,7 +46,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         dir: state.domainStates.globalDir,
         onMinimizeClick: () => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-                Event: TelemetryEvent.MinimizeChatActionStarted, 
+                Event: TelemetryEvent.HeaderMinimizeButtonClicked,
                 Description: "Header Minimize action started."
             });
 
@@ -60,7 +60,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         },
         onCloseClick: async () => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-                Event: TelemetryEvent.CloseChatActionStarted, 
+                Event: TelemetryEvent.HeaderCloseButtonClicked,
                 Description: "Header Close action started."
             });
 
@@ -95,7 +95,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         },
         onMinimizeClick: () => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-                Event: TelemetryEvent.MinimizeChatActionStarted, 
+                Event: TelemetryEvent.HeaderMinimizeButtonClicked,
                 Description: "Header Minimize action started."
             });
 

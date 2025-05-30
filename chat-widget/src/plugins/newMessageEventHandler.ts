@@ -41,7 +41,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         }
 
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.MessageSentCompleted, 
+            Event: TelemetryEvent.MessageSent, 
             Description: "New message sent"
         });
     };
@@ -51,7 +51,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         payload.messageType = Constants.systemMessageTag;
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.SystemMessageReceivedCompleted,
+            Event: TelemetryEvent.SystemMessageReceived,
             Description: "System message received"
         });
     };
@@ -68,7 +68,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             // this is needed for reload scenarios, it helps to identify the last message received before the reload
             isHistoryMessageReceivedEventRaised = true;
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-                Event: TelemetryEvent.RehydrateMessageReceivedCompleted,
+                Event: TelemetryEvent.RehydrateMessageReceived,
                 Description: "History message received",
                 CustomProperties: payload
             });
@@ -113,7 +113,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         BroadcastService.postMessage(newMessageReceivedEvent);
 
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.MessageReceivedCompleted,
+            Event: TelemetryEvent.MessageReceived,
             Description: "New message received",
             CustomProperties: payload
         });

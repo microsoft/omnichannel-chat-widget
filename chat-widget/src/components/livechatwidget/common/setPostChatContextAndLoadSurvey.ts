@@ -24,7 +24,7 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
                 TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
-                    Event: TelemetryEvent.PostChatContextCallCompleted,
+                    Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
                 });
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });

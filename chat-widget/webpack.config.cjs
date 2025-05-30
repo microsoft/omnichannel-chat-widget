@@ -24,6 +24,7 @@ module.exports = {
         type: "filesystem",
     },
     devtool: "eval-cheap-source-map", // this is the fastest source map option for development
+    // devtool: false, // to disable source maps for production build
     optimization: {
         minimize: true,
         minimizer: [new TerserPlugin({ parallel: true })], // this trick is to build faster

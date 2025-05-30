@@ -3,6 +3,7 @@ import { LogLevel, TelemetryEvent, TelemetryInput } from "../TelemetryConstants"
 import ScenarioMarker from "../ScenarioMarker";
 import { TelemetryHelper } from "../TelemetryHelper";
 import { AppInsightsTelemetryMessage } from "../../Constants";
+import { AppInsightsEventMapping } from "../AppInsightsEvents";
 
 declare global {
     interface Window {
@@ -109,8 +110,8 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     }
 
     function getTrackingEventName(logLevel: LogLevel, eventName: string): string {
-        // Remove "UX" or "LCW" prefix if present
-        const event = eventName.replace(/^(UX|LCW)/, "");
+        // Rename and Remove "UX" or "LCW" prefix if present
+        const event = (AppInsightsEventMapping[eventName] || eventName).replace(/^(UX|LCW)/, "");
 
         if (logLevel === LogLevel.ERROR) {
             return ScenarioMarker.failScenario(event);
