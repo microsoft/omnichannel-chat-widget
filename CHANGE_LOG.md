@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.1.12](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.12)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.11.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.0)
+
 ### Fixed
 
 - Remove overloading calls to handleAuthentication
@@ -24,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Added dynamic loading for app insights lib
 
 ### Added
+
 - Added application insights support 
 
 ## [1.7.7] - 2025-04-16
