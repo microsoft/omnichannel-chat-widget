@@ -1,15 +1,15 @@
 import "@testing-library/jest-dom/extend-expect";
-import * as ReactDOM from "react-dom";
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 
-import ChatButton from "./ChatButton";
-import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonProps";
-import React from "react";
-import { IChatButtonProps } from "./interfaces/IChatButtonProps";
-import { defaultChatButtonControlProps } from "./common/defaultProps/defaultChatButtonControlProps";
-import { defaultChatButtonStyleProps } from "./common/defaultStyles/defaultChatButtonStyleProps";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import ChatButton from "./ChatButton";
+import { IChatButtonProps } from "./interfaces/IChatButtonProps";
+import React from "react";
 import { Texts } from "../../common/Constants";
+import { defaultChatButtonControlProps } from "./common/defaultProps/defaultChatButtonControlProps";
+import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonProps";
+import { defaultChatButtonStyleProps } from "./common/defaultStyles/defaultChatButtonStyleProps";
 
 beforeAll(() => {
     BroadcastServiceInitialize("testChannel");
@@ -18,20 +18,15 @@ beforeAll(() => {
 describe("Chat Button component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
         it("renders chat button", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <ChatButton {...defaultChatButtonProps} />, container);
+            const {container} = render(<ChatButton {...defaultChatButtonProps} />);
             expect(container.childElementCount).toBe(1);
         });
-    });
 
-    act(() => {
         it("hide text", () => {
             const chatButtonPropsHide: IChatButtonProps = {
                 ...defaultChatButtonProps,
@@ -56,9 +51,7 @@ describe("Chat Button component", () => {
             } catch (ex) {
             }
         });
-    });
 
-    act(() => {
         it("show notification bubble", () => {
             const chatButtonPropsShow: IChatButtonProps = {
                 //...defaultChatButtonProps,
@@ -80,9 +73,7 @@ describe("Chat Button component", () => {
             } catch (ex) {
             }
         });
-    });
 
-    act(() => {
         it("show notification bubble with unread Messages", () => {
             const chatButtonPropsShow: IChatButtonProps = {
                 //...defaultChatButtonProps,
@@ -105,8 +96,7 @@ describe("Chat Button component", () => {
                 fail("Notification Bubble should be in the document");
             }
         });
-    });
-    act(() => {
+
         it("chat button key down", async () => {
             render(<ChatButton {...defaultChatButtonProps} />);
             const handleKeyDown = jest.fn();
@@ -115,8 +105,7 @@ describe("Chat Button component", () => {
             fireEvent.keyDown(startChatButton);
             expect(handleKeyDown).toHaveBeenCalledTimes(1);
         });
-    });
-    act(() => {
+
         it("chat button click", async () => {
             render(<ChatButton {...defaultChatButtonProps} />);
             const handleClick = jest.fn();
@@ -125,5 +114,4 @@ describe("Chat Button component", () => {
             fireEvent.click(startChatButton);
             expect(handleClick).toHaveBeenCalledTimes(1);
         });
-    });
 });

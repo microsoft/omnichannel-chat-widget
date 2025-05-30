@@ -1,11 +1,11 @@
-import React from "react";
-import * as ReactDOM from "react-dom";
-import { act, cleanup } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import { defaultCurrentCallProps } from "./common/defaultProps/defaultCurrentCallProps";
+import { cleanup, render } from "@testing-library/react";
+
 import CurrentCall from "./CurrentCall";
 import { ICurrentCallControlProps } from "./interfaces/ICurrentCallControlProps";
+import React from "react";
+import { defaultCurrentCallProps } from "./common/defaultProps/defaultCurrentCallProps";
 
 const currentCallStyleProps = defaultCurrentCallProps.styleProps;
 
@@ -21,27 +21,20 @@ const currentCallControlPropsRtl: ICurrentCallControlProps = {
 describe("Current Call component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
-        it("Renders CurrentCall control", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <CurrentCall controlProps={currentCallControlProps} styleProps={currentCallStyleProps} />,
-                container);
-            expect(container.childElementCount).toBe(1);
-        });
+    it("Renders CurrentCall control", () => {
+        const { container } = render(
+            <CurrentCall controlProps={currentCallControlProps} styleProps={currentCallStyleProps} />);
+
+        expect(container.childElementCount).toBe(1);
     });
 
-    act(() => {
-        it("Renders CurrentCall control with rtl", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <CurrentCall controlProps={currentCallControlPropsRtl} styleProps={currentCallStyleProps} />,
-                container);
-            expect(container.childElementCount).toBe(1);
-        });
+    it("Renders CurrentCall control with rtl", () => {
+        const { container } = render(
+            <CurrentCall controlProps={currentCallControlPropsRtl} styleProps={currentCallStyleProps} />);
+        expect(container.childElementCount).toBe(1);
     });
 });

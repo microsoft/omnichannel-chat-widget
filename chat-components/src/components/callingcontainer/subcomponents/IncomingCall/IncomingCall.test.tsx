@@ -1,11 +1,11 @@
-import React from "react";
-import * as ReactDOM from "react-dom";
-import { act, cleanup } from "@testing-library/react";
-import "@testing-library/jest-dom/extend-expect";
+import "@testing-library/jest-dom";
 
-import { defaultIncomingCallProps } from "./common/defaultProps/defaultIncomingCallProps";
-import IncomingCall from "./IncomingCall";
+import { cleanup, render } from "@testing-library/react";
+
 import { IIncomingCallControlProps } from "./interfaces/IIncomingCallControlProps";
+import IncomingCall from "./IncomingCall";
+import React from "react";
+import { defaultIncomingCallProps } from "./common/defaultProps/defaultIncomingCallProps";
 
 const incomingCallStyleProps = defaultIncomingCallProps.styleProps;
 
@@ -21,27 +21,19 @@ const incomingCallControlPropsRtl: IIncomingCallControlProps = {
 describe("Current Call component", () => {
 
     afterEach(() => {
-        cleanup;
+        cleanup();
         jest.resetAllMocks();
     });
 
-    act(() => {
-        it("Renders IncomingCall control", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <IncomingCall controlProps={incomingCallControlProps} styleProps={incomingCallStyleProps} />,
-                container);
-            expect(container.childElementCount).toBe(1);
-        });
+    it("Renders IncomingCall control", () => {
+        const { container } = render(
+            <IncomingCall controlProps={incomingCallControlProps} styleProps={incomingCallStyleProps} />);
+        expect(container.childElementCount).toBe(1);
     });
 
-    act(() => {
-        it("Renders IncomingCall control with rtl", () => {
-            const container = document.createElement("div");
-            ReactDOM.render(
-                <IncomingCall controlProps={incomingCallControlPropsRtl} styleProps={incomingCallStyleProps} />,
-                container);
-            expect(container.childElementCount).toBe(1);
-        });
+    it("Renders IncomingCall control with rtl", () => {
+        const { container } = render(
+            <IncomingCall controlProps={incomingCallControlPropsRtl} styleProps={incomingCallStyleProps} />);
+        expect(container.childElementCount).toBe(1);
     });
 });
