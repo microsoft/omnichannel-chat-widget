@@ -18,7 +18,9 @@ enum AllowedKeys {
   ChannelId = "ChannelId",
   LCWRuntimeId = "ClientSessionId",
   ConversationId = "LiveWorkItemId",
-  ChatId = "ChatThreadId"
+  ChatId = "ChatThreadId",
+  OrganizationId = "OrganizationId",
+  ElapsedTimeInMilliseconds = "DurationInMilliseconds"
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
