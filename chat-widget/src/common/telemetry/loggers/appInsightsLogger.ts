@@ -28,8 +28,27 @@ let initializationPromise: Promise<void> | null = null;
 
 export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: boolean): IChatSDKLogger => {
 
+    const isValidKey = (key: string): boolean => {
+        const INSTRUMENTATION_KEY_PATTERN = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
+        const INSTRUMENTATION_KEY_REGEX = new RegExp(`^${INSTRUMENTATION_KEY_PATTERN}$`);
+        const CONNECTION_STRING_REGEX = new RegExp(
+            `^InstrumentationKey=${INSTRUMENTATION_KEY_PATTERN};IngestionEndpoint=https://[a-zA-Z0-9\\-\\.]+\\.applicationinsights\\.azure\\.com/.*`
+        );
+        return INSTRUMENTATION_KEY_REGEX.test(key) || CONNECTION_STRING_REGEX.test(key);
+    };
+
     const initializeAppInsights = async (appInsightsKey: string, disableCookiesUsage: boolean) => {
         if (!window.appInsights && appInsightsKey) {
+            if (!isValidKey(appInsightsKey)) {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.AppInsightsInitFailed,
+                    Description: AppInsightsTelemetryMessage.AppInsightsKeyError,
+                    ExceptionDetails: {
+                        message: AppInsightsTelemetryMessage.AppInsightsKeyError
+                    }
+                });
+                return;
+            }
             try {
                 // Dynamically import Application Insights
                 const { ApplicationInsights } = await import("@microsoft/applicationinsights-web");
