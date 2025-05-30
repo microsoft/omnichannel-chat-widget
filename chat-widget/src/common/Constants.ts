@@ -369,4 +369,5 @@ export class PostChatSurveyTelemetryMessage {
 export class AppInsightsTelemetryMessage {
     public static readonly AppInsightsInitialized = "Application Insights initialized successfully.";
     public static readonly AppInsightsInitError = "Error initializing Application Insights";
+    public static readonly AppInsightsKeyError = "Invalid Application Insights key provided.";
 }

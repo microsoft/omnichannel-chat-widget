@@ -6,7 +6,9 @@ module.exports = {
     entry: "./samples/javascript-sample/SampleWidget.js",
     mode: "production",
     output: {
-        filename: "out.js"
+        filename: "out.js",
+        path: path.resolve(__dirname, "dist"),
+        publicPath: "/chat-widget/dist/",
     },
     resolve: {
         extensions: [".Webpack.js", ".web.js", ".ts", ".js", ".jsx", ".tsx"]

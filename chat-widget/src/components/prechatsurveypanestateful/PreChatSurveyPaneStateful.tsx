@@ -75,7 +75,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onSubmit: async (values: { index: number, label: any, id: any, value: string }[]) => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-                Event: TelemetryEvent.PrechatSubmitCompleted, 
+                Event: TelemetryEvent.PrechatSubmitted,
                 Description: "Prechat survey submitted."
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });

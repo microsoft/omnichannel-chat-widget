@@ -46,7 +46,7 @@ export const FooterStateful = (props: any) => {
         onDownloadTranscriptClick: async () => {
             try {
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-                    Event: TelemetryEvent.DownloadTranscriptActionStarted,
+                    Event: TelemetryEvent.DownloadTranscriptButtonClicked,
                     Description: "Download transcript action started."
                 });
 
@@ -70,7 +70,7 @@ export const FooterStateful = (props: any) => {
         },
         onEmailTranscriptClick: () => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-                Event: TelemetryEvent.EmailTranscriptActionStarted, 
+                Event: TelemetryEvent.EmailTranscriptButtonClicked,
                 Description: "Email Transcript action started."
             });
             const emailTranscriptButtonId = footerProps?.controlProps?.emailTranscriptButtonProps?.id ?? `${controlProps.id}-emailtranscript-button`;

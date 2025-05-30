@@ -1,9 +1,16 @@
-import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
 import { LogLevel, TelemetryEvent, TelemetryInput } from "../TelemetryConstants";
 import ScenarioMarker from "../ScenarioMarker";
 import { TelemetryHelper } from "../TelemetryHelper";
 import { AppInsightsTelemetryMessage } from "../../Constants";
+import { AppInsightsEventMapping } from "../AppInsightsEvents";
+
+declare global {
+    interface Window {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        appInsights?: any;
+    }
+}
 
 enum AllowedKeys {
   LogLevel = "LogLevel",
@@ -12,25 +19,48 @@ enum AllowedKeys {
   ChannelId = "ChannelId",
   LCWRuntimeId = "ClientSessionId",
   ConversationId = "LiveWorkItemId",
-  ChatId = "ChatThreadId"
+  ChatId = "ChatThreadId",
+  OrganizationId = "OrganizationId",
+  ElapsedTimeInMilliseconds = "DurationInMilliseconds"
 }
+
+let initializationPromise: Promise<void> | null = null;
 
 export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: boolean): IChatSDKLogger => {
 
-    let appInsights: ApplicationInsights | null = null;
+    const isValidKey = (key: string): boolean => {
+        const INSTRUMENTATION_KEY_PATTERN = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
+        const INSTRUMENTATION_KEY_REGEX = new RegExp(`^${INSTRUMENTATION_KEY_PATTERN}$`);
+        const CONNECTION_STRING_REGEX = new RegExp(
+            `^InstrumentationKey=${INSTRUMENTATION_KEY_PATTERN};IngestionEndpoint=https://[a-zA-Z0-9\\-\\.]+\\.applicationinsights\\.azure\\.com/.*`
+        );
+        return INSTRUMENTATION_KEY_REGEX.test(key) || CONNECTION_STRING_REGEX.test(key);
+    };
 
-    const logger = (): ApplicationInsights | null => {
-        if (!appInsights && appInsightsKey) {
+    const initializeAppInsights = async (appInsightsKey: string, disableCookiesUsage: boolean) => {
+        if (!window.appInsights && appInsightsKey) {
+            if (!isValidKey(appInsightsKey)) {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.AppInsightsInitFailed,
+                    Description: AppInsightsTelemetryMessage.AppInsightsKeyError,
+                    ExceptionDetails: {
+                        message: AppInsightsTelemetryMessage.AppInsightsKeyError
+                    }
+                });
+                return;
+            }
             try {
+                // Dynamically import Application Insights
+                const { ApplicationInsights } = await import("@microsoft/applicationinsights-web");
 
                 const config = {
                     ...appInsightsKey.includes("IngestionEndpoint") ? { connectionString: appInsightsKey } : { instrumentationKey: appInsightsKey },
                     disableCookiesUsage: disableCookiesUsage,
                 };
-                
-                // Initialize Application Insights 
-                appInsights = new ApplicationInsights({ config });
-                appInsights.loadAppInsights();
+
+                // Initialize Application Insights instance
+                window.appInsights = new ApplicationInsights({ config });
+                window.appInsights.loadAppInsights();
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.AppInsightsInitialized,
                     Description: AppInsightsTelemetryMessage.AppInsightsInitialized
@@ -45,17 +75,22 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                         exception: error
                     }
                 });
-                return null;
             }
         }
-        return appInsights;
+    };
+    const logger = async () => {
+        if (!initializationPromise) {
+            initializationPromise = initializeAppInsights(appInsightsKey, disableCookiesUsage);
+        }
+        await initializationPromise;
+        return window.appInsights;
     };
 
     const aiLogger: IChatSDKLogger = {
         type: "appInsightsLogger",
-        log: (logLevel: LogLevel, telemetryInput: TelemetryInput): void => {
+        log: async (logLevel: LogLevel, telemetryInput: TelemetryInput): Promise<void> => {
             try {
-                const _logger = logger();
+                const _logger = await logger();
                 if (!_logger) return;
                 const eventName = telemetryInput?.payload?.Event;
                 const telemetryInfo = telemetryInput?.telemetryInfo?.telemetryInfo;
@@ -70,8 +105,9 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
             }
         },
         dispose: () => {
-            if (appInsights) {
-                appInsights.unload(); //flush and unload
+            if (window.appInsights) {
+                window.appInsights.unload(); //flush and unload
+                window.appInsights = null;
             }
         }
     };
@@ -92,8 +128,8 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     }
 
     function getTrackingEventName(logLevel: LogLevel, eventName: string): string {
-        // Remove "UX" or "LCW" prefix if present
-        const event = eventName.replace(/^(UX|LCW)/, "");
+        // Rename and Remove "UX" or "LCW" prefix if present
+        const event = (AppInsightsEventMapping[eventName] || eventName).replace(/^(UX|LCW)/, "");
 
         if (logLevel === LogLevel.ERROR) {
             return ScenarioMarker.failScenario(event);

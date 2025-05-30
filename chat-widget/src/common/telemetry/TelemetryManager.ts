@@ -93,7 +93,7 @@ export const RegisterLoggers = () => {
                 if (logger.type === "appInsightsLogger" && telemetryEvent?.payload?.LogToAll !== true) {
                     return; // skip logging to AppInsights
                 }
-                logger.log(logLevel, telemetryInput);
+                Promise.resolve(logger.log(logLevel, telemetryInput));
             }
         });
     };
