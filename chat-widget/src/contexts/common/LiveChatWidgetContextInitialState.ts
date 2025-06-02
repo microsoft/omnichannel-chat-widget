@@ -28,7 +28,9 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         * as part of the flow, the pre-chat will be detected and then it will be displayed properly 
         * this case is only and only for pre-chat pane.
         * **/
-        if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat) {
+        if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat 
+            || initialStateFromCache.appStates.conversationState === ConversationState.OutOfOffice) {
+            console.log("ELOPEZANAYA :: reset conv :: ", initialStateFromCache.appStates.conversationState);
             initialStateFromCache.appStates.conversationState = ConversationState.Closed;
         }
 
@@ -38,10 +40,11 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         // Cache the result of isOutsideOperatingHours() to ensure consistency
         const outsideOperatingHours = isOutsideOperatingHours();
         initialStateFromCache.appStates.outsideOperatingHours = outsideOperatingHours;
-        initialStateFromCache.appStates.conversationState = outsideOperatingHours ?
-            ConversationState.OutOfOffice :
-            initialStateFromCache.appStates.conversationState;
-
+        if (outsideOperatingHours) {
+            initialStateFromCache.appStates.conversationState = ConversationState.Closed;
+        }
+        
+        console.log("ELOPEZANAYA ::  ", initialStateFromCache.appStates.conversationState, " :: ", outsideOperatingHours);
         return initialStateFromCache;
     }
 
@@ -67,10 +70,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             startChatFailureType: StartChatFailureType.Generic
         },
         appStates: {
-            conversationState: isOutsideOperatingHours() ? 
-                ConversationState.OutOfOffice: 
-                ConversationState.Closed,
-            isMinimized: undefined,
+            conversationState: ConversationState.Closed,
+            isMinimized: false,
             previousElementIdOnFocusBeforeModalOpen: null,
             startChatFailed: false,
             outsideOperatingHours: isOutsideOperatingHours(),

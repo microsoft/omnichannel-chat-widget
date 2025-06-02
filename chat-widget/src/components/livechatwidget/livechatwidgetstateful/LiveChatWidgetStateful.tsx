@@ -385,9 +385,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
+            console.log("LOPEZ :: StartChat :: Start chat event received from SDK OOO.=>",props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours);
+            
             // If chat is out of operating hours chat widget sets the conversation state to OutOfOffice.
             if (typeof props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "string" &&
                 props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
+                console.log("LOPEZ :: StartChat :: Out of operating hours pane is shown.");
                 state?.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 return;
