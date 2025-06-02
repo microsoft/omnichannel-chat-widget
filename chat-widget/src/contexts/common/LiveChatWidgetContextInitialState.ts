@@ -30,7 +30,6 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         * **/
         if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat 
             || initialStateFromCache.appStates.conversationState === ConversationState.OutOfOffice) {
-            console.log("ELOPEZANAYA :: reset conv :: ", initialStateFromCache.appStates.conversationState);
             initialStateFromCache.appStates.conversationState = ConversationState.Closed;
         }
 
@@ -43,8 +42,6 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         if (outsideOperatingHours) {
             initialStateFromCache.appStates.conversationState = ConversationState.Closed;
         }
-        
-        console.log("ELOPEZANAYA ::  ", initialStateFromCache.appStates.conversationState, " :: ", outsideOperatingHours);
         return initialStateFromCache;
     }
 

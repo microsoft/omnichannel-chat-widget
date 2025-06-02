@@ -30,8 +30,6 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
-
-    console.log("LOPEZ :: shouldShowWebChatContainer :: ", state.appStates.conversationState, " :: ", state.appStates.isMinimized);
     return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
         state.appStates.conversationState === ConversationState.InActive);
 };
@@ -57,7 +55,6 @@ export const shouldShowPostChatLoadingPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowOutOfOfficeHoursPane = (state: ILiveChatWidgetContext) => {
-    console.log("LOPEZ :: shouldShowOutOfOfficeHoursPane :: ", state.appStates.conversationState, " :: ", state.appStates.isMinimized);
     // Show OOOH pane only when the conversation state is Closed and outside operating hours is true
     return !state.appStates.isMinimized &&
        (state.appStates.outsideOperatingHours === true) && (state.appStates.conversationState === ConversationState.OutOfOffice);
