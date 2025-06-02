@@ -83,12 +83,10 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     if (showPrechat) {
         const isOutOfOperatingHours = state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";
         if (isOutOfOperatingHours) {
-            console.log("LOPEZ :: prechat :: hide chat , OOH");
             state?.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             return;
         } else {
-            console.log("LOPEZ :: prechat :: hide chat");
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSurveyExpected });
 
             dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
@@ -96,7 +94,6 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
             
             // If minimized, maximize the chat, if the state is missing, consider it as minimized
             if (state?.appStates.isMinimized === undefined || state?.appStates?.isMinimized === true) {
-                console.log("LOPEZ :: set state minimized to false");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
 
                 // this event will notify the upper layer to maximize the widget, an event missing during multi-tab scenario.
@@ -108,7 +105,6 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
                     }
                 });
             }
-            console.log("LOPEZ: prechat done");
             return;
         }
     }
