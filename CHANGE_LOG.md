@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Fixed post chat survey invite link space issue
 - Added dynamic loading for app insights lib
 - Reset `unreadMessageCount` on attempt to reconnect to conversation that's already been closed
+- Reset `attachment` notification error on uploading new attachment
 
 ### Added
 
