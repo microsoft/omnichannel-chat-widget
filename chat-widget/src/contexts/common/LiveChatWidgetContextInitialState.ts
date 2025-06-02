@@ -68,7 +68,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         },
         appStates: {
             conversationState: ConversationState.Closed,
-            isMinimized: false,
+            isMinimized: true,
             previousElementIdOnFocusBeforeModalOpen: null,
             startChatFailed: false,
             outsideOperatingHours: isOutsideOperatingHours(),
