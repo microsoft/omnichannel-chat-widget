@@ -384,16 +384,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // Start chat from SDK Event
-        BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {            
+        BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {  
+            console.log("LOPEZ :: startChat listener ::");
             // If chat is out of operating hours chat widget sets the conversation state to OutOfOffice.
-            if (typeof props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "string" &&
-                props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
-                state?.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+            if (state.appStates.outsideOperatingHours === true) {
+                console.log("LOPEZ :: out of Operating hours detected");
+                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 return;
             }
             // If the startChat event is not initiated by the same tab. Ignore the call
             if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+                console.log("LOPEZ :: ignore call");
                 return;
             }
 
@@ -423,6 +425,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             * To start a new chat, it needs to be called via the close button or close chat via SDK.
             **/ 
             if (inMemoryState.appStates?.conversationState === ConversationState.Closed) {
+                console.log("LOPEZ :: re-starting the chat");
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
@@ -430,8 +433,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 return;
             }
 
+            console.log("LOPEz : state min =>", inMemoryState?.appStates?.isMinimized);
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true) {
+                console.log("LOPEZ :: maximize the chat");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
