@@ -270,7 +270,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state?.appStates?.hideStartChatButton === true) {
             //handle OOH pane
             if (state.appStates.outsideOperatingHours === true) {
-                console.log("ELOPEZANAYA :: use effect OOH : 0");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.OnWidgetError,
@@ -433,7 +432,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true || inMemoryState?.appStates?.isMinimized === undefined) {
-                console.log("ELOPEZ :: start chat , maxim ");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,

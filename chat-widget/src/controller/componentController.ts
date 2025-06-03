@@ -13,15 +13,12 @@ export const shouldShowProactiveChatPane = (state: ILiveChatWidgetContext) => {
 };
 
 export const shouldShowHeader = (state: ILiveChatWidgetContext) => {
-    console.log("LOPEZ :: header => ", state.appStates.isMinimized, state.appStates.conversationState);
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState !== ConversationState.Closed &&
             state.appStates.conversationState !== ConversationState.ProactiveChat);
 };
 
 export const shouldShowFooter = (state: ILiveChatWidgetContext) => {
-    console.log("LOPEZ :: shouldShowFooter => ", state.appStates.isMinimized, state.appStates.conversationState);
-
     return !state.appStates.isMinimized &&
         (state.appStates.conversationState === ConversationState.Active ||
             state.appStates.conversationState === ConversationState.InActive ||
@@ -33,7 +30,6 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
-    console.log("LOPEZ :: shouldShowWebChatContainer => ", state.appStates.isMinimized, state.appStates.conversationState);
     return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
         state.appStates.conversationState === ConversationState.InActive);
 };
@@ -59,7 +55,6 @@ export const shouldShowPostChatLoadingPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowOutOfOfficeHoursPane = (state: ILiveChatWidgetContext) => {
-    console.log("LOPEZ ::shouldShowOutOfOfficeHoursPane ", state.appStates.isMinimized , state.appStates.outsideOperatingHours, state.appStates.conversationState);
     // Show OOOH pane only when the conversation state is Closed and outside operating hours is true
     return !state.appStates.isMinimized &&
        (state.appStates.outsideOperatingHours === true) && (state.appStates.conversationState === ConversationState.OutOfOffice);
