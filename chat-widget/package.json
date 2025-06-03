@@ -144,7 +144,7 @@
     "**/abort-controller-es5": "^2.0.1",
     "**/minimist": "1.2.6",
     "**/sanitize-html": "2.14.0",
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0"
+    "@storybook/react-docgen-typescript-plugin": "1.0.2-canary.6.9d540b91e815f8fc2f8829189deb00553559ff63.0"
   },
   "jest": {
     "verbose": true,
