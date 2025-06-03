@@ -30,7 +30,7 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
-    return (state.appStates.conversationState === ConversationState.Active ||
+    return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
         state.appStates.conversationState === ConversationState.InActive);
 };
 
@@ -55,8 +55,9 @@ export const shouldShowPostChatLoadingPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowOutOfOfficeHoursPane = (state: ILiveChatWidgetContext) => {
+    // Show OOOH pane only when the conversation state is Closed and outside operating hours is true
     return !state.appStates.isMinimized &&
-        (state.appStates.conversationState === ConversationState.OutOfOffice);
+       (state.appStates.outsideOperatingHours === true) && (state.appStates.conversationState === ConversationState.OutOfOffice);
 };
 
 export const shouldShowPreChatSurveyPane = (state: ILiveChatWidgetContext) => {

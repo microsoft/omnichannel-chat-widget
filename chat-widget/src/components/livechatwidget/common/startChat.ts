@@ -87,14 +87,13 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
             return;
         } else {
-
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PrechatSurveyExpected });
 
             dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
             
             // If minimized, maximize the chat, if the state is missing, consider it as minimized
-            if (state?.appStates.isMinimized == undefined || state?.appStates?.isMinimized === true) {
+            if (state?.appStates.isMinimized === undefined || state?.appStates?.isMinimized === true) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
 
                 // this event will notify the upper layer to maximize the widget, an event missing during multi-tab scenario.
@@ -112,6 +111,25 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
 
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+
+    /**
+     * Send max event, since there is a path coming from hide button + LCW SDK that intialize the components
+     * but dont maximize it.
+     * 
+     * This is because a new change to control OOH as closed event when a widget is coming from chat.
+     */
+    if (state?.appStates.isMinimized === undefined || state?.appStates?.isMinimized === true) {
+        dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+        // this event will notify the upper layer to maximize the widget, an event missing during multi-tab scenario.
+        BroadcastService.postMessage({
+            eventName: BroadcastEvent.MaximizeChat,
+            payload: {
+                height: state?.domainStates?.widgetSize?.height,
+                width: state?.domainStates?.widgetSize?.width
+            }
+        });
+    }
+
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
     createTrackingForFirstMessage();
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);

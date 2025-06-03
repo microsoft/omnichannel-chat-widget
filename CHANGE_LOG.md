@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix for invisible pane for OOH Pane and webchat container
 - Remove overloading calls to handleAuthentication
 - Fix to load OOH from config always
 - Enhancements to OOH scenarios
