@@ -111,6 +111,21 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
 
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
+
+    console.log("LOPEZ :: enforcing show of the UI", state?.appStates.isMinimized);
+    if (state?.appStates.isMinimized === undefined || state?.appStates?.isMinimized === true) {
+        console.log("LOPEZ :: maxim the widget after load is complete");
+        dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+        // this event will notify the upper layer to maximize the widget, an event missing during multi-tab scenario.
+        BroadcastService.postMessage({
+            eventName: BroadcastEvent.MaximizeChat,
+            payload: {
+                height: state?.domainStates?.widgetSize?.height,
+                width: state?.domainStates?.widgetSize?.width
+            }
+        });
+    }
+
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
     createTrackingForFirstMessage();
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
@@ -158,6 +173,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+            console.log("LOPEZ :: chat staRTED");
             await facadeChatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
         } catch (error) {
