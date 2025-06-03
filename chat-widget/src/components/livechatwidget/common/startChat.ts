@@ -112,9 +112,13 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     //Initiate start chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
-    console.log("LOPEZ :: enforcing show of the UI", state?.appStates.isMinimized);
+    /**
+     * Send max event, since there is a path coming from hide button + LCW SDK that intialize the components
+     * but dont maximize it.
+     * 
+     * This is because a new change to control OOH as closed event when a widget is coming from chat.
+     */
     if (state?.appStates.isMinimized === undefined || state?.appStates?.isMinimized === true) {
-        console.log("LOPEZ :: maxim the widget after load is complete");
         dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
         // this event will notify the upper layer to maximize the widget, an event missing during multi-tab scenario.
         BroadcastService.postMessage({

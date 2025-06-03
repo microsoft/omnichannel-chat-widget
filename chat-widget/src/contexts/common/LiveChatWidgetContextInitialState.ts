@@ -21,6 +21,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
 
     if (!isNullOrUndefined(initialState)) {
         const initialStateFromCache: ILiveChatWidgetContext = JSON.parse(initialState);
+        const outsideOperatingHours = isOutsideOperatingHours();
 
         /*
         * this step is needed to avoid the pre-chat pane to be injected in the DOM when the widget is reloaded, because wont be visible
@@ -28,20 +29,17 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         * as part of the flow, the pre-chat will be detected and then it will be displayed properly 
         * this case is only and only for pre-chat pane.
         * **/
-        if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat 
-            || initialStateFromCache.appStates.conversationState === ConversationState.OutOfOffice) {
+        if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat
+            || initialStateFromCache.appStates.conversationState === ConversationState.OutOfOffice
+            || outsideOperatingHours) {
             initialStateFromCache.appStates.conversationState = ConversationState.Closed;
+            // if we are resetting the conversation state, there is no point to obtain minimized state from cache
+            initialStateFromCache.appStates.isMinimized = undefined;
         }
-
         // we are always setting the chatConfig from the props to avoid any issues with the cache
         initialStateFromCache.domainStates.liveChatConfig = props.chatConfig;
-
         // Cache the result of isOutsideOperatingHours() to ensure consistency
-        const outsideOperatingHours = isOutsideOperatingHours();
         initialStateFromCache.appStates.outsideOperatingHours = outsideOperatingHours;
-        if (outsideOperatingHours) {
-            initialStateFromCache.appStates.conversationState = ConversationState.Closed;
-        }
         return initialStateFromCache;
     }
 
