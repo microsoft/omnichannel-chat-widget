@@ -269,8 +269,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         if (state?.appStates?.hideStartChatButton === true) {
             //handle OOH pane
-            if (typeof props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "string" &&
-                props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
+            if (state.appStates.outsideOperatingHours === true) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.OnWidgetError,
@@ -384,11 +383,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // Start chat from SDK Event
-        BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {  
             // If chat is out of operating hours chat widget sets the conversation state to OutOfOffice.
-            if (typeof props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours === "string" &&
-                props?.chatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours.toLowerCase() === "true") {
-                state?.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+            if (state.appStates.outsideOperatingHours === true) {
+                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 return;
             }
@@ -411,16 +409,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             });
 
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-
             inMemoryState.domainStates.customContext = msg?.payload?.customContext;
-
-
             /*
             * If the conversation is in closed state then we start a new chat, 
             * else if the conversation is in active state then we maximize the chat
             *  If the conversation is in inactive or postchat state then we maximize the chat.
             * 
             * To start a new chat, it needs to be called via the close button or close chat via SDK.
+            * 
+            * NOTE : Transition from OOH to business hours will follow this path, since during intialization conversation
+            * state is being set to closed.
+            * 
+            * Maximization has been added as part of the initialization chat, since it wont go further than this block.
             **/ 
             if (inMemoryState.appStates?.conversationState === ConversationState.Closed) {
                 BroadcastService.postMessage({
@@ -431,7 +431,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
 
             // If minimized, maximize the chat
-            if (inMemoryState?.appStates?.isMinimized === true) {
+            if (inMemoryState?.appStates?.isMinimized === true || inMemoryState?.appStates?.isMinimized === undefined) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
