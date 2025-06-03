@@ -10,7 +10,7 @@ on:
       
 jobs: 
   build:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Checking out for ${{ github.ref }}
         uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
           node-version: 20.X
       - name: Install packages
         working-directory: chat-widget
-        run: yarn install
+        run: yarn install --network-timeout 1000000
       - name: Fetch base branch
         working-directory: chat-widget
         run: git fetch origin main:main
@@ -36,7 +36,7 @@ jobs:
         shell: bash
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
-        run: yarn install
+        run: yarn install --network-timeout 1000000
       - name: Unit Tests
         working-directory: chat-widget
         run: yarn test:unit
