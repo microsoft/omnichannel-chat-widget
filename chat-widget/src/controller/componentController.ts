@@ -3,7 +3,7 @@ import { ILiveChatWidgetContext } from "../contexts/common/ILiveChatWidgetContex
 
 export const shouldShowChatButton = (state: ILiveChatWidgetContext) => {
     return (state.appStates.isMinimized ||
-        (state.appStates.conversationState === ConversationState.Closed)) 
+        (state.appStates.conversationState === ConversationState.Closed))
         && state?.appStates?.hideStartChatButton === false; // Do not show chat button in case of popout
 };
 
@@ -57,7 +57,7 @@ export const shouldShowPostChatLoadingPane = (state: ILiveChatWidgetContext) => 
 export const shouldShowOutOfOfficeHoursPane = (state: ILiveChatWidgetContext) => {
     // Show OOOH pane only when the conversation state is Closed and outside operating hours is true
     return !state.appStates.isMinimized &&
-       (state.appStates.outsideOperatingHours === true) && (state.appStates.conversationState === ConversationState.OutOfOffice);
+        (state.appStates.outsideOperatingHours === true) && (state.appStates.conversationState === ConversationState.OutOfOffice);
 };
 
 export const shouldShowPreChatSurveyPane = (state: ILiveChatWidgetContext) => {
