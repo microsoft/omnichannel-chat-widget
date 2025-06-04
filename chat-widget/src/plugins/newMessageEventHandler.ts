@@ -25,10 +25,10 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     };
 
     const userSendMessageStrategy = (activity: IActivity) => {
-
         const payload = buildMessagePayload(activity, userId);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         payload.messageType = Constants.userMessageTag;
+        
         const newMessageSentEvent: ICustomEvent = {
             eventName: BroadcastEvent.NewMessageSent,
             payload: polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId)
@@ -48,8 +48,14 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
     const systemMessageStrategy = (activity: IActivity) => {
         const payload = buildMessagePayload(activity, userId);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         payload.messageType = Constants.systemMessageTag;
+
+        if (isHistoryMessage(activity, startTime)){
+            historyMessageStrategy(polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId));
+            return;
+        }
+        
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.SystemMessageReceived,
             Description: "System message received"
@@ -57,7 +63,6 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     };
 
     const historyMessageStrategy = (payload: MessagePayload) => {
-
         const newMessageReceivedEvent: ICustomEvent = {
             eventName: BroadcastEvent.HistoryMessageReceived,
             payload: payload
@@ -96,6 +101,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
         const isHistoryMessageReceived = isHistoryMessage(activity, startTime);
         const payload = buildMessagePayload(activity, userId);
+
         payload.messageType = Constants.userMessageTag;
 
         if (isHistoryMessageReceived) {
