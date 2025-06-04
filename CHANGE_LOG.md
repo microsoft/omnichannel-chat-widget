@@ -6,10 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [1.7.8] - 2025-06-03
+## [1.8.0] - 2025-06-03
 
 ### Changed
 
+- version 1.7.8 is renamed to 1.8.0 to reflect all major changes.
 - Uptake [@microsoft/omnichannel-chat-components@1.1.12](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.12)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.0](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.0)
 
