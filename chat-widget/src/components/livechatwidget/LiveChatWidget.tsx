@@ -1,4 +1,4 @@
-import React, { Dispatch, useReducer, useState } from "react";
+import React, { Dispatch, useEffect, useReducer, useState } from "react";
 
 import { ChatAdapterStore } from "../../contexts/ChatAdapterStore";
 import { ChatContextStore } from "../../contexts/ChatContextStore";
@@ -14,6 +14,7 @@ import { getLiveChatWidgetContextInitialState } from "../../contexts/common/Live
 import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
 import { isNullOrUndefined } from "../../common/utils";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
+import { registerTelemetryLoggers } from "./common/registerTelemetryLoggers";
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
@@ -48,6 +49,10 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
                 "isSDKMocked": !isNullOrUndefined(props?.mock?.type),
             }, disableReauthentication));
     }
+
+    useEffect(() => {
+        registerTelemetryLoggers(props, dispatch);
+    }, []);
 
     return (
         <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
