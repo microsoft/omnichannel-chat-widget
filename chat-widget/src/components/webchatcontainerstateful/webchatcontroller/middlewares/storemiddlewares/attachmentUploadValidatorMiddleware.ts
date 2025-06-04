@@ -29,6 +29,8 @@ const validateAttachment = (action: IWebChatAction, allowedFileExtensions: strin
     }
 
     if (attachments) {
+        NotificationHandler.dismissNotification(NotificationScenarios.AttachmentError); // Dismiss any previous attachment error notification
+
         for (let i = 0; i < attachments.length; i++) {
             const maxUploadFileSize = getMaxUploadFileSize(maxFileSizeSupportedByDynamics, attachments[i].contentType);
             const fileExtensionValid = validateFileExtension(attachments[i], allowedFileExtensions);
