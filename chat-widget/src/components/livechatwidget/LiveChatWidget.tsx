@@ -3,6 +3,7 @@ import React, { Dispatch, useEffect, useReducer, useState } from "react";
 import { ChatAdapterStore } from "../../contexts/ChatAdapterStore";
 import { ChatContextStore } from "../../contexts/ChatContextStore";
 import { ChatSDKStore } from "../../contexts/ChatSDKStore";
+import ErrorBoundary from "../errorboundary/ErrorBoundary";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { FacadeChatSDKStore } from "../../contexts/FacadeChatSDKStore";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -55,15 +56,20 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     }, []);
 
     return (
-        <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
-            <ChatSDKStore.Provider value={chatSDK}>
-                <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
-                    <ChatContextStore.Provider value={[state, dispatch]}>
-                        <LiveChatWidgetStateful {...props} />
-                    </ChatContextStore.Provider>
-                </ChatAdapterStore.Provider>
-            </ChatSDKStore.Provider>
-        </FacadeChatSDKStore.Provider>
+        <ErrorBoundary onError={(error: Error) => {
+            console.log('Error in LCW');
+            console.log(error);
+        }}>
+            <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
+                <ChatSDKStore.Provider value={chatSDK}>
+                    <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
+                        <ChatContextStore.Provider value={[state, dispatch]}>
+                            <LiveChatWidgetStateful {...props} />
+                        </ChatContextStore.Provider>
+                    </ChatAdapterStore.Provider>
+                </ChatSDKStore.Provider>
+            </FacadeChatSDKStore.Provider>
+        </ErrorBoundary>
     );
 };
 
