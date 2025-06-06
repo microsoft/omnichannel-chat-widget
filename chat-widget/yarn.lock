@@ -2518,7 +2518,7 @@
     axios "^1.8.2"
     axios-retry "^3.9.1"
 
-"@microsoft/omnichannel-amsclient@^0.1.9":
+"@microsoft/omnichannel-amsclient@^0.1.10":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.10.tgz#bb2fa2157069bfc878d21e55747d8056fab0f66e"
   integrity sha512-mNL1z3L1HHuJMUVyMxegix4UYd6CBLKh8MfLyvk/lKRqM9CfOtyJSzrDmxkgn8qx3+CwGbHhZpraqtRUTSN4wQ==
@@ -2536,16 +2536,16 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.11.0":
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.0.tgz#00fbf809a3076e9d5243beed70ef5965d94c18d2"
-  integrity sha512-sesfiKbZFerJYwoIzvFIDe/CNFlS5F/EU0dDEXectIgzRZ+t/f4jNw3oGL/oh9UFjJ/lM1s0DSE+7BnNONhF6g==
+"@microsoft/omnichannel-chat-sdk@^1.11.1":
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.1.tgz#daaf2013165c3792c331bdbc9dec23085f4caa12"
+  integrity sha512-NfQIK1yAViGDoxXdwpprcVT+6kf7KI8P2sbNxJrDXPfHYt4hZIoT1eL1a/ajQ8LXUA2dOAyVLyXC2E4YW/g5SQ==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
     "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.2"
     "@microsoft/ocsdk" "^0.5.16"
-    "@microsoft/omnichannel-amsclient" "^0.1.9"
+    "@microsoft/omnichannel-amsclient" "^0.1.10"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
 "@microsoft/omnichannel-ic3core@^0.1.5":
