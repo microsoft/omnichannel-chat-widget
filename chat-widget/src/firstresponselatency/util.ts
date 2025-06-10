@@ -67,12 +67,17 @@ export const polyfillMessagePayloadForEvent = (activity: IActivity, payload: Mes
 };
 
 export const getScenarioType = (activity: IActivity): ScenarioType => {
-    if (activity?.from?.role === Constants.userMessageTag) {
+    const role = activity?.from?.role;
+    const tags = activity?.channelData?.tags;
+
+    if (role === Constants.userMessageTag) {
         return ScenarioType.UserSendMessageStrategy;
     }
-    if (activity?.channelData?.tags?.includes(Constants.systemMessageTag)) {
+
+    if ((tags && tags.includes(Constants.systemMessageTag)) || role === Constants.channelMessageTag) {
         return ScenarioType.SystemMessageStrategy;
     }
+
     return ScenarioType.ReceivedMessageStrategy;
 };
 

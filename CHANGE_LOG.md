@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+ - Handling participant added/deleted in thread as system message
+
 ### Changed
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.1)
 
