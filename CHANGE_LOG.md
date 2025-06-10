@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+ - Handling participant added/deleted in thread as system message
+
+## [1.8.0] - 2025-06-03
 ## [1.7.8] - 2025-06-03
 
 ### Changed
