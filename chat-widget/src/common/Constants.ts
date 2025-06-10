@@ -3,6 +3,7 @@ export class Constants {
     public static readonly magicCodeResponseBroadcastChannel = "MagicCodeResponseChannel";
     public static readonly systemMessageTag = "system";
     public static readonly userMessageTag = "user";
+    public static readonly channelMessageTag = "channel";
     public static readonly historyMessageTag = "history";
     public static readonly agentEndConversationMessageTag = "agentendconversation";
     public static readonly supervisorForceCloseMessageTag = "supervisorforceclosedconversation";
