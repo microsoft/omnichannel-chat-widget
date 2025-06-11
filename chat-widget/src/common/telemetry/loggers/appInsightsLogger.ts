@@ -26,7 +26,7 @@ enum AllowedKeys {
 
 let initializationPromise: Promise<void> | null = null;
 
-export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: boolean): IChatSDKLogger => {
+export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
 
     const isValidKey = (key: string): boolean => {
         const INSTRUMENTATION_KEY_PATTERN = "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}";
@@ -37,7 +37,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
         return INSTRUMENTATION_KEY_REGEX.test(key) || CONNECTION_STRING_REGEX.test(key);
     };
 
-    const initializeAppInsights = async (appInsightsKey: string, disableCookiesUsage: boolean) => {
+    const initializeAppInsights = async (appInsightsKey: string) => {
         if (!window.appInsights && appInsightsKey) {
             if (!isValidKey(appInsightsKey)) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -54,8 +54,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
                 const { ApplicationInsights } = await import("@microsoft/applicationinsights-web");
 
                 const config = {
-                    ...appInsightsKey.includes("IngestionEndpoint") ? { connectionString: appInsightsKey } : { instrumentationKey: appInsightsKey },
-                    disableCookiesUsage: disableCookiesUsage,
+                    ...appInsightsKey.includes("IngestionEndpoint") ? { connectionString: appInsightsKey } : { instrumentationKey: appInsightsKey }
                 };
 
                 // Initialize Application Insights instance
@@ -80,7 +79,7 @@ export const appInsightsLogger = (appInsightsKey: string, disableCookiesUsage: b
     };
     const logger = async () => {
         if (!initializationPromise) {
-            initializationPromise = initializeAppInsights(appInsightsKey, disableCookiesUsage);
+            initializationPromise = initializeAppInsights(appInsightsKey);
         }
         await initializationPromise;
         return window.appInsights;
