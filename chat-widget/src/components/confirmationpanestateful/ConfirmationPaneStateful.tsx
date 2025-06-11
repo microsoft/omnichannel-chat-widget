@@ -71,9 +71,11 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
     useEffect(() => {
         preventFocusToMoveOutOfElement(controlProps.id as string);
         const focusableElements: HTMLElement[] | null = findAllFocusableElement(`#${controlProps.id}`);
-        if (focusableElements) {
-            focusableElements[0].focus();
-        }
+        const timer = setTimeout(() => {
+            if (focusableElements) {
+                focusableElements[0].focus({ preventScroll: true });
+            }
+        }, 0);
 
         elements = findParentFocusableElementsWithoutChildContainer(controlProps.id as string);
         setTabIndices(elements, initialTabIndexMap, false);
@@ -83,6 +85,9 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
 
+        return () => {
+            clearTimeout(timer);
+        };
     }, []);
 
     return (

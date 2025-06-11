@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Removed cookieUsage config for appInsights
+- Addressed scroll jump issue on close chat.
 
 ## [1.8.0] - 2025-06-03
 

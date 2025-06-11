@@ -115,6 +115,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
+    const bubbleBackground = props.webChatContainerProps?.webChatStyles?.bubbleBackground ??
+        (props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background);
+    const bubbleTextColor = props.webChatContainerProps?.webChatStyles?.bubbleTextColor ??
+        (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color);
 
     // Process general styles
     const generalStyles: IStackStyles = {
@@ -770,6 +774,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
     const userID = directLine.getState ? directLine?.getState("acs.userId") : "teamsvisitor";
 
+    const styleOptions = React.useMemo(() => ({
+        ...webChatStyles,
+        bubbleBackground,
+        bubbleTextColor
+    }), [webChatStyles, bubbleBackground, bubbleTextColor]);
+
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>
@@ -812,11 +822,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 <Composer
                     {...webChatProps}
                     userID={userID}
-                    styleOptions={{
-                        ...webChatStyles,
-                        bubbleBackground: props.webChatContainerProps?.webChatStyles?.bubbleBackground ?? ( props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background),
-                        bubbleTextColor: props.webChatContainerProps?.webChatStyles?.bubbleTextColor ?? (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color)
-                    }}
+                    styleOptions={styleOptions}
                     directLine={directLine}>
                     <Stack
                         id={widgetElementId}
