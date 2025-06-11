@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+ - Support sending context variables in auth chat
+
 ### Fixed
 
  - Handling participant added/deleted in thread as system message
