@@ -272,12 +272,6 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, facadeChatS
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = (props?.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
-    //Should not set custom context for auth chat
-    if (isAuthenticatedChat) {
-        return;
-    }
 
     if (state?.domainStates?.customContext) {
         optionalParams = Object.assign({}, optionalParams, {
