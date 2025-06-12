@@ -17,6 +17,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.1)
 
+### Fixed
+- Removed cookieUsage config for appInsights
+
 ## [1.8.0] - 2025-06-03
 
 ### Changed
