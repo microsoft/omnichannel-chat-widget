@@ -13,7 +13,7 @@ import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { any } from "core-js/fn/promise";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
-import { detectAndCleanXSS, processTextWithSafeLinks } from "../../common/utils/xssUtils";
+import { detectAndCleanXSS } from "../../common/utils/xssUtils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
 let uiTimer : ITimer;
@@ -61,38 +61,43 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
         });
     }, []);
     
-    // Enhanced titleText sanitization with URL conversion
+    // Enhanced titleText sanitization
     if (controlProps?.titleText) {
-        const { processedText, isXSSDetected } = processTextWithSafeLinks(controlProps.titleText);
+        const { cleanText, isXSSDetected } = detectAndCleanXSS(controlProps.titleText);
         
         if (isXSSDetected) {
             TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.WARN, {
                 Event: TelemetryEvent.UXOutOfOfficeHoursPaneCompleted,
                 Description: "Potential XSS attempt detected in titleText",
                 CustomProperties: {
-                    originalText: controlProps.titleText.substring(0, 100),
-                    cleanedText: processedText.substring(0, 100),
+                    originalText: controlProps.titleText.substring(0, 100), // Log first 100 chars for analysis
+                    cleanedText: cleanText.substring(0, 100),
                     userAgent: navigator.userAgent
                 }
             });
-            console.error("OutOfOfficeHoursPaneStateful: Potential XSS attempt detected in titleText");
             controlProps.titleText = "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.";
-        } else {
-            console.log("OutOfOfficeHoursPaneStateful: Processed titleText with URLs:", processedText);
-            controlProps.titleText = processedText;
         }
         
-        // Additional validation for final safety check
-        if (controlProps.titleText.length === 0) {
+        console.log("OutOfOfficeHoursPaneStateful: Sanitized titleText:", cleanText);
+        controlProps.titleText = cleanText;
+        
+        // Additional validation - remove if still contains suspicious content
+        if (controlProps.titleText.length === 0 || 
+            controlProps.titleText.includes("<") || 
+            controlProps.titleText.includes(">") ||
+            controlProps.titleText.includes("javascript:") ||
+            /on\w+\s*=/gi.test(controlProps.titleText)) {
+            
             TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.UXOutOfOfficeHoursPaneCompleted,
-                Description: "TitleText became empty after processing, using fallback"
+                Description: "TitleText failed security validation, using fallback",
+                CustomProperties: {
+                    failedText: controlProps.titleText
+                }
             });
-            console.warn("OutOfOfficeHoursPaneStateful: TitleText became empty, using fallback text.");
+            // Fallback to safe default
             controlProps.titleText = "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.";
         }
-        
-        console.log("OutOfOfficeHoursPaneStateful: Final titleText:", controlProps.titleText);
     }
 
     return (
