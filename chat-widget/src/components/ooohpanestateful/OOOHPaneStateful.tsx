@@ -101,7 +101,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
                 }
             });
             // Fallback to safe default
-            controlProps.titleText = "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.";
+            controlProps.titleText = FALLBACK_TITLE_TEXT;
         }
     }
 
