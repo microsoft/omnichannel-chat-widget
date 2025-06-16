@@ -11,7 +11,6 @@ import { IStyle } from "@fluentui/react";
 import { ITimer } from "../../common/interfaces/ITimer";
 import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { any } from "core-js/fn/promise";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
 import { detectAndCleanXSS } from "../../common/utils/xssUtils";
 import useChatContextStore from "../../hooks/useChatContextStore";
