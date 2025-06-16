@@ -74,7 +74,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
                     userAgent: navigator.userAgent
                 }
             });
-            controlProps.titleText = "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.";
+            controlProps.titleText = FALLBACK_TITLE_TEXT;
         }
         
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
