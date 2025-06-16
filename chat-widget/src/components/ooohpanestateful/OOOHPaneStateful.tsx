@@ -77,7 +77,13 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
             controlProps.titleText = "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.";
         }
         
-        console.log("OutOfOfficeHoursPaneStateful: Sanitized titleText:", cleanText);
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXOutOfOfficeHoursPaneCompleted,
+            Description: "Sanitized titleText",
+            CustomProperties: {
+                sanitizedText: cleanText.substring(0, 100) // Log first 100 chars for analysis
+            }
+        });
         controlProps.titleText = cleanText;
         
         // Additional validation - remove if still contains suspicious content
