@@ -135,6 +135,28 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
     });
 };
 
+const logWidgetLoadWithUnexpectedError = (ex: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const details = {
+        message: ex?.message || "An unexpected error occurred",
+        stack: ex?.stack || "No stack trace available"
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const exDetails: any = {
+        Exception: `Widget load with unexpected error: ${JSON.stringify(details)}`
+    };
+    if (ex?.httpResponseStatusCode) {
+        exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
+    }
+
+    TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
+        Event: TelemetryEvent.WidgetLoadFailed,
+        Description: "Widget load with unexpected error",
+        ExceptionDetails: exDetails,
+        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+    });
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const forceEndChat = (facadeChatSDK: FacadeChatSDK) => {
     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
