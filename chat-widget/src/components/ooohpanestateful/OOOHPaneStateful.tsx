@@ -2,7 +2,6 @@ import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConsta
 import React, { Dispatch, useEffect } from "react";
 import { createTimer, findAllFocusableElement } from "../../common/utils";
 
-import DOMPurify from "dompurify";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { IOOOHPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneControlProps";
@@ -13,9 +12,11 @@ import { ITimer } from "../../common/interfaces/ITimer";
 import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
+import { detectAndCleanXSS } from "../../common/utils/xssUtils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
-let uiTimer : ITimer;
+let uiTimer: ITimer;
+const OOOHPaneTitleText = "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.";
 export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
 
     useEffect(() => {
@@ -26,10 +27,10 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
         });
     }, []);
 
-    const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    
+    const [state,]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralStyleProps, props.styleProps?.generalStyleProps);
-    
+
     const styleProps: IOOOHPaneStyleProps = {
         ...props.styleProps,
         generalStyleProps: generalStyleProps
@@ -43,14 +44,14 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
 
     // Move focus to the first button
     useEffect(() => {
-        
+
         if (state.domainStates.widgetElementId !== null && state.domainStates.widgetElementId !== undefined && state.domainStates.widgetElementId.trim() !== "") {
             const firstElement: HTMLElement[] | null = findAllFocusableElement(`#${state.domainStates.widgetElementId}`);
             if (firstElement && firstElement[0]) {
                 firstElement[0].focus();
             }
         }
-        
+
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.OutOfOfficePaneLoaded });
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXOutOfOfficeHoursPaneCompleted,
@@ -58,9 +59,28 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
-    
+
+    // Enhanced titleText sanitization
     if (controlProps?.titleText) {
-        controlProps.titleText = DOMPurify.sanitize(controlProps.titleText);
+        const { cleanText, isXSSDetected } = detectAndCleanXSS(controlProps.titleText);
+
+        if (!isXSSDetected) {
+            // replace with the sanitized text
+            controlProps.titleText = cleanText;
+
+        } else {
+
+            TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.WARN, {
+                Event: TelemetryEvent.XSSTextDetected,
+                Description: "Potential XSS attempt detected in titleText",
+                CustomProperties: {
+                    originalText: controlProps.titleText.substring(0, 100), // Log first 100 chars for analysis
+                    cleanedText: cleanText.substring(0, 100),
+                }
+            });
+
+            controlProps.titleText = OOOHPaneTitleText;
+        }
     }
 
     return (
