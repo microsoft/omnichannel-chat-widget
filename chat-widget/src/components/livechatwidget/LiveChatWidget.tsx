@@ -16,6 +16,7 @@ import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable"
 import { isNullOrUndefined } from "../../common/utils";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
 import { registerTelemetryLoggers } from "./common/registerTelemetryLoggers";
+import { logWidgetLoadWithUnexpectedError } from "./common/startChatErrorHandler";
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
@@ -59,6 +60,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
         <ErrorBoundary onError={(error: Error) => {
             console.log('Error in LCW');
             console.log(error);
+            logWidgetLoadWithUnexpectedError(error);
         }}>
             <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
                 <ChatSDKStore.Provider value={chatSDK}>
