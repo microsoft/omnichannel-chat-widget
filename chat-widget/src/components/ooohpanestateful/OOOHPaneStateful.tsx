@@ -11,8 +11,8 @@ import { IStyle } from "@fluentui/react";
 import { ITimer } from "../../common/interfaces/ITimer";
 import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { Texts } from "@microsoft/omnichannel-chat-components/lib/types/common/Constants";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
-import { defaultOOOHPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/common/defaultProps/defaultOOOHPaneControlProps";
 import { detectAndCleanXSS } from "../../common/utils/xssUtils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
@@ -79,7 +79,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
                 }
             });
 
-            controlProps.titleText = defaultOOOHPaneControlProps.titleText;
+            controlProps.titleText = Texts.OOOHPaneTitleText;
         }
     }
 
