@@ -12,6 +12,7 @@ import { ITimer } from "../../common/interfaces/ITimer";
 import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
+import { defaultOOOHPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/common/defaultProps/defaultOOOHPaneControlProps";
 import { detectAndCleanXSS } from "../../common/utils/xssUtils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
