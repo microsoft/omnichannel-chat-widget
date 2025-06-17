@@ -11,12 +11,12 @@ import { IStyle } from "@fluentui/react";
 import { ITimer } from "../../common/interfaces/ITimer";
 import { OutOfOfficeHoursPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { Texts } from "@microsoft/omnichannel-chat-components/lib/types/common/Constants";
 import { defaultGeneralStyleProps } from "./common/defaultStyleProps/defaultgeneralOOOHPaneStyleProps";
 import { detectAndCleanXSS } from "../../common/utils/xssUtils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
 let uiTimer: ITimer;
+const OOOHPaneTitleText = "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.";
 export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
 
     useEffect(() => {
@@ -79,7 +79,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
                 }
             });
 
-            controlProps.titleText = Texts.OOOHPaneTitleText;
+            controlProps.titleText = OOOHPaneTitleText;
         }
     }
 
