@@ -58,8 +58,6 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
     return (
         <ErrorBoundary onError={(error: Error) => {
-            console.log('Error in LCW');
-            console.log(error);
             logWidgetLoadWithUnexpectedError(error);
         }}>
             <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
