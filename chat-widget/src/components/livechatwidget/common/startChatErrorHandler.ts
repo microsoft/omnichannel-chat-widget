@@ -135,7 +135,7 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
     });
 };
 
-const logWidgetLoadWithUnexpectedError = (ex: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+export const logWidgetLoadWithUnexpectedError = (ex: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const details = {
         message: ex?.message || "An unexpected error occurred",
         stack: ex?.stack || "No stack trace available"
