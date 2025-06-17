@@ -16,8 +16,6 @@ import { detectAndCleanXSS } from "../../common/utils/xssUtils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
 let uiTimer: ITimer;
-const FALLBACK_TITLE_TEXT = "Thanks for contacting us. You have reached us outside of our operating hours. An agent will respond when we open.";
-
 export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
 
     useEffect(() => {
@@ -80,7 +78,7 @@ export const OutOfOfficeHoursPaneStateful = (props: IOOOHPaneProps) => {
                 }
             });
 
-            controlProps.titleText = FALLBACK_TITLE_TEXT;
+            controlProps.titleText = defaultOOOHPaneControlProps.titleText;
         }
     }
 
