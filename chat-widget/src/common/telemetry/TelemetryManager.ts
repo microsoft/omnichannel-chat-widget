@@ -65,10 +65,7 @@ export const RegisterLoggers = () => {
 
             if (TelemetryManager.InternalTelemetryData?.appInsightsConfig?.appInsightsDisabled === false) {
                 if (TelemetryManager.InternalTelemetryData?.appInsightsConfig.appInsightsKey) {
-                    loggers.push(appInsightsLogger(
-                        TelemetryManager.InternalTelemetryData?.appInsightsConfig.appInsightsKey,
-                        TelemetryManager.InternalTelemetryData?.ariaConfig?.disableCookieUsage ?? (defaultAriaConfig.disableCookieUsage as boolean),
-                    ));
+                    loggers.push(appInsightsLogger(TelemetryManager.InternalTelemetryData?.appInsightsConfig.appInsightsKey));
                 }
             }
         }
