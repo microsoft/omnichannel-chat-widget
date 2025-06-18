@@ -141,9 +141,16 @@ export const logWidgetLoadWithUnexpectedError = (ex: any) => { // eslint-disable
         stack: ex?.stack || "No stack trace available"
     };
 
+    let additionalDetails = "";
+    try {
+        additionalDetails = JSON.stringify(details);
+    } catch (error) {
+        additionalDetails = "Failed to stringify error details";
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const exDetails: any = {
-        Exception: `Widget load with unexpected error: ${JSON.stringify(details)}`
+        Exception: `Widget load with unexpected error: ${additionalDetails}`
     };
     if (ex?.httpResponseStatusCode) {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
