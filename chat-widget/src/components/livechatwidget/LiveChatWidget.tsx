@@ -54,7 +54,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         registerTelemetryLoggers(props, dispatch);
-    }, []);
+    }, [dispatch]);
 
     return (
         <ErrorBoundary onError={(error: Error) => {
