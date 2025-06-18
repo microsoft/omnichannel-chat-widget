@@ -72,7 +72,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
         preventFocusToMoveOutOfElement(controlProps.id as string);
         const focusableElements: HTMLElement[] | null = findAllFocusableElement(`#${controlProps.id}`);
         const timer = setTimeout(() => {
-            if (focusableElements) {
+            if (focusableElements && focusableElements[0]) {
                 focusableElements[0].focus({ preventScroll: true });
             }
         }, 0);
