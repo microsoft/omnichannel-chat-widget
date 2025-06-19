@@ -109,6 +109,12 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
                     Description: "Customer Voice form response error.",
                     ExceptionDetails: { message: "Customer Voice form response error." }
                 });
+            } else if (data.startsWith(CustomerVoiceEvents.FormsError)) {
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
+                    Event: TelemetryEvent.CustomerVoiceFormsError,
+                    Description: "Customer Voice forms error.",
+                    ExceptionDetails: { message: `Customer Voice forms error: ${data}` }
+                });
             }
         });
     }, []);
