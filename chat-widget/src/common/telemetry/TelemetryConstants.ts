@@ -168,6 +168,7 @@ export enum TelemetryEvent {
     CustomerVoiceResponsePageLoaded = "CustomerVoiceResponsePageLoaded",
     CustomerVoiceFormResponseSubmitted = "CustomerVoiceFormResponseSubmitted",
     CustomerVoiceFormResponseError = "CustomerVoiceFormResponseError",
+    CustomerVoiceFormsError = "CustomerVoiceFormsError",
     BotAuthActivityEmptySasUrl = "BotAuthActivityEmptySasUrl",
     SetBotAuthProviderFetchConfig = "SetBotAuthProviderFetchConfig",
     SetBotAuthProviderHideCard = "SetBotAuthProviderHideCard",

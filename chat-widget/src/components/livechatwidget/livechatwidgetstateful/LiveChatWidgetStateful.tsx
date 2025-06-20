@@ -112,6 +112,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
+    const [conversationId, setConversationId] = useState<string>("");
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
 
@@ -512,6 +513,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
         });
 
+        // Retrieve convId
+        BroadcastService.getMessageByEventName(BroadcastEvent.UpdateConversationDataForTelemetry).subscribe((msg: ICustomEvent) => {
+            if (msg.payload?.liveWorkItem?.conversationId) {
+                setConversationId(msg.payload.liveWorkItem.conversationId);
+            }
+        });
+
         // Check for TPC and log in telemetry if blocked
         isCookieAllowed();
 
@@ -845,7 +853,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...livechatProps.postChatLoadingPaneProps} />)}
 
-                        {shouldShowPostChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...livechatProps.postChatSurveyPaneProps} {...livechatProps.chatSDK} />)}
+                        {shouldShowPostChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...livechatProps.postChatSurveyPaneProps } {...livechatProps.chatSDK} customerVoiceSurveyCorrelationId={conversationId} />)}
 
                         {createFooter(livechatProps, state)}
 
