@@ -35,7 +35,6 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
 
     let surveyInviteLink = "";
     const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
-
     if (state.domainStates.postChatContext.botSurveyInviteLink && // Bot survey enabled
         state.appStates.postChatParticipantType === ParticipantType.Bot) { // Only Bot has engaged
         surveyInviteLink = generateSurveyInviteLink(
@@ -109,7 +108,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
                     Description: "Customer Voice form response error.",
                     ExceptionDetails: { message: "Customer Voice form response error." }
                 });
-            } else if (data.startsWith(CustomerVoiceEvents.FormsError)) {
+            } else if (typeof(data) === "string" && data.startsWith(CustomerVoiceEvents.FormsError)) {
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
                     Event: TelemetryEvent.CustomerVoiceFormsError,
                     Description: "Customer Voice forms error.",
