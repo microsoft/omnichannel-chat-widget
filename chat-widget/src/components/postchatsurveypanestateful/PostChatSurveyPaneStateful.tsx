@@ -17,12 +17,13 @@ import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import isValidSurveyUrl from "./common/isValidSurveyUrl";
 
-const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, showMultiLingual = false) => {
+const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, customerVoiceSurveyCorrelationId: string, showMultiLingual = false) => {
     const surveyLinkParams = new URLSearchParams({
         embed: isEmbed.toString(),
         compact: (compact ?? true).toString(),
         lang: locale ?? "en-us",
         showmultilingual: (showMultiLingual ?? false).toString(),
+        cvResponsePageRequestId: customerVoiceSurveyCorrelationId
     });
     return `${surveyInviteLink}&${surveyLinkParams.toString()}`;
 };
@@ -41,13 +42,15 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             state.domainStates.postChatContext.botSurveyInviteLink,
             surveyMode,
             state.domainStates.postChatContext.botFormsProLocale,
-            props.isCustomerVoiceSurveyCompact ?? true);
+            props.isCustomerVoiceSurveyCompact ?? true,
+            props.customerVoiceSurveyCorrelationId || "");
     } else {
         surveyInviteLink = generateSurveyInviteLink(
             state.domainStates.postChatContext.surveyInviteLink,
             surveyMode,
             state.domainStates.postChatContext.formsProLocale,
-            props.isCustomerVoiceSurveyCompact ?? true);
+            props.isCustomerVoiceSurveyCompact ?? true,
+            props.customerVoiceSurveyCorrelationId || "");
     }
 
     if (props.copilotSurveyContext) {
