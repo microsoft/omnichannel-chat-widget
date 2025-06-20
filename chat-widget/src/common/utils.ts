@@ -410,6 +410,11 @@ export const getConversationDetailsCall = async (facadeChatSDK: FacadeChatSDK, l
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const checkContactIdError = (e: any) => {
+    
+    TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+        Event: TelemetryEvent.CheckContactIdError,
+    });
+    
     if (e?.message === ChatSDKErrorName.AuthContactIdNotFoundFailure) {
         const contactIdNotFoundErrorEvent: ICustomEvent = {
             eventName: BroadcastEvent.ContactIdNotFound,

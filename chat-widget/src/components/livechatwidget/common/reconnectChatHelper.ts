@@ -73,6 +73,10 @@ const getChatReconnectContext = async (facadeChatSDK: FacadeChatSDK, chatConfig:
             // AuthToken will be reset later at start chat
             removeAuthTokenProvider(facadeChatSDK.getChatSDK());
         }
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.GetChatReconnectContextSDKCallSucceeded,
+            Description: "Reconnect context SDK call succeeded"
+        });
         return reconnectChatContext;
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
