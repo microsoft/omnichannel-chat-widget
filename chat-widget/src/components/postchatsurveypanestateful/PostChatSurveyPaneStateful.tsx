@@ -114,8 +114,8 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             } else if (typeof(data) === "string" && data.startsWith(CustomerVoiceEvents.FormsError)) {
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
                     Event: TelemetryEvent.CustomerVoiceFormsError,
-                    Description: "Customer Voice forms error.",
-                    ExceptionDetails: { message: `Customer Voice forms error: ${data}` }
+                    Description: "Customer Voice failed to load with forms error.",
+                    ExceptionDetails: { message: `Customer Voice forms error details: ${data}` }
                 });
             }
         });
