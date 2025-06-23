@@ -7,11 +7,11 @@ import { IInternalTelemetryData } from "./interfaces/IInternalTelemetryData";
 import { ITelemetryEvent } from "./interfaces/ITelemetryEvents";
 import { ITimer } from "../interfaces/ITimer";
 import { TelemetryData } from "./definitions/Payload";
+import { TelemetryHelper } from "./TelemetryHelper";
+import { appInsightsLogger } from "./loggers/appInsightsLogger";
 import { ariaTelemetryLogger } from "./loggers/ariaTelemetryLogger";
 import { consoleLogger } from "./loggers/consoleLogger";
 import { defaultAriaConfig } from "./defaultConfigs/defaultAriaConfig";
-import { TelemetryHelper } from "./TelemetryHelper";
-import { appInsightsLogger } from "./loggers/appInsightsLogger";
 
 export class TelemetryTimers {
     public static LcwLoadToChatButtonTimer: ITimer;
