@@ -261,6 +261,7 @@ export enum TelemetryEvent {
     UXNotificationPaneCompleted = "UXNotificationPaneCompleted",
     UXOutOfOfficeHoursPaneStart = "UXOutOfOfficeHoursPaneStart",
     UXOutOfOfficeHoursPaneCompleted = "UXOutOfOfficeHoursPaneCompleted",
+    XSSTextDetected = "XSSTextDetected",
     UXPostChatLoadingPaneStart = "UXPostChatLoadingPaneStart",
     UXPostChatLoadingPaneCompleted = "UXPostChatLoadingPaneCompleted",
     UXPrechatPaneStart = "UXPrechatPaneStart",
