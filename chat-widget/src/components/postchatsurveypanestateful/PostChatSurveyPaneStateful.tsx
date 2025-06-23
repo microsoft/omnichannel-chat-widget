@@ -17,12 +17,13 @@ import { findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import isValidSurveyUrl from "./common/isValidSurveyUrl";
 
-const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, showMultiLingual = false) => {
+const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, customerVoiceSurveyCorrelationId: string, showMultiLingual = false) => {
     const surveyLinkParams = new URLSearchParams({
         embed: isEmbed.toString(),
         compact: (compact ?? true).toString(),
         lang: locale ?? "en-us",
         showmultilingual: (showMultiLingual ?? false).toString(),
+        cvResponsePageRequestId: customerVoiceSurveyCorrelationId
     });
     return `${surveyInviteLink}&${surveyLinkParams.toString()}`;
 };
@@ -35,20 +36,21 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
 
     let surveyInviteLink = "";
     const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
-
     if (state.domainStates.postChatContext.botSurveyInviteLink && // Bot survey enabled
         state.appStates.postChatParticipantType === ParticipantType.Bot) { // Only Bot has engaged
         surveyInviteLink = generateSurveyInviteLink(
             state.domainStates.postChatContext.botSurveyInviteLink,
             surveyMode,
             state.domainStates.postChatContext.botFormsProLocale,
-            props.isCustomerVoiceSurveyCompact ?? true);
+            props.isCustomerVoiceSurveyCompact ?? true,
+            props.customerVoiceSurveyCorrelationId || "");
     } else {
         surveyInviteLink = generateSurveyInviteLink(
             state.domainStates.postChatContext.surveyInviteLink,
             surveyMode,
             state.domainStates.postChatContext.formsProLocale,
-            props.isCustomerVoiceSurveyCompact ?? true);
+            props.isCustomerVoiceSurveyCompact ?? true,
+            props.customerVoiceSurveyCorrelationId || "");
     }
 
     if (props.copilotSurveyContext) {
@@ -108,6 +110,12 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
                     Event: TelemetryEvent.CustomerVoiceFormResponseError,
                     Description: "Customer Voice form response error.",
                     ExceptionDetails: { message: "Customer Voice form response error." }
+                });
+            } else if (typeof(data) === "string" && data.startsWith(CustomerVoiceEvents.FormsError)) {
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
+                    Event: TelemetryEvent.CustomerVoiceFormsError,
+                    Description: "Customer Voice failed to load with forms error.",
+                    ExceptionDetails: { message: `Customer Voice forms error details: ${data}` }
                 });
             }
         });
