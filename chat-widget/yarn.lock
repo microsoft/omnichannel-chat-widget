@@ -22,14 +22,14 @@
   dependencies:
     tslib "^2.2.0"
 
-"@azure/abort-controller@^2.0.0":
+"@azure/abort-controller@^2.0.0", "@azure/abort-controller@^2.1.2":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@azure/abort-controller/-/abort-controller-2.1.2.tgz#42fe0ccab23841d9905812c58f1082d27784566d"
   integrity sha512-nBrLsEWm4J2u5LpAPjxADTlq3trDgVZZXHNKabeXZtpq3d3AbN/KGO82R87rdDz5/lYB024rtEf10/q0urNgsA==
   dependencies:
     tslib "^2.6.2"
 
-"@azure/communication-chat@1.5.4", "@azure/communication-chat@^1.5.4":
+"@azure/communication-chat@1.5.4":
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/@azure/communication-chat/-/communication-chat-1.5.4.tgz#8c8f3eb19719e1fe70695b1ad56160064a3712dd"
   integrity sha512-sC5IACFEGgvGbt6qzL3kocdMbhuWkldkE0HHsUfRPokPKiK4IfVCpn2syJcc9R8ts6hk0N5XvEY04KM2yayhJg==
@@ -46,6 +46,23 @@
     events "^3.0.0"
     tslib "^2.2.0"
     uuid "^8.3.0"
+
+"@azure/communication-chat@1.6.0-beta.5":
+  version "1.6.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@azure/communication-chat/-/communication-chat-1.6.0-beta.5.tgz#962db5f0de5b6c60095221520b0b3da10b8c7081"
+  integrity sha512-8R+s998qshBKnbSomlhnofljuwd/DNg8hhQvKQWOHqtCUvoWsyDGjCem5bcqq6wBXnVSBsg+GjOU4m05B/6PuA==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/communication-common" "^2.3.1"
+    "@azure/communication-signaling" "1.0.0-beta.32"
+    "@azure/core-auth" "^1.9.0"
+    "@azure/core-client" "^1.9.2"
+    "@azure/core-paging" "^1.1.1"
+    "@azure/core-rest-pipeline" "^1.18.0"
+    "@azure/core-tracing" "^1.0.0"
+    "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.8.1"
 
 "@azure/communication-common@2.3.1", "@azure/communication-common@^2.3.1":
   version "2.3.1"
@@ -77,6 +94,22 @@
     tslib "^2.2.0"
     uuid "^8.3.0"
 
+"@azure/communication-signaling@1.0.0-beta.32":
+  version "1.0.0-beta.32"
+  resolved "https://registry.yarnpkg.com/@azure/communication-signaling/-/communication-signaling-1.0.0-beta.32.tgz#7cb1252600a63b9c09bb649c67886d593a1ea782"
+  integrity sha512-ChhJXblgILpnuZd6cQlf1EDBNSTJ5cGUtvMQkxNjdlMa0qYKOXUN0Ugz6clw6jcrcMorXJlbda6tI7iGmgDPuQ==
+  dependencies:
+    "@azure/abort-controller" "^1.0.0"
+    "@azure/core-auth" "^1.3.0"
+    "@azure/core-client" "^1.9.2"
+    "@azure/core-rest-pipeline" "^1.16.3"
+    "@azure/core-tracing" "^1.0.0"
+    "@azure/core-util" "^1.0.0"
+    "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.2.0"
+    uuid "^8.3.0"
+
 "@azure/core-auth@^1.3.0", "@azure/core-auth@^1.4.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@azure/core-auth/-/core-auth-1.5.0.tgz#a41848c5c31cb3b7c84c409885267d55a2c92e44"
@@ -86,7 +119,7 @@
     "@azure/core-util" "^1.1.0"
     tslib "^2.2.0"
 
-"@azure/core-auth@^1.8.0":
+"@azure/core-auth@^1.8.0", "@azure/core-auth@^1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@azure/core-auth/-/core-auth-1.9.0.tgz#ac725b03fabe3c892371065ee9e2041bee0fd1ac"
   integrity sha512-FPwHpZywuyasDSLMqJ6fhbOK3TqUdviZNF8OqRGA4W5Ewib2lEEZ+pBsYcBa88B2NGO/SEnYPGhyBqNlE8ilSw==
@@ -127,6 +160,19 @@
     "@azure/logger" "^1.0.0"
     http-proxy-agent "^7.0.0"
     https-proxy-agent "^7.0.0"
+    tslib "^2.6.2"
+
+"@azure/core-rest-pipeline@^1.18.0":
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/@azure/core-rest-pipeline/-/core-rest-pipeline-1.21.0.tgz#65a3600da9f3b635e59aadc0a75212b7815bc7b5"
+  integrity sha512-a4MBwe/5WKbq9MIxikzgxLBbruC5qlkFYlBdI7Ev50Y7ib5Vo/Jvt5jnJo7NaWeJ908LCHL0S1Us4UMf1VoTfg==
+  dependencies:
+    "@azure/abort-controller" "^2.0.0"
+    "@azure/core-auth" "^1.8.0"
+    "@azure/core-tracing" "^1.0.1"
+    "@azure/core-util" "^1.11.0"
+    "@azure/logger" "^1.0.0"
+    "@typespec/ts-http-runtime" "^0.2.3"
     tslib "^2.6.2"
 
 "@azure/core-rest-pipeline@^1.9.1":
@@ -2484,14 +2530,15 @@
     "@nevware21/ts-async" ">= 0.5.4 < 2.x"
     "@nevware21/ts-utils" ">= 0.11.8 < 2.x"
 
-"@microsoft/botframework-webchat-adapter-azure-communication-chat@^0.0.1-beta.2":
-  version "0.0.1-beta.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta.2.tgz#7b5a31ddc5c2311317367c0a39b04d84293623ce"
-  integrity sha512-ulBtPe0ZukOPLb6eR22H+7tWv7OOzVnK3nQYghFUSruZPPCgX0ei35sztlJAFTmHWhlvg4RSsEKWQbrYCDfh0g==
+"@microsoft/botframework-webchat-adapter-azure-communication-chat@^0.0.1-beta.4":
+  version "0.0.1-beta.4"
+  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta.4.tgz#bbb86f70ff8e1899fbfa9f3c83cbbdb2b8d450d1"
+  integrity sha512-dTAtGkTprwhHO0+hQmj3u3ODF/UbzwgvjZbMhpgEuvCTaYdKWWLPqFvYeFTZi1bLY6XoN4vOySeEEIBc0qVwzw==
   dependencies:
-    "@azure/communication-chat" "^1.5.4"
+    "@azure/communication-chat" "1.6.0-beta.5"
     "@azure/communication-common" "^2.3.1"
     core-js "^3.6.5"
+    event-target-shim "^6.0.2"
     http-status-codes "^2.1.4"
     redux "^4.0.5"
     regenerator-runtime "^0.13.7"
@@ -2508,15 +2555,16 @@
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.295.tgz#d3c8d7ab186f422727ba112d6ebe5fe8e41051d9"
   integrity sha512-W+IzEBw8a6LOOfRJM02dTT7BDZijxm+Z7lhtOAz1+y9vQm1Kdz9jlAO+qCEKsfxtUOmKilW8DIRqFw2aUgKeGg==
 
-"@microsoft/ocsdk@^0.5.16":
-  version "0.5.16"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.16.tgz#dad5dacec8e58aca0fd84a3ec5f0624af8adc46e"
-  integrity sha512-uKiJFwYIXFGMBXeExv4PWHPWL+BMtpJs/fXCzVFdLvtWsnn7/6fl81sIe0DyaDvfPsHQE68NquN7DHHSrrNWMw==
+"@microsoft/ocsdk@^0.5.17":
+  version "0.5.17"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.17.tgz#118b69361c4dbfea94190c897c47ecee84251e22"
+  integrity sha512-Pw89dx8mWvT3qaDJ+dbggkEYeEr9KMRD7PmAUunZJo1TrJIoCULTj89VlqzepF9Jg8bInAYtm+S7YV5E2qllmQ==
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@types/node" "^22.13.10"
     axios "^1.8.2"
     axios-retry "^3.9.1"
+    crypto-js "^4.2.0"
 
 "@microsoft/omnichannel-amsclient@^0.1.10":
   version "0.1.10"
@@ -2536,15 +2584,15 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.11.1":
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.1.tgz#daaf2013165c3792c331bdbc9dec23085f4caa12"
-  integrity sha512-NfQIK1yAViGDoxXdwpprcVT+6kf7KI8P2sbNxJrDXPfHYt4hZIoT1eL1a/ajQ8LXUA2dOAyVLyXC2E4YW/g5SQ==
+"@microsoft/omnichannel-chat-sdk@^1.11.2":
+  version "1.11.2"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.2.tgz#50962f65fb3d42705cec844fc8181ce6f37eabe4"
+  integrity sha512-jVaPq3WnYhQsFFZIWE8F40uu56ZUfodfhEdrv3y9lpO9BgwxnQU66pYCcl4B5hBon2y9uGjdFavXnYE5edgvDg==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
-    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.2"
-    "@microsoft/ocsdk" "^0.5.16"
+    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.4"
+    "@microsoft/ocsdk" "^0.5.17"
     "@microsoft/omnichannel-amsclient" "^0.1.10"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
@@ -4649,6 +4697,15 @@
   dependencies:
     "@typescript-eslint/types" "5.54.1"
     eslint-visitor-keys "^3.3.0"
+
+"@typespec/ts-http-runtime@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@typespec/ts-http-runtime/-/ts-http-runtime-0.2.3.tgz#5a5796588ba050b57bda58852697d6173377b647"
+  integrity sha512-oRhjSzcVjX8ExyaF8hC0zzTqxlVuRlgMHL/Bh4w3xB9+wjbm0FpXylVU/lBrn+kgphwYTrOk3tp+AVShGmlYCg==
+  dependencies:
+    http-proxy-agent "^7.0.0"
+    https-proxy-agent "^7.0.0"
+    tslib "^2.6.2"
 
 "@ungap/structured-clone@^1.0.0":
   version "1.3.0"
@@ -7182,6 +7239,11 @@ crypto-browserify@^3.11.0:
     public-encrypt "^4.0.0"
     randombytes "^2.0.0"
     randomfill "^1.0.3"
+
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 css-color-keywords@^1.0.0:
   version "1.0.0"
@@ -16574,7 +16636,7 @@ tslib@^2.2.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
-tslib@^2.6.2:
+tslib@^2.6.2, tslib@^2.8.1:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
