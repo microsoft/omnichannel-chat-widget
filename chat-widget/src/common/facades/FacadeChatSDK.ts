@@ -103,7 +103,7 @@ export class FacadeChatSDK {
     }
 
     private extractExpFromToken(token: string): number {
-        
+
         const tokenParts = token.split(".");
         const last3digits = token.slice(-3);
 
@@ -112,7 +112,7 @@ export class FacadeChatSDK {
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Invalid token format",
-                ExceptionDetails: {message : "Invalid token format, must be in JWT format", token: last3digits}
+                ExceptionDetails: { message: "Invalid token format, must be in JWT format", token: last3digits }
             });
             throw new Error("Invalid token format, must be in JWT format");
         }
@@ -132,8 +132,8 @@ export class FacadeChatSDK {
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Invalid token payload",
-                ExceptionDetails: {message : "Token payload is not valid JSON", token: last3digits}
-            }); 
+                ExceptionDetails: { message: "Token payload is not valid JSON", token: last3digits }
+            });
 
             throw new Error("Invalid token payload, payload is not valid JSON");
 
@@ -142,14 +142,14 @@ export class FacadeChatSDK {
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Failed to decode token",
-                ExceptionDetails: {message : "Failed to decode token", token: last3digits}
-            }); 
+                ExceptionDetails: { message: "Failed to decode token", token: last3digits }
+            });
             throw new Error("Failed to decode token");
         }
     }
 
     private async setToken(token: string): Promise<void> {
-        
+
         // token must be not null, and must be new
         if (!isNullOrEmptyString(token) && token !== this.token) {
             const last3digits = token.slice(-3);
@@ -231,7 +231,7 @@ export class FacadeChatSDK {
                 await this.setToken(ring.token);
 
                 TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
-                    Event: TelemetryEvent.NewTokenValidationCompleted, 
+                    Event: TelemetryEvent.NewTokenValidationCompleted,
                     Description: "New Token obtained",
                     Data: {
                         "Token_Expiration": this.expiration
@@ -389,6 +389,28 @@ export class FacadeChatSDK {
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async getReconnectableChats(reconnectableChatsParams: any = {}): Promise<any> {
+
+        if (this.token === null || this.token === "") {
+
+            const pingResponse = await this.tokenRing();
+            if (pingResponse.result === false) {
+
+                const errorMessage = `Authentication failed: Process to get a token failed for getReconnectableChats, ${pingResponse.message}`;
+                //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
+                console.error(errorMessage);
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.OnWidgetError,
+                    payload: {
+                        errorMessage: errorMessage,
+                    }
+                });
+                throw new Error(errorMessage);
+            }
+        }
+        console.log("getReconnectableChats: authenticatedUserToken is already set to", this.token);
+        reconnectableChatsParams.authenticatedUserToken = this.token;
+        console.log("getReconnectableChats: authenticatedUserToken is set to", this.token);
         return this.validateAndExecuteCall("getReconnectableChats", () => this.chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams));
+
     }
 }
