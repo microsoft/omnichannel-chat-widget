@@ -5,6 +5,7 @@ import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 export const shouldSetPreChatIfPersistentChat = async (facadeChatSDK: FacadeChatSDK, conversationMode: string, showPreChat: boolean) => {
     const persistentEnabled = isPersistentChatEnabled(conversationMode);
     let skipPreChat = false;
+    console.log("******* Checking if persistent chat is enabled: ", persistentEnabled);
     if (persistentEnabled) {
         // Access private properties using type assertions
         const chatSDK = facadeChatSDK.getChatSDK();
@@ -20,11 +21,7 @@ export const shouldSetPreChatIfPersistentChat = async (facadeChatSDK: FacadeChat
 
         try {
 
-            if (reconnectableChatsParams.authenticatedUserToken === undefined || reconnectableChatsParams.authenticatedUserToken.length === 0) {
-                console.error("Authenticated user token is not available. Cannot check for reconnectable chats.");
-                return false;
-            }
-
+            console.log("******* Checking for reconnectable chats with params");
             const reconnectableChatsResponse = await facadeChatSDK.getReconnectableChats(reconnectableChatsParams);
             if (reconnectableChatsResponse && reconnectableChatsResponse.reconnectid) { // Skip rendering prechat on existing persistent chat session
                 skipPreChat = true;

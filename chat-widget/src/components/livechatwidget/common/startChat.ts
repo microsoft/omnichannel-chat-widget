@@ -78,7 +78,9 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     const parseToJson = false;
     const preChatSurveyResponse: string = props?.preChatSurveyPaneProps?.controlProps?.payload ?? await facadeChatSDK.getPreChatSurvey(parseToJson);
     let showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
+    console.log("******* Prechat survey response: ", preChatSurveyResponse);
     showPrechat = await shouldSetPreChatIfPersistentChat(facadeChatSDK, state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode, showPrechat as boolean);
+    console.log("******* Should show prechat: ", showPrechat);
 
     if (showPrechat) {
         const isOutOfOperatingHours = state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";

@@ -391,10 +391,9 @@ export class FacadeChatSDK {
     public async getReconnectableChats(reconnectableChatsParams: any = {}): Promise<any> {
 
         if (this.token === null || this.token === "") {
-
+            // If token is not set, try to get it using tokenRing
             const pingResponse = await this.tokenRing();
             if (pingResponse.result === false) {
-
                 const errorMessage = `Authentication failed: Process to get a token failed for getReconnectableChats, ${pingResponse.message}`;
                 //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
                 console.error(errorMessage);
@@ -407,9 +406,11 @@ export class FacadeChatSDK {
                 throw new Error(errorMessage);
             }
         }
-        console.log("getReconnectableChats: authenticatedUserToken is already set to", this.token);
-        reconnectableChatsParams.authenticatedUserToken = this.token;
+        
+        // Always override the token in params regardless of how getReconnectableChats was called
         console.log("getReconnectableChats: authenticatedUserToken is set to", this.token);
+        reconnectableChatsParams.authenticatedUserToken = this.token;
+        
         return this.validateAndExecuteCall("getReconnectableChats", () => this.chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams));
 
     }
