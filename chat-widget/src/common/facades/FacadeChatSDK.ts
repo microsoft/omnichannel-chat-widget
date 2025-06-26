@@ -390,6 +390,22 @@ export class FacadeChatSDK {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async getReconnectableChats(reconnectableChatsParams: any = {}): Promise<any> {
 
+        /**
+         * 
+         * This is a particular case, we dont expose getReconnectableChats in the SDK,
+         * The only way to use is by tunneling directly from the SDK to OCSDK,
+         * 
+         * In case of prechat, the function is called before any formal authentication is made, 
+         * this is an specific case for persistent chats, to prevent the survey be loaded again for an on going chat,
+         * 
+         * In this case, we check for existance of the token , otherwise we perform the authentication, error is propagated in case of issues.
+         * 
+         * Once the token is obtained , this will be added to the params to call the function.
+         * 
+         * This is a particular case, should not be taken as pattern.
+         *
+         */
+
         if (this.token === null || this.token === "") {
             // If token is not set, try to get it using tokenRing
             const pingResponse = await this.tokenRing();

@@ -41,8 +41,6 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) ||  isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
-    console.log("LiveChatWidget props:", props);
-
     if (!facadeChatSDK) {
         setFacadeChatSDK(new FacadeChatSDK(
             {
