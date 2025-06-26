@@ -14,9 +14,10 @@ import { createReducer } from "../../contexts/createReducer";
 import { getLiveChatWidgetContextInitialState } from "../../contexts/common/LiveChatWidgetContextInitialState";
 import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
 import { isNullOrUndefined } from "../../common/utils";
+import { isPersistentChatEnabled } from "./common/liveChatConfigUtils";
+import { logWidgetLoadWithUnexpectedError } from "./common/startChatErrorHandler";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
 import { registerTelemetryLoggers } from "./common/registerTelemetryLoggers";
-import { logWidgetLoadWithUnexpectedError } from "./common/startChatErrorHandler";
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
@@ -38,7 +39,9 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction);
+    const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) ||  isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+
+    console.log("LiveChatWidget props:", props);
 
     if (!facadeChatSDK) {
         setFacadeChatSDK(new FacadeChatSDK(

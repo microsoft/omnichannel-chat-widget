@@ -387,4 +387,8 @@ export class FacadeChatSDK {
     public async getAgentAvailability(optionalParams: GetAgentAvailabilityOptionalParams = {}): Promise<GetAgentAvailabilityResponse> {
         return this.validateAndExecuteCall("getAgentAvailability", () => this.chatSDK.getAgentAvailability(optionalParams));
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public async getReconnectableChats(reconnectableChatsParams: any = {}): Promise<any> {
+        return this.validateAndExecuteCall("getReconnectableChats", () => this.chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams));
+    }
 }
