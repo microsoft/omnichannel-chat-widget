@@ -287,4 +287,7 @@ export enum LiveChatWidgetActionType {
     GET_IN_MEMORY_STATE,
 
     PING,
+
+    COMBO_BREAKER,
+    COMBO_BREAKER_2
 }

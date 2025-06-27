@@ -540,7 +540,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             console.log("########### State will be tumbled only when request is coming from somewhere else");
             if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
                 console.log("########### Tumbling the state");
-                dispatch({ type: LiveChatWidgetActionType.PING, payload: !state.domainStates.ping });
+                if (msg?.payload?.isMinimized !== state.appStates.isMinimized) {
+
+                    console.log("########### Tumbling the state with isMinimized", msg?.payload?.isMinimized);
+                    dispatch({ type: LiveChatWidgetActionType.COMBO_BREAKER_2, payload: {
+                        ping : !state.domainStates.ping,
+                        isMinimized : msg?.payload?.isMinimized
+                    } });
+                }
+
+                console.log("########### Tumbling the state with conversationState", msg?.payload?.conversationState);
+
             }
         });
 
@@ -694,6 +704,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }*/
 
         console.log("########### LiveChatWidgetStateful: Publishing widget state event", TelemetryManager.InternalTelemetryData.lcwRuntimeId);
+
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+
+        if (state.appStates.isMinimized !== inMemoryState.appStates.isMinimized) {
+            console.log(" ********* Minimized states are different, so updating the state, favoring always future state *********");
+            console.log("LiveChatWidgetStateful: Updating minimized state to", inMemoryState.appStates.isMinimized);
+            console.log("LiveChatWidgetStateful: Current minimized state is", state.appStates.isMinimized);
+            state.appStates.isMinimized = inMemoryState.appStates.isMinimized;
+            console.log("LiveChatWidgetStateful: New minimized state is", state.appStates.isMinimized);
+        }
         
         widgetStateEventId = getWidgetCacheIdfromProps(props);
 
