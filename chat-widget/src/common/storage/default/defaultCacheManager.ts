@@ -1,5 +1,6 @@
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { StorageType } from "../../Constants";
+import { TelemetryManager } from "../../telemetry/TelemetryManager";
 import { defaultClientDataStoreProvider } from "./defaultClientDataStoreProvider";
 
 export class defaultCacheManager {
@@ -12,6 +13,8 @@ export const registerBroadcastServiceForStorage = (widgetCacheId: string, ttlInM
     BroadcastService.getMessageByEventName(widgetCacheId)
         .subscribe((msg) => {
             try {
+                console.log(`[ ${TelemetryManager.InternalTelemetryData.lcwRuntimeId} ]Setting data to localstorage for widgetCacheId: ${widgetCacheId}`, msg.payload.runtimeId);
+
                 defaultClientDataStoreProvider(ttlInMins, storageType).setData(
                     widgetCacheId,
                     JSON.stringify(msg.payload));

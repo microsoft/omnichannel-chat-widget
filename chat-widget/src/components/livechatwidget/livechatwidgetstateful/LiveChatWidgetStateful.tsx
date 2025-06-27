@@ -66,6 +66,7 @@ import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostCha
 import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
 import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
+import { RuleTester } from "eslint";
 import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
@@ -172,6 +173,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         let isChatValid = false;
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
+            console.log("Loading Pane enabled here : 3");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             //Check if conversation state is not in wrapup or closed state
@@ -207,6 +209,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
                     return;
                 }
+                console.log("Loading Pane enabled here : 4");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             }
         }
@@ -318,8 +321,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Toggle chat visibility
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event: any) => {
+            console.log(`HideChatVisibilityChangeEvent received: isChatHidden=${event?.payload?.isChatHidden}, runtimeId=${event?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
             if (event?.payload?.isChatHidden !== undefined) {
+                console.log(`HideChatVisibilityChangeEvent received: isChatHidden=${event?.payload?.isChatHidden}, runtimeId=${event?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
                 if (props.controlProps?.hideStartChatButton) {
+                    console.warn("HideChatVisibilityChangeEvent received, but hideStartChatButton is set to true. Ignoring the event.");
                     dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
                 }
                 const dateNow = Date.now();
@@ -379,6 +385,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
          * the event is expected to be emitted from scripting layer.
          */
         BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
+            console.log(`SyncMinimize received: minimized=${msg?.payload?.minimized}, runtimeId=${msg?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
+
+            if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+                console.warn("SyncMinimize received from different runtimeId. Ignoring the event.");
+                return;
+            }
+
+            if (state.appStates?.isMinimized === msg?.payload?.minimized) {
+                console.log("SyncMinimize received, but state is already in the same minimized state. Ignoring the event.");
+                return;
+            }
+
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: msg?.payload?.minimized });
         });
 
@@ -503,6 +521,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
+            console.log(`WidgetSize received: height=${msg?.payload?.height}, width=${msg?.payload?.width}, runtimeId=${msg?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
         });
 
@@ -512,6 +531,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+        });
+
+        BroadcastService.getMessageByEventName(BroadcastEvent.Ping).subscribe((msg) => {
+            console.log("########### Ping received", msg.payload.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId);
+        
+
+            console.log("########### State will be tumbled only when request is coming from somewhere else");
+            if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+                console.log("########### Tumbling the state");
+                dispatch({ type: LiveChatWidgetActionType.PING, payload: !state.domainStates.ping });
+            }
         });
 
         // Check for TPC and log in telemetry if blocked
@@ -563,6 +593,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
+        console.log(`LiveChatWidgetStateful: isMinimized changed to ${state.appStates.isMinimized}`);
         if (state.appStates.isMinimized) {
             ActivityStreamHandler.cork();
         } else {
@@ -662,12 +693,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             };
         }*/
 
+        console.log("########### LiveChatWidgetStateful: Publishing widget state event", TelemetryManager.InternalTelemetryData.lcwRuntimeId);
+        
         widgetStateEventId = getWidgetCacheIdfromProps(props);
 
         const chatWidgetStateChangeEvent: ICustomEvent = {
             eventName: widgetStateEventId,
             payload: {
-                ...state
+                ...state,
+                runtimeId : TelemetryManager.InternalTelemetryData.lcwRuntimeId
             }
         };
         BroadcastService.postMessage(chatWidgetStateChangeEvent);

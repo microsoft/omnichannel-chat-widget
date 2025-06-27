@@ -78,6 +78,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 Event: TelemetryEvent.PrechatSubmitted,
                 Description: "Prechat survey submitted."
             });
+            console.log("Loading Pane enabled here : 7");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             try {

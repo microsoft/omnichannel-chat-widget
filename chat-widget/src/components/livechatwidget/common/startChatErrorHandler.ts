@@ -76,6 +76,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
     } else {
+        console.log("*** Loading Pane enabled here : 7478");
         // Old flow of leveraging ConversationState.Loading
         // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });

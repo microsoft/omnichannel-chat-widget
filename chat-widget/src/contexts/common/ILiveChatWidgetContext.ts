@@ -31,7 +31,8 @@ export interface ILiveChatWidgetContext {
         transcriptRequestId: string; //Contains request id for downloading transcript
         confirmationPaneConfirmedOptionClicked: boolean; //shows if confirmation pane already displayed
         confirmationState: ConfirmationState;
-        startChatFailureType: StartChatFailureType;
+        startChatFailureType: StartChatFailureType,
+        ping: boolean; // true if the widget is pinging the server
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in

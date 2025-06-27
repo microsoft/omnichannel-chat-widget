@@ -104,6 +104,7 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, facadeCh
     const optionalParams: StartChatOptionalParams = { reconnectId: reconnectId };
 
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
+    console.log(` *** Loading Pane for Reconnect Chat with reconnectId: ${reconnectId}`);
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
