@@ -424,7 +424,6 @@ export class FacadeChatSDK {
         }
         
         // Always override the token in params regardless of how getReconnectableChats was called
-        console.log("getReconnectableChats: authenticatedUserToken is set to", this.token);
         reconnectableChatsParams.authenticatedUserToken = this.token;
         
         return this.validateAndExecuteCall("getReconnectableChats", () => this.chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams));
