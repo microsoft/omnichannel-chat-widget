@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fix to ensure getRecconnetableChat always include a valid token
+- Fix to ensure getReconnectableChat always include a valid token
 - Adding missing closure success telemetry for GetChatReconnectContextSDKCallStarted
 - Cleanup OOH Pane title obtained from props.
 - Handling participant added/deleted in thread as system message
