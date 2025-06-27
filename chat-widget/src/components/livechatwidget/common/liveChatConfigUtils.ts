@@ -9,7 +9,7 @@ export const isPostChatSurveyEnabled = async (facadeChatSDK: FacadeChatSDK) : Pr
     return postChatEnabled === "true";
 };
 
-export const isPersistentChatEnabled = async (conversationMode: string | undefined): Promise<boolean> => {
+export const isPersistentChatEnabled = (conversationMode: string | undefined): boolean => {
     if (isNullOrUndefined(conversationMode)) {
         return false;
     }
