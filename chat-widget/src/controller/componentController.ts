@@ -13,9 +13,12 @@ export const shouldShowChatButton = (state: ILiveChatWidgetContext) => {
         hideStartChatButton: state?.appStates?.hideStartChatButton
     });
     
+    // Don't show chat button during Loading state
+    // This ensures the proper transition: button -> loading pane -> widget container
     const result = (state.appStates.isMinimized ||
         (state.appStates.conversationState === ConversationState.Closed))
-        && state?.appStates?.hideStartChatButton === false; // Do not show chat button in case of popout
+        && state?.appStates?.hideStartChatButton === false
+        && state.appStates.conversationState !== ConversationState.Loading; // Added this condition
     
     console.log(`ComponentCtrl [${getLogTimestamp()}]: shouldShowChatButton result`, result);
     return result;

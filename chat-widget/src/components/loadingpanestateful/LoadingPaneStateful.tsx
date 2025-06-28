@@ -74,7 +74,7 @@ export const LoadingPaneStateful = (props: any) => {
         return () => {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LoadingPaneUnloaded,
-                Description: "Loading pane unmount."
+                Description: "Loading pane unmount.", 
             });
         };
         
