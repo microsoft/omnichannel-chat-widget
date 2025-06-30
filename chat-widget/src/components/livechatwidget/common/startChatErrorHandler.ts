@@ -96,6 +96,9 @@ const logWidgetLoadFailed = (ex?: ChatSDKError) => {
     if (ex?.httpResponseStatusCode) {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
     }
+    if (ex?.exceptionDetails) {
+        exDetails.ChatSDKExceptionDetails = ex.exceptionDetails;
+    }
     
     TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
         Event: TelemetryEvent.WidgetLoadFailed,
@@ -125,6 +128,9 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
     };
     if (ex?.httpResponseStatusCode) {
         exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
+    }
+    if (ex?.exceptionDetails) {
+        exDetails.ChatSDKExceptionDetails = ex.exceptionDetails;
     }
 
     TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
