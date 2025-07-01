@@ -36,7 +36,6 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
     const { reconnectChatProps, initStartChat } = props;
 
     const startChat = async (continueChat: boolean) => {
-        console.log("Loading Pane enabled here : 9");
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
         if (continueChat && state.appStates.reconnectId) {
             const optionalParams: StartChatOptionalParams = { reconnectId: state.appStates.reconnectId };
@@ -52,7 +51,6 @@ export const ReconnectChatPaneStateful = (props: IReconnectChatPaneStatefulParam
                 dispatch({ type: LiveChatWidgetActionType.SET_PRE_CHAT_SURVEY_RESPONSE, payload: preChatSurveyResponse });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Prechat });
             } else {
-                console.log("Loading Pane enabled here : 14");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
                 await initStartChat();
             }
