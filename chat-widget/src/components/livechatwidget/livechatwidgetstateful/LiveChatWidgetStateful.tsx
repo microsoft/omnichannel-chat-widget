@@ -66,7 +66,6 @@ import PostChatSurveyPaneStateful from "../../postchatsurveypanestateful/PostCha
 import PreChatSurveyPaneStateful from "../../prechatsurveypanestateful/PreChatSurveyPaneStateful";
 import ProactiveChatPaneStateful from "../../proactivechatpanestateful/ProactiveChatPaneStateful";
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
-import { RuleTester } from "eslint";
 import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
@@ -85,6 +84,7 @@ import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 import { initCallingSdk } from "../common/initCallingSdk";
 import { initConfirmationPropsComposer } from "../common/initConfirmationPropsComposer";
 import { initWebChatComposer } from "../common/initWebChatComposer";
+import { isFromOtherRuntime } from "../../../common/utils";
 import { registerBroadcastServiceForStorage } from "../../../common/storage/default/defaultCacheManager";
 import { registerTelemetryLoggers } from "../common/registerTelemetryLoggers";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
@@ -385,9 +385,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
          * the event is expected to be emitted from scripting layer.
          */
         BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
-            console.log(`SyncMinimize received: minimized=${msg?.payload?.minimized}, runtimeId=${msg?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
+            console.log(`SyncMinimize received: minimized=${msg?.payload?.minimized}, runtimeId=${msg?.payload?.runtimeId}, lcwRuntimeId=${TelemetryHelper.InternalTelemetryData.lcwRuntimeId}`);
 
-            if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId)) {
                 console.warn("SyncMinimize received from different runtimeId. Ignoring the event.");
                 return;
             }
@@ -409,7 +409,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 return;
             }
             // If the startChat event is not initiated by the same tab. Ignore the call
-            if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+            if ( isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId)) {
                 return;
             }
 
@@ -507,7 +507,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             props.controlProps?.widgetInstanceId ?? "");
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
-            if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId)) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
@@ -522,6 +522,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
             console.log(`WidgetSize received: height=${msg?.payload?.height}, width=${msg?.payload?.width}, runtimeId=${msg?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
+
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId)) {
+                console.warn("WidgetSize received from different runtimeId. Ignoring the event.");
+                dispatch({ type: LiveChatWidgetActionType.PING, payload: !state.domainStates.ping });
+                return;
+            }
+            
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
         });
 
@@ -534,23 +541,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         BroadcastService.getMessageByEventName(BroadcastEvent.Ping).subscribe((msg) => {
-            console.log("########### Ping received", msg.payload.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId);
-        
-
-            console.log("########### State will be tumbled only when request is coming from somewhere else");
-            if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
-                console.log("########### Tumbling the state");
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId)) {
                 if (msg?.payload?.isMinimized !== state.appStates.isMinimized) {
-
-                    console.log("########### Tumbling the state with isMinimized", msg?.payload?.isMinimized);
-                    dispatch({ type: LiveChatWidgetActionType.COMBO_BREAKER_2, payload: {
+                    dispatch({ type: LiveChatWidgetActionType.PING_MINIMIZE_COMBO, payload: {
                         ping : !state.domainStates.ping,
                         isMinimized : msg?.payload?.isMinimized
                     } });
                 }
-
-                console.log("########### Tumbling the state with conversationState", msg?.payload?.conversationState);
-
             }
         });
 

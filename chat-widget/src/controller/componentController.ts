@@ -83,8 +83,9 @@ export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
         conversationState: state.appStates.conversationState
     });
     
-    const result = ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
-        state.appStates.conversationState === ConversationState.InActive);
+    const result = (!state.appStates.isMinimized && (
+        state.appStates.conversationState === ConversationState.Active ||
+        state.appStates.conversationState === ConversationState.InActive));
     
     console.log("ComponentCtrl: shouldShowWebChatContainer result", result);
     return result;

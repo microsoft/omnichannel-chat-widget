@@ -266,7 +266,7 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, facadeChatS
         !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
         persistedState?.appStates?.conversationState === ConversationState.Active) {
         console.log("*** Loading Pane enabled here : 2 => co, co, combo breaker");
-        dispatch({ type: LiveChatWidgetActionType.COMBO_BREAKER, payload: {
+        dispatch({ type: LiveChatWidgetActionType.MINIMIZE_CONVERSATION_COMBO, payload: {
             conversationState : ConversationState.Loading,
             isMinimized: false,
         } });

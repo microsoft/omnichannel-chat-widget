@@ -32,7 +32,7 @@ export interface ILiveChatWidgetContext {
         confirmationPaneConfirmedOptionClicked: boolean; //shows if confirmation pane already displayed
         confirmationState: ConfirmationState;
         startChatFailureType: StartChatFailureType,
-        ping: boolean; // true if the widget is pinging the server
+        ping: boolean; // used to indicate a sync of states to be loaded to cache
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in

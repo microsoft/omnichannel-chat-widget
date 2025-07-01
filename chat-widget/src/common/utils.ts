@@ -479,3 +479,13 @@ export function getDeviceType(): string {
         return "standard";
     }
 }
+
+/**
+ * Checks if a runtimeId is from a different runtime (tab/window).
+ * @param runtimeId The runtimeId to check (from the message/event).
+ * @param lcwRuntimeId The current runtimeId of this widget instance.
+ * @returns true if the runtimeId is from a different runtime, false otherwise.
+ */
+export const isFromOtherRuntime = (runtimeId: string | undefined, lcwRuntimeId: string | undefined): boolean => {
+    return runtimeId !== undefined && runtimeId !== lcwRuntimeId;
+};

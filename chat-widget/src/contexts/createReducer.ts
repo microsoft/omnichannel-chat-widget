@@ -11,7 +11,6 @@ import { IRenderingMiddlewareProps } from "../components/webchatcontainerstatefu
 import { LiveChatWidgetActionType } from "./common/LiveChatWidgetActionType";
 import { PostChatSurveyMode } from "../components/postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { StartChatFailureType } from "./common/StartChatFailureType";
-import { buildMessagePayload } from "../firstresponselatency/util";
 
 export const createReducer = () => {
     return reducer;
@@ -32,7 +31,7 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
     }
 
     switch (action.type) {
-        case LiveChatWidgetActionType.COMBO_BREAKER : 
+        case LiveChatWidgetActionType.MINIMIZE_CONVERSATION_COMBO: 
 
         inMemory = {
             ...inMemory,
@@ -51,7 +50,7 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                 isMinimized: action.payload.isMinimized as boolean,
             }
         };
-        case LiveChatWidgetActionType.COMBO_BREAKER_2:
+        case LiveChatWidgetActionType.PING_MINIMIZE_COMBO:
 
             inMemory = {
                 ...inMemory,

@@ -286,8 +286,19 @@ export enum LiveChatWidgetActionType {
     */
     GET_IN_MEMORY_STATE,
 
+    /**
+     * Used to force a reload of states inline, not affecting a used state
+     */
     PING,
 
-    COMBO_BREAKER,
-    COMBO_BREAKER_2
+    /**
+     * Combo to update minimize and conversation state, to prevent multiple re-renders 
+     * and to prevent load of old states when updating a single one
+     */
+    MINIMIZE_CONVERSATION_COMBO,
+
+    /**
+     * Combo to update minimize and conversation state, used after loading chat widget in multitab scenario
+     */
+    PING_MINIMIZE_COMBO
 }
