@@ -41,7 +41,10 @@ describe("startChatErrorHandler unit test", () => {
                 Exception: `Widget load complete with error: Error: ${WidgetLoadCustomErrorString.AuthenticationFailedErrorString}`
             })
         }));
-        expect(dispatch).toHaveBeenCalledTimes(4);
+        expect(dispatch).toHaveBeenCalledTimes(2);
+        expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
+            type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE
+        }));
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
         }));
@@ -190,7 +193,10 @@ describe("startChatErrorHandler unit test", () => {
                 HttpResponseStatusCode: 429
             })
         }));
-        expect(dispatch).toHaveBeenCalledTimes(2);
+        expect(dispatch).toHaveBeenCalledTimes(3);
+        expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
+            type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE
+        }));
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
         }));
@@ -254,6 +260,30 @@ describe("startChatErrorHandler unit test", () => {
             })
         }));
         expect(dispatch).toHaveBeenCalledTimes(2);
+        expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
+            type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
+        }));
+    });
+
+    it("handleStartChatError should log failed with error event for AuthenticatedChatConversationRetrievalFailure", () => {
+        const dispatch = jest.fn();
+        const mockEx = new ChatSDKError(ChatSDKErrorName.AuthenticatedChatConversationRetrievalFailure);
+        const mockFacade = { getChatSDK: jest.fn()};
+        spyOn(BroadcastService, "postMessage").and.callFake(() => false);
+        spyOn(TelemetryHelper, "logLoadingEventToAllTelemetry").and.callFake(() => false);
+        handleStartChatError(dispatch, mockFacade, {} as ILiveChatWidgetProps, mockEx, false);
+
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledTimes(1);
+        expect(TelemetryHelper.logLoadingEventToAllTelemetry).toHaveBeenCalledWith("ERROR", expect.objectContaining({
+            Description: "Widget load complete with error",
+            ExceptionDetails: expect.objectContaining({
+                Exception: `Widget load complete with error: ${ChatSDKErrorName.AuthenticatedChatConversationRetrievalFailure}`
+            })
+        }));
+        expect(dispatch).toHaveBeenCalledTimes(3);
+        expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
+            type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE
+        }));
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE
         }));
