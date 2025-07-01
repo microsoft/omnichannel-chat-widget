@@ -597,7 +597,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Reset the UnreadMessageCount when minimized is toggled and broadcast it.
     useEffect(() => {
-        console.log(`LiveChatWidgetStateful: isMinimized changed to ${state.appStates.isMinimized}`);
         if (state.appStates.isMinimized) {
             ActivityStreamHandler.cork();
         } else {
@@ -696,17 +695,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 initiateEndChatOnBrowserUnload();
             };
         }*/
-
-        console.log("########### LiveChatWidgetStateful: Publishing widget state event", TelemetryManager.InternalTelemetryData.lcwRuntimeId);
-
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
+        /**
+         * Trick to prevent if the current tab has a different state that the future state to use the future state.
+         * 
+         * This is to prevent when a different tab updates conversation id, then a second tab will react to save the new value with a mix of old values, 
+         * the minimize state is important because is used to compute visibility of components, 
+         */
         if (state.appStates.isMinimized !== inMemoryState.appStates.isMinimized) {
-            console.log(" ********* Minimized states are different, so updating the state, favoring always future state *********");
-            console.log("LiveChatWidgetStateful: Updating minimized state to", inMemoryState.appStates.isMinimized);
-            console.log("LiveChatWidgetStateful: Current minimized state is", state.appStates.isMinimized);
             state.appStates.isMinimized = inMemoryState.appStates.isMinimized;
-            console.log("LiveChatWidgetStateful: New minimized state is", state.appStates.isMinimized);
         }
         
         widgetStateEventId = getWidgetCacheIdfromProps(props);
