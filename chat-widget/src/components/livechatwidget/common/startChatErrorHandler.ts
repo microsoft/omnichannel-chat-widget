@@ -76,7 +76,6 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         });
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
     } else {
-        console.log("*** Loading Pane enabled here : 7478");
         // Old flow of leveraging ConversationState.Loading
         // Show the loading pane in other cases for failure, this will help for both hideStartChatButton case
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
@@ -131,6 +130,35 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
     TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
         Event: TelemetryEvent.WidgetLoadFailed,
         Description: "Widget load complete with error",
+        ExceptionDetails: exDetails,
+        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+    });
+};
+
+export const logWidgetLoadWithUnexpectedError = (ex: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const details = {
+        message: ex?.message || "An unexpected error occurred",
+        stack: ex?.stack || "No stack trace available"
+    };
+
+    let additionalDetails = "";
+    try {
+        additionalDetails = JSON.stringify(details);
+    } catch (error) {
+        additionalDetails = "Failed to stringify error details";
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const exDetails: any = {
+        Exception: `Widget load with unexpected error: ${additionalDetails}`
+    };
+    if (ex?.httpResponseStatusCode) {
+        exDetails.HttpResponseStatusCode = ex.httpResponseStatusCode;
+    }
+
+    TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.ERROR, {
+        Event: TelemetryEvent.WidgetLoadFailed,
+        Description: "Widget load with unexpected error",
         ExceptionDetails: exDetails,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
     });
