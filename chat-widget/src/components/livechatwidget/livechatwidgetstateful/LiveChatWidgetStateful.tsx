@@ -713,7 +713,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             eventName: widgetStateEventId,
             payload: {
                 ...state,
-                runtimeId : TelemetryManager.InternalTelemetryData.lcwRuntimeId
+                runtimeId : TelemetryManager?.InternalTelemetryData?.lcwRuntimeId
             }
         };
         BroadcastService.postMessage(chatWidgetStateChangeEvent);
