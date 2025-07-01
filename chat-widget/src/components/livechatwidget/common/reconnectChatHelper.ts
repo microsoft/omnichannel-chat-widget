@@ -73,6 +73,10 @@ const getChatReconnectContext = async (facadeChatSDK: FacadeChatSDK, chatConfig:
             // AuthToken will be reset later at start chat
             removeAuthTokenProvider(facadeChatSDK.getChatSDK());
         }
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.GetChatReconnectContextSDKCallSucceeded,
+            Description: "Reconnect context SDK call succeeded"
+        });
         return reconnectChatContext;
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,7 +108,6 @@ const setReconnectIdAndStartChat = async (isAuthenticatedChat: boolean, facadeCh
     const optionalParams: StartChatOptionalParams = { reconnectId: reconnectId };
 
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: reconnectId });
-    console.log(` *** Loading Pane for Reconnect Chat with reconnectId: ${reconnectId}`);
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
     
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
