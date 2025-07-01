@@ -265,13 +265,10 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, facadeChatS
     if (persistedState &&
         !isUndefinedOrEmpty(persistedState?.domainStates?.liveChatContext) &&
         persistedState?.appStates?.conversationState === ConversationState.Active) {
-        console.log("*** Loading Pane enabled here : 2 => co, co, combo breaker");
         dispatch({ type: LiveChatWidgetActionType.MINIMIZE_CONVERSATION_COMBO, payload: {
             conversationState : ConversationState.Loading,
             isMinimized: false,
         } });
-        //dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
-        //dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
         const optionalParams = { liveChatContext: persistedState?.domainStates?.liveChatContext };
         await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
         return true;
