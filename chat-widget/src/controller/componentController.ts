@@ -6,7 +6,7 @@ export const shouldShowChatButton = (state: ILiveChatWidgetContext) => {
     // This ensures the proper transition: button -> loading pane -> widget container
     return (state.appStates.isMinimized ||
         (state.appStates.conversationState === ConversationState.Closed))
-        && state?.appStates?.hideStartChatButton === false
+        && state.appStates.hideStartChatButton === false
         && state.appStates.conversationState !== ConversationState.Loading;
 };
 
