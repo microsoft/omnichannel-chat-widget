@@ -103,7 +103,7 @@ export class FacadeChatSDK {
     }
 
     private extractExpFromToken(token: string): number {
-        
+
         const tokenParts = token.split(".");
         const last3digits = token.slice(-3);
 
@@ -112,7 +112,7 @@ export class FacadeChatSDK {
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Invalid token format",
-                ExceptionDetails: {message : "Invalid token format, must be in JWT format", token: last3digits}
+                ExceptionDetails: { message: "Invalid token format, must be in JWT format", token: last3digits }
             });
             throw new Error("Invalid token format, must be in JWT format");
         }
@@ -132,8 +132,8 @@ export class FacadeChatSDK {
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Invalid token payload",
-                ExceptionDetails: {message : "Token payload is not valid JSON", token: last3digits}
-            }); 
+                ExceptionDetails: { message: "Token payload is not valid JSON", token: last3digits }
+            });
 
             throw new Error("Invalid token payload, payload is not valid JSON");
 
@@ -142,14 +142,14 @@ export class FacadeChatSDK {
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Failed to decode token",
-                ExceptionDetails: {message : "Failed to decode token", token: last3digits}
-            }); 
+                ExceptionDetails: { message: "Failed to decode token", token: last3digits }
+            });
             throw new Error("Failed to decode token");
         }
     }
 
     private async setToken(token: string): Promise<void> {
-        
+
         // token must be not null, and must be new
         if (!isNullOrEmptyString(token) && token !== this.token) {
             const last3digits = token.slice(-3);
@@ -231,7 +231,7 @@ export class FacadeChatSDK {
                 await this.setToken(ring.token);
 
                 TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
-                    Event: TelemetryEvent.NewTokenValidationCompleted, 
+                    Event: TelemetryEvent.NewTokenValidationCompleted,
                     Description: "New Token obtained",
                     Data: {
                         "Token_Expiration": this.expiration
@@ -386,5 +386,47 @@ export class FacadeChatSDK {
 
     public async getAgentAvailability(optionalParams: GetAgentAvailabilityOptionalParams = {}): Promise<GetAgentAvailabilityResponse> {
         return this.validateAndExecuteCall("getAgentAvailability", () => this.chatSDK.getAgentAvailability(optionalParams));
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public async getReconnectableChats(reconnectableChatsParams: any = {}): Promise<any> {
+
+        /**
+         * 
+         * This is a particular case, we dont expose getReconnectableChats in the SDK,
+         * The only way to use is by tunneling directly from the SDK to OCSDK,
+         * 
+         * In case of prechat, the function is called before any formal authentication is made, 
+         * this is an specific case for persistent chats, to prevent the survey be loaded again for an on going chat,
+         * 
+         * In this case, we check for existance of the token , otherwise we perform the authentication, error is propagated in case of issues.
+         * 
+         * Once the token is obtained , this will be added to the params to call the function.
+         * 
+         * This is a particular case, should not be taken as pattern.
+         *
+         */
+
+        if (this.token === null || this.token === "") {
+            // If token is not set, try to get it using tokenRing
+            const pingResponse = await this.tokenRing();
+            if (pingResponse.result === false) {
+                const errorMessage = `Authentication failed: Process to get a token failed for getReconnectableChats, ${pingResponse.message}`;
+                //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
+                console.error(errorMessage);
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.OnWidgetError,
+                    payload: {
+                        errorMessage: errorMessage,
+                    }
+                });
+                throw new Error(errorMessage);
+            }
+        }
+        
+        // Always override the token in params regardless of how getReconnectableChats was called
+        reconnectableChatsParams.authenticatedUserToken = this.token;
+        
+        return this.validateAndExecuteCall("getReconnectableChats", () => this.chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams));
+
     }
 }

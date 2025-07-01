@@ -16,7 +16,6 @@ import {
     getWidgetCacheIdfromProps,
     getWidgetEndChatEventName,
     isNullOrEmptyString,
-    isNullOrUndefined,
     isThisSessionPopout,
     isUndefinedOrEmpty,
     setOcUserAgent
@@ -86,7 +85,6 @@ import { initConfirmationPropsComposer } from "../common/initConfirmationPropsCo
 import { initWebChatComposer } from "../common/initWebChatComposer";
 import { isFromOtherRuntime } from "../../../common/utils";
 import { registerBroadcastServiceForStorage } from "../../../common/storage/default/defaultCacheManager";
-import { registerTelemetryLoggers } from "../common/registerTelemetryLoggers";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
 import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
@@ -114,8 +112,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [voiceVideoCallingSDK, setVoiceVideoCallingSDK] = useState<any>(undefined);
+    const [conversationId, setConversationId] = useState<string>("");
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
+    const bubbleBackground = props.webChatContainerProps?.webChatStyles?.bubbleBackground ??
+        (props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background);
+    const bubbleTextColor = props.webChatContainerProps?.webChatStyles?.bubbleTextColor ??
+        (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color);
 
     // Process general styles
     const generalStyles: IStackStyles = {
@@ -236,7 +239,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         state.domainStates.confirmationPaneConfirmedOptionClicked = false;
         state.domainStates.confirmationState = ConfirmationState.NotSet;
         setupClientDataStore();
-        registerTelemetryLoggers(props, dispatch);
         createInternetConnectionChangeHandler(state);
         dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID, payload: widgetElementId });
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_BUTTON_DISPLAY, payload: props.controlProps?.hideStartChatButton || false });
@@ -551,6 +553,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        // Retrieve convId
+        BroadcastService.getMessageByEventName(BroadcastEvent.UpdateConversationDataForTelemetry).subscribe((msg: ICustomEvent) => {
+            if (msg.payload?.liveWorkItem?.conversationId) {
+                setConversationId(msg.payload.liveWorkItem.conversationId);
+            }
+        });
+
         // Check for TPC and log in telemetry if blocked
         isCookieAllowed();
 
@@ -821,6 +830,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
     const userID = directLine.getState ? directLine?.getState("acs.userId") : "teamsvisitor";
 
+    const styleOptions = React.useMemo(() => ({
+        ...webChatStyles,
+        bubbleBackground,
+        bubbleTextColor
+    }), [webChatStyles, bubbleBackground, bubbleTextColor]);
+
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>
@@ -863,11 +878,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 <Composer
                     {...webChatProps}
                     userID={userID}
-                    styleOptions={{
-                        ...webChatStyles,
-                        bubbleBackground: props.webChatContainerProps?.webChatStyles?.bubbleBackground ?? ( props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background),
-                        bubbleTextColor: props.webChatContainerProps?.webChatStyles?.bubbleTextColor ?? (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color)
-                    }}
+                    styleOptions={styleOptions}
                     directLine={directLine}>
                     <Stack
                         id={widgetElementId}
@@ -898,7 +909,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...livechatProps.postChatLoadingPaneProps} />)}
 
-                        {shouldShowPostChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...livechatProps.postChatSurveyPaneProps} {...livechatProps.chatSDK} />)}
+                        {shouldShowPostChatSurveyPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatSurveyPane) || <PostChatSurveyPaneStateful {...livechatProps.postChatSurveyPaneProps } {...livechatProps.chatSDK} customerVoiceSurveyCorrelationId={conversationId} />)}
 
                         {createFooter(livechatProps, state)}
 

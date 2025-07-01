@@ -78,7 +78,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     const parseToJson = false;
     const preChatSurveyResponse: string = props?.preChatSurveyPaneProps?.controlProps?.payload ?? await facadeChatSDK.getPreChatSurvey(parseToJson);
     let showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
-    showPrechat = await shouldSetPreChatIfPersistentChat(facadeChatSDK.getChatSDK(), state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode, showPrechat as boolean);
+    showPrechat = await shouldSetPreChatIfPersistentChat(facadeChatSDK, state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode, showPrechat as boolean);
 
     if (showPrechat) {
         const isOutOfOperatingHours = state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";
@@ -141,7 +141,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
-    const persistentChatEnabled = await isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+    const persistentChatEnabled = isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
     if (state?.appStates.conversationState === ConversationState.Closed) {
         // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
@@ -278,12 +278,6 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, facadeChatS
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = (props?.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction ? true : false;
-    //Should not set custom context for auth chat
-    if (isAuthenticatedChat) {
-        return;
-    }
 
     if (state?.domainStates?.customContext) {
         optionalParams = Object.assign({}, optionalParams, {

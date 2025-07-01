@@ -6,15 +6,29 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Support sending context variables in auth chat
+- Add `ErrorBoundary` component to log unexpected error
+- Log `FormsError` telemetry events from `CustomerVoice`
+
 ### Fixed
 
- - Handling participant added/deleted in thread as system message
+- Fix to ensure getReconnectableChat always include a valid token
+- Adding missing closure success telemetry for GetChatReconnectContextSDKCallStarted
+- Cleanup OOH Pane title obtained from props.
+- Handling participant added/deleted in thread as system message
 
 ### Changed
+
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.1)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.11.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.2)
+
 
 ### Fixed
+
 - Removed cookieUsage config for appInsights
+- Addressed scroll jump issue on close chat.
 
 ## [1.8.0] - 2025-06-03
 
@@ -47,7 +61,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Added application insights support 
+- Added application insights support
 
 ## [1.7.7] - 2025-04-16
 

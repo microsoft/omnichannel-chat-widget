@@ -1,8 +1,9 @@
-import React, { Dispatch, useReducer, useState } from "react";
+import React, { Dispatch, useEffect, useReducer, useState } from "react";
 
 import { ChatAdapterStore } from "../../contexts/ChatAdapterStore";
 import { ChatContextStore } from "../../contexts/ChatContextStore";
 import { ChatSDKStore } from "../../contexts/ChatSDKStore";
+import ErrorBoundary from "../errorboundary/ErrorBoundary";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { FacadeChatSDKStore } from "../../contexts/FacadeChatSDKStore";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -13,7 +14,10 @@ import { createReducer } from "../../contexts/createReducer";
 import { getLiveChatWidgetContextInitialState } from "../../contexts/common/LiveChatWidgetContextInitialState";
 import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
 import { isNullOrUndefined } from "../../common/utils";
+import { isPersistentChatEnabled } from "./common/liveChatConfigUtils";
+import { logWidgetLoadWithUnexpectedError } from "./common/startChatErrorHandler";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
+import { registerTelemetryLoggers } from "./common/registerTelemetryLoggers";
 
 export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
@@ -35,7 +39,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction);
+    const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) ||  isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
     if (!facadeChatSDK) {
         setFacadeChatSDK(new FacadeChatSDK(
@@ -49,16 +53,24 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
             }, disableReauthentication));
     }
 
+    useEffect(() => {
+        registerTelemetryLoggers(props, dispatch);
+    }, [dispatch]);
+
     return (
-        <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
-            <ChatSDKStore.Provider value={chatSDK}>
-                <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
-                    <ChatContextStore.Provider value={[state, dispatch]}>
-                        <LiveChatWidgetStateful {...props} />
-                    </ChatContextStore.Provider>
-                </ChatAdapterStore.Provider>
-            </ChatSDKStore.Provider>
-        </FacadeChatSDKStore.Provider>
+        <ErrorBoundary onError={(error: Error) => {
+            logWidgetLoadWithUnexpectedError(error);
+        }}>
+            <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
+                <ChatSDKStore.Provider value={chatSDK}>
+                    <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
+                        <ChatContextStore.Provider value={[state, dispatch]}>
+                            <LiveChatWidgetStateful {...props} />
+                        </ChatContextStore.Provider>
+                    </ChatAdapterStore.Provider>
+                </ChatSDKStore.Provider>
+            </FacadeChatSDKStore.Provider>
+        </ErrorBoundary>
     );
 };
 
