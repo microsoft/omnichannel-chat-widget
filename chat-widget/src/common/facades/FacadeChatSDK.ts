@@ -269,7 +269,7 @@ export class FacadeChatSDK {
 
         const executionErrorMessage = "Authentication Setup Error: Token validation failed - GetAuthToken function is not present";
         //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
-        console.error(`Authentication failed: Process to get a token failed for ${functionName}, ${pingResponse.message}`);
+        console.error(`${executionErrorMessage} Additional details: Process to get a token failed for ${functionName}, ${pingResponse.message}`);
         BroadcastService.postMessage({
             eventName: BroadcastEvent.OnWidgetError,
             payload: {
