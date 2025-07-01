@@ -29,6 +29,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
 
         logWidgetLoadCompleteWithError(ex);
+        return; // Exit early since we've handled this authentication error completely
     }
     if (ex.message === WidgetLoadCustomErrorString.NetworkErrorString) {
         logWidgetLoadCompleteWithError(ex);
@@ -54,6 +55,7 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
                 break;
             // Handle the case indicating failure to retrieve an authenticated chat conversation 
             case ChatSDKErrorName.AuthenticatedChatConversationRetrievalFailure:
+                dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
                 logWidgetLoadCompleteWithError(ex);
                 break;
             case ChatSDKErrorName.InvalidConversation:
@@ -207,6 +209,9 @@ const handleChatTokenRetrievalFailure = (dispatch: Dispatch<ILiveChatWidgetActio
     } else {
         if (ex.httpResponseStatusCode === 401) {
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
+        } else {
+            // For other authentication-related token retrieval failures, set as AuthSetupError
+            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.AuthSetupError });
         }
         logWidgetLoadCompleteWithError(ex);
     }
