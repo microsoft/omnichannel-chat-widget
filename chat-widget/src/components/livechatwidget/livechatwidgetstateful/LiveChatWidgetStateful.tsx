@@ -176,7 +176,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         let isChatValid = false;
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
-            console.log("Loading Pane enabled here : 3");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
             //Check if conversation state is not in wrapup or closed state
@@ -212,7 +211,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
                     return;
                 }
-                console.log("Loading Pane enabled here : 4");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
             }
         }
@@ -323,11 +321,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Toggle chat visibility
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         BroadcastService.getMessageByEventName(BroadcastEvent.HideChatVisibilityChangeEvent).subscribe(async (event: any) => {
-            console.log(`HideChatVisibilityChangeEvent received: isChatHidden=${event?.payload?.isChatHidden}, runtimeId=${event?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
             if (event?.payload?.isChatHidden !== undefined) {
-                console.log(`HideChatVisibilityChangeEvent received: isChatHidden=${event?.payload?.isChatHidden}, runtimeId=${event?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
                 if (props.controlProps?.hideStartChatButton) {
-                    console.warn("HideChatVisibilityChangeEvent received, but hideStartChatButton is set to true. Ignoring the event.");
                     dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: event?.payload?.isChatHidden });
                 }
                 const dateNow = Date.now();
@@ -387,15 +382,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
          * the event is expected to be emitted from scripting layer.
          */
         BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
-            console.log(`SyncMinimize received: minimized=${msg?.payload?.minimized}, runtimeId=${msg?.payload?.runtimeId}, lcwRuntimeId=${TelemetryHelper.InternalTelemetryData.lcwRuntimeId}`);
-
             if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId)) {
-                console.warn("SyncMinimize received from different runtimeId. Ignoring the event.");
                 return;
             }
 
             if (state.appStates?.isMinimized === msg?.payload?.minimized) {
-                console.log("SyncMinimize received, but state is already in the same minimized state. Ignoring the event.");
                 return;
             }
 
@@ -523,10 +514,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
-            console.log(`WidgetSize received: height=${msg?.payload?.height}, width=${msg?.payload?.width}, runtimeId=${msg?.payload?.runtimeId}, lcwRuntimeId=${TelemetryManager.InternalTelemetryData.lcwRuntimeId}`);
-
             if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager.InternalTelemetryData.lcwRuntimeId)) {
-                console.warn("WidgetSize received from different runtimeId. Ignoring the event.");
                 dispatch({ type: LiveChatWidgetActionType.PING, payload: !state.domainStates.ping });
                 return;
             }
