@@ -10,7 +10,6 @@ import { ITelemetryEvent } from "./interfaces/ITelemetryEvents";
 import LiveChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/LiveChatContext";
 import LiveWorkItemDetails from "@microsoft/omnichannel-chat-sdk/lib/core/LiveWorkItemDetails";
 import { TelemetryManager } from "./TelemetryManager";
-import { getRuntimeId } from "@microsoft/omnichannel-chat-sdk/lib/utils/utilities";
 import { newGuid } from "../utils";
 
 export interface TelemetryEventWrapper {
