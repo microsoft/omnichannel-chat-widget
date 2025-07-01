@@ -45,7 +45,6 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
         onMinimizeClick: () => {
-            console.log(`HeaderStateful [${new Date().toISOString()}]: Minimize button clicked MANUALLY`);
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.HeaderMinimizeButtonClicked,
                 Description: "Header Minimize action started."
@@ -97,7 +96,7 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         onMinimizeClick: () => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.HeaderMinimizeButtonClicked,
-                Description: "Header Minimize action started.",
+                Description: "Header Minimize action started."
             });
 
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
