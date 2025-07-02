@@ -64,6 +64,8 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
             // Handle the case indicating failure to retrieve an authenticated chat conversation 
             case ChatSDKErrorName.AuthenticatedChatConversationRetrievalFailure:
                 dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
+                dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
                 logWidgetLoadCompleteWithError(ex);
                 return; // Exit early to prevent falling through to the generic error-handling block
             case ChatSDKErrorName.InvalidConversation:

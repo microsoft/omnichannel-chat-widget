@@ -139,7 +139,7 @@ export class FacadeChatSDK {
             throw new Error("Authentication Setup Error: Invalid token payload, payload is not valid JSON");
 
         } catch (e) {
-            console.error("Failed to decode token", e);
+            console.error("Authentication Setup Error: Failed to decode token", e);
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Failed to decode token",
