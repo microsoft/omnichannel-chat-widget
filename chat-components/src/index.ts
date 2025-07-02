@@ -6,6 +6,8 @@ export { default as ConfirmationPane } from "./components/confirmationpane/Confi
 
 export { default as ChatButton } from "./components/chatbutton/ChatButton";
 
+export * from "./components/chatbutton/common/animationStyles/chatButtonAnimationStyles";
+
 export { default as InputValidationPane } from "./components/inputvalidationpane/InputValidationPane";
 
 export { default as ProactiveChatPane } from "./components/proactivechatpane/ProactiveChatPane";

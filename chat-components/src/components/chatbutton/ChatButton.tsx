@@ -133,6 +133,43 @@ function ChatButton(props: IChatButtonProps) {
 
     return (
         <>
+            <style>{`
+                @keyframes chatButtonShake {
+                    0%, 100% {
+                        transform: translateX(0);
+                    }
+                    10%, 30%, 50%, 70%, 90% {
+                        transform: translateX(-2px);
+                    }
+                    20%, 40%, 60%, 80% {
+                        transform: translateX(2px);
+                    }
+                }
+                @keyframes chatButtonBounce {
+                    0%, 100% {
+                        transform: translateY(0);
+                    }
+                    50% {
+                        transform: translateY(-10px);
+                    }
+                }
+                @keyframes chatButtonPulse {
+                    0%, 100% {
+                        transform: scale(1);
+                    }
+                    50% {
+                        transform: scale(1.05);
+                    }
+                }
+                @keyframes chatButtonGlow {
+                    0%, 100% {
+                        box-shadow: 0 0 4px rgb(102 102 102 / 50%);
+                    }
+                    50% {
+                        box-shadow: 0 0 20px rgb(0 123 255 / 60%);
+                    }
+                }
+            `}</style>
             {!hideChatButton && 
             <Stack horizontal
                 id={elementId}

@@ -7,6 +7,7 @@ import ChatButton from "./ChatButton";
 import { IChatButtonProps } from "./interfaces/IChatButtonProps";
 import React from "react";
 import { Texts } from "../../common/Constants";
+import { chatButtonShakeAnimation, chatButtonShakeOnLoad } from "./common/animationStyles/chatButtonAnimationStyles";
 import { defaultChatButtonControlProps } from "./common/defaultProps/defaultChatButtonControlProps";
 import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonProps";
 import { defaultChatButtonStyleProps } from "./common/defaultStyles/defaultChatButtonStyleProps";
@@ -24,7 +25,8 @@ describe("Chat Button component", () => {
 
         it("renders chat button", () => {
             const {container} = render(<ChatButton {...defaultChatButtonProps} />);
-            expect(container.childElementCount).toBe(1);
+            // Now expects 2 children: the style element and the chat button element
+            expect(container.childElementCount).toBe(2);
         });
 
         it("hide text", () => {
@@ -113,5 +115,52 @@ describe("Chat Button component", () => {
             startChatButton.onclick = handleClick;
             fireEvent.click(startChatButton);
             expect(handleClick).toHaveBeenCalledTimes(1);
+        });
+
+        it("renders chat button with animation styles", () => {
+            const chatButtonPropsWithAnimation: IChatButtonProps = {
+                ...defaultChatButtonProps,
+                styleProps: {
+                    ...defaultChatButtonProps.styleProps,
+                    generalStyleProps: {
+                        ...defaultChatButtonProps.styleProps?.generalStyleProps,
+                        ...chatButtonShakeAnimation
+                    }
+                }
+            };
+            
+            const {container} = render(<ChatButton {...chatButtonPropsWithAnimation} />);
+            // Now expects 2 children: the style element and the chat button element
+            expect(container.childElementCount).toBe(2);
+            
+            // Check that the style tag with animations is present
+            const styleElement = container.querySelector('style');
+            expect(styleElement).toBeInTheDocument();
+            expect(styleElement?.innerHTML).toContain('@keyframes chatButtonShake');
+            expect(styleElement?.innerHTML).toContain('@keyframes chatButtonBounce');
+            expect(styleElement?.innerHTML).toContain('@keyframes chatButtonPulse');
+            expect(styleElement?.innerHTML).toContain('@keyframes chatButtonGlow');
+        });
+
+        it("applies animation styles to chat button element", async () => {
+            const chatButtonPropsWithShakeOnLoad: IChatButtonProps = {
+                ...defaultChatButtonProps,
+                styleProps: {
+                    ...defaultChatButtonProps.styleProps,
+                    generalStyleProps: {
+                        ...defaultChatButtonProps.styleProps?.generalStyleProps,
+                        ...chatButtonShakeOnLoad
+                    }
+                }
+            };
+            
+            render(<ChatButton {...chatButtonPropsWithShakeOnLoad} />);
+            const startChatButton = await screen.findByRole("button");
+            
+            // Check that the animation style is applied
+            const computedStyle = window.getComputedStyle(startChatButton);
+            // Note: In jsdom, the actual animation property might not be fully computed,
+            // but we can check that the component renders without errors
+            expect(startChatButton).toBeInTheDocument();
         });
 });

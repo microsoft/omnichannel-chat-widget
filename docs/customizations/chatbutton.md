@@ -304,3 +304,72 @@ liveChatWidgetProps = {
 </details>
 
 <img src="../.attachments/customizations-chat-button-override-component.png" height="100">
+
+--------------------------------
+
+### Adding animations to the chat button
+
+You can add various animations to the chat button using the `generalStyleProps`. The component provides predefined animations that can be imported and used directly.
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+...
+import { chatButtonShakeOnLoad, chatButtonBounceRepeating, chatButtonPulseAnimation } from "@microsoft/omnichannel-chat-components";
+
+// Shake animation on page load
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                ...chatButtonShakeOnLoad
+            }
+        }
+    }
+};
+
+// Or use custom animation properties
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "chatButtonShake 0.5s ease-in-out 3 0.5s" // shake 3 times after 0.5s delay
+            }
+        }
+    }
+};
+
+// Continuous pulse animation
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                ...chatButtonPulseAnimation
+            }
+        }
+    }
+};
+...
+```
+
+Available predefined animations:
+- `chatButtonShakeAnimation`: Single shake effect
+- `chatButtonBounceAnimation`: Single bounce effect  
+- `chatButtonPulseAnimation`: Continuous pulse effect
+- `chatButtonGlowAnimation`: Continuous glow effect
+- `chatButtonShakeRepeating`: Shake 3 times
+- `chatButtonBounceRepeating`: Bounce 2 times
+- `chatButtonShakeOnLoad`: Shake 3 times with 0.5s delay (ideal for page load)
+- `chatButtonBounceOnLoad`: Bounce 2 times with 1s delay (ideal for page load)
+
+Available keyframe animations:
+- `chatButtonShake`: Horizontal shake movement
+- `chatButtonBounce`: Vertical bounce movement
+- `chatButtonPulse`: Scale pulse effect
+- `chatButtonGlow`: Glowing shadow effect
+
+</details>
