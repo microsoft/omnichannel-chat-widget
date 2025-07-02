@@ -41,9 +41,12 @@ describe("startChatErrorHandler unit test", () => {
                 Exception: `Widget load complete with error: Error: ${WidgetLoadCustomErrorString.AuthenticationFailedErrorString}`
             })
         }));
-        expect(dispatch).toHaveBeenCalledTimes(2);
+        expect(dispatch).toHaveBeenCalledTimes(3);
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE
+        }));
+        expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
+            type: LiveChatWidgetActionType.SET_START_CHAT_FAILING
         }));
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE

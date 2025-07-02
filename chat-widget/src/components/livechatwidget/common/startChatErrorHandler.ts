@@ -33,11 +33,8 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
     // Handle authentication-related errors
     if (isAuthenticationError(ex.message)) {
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.AuthSetupError });
-        // set conversation to error to enforce error UI pane
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
-
         logWidgetLoadCompleteWithError(ex);
-        return; // Exit early since we've handled this authentication error completely
+        // Don't return early - let the generic error handling logic handle hideErrorUIPane and telemetry
     }
     if (ex.message === WidgetLoadCustomErrorString.NetworkErrorString) {
         logWidgetLoadCompleteWithError(ex);
@@ -64,10 +61,9 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
             // Handle the case indicating failure to retrieve an authenticated chat conversation 
             case ChatSDKErrorName.AuthenticatedChatConversationRetrievalFailure:
                 dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
-                dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: true });
-                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
                 logWidgetLoadCompleteWithError(ex);
-                return; // Exit early to prevent falling through to the generic error-handling block
+                // Don't return early - let the generic error handling logic handle hideErrorUIPane and telemetry
+                break;
             case ChatSDKErrorName.InvalidConversation:
             case ChatSDKErrorName.ClosedConversation:
                 handleInvalidOrClosedConversation(dispatch, facadeChatSDK, props, ex);
