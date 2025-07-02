@@ -58,11 +58,9 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
             case ChatSDKErrorName.UninitializedChatSDK:
                 handleUninitializedChatSDK(ex);
                 break;
-            // Handle the case indicating failure to retrieve an authenticated chat conversation 
             case ChatSDKErrorName.AuthenticatedChatConversationRetrievalFailure:
                 dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
                 logWidgetLoadCompleteWithError(ex);
-                // Don't return early - let the generic error handling logic handle hideErrorUIPane and telemetry
                 break;
             case ChatSDKErrorName.InvalidConversation:
             case ChatSDKErrorName.ClosedConversation:
