@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Support sending context variables in auth chat
 - Add `ErrorBoundary` component to log unexpected error
 - Log `FormsError` telemetry events from `CustomerVoice`
+- Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
 
 ### Fixed
 
