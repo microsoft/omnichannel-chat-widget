@@ -2,9 +2,12 @@ import { ConversationState } from "../contexts/common/ConversationState";
 import { ILiveChatWidgetContext } from "../contexts/common/ILiveChatWidgetContext";
 
 export const shouldShowChatButton = (state: ILiveChatWidgetContext) => {
+    // Don't show chat button during Loading state
+    // This ensures the proper transition: button -> loading pane -> widget container
     return (state.appStates.isMinimized ||
         (state.appStates.conversationState === ConversationState.Closed))
-        && state?.appStates?.hideStartChatButton === false; // Do not show chat button in case of popout
+        && state.appStates.hideStartChatButton === false
+        && state.appStates.conversationState !== ConversationState.Loading;
 };
 
 export const shouldShowProactiveChatPane = (state: ILiveChatWidgetContext) => {
@@ -30,8 +33,9 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
-    return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
-        state.appStates.conversationState === ConversationState.InActive);
+    return (!state.appStates.isMinimized && (
+        state.appStates.conversationState === ConversationState.Active ||
+        state.appStates.conversationState === ConversationState.InActive));
 };
 
 export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
