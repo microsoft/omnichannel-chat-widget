@@ -1,5 +1,6 @@
 import path from "path";
 import { Configuration } from "webpack";
+import * as webpack from "webpack";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as webpackDevServer from "webpack-dev-server";
 
@@ -39,13 +40,22 @@ const config: Configuration = {
         fallback: {
             assert: require.resolve("assert"),
             crypto: require.resolve("crypto-browserify"),
-            stream: require.resolve("stream-browserify")
+            stream: require.resolve("stream-browserify"),
+            vm: require.resolve("vm-browserify")
         },
     },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
     },
+    plugins: [
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^react-native$/
+        }),
+        new webpack.ProvidePlugin({
+            process: "process/browser",
+        }),
+    ],
     devServer: {
         static: path.join(__dirname, "dist"),
         compress: true,

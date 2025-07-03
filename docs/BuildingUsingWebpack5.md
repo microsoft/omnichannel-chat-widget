@@ -180,11 +180,25 @@ const config: Configuration = {
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
+        fallback: {
+            assert: require.resolve("assert"),
+            crypto: require.resolve("crypto-browserify"),
+            stream: require.resolve("stream-browserify"),
+            vm: require.resolve("vm-browserify")
+        },
     },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
     },
+    plugins: [
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^react-native$/
+        }),
+        new webpack.ProvidePlugin({
+            process: "process/browser",
+        }),
+    ],
     devServer: {
         static: path.join(__dirname, "dist"),
         compress: true,
@@ -225,6 +239,11 @@ npm i @microsoft/omnichannel-chat-sdk
 ```
 ```
 npm i @microsoft/omnichannel-chat-widget --legacy-peer-deps
+```
+#### 13.1. Install browser polyfills
+Install the necessary polyfills for browser compatibility:
+```
+npm i assert vm-browserify process
 ```
 #### 14. Adding `<LiveChatWidget />` to index.tsx
 ```
