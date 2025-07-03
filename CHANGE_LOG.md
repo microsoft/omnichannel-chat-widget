@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix authentication error pane not honoring customization
 - Fix to ensure getReconnectableChat always include a valid token
 - Adding missing closure success telemetry for GetChatReconnectContextSDKCallStarted
 - Cleanup OOH Pane title obtained from props.
