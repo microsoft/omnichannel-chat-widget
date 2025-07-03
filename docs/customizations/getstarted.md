@@ -144,7 +144,7 @@ The container that shows up for auth chat users who, after disconnected from the
 
 <img src="../.attachments/customizations-intro-reconnectchat.png" width="450">
 
-### StartChatErrorPane
+### [StartChatErrorPane](./startchaterrorpane.md)
 
 The screen that shows up when the start chat process encounters an error.
 
