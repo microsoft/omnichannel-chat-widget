@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Button Animation Demo</title>
+    <link rel="stylesheet" href="../styles/chat-button-animations.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .demo-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .demo-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px;
+            min-width: 120px;
+        }
+        .demo-button:hover {
+            background-color: #106ebe;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #0078d4;
+            border-bottom: 2px solid #0078d4;
+            padding-bottom: 5px;
+        }
+        .restart-btn {
+            background-color: #107c10;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .restart-btn:hover {
+            background-color: #0e6e0e;
+        }
+        .code-example {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat Button Animation Demo</h1>
+    <p>This demo shows the various animations available for the chat button component using external CSS.</p>
+
+    <div class="demo-container">
+        <h2>1. Shake on Load Animation</h2>
+        <p>Shakes 3 times with a 0.5s delay (ideal for page load)</p>
+        <button class="demo-button" id="shakeBtn">Let's Chat!</button>
+        <button class="restart-btn" onclick="restartAnimation('shakeBtn', 'chat-button-shake-on-load')">Restart Animation</button>
+        
+        <div class="code-example">
+liveChatWidgetProps = {<br>
+&nbsp;&nbsp;...liveChatWidgetProps,<br>
+&nbsp;&nbsp;chatButtonProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;styleProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generalStyleProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;animation: "chatButtonShake 0.5s ease-in-out 3 0.5s"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+};
+        </div>
+    </div>
+
+    <div class="demo-container">
+        <h2>2. Bounce on Load Animation</h2>
+        <p>Bounces 2 times with a 1s delay</p>
+        <button class="demo-button" id="bounceBtn">Let's Chat!</button>
+        <button class="restart-btn" onclick="restartAnimation('bounceBtn', 'chat-button-bounce-on-load')">Restart Animation</button>
+        
+        <div class="code-example">
+liveChatWidgetProps = {<br>
+&nbsp;&nbsp;...liveChatWidgetProps,<br>
+&nbsp;&nbsp;chatButtonProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;styleProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generalStyleProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;animation: "chatButtonBounce 0.6s ease-in-out 2 1s"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+};
+        </div>
+    </div>
+
+    <div class="demo-container">
+        <h2>3. Continuous Pulse Animation</h2>
+        <p>Continuous scaling effect</p>
+        <button class="demo-button chat-button-pulse-continuous" id="pulseBtn">Let's Chat!</button>
+        
+        <div class="code-example">
+liveChatWidgetProps = {<br>
+&nbsp;&nbsp;...liveChatWidgetProps,<br>
+&nbsp;&nbsp;chatButtonProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;styleProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generalStyleProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;animation: "chatButtonPulse 1s ease-in-out infinite"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+};
+        </div>
+    </div>
+
+    <div class="demo-container">
+        <h2>4. Continuous Glow Animation</h2>
+        <p>Continuous glowing shadow effect</p>
+        <button class="demo-button chat-button-glow-continuous" id="glowBtn">Let's Chat!</button>
+        
+        <div class="code-example">
+liveChatWidgetProps = {<br>
+&nbsp;&nbsp;...liveChatWidgetProps,<br>
+&nbsp;&nbsp;chatButtonProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;styleProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;generalStyleProps: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;animation: "chatButtonGlow 2s ease-in-out infinite"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+};
+        </div>
+    </div>
+
+    <div class="demo-container">
+        <h2>5. Repeating Animations</h2>
+        <p>Immediate animations without delays</p>
+        <button class="demo-button" id="shakeRepeatBtn">Shake 3x</button>
+        <button class="demo-button" id="bounceRepeatBtn">Bounce 2x</button>
+        <button class="restart-btn" onclick="restartAnimation('shakeRepeatBtn', 'chat-button-shake-repeating')">Restart Shake</button>
+        <button class="restart-btn" onclick="restartAnimation('bounceRepeatBtn', 'chat-button-bounce-repeating')">Restart Bounce</button>
+    </div>
+
+    <script>
+        // Initialize animations on page load
+        window.addEventListener('load', function() {
+            document.getElementById('shakeBtn').classList.add('chat-button-shake-on-load');
+            document.getElementById('bounceBtn').classList.add('chat-button-bounce-on-load');
+            document.getElementById('shakeRepeatBtn').classList.add('chat-button-shake-repeating');
+            document.getElementById('bounceRepeatBtn').classList.add('chat-button-bounce-repeating');
+        });
+
+        function restartAnimation(elementId, className) {
+            const element = document.getElementById(elementId);
+            element.classList.remove(className);
+            // Force reflow
+            element.offsetHeight;
+            element.classList.add(className);
+        }
+    </script>
+</body>
+</html>

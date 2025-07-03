@@ -157,5 +157,66 @@ After the request is fired by ```BotAuthActivitySubscriber``` it will subscribe 
         });
 ```
 
+### Chat Button Animations
+
+The chat button supports CSS animations to create engaging visual effects like shake, bounce, pulse, and glow animations. This is particularly useful for Power Pages scenarios where you want to grab user attention on page load.
+
+#### Quick Start
+
+1. Download and include the [chat-button-animations.css](styles/chat-button-animations.css) file in your application
+2. Apply animations using the `generalStyleProps.animation` property
+
+```js
+// Shake animation on page load (perfect for Power Pages)
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "chatButtonShake 0.5s ease-in-out 3 0.5s"
+            }
+        }
+    }
+};
+```
+
+#### Available Animations
+
+- **chatButtonShake**: Horizontal shake movement
+- **chatButtonBounce**: Vertical bounce movement  
+- **chatButtonPulse**: Scale pulse effect
+- **chatButtonGlow**: Glowing shadow effect
+
+#### Examples
+
+```js
+// Bounce on page load
+liveChatWidgetProps = {
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "chatButtonBounce 0.6s ease-in-out 2 1s"
+            }
+        }
+    }
+};
+
+// Continuous pulse effect
+liveChatWidgetProps = {
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "chatButtonPulse 1s ease-in-out infinite"
+            }
+        }
+    }
+};
+```
+
+For detailed documentation and live examples, see:
+- [Chat Button Customization Guide](customizations/chatbutton.md#adding-animations-to-the-chat-button)
+- [Animation Demo](examples/chat-button-animations-demo.html)
+- [TypeScript Example](examples/ChatButtonAnimationExample.tsx)
+
 
 To setup ```setBotAuthTokenProvider``` at the scripting layer and set the function in the html, please follow up this documentation [setBotAuthTokenProvider guideline](https://learn.microsoft.com/en-us/dynamics365/customer-service/developer/reference/methods/setbotauthtokenprovider)

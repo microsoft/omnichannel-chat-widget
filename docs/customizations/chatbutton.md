@@ -14,6 +14,7 @@
   - [Hiding text container](#hiding-text-container)
   - [Customizing icon and overall styles](#customizing-icon-and-overall-styles)
   - [Customizing the notification bubble](#customizing-the-notification-bubble)
+  - [Adding animations to the chat button](#adding-animations-to-the-chat-button)
   - [Overriding default sub-components for ad-hoc needs](#overriding-default-sub-components-for-ad-hoc-needs)
 
 ## Interfaces
@@ -269,6 +270,167 @@ liveChatWidgetProps = {
 <img src="../.attachments/customizations-chat-button-custom-notification-bubble.png" height="100">
 
 > :pushpin: If `unreadMessageCount` is `"0"` or empty, then the notification bubble will be hidden.
+
+--------------------------------
+
+### Adding animations to the chat button
+
+The ChatButton component supports CSS animations through the `generalStyleProps.animation` property. You can create engaging effects like shake, bounce, pulse, and glow animations.
+
+> 📝 **Live Demo**: See the animations in action with the [Chat Button Animation Demo](../examples/chat-button-animations-demo.html)
+
+#### Option 1: Using the provided CSS file
+
+Download and include the [chat-button-animations.css](../styles/chat-button-animations.css) file in your application, then use the animation names directly:
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+....
+// Shake animation on page load (perfect for Power Pages)
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "chatButtonShake 0.5s ease-in-out 3 0.5s"
+            }
+        }
+    }
+};
+
+// Bounce animation on page load
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "chatButtonBounce 0.6s ease-in-out 2 1s"
+            }
+        }
+    }
+};
+
+// Continuous pulse effect
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "chatButtonPulse 1s ease-in-out infinite"
+            }
+        }
+    }
+};
+
+// Continuous glow effect
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "chatButtonGlow 2s ease-in-out infinite"
+            }
+        }
+    }
+};
+....
+```
+
+</details>
+
+#### Option 2: Using the animation property with predefined values
+
+Create a simple JavaScript object with the animation values:
+
+<details>
+    <summary>Show code</summary>
+
+```tsx
+....
+// Define animation configurations
+const chatButtonAnimations = {
+    shakeOnLoad: "chatButtonShake 0.5s ease-in-out 3 0.5s",
+    bounceOnLoad: "chatButtonBounce 0.6s ease-in-out 2 1s",
+    pulseContinuous: "chatButtonPulse 1s ease-in-out infinite",
+    glowContinuous: "chatButtonGlow 2s ease-in-out infinite"
+};
+
+// Apply the animation
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: chatButtonAnimations.shakeOnLoad
+            }
+        }
+    }
+};
+....
+```
+
+</details>
+
+#### Option 3: Custom animations
+
+You can define your own keyframe animations and apply them:
+
+<details>
+    <summary>Show code</summary>
+
+```css
+/* Add this to your CSS file */
+@keyframes myCustomAnimation {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); }
+    100% { transform: rotate(360deg); }
+}
+```
+
+```tsx
+....
+liveChatWidgetProps = {
+    ...liveChatWidgetProps,
+    chatButtonProps: {
+        styleProps: {
+            generalStyleProps: {
+                animation: "myCustomAnimation 2s linear infinite"
+            }
+        }
+    }
+};
+....
+```
+
+</details>
+
+#### Available animations
+
+The provided CSS file includes these animations:
+
+| Animation | Description | Usage Example |
+|-----------|-------------|---------------|
+| `chatButtonShake` | Horizontal shake movement | `"chatButtonShake 0.5s ease-in-out 3 0.5s"` |
+| `chatButtonBounce` | Vertical bounce movement | `"chatButtonBounce 0.6s ease-in-out 2 1s"` |
+| `chatButtonPulse` | Scale pulse effect | `"chatButtonPulse 1s ease-in-out infinite"` |
+| `chatButtonGlow` | Glowing shadow effect | `"chatButtonGlow 2s ease-in-out infinite"` |
+
+#### Animation syntax
+
+The CSS animation property follows this format:
+```
+animation: "name duration timing-function iteration-count delay"
+```
+
+- **name**: The keyframe name (e.g., `chatButtonShake`)
+- **duration**: How long the animation takes (e.g., `0.5s`)
+- **timing-function**: Animation easing (e.g., `ease-in-out`)
+- **iteration-count**: How many times to repeat (e.g., `3` or `infinite`)
+- **delay**: When to start the animation (e.g., `0.5s`)
 
 --------------------------------
 
