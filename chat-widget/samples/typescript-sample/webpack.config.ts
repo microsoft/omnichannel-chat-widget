@@ -1,8 +1,14 @@
-import path from "path";
-import { Configuration } from "webpack";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import * as webpack from "webpack";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as webpackDevServer from "webpack-dev-server";
+import HtmlWebpackPlugin from "html-webpack-plugin";
+
+import { Configuration } from "webpack";
+import path from "path";
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 
 const disableFullyQualifiedNameResolutions = {
     test: /\.m?js/,
@@ -41,7 +47,11 @@ const config: Configuration = {
             assert: require.resolve("assert"),
             crypto: require.resolve("crypto-browserify"),
             stream: require.resolve("stream-browserify"),
-            vm: require.resolve("vm-browserify")
+            vm: require.resolve("vm-browserify"),
+            path: require.resolve("path-browserify"),
+            os: require.resolve("os-browserify/browser"),
+            fs: false,
+            module: false,
         },
     },
     output: {
@@ -54,6 +64,15 @@ const config: Configuration = {
         }),
         new webpack.ProvidePlugin({
             process: "process/browser",
+            Buffer: ["buffer", "Buffer"],
+        }),
+        new webpack.DefinePlugin({
+            global: "globalThis",
+        }),
+        new HtmlWebpackPlugin({
+            template: "./src/template.html",
+            filename: "index.html",
+            inject: true,
         }),
     ],
     devServer: {
