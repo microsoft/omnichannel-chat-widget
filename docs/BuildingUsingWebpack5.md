@@ -143,12 +143,12 @@ npm install --save-dev ts-node
 `Webpack` is configured through a configuration file. Create this file in root directory
 ```
 import path from "path";
-import { Configuration } from "webpack";
+import { Configuration, NormalModuleReplacementPlugin } from "webpack";
 import * as webpack from 'webpack';
 import * as webpackDevServer from 'webpack-dev-server';
 
 const disableFullyQualifiedNameResolutions = {
-    test: /\.m?js/,
+    test: /\.m?js$/,
     resolve: {
         fullySpecified: false,
     },
@@ -180,11 +180,63 @@ const config: Configuration = {
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
+        fallback: {
+            assert: require.resolve("assert"),
+            crypto: path.resolve(__dirname, "crypto-polyfill.js"),
+            stream: require.resolve("stream-browserify"),
+            vm: require.resolve("vm-browserify"),
+            path: require.resolve("path-browserify"),
+            http: require.resolve("stream-http"),
+            https: require.resolve("https-browserify"),
+            zlib: require.resolve("browserify-zlib"),
+            url: require.resolve("url"),
+            buffer: require.resolve("buffer"),
+            util: require.resolve("util"),
+            os: require.resolve("os-browserify/browser"),
+            fs: false,
+            net: false,
+            tls: false
+        },
+        conditionNames: ["import", "require", "node", "default"],
+        mainFields: ["browser", "module", "main"],
     },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
     },
+    plugins: [
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^react-native$/
+        }),
+        new webpack.ProvidePlugin({
+            process: "process/browser.js",
+            Buffer: ["buffer", "Buffer"],
+        }),
+        new NormalModuleReplacementPlugin(/^node:/, (resource) => {
+            const moduleRequest = resource.request.replace(/^node:/, "");
+            const polyfillMap: Record<string, string> = {
+                crypto: path.resolve(__dirname, "crypto-polyfill.js"),
+                stream: "stream-browserify",
+                path: "path-browserify",
+                url: "url",
+                buffer: "buffer",
+                util: "util",
+                os: "os-browserify/browser",
+                zlib: "browserify-zlib",
+                http: "stream-http",
+                https: "https-browserify",
+                assert: "assert",
+                process: "process/browser.js",
+            };
+            
+            if (polyfillMap[moduleRequest]) {
+                resource.request = polyfillMap[moduleRequest];
+            } else {
+                // For modules we can't polyfill, replace with empty module
+                resource.request = "data:text/javascript,module.exports = {}";
+            }
+        }),
+    ],
     devServer: {
         static: path.join(__dirname, "dist"),
         compress: true,
@@ -225,6 +277,23 @@ npm i @microsoft/omnichannel-chat-sdk
 ```
 ```
 npm i @microsoft/omnichannel-chat-widget --legacy-peer-deps
+```
+#### 13.1. Install browser polyfills
+Install the necessary polyfills for browser compatibility:
+```
+npm i assert vm-browserify process path-browserify stream-http https-browserify browserify-zlib url buffer util os-browserify uuid
+```
+
+#### 13.2. Create crypto polyfill
+Create a file called `crypto-polyfill.js` in the root directory to handle crypto module compatibility:
+```javascript
+const crypto = require('crypto-browserify');
+const { v4: uuidv4 } = require('uuid');
+
+// Add the randomUUID function that crypto-browserify doesn't have
+crypto.randomUUID = () => uuidv4();
+
+module.exports = crypto;
 ```
 #### 14. Adding `<LiveChatWidget />` to index.tsx
 ```
