@@ -4,7 +4,6 @@ import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/pac
 
 import React, { useEffect, useState } from "react";
 
-import { CoffeeChatIconBase64 } from "../src/common/assets";
 import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom";
@@ -13,9 +12,9 @@ import { defaultProps } from "../src/common/defaultProps";
 const getOmnichannelChatConfig = () => {
     // add your own OC setting, hard-coded just for sample, should be replaced with a better handling
     const omnichannelConfig = {
-        orgId: "ce4db5f6-1c20-ee11-a66d-000d3a0a02f3",
-        orgUrl: "https://m-ce4db5f6-1c20-ee11-a66d-000d3a0a02f3.ca.omnichannelengagementhub.com",
-        widgetId: "148d0ead-14d2-41ea-bfc9-f4d4287f060c"
+        orgId: "",
+        orgUrl: "",
+        widgetId: ""
     };
     return omnichannelConfig;
 };
