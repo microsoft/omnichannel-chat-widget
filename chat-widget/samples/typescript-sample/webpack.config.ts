@@ -93,11 +93,24 @@ const config: Configuration = {
         }),
         new webpack.DefinePlugin({
             global: "globalThis",
+            "typeof require": JSON.stringify("function"),
         }),
         new HtmlWebpackPlugin({
             template: "./src/template.html",
             filename: "index.html",
             inject: true,
+        }),
+        new webpack.BannerPlugin({
+            banner: `
+// Global require polyfill for browser
+if (typeof require === 'undefined') {
+    window.require = function(moduleName) {
+        console.warn('require() called for:', moduleName);
+        return {};
+    };
+}
+            `,
+            raw: true,
         }),
     ],
     devServer: {
