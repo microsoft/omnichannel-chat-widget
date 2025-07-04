@@ -1,19 +1,21 @@
-import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
-import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
 import * as OcChatSdkPackageinfo from "@microsoft/omnichannel-chat-sdk/package.json";
 import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/package.json";
-import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
-import { defaultProps } from "../src/common/defaultProps";
+
+import React, { useEffect, useState } from "react";
+
 import { CoffeeChatIconBase64 } from "../src/common/assets";
+import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
+import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
+import ReactDOM from "react-dom";
+import { defaultProps } from "../src/common/defaultProps";
 
 const getOmnichannelChatConfig = () => {
     // add your own OC setting, hard-coded just for sample, should be replaced with a better handling
     const omnichannelConfig = {
-        orgId: "<DATA-ORG-ID>",
-        orgUrl: "<DATA-ORG-URL>",
-        widgetId: "<DATA-APP-ID>"
+        orgId: "ce4db5f6-1c20-ee11-a66d-000d3a0a02f3",
+        orgUrl: "https://m-ce4db5f6-1c20-ee11-a66d-000d3a0a02f3.ca.omnichannelengagementhub.com",
+        widgetId: "148d0ead-14d2-41ea-bfc9-f4d4287f060c"
     };
     return omnichannelConfig;
 };
@@ -36,24 +38,7 @@ const App = () => {
 
             const liveChatWidgetProps = {
                 ...defaultProps,
-                chatButtonProps: { // example: chat button customization overrides
-                    controlProps: {
-                        titleText: "",
-                        subtitleText: "",
-                        hideChatTextContainer: true,
-                    },
-                    styleProps: {
-                        generalStyleProps: {
-                            height: "56px",
-                            width: "56px",
-                            borderRadius: "50%",
-                        },
-                        iconStyleProps: {
-                            backgroundColor: "#c5ecc5",
-                            backgroundImage: `url(${CoffeeChatIconBase64})`,
-                        }
-                    },
-                },
+
                 headerProps: { // example: default header is being overriden with a new background color style
                     styleProps: {
                         generalStyleProps: {
