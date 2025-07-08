@@ -1,5 +1,6 @@
 import path from "path";
 import { Configuration } from "webpack";
+import CopyWebpackPlugin from "copy-webpack-plugin";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as webpackDevServer from "webpack-dev-server";
 
@@ -46,6 +47,16 @@ const config: Configuration = {
         path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
     },
+    plugins: [
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, "public"),
+                    to: path.resolve(__dirname, "dist"),
+                },
+            ],
+        }),
+    ],
     devServer: {
         static: path.join(__dirname, "dist"),
         compress: true,
