@@ -32,8 +32,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         if (initialStateFromCache.appStates.conversationState === ConversationState.Prechat
             || initialStateFromCache.appStates.conversationState === ConversationState.OutOfOffice
             || (outsideOperatingHours && 
-                initialStateFromCache.appStates.conversationState !== ConversationState.Active &&
-                initialStateFromCache.appStates.conversationState !== ConversationState.InActive)) {
+                initialStateFromCache.appStates.conversationState !== ConversationState.Active)) {
             initialStateFromCache.appStates.conversationState = ConversationState.Closed;
             // if we are resetting the conversation state, there is no point to obtain minimized state from cache
             initialStateFromCache.appStates.isMinimized = undefined;

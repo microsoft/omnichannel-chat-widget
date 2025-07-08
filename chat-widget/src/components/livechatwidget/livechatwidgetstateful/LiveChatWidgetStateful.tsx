@@ -208,14 +208,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             } else {
                 // To avoid showing blank screen in popout
                 if (state?.appStates?.hideStartChatButton === false) {
-                    // Only set Closed state for new conversations when outside operating hours
-                    // Preserve existing Active/InActive conversations even outside business hours
-                    if (state.appStates.outsideOperatingHours === true && 
-                        (state.appStates.conversationState === ConversationState.Active ||
-                         state.appStates.conversationState === ConversationState.InActive)) {
-                        // Don't set to Closed, let the active conversation continue
-                        return;
-                    }
                     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
                     return;
                 }
@@ -282,8 +274,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             //handle OOH pane
             // Only set OutOfOffice state for new conversations, allow existing Active/InActive conversations to continue
             if (state.appStates.outsideOperatingHours === true && 
-                state.appStates.conversationState !== ConversationState.Active &&
-                state.appStates.conversationState !== ConversationState.InActive) {
+                state.appStates.conversationState !== ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.OnWidgetError,
