@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Adding missing closure success telemetry for GetChatReconnectContextSDKCallStarted
 - Cleanup OOH Pane title obtained from props.
 - Handling participant added/deleted in thread as system message
+- Fix chat continuation beyond business hours for active conversations - allow customers to continue active chats when reloading widget outside operating hours
 
 ### Changed
 
