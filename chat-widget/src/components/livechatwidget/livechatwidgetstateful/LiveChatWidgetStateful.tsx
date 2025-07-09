@@ -464,8 +464,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
 
+                console.log("ADAD useEffect EndChatEvent, SET_CONVERSATION_ENDED_BY to customer");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
             } else {
+                console.log("ADAD useEffect EndChatEvent, endChat()");
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
@@ -546,10 +548,25 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
             }, {disablePolling: true});
 
-            facadeChatSDK?.onAgentEndSession((event) => {                   
+            // ADAD agent OR bot ends chat
+            // ADAD - does this trigger if bot ends chat? if only agent, then we can check agentSurveyMode + conversational survey to not hide sendbox
+            facadeChatSDK?.onAgentEndSession(async (event) => {       
+                // ADAD TODO need to update to not hide sendbox if embed mode
+                console.log("ADAD onAgentEndSession event: ", event);           
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                console.log("ADAD inMemoryState: ", inMemoryState);
+                // ADAD TODO need to fix this to account for race condition of when system message is received and when participant is removed
                 if ("participantsRemoved" in event && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
-                    setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
+                    console.log("ADAD skipping hiding sendbox, will be done later after state moves to InActive!!!");
+                    // // TODO remove:
+                    // // getConversationDetails call might be needed...
+                    // const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
+                    // console.log("ADAD conversationDetails: ", conversationDetails);
+                    // ADAD TODO this code cannot be removed! wrap this by FCB check for conversational survey
+                    if (inMemoryState?.appStates?.isConversationalSurveyEnabled === false) {
+                        console.log("ADAD hiding sendbox since not conversational survey");
+                        setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
+                    }
                     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.ParticipantsRemovedEvent,
                         Description: "Participants removed event received."
@@ -561,6 +578,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         if (state.appStates.conversationState === ConversationState.InActive) {
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
+                console.log("ADAD hiding sendbox since conversation is InActive");
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
         }
@@ -612,18 +630,21 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         //Confirmation pane dismissing through OK option, so proceed with end chat
         if (state.domainStates.confirmationState === ConfirmationState.Ok) {
+            console.log("ADAD useEffect confirmationState === ConfirmationState.Ok, setting conversation ended by customer");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
         }
     }, [state.domainStates.confirmationState]);
 
     useEffect(() => {
         // Do not process anything during initialization
+        console.log("ADAD useEffect state?.appStates?.conversationEndedBy: ", state?.appStates?.conversationEndedBy);
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.NotSet) {
             return;
         }
 
         // If start chat failed, and C2 is trying to close chat widget
-        if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
+        if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) { // ADAD - we probably don't want to endChat() yet, until postChat is complete (OR keep existing embed functionality for MCS meaning no change needed)
+            console.log("ADAD Customer is trying to close chat widget on start chat failure or post chat pane. Calling endChat() now.");
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.CustomerCloseChatOnFailureOrPostChat
@@ -634,6 +655,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Scenario -> Chat was InActive and closing the chat (Refresh scenario on post chat)
         if (state?.appStates?.conversationState === ConversationState.InActive) {
+            console.log("ADAD Customer is trying to close chat widget on InActive chat. Calling endChat() now.");
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.CustomerCloseInactiveChat
@@ -642,12 +664,43 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
-            state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+        // // ADAD c1 end scenario
+        // // TODO remove:
+        // // Not needed since will be handled in initiatePostChat() as well
+        // // ADAD TODO only run if non MCS seamless survey; set to InActive after seamless survey complete 
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+        console.log("ADAD useEffect inMemoryState isConversationalSurvey: ", inMemoryState.appStates.isConversationalSurveyEnabled);
+        console.log("ADAD useEffect inMemoryState: ", inMemoryState);
+        let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+        // console.log("ADAD useEffect isSeamlessSurvey: ", isSeamlessSurvey);
+        // isSeamlessSurvey = false;
+        // // ADAD postchatContext is undefined if initial setPostChatContextAndLoadSurvey() failed, so not guaranteed at this point...
+        // const postchatContext = inMemoryState?.domainStates?.postChatContext;
+        // if (postchatContext?.surveyProvider === "600990001") { // survey provider = MCS, also add postchatContext.isConversationalSurveyEnabled
+        //     console.log("ADAD postchatContext surveyProvider = MCS");
+        //     if (((state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) && (postchatContext?.botSurveyMode === "192350000")) 
+        //         || ((state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent) && (postchatContext?.agentSurveyMode === "192350000"))) { // survey mode = embed
+        //         console.log("ADAD reducer SET_LCW_STATE to use seamless survey inside useEffect conversationEndedBy");
+        //         isSeamlessSurvey = true;
+        //         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: true });
+        //     }
+        // }
+
+        // ADAD TODO 6/3: let's consider moving this check inside prepareEndChat() to avoid fetching postChatContext and conversationDetails again!
+        // This code is present in production, cannot completely remove!!!
+        if (!isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
+            state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
+            console.log("ADAD setting conversation state to InActive, conversation ended by: ", state?.appStates?.conversationEndedBy); // ADAD is this hit in c2 end conversation? -> don't think so
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive }); 
         }
 
+        // 6/19 - unclear what this comment is, probably irrelevant
+        // ADAD TODO add conditional logic to handle c2 end chat in seamless survey scenario!!! since in renderSurveyHelper we are having difficulty getting state value for isConversationalSurvey
+        // ohhh the above might be needed since we are hardcoding true within renderSurveyHelper...
+
+        // ADAD c2 end scenario
         // All other cases
+        console.log("ADAD useEffect prepareEndChat()");
         prepareEndChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
 
     }, [state?.appStates?.conversationEndedBy]);

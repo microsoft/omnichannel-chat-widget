@@ -227,6 +227,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         logWidgetLoadComplete();
         // Set post chat context in state, load in background to do not block the load
         setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch);
+        console.log("ADAD postChatContextAndLoadSurvey setting called inside initStartChat");
         // Updating chat session detail for telemetry
         await updateTelemetryData(facadeChatSDK, dispatch);
     } catch (ex) {
