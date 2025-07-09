@@ -1,7 +1,7 @@
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import * as OcChatSdkPackageinfo from "@microsoft/omnichannel-chat-sdk/package.json";
 import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/package.json";
 import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
@@ -117,7 +117,6 @@ const App = () => {
     );
 };
 
-ReactDOM.render(
-    <App />,
-    document.getElementById("root")
-);
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(<App />);
