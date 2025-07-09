@@ -272,9 +272,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         if (state?.appStates?.hideStartChatButton === true) {
             //handle OOH pane
-            // Only set OutOfOffice state when conversation is truly closed
+            // Only set OutOfOffice state for new conversations, allow existing Active/InActive conversations to continue
             if (state.appStates.outsideOperatingHours === true && 
-                state.appStates.conversationState === ConversationState.Closed) {
+                state.appStates.conversationState !== ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.OnWidgetError,
