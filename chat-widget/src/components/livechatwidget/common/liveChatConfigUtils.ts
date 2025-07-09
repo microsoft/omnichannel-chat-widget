@@ -18,7 +18,7 @@ export const getPostChatSurveyConfig = async (facadeChatSDK: FacadeChatSDK) : Pr
     const agentSurveyMode = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode?.toString();
     const botSurveyMode = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode?.toString();
     const surveyProvider = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_surveyprovider?.toString();
-    const isConversationalSurveyEnabled = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_isConversationalPostChatSurveyEnabled?.toString().toLowerCase(); // ADAD TODO what if this value does not exist?
+    const isConversationalSurveyEnabled = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_isConversationalPostChatSurveyEnabled?.toString().toLowerCase();
     return {
         postChatEnabled: postChatEnabled === "true",
         agentSurveyMode: agentSurveyMode,

@@ -69,7 +69,7 @@ const embedModePostChatWorkflow = async (postChatContext: any, state: ILiveChatW
         console.log("ADAD embedModePostChatWorkflow() isConversationalSurvey", state.appStates.isConversationalSurvey);
         console.log("ADAD embedModePostChatWorkflow() postChatContext", postChatContext);
 
-        if (postChatContext.isConversationalSurveyEnabled && postChatContext.surveyProvider === SurveyProvider.MicrosoftCopilotStudio) { // we already know it's embed mode
+        if (postChatContext.isConversationalSurveyEnabled && postChatContext.surveyProvider === SurveyProvider.MicrosoftCopilotStudio) {
             console.log("ADAD embedModePostChatWorkflow() early return using postChatContext.isConversationalSurvey");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: true });

@@ -86,7 +86,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             //For agent initiated end chat, allow to download transcript
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
             return;
-        } 
+        }
 
         // Log PrepareEndChat if conversation ended by customer (bot and agent cases are handled in LiveChatWidgetStateful.tsx)
         if (state?.appStates?.conversationEndedBy) {

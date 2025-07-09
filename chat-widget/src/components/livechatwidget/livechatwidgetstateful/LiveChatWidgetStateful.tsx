@@ -664,7 +664,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Hence setting ConversationState to InActive will be done later in the post chat flows
         if (!isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
             state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
-            console.log("ADAD setting conversation state to InActive, conversation ended by: ", state?.appStates?.conversationEndedBy); // ADAD is this hit in c2 end conversation? -> don't think so
+            console.log("ADAD setting conversation state to InActive, conversation ended by: ", state?.appStates?.conversationEndedBy);
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive }); 
         }
 
