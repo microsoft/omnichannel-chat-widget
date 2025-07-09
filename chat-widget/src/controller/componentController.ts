@@ -30,11 +30,10 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
-    const isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
     console.log("ADAD shouldShowWebChatContainer() isConversationalSurveyEnabled", state.appStates.isConversationalSurveyEnabled);
     return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
         state.appStates.conversationState === ConversationState.InActive ||
-        (state.appStates.conversationState === ConversationState.Postchat && isConversationalSurveyEnabled && state.appStates.isConversationalSurvey)); // ADAD TODO state.appStates.isConversationalSurvey was added
+        (state.appStates.conversationState === ConversationState.Postchat && state.appStates.isConversationalSurveyEnabled && state.appStates.isConversationalSurvey));
 };
 
 export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
@@ -71,12 +70,10 @@ export const shouldShowConfirmationPane = (state: ILiveChatWidgetContext) => {
     return state.uiStates.showConfirmationPane;
 };
 
-export const shouldShowPostChatSurveyPane = (state: ILiveChatWidgetContext) => { // ADAD TODO - remove since no more post chat survey pane (might be okay to leave since will skip entire embed flow if MCS)
+export const shouldShowPostChatSurveyPane = (state: ILiveChatWidgetContext) => {
     console.log("ADAD shouldShowPostChatSurveyPane() isConversationalSurvey state", state.appStates.isConversationalSurvey);
     console.log("ADAD shouldShowPostChatSurveyPane() conversationState", state.appStates.conversationState);
-    // const isSeamlessSurveyFCBEnabled = true;
-    // return ((state.appStates.conversationState === ConversationState.Postchat) && !state.appStates.isConversationalSurvey) || !isSeamlessSurveyFCBEnabled; // replace false with isSeamlessSurvey
-    return (state.appStates.conversationState === ConversationState.Postchat) && !state.appStates.isConversationalSurvey; // ADAD TODO - do we need to factor in isConversationalSurveyEnabled flag here?
+    return (state.appStates.conversationState === ConversationState.Postchat) && !state.appStates.isConversationalSurvey;
 };
 
 export const shouldShowCallingContainer = (state: ILiveChatWidgetContext) => {

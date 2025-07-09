@@ -10,8 +10,6 @@ import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { MessageTypes } from "../../enums/MessageType";
 import { WebChatActionType } from "../../enums/WebChatActionType";
-// import { ConversationState } from "../../../../../contexts/common/ConversationState";
-// import { LiveChatWidgetActionType } from "../../../../../contexts/common/LiveChatWidgetActionType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const createConversationEndMiddleware = (conversationEndCallback: any, startConversationalSurveyCallback: any, endConversationalSurveyCallback: any) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
@@ -31,23 +29,19 @@ const createConversationEndMiddleware = (conversationEndCallback: any, startConv
                 }
                 if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
                     && (activity.channelData?.tags?.includes(Constants.startConversationalSurveyMessageTag)
-                        || activity.channelData?.tags?.includes(Constants.startConversationalSurveyMessageTag))) { // ADAD agentEndConversationMessageTag just for POC, otherwise startConversationalSurveyMessageTag
+                        || activity.channelData?.tags?.includes(Constants.startConversationalSurveyMessageTag))) {
                     console.log("ADAD reducer SET_LCW_STATE to use seamless survey");
-                    // console.log("ADAD JK commented out");
                     startConversationalSurveyCallback();
-                    // dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: true });
                 }
                 if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
                     && activity.channelData?.tags?.includes(Constants.endConversationalSurveyMessageTag)) {
                     console.log("ADAD set LCW state to InActive");
                     endConversationalSurveyCallback();
-                    // dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
                 }
             }
         } else if (activity.from?.role === DirectLineSenderRole.Channel &&
             activity.channelData?.type === MessageTypes.Thread &&
             activity.channelData?.properties) { // IC3
-            console.log("ADAD activity.channelData?.properties", activity.channelData?.properties);
             if (activity.channelData?.properties?.isdeleted === Constants.truePascal ||
                 !activity.channelData?.properties?.containsExternalEntitiesListeningAll) {
                 conversationEndCallback();

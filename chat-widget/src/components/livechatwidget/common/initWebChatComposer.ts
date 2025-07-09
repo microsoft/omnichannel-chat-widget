@@ -67,9 +67,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
         const addConversationalSurveyTagsCallback = (action: any) => {
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-            // console.log("~~ ADAD addConversationalSurveyTagsCallback() inMemoryState isConversationalSurvey", inMemoryState.appStates.isConversationalSurvey);
-            // console.log("~~ ADAD addConversationalSurveyTagsCallback() isConversationalSurvey", state.appStates?.isConversationalSurvey);
-            const isConversationalSurvey = inMemoryState.appStates?.isConversationalSurvey; // ADAD TODO check that LCW is in PostChat state as well!
+            const isConversationalSurvey = inMemoryState.appStates?.isConversationalSurvey;
             if (isConversationalSurvey) {
                 if (!action.payload.activity.channelData.tags.includes(Constants.c2ConversationalSurveyMessageTag)) {
                     console.log("~~ ADAD addConversationalSurveyTagsCallback() adding c2conversationalsurvey tag");

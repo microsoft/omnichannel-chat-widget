@@ -7,10 +7,6 @@ export const isPostChatSurveyEnabled = async (facadeChatSDK: FacadeChatSDK) : Pr
     console.log("ADAD chatConfig isPostChatSurveyEnabled()", chatConfig);
     const postChatEnabled = chatConfig.LiveWSAndLiveChatEngJoin
         ?.msdyn_postconversationsurveyenable.toString().toLowerCase();
-    // const agentSurveyMode = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode.toString() === "192350000";
-    // const botSurveyMode = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode.toString() === "192350000";
-    // const surveyProvider = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveyprovider === "600990001";
-    // const isConversationalSurveyEnabled = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_isConversationalPostChatSurveyEnabled.toString().toLowerCase() === "true";
     return postChatEnabled === "true";
 };
 

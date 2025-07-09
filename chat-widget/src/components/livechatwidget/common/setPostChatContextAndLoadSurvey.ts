@@ -14,8 +14,6 @@ import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConf
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
     try {
-        // const postChatEnabled = await isPostChatSurveyEnabled(facadeChatSDK);
-        // console.log("ADAD postChatEnabled setPostChatContextAndLoadSurvey", postChatEnabled);
         const postChatConfig = await getPostChatSurveyConfig(facadeChatSDK);
         console.log("ADAD postChatConfig setPostChatContextAndLoadSurvey()", postChatConfig);
         if (postChatConfig.isConversationalSurveyEnabled) {
@@ -36,7 +34,6 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
                 });
-                // dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
 
                 // Merge postChatConfig with postChatSurveyContext
                 const mergedContext = {
@@ -48,14 +45,6 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
 
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: mergedContext });
             }
-            // // TODO remove below:
-            // // ADAD we need to remove this, since we don't know what survey we are sending yet since it depends on which agent or bot ended the conversation
-            // // this will be done in LiveChatWidgetStateful instead, within the useEffect conversationEndedBy hook
-            // const isSeamlessSurvey = false;
-            // if (postChatConfig.isConversationalSurveyEnabled || isSeamlessSurvey) { // ADAD check if this can set the conversational survey very early on -> no bc we need to know later who ended chat
-            //     console.log("ADAD setPostChatContextAndLoadSurvey conversational survey enabled early!!");
-            //     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: true });
-            // }
         }
     } catch (ex) {
         TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.ERROR, {
@@ -68,7 +57,6 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
-        console.log("ADAD LoadPostChatSurvey event received", msg);
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
     });
 };

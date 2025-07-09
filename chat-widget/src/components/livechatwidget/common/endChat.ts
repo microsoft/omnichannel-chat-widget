@@ -44,13 +44,11 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             }
 
             // Use Case: If ended by Agent, stay chat in InActive state
-            console.log("ADAD no PCS but set conversation state to InActive -- FCB wrapped + condition change");
-            // Note: in conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
+            console.log("ADAD no PCS but set conversation state to InActive");
             let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
             if (isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
                 state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
-                console.log("ADAD hiding sendbox since not conversational survey");
-                // needed for agent end chat + isConversationalSurveyEnabled = true to set state to InActive (since we removed the InActive flow for conv survey earlier)
+                console.log("ADAD hiding sendbox since conversational survey");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
             }
             return;
@@ -89,20 +87,6 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
             return;
         } 
-        // // TODO remove:
-        // // this else logic will be handled inside initiatePostChat(), so it's redundant here
-        // else {
-        //     console.log("ADAD postchatContext is defined", postchatContext);
-        //     if (postchatContext.surveyProvider === "600990001") { // survey provider = MCS, also add postchatContext.isConversationalSurveyEnabled
-        //         console.log("ADAD postchatContext surveyProvider = MCS");
-        //         console.log("ADAD conversationDetails", conversationDetails);
-        //         if (((conversationDetails?.participantType === ParticipantType.Bot) && (postchatContext.botSurveyMode === "192350000")) 
-        //             || ((conversationDetails?.participantType === ParticipantType.User) && (postchatContext.agentSurveyMode === "192350000"))) { // survey mode = embed
-        //             console.log("ADAD reducer SET_LCW_STATE to use seamless survey inside prepareEndChat()");
-        //             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: true });
-        //         }
-        //     }
-        // }
 
         // Log PrepareEndChat if conversation ended by customer (bot and agent cases are handled in LiveChatWidgetStateful.tsx)
         if (state?.appStates?.conversationEndedBy) {
@@ -122,12 +106,8 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
         if (persistentEnabled && endedByCustomer) {
             await endChat(...commonParams, true, false, true);
         } else {
-            // ADAD -> why is endChat() called before initiatePostChat() in this case? -> make sure completion before post chat flows
             console.log("ADAD endChat() called within prepareEndChat()");
-            // // ADAD skipEndChatSDK = true [seemless PCS case] (postMessageToOtherTab = false???)
-            // await endChat(...commonParams, true, true, true);
-            // ADAD skipEndChatSDK = false -> let's end chat as is, and let MRT handle thread management
-            await endChat(...commonParams, false, true, true); // ADAD TODO what is the official "end" of endChat from MRT side? will the system message come in before initiatePostChat?
+            await endChat(...commonParams, false, true, true);
 
             if (postchatContext) {
                 console.log("ADAD initiatePostChat() called within prepareEndChat()");
@@ -256,7 +236,7 @@ export const endChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) =
 export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
     // dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
-    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: false }); // ADAD clear conversational survey state after chat close
+    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: false });
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_AUDIO_NOTIFICATION, payload: null });
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.NotSet });
