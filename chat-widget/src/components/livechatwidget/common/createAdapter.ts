@@ -9,6 +9,7 @@ import { NotificationLevel } from "../../webchatcontainerstateful/webchatcontrol
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { PauseActivitySubscriber } from "./ActivitySubscriber/PauseActivitySubscriber";
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
+import { AddActivitySubscriber } from "./ActivitySubscriber/AddActivitySubscriber";
 
 const defaultBotAuthConfig = {
     fetchBotAuthConfigRetries: 3,
@@ -54,6 +55,7 @@ export const createAdapter = async (facadeChatSDK: FacadeChatSDK, props?: ILiveC
         adapter = new ChatAdapterShim(adapter);
         adapter.addSubscriber(new PauseActivitySubscriber());
         adapter.addSubscriber(new BotAuthActivitySubscriber(botAuthActivitySubscriberOptionalParams));
+        adapter.addSubscriber(new AddActivitySubscriber());
         // Remove this code after ICM ID:544623085 is fixed
         adapter.addSubscriber(new HiddenAdaptiveCardActivitySubscriber());
         return adapter.chatAdapter;
