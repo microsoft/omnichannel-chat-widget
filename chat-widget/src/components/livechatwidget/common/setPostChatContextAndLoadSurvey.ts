@@ -15,9 +15,7 @@ import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConf
 export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
     try {
         const postChatConfig = await getPostChatSurveyConfig(facadeChatSDK);
-        console.log("ADAD postChatConfig setPostChatContextAndLoadSurvey()", postChatConfig);
         if (postChatConfig.isConversationalSurveyEnabled) {
-            console.log("ADAD setting isConversationSurveyEnabled to true");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_ENABLED, payload: true });
         }
         const postChatEnabled = postChatConfig.postChatEnabled;
@@ -29,7 +27,6 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
                 });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
-                console.log("ADAD postChatSurveyContext facadeChatSDK setPostChatContextAndLoadSurvey()", context);
                 TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
@@ -40,8 +37,6 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
                     ...context,
                     ...postChatConfig
                 };
-
-                console.log("ADAD mergedContext setPostChatContextAndLoadSurvey()", mergedContext);
 
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: mergedContext });
             }

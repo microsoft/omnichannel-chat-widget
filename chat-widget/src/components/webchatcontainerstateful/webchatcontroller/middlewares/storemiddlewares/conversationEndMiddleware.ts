@@ -17,11 +17,8 @@ const createConversationEndMiddleware = (conversationEndCallback: any, startConv
 
         const activity = action.payload.activity;
 
-        console.log("ADAD activity.channelId", activity.channelId);
         if (activity.channelId === "ACS_CHANNEL") {
-            console.log("ADAD activity.from?.role", activity.from?.role);
             if (activity.from?.role === DirectLineSenderRole.Bot) {
-                console.log("ADAD activity.channelData?.tags", activity.channelData?.tags);
                 if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
                     && (activity.channelData?.tags?.includes(Constants.agentEndConversationMessageTag)
                         || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
@@ -30,12 +27,10 @@ const createConversationEndMiddleware = (conversationEndCallback: any, startConv
                 if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
                     && (activity.channelData?.tags?.includes(Constants.startConversationalSurveyMessageTag)
                         || activity.channelData?.tags?.includes(Constants.startConversationalSurveyMessageTag))) {
-                    console.log("ADAD reducer SET_LCW_STATE to use seamless survey");
                     startConversationalSurveyCallback();
                 }
                 if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
                     && activity.channelData?.tags?.includes(Constants.endConversationalSurveyMessageTag)) {
-                    console.log("ADAD set LCW state to InActive");
                     endConversationalSurveyCallback();
                 }
             }

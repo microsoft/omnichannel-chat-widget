@@ -30,7 +30,6 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
-    console.log("ADAD shouldShowWebChatContainer() isConversationalSurveyEnabled", state.appStates.isConversationalSurveyEnabled);
     return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
         state.appStates.conversationState === ConversationState.InActive ||
         (state.appStates.conversationState === ConversationState.Postchat && state.appStates.isConversationalSurveyEnabled && state.appStates.isConversationalSurvey));
@@ -71,8 +70,6 @@ export const shouldShowConfirmationPane = (state: ILiveChatWidgetContext) => {
 };
 
 export const shouldShowPostChatSurveyPane = (state: ILiveChatWidgetContext) => {
-    console.log("ADAD shouldShowPostChatSurveyPane() isConversationalSurvey state", state.appStates.isConversationalSurvey);
-    console.log("ADAD shouldShowPostChatSurveyPane() conversationState", state.appStates.conversationState);
     return (state.appStates.conversationState === ConversationState.Postchat) && !state.appStates.isConversationalSurvey;
 };
 

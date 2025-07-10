@@ -35,14 +35,12 @@ const getUserSurveyMode = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCo
 const setSurveyMode = async (props: ILiveChatWidgetProps, participantType: string, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     if (participantType === ParticipantType.User) {
         postChatSurveyMode = getUserSurveyMode(props, state);
-        console.log("ADAD getUserSurveyMode", postChatSurveyMode);
         dispatch({ type: LiveChatWidgetActionType.SET_SURVEY_MODE, payload: postChatSurveyMode });
         return;
     }
 
     if (participantType === ParticipantType.Bot) {
         postChatSurveyMode = getBotSurveyMode(props, state);
-        console.log("ADAD getBotSurveyMode", postChatSurveyMode);
         dispatch({ type: LiveChatWidgetActionType.SET_SURVEY_MODE, payload: postChatSurveyMode });
         return;
     }
@@ -66,11 +64,7 @@ const embedModePostChatWorkflow = async (postChatContext: any, state: ILiveChatW
         Event: TelemetryEvent.EmbedModePostChatWorkflowStarted
     });
     if (postChatContext) {
-        console.log("ADAD embedModePostChatWorkflow() isConversationalSurvey", state.appStates.isConversationalSurvey);
-        console.log("ADAD embedModePostChatWorkflow() postChatContext", postChatContext);
-
         if (postChatContext.isConversationalSurveyEnabled && postChatContext.surveyProvider === SurveyProvider.MicrosoftCopilotStudio) {
-            console.log("ADAD embedModePostChatWorkflow() early return using postChatContext.isConversationalSurvey");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: true });
             return;
@@ -111,17 +105,14 @@ const isPostChatEnabled = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCo
 const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     try {
         const postChatConfig = await getPostChatSurveyConfig(facadeChatSDK);
-        console.log("ADAD postChatConfig getPostChatContext()", postChatConfig);
         const postChatEnabled = postChatConfig.postChatEnabled;
         if (postChatConfig.isConversationalSurveyEnabled) {
-            console.log("ADAD setting isConversationSurveyEnabled to true");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_ENABLED, payload: true });
         }
         if (postChatEnabled) {
             if (state?.domainStates?.postChatContext === undefined) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
-                console.log("ADAD postChatSurveyContext facadeChatSDK when context == undefined", context);
                 TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
@@ -132,8 +123,6 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
                     ...context,
                     ...postChatConfig
                 };
-
-                console.log("ADAD mergedContext", mergedContext);
 
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: mergedContext });
                 return mergedContext;

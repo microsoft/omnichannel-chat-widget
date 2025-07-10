@@ -29,13 +29,11 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
         endVoiceVideoCallIfOngoing(facadeChatSDK, dispatch);
 
         const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
-        console.log("ADAD conversationDetails prepareEndChat()", conversationDetails);
 
         // Use Case: When post chat is not configured
         if (conversationDetails?.canRenderPostChat?.toLowerCase() === Constants.false) {
             // If ended by customer, just close chat
             if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Customer) {
-                console.log("ADAD conversation ended by customer without post chat survey");
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithoutPostChat
@@ -44,11 +42,9 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             }
 
             // Use Case: If ended by Agent, stay chat in InActive state
-            console.log("ADAD no PCS but set conversation state to InActive");
             let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
             if (isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
                 state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
-                console.log("ADAD hiding sendbox since conversational survey");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
             }
             return;
@@ -62,7 +58,6 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
         // Use Case: Can render post chat scenarios
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const postchatContext: any = await getPostChatContext(facadeChatSDK, state, dispatch) ?? state?.domainStates?.postChatContext;
-        console.log("ADAD postchatContext getPostChatContext endChat()", postchatContext);
 
         if (postchatContext === undefined) {
 
@@ -106,11 +101,9 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
         if (persistentEnabled && endedByCustomer) {
             await endChat(...commonParams, true, false, true);
         } else {
-            console.log("ADAD endChat() called within prepareEndChat()");
             await endChat(...commonParams, false, true, true);
 
             if (postchatContext) {
-                console.log("ADAD initiatePostChat() called within prepareEndChat()");
                 await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
                 return;
             }
@@ -202,7 +195,6 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
-            console.log("ADAD closeChatWidget called within endChat(), conversation state set to Closed");
             closeChatWidget(dispatch);
             facadeChatSDK.destroy();
         }

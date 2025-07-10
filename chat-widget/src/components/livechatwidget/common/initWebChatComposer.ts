@@ -70,7 +70,6 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             const isConversationalSurvey = inMemoryState.appStates?.isConversationalSurvey;
             if (isConversationalSurvey) {
                 if (!action.payload.activity.channelData.tags.includes(Constants.c2ConversationalSurveyMessageTag)) {
-                    console.log("~~ ADAD addConversationalSurveyTagsCallback() adding c2conversationalsurvey tag");
                     action.payload.activity.channelData.tags.push(Constants.c2ConversationalSurveyMessageTag);
                 }
             }
@@ -80,7 +79,6 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         const conversationEndCallback = async () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const conversationDetails: any = await getConversationDetailsCall(facadeChatSDK);
-            console.log("ADAD conversationDetails conversationEndCallback()", conversationDetails);
             if (conversationDetails?.participantType === ParticipantType.Bot) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ConversationEndedThreadEventReceived,

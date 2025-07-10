@@ -466,10 +466,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
 
-                console.log("ADAD useEffect EndChatEvent, SET_CONVERSATION_ENDED_BY to customer");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
             } else {
-                console.log("ADAD useEffect EndChatEvent, endChat()");
                 const skipEndChatSDK = true;
                 const skipCloseChat = false;
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
@@ -550,14 +548,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
             }, {disablePolling: true});
 
-            facadeChatSDK?.onAgentEndSession(async (event) => {
-                console.log("ADAD onAgentEndSession event: ", event);           
+            facadeChatSDK?.onAgentEndSession(async (event) => {  
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-                console.log("ADAD inMemoryState: ", inMemoryState);
                 if ("participantsRemoved" in event && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
-                    console.log("ADAD skipping hiding sendbox, will be done later after state moves to InActive!!!");
                     if (inMemoryState?.appStates?.isConversationalSurveyEnabled === false) {
-                        console.log("ADAD hiding sendbox since not conversational survey");
                         setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
                     }
                     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
@@ -571,7 +565,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         if (state.appStates.conversationState === ConversationState.InActive) {
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
-                console.log("ADAD hiding sendbox since conversation is InActive");
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
         }
@@ -623,21 +616,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         //Confirmation pane dismissing through OK option, so proceed with end chat
         if (state.domainStates.confirmationState === ConfirmationState.Ok) {
-            console.log("ADAD useEffect confirmationState === ConfirmationState.Ok, setting conversation ended by customer");
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
         }
     }, [state.domainStates.confirmationState]);
 
     useEffect(() => {
         // Do not process anything during initialization
-        console.log("ADAD useEffect state?.appStates?.conversationEndedBy: ", state?.appStates?.conversationEndedBy);
         if (state?.appStates?.conversationEndedBy === ConversationEndEntity.NotSet) {
             return;
         }
 
         // If start chat failed, and C2 is trying to close chat widget
         if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
-            console.log("ADAD Customer is trying to close chat widget on start chat failure or post chat pane. Calling endChat() now.");
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.CustomerCloseChatOnFailureOrPostChat
@@ -648,7 +638,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // Scenario -> Chat was InActive and closing the chat (Refresh scenario on post chat)
         if (state?.appStates?.conversationState === ConversationState.InActive) {
-            console.log("ADAD Customer is trying to close chat widget on InActive chat. Calling endChat() now.");
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.CustomerCloseInactiveChat
@@ -658,20 +647,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-        console.log("ADAD useEffect inMemoryState isConversationalSurvey: ", inMemoryState.appStates.isConversationalSurveyEnabled);
-        console.log("ADAD useEffect inMemoryState: ", inMemoryState);
         let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
 
         // In conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
         // Hence setting ConversationState to InActive will be done later in the post chat flows
         if (!isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
             state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
-            console.log("ADAD setting conversation state to InActive, conversation ended by: ", state?.appStates?.conversationEndedBy);
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive }); 
         }
 
         // All other cases
-        console.log("ADAD useEffect prepareEndChat()");
         prepareEndChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
 
     }, [state?.appStates?.conversationEndedBy]);

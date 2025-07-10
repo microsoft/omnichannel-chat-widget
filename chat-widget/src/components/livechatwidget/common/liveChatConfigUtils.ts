@@ -4,7 +4,6 @@ import { isNullOrUndefined } from "../../../common/utils";
 
 export const isPostChatSurveyEnabled = async (facadeChatSDK: FacadeChatSDK) : Promise<boolean> => {
     const chatConfig = await facadeChatSDK.getLiveChatConfig();
-    console.log("ADAD chatConfig isPostChatSurveyEnabled()", chatConfig);
     const postChatEnabled = chatConfig.LiveWSAndLiveChatEngJoin
         ?.msdyn_postconversationsurveyenable.toString().toLowerCase();
     return postChatEnabled === "true";
@@ -12,7 +11,6 @@ export const isPostChatSurveyEnabled = async (facadeChatSDK: FacadeChatSDK) : Pr
 
 export const getPostChatSurveyConfig = async (facadeChatSDK: FacadeChatSDK) : Promise<any> => {
     const chatConfig = await facadeChatSDK.getLiveChatConfig();
-    console.log("ADAD chatConfig isPostChatSurveyEnabled()", chatConfig);
     const postChatEnabled = chatConfig.LiveWSAndLiveChatEngJoin
         ?.msdyn_postconversationsurveyenable.toString().toLowerCase();
     const agentSurveyMode = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode?.toString();
@@ -24,7 +22,7 @@ export const getPostChatSurveyConfig = async (facadeChatSDK: FacadeChatSDK) : Pr
         agentSurveyMode: agentSurveyMode,
         botSurveyMode: botSurveyMode,
         surveyProvider: surveyProvider,
-        isConversationalSurveyEnabled: (isConversationalSurveyEnabled === "true") || true // ADAD TODO hardcode true for testing!
+        isConversationalSurveyEnabled: (isConversationalSurveyEnabled === "true")
     };
 };
 
