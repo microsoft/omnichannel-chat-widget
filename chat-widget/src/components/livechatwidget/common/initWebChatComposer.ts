@@ -40,6 +40,8 @@ import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { Constants } from "../../../common/Constants";
+import { ConversationState } from "../../../contexts/common/ConversationState";
+import { executeReducer } from "../../../contexts/createReducer";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -63,6 +65,17 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
     if (!webChatStore) {
 
+        const addConversationalSurveyTagsCallback = (action: any) => {
+            const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+            const isConversationalSurvey = inMemoryState.appStates?.isConversationalSurvey;
+            if (isConversationalSurvey) {
+                if (!action.payload.activity.channelData.tags.includes(Constants.c2ConversationalSurveyMessageTag)) {
+                    action.payload.activity.channelData.tags.push(Constants.c2ConversationalSurveyMessageTag);
+                }
+            }
+            return action;
+        };
+
         const conversationEndCallback = async () => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const conversationDetails: any = await getConversationDetailsCall(facadeChatSDK);
@@ -85,6 +98,14 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             }
         };
 
+        const startConversationalSurveyCallback = async () => {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: true });
+        };
+
+        const endConversationalSurveyCallback = async () => {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+        };
+
         webChatStore = createStore(
             {}, //initial state
             preProcessingMiddleware,
@@ -94,8 +115,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 state.domainStates.liveChatConfig?.maxUploadFileSize as string,
                 localizedTexts
             ),
-            channelDataMiddleware,
-            createConversationEndMiddleware(conversationEndCallback),
+            channelDataMiddleware(addConversationalSurveyTagsCallback),
+            createConversationEndMiddleware(conversationEndCallback, startConversationalSurveyCallback, endConversationalSurveyCallback),
             createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
             createMessageTimeStampMiddleware,
             createMessageSequenceIdOverrideMiddleware,
