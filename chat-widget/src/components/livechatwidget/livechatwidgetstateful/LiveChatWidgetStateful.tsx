@@ -548,7 +548,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
             }, {disablePolling: true});
 
-            facadeChatSDK?.onAgentEndSession(async (event) => {  
+            facadeChatSDK?.onAgentEndSession((event) => {  
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 if ("participantsRemoved" in event && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
                     if (inMemoryState?.appStates?.isConversationalSurveyEnabled === false) {
