@@ -83,7 +83,7 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             return handleSystemMessage(next, args, card, renderMarkdown, systemMessageStyleProps);
         }
 
-        if (card.activity.channelData?.tags.includes('fetch-persistent-chat-history-trigger')) {
+        if (isTagIncluded(card, 'fetch-persistent-chat-history-trigger')) {
             return <LazyLoadActivity />;
         }
 
