@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Widget
 
+
 ## [Unreleased]
+
+## [1.8.1]
 
 ### Added
 
@@ -16,16 +19,17 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix authentication error pane not honoring customization
 - Fix to ensure getReconnectableChat always include a valid token
 - Adding missing closure success telemetry for GetChatReconnectContextSDKCallStarted
 - Cleanup OOH Pane title obtained from props.
 - Handling participant added/deleted in thread as system message
+- Fix chat continuation beyond business hours for active conversations - allow customers to continue active chats when reloading widget outside operating hours
 
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.1)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.2)
-
 
 ### Fixed
 

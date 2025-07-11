@@ -29,6 +29,7 @@ import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
+import { WidgetLoadCustomErrorString } from "../Constants";
 import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
@@ -114,7 +115,7 @@ export class FacadeChatSDK {
                 Description: "Invalid token format",
                 ExceptionDetails: { message: "Invalid token format, must be in JWT format", token: last3digits }
             });
-            throw new Error("Invalid token format, must be in JWT format");
+            throw new Error("Authentication Setup Error: Invalid token format, must be in JWT format");
         }
 
         try {
@@ -135,16 +136,16 @@ export class FacadeChatSDK {
                 ExceptionDetails: { message: "Token payload is not valid JSON", token: last3digits }
             });
 
-            throw new Error("Invalid token payload, payload is not valid JSON");
+            throw new Error("Authentication Setup Error: Invalid token payload, payload is not valid JSON");
 
         } catch (e) {
-            console.error("Failed to decode token", e);
+            console.error("Authentication Setup Error: Failed to decode token", e);
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "Failed to decode token",
                 ExceptionDetails: { message: "Failed to decode token", token: last3digits }
             });
-            throw new Error("Failed to decode token");
+            throw new Error("Authentication Setup Error: Failed to decode authentication token");
         }
     }
 
@@ -168,7 +169,7 @@ export class FacadeChatSDK {
                         "Token": last3digits,
                     }
                 });
-                throw new Error(`New token is already expired, with epoch time ${this.expiration} , last 3 digits of token: ${last3digits}`);
+                throw new Error("Authentication Setup Error: New authentication token is already expired");
             }
         }
     }
@@ -266,9 +267,9 @@ export class FacadeChatSDK {
             return fn();
         }
 
-        const executionErrorMessage = `Authentication failed: Process to get a token failed for ${functionName}, ${pingResponse.message}`;
+        const executionErrorMessage = "Authentication Setup Error: Token validation failed - GetAuthToken function is not present";
         //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
-        console.error(executionErrorMessage);
+        console.error(`${executionErrorMessage} Additional details: Process to get a token failed for ${functionName}, ${pingResponse.message}`);
         BroadcastService.postMessage({
             eventName: BroadcastEvent.OnWidgetError,
             payload: {
@@ -410,9 +411,9 @@ export class FacadeChatSDK {
             // If token is not set, try to get it using tokenRing
             const pingResponse = await this.tokenRing();
             if (pingResponse.result === false) {
-                const errorMessage = `Authentication failed: Process to get a token failed for getReconnectableChats, ${pingResponse.message}`;
+                const errorMessage = "Authentication Setup Error: Token validation failed for reconnectable chats";
                 //telemetry is already logged in tokenRing, so no need to log again, just return the error and communicate to the console
-                console.error(errorMessage);
+                console.error(`Authentication failed: Process to get a token failed for getReconnectableChats, ${pingResponse.message}`);
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.OnWidgetError,
                     payload: {
