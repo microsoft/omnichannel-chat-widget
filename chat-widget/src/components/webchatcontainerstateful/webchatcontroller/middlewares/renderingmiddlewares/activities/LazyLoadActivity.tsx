@@ -62,7 +62,7 @@ const LazyLoadActivity = () => {
         LazyLoadHandler.paused = true; // Pause to prevent unexpected pull during initialization
         setTimeout(() => {
             LazyLoadHandler.paused = false;
-        }, 2000);
+        }, 1000);
 
         return () => {
             LazyLoadHandler.unmount();
