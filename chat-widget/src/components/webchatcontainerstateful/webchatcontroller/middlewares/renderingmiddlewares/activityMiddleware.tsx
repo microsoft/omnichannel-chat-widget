@@ -17,6 +17,7 @@ import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
 import { escapeHtml } from "../../../../../common/utils";
+import LazyLoadActivity from "./activities/LazyLoadActivity";
 
 const loggedSystemMessages = new Array<string>();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -80,6 +81,10 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
 
         if (isTagIncluded(card, Constants.systemMessageTag)) {
             return handleSystemMessage(next, args, card, renderMarkdown, systemMessageStyleProps);
+        }
+
+        if (card.activity.channelData?.tags.includes('fetch-persistent-chat-history-trigger')) {
+            return <LazyLoadActivity />;
         }
 
         if (card.activity.text
