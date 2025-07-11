@@ -1,7 +1,6 @@
 
 import path from "path";
 import type { Configuration } from "webpack";
-// import CopyWebpackPlugin from "copy-webpack-plugin";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
