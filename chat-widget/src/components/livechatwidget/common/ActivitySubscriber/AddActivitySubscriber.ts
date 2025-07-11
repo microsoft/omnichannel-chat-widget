@@ -9,9 +9,8 @@ export class AddActivitySubscriber implements IActivitySubscriber {
     
     constructor() {
         window.addEventListener(ChatWidgetEvents.ADD_ACTIVITY, (event: any) => {
-            console.log(event);
-            if (event?.detail?.payload?.activity) {                
-                this.observer.next(event.detail.payload.activity);
+            if (event?.detail?.payload?.activity) {
+                this.observer?.next(event.detail.payload.activity);
             }
         });
     }
