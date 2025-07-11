@@ -242,7 +242,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             border-radius: ${webChatContainerProps?.webChatStyles?.bubbleBorderRadius?? 0 } !important; /* Override border-radius */
         }
 
-        .webchat__stacked-layout_container>div {
+        .webchat__stacked-layout_container>div>div {
             background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background?? ""}
         }
         .webchat__toast_text {
@@ -256,7 +256,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-            <BasicWebChat></BasicWebChat>
+            <div id="ms_lcw_webchat_root" style={{height: 'inherit', width: 'inherit'}}>
+                <BasicWebChat></BasicWebChat>
+            </div>
         </Stack>
         </>
     );
