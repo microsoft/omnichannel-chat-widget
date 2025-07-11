@@ -26,6 +26,7 @@ import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/r
 import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { useChatContextStore } from "../..";
+import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
 
 let uiTimer : ITimer;
 
@@ -257,6 +258,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{height: 'inherit', width: 'inherit'}}>
+                <WebChatEventSubscribers />
                 <BasicWebChat></BasicWebChat>
             </div>
         </Stack>
