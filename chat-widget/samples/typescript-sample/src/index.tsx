@@ -1,7 +1,7 @@
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
 import React, { useEffect, useState } from "react";
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom/client";
 import * as OcChatSdkPackageinfo from "@microsoft/omnichannel-chat-sdk/package.json";
 import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/package.json";
 import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
@@ -9,7 +9,6 @@ import { defaultProps } from "../src/common/defaultProps";
 import { CoffeeChatIconBase64 } from "../src/common/assets";
 
 const getOmnichannelChatConfig = () => {
-    // add your own OC setting, hard-coded just for sample, should be replaced with a better handling
     const omnichannelConfig = {
         orgId: "<DATA-ORG-ID>",
         orgUrl: "<DATA-ORG-URL>",
@@ -90,7 +89,7 @@ const App = () => {
                 styleProps: { // example: adjusting sizing and placement of the chat widget
                     generalStyles: {
                         width: "50%",
-                        height: "800px",
+                        height: "600px",
                         bottom: "30px",
                         right: "30px"
                     }
@@ -117,6 +116,7 @@ const App = () => {
     );
 };
 
-const container = document.getElementById("root");
-const root = createRoot(container!);
-root.render(<App />);
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+root.render(
+    <App />
+);
