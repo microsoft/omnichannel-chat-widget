@@ -19,6 +19,18 @@ const WebChatEventSubscribers = (props: WebChatEventSubscribersProps) => {
             if (props.persistentChatHistoryEnabled === true) {
                 setTimeout(() => {
                     dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
+                    dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {
+                        activity: {
+                            from: {
+                                role: "bot"
+                            },
+                            timestamp: 0, // Set to 0 to stay at the top of the chat history
+                            type: 'message',
+                            channelData: {
+                                tags: ['fetch-persistent-chat-history-trigger']
+                            }
+                        }
+                    });
                 }, 2000);
             }
         }
