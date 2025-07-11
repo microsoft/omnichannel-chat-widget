@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Remove `Important` from link gift , preventing new styles to be applied
 - Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
 - Removed deprecated `crypto` package from TypeScript sample (now built into Node.js)
 - Fixed TypeScript compilation error by removing unsupported `hideCurrentCallTitle` property
@@ -25,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - Added public/index.html template with proper styling and configuration guidance for TypeScript sample
 - Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
 - Added browserslist configuration to TypeScript sample package.json for better browser compatibility
+
 
 ## [1.8.1]
 
