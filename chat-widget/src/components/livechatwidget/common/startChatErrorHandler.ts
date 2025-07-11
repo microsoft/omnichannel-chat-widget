@@ -15,6 +15,14 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { getWidgetCacheIdfromProps } from "../../../common/utils";
 
+// Helper function to check if error is authentication-related
+const isAuthenticationError = (errorMessage: string): boolean => {
+    return errorMessage === WidgetLoadCustomErrorString.AuthenticationFailedErrorString ||
+           errorMessage.startsWith("Authentication Setup Error:") ||
+           errorMessage.includes("Token validation failed") ||
+           errorMessage.includes("Authentication token");
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps | undefined, ex: any, isStartChatSuccessful: boolean) => {
     if (!ex) {
@@ -22,13 +30,11 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
         return;
     }
 
-    // Handle internal or misc errors
-    if (ex.message === WidgetLoadCustomErrorString.AuthenticationFailedErrorString) {
+    // Handle authentication-related errors
+    if (isAuthenticationError(ex.message)) {
         dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.AuthSetupError });
-        // set conversation to error to enforce error UI pane
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Error });
-
         logWidgetLoadCompleteWithError(ex);
+        // Don't return early - let the generic error handling logic handle hideErrorUIPane and telemetry
     }
     if (ex.message === WidgetLoadCustomErrorString.NetworkErrorString) {
         logWidgetLoadCompleteWithError(ex);
@@ -52,8 +58,8 @@ export const handleStartChatError = (dispatch: Dispatch<ILiveChatWidgetAction>, 
             case ChatSDKErrorName.UninitializedChatSDK:
                 handleUninitializedChatSDK(ex);
                 break;
-            // Handle the case indicating failure to retrieve an authenticated chat conversation 
             case ChatSDKErrorName.AuthenticatedChatConversationRetrievalFailure:
+                dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
                 logWidgetLoadCompleteWithError(ex);
                 break;
             case ChatSDKErrorName.InvalidConversation:
@@ -213,6 +219,9 @@ const handleChatTokenRetrievalFailure = (dispatch: Dispatch<ILiveChatWidgetActio
     } else {
         if (ex.httpResponseStatusCode === 401) {
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.Unauthorized });
+        } else {
+            // For other authentication-related token retrieval failures, set as AuthSetupError
+            dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILURE_TYPE, payload: StartChatFailureType.AuthSetupError });
         }
         logWidgetLoadCompleteWithError(ex);
     }
