@@ -10,6 +10,23 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Remove `Important` from link gift , preventing new styles to be applied
+- Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
+- Removed deprecated `crypto` package from TypeScript sample (now built into Node.js)
+- Fixed TypeScript compilation error by removing unsupported `hideCurrentCallTitle` property
+- Updated React from 16.14.0 to 18.3.1 and implemented React 18 createRoot API
+- Updated Microsoft Omnichannel packages to latest versions:
+  - `@microsoft/omnichannel-chat-widget`: ^1.0.4 → ^1.8.0
+  - `@microsoft/omnichannel-chat-sdk`: ^1.4.0 → ^1.11.2
+  - `@microsoft/omnichannel-chat-components`: ^1.0.1 → ^1.1.12
+- Updated build tools including Babel, Webpack, and TypeScript to resolve compatibility issues
+
+### Added
+
+- Added comprehensive README.md with setup and configuration instructions for TypeScript sample
+- Added public/index.html template with proper styling and configuration guidance for TypeScript sample
+- Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
+- Added browserslist configuration to TypeScript sample package.json for better browser compatibility
+
 
 ## [1.8.1]
 
