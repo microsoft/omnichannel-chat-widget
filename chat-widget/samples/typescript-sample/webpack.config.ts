@@ -1,52 +1,69 @@
-const path = require('path');
+
+import path from "path";
+import type { Configuration } from "webpack";
+// import CopyWebpackPlugin from "copy-webpack-plugin";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const disableFullyQualifiedNameResolutions = {
-  test: /\.m?js/,
-  resolve: {
-    fullySpecified: false,
-  },
+    test: /\.m?js/,
+    resolve: {
+        fullySpecified: false,
+    },
 };
 
 const babelLoaderConfiguration = {
-  test: /\.(ts|js)x?$/,
-  exclude: /node_modules/,
-  use: {
-    loader: 'babel-loader',
-    options: {
-      presets: [
-        '@babel/preset-env',
-        '@babel/preset-react',
-        '@babel/preset-typescript',
-      ],
-    },
-  },
+    test: /\.(ts|js)x?$/,
+    exclude: /node_modules/,
+    use: {
+        loader: "babel-loader",
+        options: {
+            presets: [
+                "@babel/preset-env",
+                "@babel/preset-react",
+                "@babel/preset-typescript",
+            ],
+        },
+    }
 };
 
-module.exports = {
-  entry: './src/index.tsx',
-  mode: 'development',
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
-  module: {
-    rules: [
-      babelLoaderConfiguration,
-      disableFullyQualifiedNameResolutions,
-    ],
-  },
-  externals: {
-    "react-native": true,
-  },
-  resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    fallback: {
-      assert: require.resolve('assert'),
-      crypto: require.resolve('crypto-browserify'),
-      stream: require.resolve('stream-browserify'),
+const config: Configuration = {
+    entry: "./src/index.tsx",
+    mode: "development",
+    module: {
+        rules: [
+            babelLoaderConfiguration,
+            disableFullyQualifiedNameResolutions
+        ],
     },
-    alias: {
-     'react-native$': 'react-native-web'
-   },
-  },
+    resolve: {
+        extensions: [".tsx", ".ts", ".js"],
+        alias: {
+            "react-native$": "react-native-web"
+        },
+        fallback: {
+            assert: "assert",
+            crypto: "crypto-browserify",
+            stream: "stream-browserify"
+        },
+    },
+    output: {
+        path: path.resolve(__dirname, "dist"),
+        filename: "bundle.js",
+    },
+    // plugins: [
+    //     new CopyWebpackPlugin({
+    //         patterns: [
+    //             {
+    //                 from: path.resolve(__dirname, "public"),
+    //                 to: path.resolve(__dirname, "dist"),
+    //             },
+    //         ],
+    //     }),
+    // ]
 };
+
+export default config;
