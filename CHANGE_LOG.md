@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Remove `Important` from link gift , preventing new styles to be applied
+
 ## [1.8.1]
 
 ### Added
