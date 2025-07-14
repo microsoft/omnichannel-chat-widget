@@ -188,7 +188,7 @@ export const getTimestampHourMinute = (timestampStr: string) => {
 export const parseAdaptiveCardPayload = (payload: string, requiredFieldMissingMessage: string) => {
     if (payload && payload !== "{}") {
         try {
-            const parsedPayload = JSON.parse(payload.replace("*", "&#42;"));
+            const parsedPayload = JSON.parse(payload.replace(/\*/g, "&#42;"));
             const body = parsedPayload.body;
             if (body) {
                 //Parse ID field into available options and add required error messages
