@@ -147,7 +147,7 @@ export class Constants {
 }
 
 export const Regex = class {
-    public static readonly EmailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    public static readonly EmailRegex = "^(?!.*\\.\\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 };
 
 export class HtmlIdNames {
