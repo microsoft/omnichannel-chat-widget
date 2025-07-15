@@ -1,3 +1,9 @@
+permissions:
+  contents: read       # For checkout
+  actions: write       # For downloading and uploading artifacts
+  pull-requests: write # For DangerJS to comment on PRs
+  checks: write        # For writing check results
+
 name: chat-widget-pr
 
 on:
