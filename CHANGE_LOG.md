@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
   - `@microsoft/omnichannel-chat-sdk`: ^1.4.0 → ^1.11.2
   - `@microsoft/omnichannel-chat-components`: ^1.0.1 → ^1.1.12
 - Updated build tools including Babel, Webpack, and TypeScript to resolve compatibility issues
+- Fix inefficient EmailRegex causing exponential backtracking vulnerability
 
 ### Added
 
@@ -27,6 +28,9 @@ All notable changes to this project will be documented in this file.
 - Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
 - Added browserslist configuration to TypeScript sample package.json for better browser compatibility
 
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.11.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.3)
 
 ## [1.8.1]
 
