@@ -42,9 +42,9 @@ describe("Regex unit tests", () => {
             // Test with input that could cause exponential backtracking
             const problematicInput = "\u0001".repeat(30) + "@test.com";
             
-            const start = Date.now();
+            const start = performance.now();
             const result = emailRegex.test(problematicInput);
-            const end = Date.now();
+            const end = performance.now();
             
             // Should complete quickly (less than 100ms for such a simple test)
             expect(end - start).toBeLessThan(100);
