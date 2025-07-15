@@ -1,5 +1,6 @@
 permissions:
-  contents: read
+  contents: read    # For checkout
+  actions: read     # For downloading artifacts between jobs
 
 name: chat-widget-release
 
