@@ -7,4 +7,5 @@ export interface ICustomEvent {
     elementId?: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     payload?: any,
+    eventId?: number
 }
