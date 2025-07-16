@@ -15,6 +15,61 @@ let pubChannel: any;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let subChannel: any;
 
+class EventQueue {
+    private queueing: boolean = true;
+    private channelEventQueue: ICustomEvent[];
+    private queuingId?: NodeJS.Timeout;
+
+    constructor() {
+        this.channelEventQueue = [];
+        this.queueEvents();
+    }
+
+    processEvents() {
+        while (this.channelEventQueue.length > 0) {
+            const event = this.channelEventQueue.shift();
+            if (event) {
+                pubChannel.postMessage(event);
+            }
+        }
+    }
+
+    queueEvents(timeout = 3000) {
+        this.processEvents();
+        if (this.queueing) {
+            this.queuingId = setTimeout(() => {
+                this.queueEvents();
+            }, timeout);
+        }
+    }
+
+    resumeQueueing() {
+        this.queueing = true;
+    }
+
+    stopQueueing() {
+        this.queueing = false;
+        this.queuingId = undefined
+    }
+
+    pushEvent(event: any) {
+        this.channelEventQueue.push(event);
+    }
+
+    popEvent(event: any) {
+        const eventId = event.eventId;
+        this.channelEventQueue = this.channelEventQueue.filter(event => event.eventId !== eventId);
+    }
+
+    dispose() {
+        if (this.queuingId) {
+            clearTimeout(this.queuingId);
+            this.queuingId = undefined;
+        }
+        this.channelEventQueue = [];
+    }
+}
+
 export const BroadcastServiceInitialize = (channelName: string) => {
     if (broadcastServicePubList[channelName]) {
         pubChannel = broadcastServicePubList[channelName];
