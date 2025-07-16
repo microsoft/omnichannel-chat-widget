@@ -115,6 +115,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [conversationId, setConversationId] = useState<string>("");
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
+
+    // isTabValidationEnabled is true only when disableSameTabEventValidation is explicitly false
+    // When prop is missing/undefined or true, validation is disabled (isTabValidationEnabled = false)
+    const isTabValidationEnabled = props?.featureConfigProps?.disableSameTabEventValidation === false;
+
     const bubbleBackground = props.webChatContainerProps?.webChatStyles?.bubbleBackground ??
         (props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background);
     const bubbleTextColor = props.webChatContainerProps?.webChatStyles?.bubbleTextColor ??
@@ -384,7 +389,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
          * the event is expected to be emitted from scripting layer.
          */
         BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
-            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId)) {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
                 return;
             }
 
@@ -404,7 +409,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 return;
             }
             // If the startChat event is not initiated by the same tab. Ignore the call
-            if ( isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId)) {
+            if ( isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
                 return;
             }
 
@@ -502,7 +507,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             props.controlProps?.widgetInstanceId ?? "");
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
-            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId)) {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
@@ -517,7 +522,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
             console.log("WidgetSize event received", msg);
-            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId)) {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
                 console.warn("WidgetSize event received from other runtime, ignoring.");
                 dispatch({ type: LiveChatWidgetActionType.PING, payload: !state.domainStates.ping });
                 return;
@@ -536,7 +541,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         BroadcastService.getMessageByEventName(BroadcastEvent.Ping).subscribe((msg) => {
             console.log("Ping event received", msg);
-            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId)) {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
                 console.warn("Ping event received from other runtime, NOT ignoring.");
                 if (msg?.payload?.isMinimized !== state.appStates.isMinimized) {
                     console.log("Ping : Updating minimized state:", msg?.payload?.isMinimized);
