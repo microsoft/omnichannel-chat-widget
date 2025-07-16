@@ -178,6 +178,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+            console.log("Start chat optional params:", startChatOptionalParams);
             await facadeChatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
         } catch (error) {

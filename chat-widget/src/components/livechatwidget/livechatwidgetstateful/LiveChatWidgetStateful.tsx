@@ -516,7 +516,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
+            console.log("WidgetSize event received", msg);
             if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId)) {
+                console.warn("WidgetSize event received from other runtime, ignoring.");
                 dispatch({ type: LiveChatWidgetActionType.PING, payload: !state.domainStates.ping });
                 return;
             }
@@ -533,14 +535,20 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         BroadcastService.getMessageByEventName(BroadcastEvent.Ping).subscribe((msg) => {
+            console.log("Ping event received", msg);
             if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId)) {
+                console.warn("Ping event received from other runtime, NOT ignoring.");
                 if (msg?.payload?.isMinimized !== state.appStates.isMinimized) {
+                    console.log("Ping : Updating minimized state:", msg?.payload?.isMinimized);
                     dispatch({ type: LiveChatWidgetActionType.PING_MINIMIZE_COMBO, payload: {
                         ping : !state.domainStates.ping,
                         isMinimized : msg?.payload?.isMinimized
                     } });
                 }
             }
+
+            console.warn("Ping event completed");
+
         });
 
         // Retrieve convId
@@ -714,8 +722,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         const chatWidgetStateChangeEvent: ICustomEvent = {
             eventName: widgetStateEventId,
             payload: {
-                ...state            }
+                ...state
+            }
         };
+        console.log("LOADING :: Chat widget state change event:", chatWidgetStateChangeEvent);
         BroadcastService.postMessage(chatWidgetStateChangeEvent);
     }, [state]);
 
