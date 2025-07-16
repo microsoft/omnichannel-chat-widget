@@ -491,6 +491,9 @@ export function getDeviceType(): string {
  * @param lcwRuntimeId The current runtimeId of this widget instance.
  * @returns true if the runtimeId is from a different runtime, false otherwise.
  */
-export const isFromOtherRuntime = (runtimeId: string | undefined, lcwRuntimeId: string | undefined): boolean => {
+export const isFromOtherRuntime = (runtimeId: string | undefined, lcwRuntimeId: string | undefined, isTabValidationEnabled: boolean): boolean => {
+    if (!isTabValidationEnabled) {
+        return false; // If same tab validation is disabled, always return false
+    }
     return runtimeId !== undefined && runtimeId !== lcwRuntimeId;
 };
