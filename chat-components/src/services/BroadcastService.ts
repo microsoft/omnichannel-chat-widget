@@ -14,6 +14,7 @@ const broadcastServiceSubList: Record<string, any> = {};
 let pubChannel: any;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let subChannel: any;
+let eventQueue: EventQueue;
 
 class EventQueue {
     private queueing: boolean = true;
@@ -71,6 +72,8 @@ class EventQueue {
 }
 
 export const BroadcastServiceInitialize = (channelName: string) => {
+    eventQueue = new EventQueue();
+
     if (broadcastServicePubList[channelName]) {
         pubChannel = broadcastServicePubList[channelName];
     } else {
