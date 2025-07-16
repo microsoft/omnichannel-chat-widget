@@ -2530,10 +2530,10 @@
     "@nevware21/ts-async" ">= 0.5.4 < 2.x"
     "@nevware21/ts-utils" ">= 0.11.8 < 2.x"
 
-"@microsoft/botframework-webchat-adapter-azure-communication-chat@^0.0.1-beta.4":
-  version "0.0.1-beta.4"
-  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta.4.tgz#bbb86f70ff8e1899fbfa9f3c83cbbdb2b8d450d1"
-  integrity sha512-dTAtGkTprwhHO0+hQmj3u3ODF/UbzwgvjZbMhpgEuvCTaYdKWWLPqFvYeFTZi1bLY6XoN4vOySeEEIBc0qVwzw==
+"@microsoft/botframework-webchat-adapter-azure-communication-chat@^0.0.1-beta.5":
+  version "0.0.1-beta.5"
+  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta.5.tgz#0795960203db464c184714e2327cbd89bb3c3fa0"
+  integrity sha512-mnRuRqxUIQAEjL1319glhC9uCJYzEZGdxEDRrDbMYwGpu6OPHOu59FSTQCNHY/jmEXWBwEWIHh5U7y8/tuaeQw==
   dependencies:
     "@azure/communication-chat" "1.6.0-beta.5"
     "@azure/communication-common" "^2.3.1"
@@ -2555,10 +2555,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.295.tgz#d3c8d7ab186f422727ba112d6ebe5fe8e41051d9"
   integrity sha512-W+IzEBw8a6LOOfRJM02dTT7BDZijxm+Z7lhtOAz1+y9vQm1Kdz9jlAO+qCEKsfxtUOmKilW8DIRqFw2aUgKeGg==
 
-"@microsoft/ocsdk@^0.5.17":
-  version "0.5.17"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.17.tgz#118b69361c4dbfea94190c897c47ecee84251e22"
-  integrity sha512-Pw89dx8mWvT3qaDJ+dbggkEYeEr9KMRD7PmAUunZJo1TrJIoCULTj89VlqzepF9Jg8bInAYtm+S7YV5E2qllmQ==
+"@microsoft/ocsdk@^0.5.18":
+  version "0.5.18"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.18.tgz#93618a2228e32695f21d9ad52a5693e13dee933b"
+  integrity sha512-oC97/9Hc4kJDuuHABvBm1qnNYyeC9sW/QEcHjwD4yj2bIkMonbvDTeVhTMpxv6KL0P/4dHMgHkjpR2fADyYmGw==
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@types/node" "^22.13.10"
@@ -2584,15 +2584,15 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.11.2":
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.2.tgz#50962f65fb3d42705cec844fc8181ce6f37eabe4"
-  integrity sha512-jVaPq3WnYhQsFFZIWE8F40uu56ZUfodfhEdrv3y9lpO9BgwxnQU66pYCcl4B5hBon2y9uGjdFavXnYE5edgvDg==
+"@microsoft/omnichannel-chat-sdk@^1.11.3":
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.3.tgz#9ec2b4227c13fca999b61f0e08e4afa973bdb14f"
+  integrity sha512-V3x38k1WYRH02AFYVoC+FR2bholR/3ZjoEpmDDhNFQw4AMRNPy65GRXxdEzwJ1TGFwyiK+2gCZbsT7ZVhquaDw==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
-    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.4"
-    "@microsoft/ocsdk" "^0.5.17"
+    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.5"
+    "@microsoft/ocsdk" "^0.5.18"
     "@microsoft/omnichannel-amsclient" "^0.1.10"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
