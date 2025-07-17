@@ -19,22 +19,24 @@ let eventQueue: EventQueue;
 
 class EventQueue {
     private queueing: boolean = true;
-    private channelEventQueue: ICustomEvent[];
+    private channelEventQueue: Map<string, ICustomEvent>;
     private queueingId?: NodeJS.Timeout;
 
     constructor() {
-        this.channelEventQueue = [];
+        this.channelEventQueue = new Map<string, ICustomEvent>();
         this.queueEvents();
     }
 
     processEvents() {
-        let queueSize = this.channelEventQueue.length; // Set queue size before processing to prevent infinite loop
+        let queueSize = this.channelEventQueue.size; // Set queue size before processing to prevent infinite loop
         while (queueSize > 0) {
-            const event = this.channelEventQueue.shift();
-            if (event) {
+            const entries = this.channelEventQueue.entries();
+            const entry = entries.next(); // Process entry based on insertion order
+            if (entry?.value) {
+                const [_, event] = entry.value;
                 pubChannel.postMessage(event);
+                eventQueue.pushEvent(event);
             }
-
             queueSize -= 1;
         }
     }
@@ -58,12 +60,12 @@ class EventQueue {
     }
 
     pushEvent(event: any) {
-        this.channelEventQueue.push(event);
+        this.channelEventQueue.set(event.eventId, event);
     }
 
     popEvent(event: any) {
         const eventId = event.eventId;
-        this.channelEventQueue = this.channelEventQueue.filter(event => event.eventId !== eventId);
+        this.channelEventQueue.delete(eventId);
     }
 
     dispose() {
@@ -71,7 +73,8 @@ class EventQueue {
             clearTimeout(this.queueingId);
             this.queueingId = undefined;
         }
-        this.channelEventQueue = [];
+
+        this.channelEventQueue.clear();
     }
 }
 
