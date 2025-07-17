@@ -93,6 +93,7 @@ export const BroadcastServiceInitialize = (channelName: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     subChannel.onmessage = (message: any) => {
         newMessage.next(message);
+        eventQueue.popEvent(message);
     };
 };
 
@@ -103,7 +104,16 @@ export const BroadcastService = {
          * Omit copying methods to prevent 'DataCloneError' in older browsers when passing an object with functions
          * This exception occurs when an object can't be clone with the 'structured clone algorithm' (used by postMessage)
          */
-        pubChannel.postMessage(JSON.parse(JSON.stringify(message)));
+        try {
+            const messageCopy = JSON.parse(JSON.stringify(message));
+            const eventId = new Date().getTime();
+            const event = {...messageCopy, eventId};
+
+            pubChannel.postMessage(event);
+            eventQueue.pushEvent(event);
+        } catch (error) {
+            console.error("Error in BroadcastService.postMessage:", error);
+        }
     },
 
     getMessage: (message: ICustomEvent) => {
