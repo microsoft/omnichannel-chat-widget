@@ -61,12 +61,15 @@ class EventQueue {
     }
 
     pushEvent(event: any) {
-        this.channelEventQueue.set(event.eventId, event);
+        if (event.eventId) {
+            this.channelEventQueue.set(event.eventId, event);
+        }
     }
 
     popEvent(event: any) {
-        const eventId = event.eventId;
-        this.channelEventQueue.delete(eventId);
+        if (event.eventId) {
+            this.channelEventQueue.delete(event.eventId);
+        }
     }
 
     dispose() {
