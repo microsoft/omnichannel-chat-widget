@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed `ChatButtonStateful` component to properly handle out-of-office mode initialization and state updates
+- Fixed `ChatButtonStateful` and `HeaderStateful` components to properly handle out-of-office mode initialization and state updates
 - Remove `Important` from link gift , preventing new styles to be applied
 - Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
 - Removed deprecated `crypto` package from TypeScript sample (now built into Node.js)
