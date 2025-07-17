@@ -86,12 +86,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         titleText: outOfOfficeButtonProps?.controlProps?.titleText || "We're Offline",
         subtitleText: outOfOfficeButtonProps?.controlProps?.subtitleText || "No agents available",
         unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
-        // Copy any other safe properties but explicitly exclude onClick
-        ...(outOfOfficeButtonProps?.controlProps && (() => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { onClick, titleText, subtitleText, id, dir, ...rest } = outOfOfficeButtonProps.controlProps;
-            return rest;
-        })()),
+        ...outOfOfficeButtonProps?.controlProps,
         // Out-of-office specific onClick - this will ALWAYS take precedence
         onClick: () => {
             if (state.appStates.isMinimized) {
