@@ -48,7 +48,6 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         id: "oc-lcw-header",
         dir: state.domainStates.globalDir,
         onMinimizeClick: () => {
-            console.error("********* Regular header minimize clicked *********");
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.HeaderMinimizeButtonClicked,
                 Description: "Header Minimize action started."
@@ -98,7 +97,6 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             text: "We're Offline"
         },
         onMinimizeClick: () => {
-            console.error("********* Out-of-office header minimize clicked *********");
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.HeaderMinimizeButtonClicked,
                 Description: "Header Minimize action started."
@@ -107,7 +105,6 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
             // Ensure conversation state remains Closed to maintain out-of-office mode
             if (state.appStates.conversationState !== ConversationState.Closed) {
-                console.error("********* Setting conversation state to Closed to maintain out-of-office mode *********");
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
             }
 

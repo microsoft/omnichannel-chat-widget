@@ -42,7 +42,6 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
     ref.current = async () => {
 
-        console.error("********* Chat button clicked *********");
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonClicked,
             Description: "Chat button click action started"
@@ -95,7 +94,6 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         })()),
         // Out-of-office specific onClick - this will ALWAYS take precedence
         onClick: () => {
-            console.error("********* Chat button clicked while out of office *********");
             if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             }
@@ -127,13 +125,10 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         if (state.appStates.conversationState === ConversationState.Closed) {   
             // If the conversation state is closed, check if we are outside operating hours
             const isOutsideOperatingHours = state.appStates.outsideOperatingHours;
-            console.error("********* Debug: conversationState=Closed, outsideOperatingHours =", isOutsideOperatingHours, "outOfOperatingHours =", outOfOperatingHours);
             setOutOfOperatingHours(isOutsideOperatingHours);
         } else {
-            console.error("********* Debug: conversationState =", state.appStates.conversationState, "isMinimized =", state.appStates.isMinimized);
             // If conversation state is not Closed, we should not be in out-of-office mode
             if (outOfOperatingHours) {
-                console.error("********* Debug: Resetting outOfOperatingHours to false because conversationState is not Closed");
                 setOutOfOperatingHours(false);
             }
         }     
@@ -143,11 +138,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     return (
         <ChatButton
             componentOverrides={buttonProps?.componentOverrides}
-            controlProps={(() => {
-                const props = outOfOperatingHours ? outOfOfficeControlProps : controlProps;
-                console.error("********* Debug: Using", outOfOperatingHours ? "OUT-OF-OFFICE" : "REGULAR", "props *********");
-                return props;
-            })()}
+            controlProps={outOfOperatingHours ? outOfOfficeControlProps : controlProps}
             styleProps={outOfOperatingHours ? outOfOfficeStyleProps : buttonProps?.styleProps}
         />
     );
