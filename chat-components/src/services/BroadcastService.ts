@@ -35,7 +35,6 @@ class EventQueue {
             if (entry?.value) {
                 const [_, event] = entry.value;
                 pubChannel.postMessage(event);
-                eventQueue.pushEvent(event);
             }
             queueSize -= 1;
         }
