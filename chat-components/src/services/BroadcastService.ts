@@ -19,7 +19,7 @@ let eventQueue: EventQueue;
 class EventQueue {
     private queueing: boolean = true;
     private channelEventQueue: ICustomEvent[];
-    private queuingId?: NodeJS.Timeout;
+    private queueingId?: NodeJS.Timeout;
 
     constructor() {
         this.channelEventQueue = [];
@@ -41,7 +41,7 @@ class EventQueue {
     queueEvents(timeout = 3000) {
         this.processEvents();
         if (this.queueing) {
-            this.queuingId = setTimeout(() => {
+            this.queueingId = setTimeout(() => {
                 this.queueEvents();
             }, timeout);
         }
@@ -53,7 +53,7 @@ class EventQueue {
 
     stopQueueing() {
         this.queueing = false;
-        this.queuingId = undefined
+        this.queueingId = undefined;
     }
 
     pushEvent(event: any) {
@@ -66,9 +66,9 @@ class EventQueue {
     }
 
     dispose() {
-        if (this.queuingId) {
-            clearTimeout(this.queuingId);
-            this.queuingId = undefined;
+        if (this.queueingId) {
+            clearTimeout(this.queueingId);
+            this.queueingId = undefined;
         }
         this.channelEventQueue = [];
     }
