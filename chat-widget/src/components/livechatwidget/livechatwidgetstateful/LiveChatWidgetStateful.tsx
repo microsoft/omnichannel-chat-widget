@@ -387,6 +387,52 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: msg?.payload?.minimized });
         });
 
+
+
+        BroadcastService.getMessageByEventName("sendCustomEvent").subscribe((event: object) => {
+            let payload = {};
+            if ("payload" in event) payload = event.payload as object;
+            console.log("debugging: sendCustomEvent is received", event);
+            if ("customEventName" in payload && payload.customEventName && typeof payload.customEventName === "string" 
+                && "customEventValue" in payload && payload.customEventValue
+            ) {
+                try {
+                    const customEventValueStr = typeof payload.customEventValue === "string" ? payload.customEventValue : JSON.stringify(payload.customEventValue);
+                    const customEventName = payload.customEventName;
+                    const messageMeta = {
+                        customEvent: "True",
+                        customEventName,
+                        customEventValue: customEventValueStr
+                    };
+                    const messagePayload = {
+                        content: "",
+                        tags: ["ChannelId-lcw","hidden"],
+                        metadata: messageMeta,
+                        timestamp: new Date()
+                    };
+                    console.log("debugging: posting message to chatSDK ", messagePayload);
+                    facadeChatSDK.sendMessage(messagePayload);
+                    TelemetryHelper.logActionEventToAllTelemetry(LogLevel.DEBUG, {
+                        Event: TelemetryEvent.CustomEventAction,
+                        Description: "Sent customEvent.",
+                        CustomProperties: {
+                            customEventName,
+                            lengthCustomEventValue: customEventValueStr.length
+                        }
+                    });
+                } catch (error) {
+                    TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
+                        Event: TelemetryEvent.CustomEventAction,
+                        Description: "Failed to process CustomEvent.",
+                        ExceptionDetails: {
+                            customEventName: payload.customEventName,
+                            error
+                        }
+                    });
+                }
+            }
+        });
+
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {  
             // If chat is out of operating hours chat widget sets the conversation state to OutOfOffice.

@@ -222,6 +222,7 @@ export enum TelemetryEvent {
     RehydrateMessageReceived = "RehydrateMessageReceived",
 
     CustomContextReceived = "CustomContextReceived",
+    CustomEventAction = "CustomEventAction",
 
     // Internet connection
     NetworkDisconnected = "NetworkDisconnected",
