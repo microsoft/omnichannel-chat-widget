@@ -123,7 +123,6 @@
     "testpack": "yarn build && yarn pack",
     "build-sample": "yarn build && cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --config ./webpack.config.cjs",
     "build-sample:dev": "yarn build && cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --config ./webpack.dev.config.cjs",
-    "prebuild-sample": "cross-env NODE_OPTIONS=--openssl-legacy-provider",
     "test:visual:build": "yarn build-storybook && yarn test:visual",
     "lint": "yarn eslint . --max-warnings=0",
     "prepush": "yarn lint && yarn danger:prepush",
