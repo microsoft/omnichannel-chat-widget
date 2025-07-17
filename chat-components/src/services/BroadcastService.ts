@@ -24,7 +24,6 @@ class EventQueue {
 
     constructor() {
         this.channelEventQueue = new Map<string, ICustomEvent>();
-        this.queueEvents();
     }
 
     processEvents() {
@@ -34,7 +33,10 @@ class EventQueue {
             const entry = entries.next(); // Process entry based on insertion order
             if (entry?.value) {
                 const [_, event] = entry.value;
-                pubChannel.postMessage(event);
+                newMessage.next(event); // Post event directly instead of using pubChannel
+                if (event.eventId) {
+                    this.channelEventQueue.delete(event?.eventId); // Remove event from queue regardless of outcome
+                }
             }
             queueSize -= 1;
         }
@@ -117,6 +119,7 @@ export const BroadcastService = {
 
             pubChannel.postMessage(event);
             eventQueue.pushEvent(event);
+            eventQueue.processEvents(); // Reactive flow to process events immediately
         } catch (error) {
             console.error("Error in BroadcastService.postMessage:", error);
         }
