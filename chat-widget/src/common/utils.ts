@@ -10,6 +10,7 @@ import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { Md5 } from "md5-typescript";
 import { TelemetryHelper } from "./telemetry/TelemetryHelper";
+import { getLiveWorkItemDetailsDebounce } from "../components/livechatwidget/common/helpers/getLiveworkItemDetailsHelper";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -394,7 +395,8 @@ export const getConversationDetailsCall = async (facadeChatSDK: FacadeChatSDK, l
             Event: TelemetryEvent.GetConversationDetailsCallStarted,
             Description: "Conversation details call started"
         });
-        conversationDetails = await facadeChatSDK.getConversationDetails(optionalParams);
+        //conversationDetails = await facadeChatSDK.getConversationDetails(optionalParams);
+        conversationDetails = await getLiveWorkItemDetailsDebounce(facadeChatSDK, optionalParams);
     } catch (error) {
         checkContactIdError(error);
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -406,6 +408,27 @@ export const getConversationDetailsCall = async (facadeChatSDK: FacadeChatSDK, l
     }
 
     return conversationDetails;
+};
+
+export const checkConversationDetailsUntilConversationClosed = async (
+    facadeChatSDK: FacadeChatSDK,
+    timeoutMs = 30 * 1000,
+    pollIntervalMs = 5000
+): Promise<boolean> => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeoutMs) {
+        try {
+            const details = await getConversationDetailsCall(facadeChatSDK);
+            if (details?.state === "Closed") {
+                return true;
+            }
+        } catch (err) {
+            // Optionally log or handle error
+        }
+        pollIntervalMs *= 2;
+        await new Promise(res => setTimeout(res, pollIntervalMs));
+    }
+    return false;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
