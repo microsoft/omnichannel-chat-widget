@@ -122,10 +122,11 @@ export const BroadcastService = {
 
             pubChannel.postMessage(event);
             eventQueue.pushEvent(event);
-            eventQueue.processEvents(); // Reactive flow to process events immediately
         } catch (error) {
             console.error("Error in BroadcastService.postMessage:", error);
         }
+
+        eventQueue.processEvents(); // Reactive flow to process events immediately
     },
 
     getMessage: (message: ICustomEvent) => {
