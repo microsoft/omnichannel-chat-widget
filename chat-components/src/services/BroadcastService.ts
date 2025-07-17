@@ -2,6 +2,7 @@ import { Subject } from "rxjs";
 import { ICustomEvent } from "../interfaces/ICustomEvent";
 import { filter } from "rxjs/operators";
 import { BroadcastChannel } from "broadcast-channel";
+import { uuidv4 } from "../common/utils";
 
 const newMessage = new Subject<ICustomEvent>();
 
@@ -109,7 +110,7 @@ export const BroadcastService = {
          */
         try {
             const messageCopy = JSON.parse(JSON.stringify(message));
-            const eventId = new Date().getTime();
+            const eventId = uuidv4();
             const event = {...messageCopy, eventId};
 
             pubChannel.postMessage(event);
