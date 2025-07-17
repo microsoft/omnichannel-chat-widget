@@ -1,3 +1,5 @@
+import React from "react";
+
 import { act, cleanup, render, screen } from "@testing-library/react";
 
 import { ChatButtonStateful } from "../../chatbuttonstateful/ChatButtonStateful";
