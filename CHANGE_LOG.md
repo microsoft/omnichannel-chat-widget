@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added closing pane functionality to display loading indicator while chat is being closed, preventing race conditions when starting new chats
 - Added comprehensive README.md with setup and configuration instructions for TypeScript sample
 - Added public/index.html template with proper styling and configuration guidance for TypeScript sample
 - Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
