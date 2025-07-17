@@ -27,11 +27,14 @@ class EventQueue {
     }
 
     processEvents() {
-        while (this.channelEventQueue.length > 0) {
+        let queueSize = this.channelEventQueue.length; // Set queue size before processing to prevent infinite loop
+        while (queueSize > 0) {
             const event = this.channelEventQueue.shift();
             if (event) {
                 pubChannel.postMessage(event);
             }
+
+            queueSize -= 1;
         }
     }
 
