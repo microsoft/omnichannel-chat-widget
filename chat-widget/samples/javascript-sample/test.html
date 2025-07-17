@@ -8,13 +8,8 @@
   <title>Sample App</title>
 </head>
 
-<body style="margin: 0">  
+<body style="margin: 0">
   <script>
-    // window.lcwError = "ChatButtonStateful"; // X
-    // window.lcwError = "ChatButtonStateful.UseEffect"; // X
-    // window.lcwError = "LiveChatWidgetStateful"; // X
-    // window.lcwError = "LiveChatWidgetStateful.UseEffect"; // OK
-    // window.lcwError = "initStartChat";    
     function lcw() {
       return {
         styleProps: {
@@ -33,9 +28,6 @@
           }
         },
         webChatContainerProps: {
-          containerStyles: {
-            // background: "green"
-          },
           webChatStyles: {
             hideUploadButton: false
           },
@@ -75,13 +67,9 @@
     }
   </script>
   <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
-  <!-- <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" 
+  <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" 
   data-app-id="" 
   data-org-id="" 
-  data-org-url="" ></script> -->
-  <!-- BOT -->
-  <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" data-org-id="ce4db5f6-1c20-ee11-a66d-000d3a0a02f3" data-app-id="700b43b4-6e8f-4185-9983-192153e49ade" data-org-url="https://unqce4db5f61c20ee11a66d000d3a0a0-crm3.omnichannelengagementhub.com"></script>
-  <!-- Customer Voice Embed -->
-  <!-- <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" data-org-id="ce4db5f6-1c20-ee11-a66d-000d3a0a02f3" data-app-id="88f6e7fd-44a3-4922-83f9-afb6074ad339" data-org-url="https://unqce4db5f61c20ee11a66d000d3a0a0-crm3.omnichannelengagementhub.com"></script> -->
+  data-org-url="" ></script>
 </body>
 </html>
