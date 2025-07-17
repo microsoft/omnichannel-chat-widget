@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Added `cross-env NODE_OPTIONS=--openssl-legacy-provider` to webpack build scripts to resolve OpenSSL compatibility issues on Windows
+- Added deprecation notice for `react-scripts` with recommendation to use Vite build instructions instead
 - Remove `Important` from link gift , preventing new styles to be applied
 - Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
 - Removed deprecated `crypto` package from TypeScript sample (now built into Node.js)
