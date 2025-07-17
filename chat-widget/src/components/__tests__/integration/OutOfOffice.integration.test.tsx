@@ -1,5 +1,3 @@
-import React from "react";
-
 import { act, cleanup, render, screen } from "@testing-library/react";
 
 import { ChatButtonStateful } from "../../chatbuttonstateful/ChatButtonStateful";
@@ -7,6 +5,7 @@ import { ConversationState } from "../../../contexts/common/ConversationState";
 import { HeaderStateful } from "../../headerstateful/HeaderStateful";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import React from "react";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 
