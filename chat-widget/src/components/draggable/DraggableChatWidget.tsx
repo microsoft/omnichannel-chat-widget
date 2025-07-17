@@ -31,9 +31,14 @@ const DraggableChatWidget = (props: IDraggableChatWidgetInternalProps) => {
 
     const calculateOffsetsWithinViewport = useCallback((id: string, offset: IDraggableElementPosition, delta: IDraggableElementPositionDelta) => {
         const draggableElement: HTMLElement | null = document.getElementById(id);
-        const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
+        
+        if (isNullOrUndefined(draggableElement)) {
+            return;
+        }
 
-        if (isNullOrUndefined(draggableElement) || isNullOrUndefined(positionRelativeToViewport) || isNullOrUndefined(offset.offsetLeft) || isNullOrUndefined(offset.offsetTop)) {
+        const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
+        
+        if (isNullOrUndefined(positionRelativeToViewport) || isNullOrUndefined(offset.offsetLeft) || isNullOrUndefined(offset.offsetTop)) {
             return;
         }
 
