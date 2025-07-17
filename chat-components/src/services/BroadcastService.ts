@@ -134,5 +134,5 @@ export const BroadcastService = {
         return newMessage;
     },
 
-    disposeChannel: () => { pubChannel.close(); subChannel.close(); }
+    disposeChannel: () => { pubChannel.close(); subChannel.close(); eventQueue.dispose(); },
 };
