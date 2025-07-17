@@ -78,12 +78,12 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         dir: state.domainStates.globalDir,
         titleText: "We're Offline",
         subtitleText: "No agents available",
+        ...outOfOfficeButtonProps?.controlProps,
         onClick: async () => {
             state.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
         },
-        unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
-        ...outOfOfficeButtonProps?.controlProps
+        unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString
     };
 
     useEffect(() => {
