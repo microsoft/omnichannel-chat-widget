@@ -25,7 +25,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useReducer(reducer, getLiveChatWidgetContextInitialState(props));
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [adapter, setAdapter]: [any, (adapter: any) => void] = useState(undefined);
-    
+
     const [facadeChatSDK, setFacadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useState<FacadeChatSDK | undefined>(undefined);
 
     const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
@@ -39,7 +39,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) ||  isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+    const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) || isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
     if (!facadeChatSDK) {
         setFacadeChatSDK(new FacadeChatSDK(
@@ -58,19 +58,15 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     }, [dispatch]);
 
     return (
-        <ErrorBoundary onError={(error: Error) => {
-            logWidgetLoadWithUnexpectedError(error);
-        }}>
-            <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
-                <ChatSDKStore.Provider value={chatSDK}>
-                    <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
-                        <ChatContextStore.Provider value={[state, dispatch]}>
-                            <LiveChatWidgetStateful {...props} />
-                        </ChatContextStore.Provider>
-                    </ChatAdapterStore.Provider>
-                </ChatSDKStore.Provider>
-            </FacadeChatSDKStore.Provider>
-        </ErrorBoundary>
+        <FacadeChatSDKStore.Provider value={[facadeChatSDK, setFacadeChatSDK]}>
+            <ChatSDKStore.Provider value={chatSDK}>
+                <ChatAdapterStore.Provider value={[adapter, setAdapter]}>
+                    <ChatContextStore.Provider value={[state, dispatch]}>
+                        <LiveChatWidgetStateful {...props} />
+                    </ChatContextStore.Provider>
+                </ChatAdapterStore.Provider>
+            </ChatSDKStore.Provider>
+        </FacadeChatSDKStore.Provider>
     );
 };
 
