@@ -26,7 +26,7 @@ class EventQueue {
         this.channelEventQueue = new Map<string, ICustomEvent>();
     }
 
-    processEvents() {
+    processEvents(deferTimeout = 0) {
         const dequeue = () => {
             let queueSize = this.channelEventQueue.size; // Set queue size before processing to prevent infinite loop
             while (queueSize > 0) {
@@ -43,7 +43,9 @@ class EventQueue {
             }
         }
 
-        dequeue();
+        setTimeout(() => {
+            dequeue();
+        }, deferTimeout);
     }
 
     queueEvents(timeout = 3000) {
