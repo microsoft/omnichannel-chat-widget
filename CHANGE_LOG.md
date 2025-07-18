@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
 - Remove `Important` from link gift , preventing new styles to be applied
 - Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
 - Removed deprecated `crypto` package from TypeScript sample (now built into Node.js)
