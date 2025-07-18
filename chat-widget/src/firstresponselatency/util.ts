@@ -16,17 +16,10 @@ export const isHistoryMessage = (activity: IActivity, startTime: number): boolea
     }
 
     const activityId = extractTimestampFromId(activity);
-    // Check if activity ID indicates history message
-    if (activityId > 0) {
-        const isValidId = !isNaN(activityId);
-        const isOlderThanStartTime = activityId < startTime;
-        const isHistoryById = isValidId && isOlderThanStartTime;
-        
-        // If parsing fails or ID is older than start time, it's history
-        return isHistoryById;
-    }
-
-    return false;
+    const isValidId = !isNaN(activityId);
+    const isOlderThanStartTime = activityId < startTime;
+    const isHistoryById = isValidId && isOlderThanStartTime;
+    return isHistoryById;
 };
 
 export const extractTimestampFromId = (activity: IActivity): number => {
