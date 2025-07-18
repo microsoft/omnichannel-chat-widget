@@ -132,7 +132,7 @@ export const BroadcastService = {
             console.error("Error in BroadcastService.postMessage:", error);
         }
 
-        eventQueue.processEvents(); // Reactive flow to process events immediately
+        eventQueue.processEvents(1500); // Second attempt to process events from queue if first try failed
     },
 
     getMessage: (message: ICustomEvent) => {
