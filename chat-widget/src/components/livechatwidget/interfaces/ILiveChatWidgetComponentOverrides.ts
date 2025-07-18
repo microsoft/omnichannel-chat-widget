@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 
 export interface ILiveChatWidgetComponentOverrides {
     chatButton?: ReactNode | string;
+    closingPane?: ReactNode | string;
     confirmationPane?: ReactNode | string;
     footer?: ReactNode | string;
     emailTranscriptPane?: ReactNode | string;
