@@ -31,9 +31,14 @@ const DraggableChatWidget = (props: IDraggableChatWidgetInternalProps) => {
 
     const calculateOffsetsWithinViewport = useCallback((id: string, offset: IDraggableElementPosition, delta: IDraggableElementPositionDelta) => {
         const draggableElement: HTMLElement | null = document.getElementById(id);
-        const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
+        
+        if (isNullOrUndefined(draggableElement)) {
+            return;
+        }
 
-        if (isNullOrUndefined(draggableElement) || isNullOrUndefined(positionRelativeToViewport) || isNullOrUndefined(offset.offsetLeft) || isNullOrUndefined(offset.offsetTop)) {
+        const positionRelativeToViewport = (draggableElement as HTMLElement).getBoundingClientRect();
+        
+        if (isNullOrUndefined(positionRelativeToViewport) || isNullOrUndefined(offset.offsetLeft) || isNullOrUndefined(offset.offsetTop)) {
             return;
         }
 
@@ -81,6 +86,11 @@ const DraggableChatWidget = (props: IDraggableChatWidgetInternalProps) => {
 
         const cacheInitialPosition = () => {
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+            
+            if (isNullOrUndefined(draggableElement)) {
+                return;
+            }
+            
             const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
             const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
             setInitialPosition({offsetLeft, offsetTop});
@@ -88,6 +98,11 @@ const DraggableChatWidget = (props: IDraggableChatWidgetInternalProps) => {
 
         const calculateOffsets = () => {
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+            
+            if (isNullOrUndefined(draggableElement)) {
+                return;
+            }
+            
             const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
             const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
 
@@ -119,6 +134,11 @@ const DraggableChatWidget = (props: IDraggableChatWidgetInternalProps) => {
             resetPosition(initialPosition);
         } else if (state.appStates.isMinimized) {
             const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+            
+            if (isNullOrUndefined(draggableElement)) {
+                return;
+            }
+            
             const offsetLeft = (draggableElement as HTMLElement).offsetLeft as number;
             const offsetTop = (draggableElement as HTMLElement).offsetTop as number;
 
@@ -143,6 +163,11 @@ const DraggableChatWidget = (props: IDraggableChatWidgetInternalProps) => {
 
                 // Update position via DOM manipulation to prevent <Stack/> continuously rendering on style change causing high CPU spike
                 const draggableElement: HTMLElement | null = document.getElementById(props.elementId);
+                
+                if (isNullOrUndefined(draggableElement)) {
+                    return;
+                }
+                
                 repositionElement(draggableElement as HTMLElement, offsetLeft, offsetTop);
 
                 setPosition({offsetLeft, offsetTop});
