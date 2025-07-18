@@ -126,8 +126,8 @@ export const BroadcastService = {
             const eventId = uuidv4();
             const event = {...messageCopy, eventId};
 
-            pubChannel.postMessage(event);
             eventQueue.pushEvent(event);
+            pubChannel.postMessage(event);
         } catch (error) {
             console.error("Error in BroadcastService.postMessage:", error);
         }
