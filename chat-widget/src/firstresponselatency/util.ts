@@ -5,14 +5,8 @@ import { IActivity } from "botframework-directlinejs";
 
 export const isHistoryMessage = (activity: IActivity, startTime: number): boolean => {
 
-    console.error("Checking if message is history message");
-    console.error("Activity : ", activity);
-    console.error("Activity ID: ", activity?.id);
-    console.error("Start Time: ", startTime);
-    
     // Only process message activities
     if (activity?.type !== Constants.message) {
-        console.error("Not a message activity");
         return false;
     }
     
@@ -29,11 +23,9 @@ export const isHistoryMessage = (activity: IActivity, startTime: number): boolea
         const isHistoryById = isValidId && isOlderThanStartTime;
         
         // If parsing fails or ID is older than start time, it's history
-        console.error("Activity ID is valid:", isValidId, "and older than start time:", isOlderThanStartTime);
         return isHistoryById;
     }
 
-    console.error("No activity ID found, defaulting to false");
     return false;
 };
 
