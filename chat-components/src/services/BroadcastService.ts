@@ -3,6 +3,7 @@ import { ICustomEvent } from "../interfaces/ICustomEvent";
 import { filter } from "rxjs/operators";
 import { BroadcastChannel } from "broadcast-channel";
 import { uuidv4 } from "../common/utils";
+import EventQueue from "./EventQueue";
 
 const newMessage = new Subject<ICustomEvent>();
 
@@ -17,79 +18,8 @@ let pubChannel: any;
 let subChannel: any;
 let eventQueue: EventQueue;
 
-class EventQueue {
-    private queueing: boolean = true;
-    private channelEventQueue: Map<string, ICustomEvent>;
-    private queueingId?: NodeJS.Timeout;
-
-    constructor() {
-        this.channelEventQueue = new Map<string, ICustomEvent>();
-    }
-
-    processEvents(deferTimeout = 0) {
-        const dequeue = () => {
-            let queueSize = this.channelEventQueue.size; // Set queue size before processing to prevent infinite loop
-            while (queueSize > 0) {
-                const entries = this.channelEventQueue.entries();
-                const entry = entries.next(); // Process entry based on insertion order
-                if (entry?.value) {
-                    const [_, event] = entry.value;
-                    newMessage.next(event); // Post event directly instead of using pubChannel
-                    if (event.eventId) {
-                        this.channelEventQueue.delete(event?.eventId); // Remove event from queue regardless of outcome
-                    }
-                }
-                queueSize -= 1;
-            }
-        }
-
-        setTimeout(() => {
-            dequeue();
-        }, deferTimeout);
-    }
-
-    queueEvents(timeout = 3000) {
-        this.processEvents();
-        if (this.queueing) {
-            this.queueingId = setTimeout(() => {
-                this.queueEvents();
-            }, timeout);
-        }
-    }
-
-    resumeQueueing() {
-        this.queueing = true;
-    }
-
-    stopQueueing() {
-        this.queueing = false;
-        this.queueingId = undefined;
-    }
-
-    pushEvent(event: any) {
-        if (event.eventId) {
-            this.channelEventQueue.set(event.eventId, event);
-        }
-    }
-
-    popEvent(event: any) {
-        if (event.eventId) {
-            this.channelEventQueue.delete(event.eventId);
-        }
-    }
-
-    dispose() {
-        if (this.queueingId) {
-            clearTimeout(this.queueingId);
-            this.queueingId = undefined;
-        }
-
-        this.channelEventQueue.clear();
-    }
-}
-
 export const BroadcastServiceInitialize = (channelName: string) => {
-    eventQueue = new EventQueue();
+    eventQueue = new EventQueue(newMessage);
 
     if (broadcastServicePubList[channelName]) {
         pubChannel = broadcastServicePubList[channelName];
