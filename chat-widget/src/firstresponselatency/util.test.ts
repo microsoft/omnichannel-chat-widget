@@ -246,9 +246,9 @@ describe("isHistoryMessage", () => {
                 channelId: "test"
             };
 
-            // parseInt("550e8400-...") returns 550, which is < mockStartTime, so it's considered history
+            // UUIDs should not be considered history (strict mode)
             const result = isHistoryMessage(activity, mockStartTime);
-            expect(result).toBe(true); // This documents the actual behavior
+            expect(result).toBe(false); // UUIDs are not valid numeric IDs
         });
 
         it("should return false for empty activity ID", () => {
@@ -371,7 +371,7 @@ describe("isHistoryMessage", () => {
             };
 
             const result = isHistoryMessage(activity, mockStartTime);
-            expect(result).toBe(true); // -1000 is less than startTime
+            expect(result).toBe(false); // Negative numbers are not valid IDs
         });
     });
 

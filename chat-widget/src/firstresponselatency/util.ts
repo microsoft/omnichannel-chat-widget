@@ -16,7 +16,7 @@ export const isHistoryMessage = (activity: IActivity, startTime: number): boolea
     }
 
     const activityId = extractTimestampFromId(activity);
-    const isValidId = !isNaN(activityId);
+    const isValidId = !isNaN(activityId) && activityId > 0;
     const isOlderThanStartTime = activityId < startTime;
     const isHistoryById = isValidId && isOlderThanStartTime;
     return isHistoryById;
