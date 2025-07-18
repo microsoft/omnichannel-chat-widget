@@ -1,4 +1,4 @@
-import { Constants, ParticipantType, PostChatSurveyTelemetryMessage } from "../../../common/Constants";
+import { Constants, ParticipantType, PostChatSurveyTelemetryMessage, SurveyProvider } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 
 import { ConversationState } from "../../../contexts/common/ConversationState";
@@ -11,7 +11,7 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { addDelayInMs } from "../../../common/utils";
-import { isPostChatSurveyEnabled } from "./liveChatConfigUtils";
+import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let conversationDetails: any = undefined;
@@ -47,23 +47,29 @@ const setSurveyMode = async (props: ILiveChatWidgetProps, participantType: strin
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const renderSurvey = async (postChatContext: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const renderSurvey = async (postChatContext: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     if (postChatSurveyMode === PostChatSurveyMode.Link) {
         setWidgetStateToInactive(dispatch);
         return;
     }
     if (postChatSurveyMode === PostChatSurveyMode.Embed) {
-        await embedModePostChatWorkflow(postChatContext, dispatch);
+        await embedModePostChatWorkflow(postChatContext, state, dispatch);
     }
 };
 
 // Function for embed mode postchat workflow which is essentially same for both customer and agent
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const embedModePostChatWorkflow = async (postChatContext: any, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const embedModePostChatWorkflow = async (postChatContext: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     TelemetryHelper.logActionEvent(LogLevel.INFO, {
         Event: TelemetryEvent.EmbedModePostChatWorkflowStarted
     });
     if (postChatContext) {
+        if (postChatContext.isConversationalSurveyEnabled && postChatContext.surveyProvider === SurveyProvider.MicrosoftCopilotStudio) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY, payload: true });
+            return;
+        }
+
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
 
         await addDelayInMs(Constants.PostChatLoadingDurationInMs);
@@ -86,7 +92,7 @@ const initiatePostChat = async (props: ILiveChatWidgetProps, conversationDetails
     const participantType = conversationDetails?.participantType ?? postchatContext.participantType;
     await setSurveyMode(props, participantType, state, dispatch);
 
-    await renderSurvey(postchatContext, dispatch);
+    await renderSurvey(postchatContext, state, dispatch);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -98,7 +104,11 @@ const isPostChatEnabled = (props: ILiveChatWidgetProps, state: ILiveChatWidgetCo
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     try {
-        const postChatEnabled = await isPostChatSurveyEnabled(facadeChatSDK);
+        const postChatConfig = await getPostChatSurveyConfig(facadeChatSDK);
+        const postChatEnabled = postChatConfig.postChatEnabled;
+        if (postChatConfig.isConversationalSurveyEnabled) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_ENABLED, payload: true });
+        }
         if (postChatEnabled) {
             if (state?.domainStates?.postChatContext === undefined) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -107,8 +117,15 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
                 });
-                dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
-                return context;
+
+                // Merge postChatConfig with postChatSurveyContext
+                const mergedContext = {
+                    ...context,
+                    ...postChatConfig
+                };
+
+                dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: mergedContext });
+                return mergedContext;
             }
         }
     } catch (error) {

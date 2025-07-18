@@ -8,9 +8,10 @@ import { Constants } from "../../../../../common/Constants";
 import { DeliveryMode } from "@microsoft/omnichannel-chat-sdk";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
+import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const channelDataMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+const channelDataMiddleware = (addConversationalSurveyTagsCallback: any) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
     if (action?.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY_PENDING && action?.payload?.activity?.channelData) {
         const channelIdTag = `${Constants.channelIdKey}${Constants.ChannelId}`;
         const customerMessageTag = `${Constants.CustomerTag}`;
@@ -26,6 +27,7 @@ const channelDataMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) =
             action.payload.activity.channelData.tags = [channelIdTag];
             action.payload.activity.channelData.tags.push(customerMessageTag);
         }
+        action = addConversationalSurveyTagsCallback(action);
         action.payload.activity.channelData.metadata = {
             deliveryMode: DeliveryMode.Bridged
         };
