@@ -182,7 +182,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         }
 
         .webchat__bubble__content>div#ms_lcw_webchat_adaptive_card .ac-textBlock {
-            color: ${webChatContainerProps?.adaptiveCardStyles?.color ?? props.webChatContainerProps?.webChatStyles?.bubbleTextColor ?? defaultAdaptiveCardStyles.color} !important;
+            color: ${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color} !important;
         }
 
         .webchat__stacked-layout__content div.webchat__stacked-layout__message-row div.webchat__bubble--from-user {
