@@ -27,19 +27,23 @@ class EventQueue {
     }
 
     processEvents() {
-        let queueSize = this.channelEventQueue.size; // Set queue size before processing to prevent infinite loop
-        while (queueSize > 0) {
-            const entries = this.channelEventQueue.entries();
-            const entry = entries.next(); // Process entry based on insertion order
-            if (entry?.value) {
-                const [_, event] = entry.value;
-                newMessage.next(event); // Post event directly instead of using pubChannel
-                if (event.eventId) {
-                    this.channelEventQueue.delete(event?.eventId); // Remove event from queue regardless of outcome
+        const dequeue = () => {
+            let queueSize = this.channelEventQueue.size; // Set queue size before processing to prevent infinite loop
+            while (queueSize > 0) {
+                const entries = this.channelEventQueue.entries();
+                const entry = entries.next(); // Process entry based on insertion order
+                if (entry?.value) {
+                    const [_, event] = entry.value;
+                    newMessage.next(event); // Post event directly instead of using pubChannel
+                    if (event.eventId) {
+                        this.channelEventQueue.delete(event?.eventId); // Remove event from queue regardless of outcome
+                    }
                 }
+                queueSize -= 1;
             }
-            queueSize -= 1;
         }
+
+        dequeue();
     }
 
     queueEvents(timeout = 3000) {
