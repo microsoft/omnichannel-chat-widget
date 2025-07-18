@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
   - `@microsoft/omnichannel-chat-components`: ^1.0.1 → ^1.1.12
 - Updated build tools including Babel, Webpack, and TypeScript to resolve compatibility issues
 - Fix inefficient EmailRegex causing exponential backtracking vulnerability
+- Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
 
 ### Added
 
