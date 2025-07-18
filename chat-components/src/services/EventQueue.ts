@@ -18,7 +18,7 @@ class EventQueue {
                 this.newMessage.next(event); // Post event directly instead of using pubChannel
                 this.channelEventQueue.delete(eventId); // Remove event from queue regardless of outcome
             });
-        }
+        };
 
         setTimeout(() => {
             dequeue();
