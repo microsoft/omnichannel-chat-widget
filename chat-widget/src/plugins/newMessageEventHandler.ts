@@ -10,14 +10,14 @@ import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/i
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../common/telemetry/TelemetryManager";
 
-export const createOnNewAdapterActivityHandler = (chatId: string, userId: string) => {
+export const createOnNewAdapterActivityHandler = (chatId: string, userId: string, startTime: number) => {
 
     // Hooking the message tracker in the listener, a bit invasive but easier to control.
     const firstResponseLatencyTracker = new FirstResponseLatencyTracker();
     // epoch time in utc for when start to listen.
     // We dont longer have a mechanism to know if a message is history or new, so any message older than the time we start listening will be considered a history message.
     // this is a workaround for the fact that we dont have a way to identify if a message is history or new, and it will provide consistency across different scenarios
-    const startTime = (new Date().getTime());
+
     let isHistoryMessageReceivedEventRaised = false;
 
     const onNewAdapterActivityHandler = (activity: IActivity) => {
