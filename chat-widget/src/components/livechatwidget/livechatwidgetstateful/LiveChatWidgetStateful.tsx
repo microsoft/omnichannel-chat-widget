@@ -406,7 +406,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     };
                     const messagePayload = {
                         content: "",
-                        tags: ["ChannelId-lcw","hidden"],
+                        tags: ["ChannelId-lcw","Hidden"],
                         metadata: messageMeta,
                         timestamp: new Date()
                     };
