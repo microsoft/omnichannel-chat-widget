@@ -358,7 +358,7 @@ describe("isHistoryMessage", () => {
             };
 
             const result = isHistoryMessage(activity, mockStartTime);
-            expect(result).toBe(true); // 0 is less than startTime
+            expect(result).toBe(false); // 0 is not a valid positive ID
         });
 
         it("should handle negative numbers", () => {
@@ -534,7 +534,7 @@ describe("isHistoryMessage", () => {
                 // Both parseInt("invalid-id") and new Date("invalid-timestamp").getTime() return NaN
                 // extractTimestampFromId should return 0, and 0 < mockStartTime = true
                 const result = isHistoryMessage(activity, mockStartTime);
-                expect(result).toBe(true); // fallback value 0 < mockStartTime
+                expect(result).toBe(false); // fallback value 0 is not a valid positive ID
             });
 
             it("should handle missing timestamp gracefully", () => {
@@ -549,7 +549,7 @@ describe("isHistoryMessage", () => {
                 // Should fall back to timestamp, but timestamp is undefined
                 // new Date(undefined).getTime() returns NaN, so fallback to 0
                 const result = isHistoryMessage(activity, mockStartTime);
-                expect(result).toBe(true); // fallback value 0 < mockStartTime
+                expect(result).toBe(false); // fallback value 0 is not a valid positive ID
             });
 
             it("should handle malformed ISO timestamp", () => {
@@ -562,7 +562,7 @@ describe("isHistoryMessage", () => {
                 };
 
                 const result = isHistoryMessage(activity, mockStartTime);
-                expect(result).toBe(true); // fallback value 0 < mockStartTime
+                expect(result).toBe(false); // fallback value 0 is not a valid positive ID
             });
         });
 
