@@ -1,5 +1,6 @@
 import { Subject } from "rxjs";
 import { ICustomEvent } from "../interfaces/ICustomEvent";
+import { IPostMessageOptions } from "../interfaces/IPostMessageOptions";
 import { filter } from "rxjs/operators";
 import { BroadcastChannel } from "broadcast-channel";
 import { uuidv4 } from "../common/utils";
@@ -46,7 +47,7 @@ export const BroadcastServiceInitialize = (channelName: string) => {
 
 export const BroadcastService = {
     //broadcast a message
-    postMessage: (message: ICustomEvent) => {
+    postMessage: (message: ICustomEvent, options: IPostMessageOptions = {}) => {
         /**
          * Omit copying methods to prevent 'DataCloneError' in older browsers when passing an object with functions
          * This exception occurs when an object can't be clone with the 'structured clone algorithm' (used by postMessage)
@@ -62,7 +63,10 @@ export const BroadcastService = {
             console.error("Error in BroadcastService.postMessage:", error);
         }
 
-        eventQueue.processEvents(1500); // Second attempt to process events from queue if first try failed
+        if (options?.retry) {
+            const deferTimeout = options?.deferTimeout || 500;
+            eventQueue.processEvents(deferTimeout); // Second attempt to process events from queue if first try failed
+        }
     },
 
     getMessage: (message: ICustomEvent) => {
