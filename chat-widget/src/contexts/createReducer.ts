@@ -31,6 +31,68 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
     }
 
     switch (action.type) {
+        case LiveChatWidgetActionType.MINIMIZE_CONVERSATION_COMBO: 
+
+        inMemory = {
+            ...inMemory,
+            appStates: {
+                ...inMemory.appStates,
+                conversationState: action.payload.conversationState as ConversationState,
+                isMinimized: action.payload.isMinimized as boolean,
+            }
+        };
+
+        return  {
+            ...state,
+            appStates: {
+                ...state.appStates,
+                conversationState: action.payload.conversationState as ConversationState,
+                isMinimized: action.payload.isMinimized as boolean,
+            }
+        };
+        case LiveChatWidgetActionType.PING_MINIMIZE_COMBO:
+
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    ping : action.payload.ping as boolean,
+                },
+                appStates: {
+                    ...inMemory.appStates,
+                    isMinimized: action.payload.isMinimized as boolean,
+                }
+            };
+
+            return {
+                ...state,
+                domainStates: {
+                    ...state.domainStates,
+                    ping : action.payload.ping as boolean,
+                },
+                appStates: {
+                    ...state.appStates,
+                    isMinimized: action.payload.isMinimized as boolean,
+                }
+            };
+
+
+        case LiveChatWidgetActionType.PING :
+        inMemory = {
+            ...inMemory,
+            domainStates: {
+                ...inMemory.domainStates,
+                ping: action.payload as boolean
+            }
+        };
+            return {
+                ...state,
+                domainStates: {
+                    ...state.domainStates,
+                    ping: action.payload as boolean
+                }
+            };
+
         case LiveChatWidgetActionType.SET_WIDGET_ELEMENT_ID:
             inMemory = {
                 ...inMemory,
