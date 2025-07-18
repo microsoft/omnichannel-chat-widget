@@ -56,6 +56,13 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             return;
         }
         
+        const newMessageReceivedEvent: ICustomEvent = {
+            eventName: BroadcastEvent.NewMessageReceived,
+            payload: polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId)
+        };
+
+        BroadcastService.postMessage(newMessageReceivedEvent);
+
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.SystemMessageReceived,
             Description: "System message received"
