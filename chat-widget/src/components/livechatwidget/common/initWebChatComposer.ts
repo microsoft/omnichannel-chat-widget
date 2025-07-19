@@ -40,6 +40,7 @@ import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { Constants } from "../../../common/Constants";
+import { createParticipantUpdateMiddleware, participantAddedCallback, participantRemovedCallback } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/participantUpdateMiddleware";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -96,6 +97,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             ),
             channelDataMiddleware,
             createConversationEndMiddleware(conversationEndCallback),
+            createParticipantUpdateMiddleware(state, dispatch, facadeChatSDK, participantAddedCallback, participantRemovedCallback),
             createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
             createMessageTimeStampMiddleware,
             createMessageSequenceIdOverrideMiddleware,
