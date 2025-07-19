@@ -395,7 +395,6 @@ export const getConversationDetailsCall = async (facadeChatSDK: FacadeChatSDK, l
             Event: TelemetryEvent.GetConversationDetailsCallStarted,
             Description: "Conversation details call started"
         });
-        //conversationDetails = await facadeChatSDK.getConversationDetails(optionalParams);
         conversationDetails = await getLiveWorkItemDetailsDebounce(facadeChatSDK, optionalParams);
     } catch (error) {
         checkContactIdError(error);
