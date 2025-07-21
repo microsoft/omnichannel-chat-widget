@@ -42,12 +42,13 @@ export const BroadcastServiceInitialize = (channelName: string) => {
     subChannel.onmessage = (message: any) => {
         newMessage.next(message);
         eventQueue.popEvent(message);
+        eventQueue.stopIfEmpty();
     };
 };
 
 export const BroadcastService = {
     //broadcast a message
-    postMessage: (message: ICustomEvent, options: IPostMessageOptions = {}) => {
+    postMessage: (message: ICustomEvent, options: IPostMessageOptions = {retry: true}) => {
         /**
          * Omit copying methods to prevent 'DataCloneError' in older browsers when passing an object with functions
          * This exception occurs when an object can't be clone with the 'structured clone algorithm' (used by postMessage)
@@ -64,8 +65,11 @@ export const BroadcastService = {
         }
 
         if (options?.retry) {
-            const deferTimeout = options?.deferTimeout || 500;
-            eventQueue.processEvents(deferTimeout); // Second attempt to process events from queue if first try failed
+            const queueTimeout = options?.queueTimeout || 500;
+            const deferTimeout = options?.deferTimeout || 500; // Defer to prevent race condition
+            setTimeout(() => {
+                eventQueue.queueEvents(queueTimeout);
+            }, deferTimeout);
         }
     },
 
