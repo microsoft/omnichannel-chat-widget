@@ -29,6 +29,7 @@ class EventQueue {
         if (this.channelEventQueue.size === 0) { // Base case
             this.queueing = false;
             this.queueingId = undefined;
+            return;
         }
 
         if (this.queueingId) { // Queueing in progress
@@ -41,6 +42,11 @@ class EventQueue {
                 this.queueEvents();
             }, timeout);
         }
+    }
+
+    startQueue(timeout = 500) {
+        this.queueing = true;
+        this.queueEvents(timeout);
     }
 
     stopIfEmpty() {
