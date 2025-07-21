@@ -25,7 +25,7 @@ class EventQueue {
         }, deferTimeout);
     }
 
-    queueEvents(timeout = 3000) {
+    queueEvents(timeout = 500) {
         this.processEvents();
         if (this.queueing) {
             this.queueingId = setTimeout(() => {
