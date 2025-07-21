@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 - Added `cross-env NODE_OPTIONS=--openssl-legacy-provider` to webpack build scripts to resolve OpenSSL compatibility issues on Windows
 - Added deprecation notice for `react-scripts` with recommendation to use Vite build instructions instead
+- Fixed `ChatButtonStateful` and `HeaderStateful` components to properly handle out-of-office mode initialization and state updates
 - Remove `Important` from link gift , preventing new styles to be applied
 - Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
 - Removed deprecated `crypto` package from TypeScript sample (now built into Node.js)
@@ -22,6 +23,7 @@ All notable changes to this project will be documented in this file.
   - `@microsoft/omnichannel-chat-components`: ^1.0.1 → ^1.1.12
 - Updated build tools including Babel, Webpack, and TypeScript to resolve compatibility issues
 - Fix inefficient EmailRegex causing exponential backtracking vulnerability
+- Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
 
 ### Added
 
@@ -32,6 +34,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Uptake [@microsoft/omnichannel-chat-sdk@1.11.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.4)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.3)
 
 ## [1.8.1]
