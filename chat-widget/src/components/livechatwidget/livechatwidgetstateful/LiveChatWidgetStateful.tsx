@@ -115,6 +115,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [conversationId, setConversationId] = useState<string>("");
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
+    const bubbleBackground = props.webChatContainerProps?.webChatStyles?.bubbleBackground ??
+        (props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background);
+    const bubbleTextColor = props.webChatContainerProps?.webChatStyles?.bubbleTextColor ??
+        (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color);
 
     // Process general styles
     const generalStyles: IStackStyles = {
@@ -268,7 +272,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         if (state?.appStates?.hideStartChatButton === true) {
             //handle OOH pane
-            if (state.appStates.outsideOperatingHours === true) {
+            // Only set OutOfOffice state for new conversations, allow existing Active/InActive conversations to continue
+            if (state.appStates.outsideOperatingHours === true && 
+                state.appStates.conversationState !== ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.OnWidgetError,
@@ -776,6 +782,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
     const userID = directLine.getState ? directLine?.getState("acs.userId") : "teamsvisitor";
 
+    const styleOptions = React.useMemo(() => ({
+        ...webChatStyles,
+        bubbleBackground,
+        bubbleTextColor
+    }), [webChatStyles, bubbleBackground, bubbleTextColor]);
+
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>
@@ -818,11 +830,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 <Composer
                     {...webChatProps}
                     userID={userID}
-                    styleOptions={{
-                        ...webChatStyles,
-                        bubbleBackground: props.webChatContainerProps?.webChatStyles?.bubbleBackground ?? ( props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background),
-                        bubbleTextColor: props.webChatContainerProps?.webChatStyles?.bubbleTextColor ?? (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color)
-                    }}
+                    styleOptions={styleOptions}
                     directLine={directLine}>
                     <Stack
                         id={widgetElementId}

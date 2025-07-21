@@ -137,13 +137,13 @@ describe("FacadeChatSDK", () => {
 
         it("should throw error for invalid token format", async () => {
             const token = "any-thing";
-            await expect(facadeChatSDK["setToken"](token)).rejects.toThrow("Invalid token format, must be in JWT format");
+            await expect(facadeChatSDK["setToken"](token)).rejects.toThrow("Authentication Setup Error: Invalid token format, must be in JWT format");
         });
 
         it("should throw error for expired token", async () => {
             const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk0NTkyMDB9.4f1d4f1d4f1d4f1d4f1d4f1d4f1d4f1d4f1d4f1d4f1d4f1d4f1d4f1d4f1d";
             jest.spyOn(Date, "now").mockReturnValue(1609459201000); // mock current time to be after token expiration
-            await expect(facadeChatSDK["setToken"](token)).rejects.toThrow("New token is already expired, with epoch time 1609459200");
+            await expect(facadeChatSDK["setToken"](token)).rejects.toThrow("Authentication Setup Error: New authentication token is already expired");
         });
 
     });
@@ -223,7 +223,7 @@ describe("FacadeChatSDK", () => {
         it("should throw error if token is invalid", async () => {
             jest.spyOn(facadeChatSDK, "tokenRing").mockResolvedValue({ result: false, message: "Token is invalid" });
             const mockFn = jest.fn();
-            await expect(facadeChatSDK["validateAndExecuteCall"]("testFunction", mockFn)).rejects.toThrow("Authentication failed: Process to get a token failed for testFunction, Token is invalid");
+            await expect(facadeChatSDK["validateAndExecuteCall"]("testFunction", mockFn)).rejects.toThrow("Authentication Setup Error: Token validation failed - GetAuthToken function is not present");
         });
     });
     

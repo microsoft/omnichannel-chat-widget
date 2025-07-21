@@ -34,10 +34,14 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     const { buttonProps, outOfOfficeButtonProps, startChat } = props;
     //Setting OutOfOperatingHours Flag
     //Setting OutOfOperatingHours Flag - to string conversion to normalize the value (could be boolean from other states or string directly from config)
-    const [outOfOperatingHours, setOutOfOperatingHours] = useState(state.appStates.outsideOperatingHours);
+    // Initialize with the current state value to prevent visual flicker
+    const [outOfOperatingHours, setOutOfOperatingHours] = useState(() => {
+        return state.appStates.conversationState === ConversationState.Closed && state.appStates.outsideOperatingHours;
+    });
     const ref = useRef(() => {return;});
 
     ref.current = async () => {
+
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonClicked,
             Description: "Chat button click action started"
@@ -61,33 +65,38 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     };
 
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);
+    
     const controlProps: IChatButtonControlProps = {
+        ...buttonProps?.controlProps,
         id: "oc-lcw-chat-button",
         dir: state.domainStates.globalDir,
         titleText: "Let's Chat!",
         subtitleText: "We're online.",
         hideNotificationBubble: buttonProps?.controlProps?.hideNotificationBubble === true || state.appStates.isMinimized === false,
         unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? props.buttonProps?.controlProps?.largeUnreadMessageString : state.appStates.unreadMessageCount.toString()) : "0",
-        onClick: () => ref.current(),
         unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
-        ...buttonProps?.controlProps,
+        // Regular chat button onClick - this will always take precedence
+        onClick: () => ref.current()
     };
 
     const outOfOfficeControlProps: IChatButtonControlProps = {
+        // Only take specific properties from outOfOfficeButtonProps, never onClick
         id: "oc-lcw-chat-button",
         dir: state.domainStates.globalDir,
-        titleText: "We're Offline",
-        subtitleText: "No agents available",
-        onClick: async () => {
-            state.appStates.isMinimized && dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
-        },
+        titleText: outOfOfficeButtonProps?.controlProps?.titleText || "We're Offline",
+        subtitleText: outOfOfficeButtonProps?.controlProps?.subtitleText || "No agents available",
         unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
-        ...outOfOfficeButtonProps?.controlProps
+        ...outOfOfficeButtonProps?.controlProps,
+        // Out-of-office specific onClick - this will ALWAYS take precedence
+        onClick: () => {
+            if (state.appStates.isMinimized) {
+                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+            }
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
+        }
     };
 
     useEffect(() => {
-        setOutOfOperatingHours(state.appStates.outsideOperatingHours);
         
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonShow,
@@ -104,9 +113,22 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             Event: TelemetryEvent.UXLCWChatButtonLoadingCompleted,
             Description: "Chat button loading completed",
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
-        });
-
+        }); 
     }, []);
+
+    useEffect(() => {
+        if (state.appStates.conversationState === ConversationState.Closed) {   
+            // If the conversation state is closed, check if we are outside operating hours
+            const isOutsideOperatingHours = state.appStates.outsideOperatingHours;
+            setOutOfOperatingHours(isOutsideOperatingHours);
+        } else {
+            // If conversation state is not Closed, we should not be in out-of-office mode
+            if (outOfOperatingHours) {
+                setOutOfOperatingHours(false);
+            }
+        }     
+    }, [state.appStates.conversationState, state.appStates.outsideOperatingHours, state.appStates.isMinimized]);
+
 
     return (
         <ChatButton

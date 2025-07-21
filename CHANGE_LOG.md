@@ -4,30 +4,68 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Widget
 
+
 ## [Unreleased]
+
+### Fixed
+
+- Fixed handling of history messages and missing broadcast for system message received
+- Added `cross-env NODE_OPTIONS=--openssl-legacy-provider` to webpack build scripts to resolve OpenSSL compatibility issues on Windows
+- Added deprecation notice for `react-scripts` with recommendation to use Vite build instructions instead
+- Fixed `ChatButtonStateful` and `HeaderStateful` components to properly handle out-of-office mode initialization and state updates
+- Remove `Important` from link gift , preventing new styles to be applied
+- Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
+- Removed deprecated `crypto` package from TypeScript sample (now built into Node.js)
+- Fixed TypeScript compilation error by removing unsupported `hideCurrentCallTitle` property
+- Updated React from 16.14.0 to 18.3.1 and implemented React 18 createRoot API
+- Updated Microsoft Omnichannel packages to latest versions:
+  - `@microsoft/omnichannel-chat-widget`: ^1.0.4 → ^1.8.0
+  - `@microsoft/omnichannel-chat-sdk`: ^1.4.0 → ^1.11.2
+  - `@microsoft/omnichannel-chat-components`: ^1.0.1 → ^1.1.12
+- Updated build tools including Babel, Webpack, and TypeScript to resolve compatibility issues
+- Fix inefficient EmailRegex causing exponential backtracking vulnerability
+- Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
+
+### Added
+
+- Added comprehensive README.md with setup and configuration instructions for TypeScript sample
+- Added public/index.html template with proper styling and configuration guidance for TypeScript sample
+- Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
+- Added browserslist configuration to TypeScript sample package.json for better browser compatibility
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-sdk@1.11.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.4)
+- Uptake [@microsoft/omnichannel-chat-sdk@1.11.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.3)
+
+## [1.8.1]
 
 ### Added
 
 - Support sending context variables in auth chat
 - Add `ErrorBoundary` component to log unexpected error
 - Log `FormsError` telemetry events from `CustomerVoice`
-- Added `ParticipantRemovedMiddleware` to check the conversation state post receiving on event for 30s. Display disconnection banner if verified conversation had been closed.
+- Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
+- Added `ParticipantRemovedMiddleware` to display disconnection banner if the conversation had been closed.
 
 ### Fixed
 
+- Fix authentication error pane not honoring customization
+- Fix to ensure getReconnectableChat always include a valid token
 - Adding missing closure success telemetry for GetChatReconnectContextSDKCallStarted
 - Cleanup OOH Pane title obtained from props.
 - Handling participant added/deleted in thread as system message
+- Fix chat continuation beyond business hours for active conversations - allow customers to continue active chats when reloading widget outside operating hours
 
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.1](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.1)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.2](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.2)
 
-
 ### Fixed
 
 - Removed cookieUsage config for appInsights
+- Addressed scroll jump issue on close chat.
 
 ## [1.8.0] - 2025-06-03
 

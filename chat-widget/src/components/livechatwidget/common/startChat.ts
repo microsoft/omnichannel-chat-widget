@@ -78,7 +78,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     const parseToJson = false;
     const preChatSurveyResponse: string = props?.preChatSurveyPaneProps?.controlProps?.payload ?? await facadeChatSDK.getPreChatSurvey(parseToJson);
     let showPrechat = isProactiveChat ? preChatSurveyResponse && proactiveChatEnablePrechatState : (preChatSurveyResponse && !props?.controlProps?.hidePreChatSurveyPane);
-    showPrechat = await shouldSetPreChatIfPersistentChat(facadeChatSDK.getChatSDK(), state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode, showPrechat as boolean);
+    showPrechat = await shouldSetPreChatIfPersistentChat(facadeChatSDK, state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode, showPrechat as boolean);
 
     if (showPrechat) {
         const isOutOfOperatingHours = state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.OutOfOperatingHours?.toString().toLowerCase() === "true";
@@ -138,7 +138,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
-    const persistentChatEnabled = await isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+    const persistentChatEnabled = isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
     if (state?.appStates.conversationState === ConversationState.Closed) {
         // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
@@ -177,8 +177,12 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+            // startTime is used to determine if a message is history or new, better to be set before creating the adapter to get bandwidth
+            const startTime = (new Date().getTime());
             await facadeChatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
+            await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, props);
+
         } catch (error) {
             checkContactIdError(error);
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -198,7 +202,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             throw error;
         }
 
-        await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, props);
 
         // Set app state to Active
         if (isStartChatSuccessful) {
@@ -238,7 +241,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, props?: ILiveChatWidgetProps) => {
+const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, startTime: number,  props?: ILiveChatWidgetProps) => {
     // New adapter creation
     const newAdapter = await createAdapter(facadeChatSDK, props);
     setAdapter(newAdapter);
@@ -246,7 +249,7 @@ const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch:
     const chatToken = await facadeChatSDK?.getChatToken();
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
     if (chatToken?.chatId && chatToken?.visitorId) {
-        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken.chatId, chatToken.visitorId));
+        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken.chatId, chatToken.visitorId, startTime));
     }
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
