@@ -144,6 +144,12 @@ export class Constants {
     public static readonly OCOriginalMessageId = "OriginalMessageId";
     public static readonly WebchatSequenceIdAttribute = "webchat:sequence-id";
     public static readonly MessageSequenceIdOverride = "MessageSequenceIdOverride";
+
+    public static readonly sendCustomEvent = "sendCustomEvent";
+    public static readonly onCustomEvent = "onCustomEvent";
+    public static readonly customEventName = "customEventName";
+    public static readonly customEventValue = "customEventValue";
+    public static readonly Hidden = "Hidden";
 }
 
 export const Regex = class {
@@ -182,6 +188,7 @@ export class HtmlAttributeNames {
     public static readonly ariaHidden = "aria-hidden";
     public static readonly disabled = "disabled";
     public static readonly hidden = "hidden";
+
     public static readonly download = "download";
     public static readonly href = "href";
     public static readonly region = "region";
