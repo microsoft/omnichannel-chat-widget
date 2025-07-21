@@ -38,13 +38,11 @@ class EventQueue {
         }
     }
 
-    resumeQueueing() {
-        this.queueing = true;
-    }
-
-    stopQueueing() {
-        this.queueing = false;
-        this.queueingId = undefined;
+    stopIfEmpty() {
+        if (this.channelEventQueue.size === 0) {
+            this.queueing = false;
+            this.queueingId = undefined;
+        }
     }
 
     pushEvent(event: any) {
