@@ -48,7 +48,8 @@ export const extractTimestampFromId = (activity: IActivity): number => {
     };
     
     // Check if ID looks like a UUID (contains dashes or is very long)
-    if (id.includes("-") || id.length > 13) {
+    const UUID_LENGTH_THRESHOLD = 13; // Threshold to distinguish UUIDs from epoch timestamps
+    if (id.includes("-") || id.length > UUID_LENGTH_THRESHOLD) {
         // Likely UUID, use timestamp instead
         return getTimestampFallback();
     }
