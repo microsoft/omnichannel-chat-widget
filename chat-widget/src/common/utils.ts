@@ -422,7 +422,7 @@ export const checkConversationDetailsUntilConversationClosed = async (
                 return true;
             }
         } catch (err) {
-            // Optionally log or handle error
+            // skip logging err as retry in progress
         }
         pollIntervalMs *= 2;
         await new Promise(res => setTimeout(res, pollIntervalMs));
