@@ -412,7 +412,7 @@ export const getConversationDetailsCall = async (facadeChatSDK: FacadeChatSDK, l
 export const checkConversationDetailsUntilConversationClosed = async (
     facadeChatSDK: FacadeChatSDK,
     timeoutMs = 30 * 1000,
-    pollIntervalMs = 5000
+    pollIntervalMs = 2000
 ): Promise<boolean> => {
     const startTime = Date.now();
     while (Date.now() - startTime < timeoutMs) {
