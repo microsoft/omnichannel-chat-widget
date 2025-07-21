@@ -101,6 +101,8 @@ A javascript sample widget can be found in this repo [here](https://github.com/m
 
 A typescript sample widget can be found [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample). To build it, do ```yarn install``` then ```yarn build``` then ```yarn start``` from typescript sample project root. See [Create LiveChatWidget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md) for additional typescript sample project resources.
 
+```react-scripts``` has deprecated to build the sample project, please refer to vite building instructions: [BuildingUsingVite.md](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingVite.md)
+
 ## Components
 
 For a detailed guide on how to customize each component with sample usages, please see our new [Developer Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md).
