@@ -26,6 +26,11 @@ class EventQueue {
     }
 
     queueEvents(timeout = 500) {
+        if (this.channelEventQueue.size === 0) { // Base case
+            this.queueing = false;
+            this.queueingId = undefined;
+        }
+
         if (this.queueingId) { // Queueing in progress
             return;
         }
