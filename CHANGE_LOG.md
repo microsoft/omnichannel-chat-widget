@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed null check logic in `DraggableChatWidget` to prevent runtime crashes when draggable element is null
+- Added `cross-env NODE_OPTIONS=--openssl-legacy-provider` to webpack build scripts to resolve OpenSSL compatibility issues on Windows
+- Added deprecation notice for `react-scripts` with recommendation to use Vite build instructions instead
 - Fixed `ChatButtonStateful` and `HeaderStateful` components to properly handle out-of-office mode initialization and state updates
 - Remove `Important` from link gift , preventing new styles to be applied
 - Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
