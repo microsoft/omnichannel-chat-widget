@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Support sending context variables in auth chat
 - Add `ErrorBoundary` component to log unexpected error
 - Log `FormsError` telemetry events from `CustomerVoice`
+- Added `ParticipantRemovedMiddleware` to check the conversation state post receiving on event for 30s. Display disconnection banner if verified conversation had been closed.
 
 ### Fixed
 
