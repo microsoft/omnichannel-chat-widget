@@ -241,7 +241,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, startTime : number,  props?: ILiveChatWidgetProps) => {
+const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, startTime: number,  props?: ILiveChatWidgetProps) => {
     // New adapter creation
     const newAdapter = await createAdapter(facadeChatSDK, props);
     setAdapter(newAdapter);
