@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed handling of history messages and missing broadcast for system message received
+- Added `cross-env NODE_OPTIONS=--openssl-legacy-provider` to webpack build scripts to resolve OpenSSL compatibility issues on Windows
+- Added deprecation notice for `react-scripts` with recommendation to use Vite build instructions instead
 - Fixed `ChatButtonStateful` and `HeaderStateful` components to properly handle out-of-office mode initialization and state updates
 - Remove `Important` from link gift , preventing new styles to be applied
 - Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
@@ -43,6 +46,7 @@ All notable changes to this project will be documented in this file.
 - Add `ErrorBoundary` component to log unexpected error
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
+- Support conversational post chat survey with Microsoft Copilot Studio survey provider
 
 ### Fixed
 
