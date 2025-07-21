@@ -4,6 +4,7 @@ import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ICustomEvent } from "../../../contexts/common/CustomEventType";
+import { ChatSDKMessage } from "@microsoft/omnichannel-chat-sdk";
 
 export const subscribeToSendCustomEvent = (facadeChatSDK: FacadeChatSDK) => {
 
@@ -28,7 +29,7 @@ export const subscribeToSendCustomEvent = (facadeChatSDK: FacadeChatSDK) => {
                     customEventName: customEventName as string,
                     customEventValue: customEventValueStr
                 };
-                const messagePayload = {
+                const messagePayload: ChatSDKMessage = {
                     content: "",
                     tags: [Constants.Hidden],
                     metadata: messageMeta,
@@ -48,7 +49,6 @@ export const subscribeToSendCustomEvent = (facadeChatSDK: FacadeChatSDK) => {
                     Event: TelemetryEvent.CustomEventAction,
                     Description: "Failed to process CustomEvent.",
                     ExceptionDetails: {
-                        customEventName: event.payload?.customEventName,
                         error
                     }
                 });
