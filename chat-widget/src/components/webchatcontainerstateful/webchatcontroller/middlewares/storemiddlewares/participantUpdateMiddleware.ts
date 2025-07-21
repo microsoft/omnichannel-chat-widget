@@ -21,9 +21,7 @@ const participantRemovedCallHelper = async (state: ILiveChatWidgetContext, dispa
         try {
             const closed = await checkConversationDetailsUntilConversationClosed(facadeChatSDK);
             if (closed) {
-                if (!appStates.chatDisconnectEventReceived) {
-                    dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
-                }
+                dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
             }
         } catch (error) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
