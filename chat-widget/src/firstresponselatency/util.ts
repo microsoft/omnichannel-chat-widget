@@ -3,6 +3,22 @@ import { MessagePayload, ScenarioType, TrackingMessage } from "./Constants";
 import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
 
+/**
+ * Determines whether a given activity is a historical message.
+ * 
+ * This function checks if the activity is a message type and uses a combination
+ * of legacy tags and timestamp-based logic to determine if the message is historical.
+ * 
+ * @param {IActivity} activity - The activity object to evaluate.
+ * @param {number} startTime - The start time (in milliseconds since epoch) to compare against.
+ * @returns {boolean} - Returns true if the activity is a historical message, false otherwise.
+ * 
+ * Logic:
+ * - If the activity type is not a message, it is not historical.
+ * - If the activity contains a legacy history message tag, it is considered historical.
+ * - Otherwise, the function extracts a timestamp from the activity ID using `extractTimestampFromId`.
+ *   - If the ID is valid and the timestamp is older than the start time, the message is historical.
+ */
 export const isHistoryMessage = (activity: IActivity, startTime: number): boolean => {
 
     // Only process message activities
