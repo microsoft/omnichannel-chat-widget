@@ -179,8 +179,13 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
             console.log("Start chat optional params:", startChatOptionalParams);
+
+            // startTime is used to determine if a message is history or new, better to be set before creating the adapter to get bandwidth
+            const startTime = (new Date().getTime());
             await facadeChatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
+            await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, props);
+
         } catch (error) {
             checkContactIdError(error);
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -200,7 +205,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             throw error;
         }
 
-        await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, props);
 
         // Set app state to Active
         if (isStartChatSuccessful) {
@@ -240,7 +244,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, props?: ILiveChatWidgetProps) => {
+const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, startTime: number,  props?: ILiveChatWidgetProps) => {
     // New adapter creation
     const newAdapter = await createAdapter(facadeChatSDK, props);
     setAdapter(newAdapter);
@@ -248,7 +252,7 @@ const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch:
     const chatToken = await facadeChatSDK?.getChatToken();
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
     if (chatToken?.chatId && chatToken?.visitorId) {
-        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken.chatId, chatToken.visitorId));
+        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken.chatId, chatToken.visitorId, startTime));
     }
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
