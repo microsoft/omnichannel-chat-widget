@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Updated build tools including Babel, Webpack, and TypeScript to resolve compatibility issues
 - Fix inefficient EmailRegex causing exponential backtracking vulnerability
 - Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
+- Fixed textarea height issue using `sendBoxTextBox.textarea.minHeight` prop.
 
 ### Added
 
