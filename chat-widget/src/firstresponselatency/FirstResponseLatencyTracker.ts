@@ -12,6 +12,7 @@ export class FirstResponseLatencyTracker {
     private startTrackingMessage?: TrackingMessage;
     private stopTrackingMessage?: TrackingMessage;
     private isReady = false;
+    private trackingTimeoutId?: ReturnType<typeof setTimeout>;
 
     constructor() {
         // this is a workaround to ensure in reload we track effectively the messages
@@ -35,6 +36,8 @@ export class FirstResponseLatencyTracker {
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
 
+        console.log("[FMB DEBUG] Tracking started", payload);
+
         if (!this.isReady) return;
         //  this prevents to initiate tracking for multiple incoming messages
         if (this.isStarted) {
@@ -49,6 +52,29 @@ export class FirstResponseLatencyTracker {
         this.isEnded = false;
         // The idea  of using types is to enrich telemetry data 
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
+
+        // Start a 5-second timeout to auto-stop tracking if not stopped
+        if (this.trackingTimeoutId) {
+            clearTimeout(this.trackingTimeoutId);
+        }
+        this.trackingTimeoutId = setTimeout(() => {
+            if (this.isStarted && !this.isEnded) {
+                // Create a default message for timeout with all required properties
+                const defaultPayload: MessagePayload = {
+                    Id: payload.Id + "_timeout",
+                    role: "system",
+                    timestamp: new Date().toISOString(),
+                    tags: ["timeout"],
+                    messageType: "timeout",
+                    text: "First response latency tracking timed out.",
+                    type: "timeout",
+                    userId: payload.userId || "system",
+                    isChatComplete: false
+                };
+                // Mark as stopped by timeout
+                this.stopTracking(defaultPayload);
+            }
+        }, 5000);
     }
 
     private handleAgentMessage(payload: MessagePayload): void {
@@ -59,6 +85,7 @@ export class FirstResponseLatencyTracker {
     }
 
     private stopTracking(payload: MessagePayload): void {
+        console.log("[FMB DEBUG] Tracking stopped", payload);
         // this prevents execution for multiple incoming messages from the bot.
         if (this.isEnded && !this.isStarted) {
             return;
@@ -67,6 +94,12 @@ export class FirstResponseLatencyTracker {
         // control of states to prevent clashing of messages
         this.isEnded = true;
         this.isStarted = false;
+
+        // Clear the timeout if it exists
+        if (this.trackingTimeoutId) {
+            clearTimeout(this.trackingTimeoutId);
+            this.trackingTimeoutId = undefined;
+        }
 
         // The idea  of using types is to enrich telemetry data 
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
@@ -98,6 +131,7 @@ export class FirstResponseLatencyTracker {
             if (!payload || !payload.Id) {
                 throw new Error("Invalid payload");
             }
+            console.log("[FRL DEBUG] startClock called", payload);
             this.startTracking(payload);
         } catch (e) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -121,6 +155,7 @@ export class FirstResponseLatencyTracker {
             if (!this.isMessageFromValidSender(payload)) return;
 
             if (this.isABotConversation && this.isStarted) {
+                console.log("[FRL DEBUG] stopClock called", payload);
                 this.stopTracking(payload);
             }
         } catch (e) {
@@ -180,6 +215,10 @@ export class FirstResponseLatencyTracker {
         this.isEnded = false;
         this.startTrackingMessage = undefined;
         this.stopTrackingMessage = undefined;
+        if (this.trackingTimeoutId) {
+            clearTimeout(this.trackingTimeoutId);
+            this.trackingTimeoutId = undefined;
+        }
         this.offlineNetworkListener.unsubscribe();
         this.fmltrackingListener.unsubscribe();
         this.rehydrateListener.unsubscribe();

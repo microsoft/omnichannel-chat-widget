@@ -15,6 +15,7 @@ export const createTrackingForFirstMessage = () => {
     let stopTime = 0;
     let stopTrackingMessage: TrackingMessage;
     let flag = false;
+    let trackingTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
     const isMessageFromValidSender = (payload: MessagePayload): boolean => {
         // agent scenario
@@ -28,8 +29,43 @@ export const createTrackingForFirstMessage = () => {
         if (startTracking) return;
         startTracking = true;
         startTime = new Date().getTime();
-    }
-    );
+        console.log("[FMB DEBUG] Tracking started at", startTime);
+        // Start a 5-second timeout to auto-stop tracking if not stopped
+        if (trackingTimeoutId) {
+            clearTimeout(trackingTimeoutId);
+        }
+        trackingTimeoutId = setTimeout(() => {
+            if (startTracking && !stopTracking) {
+                stopTracking = true;
+                stopTime = new Date().getTime();
+                console.log("[FMB DEBUG] Tracking timed out at", stopTime);
+                // Create a default timeout message
+                const defaultPayload: MessagePayload = {
+                    Id: "timeout-bot-message",
+                    role: "system",
+                    timestamp: new Date().toISOString(),
+                    tags: ["timeout"],
+                    messageType: "timeout",
+                    text: "First message from bot tracking timed out.",
+                    type: "timeout",
+                    userId: "system",
+                    isChatComplete: false
+                };
+                stopTrackingMessage = createTrackingMessage(defaultPayload, "timeout");
+                notifyFMLTrackingCompleted();
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.BotFirstMessageLapTrack,
+                    Description: "First Message from Bot latency tracking (timeout)",
+                    CustomProperties: {
+                        elapsedTime: stopTime - startTime,
+                        widgetLoadedAt: startTime,
+                        botMessage: stopTrackingMessage
+                    }
+                });
+                disconnectListener();
+            }
+        }, 5000);
+    });
 
     const newMessageListener = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageReceived).subscribe((message) => {
         const payload = message.payload as MessagePayload;
@@ -37,30 +73,43 @@ export const createTrackingForFirstMessage = () => {
         // we only care for bot, so we need to check if the message is from the bot
         // pending to add typing message indicator signal detection
 
-        if (isMessageFromValidSender(payload)) {
-            if (startTracking && !stopTracking) {
-                stopTime = new Date().getTime();
-                const elapsedTime = stopTime - startTime;
-                stopTracking = true;
-                stopTrackingMessage = createTrackingMessage(payload, "botMessage");
-                notifyFMLTrackingCompleted();
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.BotFirstMessageLapTrack,
-                    Description: "First Message from Bot latency tracking",
-                    CustomProperties: {
-                        elapsedTime,
-                        widgetLoadedAt: startTime,
-                        botMessage: stopTrackingMessage
-                    }
-                });
+        if (!isMessageFromValidSender(payload)) {
+            // If not valid, stop everything and clean up
+            console.log("[FMB DEBUG] Invalid sender, tracking stopped", payload);
+            startTracking = false;
+            stopTracking = false;
+            if (trackingTimeoutId) {
+                clearTimeout(trackingTimeoutId);
+                trackingTimeoutId = undefined;
             }
+            disconnectListener();
+            return;
         }
 
-        // this track only first message, if coming from the bot or not
-        // the only difference is that it logs only those from bot
-        disconnectListener();
-    }
-    );
+        if (startTracking && !stopTracking) {
+            stopTime = new Date().getTime();
+            const elapsedTime = stopTime - startTime;
+            stopTracking = true;
+            console.log("[FMB DEBUG] Tracking stopped at", stopTime, payload);
+            // Clear the timeout if it exists
+            if (trackingTimeoutId) {
+                clearTimeout(trackingTimeoutId);
+                trackingTimeoutId = undefined;
+            }
+            stopTrackingMessage = createTrackingMessage(payload, "botMessage");
+            notifyFMLTrackingCompleted();
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.BotFirstMessageLapTrack,
+                Description: "First Message from Bot latency tracking",
+                CustomProperties: {
+                    elapsedTime,
+                    widgetLoadedAt: startTime,
+                    botMessage: stopTrackingMessage
+                }
+            });
+            disconnectListener();
+        }
+    });
 
     const notifyFMLTrackingCompleted = () => {
         ackListener();
@@ -115,6 +164,10 @@ export const createTrackingForFirstMessage = () => {
 
     // this is to ensure that we are not tracking messages that are not part of the current conversation
     const disconnectListener = () => {
+        if (trackingTimeoutId) {
+            clearTimeout(trackingTimeoutId);
+            trackingTimeoutId = undefined;
+        }
         historyListener.unsubscribe();
         rehydrateListener.unsubscribe();
         newMessageListener.unsubscribe();
