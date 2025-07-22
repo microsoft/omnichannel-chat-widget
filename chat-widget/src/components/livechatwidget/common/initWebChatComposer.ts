@@ -116,7 +116,6 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 state.domainStates.liveChatConfig?.maxUploadFileSize as string,
                 localizedTexts
             ),
-            channelDataMiddleware,
             createQueueOverflowMiddleware(state, dispatch),
             channelDataMiddleware(addConversationalSurveyTagsCallback),
             createConversationEndMiddleware(conversationEndCallback, startConversationalSurveyCallback, endConversationalSurveyCallback),
