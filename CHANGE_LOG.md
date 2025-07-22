@@ -600,6 +600,10 @@ All notable changes to this project will be documented in this file.
 
 - Add `EventQueue` to emit un-processed events as fallback to `BroadcastService`
 
+### Changed
+
+- Update `EventQueue` to not process events at interval by stopping queueing as soon as queue size is empty
+
 ## [1.1.12] - 2025-05-29
 
 ### Changed
