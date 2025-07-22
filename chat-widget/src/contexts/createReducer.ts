@@ -77,7 +77,7 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
             };
 
 
-        case LiveChatWidgetActionType.PING :
+        case LiveChatWidgetActionType.PING:
         inMemory = {
             ...inMemory,
             domainStates: {
