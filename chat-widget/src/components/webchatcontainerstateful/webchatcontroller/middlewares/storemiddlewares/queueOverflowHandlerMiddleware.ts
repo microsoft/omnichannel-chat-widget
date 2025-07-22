@@ -9,6 +9,7 @@ import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChat
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { Constants } from "../../../../../common/Constants";
+import { isEndConversationDueToOverflowActivity } from "../../../../../common/utils";
 
 const queueOverflowHandlingHelper = async (state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     const { appStates } = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: undefined });
@@ -26,9 +27,7 @@ export const createQueueOverflowMiddleware = (state: ILiveChatWidgetContext,
     if (action?.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
 
         const activity = action.payload.activity;
-        if (activity?.channelData?.tags
-            && Array.isArray(activity?.channelData?.tags)
-            && activity.channelData.tags.includes(Constants.EndConversationDueToOverflow)) {
+        if (isEndConversationDueToOverflowActivity(activity)) {
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.QueueOverflowEvent,
                 Description: "Queue overflow event received."

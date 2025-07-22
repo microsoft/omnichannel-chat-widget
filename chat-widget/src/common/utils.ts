@@ -484,3 +484,13 @@ export function getDeviceType(): string {
         return "standard";
     }
 }
+
+export function isEndConversationDueToOverflowActivity(activity: {
+    channelData?: {
+        tags?: string[]
+    }
+}) {
+    return activity?.channelData?.tags
+            && Array.isArray(activity?.channelData?.tags)
+            && activity.channelData.tags.includes(Constants.EndConversationDueToOverflow);
+}

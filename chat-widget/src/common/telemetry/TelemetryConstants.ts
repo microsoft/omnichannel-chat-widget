@@ -179,7 +179,7 @@ export enum TelemetryEvent {
     BotAuthActivityUndefinedSignInId = "BotAuthActivityUndefinedSignInId",
     ThirdPartyCookiesBlocked = "ThirdPartyCookiesBlocked",
     ParticipantsRemovedEvent = "ParticipantsRemovedEvent",
-    QueueOverflowEvent = "QueueOverFlowEvent",
+    QueueOverflowEvent = "QueueOverflowEvent",
 
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
