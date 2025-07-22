@@ -1,5 +1,7 @@
 export interface ICustomEvent {
-    customEvent: string;
+    messageId?: string;
+    customEvent?: string;
     customEventName: string;
     customEventValue: unknown;
 }
+

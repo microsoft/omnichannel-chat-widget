@@ -5,14 +5,9 @@ import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ICustomEvent } from "../../../contexts/common/CustomEventType";
 import { ChatSDKMessage } from "@microsoft/omnichannel-chat-sdk";
+import { getCustomEventValue, isValidCustomEvent } from "../../../common/utils";
 
 export const subscribeToSendCustomEvent = (facadeChatSDK: FacadeChatSDK) => {
-
-    const isValidCustomEvent = (payload: object) => {
-        if (Constants.customEventName in payload && payload.customEventName && typeof payload.customEventName === Constants.String 
-            && Constants.customEventValue in payload && payload.customEventValue) return true;
-        return false;
-    };
 
     BroadcastService.getMessageByEventName(Constants.sendCustomEvent).subscribe((event: object) => {
 
@@ -22,7 +17,7 @@ export const subscribeToSendCustomEvent = (facadeChatSDK: FacadeChatSDK) => {
         {
             const customEventPayload = event.payload as ICustomEvent;
             try {
-                const customEventValueStr: string = typeof customEventPayload.customEventValue === Constants.String ? customEventPayload.customEventValue as string : JSON.stringify(customEventPayload.customEventValue);
+                const customEventValueStr: string = getCustomEventValue(customEventPayload);
                 const customEventName = customEventPayload.customEventName;
                 const messageMeta: ICustomEvent = {
                     customEvent: Constants.true,

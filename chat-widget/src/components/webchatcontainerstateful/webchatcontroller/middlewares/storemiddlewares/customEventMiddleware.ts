@@ -5,10 +5,9 @@
  * The callback is then invoked to handle the custom event.
  ******/
 
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { Constants } from "../../../../../common/Constants";
-import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
-import { MessageTypes } from "../../enums/MessageType";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
@@ -18,10 +17,10 @@ const createCustomEventMiddleware = () => (next: (action: IWebChatAction) => voi
         console.log("debugging: received incoming activity: ", action);
         const activity = action.payload.activity;
         if (activity?.channelData?.metadata?.customEvent 
-            && typeof activity?.channelData?.metadata?.customEvent === "string" && activity?.channelData?.metadata?.customEvent?.toLowerCase() === "true"
-            && activity?.from?.role !== "user"){
-            const customEvent = {
-                eventName: "onCustomEvent",
+            && typeof activity?.channelData?.metadata?.customEvent === Constants.String && activity?.channelData?.metadata?.customEvent?.toLowerCase() === Constants.true
+            && activity?.from?.role !== Constants.userMessageTag){
+            const customEvent: ICustomEvent = {
+                eventName: Constants.onCustomEvent,
                 payload: {
                     messageId: activity.messageid ?? activity.id,
                     customEventName: activity.channelData.metadata.customEventName,
