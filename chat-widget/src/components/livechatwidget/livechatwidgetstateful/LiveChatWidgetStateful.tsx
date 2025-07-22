@@ -829,8 +829,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 margin-left: .25em;
             }
             ${sendBoxTextArea?.minHeight && `
-            textarea.webchat__send-box-text-box__html-text-area {
-                min-height: ${sendBoxTextArea?.minHeight};
+            .webchat__auto-resize-textarea.webchat__send-box-text-box__text-area {
+                min-height: ${sendBoxTextArea?.minHeight} !important;
             }`}
             `}</style>
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
