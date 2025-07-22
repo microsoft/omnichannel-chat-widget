@@ -49,6 +49,10 @@ class EventQueue {
 
     stopIfEmpty() {
         if (this.channelEventQueue.size === 0) {
+            if (this.queueingId) {
+                clearTimeout(this.queueingId);
+            }
+
             this.queueing = false;
             this.queueingId = undefined;
         }
