@@ -36,8 +36,6 @@ export class FirstResponseLatencyTracker {
     // Tracking Functions
     private startTracking(payload: MessagePayload): void {
 
-        console.log("[FMB DEBUG] Tracking started", payload);
-
         if (!this.isReady) return;
         //  this prevents to initiate tracking for multiple incoming messages
         if (this.isStarted) {
@@ -85,7 +83,6 @@ export class FirstResponseLatencyTracker {
     }
 
     private stopTracking(payload: MessagePayload): void {
-        console.log("[FMB DEBUG] Tracking stopped", payload);
         // this prevents execution for multiple incoming messages from the bot.
         if (this.isEnded && !this.isStarted) {
             return;
@@ -131,7 +128,6 @@ export class FirstResponseLatencyTracker {
             if (!payload || !payload.Id) {
                 throw new Error("Invalid payload");
             }
-            console.log("[FRL DEBUG] startClock called", payload);
             this.startTracking(payload);
         } catch (e) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -155,11 +151,9 @@ export class FirstResponseLatencyTracker {
             if (!this.isMessageFromValidSender(payload)) return;
 
             if (this.isABotConversation && this.isStarted) {
-                console.log("[FRL DEBUG] stopClock called", payload);
                 this.stopTracking(payload);
             }
         } catch (e) {
-            console.error("FRL : error while trying to stop the tracker", e);
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.MessageStopLapTrackError,
                 Description: "Error while stopping the clock",

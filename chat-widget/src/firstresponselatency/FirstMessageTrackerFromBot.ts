@@ -29,7 +29,6 @@ export const createTrackingForFirstMessage = () => {
         if (startTracking) return;
         startTracking = true;
         startTime = new Date().getTime();
-        console.log("[FMB DEBUG] Tracking started at", startTime);
         // Start a 5-second timeout to auto-stop tracking if not stopped
         if (trackingTimeoutId) {
             clearTimeout(trackingTimeoutId);
@@ -38,7 +37,6 @@ export const createTrackingForFirstMessage = () => {
             if (startTracking && !stopTracking) {
                 stopTracking = true;
                 stopTime = new Date().getTime();
-                console.log("[FMB DEBUG] Tracking timed out at", stopTime);
                 // Create a default timeout message
                 const defaultPayload: MessagePayload = {
                     Id: "timeout-bot-message",
@@ -75,7 +73,6 @@ export const createTrackingForFirstMessage = () => {
 
         if (!isMessageFromValidSender(payload)) {
             // If not valid, stop everything and clean up
-            console.log("[FMB DEBUG] Invalid sender, tracking stopped", payload);
             startTracking = false;
             stopTracking = false;
             if (trackingTimeoutId) {
@@ -90,7 +87,6 @@ export const createTrackingForFirstMessage = () => {
             stopTime = new Date().getTime();
             const elapsedTime = stopTime - startTime;
             stopTracking = true;
-            console.log("[FMB DEBUG] Tracking stopped at", stopTime, payload);
             // Clear the timeout if it exists
             if (trackingTimeoutId) {
                 clearTimeout(trackingTimeoutId);
