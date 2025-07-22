@@ -24,6 +24,8 @@ class EventQueue {
     }
 
     queueEvents(timeout = 500) {
+        this.stopIfEmpty();
+
         if (this.channelEventQueue.size === 0) { // Base case
             this.queueing = false;
             this.queueingId = undefined;
