@@ -68,7 +68,7 @@ export const BroadcastService = {
             const queueTimeout = options?.queueTimeout || 500;
             const deferTimeout = options?.deferTimeout || 500; // Defer to prevent race condition
             setTimeout(() => {
-                eventQueue.queueEvents(queueTimeout);
+                eventQueue.startQueue(queueTimeout);
             }, deferTimeout);
         }
     },

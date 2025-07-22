@@ -2,7 +2,7 @@ import { Subject } from "rxjs";
 import { ICustomEvent } from "../interfaces/ICustomEvent";
 
 class EventQueue {
-    private queueing: boolean = true;
+    private queueing: boolean = false;
     private channelEventQueue: Map<string, ICustomEvent>;
     private queueingId?: NodeJS.Timeout;
     private newMessage: Subject<ICustomEvent>;
