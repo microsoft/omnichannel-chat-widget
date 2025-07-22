@@ -12,7 +12,7 @@ class EventQueue {
         this.newMessage = newMessage;
     }
 
-    processEvents(deferTimeout = 0) {
+    processEvents() {
         const dequeue = () => {
             this.channelEventQueue.forEach((event, eventId) => { // Process entry based on insertion order
                 this.newMessage.next(event); // Post event directly instead of using pubChannel
@@ -20,9 +20,7 @@ class EventQueue {
             });
         };
 
-        setTimeout(() => {
-            dequeue();
-        }, deferTimeout);
+        dequeue();
     }
 
     queueEvents(timeout = 500) {
