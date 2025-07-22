@@ -146,6 +146,7 @@ export class Constants {
     public static readonly OCOriginalMessageId = "OriginalMessageId";
     public static readonly WebchatSequenceIdAttribute = "webchat:sequence-id";
     public static readonly MessageSequenceIdOverride = "MessageSequenceIdOverride";
+    public static readonly EndConversationDueToOverflow = "endconversationduetooverflow";
 }
 
 export const Regex = class {
