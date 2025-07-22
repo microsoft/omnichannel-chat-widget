@@ -56,6 +56,8 @@ export interface ILiveChatWidgetContext {
         chatDisconnectEventReceived: boolean; // true when customer disconnect event is received
         selectedSurveyMode: string | null; // selected survey mode
         postChatParticipantType: undefined | ParticipantType; // participant type to render post chat survey
+        isConversationalSurvey: boolean; // true if conversational survey flow is active
+        isConversationalSurveyEnabled: boolean; // true if conversational survey is enabled
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

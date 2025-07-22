@@ -282,6 +282,18 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
+        true/false: Determines if conversational survey feature is enabled
+    */
+    SET_CONVERSATIONAL_SURVEY_ENABLED,
+
+    /*
+        Parameters:
+        true/false: Determines if conversational survey flow is active
+    */
+    SET_CONVERSATIONAL_SURVEY_DISPLAY,
+
+    /*
+        Parameters:
         null payload, simply returns the existing inMemory state
     */
     GET_IN_MEMORY_STATE,

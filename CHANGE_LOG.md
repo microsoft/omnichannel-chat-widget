@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+
+- Fixed null check logic in `DraggableChatWidget` to prevent runtime crashes when draggable element is null
 - Fixed handling of history messages and missing broadcast for system message received
 - Added `cross-env NODE_OPTIONS=--openssl-legacy-provider` to webpack build scripts to resolve OpenSSL compatibility issues on Windows
 - Added deprecation notice for `react-scripts` with recommendation to use Vite build instructions instead
@@ -47,6 +49,7 @@ All notable changes to this project will be documented in this file.
 - Add `ErrorBoundary` component to log unexpected error
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
+- Support conversational post chat survey with Microsoft Copilot Studio survey provider
 
 ### Fixed
 
@@ -590,6 +593,10 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+### Added
+
+- Add `EventQueue` to emit un-processed events as fallback to `BroadcastService`
 
 ## [1.1.12] - 2025-05-29
 

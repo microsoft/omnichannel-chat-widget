@@ -766,6 +766,38 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                 }
             };
 
+        case LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_ENABLED:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    isConversationalSurveyEnabled: action.payload as boolean
+                }
+            };
+            return {
+                ...state,
+                appStates: {
+                    ...state.appStates,
+                    isConversationalSurveyEnabled: action.payload as boolean
+                }
+            };
+
+        case LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_DISPLAY:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    isConversationalSurvey: action.payload as boolean
+                }
+            };
+            return {
+                ...state,
+                appStates: {
+                    ...state.appStates,
+                    isConversationalSurvey: action.payload as boolean
+                }
+            };
+
         case LiveChatWidgetActionType.GET_IN_MEMORY_STATE:
             return inMemory;
         default:
