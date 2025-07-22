@@ -178,8 +178,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
-            console.log("Start chat optional params:", startChatOptionalParams);
-
             // startTime is used to determine if a message is history or new, better to be set before creating the adapter to get bandwidth
             const startTime = (new Date().getTime());
             await facadeChatSDK.startChat(startChatOptionalParams);
