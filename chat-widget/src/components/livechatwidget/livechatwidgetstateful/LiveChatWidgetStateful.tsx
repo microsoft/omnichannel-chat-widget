@@ -410,6 +410,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
             // If the startChat event is not initiated by the same tab. Ignore the call
             if ( isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+                console.error("[BSL] Get out of here =>", isTabValidationEnabled, msg?.payload?.runtimeId,TelemetryManager?.InternalTelemetryData?.lcwRuntimeId);
                 return;
             }
 
@@ -440,16 +441,20 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             * 
             * Maximization has been added as part of the initialization chat, since it wont go further than this block.
             **/ 
+            console.log("In StartChat event, inMemoryState.appStates.conversationState:", inMemoryState.appStates.conversationState);
             if (inMemoryState.appStates?.conversationState === ConversationState.Closed) {
+                console.log("Starting a new chat from StartChat event.");
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
                 prepareStartChat(props, facadeChatSDK, inMemoryState, dispatch, setAdapter);
                 return;
             }
+            console.log("Maximizing chat from StartChat event.");
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true || inMemoryState?.appStates?.isMinimized === undefined) {
+                console.log("Maximizing chat from StartChat event.");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
@@ -458,6 +463,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         width: inMemoryState?.domainStates?.widgetSize?.width
                     }
                 });
+                console.log("Maximized chat from StartChat event.");
                 return;
             }
         });
