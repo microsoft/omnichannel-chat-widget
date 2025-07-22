@@ -127,8 +127,7 @@ export class Constants {
     public static readonly OpenLinkIconCssClass = "webchat__render-markdown__external-link-icon";
 
     // internet connection test
-    public static readonly internetConnectionTestUrl = "https://ocsdk-prod.azureedge.net/public/connecttest.txt";
-    public static readonly internetConnectionTestUrlText = "Omnichannel Connect Test";
+    public static readonly internetConnectionTestPath = "/livechatwidget/version.txt";
 
     public static readonly ChatWidgetStateChangedPrefix = "ChatWidgetStateChanged";
     public static readonly PostChatLoadingDurationInMs = 2000;
