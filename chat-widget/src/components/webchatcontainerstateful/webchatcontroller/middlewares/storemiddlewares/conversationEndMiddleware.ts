@@ -12,7 +12,7 @@ import { MessageTypes } from "../../enums/MessageType";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createConversationEndMiddleware = (conversationEndCallback: any) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+const createConversationEndMiddleware = (conversationEndCallback: any, startConversationalSurveyCallback: any, endConversationalSurveyCallback: any) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
     if (action?.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
 
         const activity = action.payload.activity;
@@ -23,6 +23,15 @@ const createConversationEndMiddleware = (conversationEndCallback: any) => ({ dis
                     && (activity.channelData?.tags?.includes(Constants.agentEndConversationMessageTag)
                         || activity.channelData?.tags?.includes(Constants.supervisorForceCloseMessageTag))) {
                     conversationEndCallback();
+                }
+                if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
+                    && (activity.channelData?.tags?.includes(Constants.startConversationalSurveyMessageTag)
+                        || activity.channelData?.tags?.includes(Constants.startConversationalSurveyMessageTag))) {
+                    startConversationalSurveyCallback();
+                }
+                if (activity.channelData?.tags?.includes(Constants.systemMessageTag)
+                    && activity.channelData?.tags?.includes(Constants.endConversationalSurveyMessageTag)) {
+                    endConversationalSurveyCallback();
                 }
             }
         } else if (activity.from?.role === DirectLineSenderRole.Channel &&
