@@ -10,11 +10,28 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { executeReducer } from "../../../contexts/createReducer";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 
-const isInternetConnected = async () => {
+const getRegionBasedInternetTestUrl = (state: ILiveChatWidgetContext): string | null => {
+    const widgetsnippet = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_widgetsnippet;
+    if (!widgetsnippet) {
+        return null;
+    }
+
+    const widgetSnippetSourceRegex = new RegExp("src=\"(https:\\/\\/[\\w-.]+)[\\w-.\\/]+\"");
+
+    const baseCdnUrl = widgetsnippet.match(widgetSnippetSourceRegex)?.[1];
+    return baseCdnUrl ? `${baseCdnUrl}${Constants.internetConnectionTestPath}` : null;
+};
+
+const isInternetConnected = async (state: ILiveChatWidgetContext) => {
+    const internetConnectionTestUrl = getRegionBasedInternetTestUrl(state);
+    if (!internetConnectionTestUrl) return false;
+
     try {
-        const response = await fetch(Constants.internetConnectionTestUrl);
-        const text = await response.text();
-        return text === Constants.internetConnectionTestUrlText;
+        const response = await fetch(internetConnectionTestUrl,  {
+            method: "GET",
+            cache: "no-cache"
+        });
+        return response.ok;
     } catch {
         return false;
     }
@@ -22,7 +39,7 @@ const isInternetConnected = async () => {
 
 export const createInternetConnectionChangeHandler = async (state: ILiveChatWidgetContext) => {
     const handler = async () => {
-        const connected = await isInternetConnected();
+        const connected = await isInternetConnected(state);
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         if (!connected) {
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
