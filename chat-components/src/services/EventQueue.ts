@@ -13,14 +13,10 @@ class EventQueue {
     }
 
     processEvents() {
-        const dequeue = () => {
-            this.channelEventQueue.forEach((event, eventId) => { // Process entry based on insertion order
-                this.newMessage.next(event); // Post event directly instead of using pubChannel
-                this.channelEventQueue.delete(eventId); // Remove event from queue regardless of outcome
-            });
-        };
-
-        dequeue();
+        this.channelEventQueue.forEach((event, eventId) => { // Process entry based on insertion order
+            this.newMessage.next(event); // Post event directly instead of using pubChannel
+            this.channelEventQueue.delete(eventId); // Remove event from queue regardless of outcome
+        });
     }
 
     queueEvents(timeout = 500) {
