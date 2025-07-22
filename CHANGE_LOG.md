@@ -7,8 +7,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Fixed
+## [1.8.2] - 2025-07-22
 
+### Fixed
 
 - Fixed null check logic in `DraggableChatWidget` to prevent runtime crashes when draggable element is null
 - Fixed handling of history messages and missing broadcast for system message received
@@ -35,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - Added public/index.html template with proper styling and configuration guidance for TypeScript sample
 - Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
 - Added browserslist configuration to TypeScript sample package.json for better browser compatibility
+- Support conversational post chat survey with Microsoft Copilot Studio survey provider
 
 ### Changed
 
@@ -49,7 +51,6 @@ All notable changes to this project will be documented in this file.
 - Add `ErrorBoundary` component to log unexpected error
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
-- Support conversational post chat survey with Microsoft Copilot Studio survey provider
 
 ### Fixed
 
