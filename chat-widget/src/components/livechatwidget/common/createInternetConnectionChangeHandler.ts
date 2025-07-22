@@ -11,24 +11,20 @@ import { executeReducer } from "../../../contexts/createReducer";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 
 
-const getRegionBasedInternetTestUrl = (state: ILiveChatWidgetContext): string | null => {
-    const widgetsnippet = state.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_widgetsnippet;
-    if (!widgetsnippet) {
+const getRegionBasedInternetTestUrl = (widgetSnippet: string): string | null => {
+    if (!widgetSnippet) {
         return null;
     }
 
     const widgetSnippetSourceRegex = new RegExp("src=\"(https:\\/\\/[\\w-.]+)[\\w-.\\/]+\"");
 
-    const baseCdnUrl = widgetsnippet.match(widgetSnippetSourceRegex)?.[1];
+    const baseCdnUrl = widgetSnippet.match(widgetSnippetSourceRegex)?.[1];
     return baseCdnUrl ? `${baseCdnUrl}${Constants.internetConnectionTestPath}` : null;
 };
 
-const isInternetConnected = async (state: ILiveChatWidgetContext) => {
-    const internetConnectionTestUrl = getRegionBasedInternetTestUrl(state);
-    if (!internetConnectionTestUrl) return false;
-
+const isInternetConnected = async (testUrl: string) => {
     try {
-        const response = await fetch(internetConnectionTestUrl,  {
+        const response = await fetch(testUrl,  {
             method: "GET",
             cache: "no-cache"
         });
@@ -40,8 +36,9 @@ const isInternetConnected = async (state: ILiveChatWidgetContext) => {
 
 export const createInternetConnectionChangeHandler = async (state: ILiveChatWidgetContext) => {
     const handler = async () => {
-        const connected = await isInternetConnected(state);
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+        const testUrl = getRegionBasedInternetTestUrl(inMemoryState.domainStates.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_widgetsnippet);
+        const connected = testUrl ? await isInternetConnected(testUrl) : false;
         if (!connected) {
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.NetworkDisconnected
