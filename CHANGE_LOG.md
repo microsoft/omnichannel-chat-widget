@@ -46,6 +46,7 @@ All notable changes to this project will be documented in this file.
 - Add `ErrorBoundary` component to log unexpected error
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
+- Add QueueOverflowHandleMiddleware to display disconnection banner if conversation is ended due to overflow
 
 ### Fixed
 
