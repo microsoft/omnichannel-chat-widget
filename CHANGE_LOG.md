@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Added a timeout for messagegs tracker, 5 seconds as max wait
 - Fixed handling of history messages and missing broadcast for system message received
 - Added `cross-env NODE_OPTIONS=--openssl-legacy-provider` to webpack build scripts to resolve OpenSSL compatibility issues on Windows
 - Added deprecation notice for `react-scripts` with recommendation to use Vite build instructions instead
