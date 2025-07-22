@@ -9,12 +9,16 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { PostChatSurveyTelemetryMessage } from "../../../common/Constants";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { isPostChatSurveyEnabled } from "./liveChatConfigUtils";
+import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
     try {
-        const postChatEnabled = await isPostChatSurveyEnabled(facadeChatSDK);
+        const postChatConfig = await getPostChatSurveyConfig(facadeChatSDK);
+        if (postChatConfig.isConversationalSurveyEnabled) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATIONAL_SURVEY_ENABLED, payload: true });
+        }
+        const postChatEnabled = postChatConfig.postChatEnabled;
         if (postChatEnabled) {
             if (!persistedChat) {
                 TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
@@ -27,7 +31,14 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
                 });
-                dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: context });
+
+                // Merge postChatConfig with postChatSurveyContext
+                const mergedContext = {
+                    ...context,
+                    ...postChatConfig
+                };
+
+                dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: mergedContext });
             }
         }
     } catch (ex) {
