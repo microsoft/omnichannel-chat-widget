@@ -39,7 +39,7 @@ class EventQueue {
         this.processEvents();
         if (this.queueing) {
             this.queueingId = setTimeout(() => {
-                this.queueEvents();
+                this.queueEvents(timeout);
             }, timeout);
         }
     }
