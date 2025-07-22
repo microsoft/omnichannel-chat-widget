@@ -1,7 +1,10 @@
 import { Subject } from "rxjs";
 import { ICustomEvent } from "../interfaces/ICustomEvent";
+import { IPostMessageOptions } from "../interfaces/IPostMessageOptions";
 import { filter } from "rxjs/operators";
 import { BroadcastChannel } from "broadcast-channel";
+import { uuidv4 } from "../common/utils";
+import EventQueue from "./EventQueue";
 
 const newMessage = new Subject<ICustomEvent>();
 
@@ -14,8 +17,11 @@ const broadcastServiceSubList: Record<string, any> = {};
 let pubChannel: any;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let subChannel: any;
+let eventQueue: EventQueue;
 
 export const BroadcastServiceInitialize = (channelName: string) => {
+    eventQueue = new EventQueue(newMessage);
+
     if (broadcastServicePubList[channelName]) {
         pubChannel = broadcastServicePubList[channelName];
     } else {
@@ -35,17 +41,36 @@ export const BroadcastServiceInitialize = (channelName: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     subChannel.onmessage = (message: any) => {
         newMessage.next(message);
+        eventQueue.popEvent(message);
+        eventQueue.stopIfEmpty();
     };
 };
 
 export const BroadcastService = {
     //broadcast a message
-    postMessage: (message: ICustomEvent) => {
+    postMessage: (message: ICustomEvent, options: IPostMessageOptions = {retry: true}) => {
         /**
          * Omit copying methods to prevent 'DataCloneError' in older browsers when passing an object with functions
          * This exception occurs when an object can't be clone with the 'structured clone algorithm' (used by postMessage)
          */
-        pubChannel.postMessage(JSON.parse(JSON.stringify(message)));
+        try {
+            const messageCopy = JSON.parse(JSON.stringify(message));
+            const eventId = uuidv4();
+            const event = {...messageCopy, eventId};
+
+            eventQueue.pushEvent(event);
+            pubChannel.postMessage(event);
+        } catch (error) {
+            console.error("Error in BroadcastService.postMessage:", error);
+        }
+
+        if (options?.retry) {
+            const queueTimeout = options?.queueTimeout || 500;
+            const deferTimeout = options?.deferTimeout || 500; // Defer to prevent race condition
+            setTimeout(() => {
+                eventQueue.startQueue(queueTimeout);
+            }, deferTimeout);
+        }
     },
 
     getMessage: (message: ICustomEvent) => {
@@ -66,5 +91,5 @@ export const BroadcastService = {
         return newMessage;
     },
 
-    disposeChannel: () => { pubChannel.close(); subChannel.close(); }
+    disposeChannel: () => { pubChannel.close(); subChannel.close(); eventQueue.dispose(); },
 };

@@ -46,6 +46,7 @@ All notable changes to this project will be documented in this file.
 - Add `ErrorBoundary` component to log unexpected error
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
+- Support conversational post chat survey with Microsoft Copilot Studio survey provider
 
 ### Fixed
 
@@ -589,6 +590,10 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+### Added
+
+- Add `EventQueue` to emit un-processed events as fallback to `BroadcastService`
 
 ## [1.1.12] - 2025-05-29
 
