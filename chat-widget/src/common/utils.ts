@@ -485,6 +485,17 @@ export function getDeviceType(): string {
     }
 }
 
+export function isEndConversationDueToOverflowActivity(activity: {
+    channelData?: {
+        tags?: string[]
+    }
+}) {
+    return activity?.channelData?.tags
+            && Array.isArray(activity?.channelData?.tags)
+            && activity.channelData.tags.includes(Constants.EndConversationDueToOverflow);
+}
+
+
 /**
  * Checks if a runtimeId is from a different runtime (tab/window).
  * @param runtimeId The runtimeId to check (from the message/event).

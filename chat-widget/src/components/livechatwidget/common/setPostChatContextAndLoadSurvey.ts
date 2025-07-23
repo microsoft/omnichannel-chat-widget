@@ -9,10 +9,12 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { PostChatSurveyTelemetryMessage } from "../../../common/Constants";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConfigUtils";
+import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
+import { getPostChatSurveyConfig } from "./liveChatConfigUtils";
+import { isFromOtherRuntime } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {
+export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean, isTabValidationEnabled?: boolean) => {
     try {
         const postChatConfig = await getPostChatSurveyConfig(facadeChatSDK);
         if (postChatConfig.isConversationalSurveyEnabled) {
@@ -25,8 +27,12 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
                     Event: TelemetryEvent.PostChatContextCallStarted,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallStarted
                 });
+                console.error("setPostChatContextAndLoadSurvey :: getPostChatSurveyContext");
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
+
+                console.error("setPostChatContextAndLoadSurvey :2 : getPostChatSurveyContext", context);
+
                 TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
@@ -52,6 +58,11 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
+        // If the startChat event is not initiated by the same tab. Ignore the call
+        if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+            console.error("[BSL] Get out of here =>", isTabValidationEnabled, msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId);
+            return;
+        }
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
     });
 };

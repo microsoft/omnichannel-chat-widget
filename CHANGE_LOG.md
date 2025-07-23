@@ -27,6 +27,8 @@ All notable changes to this project will be documented in this file.
 - Updated build tools including Babel, Webpack, and TypeScript to resolve compatibility issues
 - Fix inefficient EmailRegex causing exponential backtracking vulnerability
 - Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
+- Fixed textarea height issue using `sendBoxTextBox.textarea.minHeight` prop.
+- Fixed Network reconnect notification issue
 
 ### Added
 
@@ -50,6 +52,7 @@ All notable changes to this project will be documented in this file.
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
 - Support conversational post chat survey with Microsoft Copilot Studio survey provider
+- Add QueueOverflowHandleMiddleware to display disconnection banner if conversation is ended due to overflow
 
 ### Fixed
 
@@ -597,6 +600,10 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Add `EventQueue` to emit un-processed events as fallback to `BroadcastService`
+
+### Changed
+
+- Update `EventQueue` to not process events at interval by stopping queueing as soon as queue size is empty
 
 ## [1.1.12] - 2025-05-29
 

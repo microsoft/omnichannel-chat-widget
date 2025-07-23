@@ -1,5 +1,6 @@
 import { Constants, ParticipantType, PostChatSurveyTelemetryMessage, SurveyProvider } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConfigUtils";
 
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { Dispatch } from "react";
@@ -11,7 +12,6 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { addDelayInMs } from "../../../common/utils";
-import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let conversationDetails: any = undefined;
@@ -111,8 +111,10 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
         }
         if (postChatEnabled) {
             if (state?.domainStates?.postChatContext === undefined) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                console.error("getPostChatContext :: 1");
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
+                console.error("getPostChatContext :: 2::", context);
                 TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed

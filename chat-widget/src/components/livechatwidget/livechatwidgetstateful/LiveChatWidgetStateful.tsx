@@ -470,6 +470,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // End chat
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
+
+            console.error("[lopez] :: InitiateEndChat received");
             TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent."
@@ -493,6 +495,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceived
                 });
+                console.error("[lopez] :: ending chat");
                 endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
             }
 
@@ -718,6 +721,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }*/
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
+        console.error("[LOPEz][Multistate]");
         /**
          * Trick to prevent if the current tab has a different state that the future state to use the future state.
          * 
@@ -793,7 +797,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
-    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch);
+    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch, undefined, isTabValidationEnabled);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
     const prepareStartChatRelay = () => prepareStartChat(props, facadeChatSDK, state, dispatch, setAdapter);
@@ -876,8 +880,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 margin-left: .25em;
             }
             ${sendBoxTextArea?.minHeight && `
-            textarea.webchat__send-box-text-box__html-text-area {
-                min-height: ${sendBoxTextArea?.minHeight};
+            .webchat__auto-resize-textarea.webchat__send-box-text-box__text-area {
+                min-height: ${sendBoxTextArea?.minHeight} !important;
             }`}
             `}</style>
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
