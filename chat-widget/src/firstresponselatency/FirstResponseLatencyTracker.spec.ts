@@ -155,7 +155,7 @@ describe("FirstResponseLatencyTracker", () => {
         }));
     });
 
-    it("should auto-stop tracking and log a timeout event after 5 seconds", async () => {
+    it("should reset state after 5 seconds if stopTracking is not called", async () => {
         jest.useFakeTimers();
         const payload: MessagePayload = {
             Id: "timeout-test",
@@ -174,27 +174,14 @@ describe("FirstResponseLatencyTracker", () => {
 
         // Fast-forward 5 seconds
         jest.advanceTimersByTime(5000);
-
-        // Allow any pending promises to resolve
         await Promise.resolve();
 
-        expect((tracker as any).isEnded).toBe(true);
-        expect((tracker as any).stopTrackingMessage).toEqual(
-            expect.objectContaining({
-                Id: expect.stringContaining("timeout-test_timeout"),
-                role: "system",
-                messageType: "timeout",
-                text: expect.stringContaining("timed out")
-            })
-        );
-        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(LogLevel.INFO, expect.objectContaining({
-            Event: TelemetryEvent.MessageLapTrack,
-            CustomProperties: expect.objectContaining({
-                botMessage: expect.objectContaining({
-                    messageType: "timeout",
-                    text: expect.stringContaining("timed out")
-                })
-            })
+        expect((tracker as any).isStarted).toBe(false);
+        expect((tracker as any).isEnded).toBe(false);
+        expect((tracker as any).startTrackingMessage).toBeUndefined();
+        expect((tracker as any).stopTrackingMessage).toBeUndefined();
+        expect(TelemetryHelper.logActionEvent).not.toHaveBeenCalledWith(LogLevel.INFO, expect.objectContaining({
+            Event: TelemetryEvent.MessageLapTrack
         }));
         jest.useRealTimers();
     });

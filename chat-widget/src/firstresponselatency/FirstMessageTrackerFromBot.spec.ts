@@ -48,16 +48,14 @@ describe("createTrackingForFirstMessage", () => {
         }));
     });
 
-    it("should auto-timeout and log if no message in 5s", () => {
+    it("should auto-timeout and reset state if no message in 5s", () => {
         createTrackingForFirstMessage();
         trigger(TelemetryEvent.WidgetLoadComplete, {});
         jest.advanceTimersByTime(5000);
-        expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(LogLevel.INFO, expect.objectContaining({
+        // Should not log any telemetry event for timeout
+        expect(TelemetryHelper.logActionEvent).not.toHaveBeenCalledWith(LogLevel.INFO, expect.objectContaining({
             Event: TelemetryEvent.BotFirstMessageLapTrack,
-            Description: expect.stringContaining("timeout"),
-            CustomProperties: expect.objectContaining({
-                botMessage: expect.objectContaining({ messageType: "timeout" })
-            })
+            Description: expect.stringContaining("timeout")
         }));
     });
 

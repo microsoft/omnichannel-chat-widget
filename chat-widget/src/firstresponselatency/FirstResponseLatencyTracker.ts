@@ -56,21 +56,14 @@ export class FirstResponseLatencyTracker {
             clearTimeout(this.trackingTimeoutId);
         }
         this.trackingTimeoutId = setTimeout(() => {
+            // this means the start process is in progress, but the end wasnt called within the time limit
             if (this.isStarted && !this.isEnded) {
-                // Create a default message for timeout with all required properties
-                const defaultPayload: MessagePayload = {
-                    Id: payload.Id + "_timeout",
-                    role: "system",
-                    timestamp: new Date().toISOString(),
-                    tags: ["timeout"],
-                    messageType: "timeout",
-                    text: "First response latency tracking timed out.",
-                    type: "timeout",
-                    userId: payload.userId || "system",
-                    isChatComplete: false
-                };
-                // Mark as stopped by timeout
-                this.stopTracking(defaultPayload);
+                // Reset state variables and skip stopTracking
+                this.isStarted = false;
+                this.isEnded = false;
+                this.startTrackingMessage = undefined;
+                this.stopTrackingMessage = undefined;
+                this.trackingTimeoutId = undefined;
             }
         }, 5000);
     }
@@ -87,16 +80,14 @@ export class FirstResponseLatencyTracker {
         if (this.isEnded && !this.isStarted) {
             return;
         }
-
-        // control of states to prevent clashing of messages
-        this.isEnded = true;
-        this.isStarted = false;
-
         // Clear the timeout if it exists
         if (this.trackingTimeoutId) {
             clearTimeout(this.trackingTimeoutId);
             this.trackingTimeoutId = undefined;
         }
+        // control of states to prevent clashing of messages
+        this.isEnded = true;
+        this.isStarted = false;
 
         // The idea  of using types is to enrich telemetry data 
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
