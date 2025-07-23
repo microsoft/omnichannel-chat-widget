@@ -12,33 +12,23 @@ class EventQueue {
         this.newMessage = newMessage;
     }
 
-    processEvents(deferTimeout = 0) {
-        const dequeue = () => {
-            this.channelEventQueue.forEach((event, eventId) => { // Process entry based on insertion order
-                this.newMessage.next(event); // Post event directly instead of using pubChannel
-                this.channelEventQueue.delete(eventId); // Remove event from queue regardless of outcome
-            });
-        };
-
-        setTimeout(() => {
-            dequeue();
-        }, deferTimeout);
+    processEvents() {
+        this.channelEventQueue.forEach((event, eventId) => { // Process entry based on insertion order
+            this.newMessage.next(event); // Post event directly instead of using pubChannel
+            this.channelEventQueue.delete(eventId); // Remove event from queue regardless of outcome
+        });
     }
 
     queueEvents(timeout = 500) {
-        if (this.channelEventQueue.size === 0) { // Base case
-            this.queueing = false;
-            this.queueingId = undefined;
-            return;
-        }
+        this.stopIfEmpty();
 
         if (this.queueingId) { // Queueing in progress
             return;
         }
 
-        this.processEvents();
         if (this.queueing) {
             this.queueingId = setTimeout(() => {
+                this.processEvents();
                 this.queueEvents(timeout);
             }, timeout);
         }
@@ -51,6 +41,10 @@ class EventQueue {
 
     stopIfEmpty() {
         if (this.channelEventQueue.size === 0) {
+            if (this.queueingId) {
+                clearTimeout(this.queueingId);
+            }
+
             this.queueing = false;
             this.queueingId = undefined;
         }
