@@ -9,59 +9,98 @@ import { createTrackingMessage } from "./util";
 //  with different timeline, therefore this is a functional approach to track the events, instead of a class based approach
 export const createTrackingForFirstMessage = () => {
     // Reset the tracking variables
-    let startTracking = false;
-    let stopTracking = false;
+    let isTracking = false;
     let startTime = 0;
     let stopTime = 0;
-    let stopTrackingMessage: TrackingMessage;
+    let stopTrackingMessage: TrackingMessage | null = null;
     let flag = false;
+    let trackingTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
+    /**
+     * Checks if the message payload is from a valid sender (not an agent).
+     * Returns false if the message is from an agent (tag 'public'), true otherwise.
+     */
     const isMessageFromValidSender = (payload: MessagePayload): boolean => {
-        // agent scenario
         if (payload?.tags?.includes("public")) {
             return false;
         }
         return true;
     };
 
+    /**
+     * Listener for widget load completion event.
+     * Starts tracking the time for the first bot message after widget loads.
+     * Sets a 5-second timeout to auto-reset if no bot message is received.
+     */
     const widgetLoadListener = BroadcastService.getMessageByEventName(TelemetryEvent.WidgetLoadComplete).subscribe(() => {
-        if (startTracking) return;
-        startTracking = true;
+        if (isTracking) return;
+        isTracking = true;
         startTime = new Date().getTime();
-    }
-    );
+        // Start a 5-second timeout to auto-stop tracking if not stopped
+        if (trackingTimeoutId) {
+            clearTimeout(trackingTimeoutId);
+        }
+        trackingTimeoutId = setTimeout(() => {
+            if (isTracking) {
+                // Reset state and disengage, no telemetry or FMLTrackingCompleted
+                isTracking = false;
+                startTime = 0;
+                stopTime = 0;
+                stopTrackingMessage = null;
+                trackingTimeoutId = undefined;
+                disconnectListener();
+            }
+        }, 10000); //adding more time since it meassures from widget load complete till message received
+    });
 
+    /**
+     * Listener for new bot message event.
+     * If a valid bot message is received, stops tracking and logs telemetry.
+     * If the message is invalid, resets and disengages listeners.
+     */
     const newMessageListener = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageReceived).subscribe((message) => {
         const payload = message.payload as MessagePayload;
 
-        // we only care for bot, so we need to check if the message is from the bot
-        // pending to add typing message indicator signal detection
-
-        if (isMessageFromValidSender(payload)) {
-            if (startTracking && !stopTracking) {
-                stopTime = new Date().getTime();
-                const elapsedTime = stopTime - startTime;
-                stopTracking = true;
-                stopTrackingMessage = createTrackingMessage(payload, "botMessage");
-                notifyFMLTrackingCompleted();
-                TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                    Event: TelemetryEvent.BotFirstMessageLapTrack,
-                    Description: "First Message from Bot latency tracking",
-                    CustomProperties: {
-                        elapsedTime,
-                        widgetLoadedAt: startTime,
-                        botMessage: stopTrackingMessage
-                    }
-                });
+        if (!isMessageFromValidSender(payload)) {
+            // If not valid, stop everything and clean up
+            isTracking = false;
+            if (trackingTimeoutId) {
+                clearTimeout(trackingTimeoutId);
+                trackingTimeoutId = undefined;
             }
+            disconnectListener();
+            return;
         }
 
-        // this track only first message, if coming from the bot or not
-        // the only difference is that it logs only those from bot
-        disconnectListener();
-    }
-    );
+        if (isTracking) {
+            isTracking = false;
+            // Clear the timeout if it exists
+            if (trackingTimeoutId) {
+                clearTimeout(trackingTimeoutId);
+                trackingTimeoutId = undefined;
+            }
 
+            stopTime = new Date().getTime();
+            const elapsedTime = stopTime - startTime;
+            stopTrackingMessage = createTrackingMessage(payload, "botMessage");
+            notifyFMLTrackingCompleted();
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.BotFirstMessageLapTrack,
+                Description: "First Message from Bot latency tracking",
+                CustomProperties: {
+                    elapsedTime,
+                    widgetLoadedAt: startTime,
+                    botMessage: stopTrackingMessage
+                }
+            });
+            disconnectListener();
+        }
+    });
+
+    /**
+     * Notifies that FML (First Message Latency) tracking is completed.
+     * Retries sending the completion event until acknowledged.
+     */
     const notifyFMLTrackingCompleted = () => {
         ackListener();
         // Retry sending until flag is true, but do not block the main thread
@@ -77,6 +116,10 @@ export const createTrackingForFirstMessage = () => {
         }, 100);
     };
 
+    /**
+     * Listener for FMLTrackingCompletedAck event.
+     * Sets the flag to true when acknowledgment is received.
+     */
     const ackListener = () => {
         const listen = BroadcastService.getMessageByEventName(BroadcastEvent.FMLTrackingCompletedAck).subscribe(() => {
             flag = true;
@@ -86,35 +129,49 @@ export const createTrackingForFirstMessage = () => {
     
     // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
     // No need to keep listerning for tracking, enforcing disconnection for the listners
+    /**
+     * Listener for widget rehydration event.
+     * Resets tracking and disconnects listeners when widget is reloaded.
+     */
     const rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceived).subscribe(() => {
-        startTracking = false;
-        stopTracking = false;
+        isTracking = false;
         disconnectListener();
-    }
-    );
+    });
 
     // Rehydrate message is received when the widget is reloaded, this is to ensure that we are not tracking messages that are not part of the current conversation
     // No need to keep listerning for tracking, enforcing disconnection for the listners
+    /**
+     * Listener for history message event.
+     * Resets tracking and disconnects listeners when history is loaded.
+     */
     const historyListener = BroadcastService.getMessageByEventName(BroadcastEvent.HistoryMessageReceived).subscribe(() => {
-        startTracking = false;
-        stopTracking = false;
+        isTracking = false;
         disconnectListener();
-    }
-    );
+    });
 
+    /**
+     * Listener for network disconnection event.
+     * Resets tracking, disconnects listeners, and logs a telemetry error.
+     */
     const offlineNetworkListener = BroadcastService.getMessageByEventName(TelemetryEvent.NetworkDisconnected).subscribe(() => {
-        startTracking = false;
-        stopTracking = false;
+        isTracking = false;
         disconnectListener();
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BotFirstMessageLapTrackError,
             Description: "Tracker Stopped due to network disconnection",
         });
-    }
-    );
+    });
 
     // this is to ensure that we are not tracking messages that are not part of the current conversation
+    /**
+     * Disconnects all listeners and clears the tracking timeout.
+     * Used for cleanup when tracking is stopped or reset.
+     */
     const disconnectListener = () => {
+        if (trackingTimeoutId) {
+            clearTimeout(trackingTimeoutId);
+            trackingTimeoutId = undefined;
+        }
         historyListener.unsubscribe();
         rehydrateListener.unsubscribe();
         newMessageListener.unsubscribe();

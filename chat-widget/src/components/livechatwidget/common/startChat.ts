@@ -132,7 +132,7 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     }
 
     const optionalParams: StartChatOptionalParams = { isProactiveChat };
-    createTrackingForFirstMessage();
+    
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 
@@ -180,6 +180,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
             // startTime is used to determine if a message is history or new, better to be set before creating the adapter to get bandwidth
             const startTime = (new Date().getTime());
+            createTrackingForFirstMessage();
             await facadeChatSDK.startChat(startChatOptionalParams);
             isStartChatSuccessful = true;
             await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, props);
