@@ -596,6 +596,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.13] - 2025-07-22
+
 ### Added
 
 - Add `EventQueue` to emit un-processed events as fallback to `BroadcastService`
