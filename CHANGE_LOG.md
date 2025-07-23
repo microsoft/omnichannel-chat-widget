@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-
+- Enhance to identify history messages , including an addition of 250 ms grace period to account for message processing delays
 - Fixed null check logic in `DraggableChatWidget` to prevent runtime crashes when draggable element is null
 - Fixed handling of history messages and missing broadcast for system message received
 - Added `cross-env NODE_OPTIONS=--openssl-legacy-provider` to webpack build scripts to resolve OpenSSL compatibility issues on Windows
@@ -32,6 +32,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added a timeout for messagegs tracker, 5 seconds as max wait for track of messages during conversations
+- Added a timeout for first message tracker, 10 seconds since it tracks from WigetLoadComplete till first message received
 - Added comprehensive README.md with setup and configuration instructions for TypeScript sample
 - Added public/index.html template with proper styling and configuration guidance for TypeScript sample
 - Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
@@ -39,6 +41,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- uptake [@microsoft/omnichannel-chat-components@1.1.13](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.13)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.4](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.4)
 - Uptake [@microsoft/omnichannel-chat-sdk@1.11.3](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk/v/1.11.3)
 
