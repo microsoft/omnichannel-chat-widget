@@ -469,13 +469,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // End chat
-        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async (msg) => {
 
             console.error("[lopez] :: InitiateEndChat received");
             TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent."
             });
+
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+                return;
+            }
 
             // This is to ensure to get latest state from cache in multitab
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
@@ -495,7 +499,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceived
                 });
-                console.error("[lopez] :: ending chat");
                 endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
             }
 
@@ -685,8 +688,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
-        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-        let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+        const isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
 
         // In conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
         // Hence setting ConversationState to InActive will be done later in the post chat flows
@@ -721,7 +723,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }*/
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
-        console.error("[LOPEz][Multistate]");
         /**
          * Trick to prevent if the current tab has a different state that the future state to use the future state.
          * 

@@ -8,11 +8,13 @@ import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/i
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { PostChatSurveyTelemetryMessage } from "../../../common/Constants";
+import { Subscription } from "rxjs";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { getPostChatSurveyConfig } from "./liveChatConfigUtils";
 import { isFromOtherRuntime } from "../../../common/utils";
 
+let postChatSurveyListener: Subscription | null = null;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean, isTabValidationEnabled?: boolean) => {
     try {
@@ -46,6 +48,20 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
 
                 dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: mergedContext });
             }
+
+            if (postChatSurveyListener === null) {
+                // Enable listener only when survey is enabled
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                postChatSurveyListener = BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
+                    // If the startChat event is not initiated by the same tab. Ignore the call
+                    if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled ?? false)) {
+                        console.error("[BSL] Get out of here =>", isTabValidationEnabled, msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId);
+                        return;
+                    }
+                    dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
+                });
+            }
+
         }
     } catch (ex) {
         TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.ERROR, {
@@ -55,14 +71,8 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
                 exception: ex
             }
         });
+        postChatSurveyListener?.unsubscribe();
+        postChatSurveyListener = null;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
-        // If the startChat event is not initiated by the same tab. Ignore the call
-        if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled ?? false)) {
-            console.error("[BSL] Get out of here =>", isTabValidationEnabled, msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId);
-            return;
-        }
-        dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Postchat });
-    });
+
 };
