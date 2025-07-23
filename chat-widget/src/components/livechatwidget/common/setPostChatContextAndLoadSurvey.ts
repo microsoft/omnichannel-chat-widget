@@ -59,7 +59,7 @@ export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatS
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     BroadcastService.getMessageByEventName("LoadPostChatSurvey").subscribe((msg: ICustomEvent) => {
         // If the startChat event is not initiated by the same tab. Ignore the call
-        if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+        if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled ?? false)) {
             console.error("[BSL] Get out of here =>", isTabValidationEnabled, msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId);
             return;
         }
