@@ -42,6 +42,7 @@ import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontro
 import { Constants } from "../../../common/Constants";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { executeReducer } from "../../../contexts/createReducer";
+import { createQueueOverflowMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/queueOverflowHandlerMiddleware";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -115,6 +116,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 state.domainStates.liveChatConfig?.maxUploadFileSize as string,
                 localizedTexts
             ),
+            createQueueOverflowMiddleware(state, dispatch),
             channelDataMiddleware(addConversationalSurveyTagsCallback),
             createConversationEndMiddleware(conversationEndCallback, startConversationalSurveyCallback, endConversationalSurveyCallback),
             createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
