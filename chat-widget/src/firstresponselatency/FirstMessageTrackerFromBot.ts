@@ -33,9 +33,7 @@ export const createTrackingForFirstMessage = () => {
      * Sets a 5-second timeout to auto-reset if no bot message is received.
      */
     const widgetLoadListener = BroadcastService.getMessageByEventName(TelemetryEvent.WidgetLoadComplete).subscribe(() => {
-        console.error("[widget load complete]");
         if (isTracking) return;
-        console.error("Starting tracking for first message");
         isTracking = true;
         startTime = new Date().getTime();
         // Start a 5-second timeout to auto-stop tracking if not stopped
@@ -44,7 +42,6 @@ export const createTrackingForFirstMessage = () => {
         }
         trackingTimeoutId = setTimeout(() => {
             if (isTracking) {
-                console.error("Timeout of dead!!!");
                 // Reset state and disengage, no telemetry or FMLTrackingCompleted
                 isTracking = false;
                 startTime = 0;
@@ -62,12 +59,9 @@ export const createTrackingForFirstMessage = () => {
      * If the message is invalid, resets and disengages listeners.
      */
     const newMessageListener = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageReceived).subscribe((message) => {
-        console.error("[new message listener]");
         const payload = message.payload as MessagePayload;
 
-        console.log("New message received:", payload);
         if (!isMessageFromValidSender(payload)) {
-            console.error("Invalid message sender:", payload);
             // If not valid, stop everything and clean up
             isTracking = false;
             if (trackingTimeoutId) {
@@ -77,10 +71,8 @@ export const createTrackingForFirstMessage = () => {
             disconnectListener();
             return;
         }
-        console.log("Valid bot message received:", isTracking);
 
         if (isTracking) {
-            console.error("Stopping tracking for first bot message:", payload);
             isTracking = false;
             // Clear the timeout if it exists
             if (trackingTimeoutId) {
@@ -103,7 +95,6 @@ export const createTrackingForFirstMessage = () => {
             });
             disconnectListener();
         }
-        console.error("First message tracking completed:", stopTrackingMessage);
     });
 
     /**
@@ -111,7 +102,6 @@ export const createTrackingForFirstMessage = () => {
      * Retries sending the completion event until acknowledged.
      */
     const notifyFMLTrackingCompleted = () => {
-        console.error("Notifying FML Tracking Completed");
         ackListener();
         // Retry sending until flag is true, but do not block the main thread
         const interval = setInterval(() => {
@@ -144,7 +134,6 @@ export const createTrackingForFirstMessage = () => {
      * Resets tracking and disconnects listeners when widget is reloaded.
      */
     const rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceived).subscribe(() => {
-        console.error("** Rehydrate message received, RESET");
         isTracking = false;
         disconnectListener();
     });
@@ -156,7 +145,6 @@ export const createTrackingForFirstMessage = () => {
      * Resets tracking and disconnects listeners when history is loaded.
      */
     const historyListener = BroadcastService.getMessageByEventName(BroadcastEvent.HistoryMessageReceived).subscribe(() => {
-        console.error("** History message received, RESET");
         isTracking = false;
         disconnectListener();
     });
@@ -166,7 +154,6 @@ export const createTrackingForFirstMessage = () => {
      * Resets tracking, disconnects listeners, and logs a telemetry error.
      */
     const offlineNetworkListener = BroadcastService.getMessageByEventName(TelemetryEvent.NetworkDisconnected).subscribe(() => {
-        console.error("Network disconnected");
         isTracking = false;
         disconnectListener();
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
