@@ -50,7 +50,7 @@ export const createTrackingForFirstMessage = () => {
                 trackingTimeoutId = undefined;
                 disconnectListener();
             }
-        }, 10000);
+        }, 10000); //adding more time since it meassures from widget load complete till message received
     });
 
     /**
