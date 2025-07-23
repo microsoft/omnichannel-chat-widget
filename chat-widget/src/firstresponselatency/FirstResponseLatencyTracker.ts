@@ -7,8 +7,7 @@ import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 export class FirstResponseLatencyTracker {
 
     private isABotConversation = false;
-    private isStarted = false;
-    private isEnded = false;
+    private isTracking = false;
     private startTrackingMessage?: TrackingMessage;
     private stopTrackingMessage?: TrackingMessage;
     private isReady = false;
@@ -38,7 +37,7 @@ export class FirstResponseLatencyTracker {
 
         if (!this.isReady) return;
         //  this prevents to initiate tracking for multiple incoming messages
-        if (this.isStarted) {
+        if (this.isTracking) {
             return;
         }
         // this is to ensure we track only messages where bot is engaged
@@ -46,8 +45,7 @@ export class FirstResponseLatencyTracker {
             return;
         }
         // control of states to prevent clashing of messages
-        this.isStarted = true;
-        this.isEnded = false;
+        this.isTracking = true;
         // The idea  of using types is to enrich telemetry data 
         this.startTrackingMessage = this.createTrackingMessage(payload, "userMessage");
 
@@ -56,11 +54,10 @@ export class FirstResponseLatencyTracker {
             clearTimeout(this.trackingTimeoutId);
         }
         this.trackingTimeoutId = setTimeout(() => {
-            // this means the start process is in progress, but the end wasnt called within the time limit
-            if (this.isStarted && !this.isEnded) {
+            // this means the start process is in progress, but the end wasn't called within the time limit
+            if (this.isTracking) {
                 // Reset state variables and skip stopTracking
-                this.isStarted = false;
-                this.isEnded = false;
+                this.isTracking = false;
                 this.startTrackingMessage = undefined;
                 this.stopTrackingMessage = undefined;
                 this.trackingTimeoutId = undefined;
@@ -77,7 +74,7 @@ export class FirstResponseLatencyTracker {
 
     private stopTracking(payload: MessagePayload): void {
         // this prevents execution for multiple incoming messages from the bot.
-        if (this.isEnded && !this.isStarted) {
+        if (!this.isTracking) {
             return;
         }
         // Clear the timeout if it exists
@@ -86,8 +83,7 @@ export class FirstResponseLatencyTracker {
             this.trackingTimeoutId = undefined;
         }
         // control of states to prevent clashing of messages
-        this.isEnded = true;
-        this.isStarted = false;
+        this.isTracking = false;
 
         // The idea  of using types is to enrich telemetry data 
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
@@ -134,14 +130,17 @@ export class FirstResponseLatencyTracker {
 
     public stopClock(payload: MessagePayload): void {
         try {
-
             if (!payload || !payload.Id) {
                 throw new Error("Invalid payload");
             }
 
-            if (!this.isMessageFromValidSender(payload)) return;
+            // Only allow stopTracking if sender is valid and tracking is active
+            if (!this.isMessageFromValidSender(payload)) {
+                // Do not change isTracking or stopTrackingMessage
+                return;
+            }
 
-            if (this.isABotConversation && this.isStarted) {
+            if (this.isABotConversation && this.isTracking) {
                 this.stopTracking(payload);
             }
         } catch (e) {
@@ -153,17 +152,11 @@ export class FirstResponseLatencyTracker {
                     payload: payload
                 }
             });
-            //reset state
-            this.startTrackingMessage = undefined;
-            this.stopTrackingMessage = undefined;
-            this.isStarted = false;
-            this.isEnded = false;
         }
     }
 
     private offlineNetworkListener = BroadcastService.getMessageByEventName(TelemetryEvent.NetworkDisconnected).subscribe(() => {
-        this.isStarted = false;
-        this.isEnded = false;
+        this.isTracking = false;
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageStopLapTrackError,
             Description: "Tracker Stopped due to network disconnection",
@@ -196,8 +189,7 @@ export class FirstResponseLatencyTracker {
     private deregister(): void {
         // Reset State
         this.isABotConversation = false;
-        this.isStarted = false;
-        this.isEnded = false;
+        this.isTracking = false;
         this.startTrackingMessage = undefined;
         this.stopTrackingMessage = undefined;
         if (this.trackingTimeoutId) {

@@ -9,8 +9,7 @@ import { createTrackingMessage } from "./util";
 //  with different timeline, therefore this is a functional approach to track the events, instead of a class based approach
 export const createTrackingForFirstMessage = () => {
     // Reset the tracking variables
-    let startTracking = false;
-    let stopTracking = false;
+    let isTracking = false;
     let startTime = 0;
     let stopTime = 0;
     let stopTrackingMessage: TrackingMessage | null = null;
@@ -34,25 +33,27 @@ export const createTrackingForFirstMessage = () => {
      * Sets a 5-second timeout to auto-reset if no bot message is received.
      */
     const widgetLoadListener = BroadcastService.getMessageByEventName(TelemetryEvent.WidgetLoadComplete).subscribe(() => {
-        if (startTracking) return;
-        startTracking = true;
+        console.error("[widget load complete]");
+        if (isTracking) return;
+        console.error("Starting tracking for first message");
+        isTracking = true;
         startTime = new Date().getTime();
         // Start a 5-second timeout to auto-stop tracking if not stopped
         if (trackingTimeoutId) {
             clearTimeout(trackingTimeoutId);
         }
         trackingTimeoutId = setTimeout(() => {
-            if (startTracking && !stopTracking) {
+            if (isTracking) {
+                console.error("Timeout of dead!!!");
                 // Reset state and disengage, no telemetry or FMLTrackingCompleted
-                startTracking = false;
-                stopTracking = false;
+                isTracking = false;
                 startTime = 0;
                 stopTime = 0;
                 stopTrackingMessage = null;
                 trackingTimeoutId = undefined;
                 disconnectListener();
             }
-        }, 5000);
+        }, 10000);
     });
 
     /**
@@ -61,12 +62,14 @@ export const createTrackingForFirstMessage = () => {
      * If the message is invalid, resets and disengages listeners.
      */
     const newMessageListener = BroadcastService.getMessageByEventName(BroadcastEvent.NewMessageReceived).subscribe((message) => {
+        console.error("[new message listener]");
         const payload = message.payload as MessagePayload;
 
+        console.log("New message received:", payload);
         if (!isMessageFromValidSender(payload)) {
+            console.error("Invalid message sender:", payload);
             // If not valid, stop everything and clean up
-            startTracking = false;
-            stopTracking = false;
+            isTracking = false;
             if (trackingTimeoutId) {
                 clearTimeout(trackingTimeoutId);
                 trackingTimeoutId = undefined;
@@ -74,9 +77,11 @@ export const createTrackingForFirstMessage = () => {
             disconnectListener();
             return;
         }
+        console.log("Valid bot message received:", isTracking);
 
-        if (startTracking && !stopTracking) {
-            stopTracking = true;
+        if (isTracking) {
+            console.error("Stopping tracking for first bot message:", payload);
+            isTracking = false;
             // Clear the timeout if it exists
             if (trackingTimeoutId) {
                 clearTimeout(trackingTimeoutId);
@@ -98,6 +103,7 @@ export const createTrackingForFirstMessage = () => {
             });
             disconnectListener();
         }
+        console.error("First message tracking completed:", stopTrackingMessage);
     });
 
     /**
@@ -105,6 +111,7 @@ export const createTrackingForFirstMessage = () => {
      * Retries sending the completion event until acknowledged.
      */
     const notifyFMLTrackingCompleted = () => {
+        console.error("Notifying FML Tracking Completed");
         ackListener();
         // Retry sending until flag is true, but do not block the main thread
         const interval = setInterval(() => {
@@ -137,8 +144,8 @@ export const createTrackingForFirstMessage = () => {
      * Resets tracking and disconnects listeners when widget is reloaded.
      */
     const rehydrateListener = BroadcastService.getMessageByEventName(TelemetryEvent.RehydrateMessageReceived).subscribe(() => {
-        startTracking = false;
-        stopTracking = false;
+        console.error("** Rehydrate message received, RESET");
+        isTracking = false;
         disconnectListener();
     });
 
@@ -149,8 +156,8 @@ export const createTrackingForFirstMessage = () => {
      * Resets tracking and disconnects listeners when history is loaded.
      */
     const historyListener = BroadcastService.getMessageByEventName(BroadcastEvent.HistoryMessageReceived).subscribe(() => {
-        startTracking = false;
-        stopTracking = false;
+        console.error("** History message received, RESET");
+        isTracking = false;
         disconnectListener();
     });
 
@@ -159,8 +166,8 @@ export const createTrackingForFirstMessage = () => {
      * Resets tracking, disconnects listeners, and logs a telemetry error.
      */
     const offlineNetworkListener = BroadcastService.getMessageByEventName(TelemetryEvent.NetworkDisconnected).subscribe(() => {
-        startTracking = false;
-        stopTracking = false;
+        console.error("Network disconnected");
+        isTracking = false;
         disconnectListener();
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BotFirstMessageLapTrackError,
