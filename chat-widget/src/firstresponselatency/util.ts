@@ -71,13 +71,14 @@ export const extractTimestampFromId = (activity: IActivity): number => {
 
 export const buildMessagePayload = (activity: IActivity, userId: string): MessagePayload => {
     return {
+        
         // To identify hidden contents vs empty content
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         text: (activity as any)?.text?.length >= 1 ? `*contents hidden (${(activity as any)?.text?.length} chars)*` : "",
         type: activity?.type,
         timestamp: activity?.timestamp,
         userId: userId,
-        tags: activity?.channelData?.tags,
+        tags: activity?.channelData?.tags || [],
         messageType: "",
         Id: activity?.id,
         role: activity?.from?.role,

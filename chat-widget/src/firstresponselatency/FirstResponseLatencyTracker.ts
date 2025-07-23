@@ -140,7 +140,11 @@ export class FirstResponseLatencyTracker {
                 return;
             }
 
+            console.log("Stopping clock for payload:", payload);
+            console.log("isABotConversation:", this.isABotConversation);
+            console.log("isTracking:", this.isTracking);
             if (this.isABotConversation && this.isTracking) {
+                console.log("First response latency tracker stop clock called with payload:", payload);
                 this.stopTracking(payload);
             }
         } catch (e) {
