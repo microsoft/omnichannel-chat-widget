@@ -58,7 +58,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         
         const newMessageReceivedEvent: ICustomEvent = {
             eventName: BroadcastEvent.NewMessageReceived,
-            payload: JSON.stringify(polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId))
+            payload: polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId)
         };
 
         BroadcastService.postMessage(newMessageReceivedEvent);
@@ -82,7 +82,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.RehydrateMessageReceived,
                 Description: "History message received",
-                CustomProperties: JSON.stringify(payload)
+                CustomProperties: payload
             });
         }
     };
@@ -120,7 +120,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
 
         const newMessageReceivedEvent: ICustomEvent = {
             eventName: BroadcastEvent.NewMessageReceived,
-            payload: JSON.stringify(polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId))
+            payload: polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId)
         };
 
         BroadcastService.postMessage(newMessageReceivedEvent);
