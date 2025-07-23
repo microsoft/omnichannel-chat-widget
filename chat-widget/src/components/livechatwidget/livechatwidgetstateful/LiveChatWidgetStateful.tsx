@@ -550,10 +550,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 });
             }, {disablePolling: true});
 
-            facadeChatSDK?.onAgentEndSession((event) => {                   
+            facadeChatSDK?.onAgentEndSession((event) => {  
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                 if ("participantsRemoved" in event && inMemoryState?.appStates?.conversationState === ConversationState.Active) {
-                    setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
+                    if (inMemoryState?.appStates?.isConversationalSurveyEnabled === false) {
+                        setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
+                    }
                     TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.ParticipantsRemovedEvent,
                         Description: "Participants removed event received."
@@ -653,9 +655,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
-            state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+        let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+
+        // In conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
+        // Hence setting ConversationState to InActive will be done later in the post chat flows
+        if (!isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
+            state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive }); 
         }
 
         // All other cases
@@ -831,8 +838,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 margin-left: .25em;
             }
             ${sendBoxTextArea?.minHeight && `
-            textarea.webchat__send-box-text-box__html-text-area {
-                min-height: ${sendBoxTextArea?.minHeight};
+            .webchat__auto-resize-textarea.webchat__send-box-text-box__text-area {
+                min-height: ${sendBoxTextArea?.minHeight} !important;
             }`}
             `}</style>
             <DraggableChatWidget {...chatWidgetDraggableConfig}>

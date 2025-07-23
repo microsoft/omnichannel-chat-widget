@@ -9,6 +9,23 @@ export const isPostChatSurveyEnabled = async (facadeChatSDK: FacadeChatSDK) : Pr
     return postChatEnabled === "true";
 };
 
+export const getPostChatSurveyConfig = async (facadeChatSDK: FacadeChatSDK) : Promise<any> => {
+    const chatConfig = await facadeChatSDK.getLiveChatConfig();
+    const postChatEnabled = chatConfig.LiveWSAndLiveChatEngJoin
+        ?.msdyn_postconversationsurveyenable.toString().toLowerCase();
+    const agentSurveyMode = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveymode?.toString();
+    const botSurveyMode = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_postconversationsurveybotsurveymode?.toString();
+    const surveyProvider = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_surveyprovider?.toString();
+    const isConversationalSurveyEnabled = chatConfig.LiveWSAndLiveChatEngJoin?.msdyn_isConversationalPostChatSurveyEnabled?.toString().toLowerCase();
+    return {
+        postChatEnabled: postChatEnabled === "true",
+        agentSurveyMode: agentSurveyMode,
+        botSurveyMode: botSurveyMode,
+        surveyProvider: surveyProvider,
+        isConversationalSurveyEnabled: (isConversationalSurveyEnabled === "true")
+    };
+};
+
 export const isPersistentChatEnabled = (conversationMode: string | undefined): boolean => {
     if (isNullOrUndefined(conversationMode)) {
         return false;

@@ -3,46 +3,82 @@ import { MessagePayload, ScenarioType, TrackingMessage } from "./Constants";
 import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
 
-export const isHistoryMessage = (activity: IActivity, startTime: number) => {
-    try {
-        if (activity?.type === Constants.message) {
-            // this is an old piece of code, probably no longer relevant
-            if (activity?.channelData?.tags?.includes(Constants.historyMessageTag)) return true;
+const DELTA_WITHIN_LIMITS_IN_MS = 250;
 
-            // Id is an epoch time in milliseconds , in utc format, for some reason is in a string format
-            if (activity?.id) {
-                /// activity.id is an string that contains epoch time in milliseconds
-                const activityId = parseInt(activity?.id);
+/**
+ * Determines whether a given activity is a historical message.
+ * 
+ * This function checks if the activity is a message type and uses a combination
+ * of legacy tags and timestamp-based logic to determine if the message is historical.
+ * 
+ * @param {IActivity} activity - The activity object to evaluate.
+ * @param {number} startTime - The start time (in milliseconds since epoch) to compare against.
+ * @returns {boolean} - Returns true if the activity is a historical message, false otherwise.
+ * 
+ * Logic:
+ * - If the activity type is not a message, it is not historical.
+ * - If the activity contains a legacy history message tag, it is considered historical.
+ * - Otherwise, the function extracts a timestamp from the activity ID using `extractTimestampFromId`.
+ *   - If the ID is valid and the timestamp is older than the start time, the message is historical.
+ */
+export const isHistoryMessage = (activity: IActivity, startTime: number): boolean => {
 
-                // if the activity id is not a number, we default to new message
-                if (isNaN(activityId)) {
-                    return false;
-                }
-
-                // if the activity id is less than the start time, it means that the message is a history message
-                if (activityId < startTime) {
-                    return true;
-                }
-            }
-            // anything else will be considered a new message
-            return false;
-        }
-    } catch (e) {
-        // if there is an error in parsing the activity id, we will consider it a new message
-        console.error("Error in parsing activity id: ", e);
+    // Only process message activities
+    if (activity?.type !== Constants.message) {
+        return false;
     }
-    return false;
+
+    // Prioritize legacy history tag
+    if (activity?.channelData?.tags && activity.channelData.tags.includes(Constants.historyMessageTag)) {
+        return true;
+    }
+
+    const activityId = extractTimestampFromId(activity);
+    const isValidId = !isNaN(activityId) && activityId > 0;
+    const difference = startTime - activityId;
+    // Only consider historical if activityId < startTime and difference >= DELTA_WITHIN_LIMITS_IN_MS
+    const isOlderThanStartTime = activityId < startTime && difference >= DELTA_WITHIN_LIMITS_IN_MS;
+    const isHistoryById = isValidId && isOlderThanStartTime;
+
+    return isHistoryById;
 };
+
+export const extractTimestampFromId = (activity: IActivity): number => {
+    const id = activity?.id ?? "";
+
+    // Helper function to get timestamp fallback
+    const getTimestampFallback = (): number => {
+        const timestamp = new Date(activity?.timestamp ?? "").getTime();
+        return isNaN(timestamp) ? 0 : timestamp;
+    };
+
+    // Check if ID looks like a UUID (contains dashes or is very long)
+    const UUID_LENGTH_THRESHOLD = 13; // Threshold to distinguish UUIDs from epoch timestamps
+    if (id.includes("-") || id.length > UUID_LENGTH_THRESHOLD) {
+        // Likely UUID, use timestamp instead
+        return getTimestampFallback();
+    }
+
+    const activityId = parseInt(id);
+    // if activity id is not a number, then we use timestamp field
+    if (isNaN(activityId)) {
+        return getTimestampFallback();
+    }
+
+    return activityId;
+};
+
 
 export const buildMessagePayload = (activity: IActivity, userId: string): MessagePayload => {
     return {
+        
         // To identify hidden contents vs empty content
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         text: (activity as any)?.text?.length >= 1 ? `*contents hidden (${(activity as any)?.text?.length} chars)*` : "",
         type: activity?.type,
         timestamp: activity?.timestamp,
         userId: userId,
-        tags: activity?.channelData?.tags,
+        tags: activity?.channelData?.tags || [],
         messageType: "",
         Id: activity?.id,
         role: activity?.from?.role,

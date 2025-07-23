@@ -31,7 +31,8 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
     return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
-        state.appStates.conversationState === ConversationState.InActive);
+        state.appStates.conversationState === ConversationState.InActive ||
+        (state.appStates.conversationState === ConversationState.Postchat && state.appStates.isConversationalSurveyEnabled && state.appStates.isConversationalSurvey));
 };
 
 export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
@@ -69,7 +70,7 @@ export const shouldShowConfirmationPane = (state: ILiveChatWidgetContext) => {
 };
 
 export const shouldShowPostChatSurveyPane = (state: ILiveChatWidgetContext) => {
-    return (state.appStates.conversationState === ConversationState.Postchat);
+    return (state.appStates.conversationState === ConversationState.Postchat) && !state.appStates.isConversationalSurvey;
 };
 
 export const shouldShowCallingContainer = (state: ILiveChatWidgetContext) => {
