@@ -10,7 +10,8 @@ import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { Md5 } from "md5-typescript";
 import { TelemetryHelper } from "./telemetry/TelemetryHelper";
-import { ICustomEvent } from "../contexts/common/CustomEventType";
+import * as CustomEventType from "../contexts/common/CustomEventType";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -495,7 +496,7 @@ export const isValidCustomEvent = (payload: object) => {
     return false;
 };
 
-export const getCustomEventValue = (customEventPayload: ICustomEvent) => {
+export const getCustomEventValue = (customEventPayload: CustomEventType.ICustomEvent) => {
     let returnVal = "";
     try {
         returnVal = typeof customEventPayload.customEventValue === Constants.String ? customEventPayload.customEventValue as string : JSON.stringify(customEventPayload.customEventValue);
@@ -504,3 +505,13 @@ export const getCustomEventValue = (customEventPayload: ICustomEvent) => {
     }
     return returnVal;
 };
+
+export function isEndConversationDueToOverflowActivity(activity: {
+    channelData?: {
+        tags?: string[]
+    }
+}) {
+    return activity?.channelData?.tags
+            && Array.isArray(activity?.channelData?.tags)
+            && activity.channelData.tags.includes(Constants.EndConversationDueToOverflow);
+}

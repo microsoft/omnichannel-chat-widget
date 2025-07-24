@@ -7,6 +7,9 @@ export class Constants {
     public static readonly historyMessageTag = "history";
     public static readonly agentEndConversationMessageTag = "agentendconversation";
     public static readonly supervisorForceCloseMessageTag = "supervisorforceclosedconversation";
+    public static readonly endConversationalSurveyMessageTag = "endconversationalsurvey";
+    public static readonly startConversationalSurveyMessageTag = "startconversationalsurvey";
+    public static readonly c2ConversationalSurveyMessageTag = "c2conversationalsurvey";
 
     public static readonly receivedMessageClassName = "ms_lcw_webchat_received_message";
     public static readonly sentMessageClassName = "ms_lcw_webchat_sent_message";
@@ -124,8 +127,7 @@ export class Constants {
     public static readonly OpenLinkIconCssClass = "webchat__render-markdown__external-link-icon";
 
     // internet connection test
-    public static readonly internetConnectionTestUrl = "https://ocsdk-prod.azureedge.net/public/connecttest.txt";
-    public static readonly internetConnectionTestUrlText = "Omnichannel Connect Test";
+    public static readonly internetConnectionTestPath = "/livechatwidget/version.txt";
 
     public static readonly ChatWidgetStateChangedPrefix = "ChatWidgetStateChanged";
     public static readonly PostChatLoadingDurationInMs = 2000;
@@ -150,6 +152,7 @@ export class Constants {
     public static readonly customEventName = "customEventName";
     public static readonly customEventValue = "customEventValue";
     public static readonly Hidden = "Hidden";
+    public static readonly EndConversationDueToOverflow = "endconversationduetooverflow";
 }
 
 export const Regex = class {
@@ -255,6 +258,10 @@ export enum E2VVOptions {
 export enum ConversationMode {
     Regular = "192350000",
     Persistent = "192350001"
+}
+
+export enum SurveyProvider {
+    MicrosoftCopilotStudio = "600990001"
 }
 
 export enum LiveWorkItemState {
