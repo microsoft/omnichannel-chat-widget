@@ -875,7 +875,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 
-                        {shouldShowClosingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.closingPane) || <ClosingPaneStateful closingPaneProps={livechatProps.loadingPaneProps} />)}
+                        {shouldShowClosingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.closingPane) || <ClosingPaneStateful {...livechatProps.closingPaneProps} />)}
 
                         {!livechatProps.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...livechatProps.postChatLoadingPaneProps} />)}
 

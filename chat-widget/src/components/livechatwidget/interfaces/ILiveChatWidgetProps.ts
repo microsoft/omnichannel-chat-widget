@@ -35,6 +35,7 @@ export interface ILiveChatWidgetProps {
     chatButtonProps?: IChatButtonProps;
     chatConfig?: ChatConfig;
     chatSDK: OmnichannelChatSDK;
+    closingPaneProps?: ILoadingPaneProps;
     componentOverrides?: ILiveChatWidgetComponentOverrides;
     confirmationPaneProps?: IConfirmationPaneStatefulProps;
     controlProps?: ILiveChatWidgetControlProps;

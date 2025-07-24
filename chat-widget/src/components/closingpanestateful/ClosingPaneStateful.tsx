@@ -2,9 +2,11 @@ import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConsta
 import React, { Dispatch, useEffect } from "react";
 import { createTimer, findAllFocusableElement } from "../../common/utils";
 
+import { ClosingPaneConstants } from "../../common/Constants";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILoadingPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneControlProps";
+import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneProps";
 import { ILoadingPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/loadingpane/interfaces/ILoadingPaneStyleProps";
 import { IStyle } from "@fluentui/react";
 import { ITimer } from "../../common/interfaces/ITimer";
@@ -16,8 +18,7 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 let uiTimer : ITimer;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const ClosingPaneStateful = (props: any) => {
+export const ClosingPaneStateful = (props: ILoadingPaneProps) => {
 
     useEffect(() => {
         uiTimer = createTimer();
@@ -27,21 +28,20 @@ export const ClosingPaneStateful = (props: any) => {
     }, []);
     
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const { closingPaneProps } = props;
 
-    const generalClosingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, closingPaneProps?.styleProps?.generalStyleProps);
+    const generalClosingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, props.styleProps?.generalStyleProps);
     
     const closingPaneStyleProps: ILoadingPaneStyleProps = {
-        ...closingPaneProps?.styleProps,
+        ...props.styleProps,
         generalStyleProps: generalClosingPaneStyleProps
     };
 
     const closingPaneControlProps: ILoadingPaneControlProps = {
-        id: "oc-lcw-closing-pane",
+        id: ClosingPaneConstants.DefaultClosingPaneId,
         dir: state.domainStates.globalDir,
-        titleText: "Closing chat...",
-        subtitleText: "Please wait while we close your chat session.",
-        ...closingPaneProps?.controlProps
+        titleText: ClosingPaneConstants.DefaultClosingPaneTitleText,
+        subtitleText: ClosingPaneConstants.DefaultClosingPaneSubtitleText,
+        ...props.controlProps
     };
     
     const { height, width } = useWindowDimensions();
@@ -70,7 +70,7 @@ export const ClosingPaneStateful = (props: any) => {
     
     return (
         <LoadingPane
-            componentOverrides={closingPaneProps?.componentOverrides}
+            componentOverrides={props.componentOverrides}
             controlProps={closingPaneControlProps}
             styleProps={closingPaneStyleProps}
             windowWidth={width}
