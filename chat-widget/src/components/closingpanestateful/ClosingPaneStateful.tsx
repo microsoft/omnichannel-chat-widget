@@ -30,6 +30,7 @@ export const ClosingPaneStateful = (props: any) => {
     const { closingPaneProps } = props;
 
     const generalClosingPaneStyleProps: IStyle = Object.assign({}, defaultGeneralLoadingPaneStyleProps, closingPaneProps?.styleProps?.generalStyleProps);
+    
     const closingPaneStyleProps: ILoadingPaneStyleProps = {
         ...closingPaneProps?.styleProps,
         generalStyleProps: generalClosingPaneStyleProps
