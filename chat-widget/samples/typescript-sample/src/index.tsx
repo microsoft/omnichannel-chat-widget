@@ -1,18 +1,20 @@
-import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
-import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom/client";
+import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
 import * as OcChatSdkPackageinfo from "@microsoft/omnichannel-chat-sdk/package.json";
 import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/package.json";
-import * as OcChatComponentPackageInfo from "@microsoft/omnichannel-chat-components/package.json";
-import { defaultProps } from "../src/common/defaultProps";
+
+import React, { useEffect, useState } from "react";
+
 import { CoffeeChatIconBase64 } from "../src/common/assets";
+import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
+import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
+import ReactDOM from "react-dom/client";
+import { defaultProps } from "../src/common/defaultProps";
 
 const getOmnichannelChatConfig = () => {
     const omnichannelConfig = {
-        orgId: "<DATA-ORG-ID>",
-        orgUrl: "<DATA-ORG-URL>",
-        widgetId: "<DATA-APP-ID>"
+        orgId: "<org-id>",
+        orgUrl: "<org-url>",
+        widgetId: "<widget-id>",
     };
     return omnichannelConfig;
 };
