@@ -34,7 +34,10 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     const [adapter,]: [any, (adapter: any) => void] = useChatAdapterStore();
     const { headerProps, outOfOfficeHeaderProps, endChat } = props;
     //Setting OutOfOperatingHours Flag
-    const [outOfOperatingHours, setOutOfOperatingHours] = useState(false);
+    // Initialize with the current state value to prevent visual flicker
+    const [outOfOperatingHours, setOutOfOperatingHours] = useState(() => {
+        return state.appStates.conversationState === ConversationState.Closed && state.appStates.outsideOperatingHours;
+    });
 
     const outOfOfficeStyleProps: IHeaderStyleProps = Object.assign({}, defaultOutOfOfficeHeaderStyleProps, outOfOfficeHeaderProps?.styleProps);
 
@@ -101,6 +104,10 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             });
 
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: true });
+            // Ensure conversation state remains Closed to maintain out-of-office mode
+            if (state.appStates.conversationState !== ConversationState.Closed) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+            }
 
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.MinimizeChatActionCompleted, 
@@ -129,12 +136,12 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
     }, []);
 
     useEffect(() => {
-       if (state.appStates.conversationState === ConversationState.Closed) {   
+        if (state.appStates.conversationState === ConversationState.Closed) {
             // If the conversation state is closed, check if we are outside operating hours
             const isOutsideOperatingHours = state.appStates.outsideOperatingHours;
             setOutOfOperatingHours(isOutsideOperatingHours);
         }      
-    }, [state.appStates.conversationState]);
+    }, [state.appStates.conversationState, state.appStates.outsideOperatingHours]);
 
     if (props.draggable === true) {
         const styleProps = (outOfOperatingHours || state.appStates.conversationState === ConversationState.OutOfOffice) ? outOfOfficeStyleProps : headerProps?.styleProps;
