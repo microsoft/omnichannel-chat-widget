@@ -9,7 +9,6 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- Fixed markdown numbered list formatting to handle double line breaks and ensure proper continuous numbering
 - Fixed `ChatButtonStateful` and `HeaderStateful` components to properly handle out-of-office mode initialization and state updates
 - Remove `Important` from link gift , preventing new styles to be applied
 - Fixed TypeScript sample application to work with modern Node.js versions by updating all dependencies to current stable versions
@@ -23,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Updated build tools including Babel, Webpack, and TypeScript to resolve compatibility issues
 - Fix inefficient EmailRegex causing exponential backtracking vulnerability
 - Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
+- Fixed markdown numbered list formatting to handle double line breaks and ensure proper continuous numbering
 
 ### Added
 
