@@ -38,6 +38,7 @@ All notable changes to this project will be documented in this file.
 - Added public/index.html template with proper styling and configuration guidance for TypeScript sample
 - Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
 - Added browserslist configuration to TypeScript sample package.json for better browser compatibility
+- Added middleware to support call action type quick replies
 
 ### Changed
 
