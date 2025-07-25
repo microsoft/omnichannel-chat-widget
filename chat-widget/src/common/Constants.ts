@@ -191,7 +191,6 @@ export class HtmlAttributeNames {
     public static readonly ariaHidden = "aria-hidden";
     public static readonly disabled = "disabled";
     public static readonly hidden = "hidden";
-
     public static readonly download = "download";
     public static readonly href = "href";
     public static readonly region = "region";

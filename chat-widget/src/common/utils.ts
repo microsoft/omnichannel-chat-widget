@@ -487,7 +487,7 @@ export function getDeviceType(): string {
     }
 }
 
-//Bot expect a payload containing:
+//Bots expect a payload containing:
 //1. customEventName: this should be string describe the event name
 //2. customEventValue: given the value is from customer with unknown type, it is required to stringify the payload later
 export const isValidCustomEvent = (payload: object) => {
@@ -501,7 +501,7 @@ export const getCustomEventValue = (customEventPayload: CustomEventType.ICustomE
     try {
         returnVal = typeof customEventPayload.customEventValue === Constants.String ? customEventPayload.customEventValue as string : JSON.stringify(customEventPayload.customEventValue);
     } catch (error) {
-        //skip stringify error
+        console.error(error);
     }
     return returnVal;
 };
