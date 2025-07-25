@@ -32,7 +32,7 @@ describe("FirstResponseLatencyTracker", () => {
 
         tracker.startClock(payload);
 
-        expect((tracker as any).isStarted).toBe(true);
+        expect((tracker as any).isTracking).toBe(true);
         expect((tracker as any).startTrackingMessage).toEqual(
             expect.objectContaining({
                 Id: "123",
@@ -53,13 +53,12 @@ describe("FirstResponseLatencyTracker", () => {
             type: "userMessage",
             isChatComplete: false,
             userId: "userId",
-
         };
 
         (tracker as any).isABotConversation = false;
         tracker.startClock(payload);
 
-        expect((tracker as any).isStarted).toBe(false);
+        expect((tracker as any).isTracking).toBe(false);
     });
 
     it("should stop tracking when stopClock is called with a valid payload", () => {
@@ -90,7 +89,7 @@ describe("FirstResponseLatencyTracker", () => {
         tracker.startClock(startPayload);
         tracker.stopClock(stopPayload);
 
-        expect((tracker as any).isEnded).toBe(true);
+        expect((tracker as any).isTracking).toBe(false);
         expect((tracker as any).stopTrackingMessage).toEqual(
             expect.objectContaining({
                 Id: "456",
@@ -103,37 +102,16 @@ describe("FirstResponseLatencyTracker", () => {
         }));
     });
 
-    it("should not stop tracking if the message is from an invalid sender", () => {
-        const payload: MessagePayload = {
-            Id: "123",
-            role: "user",
-            timestamp: Date.now().toString(),
-            tags: ["public"], // Indicates an agent message
-            messageType: "userMessage",
-            text: "Hello",
-            type: "",
-            userId: "",
-            isChatComplete: false
-        };
-
-        tracker.stopClock(payload);
-
-        expect((tracker as any).isEnded).toBe(false);
-        expect((tracker as any).stopTrackingMessage).toBeUndefined();
-    });
-
     it("should reset state when deregister is called", () => {
         (tracker as any).isABotConversation = true;
-        (tracker as any).isStarted = true;
-        (tracker as any).isEnded = true;
+        (tracker as any).isTracking = true;
         (tracker as any).startTrackingMessage = { Id: "123" } as any;
         (tracker as any).stopTrackingMessage = { Id: "456" } as any;
 
         (tracker as any).deregister();
 
         expect((tracker as any).isABotConversation).toBe(false);
-        expect((tracker as any).isStarted).toBe(false);
-        expect((tracker as any).isEnded).toBe(false);
+        expect((tracker as any).isTracking).toBe(false);
         expect((tracker as any).startTrackingMessage).toBeUndefined();
         expect((tracker as any).stopTrackingMessage).toBeUndefined();
     });
@@ -153,5 +131,35 @@ describe("FirstResponseLatencyTracker", () => {
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(LogLevel.ERROR, expect.objectContaining({
             Event: TelemetryEvent.MessageStopLapTrackError,
         }));
+    });
+
+    it("should reset state after 5 seconds if stopTracking is not called", async () => {
+        jest.useFakeTimers();
+        const payload: MessagePayload = {
+            Id: "timeout-test",
+            role: "user",
+            timestamp: Date.now().toString(),
+            tags: [],
+            messageType: "userMessage",
+            text: "Test timeout",
+            type: "",
+            userId: "",
+            isChatComplete: false
+        };
+
+        tracker.startClock(payload);
+        expect((tracker as any).isTracking).toBe(true);
+
+        // Fast-forward 5 seconds
+        jest.advanceTimersByTime(5000);
+        await Promise.resolve();
+
+        expect((tracker as any).isTracking).toBe(false);
+        expect((tracker as any).startTrackingMessage).toBeUndefined();
+        expect((tracker as any).stopTrackingMessage).toBeUndefined();
+        expect(TelemetryHelper.logActionEvent).not.toHaveBeenCalledWith(LogLevel.INFO, expect.objectContaining({
+            Event: TelemetryEvent.MessageLapTrack
+        }));
+        jest.useRealTimers();
     });
 });

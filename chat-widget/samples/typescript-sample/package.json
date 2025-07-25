@@ -3,9 +3,7 @@
       "version": "0.0.1",
       "dependencies": {
         "@fluentui/react": "^8.123.1",
-        "@microsoft/omnichannel-chat-components": "^1.1.12",
-        "@microsoft/omnichannel-chat-sdk": "^1.11.2",
-        "@microsoft/omnichannel-chat-widget": "^1.8.0",
+        "@microsoft/omnichannel-chat-widget": "^1.8.2-main.d82a79b",
         "broadcast-channel": "^7.1.0",
         "crypto-browserify": "^3.12.0",
         "md5-typescript": "^1.0.5",
