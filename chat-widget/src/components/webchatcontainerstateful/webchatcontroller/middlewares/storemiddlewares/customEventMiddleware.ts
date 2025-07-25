@@ -11,14 +11,30 @@ import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
+export const isValidCustomEvent = (activity: {
+    channelData?: {
+        metadata?: {
+            customEvent?: string;
+            customEventName?: string;
+            customEventValue?: unknown;
+        }
+    },
+    from?: {
+        role: string;
+    }
+}) => {
+    return !!(activity?.channelData?.metadata?.customEvent 
+            && typeof activity?.channelData?.metadata?.customEvent === Constants.String
+            && activity?.channelData?.metadata?.customEvent?.toLowerCase() === Constants.true
+            && activity?.from?.role !== Constants.userMessageTag
+            && typeof activity?.channelData?.metadata?.customEventName === Constants.String
+            && activity?.channelData?.metadata?.customEventValue);
+};
 
-const createCustomEventMiddleware = () => (next: (action: IWebChatAction) => void) => (action: IWebChatAction) => {
+const createCustomEventMiddleware = (broadcastservice: typeof BroadcastService) => () => (next: (action: IWebChatAction) => void) => (action: IWebChatAction) => {
     if (action?.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
-        console.log("debugging: received incoming activity: ", action);
         const activity = action.payload.activity;
-        if (activity?.channelData?.metadata?.customEvent 
-            && typeof activity?.channelData?.metadata?.customEvent === Constants.String && activity?.channelData?.metadata?.customEvent?.toLowerCase() === Constants.true
-            && activity?.from?.role !== Constants.userMessageTag){
+        if (isValidCustomEvent(activity)){
             const customEvent: ICustomEvent = {
                 eventName: Constants.onCustomEvent,
                 payload: {
@@ -27,8 +43,7 @@ const createCustomEventMiddleware = () => (next: (action: IWebChatAction) => voi
                     customEventValue: activity.channelData.metadata.customEventValue
                 }
             };
-            console.log("debugging: posting customEvent: ", customEvent);
-            BroadcastService.postMessage(customEvent);
+            broadcastservice.postMessage(customEvent);
             return;
         }
     }

@@ -90,7 +90,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
-import { subscribeToSendCustomEvent } from "../common/customEventHandler";
+import { customEventCallback, subscribeToSendCustomEvent } from "../common/customEventHandler";
 
 let uiTimer : ITimer;
 
@@ -528,7 +528,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         // subscribe custom event
-        subscribeToSendCustomEvent(facadeChatSDK);
+        subscribeToSendCustomEvent(BroadcastService, facadeChatSDK, customEventCallback);
 
         // Check for TPC and log in telemetry if blocked
         isCookieAllowed();
