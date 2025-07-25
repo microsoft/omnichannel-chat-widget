@@ -79,7 +79,6 @@ const main = async () => {
                 customContext: context
             }
         };
-        console.log("debugging: startChat invoked: ", context);
         BroadcastService.postMessage(setCustomContextEvent);
     };
 
@@ -114,9 +113,7 @@ const main = async () => {
     };
 
     const setOnCustomEvent = (callback) => {
-        console.log("debugging: setOnCustomEvent invoked: ", callback);
         BroadcastService.getMessageByEventName("onCustomEvent").subscribe((event) => {
-            console.log("debugging: received onCustomEvent: ", event);
             if (event && typeof callback === "function") {
                 callback(event);
             }
@@ -131,16 +128,6 @@ const main = async () => {
     window["sendCustomEvent"] = sendCustomEvent;
     window["setOnCustomEvent"] = setOnCustomEvent;
 
-    setOnCustomEvent((event) => {
-        console.log("debugging: event received onCustomEvent callback on sampleWidget", event);
-        const element = document.getElementById("displayArea");
-        if(element) {
-            let child = document.createElement("div");
-            child.innerText= JSON.stringify(event);
-            element.appendChild(child);
-            element.appendChild(document.createElement("br"));
-        }
-    });
     switchConfig(customizationJson);
 };
 
