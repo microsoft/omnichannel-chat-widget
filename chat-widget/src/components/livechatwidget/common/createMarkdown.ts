@@ -53,13 +53,14 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
             let result = text;
             
             // Only process if the text contains the double line break pattern
-            if (!/\d+\.\s+.*?\n\n[\s\S]*?(?:\n\n\d+\.|\s*$)/.test(text)) {
+            // But exclude simple numbered lists (where content after \n\n starts with another number)
+            if (!/\d+\.\s+.*?\n\n(?!\d+\.\s)[\s\S]*?(?:\n\n\d+\.|\s*$)/.test(text)) {
                 return result;
             }
             
             // Convert "1. Item\n\nContent\n\n2. Item" to proper markdown list format
-            // Use improved pattern with lookahead to handle multi-paragraph content
-            const listPattern = /(\d+\.\s+[^\n]+)(\n\n[\s\S]*?)(?=\n\n\d+\.|\s*$)/g;
+            // Use improved pattern with negative lookahead to exclude cases where content starts with numbered list
+            const listPattern = /(\d+\.\s+[^\n]+)(\n\n(?!\d+\.\s)[\s\S]*?)(?=\n\n\d+\.|\s*$)/g;
             if (listPattern.test(result)) {
                 // Reset regex state for actual replacement
                 listPattern.lastIndex = 0;
