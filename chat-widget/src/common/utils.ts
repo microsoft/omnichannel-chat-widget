@@ -494,3 +494,17 @@ export function isEndConversationDueToOverflowActivity(activity: {
             && Array.isArray(activity?.channelData?.tags)
             && activity.channelData.tags.includes(Constants.EndConversationDueToOverflow);
 }
+
+
+/**
+ * Checks if a runtimeId is from a different runtime (tab/window).
+ * @param runtimeId The runtimeId to check (from the message/event).
+ * @param lcwRuntimeId The current runtimeId of this widget instance.
+ * @returns true if the runtimeId is from a different runtime, false otherwise.
+ */
+export const isFromOtherRuntime = (runtimeId: string | undefined, lcwRuntimeId: string | undefined, isTabValidationEnabled: boolean): boolean => {
+    if (!isTabValidationEnabled) {
+        return false; // If same tab validation is disabled, always return false
+    }
+    return runtimeId !== undefined && runtimeId !== lcwRuntimeId;
+};

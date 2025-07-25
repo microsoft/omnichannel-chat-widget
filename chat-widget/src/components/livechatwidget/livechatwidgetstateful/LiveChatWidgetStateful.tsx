@@ -16,7 +16,6 @@ import {
     getWidgetCacheIdfromProps,
     getWidgetEndChatEventName,
     isNullOrEmptyString,
-    isNullOrUndefined,
     isThisSessionPopout,
     isUndefinedOrEmpty,
     setOcUserAgent
@@ -86,6 +85,7 @@ import { handleChatDisconnect } from "../common/chatDisconnectHelper";
 import { initCallingSdk } from "../common/initCallingSdk";
 import { initConfirmationPropsComposer } from "../common/initConfirmationPropsComposer";
 import { initWebChatComposer } from "../common/initWebChatComposer";
+import { isFromOtherRuntime } from "../../../common/utils";
 import { registerBroadcastServiceForStorage } from "../../../common/storage/default/defaultCacheManager";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
 import { startProactiveChat } from "../common/startProactiveChat";
@@ -117,6 +117,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [conversationId, setConversationId] = useState<string>("");
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
+
+    // isTabValidationEnabled is true only when disableSameTabEventValidation is explicitly false
+    // When prop is missing/undefined or true, validation is disabled (isTabValidationEnabled = false)
+    const isTabValidationEnabled = props?.featureConfigProps?.disableSameTabEventValidation === false;
+
     const bubbleBackground = props.webChatContainerProps?.webChatStyles?.bubbleBackground ??
         (props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background);
     const bubbleTextColor = props.webChatContainerProps?.webChatStyles?.bubbleTextColor ??
@@ -386,6 +391,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
          * the event is expected to be emitted from scripting layer.
          */
         BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+                return;
+            }
+
+            if (state.appStates?.isMinimized === msg?.payload?.minimized) {
+                return;
+            }
+
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: msg?.payload?.minimized });
         });
 
@@ -398,7 +411,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 return;
             }
             // If the startChat event is not initiated by the same tab. Ignore the call
-            if (!isNullOrUndefined(msg?.payload?.runtimeId) && msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+            if ( isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+                console.error("[BSL] Get out of here =>", isTabValidationEnabled, msg?.payload?.runtimeId,TelemetryManager?.InternalTelemetryData?.lcwRuntimeId);
                 return;
             }
 
@@ -429,16 +443,20 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             * 
             * Maximization has been added as part of the initialization chat, since it wont go further than this block.
             **/ 
+            console.log("In StartChat event, inMemoryState.appStates.conversationState:", inMemoryState.appStates.conversationState);
             if (inMemoryState.appStates?.conversationState === ConversationState.Closed) {
+                console.log("Starting a new chat from StartChat event.");
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.ChatInitiated
                 });
                 prepareStartChat(props, facadeChatSDK, inMemoryState, dispatch, setAdapter);
                 return;
             }
+            console.log("Maximizing chat from StartChat event.");
 
             // If minimized, maximize the chat
             if (inMemoryState?.appStates?.isMinimized === true || inMemoryState?.appStates?.isMinimized === undefined) {
+                console.log("Maximizing chat from StartChat event.");
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.MaximizeChat,
@@ -447,16 +465,23 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         width: inMemoryState?.domainStates?.widgetSize?.width
                     }
                 });
+                console.log("Maximized chat from StartChat event.");
                 return;
             }
         });
 
         // End chat
-        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async (msg) => {
+
+            console.error("[lopez] :: InitiateEndChat received");
             TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent."
             });
+
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+                return;
+            }
 
             // This is to ensure to get latest state from cache in multitab
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
@@ -496,7 +521,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             props.controlProps?.widgetInstanceId ?? "");
 
         BroadcastService.getMessageByEventName(endChatEventName).subscribe((msg: ICustomEvent) => {
-            if (msg?.payload?.runtimeId !== TelemetryManager.InternalTelemetryData.lcwRuntimeId) {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
                 TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
@@ -510,6 +535,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         //Listen to WidgetSize, used for minimize to maximize
         BroadcastService.getMessageByEventName("WidgetSize").subscribe((msg: ICustomEvent) => {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+                dispatch({ type: LiveChatWidgetActionType.PING, payload: !state.domainStates.ping });
+                return;
+            }
+            
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_SIZE, payload: msg?.payload });
         });
 
@@ -519,6 +549,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: undefined });
             dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
+        });
+
+        BroadcastService.getMessageByEventName(BroadcastEvent.Ping).subscribe((msg) => {
+            if (isFromOtherRuntime(msg?.payload?.runtimeId, TelemetryManager?.InternalTelemetryData?.lcwRuntimeId, isTabValidationEnabled)) {
+                if (msg?.payload?.isMinimized !== state.appStates.isMinimized) {
+                    dispatch({ type: LiveChatWidgetActionType.PING_MINIMIZE_COMBO, payload: {
+                        ping : !state.domainStates.ping,
+                        isMinimized : msg?.payload?.isMinimized
+                    } });
+                }
+            }
+
         });
 
         // Retrieve convId
@@ -655,8 +697,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
-        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-        let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+        const isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
 
         // In conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
         // Hence setting ConversationState to InActive will be done later in the post chat flows
@@ -689,7 +730,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 initiateEndChatOnBrowserUnload();
             };
         }*/
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
 
+        /**
+         * Trick to prevent if the current tab has a different state that the future state to use the future state.
+         * 
+         * This is to prevent when a different tab updates conversation id, then a second tab will react to save the new value with a mix of old values, 
+         * the minimize state is important because is used to compute visibility of components, 
+         */
+        if (state.appStates.isMinimized !== inMemoryState.appStates.isMinimized) {
+            state.appStates.isMinimized = inMemoryState.appStates.isMinimized;
+        }
+        
         widgetStateEventId = getWidgetCacheIdfromProps(props);
 
         const chatWidgetStateChangeEvent: ICustomEvent = {
@@ -755,7 +807,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.postMessage({ eventName: BroadcastEvent.ClosePopoutWindow });
     };
 
-    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch);
+    const setPostChatContextRelay = () => setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch, undefined, isTabValidationEnabled);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
     const prepareStartChatRelay = () => prepareStartChat(props, facadeChatSDK, state, dispatch, setAdapter);

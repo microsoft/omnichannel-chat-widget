@@ -22,6 +22,7 @@ export enum LogLevel {
 
 // Events used in certain functionalities that are not being logged
 export enum BroadcastEvent {
+    Ping = "Ping",
     LoadPostChatSurvey = "LoadPostChatSurvey",
     ChatEnded = "ChatEnded", // used for multitab notification when chat ended 
     NewMessageNotification = "NewMessageNotification",

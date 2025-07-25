@@ -29,7 +29,6 @@ import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
-import { WidgetLoadCustomErrorString } from "../Constants";
 import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {

@@ -1,7 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 
-import { ParticipantType } from "../../common/Constants";
 import { CustomerVoiceEvents } from "./enums/CustomerVoiceEvents";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -9,13 +8,16 @@ import { IPostChatSurveyPaneControlProps } from "@microsoft/omnichannel-chat-com
 import { IPostChatSurveyPaneStatefulProps } from "./interfaces/IPostChatSurveyPaneStatefulProps";
 import { IPostChatSurveyPaneStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/postchatsurveypane/interfaces/IPostChatSurveyPaneStyleProps";
 import { IStyle } from "@fluentui/react";
+import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
+import { ParticipantType } from "../../common/Constants";
 import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
 import { PostChatSurveyPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPostChatSurveyPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralPostChatSurveyPaneStyleProps";
+import { executeReducer } from "../../contexts/createReducer";
 import { findAllFocusableElement } from "../../common/utils";
-import useChatContextStore from "../../hooks/useChatContextStore";
 import isValidSurveyUrl from "./common/isValidSurveyUrl";
+import useChatContextStore from "../../hooks/useChatContextStore";
 
 const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, customerVoiceSurveyCorrelationId: string, showMultiLingual = false) => {
     const surveyLinkParams = new URLSearchParams({
@@ -36,19 +38,25 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
 
     let surveyInviteLink = "";
     const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
-    if (state.domainStates.postChatContext.botSurveyInviteLink && // Bot survey enabled
-        state.appStates.postChatParticipantType === ParticipantType.Bot) { // Only Bot has engaged
+
+    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+    console.error("[lopez] :: PostChatSurveyPaneStateful inMemoryState botSurveyInviteLink  ", inMemoryState?.domainStates?.postChatContext?.botSurveyInviteLink );
+    console.error("[lopez] :: PostChatSurveyPaneStateful state botSurveyInviteLink  ", state?.domainStates?.postChatContext?.botSurveyInviteLink );
+    console.error("[lopez] :: PostChatSurveyPaneStateful state postChatContext => ", state?.domainStates?.postChatContext );
+    
+    if (state?.domainStates?.postChatContext?.botSurveyInviteLink && // Bot survey enabled
+        state?.appStates?.postChatParticipantType === ParticipantType.Bot) { // Only Bot has engaged
         surveyInviteLink = generateSurveyInviteLink(
-            state.domainStates.postChatContext.botSurveyInviteLink,
+            state?.domainStates?.postChatContext?.botSurveyInviteLink,
             surveyMode,
-            state.domainStates.postChatContext.botFormsProLocale,
+            state?.domainStates?.postChatContext?.botFormsProLocale,
             props.isCustomerVoiceSurveyCompact ?? true,
             props.customerVoiceSurveyCorrelationId || "");
     } else {
         surveyInviteLink = generateSurveyInviteLink(
-            state.domainStates.postChatContext.surveyInviteLink,
+            state?.domainStates?.postChatContext?.surveyInviteLink,
             surveyMode,
-            state.domainStates.postChatContext.formsProLocale,
+            state?.domainStates?.postChatContext?.formsProLocale,
             props.isCustomerVoiceSurveyCompact ?? true,
             props.customerVoiceSurveyCorrelationId || "");
     }
