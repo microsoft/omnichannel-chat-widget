@@ -74,7 +74,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                     const cleanContent = content.substring(2); // Remove leading \n\n
                     const lines = cleanContent.split("\n");
                     const indentedContent = lines.map((line: string) => 
-                        line.trim() ? `${MARKDOWN_LIST_INDENTATION}${line}` : ""
+                        line.trim() ? `${Constants.MARKDOWN_LIST_INDENTATION}${line}` : ""
                     ).join("\n");
                     
                     const lineBreak = disableNewLineMarkdownSupport ? "\n" : "\n\n";
