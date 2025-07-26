@@ -32,13 +32,71 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
             "linkify", // Rule to replace link-like texts with link nodes
             "html_block", // Rule to process html blocks and paragraphs
             "html_inline", // Rule to process html tags
-            "newline" // Rule to proceess '\n'
+            "newline", // Rule to proceess '\n'
+            "list" // Enable list parsing rule
         ]);
     }
 
     markdown.disable([
         "strikethrough"
     ]);
+
+    // Custom plugin to fix numbered list continuity
+    markdown.use(function(md) {
+        const originalRender = md.render.bind(md);
+        const originalRenderInline = md.renderInline.bind(md);
+        
+        function preprocessText(text: string): string {
+            // Handle numbered lists that come with double line breaks (knowledge article format)
+            // This ensures proper continuous numbering instead of separate lists
+            
+            let result = text;
+            
+            // Only process if the text contains the double line break pattern
+            // But exclude simple numbered lists (where content after \n\n starts with another number)
+            if (!/\d+\.\s+.*?\n\n(?!\d+\.\s)[\s\S]*?(?:\n\n\d+\.|\s*$)/.test(text)) {
+                return result;
+            }
+            
+            // Convert "1. Item\n\nContent\n\n2. Item" to proper markdown list format
+            // Use improved pattern with negative lookahead to exclude cases where content starts with numbered list
+            const listPattern = /(\d+\.\s+[^\n]+)(\n\n(?!\d+\.\s)[\s\S]*?)(?=\n\n\d+\.|\s*$)/g;
+            if (listPattern.test(result)) {
+                // Reset regex state for actual replacement
+                listPattern.lastIndex = 0;
+                
+                result = result.replace(listPattern, (match, listItem, content) => {
+                    if (!content) {
+                        return match;
+                    }
+                    
+                    // Format content with proper indentation
+                    const cleanContent = content.substring(2); // Remove leading \n\n
+                    const lines = cleanContent.split("\n");
+                    const indentedContent = lines.map((line: string) => 
+                        line.trim() ? `${Constants.MARKDOWN_LIST_INDENTATION}${line}` : ""
+                    ).join("\n");
+                    
+                    const lineBreak = disableNewLineMarkdownSupport ? "\n" : "\n\n";
+                    return `${listItem}${lineBreak}${indentedContent}`;
+                });
+            }
+            
+            return result;
+        }
+        
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        md.render = function(text: string, env?: any): string {
+            const processedText = preprocessText(text);
+            return originalRender(processedText, env);
+        };
+        
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        md.renderInline = function(text: string, env?: any): string {
+            const processedText = preprocessText(text);
+            return originalRenderInline(processedText, env);
+        };
+    });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     markdown.use(MarkdownItForInline, "url_new_win", "link_open", function (tokens: any, idx: number, env: any) {
