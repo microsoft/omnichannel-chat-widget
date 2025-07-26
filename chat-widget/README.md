@@ -223,6 +223,51 @@ const customizedFooterProp: IFooterProps = {
 
 > :pushpin: Note that [WebChat hooks](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/HOOKS.md) can also be used in any custom components.
 
+#### Bidirectional Custom Events
+- Sending events from a hosting web page to bots/agents
+    - Register a function to post event
+        ```js
+        //define sendCustomEvent function
+        const sendCustomEvent = (payload) => {
+            const customEvent = {
+                eventName: "sendCustomEvent",
+                payload
+            };
+            BroadcastService.postMessage(customEvent);
+        };
+
+        //attach the sendCustomEvent function to window object
+        window["sendCustomEvent"] = sendCustomEvent;
+
+        //invoke the sendCustomEvent function with some customized payload
+        window.sendCustomEvent({
+            customEventName: "TestEvent",
+            customEventValue: {
+                boolVar: true,
+                displayableVar: {
+                    isDisplayable: true,
+                    value: "From C2: "+ new Date().toISOString()
+                },
+                numberVar: -10.5,
+                stringVar: "Hello from C2 str: " + new Date().toISOString()
+            }
+        })
+        ```
+    - Receiving events from bots/agents
+        ```js
+        //define setOnCustomEvent function
+        const setOnCustomEvent = (callback) => {
+            BroadcastService.getMessageByEventName("onCustomEvent").subscribe((event) => {
+                if (event && typeof callback === "function") {
+                    callback(event);
+                }
+            });
+        };
+
+        //set callback function
+        setOnCustomEvent((event) => console.log(event));
+        ```
+
 ## See Also
 
 [Customizations Dev Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md)\

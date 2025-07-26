@@ -103,11 +103,31 @@ const main = async () => {
         BroadcastService.postMessage(startProactiveChatEvent);
     };
 
+
+    const sendCustomEvent = (payload) => {
+        const customEvent = {
+            eventName: "sendCustomEvent",
+            payload
+        };
+        BroadcastService.postMessage(customEvent);
+    };
+
+    const setOnCustomEvent = (callback) => {
+        BroadcastService.getMessageByEventName("onCustomEvent").subscribe((event) => {
+            if (event && typeof callback === "function") {
+                callback(event);
+            }
+        });
+    };
+
     window["switchConfig"] = switchConfig;
     window["startProactiveChat"] = startProactiveChat;
     window["startChat"] = startChat;
     window["endChat"] = endChat;
     window["setCustomContext"] = setCustomContext;
+    window["sendCustomEvent"] = sendCustomEvent;
+    window["setOnCustomEvent"] = setOnCustomEvent;
+
     switchConfig(customizationJson);
 };
 
