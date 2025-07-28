@@ -5,11 +5,13 @@ import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 import { DataStoreManager } from "./contextDataStore/DataStoreManager";
 import { FacadeChatSDK } from "./facades/FacadeChatSDK";
-import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
+
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { Md5 } from "md5-typescript";
 import { TelemetryHelper } from "./telemetry/TelemetryHelper";
+import * as CustomEventType from "../contexts/common/CustomEventType";
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -484,6 +486,25 @@ export function getDeviceType(): string {
         return "standard";
     }
 }
+
+//Bots expect a payload containing:
+//1. customEventName: this should be string describe the event name
+//2. customEventValue: given the value is from customer with unknown type, it is required to stringify the payload later
+export const isValidCustomEvent = (payload: object) => {
+    if (Constants.customEventName in payload && payload.customEventName && typeof payload.customEventName === Constants.String 
+        && Constants.customEventValue in payload && payload.customEventValue) return true;
+    return false;
+};
+
+export const getCustomEventValue = (customEventPayload: CustomEventType.ICustomEvent) => {
+    let returnVal = "";
+    try {
+        returnVal = typeof customEventPayload.customEventValue === Constants.String ? customEventPayload.customEventValue as string : JSON.stringify(customEventPayload.customEventValue);
+    } catch (error) {
+        console.error(error);
+    }
+    return returnVal;
+};
 
 export function isEndConversationDueToOverflowActivity(activity: {
     channelData?: {

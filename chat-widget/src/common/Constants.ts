@@ -146,6 +146,12 @@ export class Constants {
     public static readonly OCOriginalMessageId = "OriginalMessageId";
     public static readonly WebchatSequenceIdAttribute = "webchat:sequence-id";
     public static readonly MessageSequenceIdOverride = "MessageSequenceIdOverride";
+
+    public static readonly sendCustomEvent = "sendCustomEvent";
+    public static readonly onCustomEvent = "onCustomEvent";
+    public static readonly customEventName = "customEventName";
+    public static readonly customEventValue = "customEventValue";
+    public static readonly Hidden = "Hidden";
     public static readonly EndConversationDueToOverflow = "endconversationduetooverflow";
 }
 
@@ -382,4 +388,10 @@ export class AppInsightsTelemetryMessage {
     public static readonly AppInsightsInitialized = "Application Insights initialized successfully.";
     public static readonly AppInsightsInitError = "Error initializing Application Insights";
     public static readonly AppInsightsKeyError = "Invalid Application Insights key provided.";
+}
+
+export class ClosingPaneConstants {
+    public static readonly DefaultClosingPaneId = "oc-lcw-closing-pane";
+    public static readonly DefaultClosingPaneTitleText = "Closing chat...";
+    public static readonly DefaultClosingPaneSubtitleText = "Please wait while we close your chat session.";
 }
