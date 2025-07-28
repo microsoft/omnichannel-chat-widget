@@ -461,6 +461,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             // This is to ensure to get latest state from cache in multitab
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ClosingChat });
 
             if (persistedState &&
                 persistedState.appStates.conversationState === ConversationState.Active) {
