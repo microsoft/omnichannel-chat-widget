@@ -33,12 +33,15 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Added closing pane functionality to display loading indicator while chat is being closed, preventing race conditions when starting new chats
 - Added a timeout for messagegs tracker, 5 seconds as max wait for track of messages during conversations
 - Added a timeout for first message tracker, 10 seconds since it tracks from WigetLoadComplete till first message received
 - Added comprehensive README.md with setup and configuration instructions for TypeScript sample
 - Added public/index.html template with proper styling and configuration guidance for TypeScript sample
 - Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
 - Added browserslist configuration to TypeScript sample package.json for better browser compatibility
+- Add QueueOverflowHandleMiddleware to display disconnection banner if conversation is ended due to overflow
+- Add support for bidirectional custom events support
 
 ### Changed
 
@@ -55,7 +58,7 @@ All notable changes to this project will be documented in this file.
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
 - Support conversational post chat survey with Microsoft Copilot Studio survey provider
-- Add QueueOverflowHandleMiddleware to display disconnection banner if conversation is ended due to overflow
+
 
 ### Fixed
 
