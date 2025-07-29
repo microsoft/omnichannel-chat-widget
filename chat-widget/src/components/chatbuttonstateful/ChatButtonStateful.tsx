@@ -69,8 +69,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
     const controlProps: IChatButtonControlProps = {
         id: "oc-lcw-chat-button",
         dir: state.domainStates.globalDir,
-        titleText: "Let's Chat!",
-        subtitleText: "We're online.",
+        titleText: buttonProps?.controlProps?.titleText || "Let's Chat!",
+        subtitleText: buttonProps?.controlProps?.subtitleText || "We're online.",
         hideNotificationBubble: buttonProps?.controlProps?.hideNotificationBubble === true || state.appStates.isMinimized === false,
         unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? props.buttonProps?.controlProps?.largeUnreadMessageString : state.appStates.unreadMessageCount.toString()) : "0",
         unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,

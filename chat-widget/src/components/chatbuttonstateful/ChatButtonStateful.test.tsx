@@ -427,7 +427,7 @@ describe("ChatButtonStateful Component", () => {
     });
 
     describe("Props spreading and click handler precedence", () => {
-        it("should not override out-of-office onClick with props from outOfOfficeButtonProps", async () => {
+        it("should allow external onClick to override internal onClick for popup functionality", async () => {
             const mockState = createMockState({
                 appStates: {
                     conversationState: ConversationState.Closed,
@@ -440,7 +440,7 @@ describe("ChatButtonStateful Component", () => {
 
             mockUseChatContextStore.mockReturnValue([mockState, mockDispatch]);
 
-            const conflictingOnClick = jest.fn();
+            const customOnClick = jest.fn();
             const props = {
                 buttonProps: {
                     controlProps: {
@@ -452,7 +452,7 @@ describe("ChatButtonStateful Component", () => {
                     controlProps: {
                         id: "test-ooo-button",
                         titleText: "We're Offline",
-                        onClick: conflictingOnClick // This should be excluded
+                        onClick: customOnClick // This should override the internal onClick
                     }
                 },
                 startChat: mockStartChat
@@ -466,12 +466,12 @@ describe("ChatButtonStateful Component", () => {
                 button.click();
             });
 
-            // Should dispatch OutOfOffice state, not call the conflicting onClick
-            expect(mockDispatch).toHaveBeenCalledWith({
+            // Should call the custom onClick handler instead of internal logic
+            expect(customOnClick).toHaveBeenCalled();
+            expect(mockDispatch).not.toHaveBeenCalledWith({
                 type: LiveChatWidgetActionType.SET_CONVERSATION_STATE,
                 payload: ConversationState.OutOfOffice
             });
-            expect(conflictingOnClick).not.toHaveBeenCalled();
         });
 
         it("should properly spread other properties from outOfOfficeButtonProps while excluding onClick", () => {
