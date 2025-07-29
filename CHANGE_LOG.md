@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
 - Fixed textarea height issue using `sendBoxTextBox.textarea.minHeight` prop.
 - Fixed Network reconnect notification issue
+- Fixed chat button custom prop issue
 
 ### Added
 
