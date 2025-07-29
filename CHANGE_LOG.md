@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed regression in ChatButtonStateful and LiveChatWidgetStateful components affecting control props order and out-of-office state logic
 - Enhance to identify history messages , including an addition of 250 ms grace period to account for message processing delays
 - Fixed null check logic in `DraggableChatWidget` to prevent runtime crashes when draggable element is null
 - Fixed handling of history messages and missing broadcast for system message received

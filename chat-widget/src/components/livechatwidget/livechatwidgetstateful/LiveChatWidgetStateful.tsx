@@ -391,7 +391,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {  
             // If chat is out of operating hours chat widget sets the conversation state to OutOfOffice.
-            if (state.appStates.outsideOperatingHours === true) {
+            if (state.appStates.outsideOperatingHours && state.appStates.conversationState !== ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 return;
