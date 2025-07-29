@@ -9,6 +9,5 @@ export enum ConversationState {
     PostchatLoading = 7,
     Postchat = 8,
     Closed = 9,
-    Error = 10,
-    ClosingChat = 11
+    Error = 10
 }

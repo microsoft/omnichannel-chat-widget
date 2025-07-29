@@ -389,9 +389,3 @@ export class AppInsightsTelemetryMessage {
     public static readonly AppInsightsInitError = "Error initializing Application Insights";
     public static readonly AppInsightsKeyError = "Invalid Application Insights key provided.";
 }
-
-export class ClosingPaneConstants {
-    public static readonly DefaultClosingPaneId = "oc-lcw-closing-pane";
-    public static readonly DefaultClosingPaneTitleText = "Closing chat...";
-    public static readonly DefaultClosingPaneSubtitleText = "Please wait while we close your chat session.";
-}
