@@ -4,7 +4,6 @@ import { createTimer, findAllFocusableElement, findParentFocusableElementsWithou
 
 import { ConfirmationPane } from "@microsoft/omnichannel-chat-components";
 import { ConfirmationState } from "../../common/Constants";
-import { ConversationState } from "../../contexts/common/ConversationState";
 import { DimLayer } from "../dimlayer/DimLayer";
 import { IConfirmationPaneControlProps } from "@microsoft/omnichannel-chat-components/lib/types/components/confirmationpane/interfaces/IConfirmationPaneControlProps";
 import { IConfirmationPaneStatefulParams } from "./interfaces/IConfirmationPaneStatefulParams";
@@ -41,7 +40,6 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ClosingChat });
             setTabIndices(elements, initialTabIndexMap, true);
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.ConversationEndedByCustomer,
@@ -55,7 +53,6 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             });
             dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Cancel });
-            
             const previousFocusedElementId = state.appStates.previousElementIdOnFocusBeforeModalOpen;
 
             if (previousFocusedElementId) {

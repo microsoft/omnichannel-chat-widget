@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Widget
 
+
 ## [Unreleased]
 
 ### Fixed
 
-- Missing set for closing pane in InitiateEndChat event handler to ensure proper state transition
 - Enhance to identify history messages , including an addition of 250 ms grace period to account for message processing delays
 - Fixed null check logic in `DraggableChatWidget` to prevent runtime crashes when draggable element is null
 - Fixed handling of history messages and missing broadcast for system message received
@@ -33,7 +33,6 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Added closing pane functionality to display loading indicator while chat is being closed, preventing race conditions when starting new chats
 - Added a timeout for messagegs tracker, 5 seconds as max wait for track of messages during conversations
 - Added a timeout for first message tracker, 10 seconds since it tracks from WigetLoadComplete till first message received
 - Added comprehensive README.md with setup and configuration instructions for TypeScript sample
