@@ -66,8 +66,7 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);
     
-    const controlProps: IChatButtonControlProps = {
-        ...buttonProps?.controlProps,
+    const controlProps: IChatButtonControlProps = {        
         id: "oc-lcw-chat-button",
         dir: state.domainStates.globalDir,
         titleText: "Let's Chat!",
@@ -76,7 +75,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         unreadMessageCount: state.appStates.unreadMessageCount ? (state.appStates.unreadMessageCount > Constants.maximumUnreadMessageCount ? props.buttonProps?.controlProps?.largeUnreadMessageString : state.appStates.unreadMessageCount.toString()) : "0",
         unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
         // Regular chat button onClick - this will always take precedence
-        onClick: () => ref.current()
+        onClick: () => ref.current(),
+        ...buttonProps?.controlProps,
     };
 
     const outOfOfficeControlProps: IChatButtonControlProps = {
@@ -85,15 +85,15 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         dir: state.domainStates.globalDir,
         titleText: outOfOfficeButtonProps?.controlProps?.titleText || "We're Offline",
         subtitleText: outOfOfficeButtonProps?.controlProps?.subtitleText || "No agents available",
-        unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,
-        ...outOfOfficeButtonProps?.controlProps,
+        unreadMessageString: props.buttonProps?.controlProps?.unreadMessageString,        
         // Out-of-office specific onClick - this will ALWAYS take precedence
         onClick: () => {
             if (state.appStates.isMinimized) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
             }
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
-        }
+        },
+        ...outOfOfficeButtonProps?.controlProps,
     };
 
     useEffect(() => {
