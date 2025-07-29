@@ -26,7 +26,6 @@ import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "..
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
-    shouldShowClosingPane,
     shouldShowConfirmationPane,
     shouldShowEmailTranscriptPane,
     shouldShowHeader,
@@ -44,7 +43,6 @@ import {
 import { ActivityStreamHandler } from "../common/ActivityStreamHandler";
 import CallingContainerStateful from "../../callingcontainerstateful/CallingContainerStateful";
 import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
-import ClosingPaneStateful from "../../closingpanestateful/ClosingPaneStateful";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
@@ -461,7 +459,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             // This is to ensure to get latest state from cache in multitab
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ClosingChat });
 
             if (persistedState &&
                 persistedState.appStates.conversationState === ConversationState.Active) {
@@ -621,18 +618,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [props.webChatContainerProps?.webChatStyles]);
 
     useEffect(() => {
-        //Confirmation pane dismissing through OK option, so show closing pane and proceed with end chat
+        //Confirmation pane dismissing through OK option, so proceed with end chat
         if (state.domainStates.confirmationState === ConfirmationState.Ok) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.ClosingChat });
-        }
-    }, [state.domainStates.confirmationState]);
-
-    useEffect(() => {
-        // When conversation state changes to ClosingChat, proceed with end chat
-        if (state.appStates.conversationState === ConversationState.ClosingChat) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY, payload: ConversationEndEntity.Customer });
         }
-    }, [state.appStates.conversationState]);
+    }, [state.domainStates.confirmationState]);
 
     useEffect(() => {
         // Do not process anything during initialization
@@ -879,8 +869,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...livechatProps} />)}
 
                         {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
-
-                        {shouldShowClosingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.closingPane) || <ClosingPaneStateful {...livechatProps.closingPaneProps} />)}
 
                         {!livechatProps.controlProps?.hidePostChatLoadingPane && shouldShowPostChatLoadingPane(state) && (decodeComponentString(livechatProps.componentOverrides?.postChatLoadingPane) || <PostChatLoadingPaneStateful {...livechatProps.postChatLoadingPaneProps} />)}
 
