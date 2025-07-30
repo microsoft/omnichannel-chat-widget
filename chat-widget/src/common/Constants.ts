@@ -18,6 +18,7 @@ export class Constants {
     public static readonly actionType = "actionType";
 
     public static readonly markDownSystemMessageClass = "webchat__basic-transcript__activity-markdown-body";
+    public static readonly MARKDOWN_LIST_INDENTATION = "   ";
 
     public static readonly String = "string";
     public static readonly ChatMessagesJson = "chatMessagesJson";
