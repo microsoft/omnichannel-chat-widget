@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Added browserslist configuration to TypeScript sample package.json for better browser compatibility
 - Add QueueOverflowHandleMiddleware to display disconnection banner if conversation is ended due to overflow
 - Add support for bidirectional custom events support
+- Added middleware to support call action type quick replies
 
 ### Changed
 
