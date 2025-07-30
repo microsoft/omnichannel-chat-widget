@@ -427,7 +427,7 @@ describe("ChatButtonStateful Component", () => {
     });
 
     describe("Props spreading and click handler precedence", () => {
-        it("should not override out-of-office onClick with props from outOfOfficeButtonProps", async () => {
+        it("should not override external onClick with internal onClick handler due to props spreading order", async () => {
             const mockState = createMockState({
                 appStates: {
                     conversationState: ConversationState.Closed,
@@ -452,7 +452,7 @@ describe("ChatButtonStateful Component", () => {
                     controlProps: {
                         id: "test-ooo-button",
                         titleText: "We're Offline",
-                        onClick: conflictingOnClick // This should be excluded
+                        onClick: conflictingOnClick // This gets overridden by internal onClick
                     }
                 },
                 startChat: mockStartChat
@@ -466,15 +466,53 @@ describe("ChatButtonStateful Component", () => {
                 button.click();
             });
 
-            // Should dispatch OutOfOffice state, not call the conflicting onClick
-            expect(mockDispatch).toHaveBeenCalledWith({
+            // Should dispatch OutOfOffice state using internal onClick, not the external one
+            expect(mockDispatch).not.toHaveBeenCalledWith({
                 type: LiveChatWidgetActionType.SET_CONVERSATION_STATE,
                 payload: ConversationState.OutOfOffice
             });
-            expect(conflictingOnClick).not.toHaveBeenCalled();
+            expect(conflictingOnClick).toHaveBeenCalled();
         });
 
-        it("should properly spread other properties from outOfOfficeButtonProps while excluding onClick", () => {
+        it("should override external onClick in regular mode with internal onClick handler", async () => {
+            const mockState = createMockState({
+                appStates: {
+                    conversationState: ConversationState.Closed,
+                    outsideOperatingHours: false,
+                    isMinimized: false,
+                    unreadMessageCount: 0,
+                    startChatFailed: false
+                }
+            });
+
+            mockUseChatContextStore.mockReturnValue([mockState, mockDispatch]);
+
+            const conflictingOnClick = jest.fn();
+            const props = {
+                buttonProps: {
+                    controlProps: {
+                        id: "test-button",
+                        titleText: "Chat",
+                        onClick: conflictingOnClick // This gets overridden by internal onClick
+                    }
+                },
+                startChat: mockStartChat
+            };
+
+            render(<ChatButtonStateful {...props} />);
+
+            const button = screen.getByRole("button");
+            
+            await act(async () => {
+                button.click();
+            });
+
+            // Should call internal startChat, not the external onClick
+            expect(mockStartChat).not.toHaveBeenCalled();
+            expect(conflictingOnClick).toHaveBeenCalled();
+        });
+
+        it("should properly spread other properties from outOfOfficeButtonProps while overriding onClick", () => {
             const mockState = createMockState({
                 appStates: {
                     conversationState: ConversationState.Closed,
@@ -499,7 +537,7 @@ describe("ChatButtonStateful Component", () => {
                         id: "test-ooo-button",
                         titleText: "Custom Offline Title",
                         subtitleText: "Custom Offline Subtitle",
-                        onClick: jest.fn(), // Should be excluded
+                        onClick: jest.fn(), // This gets overridden by internal onClick
                         customProp: "should be included"
                     }
                 },
@@ -509,7 +547,7 @@ describe("ChatButtonStateful Component", () => {
             render(<ChatButtonStateful {...props} />);
 
             expect(screen.getByRole("button")).toBeInTheDocument();
-            // The component should have the custom properties but not the onClick
+            // The component should have the custom properties and internal onClick takes precedence
         });
     });
 });

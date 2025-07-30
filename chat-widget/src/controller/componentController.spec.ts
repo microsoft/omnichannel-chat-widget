@@ -1,6 +1,6 @@
 import { ConversationState } from "../contexts/common/ConversationState";
 import { ILiveChatWidgetContext } from "../contexts/common/ILiveChatWidgetContext";
-import { shouldShowClosingPane, shouldShowOutOfOfficeHoursPane } from "./componentController";
+import { shouldShowOutOfOfficeHoursPane } from "./componentController";
 
 describe("componentController unit tests", () => {
     describe("shouldShowOutOfOfficeHoursPane", () => {
@@ -44,49 +44,6 @@ describe("componentController unit tests", () => {
         it("should return false when conversation is InActive even if outside operating hours", () => {
             const state = createMockState(false, true, ConversationState.InActive);
             expect(shouldShowOutOfOfficeHoursPane(state)).toBe(false);
-        });
-    });
-
-    describe("shouldShowClosingPane", () => {
-        const createMockState = (
-            isMinimized = false,
-            conversationState: ConversationState = ConversationState.Closed
-        ): ILiveChatWidgetContext => ({
-            appStates: {
-                isMinimized,
-                conversationState
-            }
-        } as ILiveChatWidgetContext);
-
-        it("should return false when widget is minimized", () => {
-            const state = createMockState(true, ConversationState.ClosingChat);
-            expect(shouldShowClosingPane(state)).toBe(false);
-        });
-
-        it("should return false when conversation state is not ClosingChat", () => {
-            const state = createMockState(false, ConversationState.Active);
-            expect(shouldShowClosingPane(state)).toBe(false);
-        });
-
-        it("should return true when not minimized and conversation state is ClosingChat", () => {
-            const state = createMockState(false, ConversationState.ClosingChat);
-            expect(shouldShowClosingPane(state)).toBe(true);
-        });
-
-        it("should return false for other conversation states", () => {
-            const states = [
-                ConversationState.Prechat,
-                ConversationState.Loading,
-                ConversationState.Active,
-                ConversationState.InActive,
-                ConversationState.Closed,
-                ConversationState.Error
-            ];
-            
-            states.forEach(state => {
-                const mockState = createMockState(false, state);
-                expect(shouldShowClosingPane(mockState)).toBe(false);
-            });
         });
     });
 });
