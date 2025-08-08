@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed regression in ChatButtonStateful and LiveChatWidgetStateful components affecting control props order and out-of-office state logic
 - Enhance to identify history messages , including an addition of 250 ms grace period to account for message processing delays
 - Fixed null check logic in `DraggableChatWidget` to prevent runtime crashes when draggable element is null
 - Fixed handling of history messages and missing broadcast for system message received
@@ -29,6 +30,7 @@ All notable changes to this project will be documented in this file.
 - Fixed `adaptiveCardStyles.color` property not being honored for adaptive card text color
 - Fixed textarea height issue using `sendBoxTextBox.textarea.minHeight` prop.
 - Fixed Network reconnect notification issue
+- Fixed markdown numbered list formatting to handle double line breaks and ensure proper continuous numbering
 
 ### Added
 
@@ -38,6 +40,9 @@ All notable changes to this project will be documented in this file.
 - Added public/index.html template with proper styling and configuration guidance for TypeScript sample
 - Added .gitignore file to exclude build artifacts and dependencies from TypeScript sample
 - Added browserslist configuration to TypeScript sample package.json for better browser compatibility
+- Add QueueOverflowHandleMiddleware to display disconnection banner if conversation is ended due to overflow
+- Add support for bidirectional custom events support
+- Added middleware to support call action type quick replies
 
 ### Changed
 
@@ -54,7 +59,7 @@ All notable changes to this project will be documented in this file.
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
 - Support conversational post chat survey with Microsoft Copilot Studio survey provider
-- Add QueueOverflowHandleMiddleware to display disconnection banner if conversation is ended due to overflow
+
 
 ### Fixed
 

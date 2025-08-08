@@ -18,6 +18,7 @@ export class Constants {
     public static readonly actionType = "actionType";
 
     public static readonly markDownSystemMessageClass = "webchat__basic-transcript__activity-markdown-body";
+    public static readonly MARKDOWN_LIST_INDENTATION = "   ";
 
     public static readonly String = "string";
     public static readonly ChatMessagesJson = "chatMessagesJson";
@@ -146,6 +147,12 @@ export class Constants {
     public static readonly OCOriginalMessageId = "OriginalMessageId";
     public static readonly WebchatSequenceIdAttribute = "webchat:sequence-id";
     public static readonly MessageSequenceIdOverride = "MessageSequenceIdOverride";
+
+    public static readonly sendCustomEvent = "sendCustomEvent";
+    public static readonly onCustomEvent = "onCustomEvent";
+    public static readonly customEventName = "customEventName";
+    public static readonly customEventValue = "customEventValue";
+    public static readonly Hidden = "Hidden";
     public static readonly EndConversationDueToOverflow = "endconversationduetooverflow";
 }
 

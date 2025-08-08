@@ -90,6 +90,7 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
+import { customEventCallback, subscribeToSendCustomEvent } from "../common/customEventHandler";
 
 let uiTimer : ITimer;
 
@@ -390,7 +391,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         // Start chat from SDK Event
         BroadcastService.getMessageByEventName(BroadcastEvent.StartChat).subscribe((msg: ICustomEvent) => {  
             // If chat is out of operating hours chat widget sets the conversation state to OutOfOffice.
-            if (state.appStates.outsideOperatingHours === true) {
+            if (state.appStates.outsideOperatingHours && state.appStates.conversationState !== ConversationState.Active) {
                 dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.OutOfOffice });
                 return;
@@ -525,6 +526,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 setConversationId(msg.payload.liveWorkItem.conversationId);
             }
         });
+
+        // subscribe custom event
+        subscribeToSendCustomEvent(BroadcastService, facadeChatSDK, customEventCallback);
 
         // Check for TPC and log in telemetry if blocked
         isCookieAllowed();

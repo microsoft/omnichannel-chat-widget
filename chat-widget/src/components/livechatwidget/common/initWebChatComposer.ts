@@ -40,9 +40,13 @@ import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
 import { Constants } from "../../../common/Constants";
+import createCallActionMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/callActionMiddleware";
+import createCustomEventMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/customEventMiddleware";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { executeReducer } from "../../../contexts/createReducer";
 import { createQueueOverflowMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/queueOverflowHandlerMiddleware";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -116,6 +120,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 state.domainStates.liveChatConfig?.maxUploadFileSize as string,
                 localizedTexts
             ),
+            createCustomEventMiddleware(BroadcastService),
             createQueueOverflowMiddleware(state, dispatch),
             channelDataMiddleware(addConversationalSurveyTagsCallback),
             createConversationEndMiddleware(conversationEndCallback, startConversationalSurveyCallback, endConversationalSurveyCallback),
@@ -127,6 +132,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             htmlTextMiddleware(honorsTargetInHTMLLinks),
             createMaxMessageSizeValidator(localizedTexts),
             sanitizationMiddleware,
+            createCallActionMiddleware(),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );
