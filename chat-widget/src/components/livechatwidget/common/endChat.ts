@@ -39,6 +39,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
                     Description: PrepareEndChatDescriptionConstants.ConversationEndedByCustomerWithoutPostChat
                 });
                 await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
+                return;
             }
 
             // Use Case: If ended by Agent, stay chat in InActive state
