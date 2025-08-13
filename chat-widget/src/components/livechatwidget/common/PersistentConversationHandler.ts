@@ -107,9 +107,10 @@ class PersistentConversationHandler {
                 separatorActivity = null;
             }
 
-            PersistentConversationHandler.lastMessage = activity;   
-            PersistentConversationHandler.count += 1;   
+            PersistentConversationHandler.lastMessage = activity;
         }
+
+        PersistentConversationHandler.count += 1;
     }
 }
 
