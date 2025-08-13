@@ -87,6 +87,31 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             return <LazyLoadActivity />;
         }
 
+        if (isTagIncluded(card, 'persistent-chat-history')) {
+            return (...renderArgs: any) => {
+                return (
+                    <div className="history-message" style={{ border: '3px dotted rgb(100, 108, 255)', padding: '5px'}}>
+                        {next(...args)(...renderArgs)}
+                        <div style={{fontSize: '12px'}}>
+                            <span> Pull #{card.activity.channelData.count} </span>
+                            <span> ConvId: {card.activity.channelData.conversationId} </span>
+                        </div>
+                    </div>
+                )
+            };
+        }
+
+        if (isTagIncluded(card, 'conversation-separator')) {
+            return (
+                <>
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', fontFamily: 'Segoe UI', fontSize: '12px', color: 'rgb(96, 94, 92)'}}>
+                        <span> [ConvId: {card.activity.channelData.conversationId}] </span>
+                        <span> --------------- END --------------- </span>
+                    </div>
+                </>
+            );
+        }
+
         if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message) {
 
