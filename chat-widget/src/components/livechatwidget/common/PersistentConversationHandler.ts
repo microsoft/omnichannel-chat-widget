@@ -1,3 +1,4 @@
+import ChatWidgetEvents from "./ChatWidgetEvents";
 import conversationSeparatorActivity from "../../webchatcontainerstateful/common/activities/conversationSeparatorActivity";
 import convertPersistentChatHistoryMessageToActivity from "../../webchatcontainerstateful/common/activityConverters/convertPersistentChatHistoryMessageToActivity";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
@@ -15,8 +16,8 @@ class PersistentConversationHandler {
         return !PersistentConversationHandler.isLastPull;
     }
 
-    public static async fetchPersistentConversationHistory(_: { pageSize?: number; pageToken?: string | null }) {
-        return {chatMessages: [], nextPageToken: null};
+    public static async fetchPersistentConversationHistory(options: { pageSize?: number; pageToken?: string | null }) {
+        return fetchPersistentConversationHistory(options);
     }
 
     public static async fetchHistoryMessages() {
@@ -99,10 +100,10 @@ class PersistentConversationHandler {
                 };
             }
         
-            dispatchCustomEvent('CHAT_WIDGET/ADD_ACTIVITY', {activity});
+            dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {activity});
 
             if (separatorActivity) {
-                dispatchCustomEvent('CHAT_WIDGET/ADD_ACTIVITY', {activity: separatorActivity});
+                dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {activity: separatorActivity});
                 separatorActivity = null;
             }
 
