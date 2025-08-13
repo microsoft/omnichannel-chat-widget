@@ -43,6 +43,7 @@ All notable changes to this project will be documented in this file.
 - Add QueueOverflowHandleMiddleware to display disconnection banner if conversation is ended due to overflow
 - Add support for bidirectional custom events support
 - Added middleware to support call action type quick replies
+- Add ability to render `persistent chat history messages`
 
 ### Changed
 
