@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 - Fixed textarea height issue using `sendBoxTextBox.textarea.minHeight` prop.
 - Fixed Network reconnect notification issue
 - Fixed markdown numbered list formatting to handle double line breaks and ensure proper continuous numbering
+- Fixed transcript download issue for messages containing <br/> tags
 
 ### Added
 
