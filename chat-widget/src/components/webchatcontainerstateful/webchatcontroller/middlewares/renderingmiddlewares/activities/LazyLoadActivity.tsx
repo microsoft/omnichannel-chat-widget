@@ -71,7 +71,7 @@ const LazyLoadActivity = () => {
 
     return (
         <>
-            <div id="lazy-load-trigger-element" style={style}/>
+            <div id={LazyLoadHandler.targetId} style={style}/>
         </>
     );
 };
