@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { hooks } from 'botframework-webchat-component';
 import dispatchCustomEvent from '../../../common/utils/dispatchCustomEvent';
 import ChatWidgetEvents from "../../livechatwidget/common/ChatWidgetEvents";
+import { Constants } from "../../../common/Constants";
 
 interface WebChatEventSubscribersProps {
     persistentChatHistoryEnabled?: boolean;
@@ -27,7 +28,7 @@ const WebChatEventSubscribers = (props: WebChatEventSubscribersProps) => {
                             timestamp: 0, // Set to 0 to stay at the top of the chat history
                             type: 'message',
                             channelData: {
-                                tags: ['fetch-persistent-chat-history-trigger']
+                                tags: [Constants.persistentChatHistoryMessagePullTriggerTag]
                             }
                         }
                     });
