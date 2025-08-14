@@ -19,7 +19,10 @@ const convertStringValueToInt = (value: any) => {
 const convertPersistentChatHistoryMessageToActivity = (message: any) => {
     const {additionalData, attachments, content, created, from, transcriptOriginalMessageId} = message;
     const activity: any = {
-        ...botActivity
+        ...botActivity,
+        channelData: {
+            tags: [Constants.persistentChatHistoryMessageTag]
+        }
     };
 
     let webchatSequenceId;
@@ -34,15 +37,13 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
 
     if (additionalData && additionalData.tags) {
         const {tags, ConversationId} = additionalData;
-        activity.channelData = {};
-
         if (ConversationId) {
             activity.channelData.conversationId = ConversationId;
         }
 
         if (tags) {
             const formattedTags = additionalData.tags.split(",");
-            activity.channelData.tags = [...formattedTags, Constants.persistentChatHistoryMessageTag];
+            activity.channelData.tags = [...activity.channelData.tags, ...formattedTags];
         }
     }
 
