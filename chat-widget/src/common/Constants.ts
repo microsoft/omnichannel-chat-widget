@@ -30,6 +30,9 @@ export class Constants {
     public static readonly userParticipantTypeTag = "User";
     public static readonly botParticipantTypeTag = "Bot";
 
+    // LCW only tags (Only applicable on client-side for additional processing, not recognized by service)
+    public static persistentChatHistoryMessageTag = "PersistentChatHistory";
+
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";
     public static readonly ChannelId = "lcw";
