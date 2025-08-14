@@ -32,6 +32,10 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
         if (id) {
             webchatSequenceId = id;
             timestamp = new Date(id) || created;
+            activity.channelData = {
+                ...activity.channelData,
+                "webchat:sequence-id": webchatSequenceId
+            };
         }
     }
 
@@ -60,13 +64,9 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
 
     if (content) {
         return {
-            ...activity,      
+            ...activity,
             text: content,
-            timestamp,
-            channelData: {        
-                ...activity.channelData,
-                "webchat:sequence-id": webchatSequenceId
-            }
+            timestamp
         }
     }
 
@@ -76,11 +76,7 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
         return {
             ...activity,
             text,
-            timestamp,
-            channelData: {        
-                ...activity.channelData,
-                "webchat:sequence-id": webchatSequenceId
-            }
+            timestamp
         }
     }
 }
