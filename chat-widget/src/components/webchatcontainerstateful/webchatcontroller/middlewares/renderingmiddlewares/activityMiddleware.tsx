@@ -87,7 +87,7 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             return <LazyLoadActivity />;
         }
 
-        if (isTagIncluded(card, 'persistent-chat-history')) {
+        if (isTagIncluded(card, Constants.persistentChatHistoryMessageTag)) {
             return (...renderArgs: any) => {
                 return (
                     <div className="history-message" style={{ border: '3px dotted rgb(100, 108, 255)', padding: '5px'}}>

@@ -1,3 +1,4 @@
+import { Constants } from "../../../../common/Constants";
 import botActivity from "../activities/botActivity";
 
 const convertStringValueToInt = (value: any) => {
@@ -41,7 +42,7 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
 
         if (tags) {
             const formattedTags = additionalData.tags.split(",");
-            activity.channelData.tags = [...formattedTags, "persistent-chat-history"];
+            activity.channelData.tags = [...formattedTags, Constants.persistentChatHistoryMessageTag];
         }
     }
 
