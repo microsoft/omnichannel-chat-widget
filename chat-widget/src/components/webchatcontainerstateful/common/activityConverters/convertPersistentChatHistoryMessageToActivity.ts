@@ -39,7 +39,7 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
         }
     }
 
-    if (additionalData && additionalData.tags) {
+    if (additionalData?.tags) {
         const {tags, ConversationId} = additionalData;
         if (ConversationId) {
             activity.channelData.conversationId = ConversationId;
@@ -51,11 +51,11 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
         }
     }
 
-    if (from && from.user && from.user.displayName) {
+    if (from?.user?.displayName) {
         activity.from.name = from.user.displayName;  
     }
 
-    if (from && from.application && from.application.displayName && from.application.displayName === "Customer") {
+    if (from?.application?.displayName === "Customer") {
         activity.from = {
             role: "user",
             name: from.application.displayName
