@@ -27,6 +27,8 @@ import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/ren
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { useChatContextStore } from "../..";
 import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
+import PersistentConversationHandler from "../livechatwidget/common/PersistentConversationHandler";
+import ChatWidgetEvents from "../livechatwidget/common/ChatWidgetEvents";
 
 let uiTimer : ITimer;
 
@@ -62,6 +64,18 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXWebchatContainerCompleted
         });
+    }, []);
+
+    useEffect(() => {
+        const handler = async () => {
+            await PersistentConversationHandler.pullHistory();
+        };
+
+        window.addEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
+
+        return () => {
+            window.removeEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
+        }
     }, []);
 
     const { BasicWebChat } = Components;
