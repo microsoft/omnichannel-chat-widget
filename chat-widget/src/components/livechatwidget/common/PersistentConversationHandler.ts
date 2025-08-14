@@ -70,23 +70,8 @@ class PersistentConversationHandler {
                 }
             }
         
-            // Render separator between history messages and current conversation messages
-            if (PersistentConversationHandler.lastMessage === null) {
-                const sequenceId = activity.channelData['webchat:sequence-id'] + 1;
-                const timestamp = new Date(activity.timestamp).getTime() + 1;
-                separatorActivity = {
-                    ...conversationSeparatorActivity,
-                    channelData: {
-                        ...conversationSeparatorActivity.channelData,
-                        conversationId: activity.channelData.conversationId,
-                        'webchat:sequence-id': sequenceId
-                    },        
-                    timestamp: new Date(timestamp).toISOString()
-                };
-            }
-
             // Render separator between different conversations
-            if (PersistentConversationHandler.lastMessage && PersistentConversationHandler.lastMessage.channelData?.conversationId && PersistentConversationHandler.lastMessage.channelData?.conversationId !== activity.channelData.conversationId) {
+            if (PersistentConversationHandler.lastMessage?.channelData?.conversationId !== activity.channelData.conversationId) {
                 const sequenceId = activity.channelData['webchat:sequence-id'] + 1;
                 const timestamp = new Date(activity.timestamp).getTime() + 1;
                 separatorActivity = {
