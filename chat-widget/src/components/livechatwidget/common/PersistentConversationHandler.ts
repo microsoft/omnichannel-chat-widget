@@ -74,7 +74,7 @@ class PersistentConversationHandler {
             if (PersistentConversationHandler.lastMessage === null) {
                 const sequenceId = activity.channelData['webchat:sequence-id'] + 1;
                 const timestamp = new Date(activity.timestamp).getTime() + 1;
-                    separatorActivity = {
+                separatorActivity = {
                     ...conversationSeparatorActivity,
                     channelData: {
                         ...conversationSeparatorActivity.channelData,
