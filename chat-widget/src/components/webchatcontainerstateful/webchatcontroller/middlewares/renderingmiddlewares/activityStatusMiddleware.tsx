@@ -56,3 +56,7 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
         ) as any;
     }
 };
+
+export const createActivityStatusMiddleware = () => {
+    return activityStatusMiddleware;
+}
