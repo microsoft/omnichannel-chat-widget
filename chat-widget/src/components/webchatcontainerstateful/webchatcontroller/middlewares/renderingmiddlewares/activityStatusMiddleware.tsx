@@ -7,7 +7,7 @@ import { SendStatus } from "../../enums/SendStatus";
 import { SendingTimestamp } from "./timestamps/SendingTimestamp";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name, @typescript-eslint/no-unused-vars
-export const activityStatusMiddleware = () => (next: any) => (args: any) => {
+const activityStatusMiddleware = () => (next: any) => (args: any) => {
     const {
         activity: {
             channelData: {
