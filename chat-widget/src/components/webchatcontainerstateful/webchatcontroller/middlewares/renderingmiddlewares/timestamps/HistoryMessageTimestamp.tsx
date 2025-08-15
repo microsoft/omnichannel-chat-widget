@@ -20,7 +20,7 @@ export const HistoryMessageTimestamp = ({ args }: any) => {
     };
 
     const getLocalizedTimestamp = (timestamp: string) => {
-        const locale = getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid);
+        const locale = navigator.language || "en-US";
         const currentDate = new Date(timestamp);
         return `${currentDate.toLocaleDateString(locale)} ${currentDate.toLocaleTimeString(locale)}`;
     };
