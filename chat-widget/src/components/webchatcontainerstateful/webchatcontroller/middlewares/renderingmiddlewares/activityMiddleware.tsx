@@ -18,6 +18,7 @@ import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessage
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
 import { escapeHtml } from "../../../../../common/utils";
 import LazyLoadActivity from "./activities/LazyLoadActivity";
+import ConversationDividerActivity from "./activities/ConversationDividerActivity";
 
 const loggedSystemMessages = new Array<string>();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,8 +107,8 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
                 <>
                     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', fontFamily: 'Segoe UI', fontSize: '12px', color: 'rgb(96, 94, 92)'}}>
                         <span> [ConvId: {card.activity.channelData.conversationId}] </span>
-                        <span> --------------- END --------------- </span>
                     </div>
+                    <ConversationDividerActivity />
                 </>
             );
         }
