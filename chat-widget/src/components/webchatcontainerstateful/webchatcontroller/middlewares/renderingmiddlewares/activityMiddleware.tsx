@@ -102,7 +102,7 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             };
         }
 
-        if (isTagIncluded(card, 'conversation-divider')) {
+        if (isTagIncluded(card, Constants.conversationDividerTag)) {
             return (
                 <>
                     <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', fontFamily: 'Segoe UI', fontSize: '12px', color: 'rgb(96, 94, 92)'}}>

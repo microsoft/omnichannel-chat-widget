@@ -1,9 +1,10 @@
+import { Constants } from "../../../../common/Constants";
 import botActivity from "./botActivity";
 
 const conversationDividerActivity = {
     ...botActivity,
     channelData: {
-        tags: ['conversation-divider'],
+        tags: [Constants.conversationDividerTag],
     }
 };
 

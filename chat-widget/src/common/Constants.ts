@@ -33,6 +33,7 @@ export class Constants {
     // LCW only tags (Only applicable on client-side for additional processing, not recognized by service)
     public static persistentChatHistoryMessageTag = "PersistentChatHistory";
     public static persistentChatHistoryMessagePullTriggerTag = "PersistentChatHistoryMessagePullTrigger";
+    public static conversationDividerTag = "ConversationDivider";
 
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";
