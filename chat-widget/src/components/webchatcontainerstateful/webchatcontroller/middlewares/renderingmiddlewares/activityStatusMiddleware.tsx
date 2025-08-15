@@ -5,6 +5,7 @@ import { NotDeliveredTimestamp } from "./timestamps/NotDeliveredTimestamp";
 import React from "react";
 import { SendStatus } from "../../enums/SendStatus";
 import { SendingTimestamp } from "./timestamps/SendingTimestamp";
+import { HistoryMessageTimestamp } from "./timestamps/HistoryMessageTimestamp";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name, @typescript-eslint/no-unused-vars
 const activityStatusMiddleware = () => (next: any) => (args: any) => {
@@ -25,6 +26,11 @@ const activityStatusMiddleware = () => (next: any) => (args: any) => {
 
     const current_tags = tags, current_name = name, current_role = role, current_timestamp = timestamp;
     let sameTimestampGroupTemp: boolean = sameTimestampGroup;
+
+    if (tags.includes(Constants.persistentChatHistoryMessageTag)) {
+        return <HistoryMessageTimestamp args={args} />;
+    }
+
     if (args[WebChatMiddlewareConstants.nextVisibleActivity]) {
         const {
             nextVisibleActivity: {
