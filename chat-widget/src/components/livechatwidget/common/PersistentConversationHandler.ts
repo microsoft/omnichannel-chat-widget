@@ -1,5 +1,5 @@
 import ChatWidgetEvents from "./ChatWidgetEvents";
-import conversationSeparatorActivity from "../../webchatcontainerstateful/common/activities/conversationSeparatorActivity";
+import conversationDividerActivity from "../../webchatcontainerstateful/common/activities/conversationDividerActivity";
 import convertPersistentChatHistoryMessageToActivity from "../../webchatcontainerstateful/common/activityConverters/convertPersistentChatHistoryMessageToActivity";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 import fetchPersistentConversationHistory from "./fetchPersistentConversationHistory";
@@ -55,7 +55,7 @@ class PersistentConversationHandler {
         messagesDescOrder.reverse();
 
         for (const message of messagesDescOrder) {
-            let separatorActivity = null;
+            let dividerActivity = null;
             let activity = convertPersistentChatHistoryMessageToActivity(message);
 
             if (activity?.channelData) {
@@ -74,10 +74,10 @@ class PersistentConversationHandler {
             if (PersistentConversationHandler.lastMessage?.channelData?.conversationId !== activity.channelData.conversationId) {
                 const sequenceId = activity.channelData['webchat:sequence-id'] + 1;
                 const timestamp = new Date(activity.timestamp).getTime() + 1;
-                separatorActivity = {
-                    ...conversationSeparatorActivity,
+                dividerActivity = {
+                    ...conversationDividerActivity,
                     channelData: {
-                        ...conversationSeparatorActivity.channelData,
+                        ...conversationDividerActivity.channelData,
                         conversationId: activity.channelData.conversationId,
                         'webchat:sequence-id': sequenceId
                     },
@@ -87,9 +87,9 @@ class PersistentConversationHandler {
         
             dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {activity});
 
-            if (separatorActivity) {
-                dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {activity: separatorActivity});
-                separatorActivity = null;
+            if (dividerActivity) {
+                dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {activity: dividerActivity});
+                dividerActivity = null;
             }
 
             PersistentConversationHandler.lastMessage = activity;
