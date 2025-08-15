@@ -4,6 +4,7 @@ import { defaultTimestampContentStyles } from "../defaultStyles/defaultTimestamp
 import { ILiveChatWidgetContext } from "../../../../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetAction } from "../../../../../../contexts/common/ILiveChatWidgetAction";
 import useChatContextStore from "../../../../../../hooks/useChatContextStore";
+import { getLocaleStringFromId } from "@microsoft/omnichannel-chat-sdk";
 
 export const HistoryMessageTimestamp = ({ args }: any) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -19,8 +20,9 @@ export const HistoryMessageTimestamp = ({ args }: any) => {
     };
 
     const getLocalizedTimestamp = (timestamp: string) => {
+        const locale = getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid);
         const currentDate = new Date(timestamp);
-        return `${currentDate.toLocaleDateString()} ${currentDate.toLocaleTimeString()}`;
+        return `${currentDate.toLocaleDateString(locale)} ${currentDate.toLocaleTimeString(locale)}`;
     };
 
     return (
