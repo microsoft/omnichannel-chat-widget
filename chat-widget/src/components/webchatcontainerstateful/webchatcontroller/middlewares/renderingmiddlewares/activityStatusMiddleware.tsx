@@ -57,6 +57,6 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
     }
 };
 
-export const createActivityStatusMiddleware = () => {
+export const createActivityStatusMiddleware = (locale: string = "en-us") => {
     return activityStatusMiddleware;
 }
