@@ -17,7 +17,7 @@ export const botUser: User = {
 export const agentUser: User = {
     id: "AgentId",
     name: "John",
-    role: "user"
+    role: "bot"
 };
 
 // WebChat expects an "echo" activity to confirm the message has been sent successfully
