@@ -4,8 +4,8 @@ import ChatWidgetEvents from "../../../../../livechatwidget/common/ChatWidgetEve
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
 
 class LazyLoadHandler {
-    public static rootId = 'ms_lcw_webchat_root';
-    public static targetId = 'lazy-load-trigger-element';
+    public static rootId = "ms_lcw_webchat_root";
+    public static targetId = "lazy-load-trigger-element";
     public static initialized = false;
     public static paused = false;
     public static observer: IntersectionObserver | null = null;
@@ -25,11 +25,11 @@ class LazyLoadHandler {
                     dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
                 }
             });
-        }
+        };
 
         const options: IntersectionObserverInit = {
             root: document.getElementById(LazyLoadHandler.rootId)
-        }
+        };
 
         const observer = new IntersectionObserver(callback, options);
         const targetElement = document.getElementById(LazyLoadHandler.targetId);
@@ -55,7 +55,7 @@ class LazyLoadHandler {
 
 const LazyLoadActivity = () => {
     const style: React.CSSProperties = {
-        visibility: 'visible'
+        visibility: "visible"
     };
 
     useEffect(() => {
@@ -67,7 +67,7 @@ const LazyLoadActivity = () => {
 
         return () => {
             LazyLoadHandler.unmount();
-        }
+        };
     }, []);
 
     return (

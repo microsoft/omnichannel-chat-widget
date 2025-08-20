@@ -1,5 +1,4 @@
 import { IWebChatProps } from "../../interfaces/IWebChatProps";
-import { activityStatusMiddleware } from "../../webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware";
 import { createActivityStatusMiddleware } from "../../webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware";
 import { groupActivitiesMiddleware } from "../../webchatcontroller/middlewares/renderingmiddlewares/groupActivitiesMiddleware";
 import { typingIndicatorMiddleware } from "../../webchatcontroller/middlewares/renderingmiddlewares/typingIndicatorMiddleware";

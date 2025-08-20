@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/display-name */
 /******
  * ActivityMiddleware
  * 
@@ -87,31 +89,30 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         if (isTagIncluded(card, Constants.persistentChatHistoryMessagePullTriggerTag)) {
             return <LazyLoadActivity />;
         }
-
+        
         if (isTagIncluded(card, Constants.persistentChatHistoryMessageTag)) {
             return (...renderArgs: any) => {
                 return (
-                    <div className="history-message" style={{ border: '3px dotted rgb(100, 108, 255)', padding: '5px' }}>
+                    <div className="history-message" style={{ border: "3px dotted rgb(100, 108, 255)", padding: "5px" }}>
                         {next(...args)(...renderArgs)}
-                        <div style={{ fontSize: '12px' }}>
+                        <div style={{ fontSize: "12px" }}>
                             <span> Pull #{card.activity.channelData.count} </span>
                             <span> ConvId: {card.activity.channelData.conversationId} </span>
                         </div>
                     </div>
-                )
+                );
             };
         }
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
             return (
                 <>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', fontFamily: 'Segoe UI', fontSize: '12px', color: 'rgb(96, 94, 92)' }}>
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", fontFamily: "Segoe UI", fontSize: "12px", color: "rgb(96, 94, 92)" }}>
                         <span> [ConvId: {card.activity.channelData.conversationId}] </span>
                     </div>
                     <ConversationDividerActivity />
                 </>
             );
         }
-
 
 
         if (card.activity.text

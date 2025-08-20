@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dispatchCustomEvent = (name: string, payload?: any) => {
     let event: CustomEvent | null = null;
     const eventDetails = payload ? { detail: { payload } } : undefined;
@@ -5,11 +6,12 @@ const dispatchCustomEvent = (name: string, payload?: any) => {
         event = new CustomEvent(name, eventDetails);
     } catch {
 
+        console.error("Error dispatching custom event:", name, payload);
     }
 
     if (event) {
         window.dispatchEvent(event);
     }
-}
+};
 
 export default dispatchCustomEvent;

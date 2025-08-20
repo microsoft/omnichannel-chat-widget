@@ -1,6 +1,7 @@
 import { Constants } from "../../../../common/Constants";
 import botActivity from "../activities/botActivity";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const convertStringValueToInt = (value: any) => {
     if (typeof value !== "string" || value === "") {
         return undefined;
@@ -10,14 +11,16 @@ const convertStringValueToInt = (value: any) => {
     try { 
         result = parseInt(value);
     } catch (e) {
-        return undefined
+        return undefined;
     }
 
     return isNaN(result) ? undefined : result;
-}
+};
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const convertPersistentChatHistoryMessageToActivity = (message: any) => {
     const {additionalData, attachments, content, created, from, transcriptOriginalMessageId} = message;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const activity: any = {
         ...botActivity,
         channelData: {
@@ -28,7 +31,7 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
     let webchatSequenceId;
     let timestamp;
     if (transcriptOriginalMessageId) { 
-        let id = convertStringValueToInt(transcriptOriginalMessageId); // Id used to determine the sequence of messages which is the same as the 'live' messages
+        const id = convertStringValueToInt(transcriptOriginalMessageId); // Id used to determine the sequence of messages which is the same as the 'live' messages
         if (id) {
             webchatSequenceId = id;
             timestamp = new Date(id) || created;
@@ -67,18 +70,18 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
             ...activity,
             text: content,
             timestamp
-        }
+        };
     }
 
     if (attachments && attachments.length > 0) {
-        const fileName = attachments[0].name || 'Unknown';
+        const fileName = attachments[0].name || "Unknown";
         const text = `The following attachment was uploaded during the conversation: ${fileName}`;
         return {
             ...activity,
             text,
             timestamp
-        }
+        };
     }
-}
+};
 
-export default convertPersistentChatHistoryMessageToActivity
+export default convertPersistentChatHistoryMessageToActivity;

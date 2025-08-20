@@ -75,7 +75,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         return () => {
             window.removeEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
-        }
+        };
     }, []);
 
     const { BasicWebChat } = Components;
@@ -309,7 +309,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-            <div id="ms_lcw_webchat_root" style={{ height: 'inherit', width: 'inherit' }}>
+            <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
                 <WebChatEventSubscribers />
                 <BasicWebChat></BasicWebChat>
             </div>

@@ -4,9 +4,9 @@ import { ILiveChatWidgetAction } from "../../../../../../contexts/common/ILiveCh
 import { ILiveChatWidgetContext } from "../../../../../../contexts/common/ILiveChatWidgetContext";
 import { Stack } from "@fluentui/react";
 import { defaultTimestampContentStyles } from "../defaultStyles/defaultTimestampContentStyles";
-import { getLocaleStringFromId } from "@microsoft/omnichannel-chat-sdk";
 import useChatContextStore from "../../../../../../hooks/useChatContextStore";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const HistoryMessageTimestamp = ({ args }: any) => {
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const dir = state.domainStates.renderingMiddlewareProps?.timestampDir ?? state.domainStates.globalDir;
@@ -30,5 +30,5 @@ export const HistoryMessageTimestamp = ({ args }: any) => {
         <Stack style={contentStyles} dir={dir} horizontal>
             <span> {getLocalizedTimestamp(timestamp)}</span>
         </Stack>
-    )
-}
+    );
+};

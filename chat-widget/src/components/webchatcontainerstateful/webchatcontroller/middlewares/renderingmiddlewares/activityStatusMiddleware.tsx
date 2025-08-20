@@ -64,6 +64,7 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
     }
 };
 
-export const createActivityStatusMiddleware = (locale: string = "en-us") => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const createActivityStatusMiddleware = (locale = "en-us") => {
     return activityStatusMiddleware;
-}
+};

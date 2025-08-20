@@ -5,12 +5,14 @@ import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 import fetchPersistentConversationHistory from "./fetchPersistentConversationHistory";
 
 class PersistentConversationHandler {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static chatSDK: any;
-    static isLastPull: boolean = false;
-    static pageSize: number = 4;
+    static isLastPull = false;
+    static pageSize = 4;
     static pageToken: string | null = null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static lastMessage: any = null;
-    static count: number = 0;
+    static count = 0;
 
     public static shouldPull(): boolean {
         return !PersistentConversationHandler.isLastPull;
@@ -59,27 +61,27 @@ class PersistentConversationHandler {
             let activity = convertPersistentChatHistoryMessageToActivity(message);
 
             if (activity?.channelData) {
-                const sequenceId = activity.channelData['webchat:sequence-id'];
+                const sequenceId = activity.channelData["webchat:sequence-id"];
                 activity = {
                     ...activity,
                     channelData: {
                         ...activity.channelData,
-                        'webchat:sequence-id': sequenceId,
+                        "webchat:sequence-id": sequenceId,
                         count: PersistentConversationHandler.count
                     }
-                }
+                };
             }
         
             // Render separator between different conversations
             if (PersistentConversationHandler.lastMessage?.channelData?.conversationId !== activity.channelData.conversationId) {
-                const sequenceId = activity.channelData['webchat:sequence-id'] + 1;
+                const sequenceId = activity.channelData["webchat:sequence-id"] + 1;
                 const timestamp = new Date(activity.timestamp).getTime() + 1;
                 dividerActivity = {
                     ...conversationDividerActivity,
                     channelData: {
                         ...conversationDividerActivity.channelData,
                         conversationId: activity.channelData.conversationId,
-                        'webchat:sequence-id': sequenceId
+                        "webchat:sequence-id": sequenceId
                     },
                     timestamp: new Date(timestamp).toISOString(),
                 };
