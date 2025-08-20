@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- Fixed agent user role in mock adapter to properly display agent messages in chat interface and also links in agent and customer messages
 - Fixed startchat and endchat sychronization
 - Fixed regression in ChatButtonStateful and LiveChatWidgetStateful components affecting control props order and out-of-office state logic
 - Enhance to identify history messages , including an addition of 250 ms grace period to account for message processing delays
