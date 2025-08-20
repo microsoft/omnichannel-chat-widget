@@ -1,6 +1,7 @@
 import { Constants, WebChatMiddlewareConstants } from "../../../../../common/Constants";
 
 import { DeliveredTimestamp } from "./timestamps/DeliveredTimestamp";
+import { HistoryMessageTimestamp } from "./timestamps/HistoryMessageTimestamp";
 import { NotDeliveredTimestamp } from "./timestamps/NotDeliveredTimestamp";
 import React from "react";
 import { SendStatus } from "../../enums/SendStatus";
@@ -25,6 +26,12 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
 
     const current_tags = tags, current_name = name, current_role = role, current_timestamp = timestamp;
     let sameTimestampGroupTemp: boolean = sameTimestampGroup;
+
+    if (tags.includes(Constants.persistentChatHistoryMessageTag)) {
+        return <HistoryMessageTimestamp args={args} />;
+    }
+
+
     if (args[WebChatMiddlewareConstants.nextVisibleActivity]) {
         const {
             nextVisibleActivity: {
@@ -56,3 +63,7 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
         ) as any;
     }
 };
+
+export const createActivityStatusMiddleware = (locale: string = "en-us") => {
+    return activityStatusMiddleware;
+}

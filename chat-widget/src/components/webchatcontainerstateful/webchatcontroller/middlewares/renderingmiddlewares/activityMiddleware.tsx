@@ -10,8 +10,10 @@
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 
 import { Constants } from "../../../../../common/Constants";
+import ConversationDividerActivity from "./activities/ConversationDividerActivity";
 import { DirectLineActivityType } from "../../enums/DirectLineActivityType";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
+import LazyLoadActivity from "./activities/LazyLoadActivity";
 import React from "react";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
@@ -81,6 +83,36 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         if (isTagIncluded(card, Constants.systemMessageTag)) {
             return handleSystemMessage(next, args, card, renderMarkdown, systemMessageStyleProps);
         }
+
+        if (isTagIncluded(card, Constants.persistentChatHistoryMessagePullTriggerTag)) {
+            return <LazyLoadActivity />;
+        }
+
+        if (isTagIncluded(card, Constants.persistentChatHistoryMessageTag)) {
+            return (...renderArgs: any) => {
+                return (
+                    <div className="history-message" style={{ border: '3px dotted rgb(100, 108, 255)', padding: '5px' }}>
+                        {next(...args)(...renderArgs)}
+                        <div style={{ fontSize: '12px' }}>
+                            <span> Pull #{card.activity.channelData.count} </span>
+                            <span> ConvId: {card.activity.channelData.conversationId} </span>
+                        </div>
+                    </div>
+                )
+            };
+        }
+        if (isTagIncluded(card, Constants.conversationDividerTag)) {
+            return (
+                <>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', fontFamily: 'Segoe UI', fontSize: '12px', color: 'rgb(96, 94, 92)' }}>
+                        <span> [ConvId: {card.activity.channelData.conversationId}] </span>
+                    </div>
+                    <ConversationDividerActivity />
+                </>
+            );
+        }
+
+
 
         if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message) {

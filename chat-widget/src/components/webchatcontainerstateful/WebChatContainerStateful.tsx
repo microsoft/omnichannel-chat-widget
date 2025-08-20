@@ -7,6 +7,7 @@ import React, { Dispatch, useEffect } from "react";
 import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
+import ChatWidgetEvents from "../livechatwidget/common/ChatWidgetEvents";
 import { Components } from "botframework-webchat";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -15,8 +16,10 @@ import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
+import PersistentConversationHandler from "../livechatwidget/common/PersistentConversationHandler";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
+import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
 import { defaultAdaptiveCardStyles } from "./common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
@@ -27,10 +30,10 @@ import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/ren
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { useChatContextStore } from "../..";
 
-let uiTimer : ITimer;
+let uiTimer: ITimer;
 
 const broadcastChannelMessageEvent = "message";
-const postActivity = (activity: any) => { 
+const postActivity = (activity: any) => {
     // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
         type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
@@ -63,9 +66,21 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         });
     }, []);
 
+    useEffect(() => {
+        const handler = async () => {
+            await PersistentConversationHandler.pullHistory();
+        };
+
+        window.addEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
+
+        return () => {
+            window.removeEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
+        }
+    }, []);
+
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const {webChatContainerProps, contextDataStore} = props;
+    const { webChatContainerProps, contextDataStore } = props;
 
     const containerStyles: IStackStyles = {
         root: Object.assign(
@@ -277,11 +292,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         // we had a nasty bug long time ago with crashing borders messing with the sendbox, so if customer adds this value, they need to deal with that
         .webchat__bubble:not(.webchat__bubble--from-user) .webchat__bubble__content {
-            border-radius: ${webChatContainerProps?.webChatStyles?.bubbleBorderRadius?? 0 } !important; /* Override border-radius */
+            border-radius: ${webChatContainerProps?.webChatStyles?.bubbleBorderRadius ?? 0} !important; /* Override border-radius */
         }
 
         .webchat__stacked-layout_container>div {
-            background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background?? ""}
+            background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background ?? ""}
         }
         .webchat__toast_text {
             display: flex;
@@ -294,7 +309,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-            <BasicWebChat></BasicWebChat>
+            <div id="ms_lcw_webchat_root" style={{ height: 'inherit', width: 'inherit' }}>
+                <WebChatEventSubscribers />
+                <BasicWebChat></BasicWebChat>
+            </div>
         </Stack>
         </>
     );

@@ -1,0 +1,6 @@
+enum ChatWidgetEvents {
+    ADD_ACTIVITY = "CHAT_WIDGET/ADD_ACTIVITY",
+    FETCH_PERSISTENT_CHAT_HISTORY = "CHAT_WIDGET/FETCH_PERSISTENT_CHAT_HISTORY"
+}
+
+export default ChatWidgetEvents;

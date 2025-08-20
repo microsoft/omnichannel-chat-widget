@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.23/jsrsasign-all-min.js"></script>
+
+  <title>Sample App</title>
+</head>
+
+<body style="margin: 0">
+  <script>
+
+
+  // Store the generated JWT and its expiration time
+  let cachedJwt = null;
+  let cachedJwtExp = null;
+
+  function authFunction(callback) {
+    return "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.kTfvc1kttXa57brSrX9A84fYYjaUqOT8DpWASJ_QGMGFZSvxJPvvKMAkHLrQVjwshe1O4TSlWepEGIBZ5PV-HdWP1P0gV5Pijd0BPT1m-fHZu_B5FBph2IpPxW_9KrFODUebv3IJ1juwaXDIxPwQgTViPlBEa73AOyGuetwXjP2Omko0GA-0C2ZExe-ItkXpQQ1wIRS_rPkGe-GCcP0Ii6M4-0cXeF5z_eQPQVqWOiP90vMX7-6jIWPOsbzWxuXVcCOmqqFUNTGBRsjl8w7DQ9ey-peDhLcdCItccNjBeKIdh8k1iAFZULBz4IshlMzoae3yj_UiCW2najSiOzbieQ";
+  };
+
+
+    function lcw() {
+      return {
+
+        getAuthToken: authFunction,
+        styleProps: {
+          generalStyles: {
+            width: "360px",
+            height: "560px",
+            bottom: "20px",
+            right: "20px"
+          }
+        },
+        chatButtonProps: {
+          styleProps: {
+            generalStyleProps: {
+              position: "absolute"
+            }
+          }
+        },
+        webChatContainerProps: {
+          webChatStyles: {
+            hideUploadButton: false
+          },
+          botMagicCode: {
+            disabled: false,
+            fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
+          }
+        },
+      }
+    }
+
+    // browser compatibility
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+    eventer(messageEvent, function (e) {
+      try {
+        if (e.data.key) {
+          localStorage.setItem(e.data.key, e.data.data);
+        }
+      }
+      catch (ex) {
+        console.log(ex);
+      }
+    });
+
+    // Raise event after data found in localStorage
+    if (localStorage.getItem("LcwChatWidgetState")) {
+      var evt = new CustomEvent("lcw:onWidgetStateUpdated", {
+        detail: {
+          key: "LcwChatWidgetState",
+          data: widgetData
+        }
+      });
+      window.dispatchEvent(evt);
+    }
+  </script>
+  <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
+  <script id="oc-lcw-script" src="../../dist/out.js" 
+  data-customization-callback="lcw" 
+  data-app-id="60728284-882f-436d-87bf-322976573f9a" 
+  data-org-id="ce4db5f6-1c20-ee11-a66d-000d3a0a02f3"
+  data-org-url="https://m-ce4db5f6-1c20-ee11-a66d-000d3a0a02f3.ca.omnichannelengagementhub.com"
+  
+  ></script>
+</body>
+
+</html>
