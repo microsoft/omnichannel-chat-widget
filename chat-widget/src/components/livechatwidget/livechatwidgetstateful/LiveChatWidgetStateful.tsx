@@ -21,6 +21,7 @@ import {
     isUndefinedOrEmpty,
     setOcUserAgent
 } from "../../../common/utils";
+import { customEventCallback, subscribeToSendCustomEvent } from "../common/customEventHandler";
 import { defaultClientDataStoreProvider, isCookieAllowed } from "../../../common/storage/default/defaultClientDataStoreProvider";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "../common/reconnectChatHelper";
 import {
@@ -90,7 +91,6 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
-import { customEventCallback, subscribeToSendCustomEvent } from "../common/customEventHandler";
 
 let uiTimer : ITimer;
 
@@ -650,8 +650,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
 
-        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-        let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+        const isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
 
         // In conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
         // Hence setting ConversationState to InActive will be done later in the post chat flows
