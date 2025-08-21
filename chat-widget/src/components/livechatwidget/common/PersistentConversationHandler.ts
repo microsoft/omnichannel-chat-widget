@@ -18,7 +18,7 @@ class PersistentConversationHandler {
         return !PersistentConversationHandler.isLastPull;
     }
 
-    public static async fetchPersistentConversationHistory(options: { pageSize?: number; pageToken?: string | null }) {
+    public static async fetchPersistentConversationHistory(options: { pageSize?: number; pageToken?: string | undefined }) {
         return fetchPersistentConversationHistory(options);
     }
 
@@ -28,7 +28,7 @@ class PersistentConversationHandler {
             return [];
         }
         
-        const options: { pageSize?: number; pageToken?: string | null } = {
+        const options: { pageSize?: number; pageToken?: string | undefined } = {
             pageSize: PersistentConversationHandler.pageSize
         };
 
