@@ -700,10 +700,23 @@ const createChatTranscript = async (transcript: string, facadeChatSDK: FacadeCha
         });
     };
 
+    // Configure DOMPurify to remove target attribute from br tags
+    const hook = function (node: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+        // Remove target attribute from br tags as it causes them to display as literal text
+        if (node.tagName === "BR" && node.hasAttribute("target")) {
+            node.removeAttribute("target");
+        }
+    };
+
+    DOMPurify.addHook("afterSanitizeAttributes", hook);
+
     let messages = transcriptMessages.filter((message: { content: string; }) => {
         message.content = DOMPurify.sanitize(message.content);
         return message;
     });
+
+    // Clean up the hook after processing all messages
+    DOMPurify.removeHook("afterSanitizeAttributes", hook);
 
     if (renderAttachments) {
         messages = await Promise.all(transcriptMessages.map(async (message: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any

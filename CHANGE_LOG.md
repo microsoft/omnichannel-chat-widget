@@ -8,7 +8,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
-
+- Fixed agent user role in mock adapter to properly display agent messages in chat interface and also links in agent and customer messages
+- Fixed startchat and endchat sychronization
 - Fixed regression in ChatButtonStateful and LiveChatWidgetStateful components affecting control props order and out-of-office state logic
 - Enhance to identify history messages , including an addition of 250 ms grace period to account for message processing delays
 - Fixed null check logic in `DraggableChatWidget` to prevent runtime crashes when draggable element is null
@@ -31,6 +32,7 @@ All notable changes to this project will be documented in this file.
 - Fixed textarea height issue using `sendBoxTextBox.textarea.minHeight` prop.
 - Fixed Network reconnect notification issue
 - Fixed markdown numbered list formatting to handle double line breaks and ensure proper continuous numbering
+- Fixed transcript download issue for messages containing <br/> tags
 - Fixed adaptive card error color issue
 
 ### Added

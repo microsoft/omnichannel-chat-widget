@@ -14,6 +14,12 @@ export const botUser: User = {
     role: "bot"
 };
 
+export const agentUser: User = {
+    id: "AgentId",
+    name: "John",
+    role: "bot"
+};
+
 // WebChat expects an "echo" activity to confirm the message has been sent successfully
 export const postEchoActivity = (activityObserver: Subscriber<Activity> | undefined, activity: Message, user: User, delay = 1000): void => {
     const echoActivity: Message = {
@@ -37,6 +43,23 @@ export const postBotMessageActivity = (activityObserver: Subscriber<Activity> | 
             id: uuidv4(),
             from: {
                 ...botUser
+            },
+            text,
+            type: "message",
+            channelData: {
+                tags
+            },
+            timestamp: new Date().toISOString()
+        });
+    }, delay);
+};
+
+export const postAgentMessageActivity = (activityObserver: Subscriber<Activity> | undefined, text: string, tags = "", delay = 1000): void => {
+    setTimeout(() => {
+        activityObserver?.next({
+            id: uuidv4(),
+            from: {
+                ...agentUser
             },
             text,
             type: "message",
