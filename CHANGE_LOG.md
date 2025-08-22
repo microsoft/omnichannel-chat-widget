@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Fixed adaptive card error color issue
+
 ## [1.8.2] - 2025-08-20
 
 ### Fixed
@@ -34,7 +37,6 @@ All notable changes to this project will be documented in this file.
 - Fixed Network reconnect notification issue
 - Fixed markdown numbered list formatting to handle double line breaks and ensure proper continuous numbering
 - Fixed transcript download issue for messages containing <br/> tags
-- Fixed adaptive card error color issue
 
 ### Added
 
