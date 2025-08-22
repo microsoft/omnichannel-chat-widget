@@ -6,12 +6,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Adding runtimeId as part of events send to identify calls from different tabs.
+
 ### Fixed
 - Fixed adaptive card error color issue
 
 ## [1.8.2] - 2025-08-20
 
 ### Fixed
+
 - Fixed agent user role in mock adapter to properly display agent messages in chat interface and also links in agent and customer messages
 - Fixed startchat and endchat sychronization
 - Fixed regression in ChatButtonStateful and LiveChatWidgetStateful components affecting control props order and out-of-office state logic

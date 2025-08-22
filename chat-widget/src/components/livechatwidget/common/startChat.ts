@@ -1,5 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { Constants, LiveWorkItemState, WidgetLoadTelemetryMessage } from "../../../common/Constants";
+import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isNullOrUndefined, isUndefinedOrEmpty } from "../../../common/utils";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
 import { handleStartChatError, logWidgetLoadComplete } from "./startChatErrorHandler";
@@ -15,7 +16,6 @@ import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
@@ -125,7 +125,8 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
             eventName: BroadcastEvent.MaximizeChat,
             payload: {
                 height: state?.domainStates?.widgetSize?.height,
-                width: state?.domainStates?.widgetSize?.width
+                width: state?.domainStates?.widgetSize?.width,
+                runtimeId : TelemetryManager?.InternalTelemetryData?.lcwRuntimeId
             }
         });
     }
