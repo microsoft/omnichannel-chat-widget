@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Fixed adaptive card error color issue
+
 ## [1.8.2] - 2025-08-20
 
 ### Fixed
