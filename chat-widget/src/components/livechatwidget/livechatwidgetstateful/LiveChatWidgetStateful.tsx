@@ -385,7 +385,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
          * the event is expected to be emitted from scripting layer.
          */
         BroadcastService.getMessageByEventName(BroadcastEvent.SyncMinimize).subscribe((msg: ICustomEvent) => {
+
+            console.log("LOPEZ :: SyncMinimize event received in LiveChatWidgetStateful, state is defined");
+            // if the state and the sync value is the same no need to perform any action
+            if (state.appStates?.isMinimized === msg?.payload?.minimized) {
+                console.log("LOPEZ  :: SyncMinimize event received in LiveChatWidgetStateful, but state is the same, ignoring the event");
+                return;
+            }
+
+            console.log("LOPEZ  :: SyncMinimize event received in LiveChatWidgetStateful, dispatching SET_MINIMIZED action");
             dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: msg?.payload?.minimized });
+
         });
 
         // Start chat from SDK Event
