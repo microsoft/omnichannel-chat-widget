@@ -289,10 +289,26 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         }
         .webchat__toaster {
             overflow-y: unset;
-            }
-
+        } 
         
-        `}</style>
+		/* Custom styles for carousel hero cards */
+		ul.webchat__carousel-filmstrip__attachments .ac-image {
+			width: 200px !important;
+			height: 150px !important;
+			object-fit: cover !important;
+			border-radius: 8px !important;
+			border: 1px solid #e0e0e0 !important;
+		}
+
+		.webchat__carousel-filmstrip-attachment .webchat__bubble {
+			height: 100% !important;
+		}
+
+		.webchat__carousel-filmstrip-attachment .webchat__bubble #ms_lcw_webchat_adaptive_card {
+			height: 100% !important;
+		}
+
+		`}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <BasicWebChat></BasicWebChat>
         </Stack>
