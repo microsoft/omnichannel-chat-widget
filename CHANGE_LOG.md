@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fixed adaptive card error color issue
+- A11Y fix for announcing incorrect bot initials and alt text
 
 ## [1.8.2] - 2025-08-20
 
