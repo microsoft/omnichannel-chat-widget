@@ -32,9 +32,12 @@ export const createCitationsMiddleware = ({ dispatch }: { dispatch: any }) => (n
 };
 
 const isApplicable = (action: IWebChatAction): boolean => {
-    // Validate if pva:gpt-feedback exists and is not null
-    if (action?.payload?.activity?.channelData?.metadata?.["pva:gpt-feedback"]) {
-        return true;
+
+    if (action?.payload?.activity?.actionType === "DIRECT_LINE/INCOMING_ACTIVITY" && action?.payload?.activity?.channelId == "ACS_CHANNEL") {
+        // Validate if pva:gpt-feedback exists and is not null
+        if (action?.payload?.activity?.channelData?.metadata?.["pva:gpt-feedback"]) {
+            return true;
+        }
     }
     return false;
 };
@@ -45,7 +48,7 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
     }
 
     try {
-        return text.replace(/\[(\d+)\]:\s(cite:\d+)\s"([^"]+)"/g, (match, number, citeId, citationLabel) => {
+        return text.replace(/\[(\d+)\]:\s(cite:\d+)\s"([^"]+)"/g, (match, number, citeId) => {
             const citation = citations.find(c => c.id === citeId);
             if (citation) {
                 // Replace only the citation label while preserving the original format
