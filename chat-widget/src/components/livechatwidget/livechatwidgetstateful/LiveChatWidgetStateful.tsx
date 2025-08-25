@@ -836,13 +836,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             .webchat__link-definitions__header-text {
                 color: ${bubbleBackground}
             }
-
             
             .webchat__link-definitions__header-chevron {
                 color: ${bubbleBackground}
             }
-
-            console.log("WebChatStyles:", webChatStyles);
 
             ${sendBoxTextArea?.minHeight && `
             .webchat__auto-resize-textarea.webchat__send-box-text-box__text-area {

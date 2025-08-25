@@ -1,7 +1,6 @@
-import { Constants } from "../../../../../common/Constants";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
-
+import { Constants } from "../../../../../common/Constants";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 export const createMessageSequenceIdOverrideMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
     if (isApplicable(action)) {
