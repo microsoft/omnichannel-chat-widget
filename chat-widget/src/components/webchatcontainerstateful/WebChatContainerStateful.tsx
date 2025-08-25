@@ -291,7 +291,6 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             overflow-y: unset;
             }
 
-        
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <BasicWebChat></BasicWebChat>

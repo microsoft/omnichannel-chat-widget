@@ -2,6 +2,9 @@ import { ConversationEndEntity, ParticipantType } from "../../../common/Constant
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { changeLanguageCodeFormatForWebChat, getConversationDetailsCall } from "../../../common/utils";
 
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { Constants } from "../../../common/Constants";
+import { ConversationState } from "../../../contexts/common/ConversationState";
 import DOMPurify from "dompurify";
 import { Dispatch } from "react";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
@@ -20,33 +23,30 @@ import { createActivityMiddleware } from "../../webchatcontainerstateful/webchat
 import { createAttachmentMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
 import createAttachmentUploadValidatorMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentUploadValidatorMiddleware";
 import { createAvatarMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware";
+import createCallActionMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/callActionMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
+import { createCitationsMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/citationsMiddleware";
 import createConversationEndMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/conversationEndMiddleware";
+import createCustomEventMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/customEventMiddleware";
 import createDataMaskingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/dataMaskingMiddleware";
 import { createMarkdown } from "./createMarkdown";
 import createMaxMessageSizeValidator from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/maxMessageSizeValidator";
 import { createMessageSequenceIdOverrideMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageSequenceIdOverrideMiddleware";
 import { createMessageTimeStampMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
+import { createQueueOverflowMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/queueOverflowHandlerMiddleware";
 import { createStore } from "botframework-webchat";
 import { createToastMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/toastMiddleware";
 import { createWebChatTelemetry } from "../../webchatcontainerstateful/webchatcontroller/webchattelemetry/WebChatLogger";
 import { defaultAttachmentProps } from "../../webchatcontainerstateful/common/defaultProps/defaultAttachmentProps";
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
+import { executeReducer } from "../../../contexts/createReducer";
 import { getLocaleStringFromId } from "@microsoft/omnichannel-chat-sdk";
 import gifUploadMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/gifUploadMiddleware";
 import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlPlayerMiddleware";
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
-import { Constants } from "../../../common/Constants";
-import createCallActionMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/callActionMiddleware";
-import createCustomEventMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/customEventMiddleware";
-import { ConversationState } from "../../../contexts/common/ConversationState";
-import { executeReducer } from "../../../contexts/createReducer";
-import { createQueueOverflowMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/queueOverflowHandlerMiddleware";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -127,6 +127,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
             createMessageTimeStampMiddleware,
             createMessageSequenceIdOverrideMiddleware,
+            createCitationsMiddleware,
             gifUploadMiddleware,
             htmlPlayerMiddleware,
             htmlTextMiddleware(honorsTargetInHTMLLinks),
