@@ -46,6 +46,7 @@ import { ConversationState } from "../../../contexts/common/ConversationState";
 import { executeReducer } from "../../../contexts/createReducer";
 import { createQueueOverflowMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/queueOverflowHandlerMiddleware";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { localizedStringsBotInitialsMiddleware, getOverriddenLocalizedStrings } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/localizedStringsBotInitialsMiddleware";
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -133,6 +134,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createMaxMessageSizeValidator(localizedTexts),
             sanitizationMiddleware,
             createCallActionMiddleware(),
+            localizedStringsBotInitialsMiddleware(),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );
@@ -190,6 +192,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         onTelemetry: createWebChatTelemetry(),
         cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
         sendTypingIndicator: true,
+        overrideLocalizedStrings: getOverriddenLocalizedStrings(props.webChatContainerProps?.webChatProps?.overrideLocalizedStrings),
         ...props.webChatContainerProps?.webChatProps
     };
 
