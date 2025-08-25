@@ -1,8 +1,10 @@
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createCitationsMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
-    
+import { Dispatch } from "redux";
+import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
+
+export const createCitationsMiddleware = ({ dispatch }: { dispatch: Dispatch<IWebChatAction> }) => (next: Dispatch<IWebChatAction>) => (action: IWebChatAction) => {
     if (action.payload?.activity) {
         if (isApplicable(action)) {
 
@@ -12,7 +14,13 @@ export const createCitationsMiddleware = ({ dispatch }: { dispatch: any }) => (n
                 const updatedText = replaceCitations(action.payload.activity.text, gptFeedback.summarizationOpenAIResponse.result.textCitations);
                 action.payload.activity.text = updatedText;
             } catch (error) {
-                // Keep the original text in case of issues
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.CitationMiddlewareFailed,
+                    ExceptionDetails: {
+                        ErrorData: "Error while converting citation labels",
+                        Exception: error
+                    }
+                });
             }
         }
     }
@@ -21,7 +29,8 @@ export const createCitationsMiddleware = ({ dispatch }: { dispatch: any }) => (n
 
 const isApplicable = (action: IWebChatAction): boolean => {
 
-    if (action?.payload?.activity?.actionType === "DIRECT_LINE/INCOMING_ACTIVITY" && action?.payload?.activity?.channelId == "ACS_CHANNEL") {
+    if (action?.payload?.activity?.actionType === "DIRECT_LINE/INCOMING_ACTIVITY" && 
+        action?.payload?.activity?.channelId === "ACS_CHANNEL") {
         // Validate if pva:gpt-feedback exists and is not null
         if (action?.payload?.activity?.channelData?.metadata?.["pva:gpt-feedback"]) {
             return true;

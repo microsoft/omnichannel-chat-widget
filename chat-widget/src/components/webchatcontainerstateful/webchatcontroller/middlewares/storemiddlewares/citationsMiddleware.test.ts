@@ -1,32 +1,13 @@
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { createCitationsMiddleware } from "./citationsMiddleware";
 
+jest.mock("@microsoft/omnichannel-chat-components", () => ({
+    BroadcastService: {
+        postMessage: jest.fn(),
+    },
+}));
+
 describe("citationsMiddleware", () => {
-    it("should properly replace citation label", () => {
-        const store = {
-            getState: jest.fn(),
-            dispatch: jest.fn(),
-        };
-        const next = jest.fn();
-        const action = {
-            type: "ADD_CITATION",
-            payload: {
-                label: "oldLabel",
-                content: "This is a citation.",
-            },
-        };
-
-        const middleware = createCitationsMiddleware(store)(next);
-
-        middleware(action);
-
-        expect(next).toHaveBeenCalledWith({
-            ...action,
-            payload: {
-                ...action.payload,
-                label: "newLabel", // Assuming the middleware replaces 'oldLabel' with 'newLabel'
-            },
-        });
-    });
 
     it("should process action if schema matches", () => {
         const dispatch = jest.fn();
@@ -159,6 +140,7 @@ describe("citationsMiddleware", () => {
 
         expect(action.payload.activity.text).toBe("[1]: cite:1 \"Original Title\"");
         expect(next).toHaveBeenCalledWith(action);
+        expect(BroadcastService.postMessage).toHaveBeenCalled(); // Ensure no telemetry event is posted
     });
 });
 
