@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Adding runtimeId as part of events send to identify calls from different tabs.
+- Masking custom properties for message event telemetry
 
 ### Fixed
 - Fixed adaptive card error color issue
