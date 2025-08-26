@@ -60,7 +60,7 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
                 ErrorData: "Error while finding citations references",
                 Exception: error
             }
-                });
+        });
         // Return the original text in case of issues
         return text;
     }
