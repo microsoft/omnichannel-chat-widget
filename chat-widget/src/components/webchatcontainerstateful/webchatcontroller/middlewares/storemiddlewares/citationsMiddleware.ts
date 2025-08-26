@@ -54,7 +54,13 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
             return match; // Keep the original match if no replacement is found
         });
     } catch (error) {
-        
+        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.CitationMiddlewareFailed,
+            ExceptionDetails: {
+                ErrorData: "Error while finding citations references",
+                Exception: error
+            }
+                });
         // Return the original text in case of issues
         return text;
     }
