@@ -1,8 +1,13 @@
 {
   "rules": {
-    "indent": [true],
+    "indent": [
+      true
+    ],
     "member-access": true,
-    "member-ordering": [true, "variables-before-functions"],
+    "member-ordering": [
+      true,
+      "variables-before-functions"
+    ],
     "no-angle-bracket-type-assertion": true,
     "no-any": true,
     "no-arg": true,
@@ -10,17 +15,32 @@
     "no-parameter-properties": false,
     "no-debugger": true,
     "no-eval": true,
-    "no-inferrable-types": [true, "ignore-params", "ignore-properties"],
+    "no-inferrable-types": [
+      true,
+      "ignore-params",
+      "ignore-properties"
+    ],
     "no-internal-module": true,
     "no-require-imports": true,
     "no-shadowed-variable": true,
     "no-string-literal": true,
-    "no-trailing-whitespace": [true, "ignore-comments"],
+    "no-trailing-whitespace": [
+      true,
+      "ignore-comments"
+    ],
     "no-var-keyword": true,
     "no-var-requires": true,
-    "quotemark": [true, "double", "jsx-double", "avoid-escape"],
+    "quotemark": [
+      true,
+      "double",
+      "jsx-double",
+      "avoid-escape"
+    ],
     "radix": true,
-    "semicolon": [true, "always"],
+    "semicolon": [
+      true,
+      "always"
+    ],
     "trailing-comma": [
       true,
       {
@@ -28,7 +48,10 @@
         "singline": "never"
       }
     ],
-    "triple-equals": [true, "allow-null-check"],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
     "whitespace": [
       true,
       "check-branch",
@@ -46,5 +69,8 @@
         "ignore-pattern": "^import [^,]+ from |^export | implements "
       }
     }
-  }
+  },
+  "extends": [
+    "tslint-circular-dependencies"
+  ]
 }
