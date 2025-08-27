@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 - Citations reference label styling issue
 - Ensuring sendbox is enabled when starting a new chat
 
+### Security
+
+- CVE-2022-25883 : ensure semver 7.5.4 is default, other libs used for testing are using a lower version
+
 ## [1.8.2] - 2025-08-20
 
 ### Fixed
