@@ -501,7 +501,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
                 });
                 endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
-                endChatStateCleanUp(dispatch, setWebChatStyles);
+                endChatStateCleanUp(dispatch);
                 chatSDKStateCleanUp(facadeChatSDK.getChatSDK());
                 return;
             }
