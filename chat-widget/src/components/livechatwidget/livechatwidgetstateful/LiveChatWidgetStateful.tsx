@@ -574,7 +574,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
 
         if (state.appStates.conversationState === ConversationState.Active) {
-            // this means customer on purpose wants to hide the send box, we should not override it
             if (props?.webChatContainerProps?.webChatStyles?.hideSendBox === true) return;
             if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: false }; });

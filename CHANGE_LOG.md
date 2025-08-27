@@ -12,8 +12,10 @@ All notable changes to this project will be documented in this file.
 - Masking custom properties for message event telemetry
 
 ### Fixed
+
 - Fixed adaptive card error color issue
 - Citations reference label styling issue
+- Ensuring sendbox is enabled when starting a new chat
 
 ## [1.8.2] - 2025-08-20
 
@@ -72,7 +74,6 @@ All notable changes to this project will be documented in this file.
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
 - Support conversational post chat survey with Microsoft Copilot Studio survey provider
-
 
 ### Fixed
 
@@ -632,7 +633,6 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Uptake [botframework-webchat@4.18.1-main.20250213.4c7400a](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-main.20250213.4c7400a)
-
 
 ## [1.1.11] - 2025-05-22
 
