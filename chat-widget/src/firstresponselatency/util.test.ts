@@ -645,7 +645,7 @@ describe("isHistoryMessage", () => {
                 } as IActivity;
 
                 const result = isHistoryMessage(activity, mockStartTime);
-                expect(typeof result).toBe('boolean');
+                expect(typeof result).toBe("boolean");
             });
         });
     });
