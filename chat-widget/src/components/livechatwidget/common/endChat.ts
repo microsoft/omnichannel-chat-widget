@@ -12,6 +12,7 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import { StyleOptions } from "botframework-webchat";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
@@ -169,7 +170,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
 
             postMessageToOtherTab = false;
         } finally {
-            endChatStateCleanUp(dispatch);
+            endChatStateCleanUp(dispatch, setWebChatStyles);
             facadeChatSDK.destroy();
         }
     }
@@ -220,10 +221,16 @@ export const callingStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) =
     dispatch({ type: LiveChatWidgetActionType.DISABLE_REMOTE_VIDEO, payload: true });
 };
 
-export const endChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+export const endChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles?: (styles: StyleOptions) => void) => {
     // Need to clear these states immediately when chat ended from OC.
     dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: undefined });
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: false });
+    if (setWebChatStyles) {
+        setWebChatStyles({
+            ...defaultWebChatContainerStatefulProps.webChatStyles,
+            hideSendBox: false
+        });
+    }
 };
 
 export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>) => {

@@ -501,7 +501,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Description: "Received EndChat BroadcastEvent from other tabs. Closing this chat."
                 });
                 endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, false);
-                endChatStateCleanUp(dispatch);
+                endChatStateCleanUp(dispatch, setWebChatStyles);
                 chatSDKStateCleanUp(facadeChatSDK.getChatSDK());
                 return;
             }
@@ -573,12 +573,6 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         }
 
-        if (state.appStates.conversationState === ConversationState.Active) {
-            if (props?.webChatContainerProps?.webChatStyles?.hideSendBox === true) return;
-            if (props?.webChatContainerProps?.renderingMiddlewareProps?.hideSendboxOnConversationEnd !== false) {
-                setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: false }; });
-            }
-        }
     }, [state.appStates.conversationState]);
 
     useEffect(() => {
