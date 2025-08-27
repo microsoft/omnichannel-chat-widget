@@ -572,6 +572,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 setWebChatStyles((styles: StyleOptions) => { return { ...styles, hideSendBox: true }; });
             }
         }
+
     }, [state.appStates.conversationState]);
 
     useEffect(() => {

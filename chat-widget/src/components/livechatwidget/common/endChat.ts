@@ -12,6 +12,7 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import { StyleOptions } from "botframework-webchat";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
@@ -196,7 +197,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
-            closeChatWidget(dispatch);
+            closeChatWidget(dispatch, setWebChatStyles, props);
             facadeChatSDK.destroy();
         }
     }
@@ -284,9 +285,14 @@ export const endVoiceVideoCallIfOngoing = async (facadeChatSDK: FacadeChatSDK, d
     }
 };
 
-const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles: any, props: ILiveChatWidgetProps) => {
     // Embedded chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+
+    // if customer is setting the hideSendbox, we should not alter its value
+    if (props?.webChatContainerProps?.webChatStyles?.hideSendBox === true) return;
+    setWebChatStyles((styles: StyleOptions) => ({ ...styles, hideSendBox: false } as StyleOptions));
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
