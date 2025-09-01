@@ -1,0 +1,40 @@
+{
+    "stories": [
+        {
+            "name": "ChatInput Default",
+            "path": "components-chatinput--default"
+        },
+        {
+            "name": "ChatInput With Custom Placeholder",
+            "path": "components-chatinput--with-custom-placeholder"
+        },
+        {
+            "name": "ChatInput Disabled",
+            "path": "components-chatinput--disabled"
+        },
+        {
+            "name": "ChatInput With Character Limit",
+            "path": "components-chatinput--with-character-limit"
+        },
+        {
+            "name": "ChatInput With Custom Styling",
+            "path": "components-chatinput--with-custom-styling"
+        },
+        {
+            "name": "ChatInput Right To Left",
+            "path": "components-chatinput--right-to-left"
+        },
+        {
+            "name": "ChatInput With Attachment Button",
+            "path": "components-chatinput--with-attachment-button"
+        },
+        {
+            "name": "ChatInput With Attachments",
+            "path": "components-chatinput--with-attachments"
+        },
+        {
+            "name": "ChatInput With Custom Send Icon",
+            "path": "components-chatinput--with-custom-send-icon"
+        }
+    ]
+}
