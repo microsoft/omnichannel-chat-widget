@@ -47,6 +47,7 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
+import { localizedStringsBotInitialsMiddleware, getOverriddenLocalizedStrings } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/localizedStringsBotInitialsMiddleware";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -134,6 +135,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createMaxMessageSizeValidator(localizedTexts),
             sanitizationMiddleware,
             createCallActionMiddleware(),
+            localizedStringsBotInitialsMiddleware(),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );
@@ -191,6 +193,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         onTelemetry: createWebChatTelemetry(),
         cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
         sendTypingIndicator: true,
+        overrideLocalizedStrings: getOverriddenLocalizedStrings(props.webChatContainerProps?.webChatProps?.overrideLocalizedStrings),
         ...props.webChatContainerProps?.webChatProps
     };
 

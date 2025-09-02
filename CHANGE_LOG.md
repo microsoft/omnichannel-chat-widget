@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Fixed adaptive card error color issue
 - Citations reference label styling issue
 - Ensuring sendbox is enabled when starting a new chat
+- A11Y fix for announcing incorrect bot initials and alt text
 
 ### Security
 
