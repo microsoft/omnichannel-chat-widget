@@ -6,6 +6,7 @@ export const defaultChatInputAttachmentProps: IChatInputAttachmentProps = {
     attachmentButtonDisabled: false,
     attachmentAccept: "*/*",
     attachmentMultiple: true,
+    dropzoneMaxFiles: 10,
     
     // === Attachment preview configuration ===
     maxVisibleAttachments: 1,

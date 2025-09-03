@@ -1,7 +1,6 @@
 /**
- * Paste file utilities - both legacy and modern approaches
+ * Paste file utilities
  */
-import { useEffect } from "react";
 
 /**
  * Extract files from a paste event
@@ -24,7 +23,7 @@ export const extractFilesFromPasteEvent = (event: ClipboardEvent): File[] => {
 };
 
 /**
- * Create a paste handler for ChatInput onPaste prop (recommended approach)
+ * Create a paste handler for ChatInput onPaste prop
  * @param onFiles - Callback when files are pasted
  * @returns Paste event handler function
  */
@@ -37,28 +36,4 @@ export const createPasteFileHandler = (onFiles: (files: File[]) => void) => {
             event.preventDefault();
         }
     };
-};
-
-/**
- * Simple hook for handling pasted files (legacy approach)
- * @param onFiles - Callback when files are pasted
- * @param enabled - Whether paste handling is enabled (default: true)
- */
-export const usePasteFiles = (
-    onFiles: (files: File[]) => void, 
-    enabled = true
-) => {
-    useEffect(() => {
-        if (!enabled) return;
-
-        const handlePaste = (event: ClipboardEvent) => {
-            const files = extractFilesFromPasteEvent(event);
-            if (files.length > 0) {
-                onFiles(files);
-            }
-        };
-
-        document.addEventListener("paste", handlePaste);
-        return () => document.removeEventListener("paste", handlePaste);
-    }, [onFiles, enabled]);
 };

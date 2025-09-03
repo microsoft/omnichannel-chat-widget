@@ -22,6 +22,8 @@ export type IChatInputAttachmentProps = Omit<AttachmentListProps, "children"> & 
     attachmentAccept?: string;
     attachmentMultiple?: boolean;
     onAttachmentClick?: () => void;
+    // Max files when using drag-and-drop over the input
+    dropzoneMaxFiles?: number;
     
     // === File handling ===
     onFilesChange?: (files: File[]) => void;

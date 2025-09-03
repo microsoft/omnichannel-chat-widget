@@ -13,7 +13,6 @@ import { ConversationState } from "../../contexts/common/ConversationState";
 import { useFileUploadProgress } from "../../hooks/useFileUploadProgress";
 import { getDefaultControlProps } from "./common/defaultProps/defaultControlProps";
 import { getDefaultStyleProps } from "./common/defaultProps/defaultStyleProps";
-import { DragDropZone } from "./components/DragDropZone";
 import { ISuggestionItem } from "@microsoft/omnichannel-chat-components/lib/types/components/suggestions/interfaces/ISuggestionsProps";
 import { IChatInputProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatinput/interfaces/IChatInputProps";
 
@@ -244,23 +243,17 @@ export const ChatInputStateful = (props: IChatInputProps) => {
     }, []);
 
     return (
-        <DragDropZone
-            onFilesDropped={handleFilesSelected}
-            accept="*/*"
-            maxFiles={5}
-        >
-            <ChatInput
-                controlProps={controlProps}
-                styleProps={styleProps}
-                componentOverrides={props?.componentOverrides}
-                suggestionsProps={{
-                    controlProps: {
-                        onSuggestionClick: handleSuggestionClick,
-                        suggestions: convertedSuggestions
-                    }
-                }}
-            />
-        </DragDropZone>
+        <ChatInput
+            controlProps={controlProps}
+            styleProps={styleProps}
+            componentOverrides={props?.componentOverrides}
+            suggestionsProps={{
+                controlProps: {
+                    onSuggestionClick: handleSuggestionClick,
+                    suggestions: convertedSuggestions
+                }
+            }}
+        />
     );
 };
 

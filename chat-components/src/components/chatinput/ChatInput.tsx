@@ -7,6 +7,7 @@ import { defaultChatInputProps } from "./common/defaultProps/defaultChatInputPro
 import { defaultChatInputAttachmentProps } from "./common/defaultProps/defaultChatInputAttachmentProps";
 import { renderDefaultAttachmentButton } from "./subcomponents/DefaultAttachmentButton";
 import ChatInputAttachments from "./subcomponents/ChatInputAttachments";
+import DragDropZone from "./subcomponents/DragDropZone";
 import { defaultChatInputStyleProps } from "./common/defaultProps/defaultChatInputStyleProps";
 import { renderDynamicStyles } from "./common/utils/styleUtils";
 import { Suggestions } from "../suggestions/Suggestions";
@@ -91,12 +92,18 @@ function ChatInput(props: IChatInputProps) {
         <CopilotProvider {...CopilotTheme} theme={controlProps?.theme} style={{ borderRadius: styleProps?.inputContainerStyleProps?.borderRadius }}>
             {renderDynamicStyles(styleProps)}
             <Suggestions {...suggestionsProps} />
-            <CopilotChatInput 
-                id={elementId}
-                {...chatInputProps()}
-                style={styleProps?.inputContainerStyleProps}
+            <DragDropZone
+                accept={controlProps?.attachmentProps?.attachmentAccept}
+                maxFiles={controlProps?.attachmentProps?.dropzoneMaxFiles}
+                onFilesDropped={(files) => controlProps?.attachmentProps?.onFilesChange?.(files)}
             >
-            </CopilotChatInput>
+                <CopilotChatInput 
+                    id={elementId}
+                    {...chatInputProps()}
+                    style={styleProps?.inputContainerStyleProps}
+                >
+                </CopilotChatInput>
+            </DragDropZone>
         </CopilotProvider>
     );
 
