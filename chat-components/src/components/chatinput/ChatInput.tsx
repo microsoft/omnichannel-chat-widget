@@ -1,7 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { ChatInput as CopilotChatInput, ChatInputProps } from "@fluentui-copilot/react-chat-input";
-import { ImperativeControlPlugin } from "@fluentui-copilot/react-copilot";
-import type { ImperativeControlPluginRef } from "@fluentui-copilot/react-copilot";
 import { CopilotProvider } from "@fluentui-copilot/react-provider";
 import { CopilotTheme } from "@fluentui-copilot/react-copilot";
 import { IChatInputProps } from "./interfaces/IChatInputProps";
@@ -11,20 +9,22 @@ import { renderDefaultAttachmentButton } from "./subcomponents/DefaultAttachment
 import ChatInputAttachments from "./subcomponents/ChatInputAttachments";
 import { defaultChatInputStyleProps } from "./common/defaultProps/defaultChatInputStyleProps";
 import { renderDynamicStyles } from "./common/utils/styleUtils";
+import { Suggestions } from "../suggestions/Suggestions";
+import type { LexicalEditor } from "@fluentui-copilot/react-text-editor";
+import { $getRoot } from "lexical";
 
 /**
- * ChatInput Component - A wrapper around Fluent UI Copilot ChatInput
+ * ChatInput Component - A wrapper around Fluent UI Copilot ChatInput with integrated suggestions
  */
 function ChatInput(props: IChatInputProps) {
     const styleProps =  { ...defaultChatInputStyleProps, ...props.styleProps };
     const controlProps = { ...defaultChatInputProps.controlProps, ...props.controlProps };
     const componentOverrides = { ...defaultChatInputProps.componentOverrides, ...props.componentOverrides };
+    const suggestionsProps = props.suggestionsProps;
     const elementId = controlProps?.chatInputId || "chat-input";
-    
     const attachmentPreviewItems = controlProps?.attachmentProps?.attachmentPreviewItems;
-    const [inputText, setInputText] = useState<string>("");
-    const controlRef = useRef<ImperativeControlPluginRef>(null);
     const hasAttachments = Boolean(attachmentPreviewItems?.length); // check if attachments exist
+    const editorRef = useRef<LexicalEditor | null>(null);
 
     // Event handlers
     const handleSubmit = (_e: React.FormEvent, data: { value: string }) => {
@@ -35,13 +35,13 @@ function ChatInput(props: IChatInputProps) {
             controlProps?.onSubmitText?.(value, attachments);
             
             // Clear input after submission
-            setInputText("");
-            controlRef.current?.setInputText("");
+            editorRef.current?.update(() => {
+                $getRoot().clear().select();
+            });
         }
     };
 
     const handleTextChange = (val: string) => {
-        setInputText(val);
         controlProps?.onTextChange?.(val);
     };
 
@@ -81,20 +81,21 @@ function ChatInput(props: IChatInputProps) {
             }),
             onChange: (_e, data: { value: string }) => handleTextChange(data.value),
             onSubmit: handleSubmit,
-            ...slots
+            ...slots,
+            editor: { editorRef },
         } as ChatInputProps;
     };
 
     // Main input component
     const chatInputComponent = (
-        <CopilotProvider {...CopilotTheme} theme={controlProps?.theme}>
+        <CopilotProvider {...CopilotTheme} theme={controlProps?.theme} style={{ borderRadius: styleProps?.inputContainerStyleProps?.borderRadius }}>
             {renderDynamicStyles(styleProps)}
+            <Suggestions {...suggestionsProps} />
             <CopilotChatInput 
                 id={elementId}
                 {...chatInputProps()}
                 style={styleProps?.inputContainerStyleProps}
             >
-                <ImperativeControlPlugin ref={controlRef} />
             </CopilotChatInput>
         </CopilotProvider>
     );

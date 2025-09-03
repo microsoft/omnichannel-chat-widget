@@ -40,6 +40,12 @@ export const renderDynamicStyles = (styleProps: IChatInputStyleProps): React.Rea
         }
     });
 
+    const additionalRules = [
+        // Update styles for the ::before pseudo-element
+        `.fai-ChatInput::before { border-radius: ${styleProps.inputContainerStyleProps?.borderRadius} !important; opacity: 0 !important; }`,
+    ];
+    cssRules.push(...additionalRules);
+
     return cssRules.length > 0 ? 
         React.createElement("style", { key: "chat-input-styles" }, cssRules.join("\n")) : 
         null;

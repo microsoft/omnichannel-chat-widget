@@ -10,31 +10,38 @@ import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetActi
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import { ConversationState } from "../../contexts/common/ConversationState";
-import { IChatInputStatefulParams } from "./interfaces/IChatInputStatefulParams";
 import { useFileUploadProgress } from "../../hooks/useFileUploadProgress";
 import { getDefaultControlProps } from "./common/defaultProps/defaultControlProps";
 import { getDefaultStyleProps } from "./common/defaultProps/defaultStyleProps";
 import { DragDropZone } from "./components/DragDropZone";
+import { ISuggestionItem } from "@microsoft/omnichannel-chat-components/lib/types/components/suggestions/interfaces/ISuggestionsProps";
+import { IChatInputProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatinput/interfaces/IChatInputProps";
+
+const { useSuggestedActions, usePerformCardAction, useActivities } = WebChatHooks;
 
 let uiTimer: ITimer;
 
-export const ChatInputStateful = (props: IChatInputStatefulParams) => {
-    const {
-        chatInputProps,
-        hideTextInput = false,
-        isMinimized = false
-    } = props;
+export const ChatInputStateful = (props: IChatInputProps) => {
+    const [webChatSuggestedActions] = useSuggestedActions();
+    const performCardAction = usePerformCardAction();
+    const [activities] = useActivities();
+    const [shouldShowSuggestions, setShouldShowSuggestions] = useState(false);
+    const [lastActivityId, setLastActivityId] = useState<string | null>(null);
     
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXFooterStart // Using footer events as placeholder
+            Event: TelemetryEvent.UXFooterStart
         });
     }, []);
 
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const sendMessage = WebChatHooks.useSendMessage();
     const { simulateUpload, cancelUpload, getProgress } = useFileUploadProgress();
+    
+    // Extract state variables
+    const isMinimized = state.appStates.isMinimized;
+    
     const [previewAttachments, setPreviewAttachments] = useState<Array<{ 
         id: string; 
         text: string; 
@@ -97,7 +104,7 @@ export const ChatInputStateful = (props: IChatInputStatefulParams) => {
     }, [previewAttachments, cancelUpload]);
 
     // Early return if component should be hidden
-    if (isMinimized || hideTextInput || state.appStates.conversationState !== ConversationState.Active) {
+    if (isMinimized || state.appStates.conversationState !== ConversationState.Active) {
         return null;
     }
 
@@ -126,11 +133,41 @@ export const ChatInputStateful = (props: IChatInputStatefulParams) => {
         // Placeholder for future text change logic
     }, []);
 
+    // Handle suggestion clicks
+    const handleSuggestionClick = useCallback((suggestion: ISuggestionItem) => {
+        console.log("Suggestion option clicked:", suggestion);
+        try {
+            const val = suggestion.value;
+            const isCardActionObject = !!val && typeof val === "object" && "type" in (val as Record<string, unknown>);
+
+            if (isCardActionObject) {
+                // Forward the original Web Chat card action to Web Chat to let existing middlewares handle it
+                performCardAction(val as any);
+            } else {
+                // Fallback: construct a minimal card action from suggestion fields
+                const rawValue = val ?? suggestion.text;
+                const valueStr = typeof rawValue === "string" ? rawValue : JSON.stringify(rawValue);
+                const type = suggestion.type ?? "imBack";
+
+                performCardAction({
+                    type,
+                    value: valueStr,
+                    title: suggestion.text,
+                    displayText: suggestion.displayText ?? suggestion.text
+                } as any);
+            }
+
+            setShouldShowSuggestions(false);
+        } catch (error) {
+            console.warn("Error performing card action:", error);
+        }
+    }, [performCardAction]);
+
     // Build control props
     const controlProps = useMemo(() => {
         const defaultProps = getDefaultControlProps();
-        const customControlProps = chatInputProps?.controlProps;
-        
+        const customControlProps = props?.controlProps;
+
         return {
             ...defaultProps,
             ...customControlProps,
@@ -152,14 +189,52 @@ export const ChatInputStateful = (props: IChatInputStatefulParams) => {
         handleFilesSelected,
         attachmentPreviewItems,
         handleRemoveAttachment,
-        chatInputProps?.controlProps
+        props?.controlProps
     ]);
 
     // Build style props
     const styleProps = useMemo(() => ({
         ...getDefaultStyleProps(),
-        ...chatInputProps?.styleProps,
-    }), [chatInputProps?.styleProps]);
+        ...props?.styleProps,
+    }), [props?.styleProps]);
+
+    // Convert WebChat actions to suggestions format
+    const convertedSuggestions = useMemo(() => {
+        if (!webChatSuggestedActions?.length || !shouldShowSuggestions) return [];
+
+        return webChatSuggestedActions.map((action: unknown) => {
+            const actionObj = action as Record<string, unknown>;
+            // Preserve original action in value to leverage Web Chat performCardAction + middlewares
+            return {
+                text: (actionObj.title || actionObj.text || actionObj.displayText || "Action") as string,
+                // value: actionObj.value,
+                value: actionObj,
+                displayText: (actionObj.displayText || actionObj.title || actionObj.text) as string,
+                type: (actionObj.type || "postBack") as string,
+                disabled: false
+            };
+        });
+    }, [webChatSuggestedActions, shouldShowSuggestions]);
+
+    // Monitor WebChat suggestions
+    useEffect(() => {
+        if (webChatSuggestedActions?.length > 0) {
+            setShouldShowSuggestions(true);
+        }
+    }, [webChatSuggestedActions]);
+
+    // Monitor activities to hide suggestions
+    useEffect(() => {
+        if (activities.length > 0) {
+            const latestActivity = activities[activities.length - 1];
+            if (latestActivity.id && latestActivity.id !== lastActivityId) {
+                setLastActivityId(latestActivity.id);
+                if (latestActivity.from?.role === "user") {
+                    setShouldShowSuggestions(false);
+                }
+            }
+        }
+    }, [activities, lastActivityId]);
 
     useEffect(() => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -177,7 +252,13 @@ export const ChatInputStateful = (props: IChatInputStatefulParams) => {
             <ChatInput
                 controlProps={controlProps}
                 styleProps={styleProps}
-                componentOverrides={chatInputProps?.componentOverrides}
+                componentOverrides={props?.componentOverrides}
+                suggestionsProps={{
+                    controlProps: {
+                        onSuggestionClick: handleSuggestionClick,
+                        suggestions: convertedSuggestions
+                    }
+                }}
             />
         </DragDropZone>
     );

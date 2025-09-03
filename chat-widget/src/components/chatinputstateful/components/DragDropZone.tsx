@@ -119,7 +119,9 @@ export const DragDropZone: React.FC<IDragDropZoneProps> = ({
                 position: "relative",
                 width: "100%",
                 maxWidth: "100%",
-                boxSizing: "border-box"
+                boxSizing: "border-box",
+                backgroundColor: "#F7F7F9",
+                padding: "0px",
             }}
         >
             {children}
