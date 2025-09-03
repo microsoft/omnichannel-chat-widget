@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { SuggestionListProps } from "@fluentui-copilot/react-suggestions";
+import { Slot } from "@fluentui/react-components";
 
 export interface ISuggestionItem {
     /**
@@ -41,23 +41,67 @@ export interface ISuggestionItem {
      * Icon name or identifier for the suggestion
      */
     iconName?: string;
-
-    /**
-     * FluentUI Copilot Suggestion props
-     */
-    fluentProps?: {
-        mode?: "canvas" | "sidecar";
-        designVersion?: "current" | "previous" | "next";
-        appearance?: "outline" | "subtle" | "secondary" | "primary" | "transparent";
-        size?: "small" | "medium" | "large";
-        shape?: "rounded" | "square" | "circular";
-        iconPosition?: "before" | "after";
-        disabledFocusable?: boolean;
-        as?: "a" | "button";
-    };
 }
 
-export interface ISuggestionsControlProps {
+export interface ISuggestionsProps {
+    // === SuggestionList props ===
+    /**
+     * Horizontal alignment of the suggestion list
+     */
+    horizontalAlignment?: "end" | "start";
+
+    /**
+     * Slots for the suggestion list components - for suggestion items
+     */
+    action?: Slot<"span">;
+
+    // === Suggestion props ===
+    /**
+     * Default mode for all suggestions
+     */
+    mode?: "canvas" | "sidecar";
+    
+    /**
+     * Default design version for all suggestions
+     */
+    designVersion?: "current" | "previous" | "next";
+
+    /**
+     * Default icon for all suggestions
+     */
+    icon?: Slot<"span">;
+
+    /**
+     * Default appearance for all suggestions
+     */
+    appearance?: "outline" | "subtle" | "secondary" | "primary" | "transparent";
+    
+    /**
+     * Default size for all suggestions
+     */
+    size?: "small" | "medium" | "large";
+    
+    /**
+     * Default shape for all suggestions
+     */
+    shape?: "rounded" | "square" | "circular";
+    
+    /**
+     * Default icon position for all suggestions
+     */
+    iconPosition?: "before" | "after";
+    
+    /**
+     * Default disabled focusable for all suggestions
+     */
+    disabledFocusable?: boolean;
+    
+    /**
+     * Default element type for all suggestions
+     */
+    as?: "a" | "button";
+
+    // === Suggestions custom props ===
     /**
      * Array of suggestion items to display
      */
@@ -67,11 +111,6 @@ export interface ISuggestionsControlProps {
      * Whether suggestions are disabled
      */
     disabled?: boolean;
-    
-    /**
-     * Maximum number of suggestions to show
-     */
-    maxSuggestions?: number;
     
     /**
      * Callback when a suggestion is clicked
@@ -92,58 +131,8 @@ export interface ISuggestionsControlProps {
      * Whether to auto-hide suggestions after click
      */
     autoHide?: boolean;
-    
-    /**
-     * Additional props to pass to SuggestionList component
-     */
-    suggestionListProps?: Partial<SuggestionListProps>;
-
-    /**
-     * Default FluentUI Copilot props for all suggestions
-     */
-    defaultSuggestionProps?: {
-        mode?: "canvas" | "sidecar";
-        designVersion?: "current" | "previous" | "next";
-        appearance?: "outline" | "subtle" | "secondary" | "primary" | "transparent";
-        size?: "small" | "medium" | "large";
-        shape?: "rounded" | "square" | "circular";
-        iconPosition?: "before" | "after";
-        disabledFocusable?: boolean;
-        as?: "a" | "button";
-    };
-
-    /**
-     * SuggestionList specific props
-     */
-    suggestionListConfig?: {
-        horizontalAlignment?: "end" | "start";
-        as?: "div";
-    };
-}
-
-export interface ISuggestionsStyleProps {
     /**
      * Style for the main suggestions container
      */
     containerStyleProps?: CSSProperties;
-}
-
-export interface ISuggestionsProps {
-    /**
-     * Control properties for suggestions behavior
-     */
-    controlProps?: ISuggestionsControlProps;
-    
-    /**
-     * Style properties for suggestions appearance
-     */
-    styleProps?: ISuggestionsStyleProps;
-    
-    /**
-     * Component overrides for custom rendering
-     */
-    componentOverrides?: {
-        suggestion?: React.ComponentType<any>;
-        icon?: React.ComponentType<any>;
-    };
 }
