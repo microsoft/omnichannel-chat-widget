@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/omnichannel-chat-widget",
-  "version": "1.8.2-0",
+  "version": "1.8.3-0",
   "description": "Microsoft Omnichannel Chat Widget",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",
@@ -87,7 +87,7 @@
     "@azure/core-tracing": "^1.2.0",
     "@microsoft/applicationinsights-web": "^3.3.6",
     "@microsoft/omnichannel-chat-components": "1.1.13",
-    "@microsoft/omnichannel-chat-sdk": "^1.11.4",
+    "@microsoft/omnichannel-chat-sdk": "^1.11.6",
     "@opentelemetry/api": "^1.9.0",
     "abort-controller": "^3",
     "abort-controller-es5": "^2.0.1",
@@ -144,7 +144,8 @@
     "**/abort-controller-es5": "^2.0.1",
     "**/minimist": "1.2.6",
     "**/sanitize-html": "2.14.0",
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0"
+    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
+    "**/semver": "7.5.4"
   },
   "jest": {
     "verbose": true,

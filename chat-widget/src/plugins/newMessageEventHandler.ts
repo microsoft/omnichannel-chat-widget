@@ -1,6 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../common/telemetry/TelemetryConstants";
 import { MessagePayload, ScenarioType } from "../firstresponselatency/Constants";
-import { buildMessagePayload, getScenarioType, isHistoryMessage, polyfillMessagePayloadForEvent } from "../firstresponselatency/util";
+import { buildMessagePayload, getScenarioType, isHistoryMessage, maskPayloadText, polyfillMessagePayloadForEvent } from "../firstresponselatency/util";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../common/Constants";
@@ -82,7 +82,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.RehydrateMessageReceived,
                 Description: "History message received",
-                CustomProperties: payload
+                CustomProperties: maskPayloadText(payload)
             });
         }
     };
@@ -128,7 +128,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.MessageReceived,
             Description: "New message received",
-            CustomProperties: payload
+            CustomProperties: maskPayloadText(payload)
         });
 
     };

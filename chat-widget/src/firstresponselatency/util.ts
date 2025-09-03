@@ -129,3 +129,17 @@ export const createTrackingMessage = (payload: MessagePayload, type: string): Tr
         checkTime: new Date().getTime()
     };
 };
+
+
+
+export const maskPayloadText = (payload: MessagePayload): MessagePayload => {
+
+    if (!payload){
+        return payload;
+    }
+    
+    return {
+        ...payload,
+        text: "*contents hidden*"
+    };
+};

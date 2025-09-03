@@ -2566,10 +2566,10 @@
     axios-retry "^3.9.1"
     crypto-js "^4.2.0"
 
-"@microsoft/omnichannel-amsclient@^0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.10.tgz#bb2fa2157069bfc878d21e55747d8056fab0f66e"
-  integrity sha512-mNL1z3L1HHuJMUVyMxegix4UYd6CBLKh8MfLyvk/lKRqM9CfOtyJSzrDmxkgn8qx3+CwGbHhZpraqtRUTSN4wQ==
+"@microsoft/omnichannel-amsclient@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.npmjs.org/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.11.tgz#f9515b3d56a1e516d7a6e48136c943eef913121f"
+  integrity sha512-e2CCDYu4ZGMU9CNM6MNQUk4OZFWjPCxvMph4qfzdFFpiSDau5J+MMnccUT/qAeUcBvZktFFKCbDiFwPQrK3E6g==
 
 "@microsoft/omnichannel-chat-components@1.1.13":
   version "1.1.13"
@@ -2584,16 +2584,16 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.4.tgz#442f0ba1e4452c0ea63c2aec9daed4e2ea1adb44"
-  integrity sha512-JKSLOYdy/q1dSVZD2iM9v+9V+2KqDDjjIGmaemTW1hRcSJLmFAZjGWOcn+f1mi5nxoN1aHApFZdeMyspkgl6uw==
+"@microsoft/omnichannel-chat-sdk@^1.11.6":
+  version "1.11.6"
+  resolved "https://registry.npmjs.org/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.6.tgz#a796badb496644d00ead2c83e25a03abe26f2833"
+  integrity sha512-n0FMAabALQEi0QUXwKKSgyvmoAfyUS1ms9jxuQCIBpmU1NckMV3mBTAOfA01G9VaDO3R7si3GkrvFaxV+0wA7Q==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
     "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.5"
     "@microsoft/ocsdk" "^0.5.18"
-    "@microsoft/omnichannel-amsclient" "^0.1.10"
+    "@microsoft/omnichannel-amsclient" "^0.1.11"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
 "@microsoft/omnichannel-ic3core@^0.1.5":
@@ -15281,27 +15281,12 @@ screenfull@^5.1.0:
   resolved "https://registry.yarnpkg.com/screenfull/-/screenfull-5.2.0.tgz#6533d524d30621fc1283b9692146f3f13a93d1ba"
   integrity sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==
 
-"semver@2 || 3 || 4 || 5", semver@^5.4.1, semver@^5.5.0, semver@^5.6.0:
-  version "5.7.2"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.2.tgz#48d55db737c3287cd4835e17fa13feace1c41ef8"
-  integrity sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==
-
-semver@^6.0.0, semver@^6.1.0, semver@^6.1.1, semver@^6.1.2, semver@^6.3.0:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
-  integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
-
-semver@^7.2.1, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7:
+"semver@2 || 3 || 4 || 5", semver@7.5.4, semver@^5.4.1, semver@^5.5.0, semver@^5.6.0, semver@^6.0.0, semver@^6.1.0, semver@^6.1.1, semver@^6.1.2, semver@^6.3.0, semver@^7.2.1, semver@^7.3.2, semver@^7.3.4, semver@^7.3.5, semver@^7.3.7, semver@^7.5.4:
   version "7.5.4"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
   dependencies:
     lru-cache "^6.0.0"
-
-semver@^7.5.4:
-  version "7.7.2"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.2.tgz#67d99fdcd35cec21e6f8b87a7fd515a33f982b58"
-  integrity sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==
 
 send@0.18.0:
   version "0.18.0"
