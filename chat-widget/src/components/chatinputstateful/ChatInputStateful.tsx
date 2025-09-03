@@ -16,7 +16,7 @@ import { getDefaultStyleProps } from "./common/defaultProps/defaultStyleProps";
 import { ISuggestionItem } from "@microsoft/omnichannel-chat-components/lib/types/components/suggestions/interfaces/ISuggestionsProps";
 import { IChatInputProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatinput/interfaces/IChatInputProps";
 
-const { useSuggestedActions, usePerformCardAction, useActivities } = WebChatHooks;
+const { useSuggestedActions, usePerformCardAction, useActivities, useStyleOptions } = WebChatHooks as any;
 
 let uiTimer: ITimer;
 
@@ -24,6 +24,7 @@ export const ChatInputStateful = (props: IChatInputProps) => {
     const [webChatSuggestedActions] = useSuggestedActions();
     const performCardAction = usePerformCardAction();
     const [activities] = useActivities();
+    const [styleOptions] = typeof useStyleOptions === "function" ? useStyleOptions() : [{}];
     const [shouldShowSuggestions, setShouldShowSuggestions] = useState(false);
     const [lastActivityId, setLastActivityId] = useState<string | null>(null);
     
@@ -49,17 +50,30 @@ export const ChatInputStateful = (props: IChatInputProps) => {
 
     // Create attachment preview items with progress for ChatInput
     const attachmentPreviewItems = useMemo(() => 
-        previewAttachments.map(att => ({
-            id: att.id,
-            text: att.text,
-            progress: getProgress(att.id), // get the progress if exists
-            _file: att._file // Include file object for sending
-        }))
+        previewAttachments.map(att => {
+            const progressPercentage = getProgress(att.id);
+            return {
+                id: att.id,
+                text: att.text,
+                progress: progressPercentage !== undefined ? progressPercentage / 100 : undefined, // Normalize 0-100 to 0-1
+                _file: att._file
+            };
+        })
     , [previewAttachments, getProgress]);
 
     // Handle file attachment selection (optimized)
     const handleFilesSelected = useCallback((files: File[]) => {
         if (!files?.length) return;
+
+        // If Web Chat is configured to send attachment on select, send immediately
+        // if ((styleOptions as any)?.sendAttachmentOn === "attach") {
+        //     const webChatAttachments: SendBoxAttachment[] = files.map(file => ({ blob: file }));
+        //     if (webChatAttachments.length) {
+        //         // send with no text
+        //         sendMessage(undefined, "keyboard", { attachments: webChatAttachments });
+        //     }
+        //     return;
+        // }
 
         const timestamp = Date.now();
         const newAttachments = files.map((file, index) => ({
@@ -72,7 +86,7 @@ export const ChatInputStateful = (props: IChatInputProps) => {
         
         // Start upload progress simulation
         newAttachments.forEach(attachment => simulateUpload(attachment.id));
-    }, [simulateUpload]);
+    }, [simulateUpload, sendMessage, styleOptions]);
 
     // Handle paste events (optimized)
     const handlePaste = useCallback((event: ClipboardEvent) => {
@@ -248,10 +262,9 @@ export const ChatInputStateful = (props: IChatInputProps) => {
             styleProps={styleProps}
             componentOverrides={props?.componentOverrides}
             suggestionsProps={{
-                controlProps: {
+                    ...props?.suggestionsProps,
                     onSuggestionClick: handleSuggestionClick,
-                    suggestions: convertedSuggestions
-                }
+                    suggestions: convertedSuggestions,
             }}
         />
     );
