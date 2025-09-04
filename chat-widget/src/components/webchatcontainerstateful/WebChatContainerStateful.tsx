@@ -3,7 +3,7 @@
 import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
@@ -61,6 +61,47 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.UXWebchatContainerCompleted
         });
+    }, []);
+
+    // Citation modal state
+    const [citationModalOpen, setCitationModalOpen] = useState(false);
+    const [citationModalText, setCitationModalText] = useState("");
+
+    useEffect(() => {
+        // Delegated click handler: when an anchor with data-citation-id is clicked, open modal
+        const clickHandler = (ev: MouseEvent) => {
+            try {
+                const target = ev.target as HTMLElement;
+                let anchor = target.closest && (target.closest("a[data-citation-id]") as HTMLAnchorElement);
+                if (!anchor) {
+                    // support anchors with href="cite:1"
+                    const possible = target.closest && (target.closest("a[href^=\"cite:\"]") as HTMLAnchorElement);
+                    anchor = possible || anchor;
+                }
+                if (anchor) {
+                    ev.preventDefault();
+                    let text = anchor.getAttribute("data-citation-text") ?? "";
+                    if (!text) {
+                        try {
+                            const globalAny = window as any;
+                            const cid = anchor.getAttribute("data-citation-id") || anchor.getAttribute("href");
+                            if (globalAny && globalAny.__ocwCitations && cid) {
+                                text = globalAny.__ocwCitations[cid] ?? "";
+                            }
+                        } catch (e) {
+                            // ignore
+                        }
+                    }
+                    setCitationModalText(text);
+                    setCitationModalOpen(true);
+                }
+            } catch (e) {
+                // ignore
+            }
+        };
+
+        document.addEventListener("click", clickHandler);
+        return () => document.removeEventListener("click", clickHandler);
     }, []);
 
     const { BasicWebChat } = Components;
@@ -295,6 +336,26 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <BasicWebChat></BasicWebChat>
         </Stack>
+        {citationModalOpen && (
+            <div className="ocw-citation-modal" role="dialog" aria-modal="true">
+                <div className="ocw-citation-modal__backdrop" onClick={() => setCitationModalOpen(false)} />
+                <div className="ocw-citation-modal__content">
+                    <div className="ocw-citation-modal__header">Citation</div>
+                    <div className="ocw-citation-modal__body"><div dangerouslySetInnerHTML={{ __html: citationModalText }} /></div>
+                    <div className="ocw-citation-modal__footer">
+                        <button onClick={() => setCitationModalOpen(false)}>Close</button>
+                    </div>
+                </div>
+                <style>{`
+                        .ocw-citation-modal { position: fixed; inset: 0; display:flex; align-items:center; justify-content:center; z-index: 9999 }
+                        .ocw-citation-modal__backdrop { position:absolute; inset:0; background: rgba(0,0,0,0.5) }
+                        .ocw-citation-modal__content { position:relative; background:#fff; max-width:80%; max-height:80%; overflow:auto; padding:16px; border-radius:6px; z-index:1 }
+                        .ocw-citation-modal__header { font-weight:600; margin-bottom:8px }
+                        .ocw-citation-modal__body { margin-bottom:12px }
+                        .ocw-citation-modal__footer { text-align:right }
+                    `}</style>
+            </div>
+        )}
         </>
     );
 };
