@@ -4,6 +4,7 @@ import { createTimer, findAllFocusableElement, findParentFocusableElementsWithou
 import { defaultCitationContentCSS, defaultCitationPaneStyles } from "./common/defaultProps/defaultCitationPaneProps";
 
 import { DimLayer } from "../dimlayer/DimLayer";
+import CitationDim from "./CitationDim";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ITimer } from "../../common/interfaces/ITimer";
@@ -124,7 +125,7 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
 
     return (
         <>
-            <DimLayer brightness="0.2" onClick={handleClose} containerSelector=".webchat__stacked-layout_container" zIndex={10000} />
+            <CitationDim brightness="0.2" />
             <div id={controlId} role="dialog" aria-modal={true} style={Object.assign({}, mergedStyle, hiddenStyle, { display: "flex", flexDirection: "column", zIndex: 10001 })}>
                 {/* Header with close button */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
