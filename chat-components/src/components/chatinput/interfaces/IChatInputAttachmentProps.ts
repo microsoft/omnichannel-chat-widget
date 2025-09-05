@@ -31,5 +31,4 @@ export type IChatInputAttachmentProps = Omit<AttachmentListProps, "children"> & 
     
     // === Additional convenience props ===
     overflowMenuAriaLabel?: string;
-    className?: string;
 };

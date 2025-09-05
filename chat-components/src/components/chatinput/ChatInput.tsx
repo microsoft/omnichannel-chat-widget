@@ -13,32 +13,41 @@ import { renderDynamicStyles } from "./common/utils/styleUtils";
 import { Suggestions } from "../suggestions/Suggestions";
 import type { LexicalEditor } from "@fluentui-copilot/react-text-editor";
 import { $getRoot } from "lexical";
+import { ISuggestionsProps } from "../suggestions/interfaces/ISuggestionsProps";
+import { defaultChatInputControlProps } from "./common/defaultProps/defaultChatInputControlProps";
+import { deepMerge } from "../../common/utils";
 
 /**
  * ChatInput Component - A wrapper around Fluent UI Copilot ChatInput with integrated suggestions
  */
-function ChatInput(props: IChatInputProps) {
-    const styleProps =  { ...defaultChatInputStyleProps, ...props.styleProps };
-    const controlProps = { ...defaultChatInputProps.controlProps, ...props.controlProps };
-    const componentOverrides = { ...defaultChatInputProps.componentOverrides, ...props.componentOverrides };
-    const suggestionsProps = props.suggestionsProps;
-    const elementId = controlProps?.chatInputId || "chat-input";
-    const attachmentPreviewItems = controlProps?.attachmentProps?.attachmentPreviewItems;
-    const hasAttachments = Boolean(attachmentPreviewItems?.length); // check if attachments exist
+function ChatInput(props: {chatInputProps: IChatInputProps; suggestionsProps?: ISuggestionsProps }) {
+    const { chatInputProps, suggestionsProps } = props;
+    // Deep merge style props (generic util) so partial nested overrides augment defaults
+    const styleProps = deepMerge(defaultChatInputStyleProps, chatInputProps.styleProps);
+    const controlProps = deepMerge(defaultChatInputControlProps, chatInputProps.controlProps);
+    const componentOverrides = deepMerge(defaultChatInputProps.componentOverrides, chatInputProps.componentOverrides);
     const editorRef = useRef<LexicalEditor | null>(null);
+    const attachmentPreviewItems = controlProps?.attachmentProps?.attachmentPreviewItems;
+    
+    const hasAttachments = Boolean(attachmentPreviewItems?.length); // check if attachments exist
 
     // Event handlers
     const handleSubmit = (_e: React.FormEvent, data: { value: string }) => {
         const value = data?.value?.trim() || "";
-        
-        if (value || hasAttachments) {
-            const attachments = hasAttachments ? attachmentPreviewItems : undefined;
+        if (!value && !hasAttachments) return; // nothing to submit
+        const attachments = hasAttachments ? attachmentPreviewItems : undefined;
+        try {
             controlProps?.onSubmitText?.(value, attachments);
-            
-            // Clear input after submission
+            // Clear input only after successful submit
             editorRef.current?.update(() => {
                 $getRoot().clear().select();
             });
+            // Clear attachments after sent
+            if (hasAttachments) {
+                controlProps?.attachmentProps?.onFilesChange?.([]);
+            }
+        } catch (err) {
+            console.error("Error submitting chat input:", err);
         }
     };
 
@@ -46,8 +55,19 @@ function ChatInput(props: IChatInputProps) {
         controlProps?.onTextChange?.(val);
     };
 
-    // Build chat input props
-    const chatInputProps = (): ChatInputProps => {
+    // Build attachments element directly (low cost; memo not necessary here)
+    const attachmentsComponent = hasAttachments ? (
+        <ChatInputAttachments
+            attachmentPreviewItems={attachmentPreviewItems}
+            onAttachmentRemove={controlProps?.attachmentProps?.onAttachmentRemove}
+            maxVisibleAttachments={controlProps?.attachmentProps?.maxVisibleAttachments}
+            overflowMenuAriaLabel={controlProps?.attachmentProps?.overflowMenuAriaLabel}
+            {...controlProps?.attachmentProps}
+        />
+    ) : undefined;
+
+    // Build chat input props (after attachmentsElement so it can be referenced)
+    const inputBoxProps = (): ChatInputProps => {
         const { onSubmitText, onTextChange, attachmentProps, sendButtonProps, ...nativeProps } = controlProps || {};
         const mergedAttachmentProps = { ...defaultChatInputAttachmentProps, ...attachmentProps };
         const slots = { 
@@ -70,15 +90,7 @@ function ChatInput(props: IChatInputProps) {
             ...(sendButtonProps && { send: sendButtonProps }),
             ...(hasAttachments && {
                 submitEnabled: true,
-                attachments: (
-                    <ChatInputAttachments
-                        attachmentPreviewItems={attachmentPreviewItems}
-                        onAttachmentRemove={mergedAttachmentProps.onAttachmentRemove}
-                        maxVisibleAttachments={mergedAttachmentProps.maxVisibleAttachments}
-                        overflowMenuAriaLabel={mergedAttachmentProps.overflowMenuAriaLabel}
-                        {...mergedAttachmentProps}
-                    />
-                )
+                attachments: attachmentsComponent
             }),
             onChange: (_e, data: { value: string }) => handleTextChange(data.value),
             onSubmit: handleSubmit,
@@ -87,19 +99,24 @@ function ChatInput(props: IChatInputProps) {
         } as ChatInputProps;
     };
 
+    // Generate dynamic styles directly (cost is small; can reintroduce memo if profiling shows need)
+    const dynamicStylesElement = renderDynamicStyles(styleProps);
+
+    console.log("chat input props new:", controlProps, styleProps, suggestionsProps);
     // Main input component
     const chatInputComponent = (
-        <CopilotProvider {...CopilotTheme} theme={controlProps?.theme} style={{ borderRadius: styleProps?.inputContainerStyleProps?.borderRadius }}>
-            {renderDynamicStyles(styleProps)}
+        <CopilotProvider {...CopilotTheme} theme={controlProps.theme} style={{ borderRadius: styleProps?.inputContainerStyleProps?.borderRadius }}>
+            {dynamicStylesElement}
             <Suggestions {...suggestionsProps} />
             <DragDropZone
                 accept={controlProps?.attachmentProps?.attachmentAccept}
                 maxFiles={controlProps?.attachmentProps?.dropzoneMaxFiles}
                 onFilesDropped={(files) => controlProps?.attachmentProps?.onFilesChange?.(files)}
+                overlayStyleProps={styleProps.dragDropOverlayStyleProps}
+                overlayText={controlProps.dragDropOverlayText}
             >
-                <CopilotChatInput 
-                    id={elementId}
-                    {...chatInputProps()}
+                <CopilotChatInput
+                    {...inputBoxProps()}
                     style={styleProps?.inputContainerStyleProps}
                 >
                 </CopilotChatInput>
@@ -110,7 +127,7 @@ function ChatInput(props: IChatInputProps) {
     // Return wrapped component
     return (
         <div 
-            id={elementId} 
+            id={controlProps.chatInputId} 
             className="lcw-chat-input-box"
             style={styleProps?.containerStyleProps}
         >

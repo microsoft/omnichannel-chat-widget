@@ -15,12 +15,13 @@ export const defaultChatInputControlProps: IChatInputControlProps = {
 
     // === ChatInput appearance and behavior ===
     appearance: "responsive", // 'auto' | 'multi' | 'single' | 'responsive';
-    characterLimitErrorMessage: "Character limit exceeded",
+    characterLimitErrorMessage: "Character limit exceeded!",
     disableSend: false,
     
     // === Accessibility ===
     chatInputAriaLabel: "Chat input field",
     chatInputId: "chat-input",
+    dragDropOverlayText: "Drop files here to attach",
 
     // === Theme ===
     theme: webLightTheme,

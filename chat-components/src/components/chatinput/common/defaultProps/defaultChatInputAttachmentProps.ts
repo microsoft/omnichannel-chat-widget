@@ -11,7 +11,8 @@ export const defaultChatInputAttachmentProps: IChatInputAttachmentProps = {
     // === Attachment preview configuration ===
     maxVisibleAttachments: 1,
     overflowMenuAriaLabel: "View and remove additional attachments",
-    
+    size: "medium",
+
     // === File handling ===
     onFilesChange: undefined,
     

@@ -1,5 +1,13 @@
 import React from "react";
 import { IChatInputStyleProps } from "../../interfaces/IChatInputStyleProps";
+import { createChatInputSendButtonStyle } from "./sendButtonStyles";
+import { createChatInputSendBoxStyles } from "./sendBoxStyles";
+import { createChatInputUploadButtonStyles } from "./uploadButtonStyles";
+
+/**
+ * StyleUtils for ChatInput Component
+ * This module provides comprehensive styling utilities for the ChatInput component
+ */
 
 /**
  * Simple mapping of style properties to CSS selectors
@@ -21,7 +29,26 @@ const STYLE_MAPPINGS: Record<string, string> = {
 export const renderDynamicStyles = (styleProps: IChatInputStyleProps): React.ReactElement | null => {
     const cssRules: string[] = [];
     
-    // Generate CSS rules for each provided style property
+    // Generate comprehensive send button styles first
+    const sendButtonStyles = createChatInputSendButtonStyle(styleProps);
+    if (sendButtonStyles) {
+        cssRules.push(sendButtonStyles);
+    }
+
+    // Generate send box (container + text box) styles next (WebChat parity)
+    const sendBoxStyles = createChatInputSendBoxStyles(styleProps);
+    if (sendBoxStyles) {
+        cssRules.push(sendBoxStyles);
+    }
+
+
+    // Generate upload/attachment button styles (reusing sendBoxButton* color props)
+    const uploadButtonStyles = createChatInputUploadButtonStyles(styleProps);
+    if (uploadButtonStyles) {
+        cssRules.push(uploadButtonStyles);
+    }
+    
+    // Generate CSS rules for other style properties
     Object.entries(styleProps).forEach(([key, styles]) => {
         const selector = STYLE_MAPPINGS[key];
         if (!selector || !styles || typeof styles !== "object") return;

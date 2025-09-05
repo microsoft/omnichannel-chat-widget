@@ -14,5 +14,4 @@ export interface IChatInputProps {
     componentOverrides?: ChatInputSlots; 
     controlProps?: IChatInputControlProps;
     styleProps?: IChatInputStyleProps;
-    suggestionsProps?: ISuggestionsProps;
 }

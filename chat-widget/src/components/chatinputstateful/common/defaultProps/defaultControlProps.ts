@@ -4,19 +4,6 @@ import { IChatInputControlProps } from "@microsoft/omnichannel-chat-components/l
  * Default control props configuration for ChatInput component
  */
 export const getDefaultControlProps = (): IChatInputControlProps => ({
-    disabled: false,
-    placeholderValue: "Ask your questions...",
-    maxLength: 100,
-    showCount: true,
+    id: "lcw-chat-input-wrapper",
     charactersRemainingMessage: (remaining: number) => `${remaining} characters remaining`,
-    
-    // Attachment configuration
-    attachmentProps: {
-        showAttachButton: true,
-        attachmentAccept: "*/*",
-        attachmentMultiple: true,
-        size: "medium" as const,
-        maxVisibleAttachments: 3,
-        overflowMenuAriaLabel: "View additional attachments",
-    }
 });

@@ -1,8 +1,4 @@
 import React, { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { createTimer } from "../../common/utils";
-import { ITimer } from "../../common/interfaces/ITimer";
 import { ChatInput } from "@microsoft/omnichannel-chat-components";
 import { hooks as WebChatHooks } from "botframework-webchat";
 import type { SendBoxAttachment } from "botframework-webchat-core";
@@ -13,41 +9,29 @@ import { ConversationState } from "../../contexts/common/ConversationState";
 import { useFileUploadProgress } from "../../hooks/useFileUploadProgress";
 import { getDefaultControlProps } from "./common/defaultProps/defaultControlProps";
 import { getDefaultStyleProps } from "./common/defaultProps/defaultStyleProps";
-import { ISuggestionItem } from "@microsoft/omnichannel-chat-components/lib/types/components/suggestions/interfaces/ISuggestionsProps";
-import { IChatInputProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatinput/interfaces/IChatInputProps";
+import { ISuggestionItem } from "@microsoft/omnichannel-chat-components/lib/types/components/suggestions/interfaces/ISuggestionItem";
+import { IChatInputStatefulProps } from "./interfaces/IChatButtonStatefulParams";
 
 const { useSuggestedActions, usePerformCardAction, useActivities, useStyleOptions } = WebChatHooks as any;
 
-let uiTimer: ITimer;
-
-export const ChatInputStateful = (props: IChatInputProps) => {
+export const ChatInputStateful: React.FC<IChatInputStatefulProps> = (props) => {
+    const { suggestionsProps, chatInputProps } = props;
     const [webChatSuggestedActions] = useSuggestedActions();
     const performCardAction = usePerformCardAction();
     const [activities] = useActivities();
     const [styleOptions] = typeof useStyleOptions === "function" ? useStyleOptions() : [{}];
     const [shouldShowSuggestions, setShouldShowSuggestions] = useState(false);
     const [lastActivityId, setLastActivityId] = useState<string | null>(null);
-    
-    useEffect(() => {
-        uiTimer = createTimer();
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXFooterStart
-        });
-    }, []);
-
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const sendMessage = WebChatHooks.useSendMessage();
     const { simulateUpload, cancelUpload, getProgress } = useFileUploadProgress();
-    
-    // Extract state variables
-    const isMinimized = state.appStates.isMinimized;
-    
     const [previewAttachments, setPreviewAttachments] = useState<Array<{ 
         id: string; 
         text: string; 
         _file: File;
     }>>([]);
-
+    const isMinimized = state.appStates.isMinimized;
+    
     // Create attachment preview items with progress for ChatInput
     const attachmentPreviewItems = useMemo(() => 
         previewAttachments.map(att => {
@@ -179,7 +163,7 @@ export const ChatInputStateful = (props: IChatInputProps) => {
     // Build control props
     const controlProps = useMemo(() => {
         const defaultProps = getDefaultControlProps();
-        const customControlProps = props?.controlProps;
+        const customControlProps = chatInputProps?.controlProps;
 
         return {
             ...defaultProps,
@@ -202,17 +186,18 @@ export const ChatInputStateful = (props: IChatInputProps) => {
         handleFilesSelected,
         attachmentPreviewItems,
         handleRemoveAttachment,
-        props?.controlProps
+        chatInputProps?.controlProps
     ]);
 
     // Build style props
     const styleProps = useMemo(() => ({
         ...getDefaultStyleProps(),
-        ...props?.styleProps,
-    }), [props?.styleProps]);
+        ...chatInputProps?.styleProps
+    }), [chatInputProps?.styleProps]);
 
     // Convert WebChat actions to suggestions format
     const convertedSuggestions = useMemo(() => {
+        console.log("webChatSuggestedActions:", webChatSuggestedActions);
         if (!webChatSuggestedActions?.length || !shouldShowSuggestions) return [];
 
         return webChatSuggestedActions.map((action: unknown) => {
@@ -249,23 +234,34 @@ export const ChatInputStateful = (props: IChatInputProps) => {
         }
     }, [activities, lastActivityId]);
 
-    useEffect(() => {
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXFooterCompleted,
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
-        });
-    }, []);
+    // Build suggestions props in new structure (controlProps/styleProps/componentOverrides)
+    const suggestedActionsProps = useMemo(() => {
+        const upstream = suggestionsProps || {};
+        return {
+            controlProps: {
+                ...upstream.controlProps,
+                suggestions: convertedSuggestions,
+                onSuggestionClick: handleSuggestionClick,
+                onSuggestionsClear: () => setShouldShowSuggestions(false),
+                autoHide: true,
+                horizontalAlignment: upstream.controlProps?.horizontalAlignment
+            },
+            styleProps: upstream.styleProps,
+            componentOverrides: upstream.componentOverrides
+        };
+    }, [suggestionsProps, convertedSuggestions, handleSuggestionClick]);
 
+    console.log("ChatInputStateful props:", {
+        controlProps,
+        styleProps,
+        componentOverrides: chatInputProps?.componentOverrides
+    });
+
+    console.log("Suggested actions props:", suggestedActionsProps);
     return (
         <ChatInput
-            controlProps={controlProps}
-            styleProps={styleProps}
-            componentOverrides={props?.componentOverrides}
-            suggestionsProps={{
-                    ...props?.suggestionsProps,
-                    onSuggestionClick: handleSuggestionClick,
-                    suggestions: convertedSuggestions,
-            }}
+            chatInputProps={{ controlProps, styleProps, componentOverrides: chatInputProps?.componentOverrides }}
+            suggestionsProps={suggestedActionsProps}
         />
     );
 };

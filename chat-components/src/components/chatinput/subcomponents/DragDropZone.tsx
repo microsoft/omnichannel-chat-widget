@@ -5,6 +5,8 @@ interface IDragDropZoneProps {
     children: React.ReactNode;
     accept?: string;
     maxFiles?: number;
+    overlayStyleProps?: React.CSSProperties; // merged with defaults (container + text)
+    overlayText?: string; // custom text
 }
 
 // Internal drag-and-drop zone that only wraps the ChatInput area (not Suggestions)
@@ -12,7 +14,9 @@ export const DragDropZone: React.FC<IDragDropZoneProps> = ({
     onFilesDropped,
     children,
     accept,
-    maxFiles = 10
+    maxFiles = 10,
+    overlayStyleProps,
+    overlayText
 }) => {
     const [isDragOver, setIsDragOver] = useState(false);
 
@@ -81,22 +85,18 @@ export const DragDropZone: React.FC<IDragDropZoneProps> = ({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0, 123, 255, 0.1)",
-        border: "2px dashed #007bff",
-        borderRadius: "15px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "14px",
-        color: "#007bff",
-        fontWeight: 500,
         zIndex: 1,
         pointerEvents: "none",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        ...(overlayStyleProps || {})
     };
 
     return (
         <div
+            id="lcw-chat-input-drag-drop-zone"
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDragOver={handleDragOver}
@@ -112,7 +112,9 @@ export const DragDropZone: React.FC<IDragDropZoneProps> = ({
         >
             {children}
             {isDragOver && (
-                <div style={overlayStyle}>Drop files here to attach</div>
+                <div style={overlayStyle}>
+                    <span>{overlayText}</span>
+                </div>
             )}
         </div>
     );
