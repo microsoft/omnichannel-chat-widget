@@ -1,6 +1,7 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useState } from "react";
 import { createTimer, findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setTabIndices } from "../../common/utils";
+import { defaultCitationContentCSS, defaultCitationPaneStyles } from "./common/defaultProps/defaultCitationPaneProps";
 
 import { DimLayer } from "../dimlayer/DimLayer";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -64,7 +65,7 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
 
     // Compute the widget bounds and set pane style accordingly (95% of widget size
     // and centered inside the widget). If the widget container can't be found,
-    // fall back to the previous centered-but-higher placement.
+    // fall back to the default pane styles from defaultCitationPaneProps.
     useEffect(() => {
         const compute = () => {
             try {
@@ -75,20 +76,20 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
                     const heightPx = Math.round(rect.height * 0.95);
                     const leftPx = Math.round(rect.left + (rect.width - widthPx) / 2);
                     const topPx = Math.round(rect.top + (rect.height - heightPx) / 2);
-                    setPaneStyle({
-                        position: "fixed",
+                    // Clone defaults and remove transform so explicit left/top pixel
+                    // coordinates are respected and the pane stays within the
+                    // widget bounds.
+                    const base = Object.assign({}, defaultCitationPaneStyles.pane) as React.CSSProperties;
+                    if (base && (base as any).transform) {
+                        // remove centering transform when we compute exact pixel coords
+                        delete (base as any).transform;
+                    }
+                    setPaneStyle(Object.assign({}, base, {
                         left: `${leftPx}px`,
                         top: `${topPx}px`,
                         width: `${widthPx}px`,
-                        height: `${heightPx}px`,
-                        overflowY: "auto",
-                        overflowX: "hidden",
-                        background: "#fff",
-                        padding: 16,
-                        borderRadius: 6,
-                        zIndex: 10001,
-                        boxSizing: "border-box"
-                    });
+                        height: `${heightPx}px`
+                    }));
                     // Make the pane visible after the next paint to avoid layout
                     // flashes on initial mount.
                     requestAnimationFrame(() => setIsReady(true));
@@ -99,21 +100,7 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
             }
 
             // fallback
-            setPaneStyle({
-                position: "fixed",
-                left: "50%",
-                top: "18%",
-                transform: "translateX(-50%)",
-                background: "#fff",
-                width: "85%",
-                height: "85%",
-                overflowY: "auto",
-                overflowX: "hidden",
-                padding: 16,
-                borderRadius: 6,
-                zIndex: 10001,
-                boxSizing: "border-box"
-            });
+            setPaneStyle(defaultCitationPaneStyles.pane);
             requestAnimationFrame(() => setIsReady(true));
         };
 
@@ -137,25 +124,32 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
 
     return (
         <>
-            <DimLayer brightness="0.2" onClick={handleClose} />
-            <div id={controlId} role="dialog" aria-modal={true} style={Object.assign({}, mergedStyle, hiddenStyle)}>
-                {/* Close button in the upper-right corner */}
-                <IconButton
-                    iconProps={{ iconName: "Cancel" }}
-                    ariaLabel="Close citation"
-                    title="Close"
-                    styles={{ root: { position: "absolute", right: 8, top: 8 } }}
-                    onClick={handleClose}
-                />
-
-                <div style={{ fontWeight: 600, marginBottom: 8 }}>{props.title ?? "Citation"}</div>
-                <div style={{ marginBottom: 12, overflowX: "hidden", whiteSpace: "normal" }} dangerouslySetInnerHTML={{ __html: props.contentHtml ?? "" }} />
-                <div style={{ textAlign: "right" }}>
+            <DimLayer brightness="0.2" onClick={handleClose} containerSelector=".webchat__stacked-layout_container" zIndex={10000} />
+            <div id={controlId} role="dialog" aria-modal={true} style={Object.assign({}, mergedStyle, hiddenStyle, { display: "flex", flexDirection: "column", zIndex: 10001 })}>
+                {/* Header with close button */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                    <div className="ms-Label" style={{ fontWeight: 600 }}>{props.title ?? "Citation"}</div>
                     <IconButton
                         iconProps={{ iconName: "Cancel" }}
                         ariaLabel="Close citation"
                         title="Close"
-                        styles={{ root: { float: "right" } }}
+                        styles={{ root: { marginLeft: 8 } }}
+                        onClick={handleClose}
+                    />
+                </div>
+
+                {/* Scrollable content area styles are provided from defaults to avoid
+                    leaking inline styles in the component file. */}
+                <style>{defaultCitationContentCSS(controlId)}</style>
+
+                <div className="citation-content" dangerouslySetInnerHTML={{ __html: props.contentHtml ?? "" }} />
+
+                {/* Footer with close button */}
+                <div style={{ textAlign: "right", marginTop: 8 }}>
+                    <IconButton
+                        iconProps={{ iconName: "Cancel" }}
+                        ariaLabel="Close citation"
+                        title="Close"
                         onClick={handleClose}
                     />
                 </div>
