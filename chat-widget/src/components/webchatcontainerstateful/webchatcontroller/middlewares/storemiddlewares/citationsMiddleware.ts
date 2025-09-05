@@ -4,27 +4,39 @@ import { Dispatch } from "redux";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 
-export const createCitationsMiddleware = () => (next: Dispatch<IWebChatAction>) => (action: IWebChatAction) => {
+export const createCitationsMiddleware = (_opts?: { dispatch?: Dispatch<IWebChatAction> }) => (next: Dispatch<IWebChatAction>) => (action: IWebChatAction) => {
+    // Reference _opts to avoid "defined but never used" lint errors when caller provides an object
+    void _opts;
     if (action.payload?.activity) {
         if (isApplicable(action)) {
 
             try {
                 console.log("LOPEZ :: TAKE :: 3");
                 const gptFeedback = JSON.parse(action.payload.activity.channelData.metadata["pva:gpt-feedback"]);
-                // Build citation mapping and install DOM handler to show citation modal when user clicks cite: links
+                // Build citation mapping and expose it for the container to render in a pane.
                 const citations = gptFeedback.summarizationOpenAIResponse?.result?.textCitations;
                 // Keep replacing citation labels in the raw text where possible
                 const updatedText = replaceCitations(action.payload.activity.text, citations);
                 action.payload.activity.text = updatedText;
 
+                // Populate a global citation map used by the UI container. Middleware must not attach DOM handlers or
+                // create UI elements to avoid duplicates — container will render a pane.
                 try {
-                    ensureCitationHandler(citations);
+                    const map: Record<string, string> = {};
+                    if (citations && Array.isArray(citations)) {
+                        (citations as unknown as Array<{ id?: string; text?: string; title?: string }> ).forEach((c) => {
+                            if (c?.id) {
+                                map[c.id] = c.text || c.title || "";
+                            }
+                        });
+                    }
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (window as any).__ocwCitations = Object.assign((window as any).__ocwCitations || {}, map);
                 } catch (innerErr) {
-                    // Non-fatal; log telemetry but continue
                     TelemetryHelper.logActionEvent(LogLevel.WARN, {
                         Event: TelemetryEvent.CitationMiddlewareFailed,
                         ExceptionDetails: {
-                            ErrorData: "Error while attaching citation handler",
+                            ErrorData: "Error while populating citation map",
                             Exception: innerErr
                         }
                     });
@@ -86,67 +98,7 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
  * Install a delegated click handler (once) and store citation mapping on window for runtime lookup.
  * This avoids mutating rendered anchor markup and keeps styling intact.
  */
-const ensureCitationHandler = (citations: Array<{ id: string; text?: string; title?: string }>) => {
-    // Build a simple map: { "cite:1": "the citation text" }
-    const map: Record<string, string> = {};
-    if (citations && Array.isArray(citations)) {
-        citations.forEach(c => {
-            if (c?.id) {
-                map[c.id] = c.text || c.title || "";
-            }
-        });
-    }
-
-    // Expose map for debugging/other consumers
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).__webchatCitationMap = (window as any).__webchatCitationMap || {};
-    // merge/update
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Object.assign((window as any).__webchatCitationMap, map);
-
-    // Attach a single delegated handler to document if not already attached
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const win = window as any;
-    if (win.__webchatCitationHandlerAttached) {
-        return;
-    }
-
-    const clickHandler = (ev: MouseEvent) => {
-        const target = ev.target as HTMLElement | null;
-        if (!target) return;
-
-        // find closest anchor
-        const anchor = (target.closest && target.closest("a")) as HTMLAnchorElement | null;
-        if (!anchor) return;
-
-        // only handle anchors with the specific classes (preserve other link behaviors/style)
-        const hasClassBox = anchor.classList.contains("webchat__link-definitions__list-item-box");
-        const hasClassAsLink = anchor.classList.contains("webchat__link-definitions__list-item-box--as-link");
-        if (!hasClassBox || !hasClassAsLink) {
-            return; // not our link
-        }
-
-        const href = anchor.getAttribute("href") || "";
-        if (!href) return;
-
-        // If it's an actual URL, let the default behavior happen
-        if (/^https?:\/\//i.test(href)) {
-            return;
-        }
-
-        // Only handle citation references like cite:1
-        if (href.indexOf("cite:") === 0) {
-            ev.preventDefault();
-            ev.stopPropagation();
-
-            const citationText = (win.__webchatCitationMap && win.__webchatCitationMap[href]) || "";
-            showCitationModal(href, citationText || "Citation content not available.");
-        }
-    };
-
-    document.addEventListener("click", clickHandler, true);
-    win.__webchatCitationHandlerAttached = true;
-};
+// ensureCitationHandler removed: UI is handled by container panes
 
 const showCitationModal = (id: string, content: string) => {
     // Create modal container if not exists

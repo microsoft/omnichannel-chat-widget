@@ -3,10 +3,11 @@
 import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useState } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
+import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -63,14 +64,23 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         });
     }, []);
 
-    // Citation modal state
-    const [citationModalOpen, setCitationModalOpen] = useState(false);
-    const [citationModalText, setCitationModalText] = useState("");
+    // Citation pane state
+    const [citationPaneOpen, setCitationPaneOpen] = useState(false);
+    const [citationPaneText, setCitationPaneText] = useState("");
+
+    // Guard to prevent handling multiple rapid clicks which could cause
+    // the dim layer and pane to re-render out of sync and create a flicker.
+    const citationOpeningRef = useRef(false);
 
     useEffect(() => {
-        // Delegated click handler: when an anchor with data-citation-id is clicked, open modal
+        // Delegated click handler: when an anchor with data-citation-id or href cite: is clicked, open citation pane
         const clickHandler = (ev: MouseEvent) => {
             try {
+                if (citationOpeningRef.current) {
+                    // ignore repeated clicks while opening
+                    return;
+                }
+
                 const target = ev.target as HTMLElement;
                 let anchor = target.closest && (target.closest("a[data-citation-id]") as HTMLAnchorElement);
                 if (!anchor) {
@@ -80,6 +90,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 }
                 if (anchor) {
                     ev.preventDefault();
+                    citationOpeningRef.current = true;
                     let text = anchor.getAttribute("data-citation-text") ?? "";
                     if (!text) {
                         try {
@@ -92,11 +103,23 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                             // ignore
                         }
                     }
-                    setCitationModalText(text);
-                    setCitationModalOpen(true);
+
+                    // Sequence updates to avoid intermediate states where the dim
+                    // layer or pane might not be fully rendered yet. Set the text
+                    // first, then open the pane on the next animation frame.
+                    setCitationPaneText(text);
+                    requestAnimationFrame(() => {
+                        setCitationPaneOpen(true);
+                        // Allow further clicks after a short delay to avoid
+                        // capturing the user's double-click as two opens.
+                        setTimeout(() => {
+                            citationOpeningRef.current = false;
+                        }, 250);
+                    });
                 }
             } catch (e) {
                 // ignore
+                citationOpeningRef.current = false;
             }
         };
 
@@ -336,25 +359,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <BasicWebChat></BasicWebChat>
         </Stack>
-        {citationModalOpen && (
-            <div className="ocw-citation-modal" role="dialog" aria-modal="true">
-                <div className="ocw-citation-modal__backdrop" onClick={() => setCitationModalOpen(false)} />
-                <div className="ocw-citation-modal__content">
-                    <div className="ocw-citation-modal__header">Citation</div>
-                    <div className="ocw-citation-modal__body"><div dangerouslySetInnerHTML={{ __html: citationModalText }} /></div>
-                    <div className="ocw-citation-modal__footer">
-                        <button onClick={() => setCitationModalOpen(false)}>Close</button>
-                    </div>
-                </div>
-                <style>{`
-                        .ocw-citation-modal { position: fixed; inset: 0; display:flex; align-items:center; justify-content:center; z-index: 9999 }
-                        .ocw-citation-modal__backdrop { position:absolute; inset:0; background: rgba(0,0,0,0.5) }
-                        .ocw-citation-modal__content { position:relative; background:#fff; max-width:80%; max-height:80%; overflow:auto; padding:16px; border-radius:6px; z-index:1 }
-                        .ocw-citation-modal__header { font-weight:600; margin-bottom:8px }
-                        .ocw-citation-modal__body { margin-bottom:12px }
-                        .ocw-citation-modal__footer { text-align:right }
-                    `}</style>
-            </div>
+        {citationPaneOpen && (
+            <CitationPaneStateful id="ocw-citation-pane" title="Citation" contentHtml={citationPaneText} onClose={() => setCitationPaneOpen(false)} />
         )}
         </>
     );
