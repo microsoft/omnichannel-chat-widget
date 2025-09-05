@@ -243,6 +243,7 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
             proactiveChatInNewWindow: false
         }
     });
+    dispatch({ type: LiveChatWidgetActionType.SET_CITATIONS, payload: {} });
 
     // Clear live chat context only if chat widget is fully closed to support transcript calls after sessionclose is called
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
