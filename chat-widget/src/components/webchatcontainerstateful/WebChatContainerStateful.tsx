@@ -105,16 +105,24 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                     }
 
                     // Sequence updates to avoid intermediate states where the dim
-                    // layer or pane might not be fully rendered yet. Set the text
-                    // first, then open the pane on the next animation frame.
-                    setCitationPaneText(text);
+                    // layer or pane might not be fully rendered yet. Open the
+                    // pane first (with empty content) so the DimLayer appears and
+                    // the pane can compute its layout; then inject the text on
+                    // the next animation frame so users don't see a transient
+                    // full-area render.
+                    setCitationPaneText("");
+                    setCitationPaneOpen(true);
+                    // Wait for two animation frames: one for the pane to mount
+                    // and compute styles, another to safely inject content.
                     requestAnimationFrame(() => {
-                        setCitationPaneOpen(true);
-                        // Allow further clicks after a short delay to avoid
-                        // capturing the user's double-click as two opens.
-                        setTimeout(() => {
-                            citationOpeningRef.current = false;
-                        }, 250);
+                        requestAnimationFrame(() => {
+                            setCitationPaneText(text);
+                            // Allow further clicks after a short delay to avoid
+                            // capturing the user's double-click as two opens.
+                            setTimeout(() => {
+                                citationOpeningRef.current = false;
+                            }, 250);
+                        });
                     });
                 }
             } catch (e) {

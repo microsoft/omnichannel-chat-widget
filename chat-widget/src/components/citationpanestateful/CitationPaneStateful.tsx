@@ -37,8 +37,11 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
     const controlId = props.id ?? "ocw-citation-pane";
 
     // Pane style computed to match the webchat widget container bounds so the pane
-    // stays within the widget and scrolls only vertically.
+    // stays within the widget and scrolls only vertically. We also track an
+    // "isReady" flag so we don't render the pane contents until the style is
+    // computed — this prevents a transient render that can appear as a flicker.
     const [paneStyle, setPaneStyle] = useState<React.CSSProperties | null>(null);
+    const [isReady, setIsReady] = useState(false);
 
     // Move focus to the container
     useEffect(() => {
@@ -86,6 +89,9 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
                         zIndex: 10001,
                         boxSizing: "border-box"
                     });
+                    // Make the pane visible after the next paint to avoid layout
+                    // flashes on initial mount.
+                    requestAnimationFrame(() => setIsReady(true));
                     return;
                 }
             } catch (e) {
@@ -108,6 +114,7 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
                 zIndex: 10001,
                 boxSizing: "border-box"
             });
+            requestAnimationFrame(() => setIsReady(true));
         };
 
         compute();
@@ -124,10 +131,14 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
     // Merge a safe style object for the container and cast to CSSProperties to satisfy TS
     const mergedStyle: React.CSSProperties = Object.assign({ position: "relative" }, paneStyle ?? { position: "fixed" }) as React.CSSProperties;
 
+    // If paneStyle hasn't been computed yet, render the DimLayer so clicks
+    // still close overlays but hide the pane itself to avoid flashes.
+    const hiddenStyle: React.CSSProperties = { visibility: isReady ? "visible" : "hidden", pointerEvents: isReady ? "auto" : "none" };
+
     return (
         <>
             <DimLayer brightness="0.2" onClick={handleClose} />
-            <div id={controlId} role="dialog" aria-modal={true} style={mergedStyle}>
+            <div id={controlId} role="dialog" aria-modal={true} style={Object.assign({}, mergedStyle, hiddenStyle)}>
                 {/* Close button in the upper-right corner */}
                 <IconButton
                     iconProps={{ iconName: "Cancel" }}
