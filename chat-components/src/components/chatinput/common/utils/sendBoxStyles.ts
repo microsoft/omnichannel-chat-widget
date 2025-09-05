@@ -22,8 +22,7 @@ export function createChatInputSendBoxStyles(styleProps: IChatInputStyleProps): 
     } = styleProps;
 
     let css = "";
-    console.log("Creating chat input send box styles", styleProps);
-    // Apply border + min-height + background to root; apply background also to inner wrapper for parity (prevents gaps/padding bleed).
+
     if (
         sendBoxBackground ||
         sendBoxBorderTop !== undefined ||
@@ -47,7 +46,7 @@ export function createChatInputSendBoxStyles(styleProps: IChatInputStyleProps): 
         css += ` }
     `;
 
-        // Background also on wrapper for inner padding areas (does not reapply borders)
+        // Background also on wrapper for inner padding areas
         if (sendBoxBackground) {
             css += `.fai-ChatInput__inputWrapper { background-color: ${sendBoxBackground} !important; }\n`;
         }

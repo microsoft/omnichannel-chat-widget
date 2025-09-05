@@ -55,7 +55,7 @@ function ChatInput(props: {chatInputProps: IChatInputProps; suggestionsProps?: I
         controlProps?.onTextChange?.(val);
     };
 
-    // Build attachments element directly (low cost; memo not necessary here)
+    // Build attachments element
     const attachmentsComponent = hasAttachments ? (
         <ChatInputAttachments
             attachmentPreviewItems={attachmentPreviewItems}
@@ -66,7 +66,7 @@ function ChatInput(props: {chatInputProps: IChatInputProps; suggestionsProps?: I
         />
     ) : undefined;
 
-    // Build chat input props (after attachmentsElement so it can be referenced)
+    // Build chat input props
     const inputBoxProps = (): ChatInputProps => {
         const { onSubmitText, onTextChange, attachmentProps, sendButtonProps, ...nativeProps } = controlProps || {};
         const mergedAttachmentProps = { ...defaultChatInputAttachmentProps, ...attachmentProps };
@@ -99,7 +99,7 @@ function ChatInput(props: {chatInputProps: IChatInputProps; suggestionsProps?: I
         } as ChatInputProps;
     };
 
-    // Generate dynamic styles directly (cost is small; can reintroduce memo if profiling shows need)
+    // Generate dynamic styles directly
     const dynamicStylesElement = renderDynamicStyles(styleProps);
 
     console.log("chat input props new:", controlProps, styleProps, suggestionsProps);

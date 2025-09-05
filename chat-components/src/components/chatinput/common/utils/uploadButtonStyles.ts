@@ -1,8 +1,7 @@
 import { IChatInputStyleProps } from "../../interfaces/IChatInputStyleProps";
 
 /**
- * Generates CSS rules for the attachment (upload) button to mirror Web Chat's createUploadButtonStyle behavior.
- * Web Chat reuses sendBoxButton* color props for both send and upload buttons; we replicate that here.
+ * Generates CSS rules for the attachment (upload) button based on a subset of Web Chat style options.
  */
 export function createChatInputUploadButtonStyles(styleProps: IChatInputStyleProps): string {
     const {

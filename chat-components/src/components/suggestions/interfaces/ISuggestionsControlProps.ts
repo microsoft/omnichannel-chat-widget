@@ -3,7 +3,6 @@ import { ISuggestionItem } from "./ISuggestionItem";
 
 /**
  * Control props for the Suggestions component.
- * Extends upstream SuggestionProps (minus click handler & children) to stay aligned with Copilot updates.
  */
 export interface ISuggestionsControlProps extends Partial<Omit<SuggestionProps, "onClick" | "children" | "root" | "icon">> {
     /** Horizontal alignment for the list container. */
