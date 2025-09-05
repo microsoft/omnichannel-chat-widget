@@ -3,7 +3,6 @@ import React, { Dispatch, useEffect, useState } from "react";
 import { createTimer, findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setTabIndices } from "../../common/utils";
 import { defaultCitationContentCSS, defaultCitationPaneStyles } from "./common/defaultProps/defaultCitationPaneProps";
 
-import { DimLayer } from "../dimlayer/DimLayer";
 import CitationDim from "./CitationDim";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -81,8 +80,10 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
                     // coordinates are respected and the pane stays within the
                     // widget bounds.
                     const base = Object.assign({}, defaultCitationPaneStyles.pane) as React.CSSProperties;
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     if (base && (base as any).transform) {
                         // remove centering transform when we compute exact pixel coords
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         delete (base as any).transform;
                     }
                     setPaneStyle(Object.assign({}, base, {
