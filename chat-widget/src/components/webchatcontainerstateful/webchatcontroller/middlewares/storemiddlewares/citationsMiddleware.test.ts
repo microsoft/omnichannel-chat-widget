@@ -10,9 +10,9 @@ jest.mock("@microsoft/omnichannel-chat-components", () => ({
 describe("citationsMiddleware", () => {
 
     it("should process action if schema matches", () => {
-        const dispatch = jest.fn();
-        const next = jest.fn();
-        const middleware = createCitationsMiddleware({ dispatch })(next);
+    const dispatch = jest.fn();
+    const next = jest.fn();
+    const middleware = createCitationsMiddleware({} as any, dispatch)(next);
 
         const action = {
             type: "PROCESS_ACTIVITY", // Add the missing 'type' property
@@ -45,9 +45,9 @@ describe("citationsMiddleware", () => {
     });
 
     it("should not process action if schema does not match", () => {
-        const dispatch = jest.fn();
-        const next = jest.fn();
-        const middleware = createCitationsMiddleware({ dispatch })(next);
+    const dispatch = jest.fn();
+    const next = jest.fn();
+    const middleware = createCitationsMiddleware({} as any, dispatch)(next);
 
         const action = {
             type: "UNKNOWN_ACTION", // Add a default type to satisfy IWebChatAction
@@ -67,9 +67,9 @@ describe("citationsMiddleware", () => {
     });
 
     it("should process action and parse gptFeedback correctly", () => {
-        const dispatch = jest.fn();
-        const next = jest.fn();
-        const middleware = createCitationsMiddleware({ dispatch })(next);
+    const dispatch = jest.fn();
+    const next = jest.fn();
+    const middleware = createCitationsMiddleware({} as any, dispatch)(next);
 
         const action = {
             type: "PROCESS_ACTIVITY", // Add the missing 'type' property
@@ -116,9 +116,9 @@ describe("citationsMiddleware", () => {
     });
 
     it("should not process action if gptFeedback is invalid JSON", () => {
-        const dispatch = jest.fn();
-        const next = jest.fn();
-        const middleware = createCitationsMiddleware({ dispatch })(next);
+    const dispatch = jest.fn();
+    const next = jest.fn();
+    const middleware = createCitationsMiddleware({} as any, dispatch)(next);
 
         const action = {
             type: "INVALID_JSON_ACTION", // Add a default type to satisfy IWebChatAction

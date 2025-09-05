@@ -72,53 +72,50 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // the dim layer and pane to re-render out of sync and create a flicker.
     const citationOpeningRef = useRef(false);
 
+    // ...existing code...
+
+    const { BasicWebChat } = Components;
+    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const {webChatContainerProps, contextDataStore} = props;
+
+    // Delegated click handler for citation anchors. Placed after state is
+    // available so we can prefer reading citations from app state and fall
+    // back to the legacy window map for backward-compatibility in tests.
     useEffect(() => {
-        // Delegated click handler: when an anchor with data-citation-id or href cite: is clicked, open citation pane
         const clickHandler = (ev: MouseEvent) => {
             try {
                 if (citationOpeningRef.current) {
-                    // ignore repeated clicks while opening
                     return;
                 }
 
                 const target = ev.target as HTMLElement;
                 let anchor = target.closest && (target.closest("a[data-citation-id]") as HTMLAnchorElement);
                 if (!anchor) {
-                    // support anchors with href="cite:1"
                     const possible = target.closest && (target.closest("a[href^=\"cite:\"]") as HTMLAnchorElement);
                     anchor = possible || anchor;
                 }
+
                 if (anchor) {
                     ev.preventDefault();
                     citationOpeningRef.current = true;
                     let text = anchor.getAttribute("data-citation-text") ?? "";
                     if (!text) {
                         try {
-                            const globalAny = window as any;
                             const cid = anchor.getAttribute("data-citation-id") || anchor.getAttribute("href");
-                            if (globalAny && globalAny.__ocwCitations && cid) {
-                                text = globalAny.__ocwCitations[cid] ?? "";
+                            // Prefer state-based citations injected by middleware
+                            if ((state as any)?.domainStates?.citations && cid) {
+                                text = (state as any).domainStates.citations[cid] ?? "";
                             }
                         } catch (e) {
                             // ignore
                         }
                     }
 
-                    // Sequence updates to avoid intermediate states where the dim
-                    // layer or pane might not be fully rendered yet. Open the
-                    // pane first (with empty content) so the DimLayer appears and
-                    // the pane can compute its layout; then inject the text on
-                    // the next animation frame so users don't see a transient
-                    // full-area render.
                     setCitationPaneText("");
                     setCitationPaneOpen(true);
-                    // Wait for two animation frames: one for the pane to mount
-                    // and compute styles, another to safely inject content.
                     requestAnimationFrame(() => {
                         requestAnimationFrame(() => {
                             setCitationPaneText(text);
-                            // Allow further clicks after a short delay to avoid
-                            // capturing the user's double-click as two opens.
                             setTimeout(() => {
                                 citationOpeningRef.current = false;
                             }, 250);
@@ -126,18 +123,13 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                     });
                 }
             } catch (e) {
-                // ignore
                 citationOpeningRef.current = false;
             }
         };
 
         document.addEventListener("click", clickHandler);
         return () => document.removeEventListener("click", clickHandler);
-    }, []);
-
-    const { BasicWebChat } = Components;
-    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const {webChatContainerProps, contextDataStore} = props;
+    }, [state]);
 
     const containerStyles: IStackStyles = {
         root: Object.assign(
