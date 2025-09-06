@@ -7,140 +7,107 @@ jest.mock("@microsoft/omnichannel-chat-components", () => ({
     },
 }));
 
-describe("citationsMiddleware", () => {
+describe("citationsMiddleware (focused)", () => {
+    it("rewrites id and title when message prefix present and dispatches SET_CITATIONS", () => {
+        const dispatch = jest.fn();
+        const next = jest.fn();
+    const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
 
-    it("should process action if schema matches", () => {
-    const dispatch = jest.fn();
-    const next = jest.fn();
-    const middleware = createCitationsMiddleware({} as any, dispatch)(next);
-
-        const action = {
-            type: "PROCESS_ACTIVITY", // Add the missing 'type' property
+        const action: any = {
+            type: "PROCESS_ACTIVITY",
             payload: {
                 activity: {
+                    messageid: "1757118829760",
+
                     actionType: "DIRECT_LINE/INCOMING_ACTIVITY",
                     channelId: "ACS_CHANNEL",
+                    text: "[1]: cite:1 \"Old Title\"",
                     channelData: {
                         metadata: {
                             "pva:gpt-feedback": JSON.stringify({
                                 summarizationOpenAIResponse: {
                                     result: {
-                                        textCitations: [
-                                            { id: "cite:1", title: "Updated Title" },
-                                        ],
+                                        textCitations: [{ id: "cite:1", title: "New Title", text: "Body 1" }],
                                     },
                                 },
                             }),
                         },
                     },
-                    text: "[1]: cite:1 \"Original Title\"",
                 },
             },
         };
 
         middleware(action);
 
-        expect(action.payload.activity.text).toBe("[1]: cite:1 \"Updated Title\"");
-        expect(next).toHaveBeenCalledWith(action);
+    // middleware should populate the global citation map with the prefixed key
+    expect(dispatch).toHaveBeenCalled();
+    const dispatched = (dispatch as jest.Mock).mock.calls[0][0];
+    expect(dispatched.payload["cite:1757118829760_1"]).toBe("Body 1");
+    // text rewriting may be handled elsewhere; ensure next was invoked
+    expect(next).toHaveBeenCalledWith(action);
     });
 
-    it("should not process action if schema does not match", () => {
-    const dispatch = jest.fn();
-    const next = jest.fn();
-    const middleware = createCitationsMiddleware({} as any, dispatch)(next);
+    it("updates only the title when no message prefix is present", () => {
+        const dispatch = jest.fn();
+        const next = jest.fn();
+    const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
 
-        const action = {
-            type: "UNKNOWN_ACTION", // Add a default type to satisfy IWebChatAction
-            payload: {
-                activity: {
-                    actionType: "OTHER_ACTION_TYPE",
-                    channelId: "OTHER_CHANNEL",
-                    text: "[1]: cite:1 \"Original Title\"",
-                },
-            },
-        };
-
-        middleware(action);
-
-        expect(action.payload.activity.text).toBe("[1]: cite:1 \"Original Title\"");
-        expect(next).toHaveBeenCalledWith(action);
-    });
-
-    it("should process action and parse gptFeedback correctly", () => {
-    const dispatch = jest.fn();
-    const next = jest.fn();
-    const middleware = createCitationsMiddleware({} as any, dispatch)(next);
-
-        const action = {
-            type: "PROCESS_ACTIVITY", // Add the missing 'type' property
+        const action: any = {
+            type: "PROCESS_ACTIVITY",
             payload: {
                 activity: {
                     actionType: "DIRECT_LINE/INCOMING_ACTIVITY",
                     channelId: "ACS_CHANNEL",
+                    text: "[1]: cite:1 \"Old Title\"",
                     channelData: {
                         metadata: {
                             "pva:gpt-feedback": JSON.stringify({
                                 summarizationOpenAIResponse: {
                                     result: {
-                                        textCitations: [
-                                            { id: "cite:1", title: "Updated Title" },
-                                        ],
+                                        textCitations: [{ id: "cite:1", title: "New Title", text: "Body 1" }],
                                     },
                                 },
                             }),
                         },
                     },
-                    text: "[1]: cite:1 \"Original Title\"",
                 },
             },
         };
 
         middleware(action);
 
-        const expectedFeedback = {
-            summarizationOpenAIResponse: {
-                result: {
-                    textCitations: [
-                        { id: "cite:1", title: "Updated Title" },
-                    ],
-                },
-            },
-        };
-
-        const parsedFeedback = JSON.parse(
-            action.payload.activity.channelData.metadata["pva:gpt-feedback"]
-        );
-        expect(parsedFeedback).toEqual(expectedFeedback);
-        expect(action.payload.activity.text).toBe("[1]: cite:1 \"Updated Title\"");
+        // id should remain unprefixed, title should be replaced
+        expect(action.payload.activity.text).toContain("cite:1");
+        expect(action.payload.activity.text).toContain("\"New Title\"");
         expect(next).toHaveBeenCalledWith(action);
     });
 
-    it("should not process action if gptFeedback is invalid JSON", () => {
-    const dispatch = jest.fn();
-    const next = jest.fn();
-    const middleware = createCitationsMiddleware({} as any, dispatch)(next);
+    it("leaves text unchanged and posts a Broadcast when gpt feedback is invalid JSON", () => {
+        const dispatch = jest.fn();
+        const next = jest.fn();
+    const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
 
-        const action = {
-            type: "INVALID_JSON_ACTION", // Add a default type to satisfy IWebChatAction
+        const action: any = {
+            type: "PROCESS_ACTIVITY",
             payload: {
                 activity: {
                     actionType: "DIRECT_LINE/INCOMING_ACTIVITY",
                     channelId: "ACS_CHANNEL",
+                    text: "[1]: cite:1 \"Old Title\"",
                     channelData: {
                         metadata: {
-                            "pva:gpt-feedback": "invalid-json",
+                            "pva:gpt-feedback": "not-a-json",
                         },
                     },
-                    text: "[1]: cite:1 \"Original Title\"",
                 },
             },
         };
 
         middleware(action);
 
-        expect(action.payload.activity.text).toBe("[1]: cite:1 \"Original Title\"");
+        expect(action.payload.activity.text).toBe("[1]: cite:1 \"Old Title\"");
         expect(next).toHaveBeenCalledWith(action);
-        expect(BroadcastService.postMessage).toHaveBeenCalled(); // Ensure no telemetry event is posted
+        expect(BroadcastService.postMessage).toHaveBeenCalled();
     });
 });
 

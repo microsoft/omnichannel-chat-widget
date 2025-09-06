@@ -17,10 +17,14 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
         if (isApplicable(action)) {
 
             try {
+                console.log("LOPEZ:@@ -<", action.payload.activity);
                 // Use explicit per-message id only when provided by the producer (e.g. `messageid_citeN`).
                 // Do NOT fallback to activity.id or timestamp — keep default behavior unchanged so tests
                 // and existing consumers that expect `cite:1` continue to work.
-                const messagePrefix = `${action.payload?.activity?.messageid}_`;
+                // Use the activity's messageid as the per-message prefix. This field is
+                // populated by the host and is the correct source for a stable message
+                // scoped prefix. Fall back to empty string only if missing.
+                const messagePrefix = action.payload?.activity?.messageid ?? "";
                 const gptFeedback = JSON.parse(action.payload.activity.channelData.metadata["pva:gpt-feedback"]);
                 // Build citation mapping and expose it for the container to render in a pane.
                 const citations = gptFeedback.summarizationOpenAIResponse?.result?.textCitations;
