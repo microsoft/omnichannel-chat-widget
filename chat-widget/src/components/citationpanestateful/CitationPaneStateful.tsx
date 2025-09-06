@@ -25,7 +25,7 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXConfirmationPaneStart
+            Event: TelemetryEvent.UXCitationPaneStart
         });
     }, []);
 
@@ -56,9 +56,9 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
 
         elements = findParentFocusableElementsWithoutChildContainer(controlId as string);
         setTabIndices(elements, initialTabIndexMap, false);
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.ConfirmationPaneLoaded });
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.CitationPaneLoaded });
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.UXConfirmationPaneCompleted,
+            Event: TelemetryEvent.UXCitationPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);

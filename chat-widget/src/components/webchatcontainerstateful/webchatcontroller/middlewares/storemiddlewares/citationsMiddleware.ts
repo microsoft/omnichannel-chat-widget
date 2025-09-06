@@ -7,43 +7,36 @@ import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { LiveChatWidgetActionType } from "../../../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 
-// Now requires a dispatch to always persist citations into app state
+// Middleware that extracts citation metadata from incoming ACS activities and
+// updates in-memory app state with a global citation map. Also rewrites
+// per-message citation labels in the activity text to use a stable,
+// message-scoped prefix when the producer provides a message id.
 
 export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
     dispatch: (action: ILiveChatWidgetAction) => void) => () => (next: (action: IWebChatAction) => void) => (action: IWebChatAction) => {
-
 
     if (action.payload?.activity) {
         if (isApplicable(action)) {
 
             try {
-                console.log("LOPEZ:@@ -<", action.payload.activity);
-                // Use explicit per-message id only when provided by the producer (e.g. `messageid_citeN`).
-                // Do NOT fallback to activity.id or timestamp — keep default behavior unchanged so tests
-                // and existing consumers that expect `cite:1` continue to work.
-                // Use the activity's messageid as the per-message prefix. This field is
-                // populated by the host and is the correct source for a stable message
-                // scoped prefix. Fall back to empty string only if missing.
+                // Use the producer-supplied messageid as a stable per-message prefix
+                // when present. Do not derive a prefix from activity.id or timestamps.
                 const messagePrefix = action.payload?.activity?.messageid ?? "";
                 const gptFeedback = JSON.parse(action.payload.activity.channelData.metadata["pva:gpt-feedback"]);
-                // Build citation mapping and expose it for the container to render in a pane.
+                // Extract citation objects from the model response
                 const citations = gptFeedback.summarizationOpenAIResponse?.result?.textCitations;
-                // Keep replacing citation labels in the raw text where possible
-                // When replacing citations in the text, the original citations may use ids like cite:1
-                // We will map those to unique ids by prefixing with the messagePrefix. The citations array
-                // is expected to contain ids like "cite:1" — we'll create a mapping keyed by the prefixed id.
+                // Rewrite inline citation labels in activity.text to match the global map keys
                 const updatedText = replaceCitations(action.payload.activity.text, citations, messagePrefix);
                 action.payload.activity.text = updatedText;
-
-                // Populate a global citation map used by the UI container. Middleware must not attach DOM handlers or
-                // create UI elements to avoid duplicates — container will render a pane.
+                // Build a global citation map keyed by the prefixed citation id and
+                // dispatch it to app state so the UI container can render citations.
                 try {
                     const citationMap: Record<string, string> = {};
+
                     if (citations && Array.isArray(citations)) {
                         (citations as unknown as Array<{ id?: string; text?: string; title?: string }> ).forEach((citation) => {
                             if (citation?.id) {
-                                // Preserve the 'cite:' scheme at the start so the renderer produces an
-                                // href that starts with 'cite:' and the click handler can intercept it.
+                                // Preserve the 'cite:' scheme so renderer click handling remains consistent
                                 const idWithoutScheme = citation.id.replace(/^cite:/, "");
                                 const prefixedId = `cite:${messagePrefix}_${idWithoutScheme}`;
                                 citationMap[prefixedId] = citation.text || citation.title || "";
@@ -51,10 +44,7 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
                         });
                     }
 
-                    // Read the latest in-memory state instead of relying on the
-                    // `state` object captured when the middleware was created. This
-                    // prevents losing previously stored citations when the widget
-                    // re-initializes because `state` will otherwise be stale.
+                    // Read current in-memory state to merge with existing citations
                     const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                     const existingCitations = inMemoryState?.domainStates?.citations || {};
                     const updatedCitations = { ...existingCitations, ...citationMap };
@@ -88,7 +78,7 @@ const isApplicable = (action: IWebChatAction): boolean => {
 
     if (action?.payload?.activity?.actionType === "DIRECT_LINE/INCOMING_ACTIVITY" && 
         action?.payload?.activity?.channelId === "ACS_CHANNEL") {
-        // Validate if pva:gpt-feedback exists and is not null
+        // Only applicable for ACS incoming activities that include pva:gpt-feedback
         if (action?.payload?.activity?.channelData?.metadata?.["pva:gpt-feedback"]) {
             return true;
         }
@@ -102,23 +92,19 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
     }
 
     try {
-        return text.replace(/\[(\d+)\]:\s(cite:\d+)\s"([^"]+)"/g, (match, number, citeId) => {
-            // If a messagePrefix is provided, we will rewrite the citation id in the text to the
-            // prefixed form so it matches the global citation map keys.
+        return text.replace(/\[(\d+)\]:\s(cite:\d+)\s"([^\\"]+)"/g, (match, number, citeId) => {
+            // Attempt to find a citation object matching the inline cite id and
+            // update the displayed id/title. When a messagePrefix exists we
+            // rewrite the id to the prefixed form so it aligns with the
+            // global citation map keys.
             const lookupId = citeId;
             const citation = citations.find(c => c.id === lookupId);
             if (citation) {
-                // Always produce a prefixed citation id so it lines up with the keys stored in the
-                // global citation map. This intentionally uses the messagePrefix even if undefined
-                // so the produced id will consistently follow the `cite:<prefix>_<id>` shape.
                 const idWithoutScheme = citeId.replace(/^cite:/, "");
-                // Always update the displayed title. Only rewrite the citation id when a
-                // messagePrefix is supplied by the producer so we don't alter existing
-                // non-prefixed ids used in other parts of the system or by tests.
                 const prefixed = messagePrefix ? `cite:${messagePrefix}_${idWithoutScheme}` : citeId;
                 return `[${number}]: ${prefixed} "${citation.title}"`;
             }
-            return match; // Keep the original match if no replacement is found
+            return match;
         });
     } catch (error) {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
@@ -128,7 +114,6 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
                 Exception: error
             }
         });
-        // Return the original text in case of issues
         return text;
     }
 };
