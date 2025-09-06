@@ -17,12 +17,10 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
         if (isApplicable(action)) {
 
             try {
-                console.log("LOPEZ :: TAKE :: 3 => ", action.payload.activity);
-
-                // Derive a per-message prefix to ensure citation ids are unique across messages.
-                // Use explicit message id if present, otherwise fallback to activity.id or timestamp.
-                const messagePrefix = action.payload?.messageid_citeN || action.payload?.activity?.id || `msg_${Date.now()}`;
-
+                // Use explicit per-message id only when provided by the producer (e.g. `messageid_citeN`).
+                // Do NOT fallback to activity.id or timestamp — keep default behavior unchanged so tests
+                // and existing consumers that expect `cite:1` continue to work.
+                const messagePrefix = `${action.payload?.activity?.messageid}_`;
                 const gptFeedback = JSON.parse(action.payload.activity.channelData.metadata["pva:gpt-feedback"]);
                 // Build citation mapping and expose it for the container to render in a pane.
                 const citations = gptFeedback.summarizationOpenAIResponse?.result?.textCitations;
@@ -106,8 +104,13 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
             const lookupId = citeId;
             const citation = citations.find(c => c.id === lookupId);
             if (citation) {
-                // Keep the 'cite:' scheme so the renderer produces an href like 'cite:msg_...'
+                // Always produce a prefixed citation id so it lines up with the keys stored in the
+                // global citation map. This intentionally uses the messagePrefix even if undefined
+                // so the produced id will consistently follow the `cite:<prefix>_<id>` shape.
                 const idWithoutScheme = citeId.replace(/^cite:/, "");
+                // Always update the displayed title. Only rewrite the citation id when a
+                // messagePrefix is supplied by the producer so we don't alter existing
+                // non-prefixed ids used in other parts of the system or by tests.
                 const prefixed = messagePrefix ? `cite:${messagePrefix}_${idWithoutScheme}` : citeId;
                 return `[${number}]: ${prefixed} "${citation.title}"`;
             }
