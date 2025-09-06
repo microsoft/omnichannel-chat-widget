@@ -79,6 +79,22 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                 }
             };
 
+        case LiveChatWidgetActionType.SET_CITATIONS:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    citations: action.payload as Record<string, string>
+                }
+            };
+            return {
+                ...state,
+                domainStates: {
+                    ...state.domainStates,
+                    citations: action.payload as Record<string, string>
+                }
+            };
+
         case LiveChatWidgetActionType.SET_GLOBAL_DIR:
             inMemory = {
                 ...inMemory,

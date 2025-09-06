@@ -3,10 +3,11 @@
 import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
+import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -63,9 +64,72 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         });
     }, []);
 
+    // Citation pane state
+    const [citationPaneOpen, setCitationPaneOpen] = useState(false);
+    const [citationPaneText, setCitationPaneText] = useState("");
+
+    // Guard to prevent handling multiple rapid clicks which could cause
+    // the dim layer and pane to re-render out of sync and create a flicker.
+    const citationOpeningRef = useRef(false);
+
+    // ...existing code...
+
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const {webChatContainerProps, contextDataStore} = props;
+
+    // Delegated click handler for citation anchors. Placed after state is
+    // available so we can prefer reading citations from app state and fall
+    // back to the legacy window map for backward-compatibility in tests.
+    useEffect(() => {
+        const clickHandler = (ev: MouseEvent) => {
+            try {
+                if (citationOpeningRef.current) {
+                    return;
+                }
+
+                const target = ev.target as HTMLElement;
+                // Only consider anchors whose href starts with the citation scheme
+                const anchor = target.closest && (target.closest("a[href^=\"cite:\"]") as HTMLAnchorElement);
+
+                if (anchor) {
+                    ev.preventDefault();
+                    citationOpeningRef.current = true;
+                    // Rely only on the href to identify the citation key
+                    let text = "";
+                    try {
+                        const cid = anchor.getAttribute("href");
+                        // Prefer state-based citations injected by middleware
+                        if ((state as any)?.domainStates?.citations && cid) {
+                            text = (state as any).domainStates.citations[cid] ?? "";
+                        }
+                        // If state lookup failed, fall back to the anchor's title or innerText
+                        if (!text) {
+                            text = anchor.getAttribute("title") || anchor.innerText || "";
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+
+                    setCitationPaneText("");
+                    setCitationPaneOpen(true);
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            setCitationPaneText(text);
+                            setTimeout(() => {
+                                citationOpeningRef.current = false;
+                            }, 250);
+                        });
+                    });
+                }
+            } catch (e) {
+                citationOpeningRef.current = false;
+            }
+        };
+
+        document.addEventListener("click", clickHandler);
+        return () => document.removeEventListener("click", clickHandler);
+    }, [state]);
 
     const containerStyles: IStackStyles = {
         root: Object.assign(
@@ -312,6 +376,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <BasicWebChat></BasicWebChat>
         </Stack>
+        {citationPaneOpen && (
+            <CitationPaneStateful id="ocw-citation-pane" title="Citation" contentHtml={citationPaneText} onClose={() => setCitationPaneOpen(false)} />
+        )}
         </>
     );
 };

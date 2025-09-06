@@ -48,6 +48,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         domainStates: {
             liveChatConfig: props.chatConfig,
             widgetElementId: "",
+            // Map of citation id => content injected by citations middleware
+            citations: {},
             renderingMiddlewareProps: props.webChatContainerProps?.renderingMiddlewareProps,
             middlewareLocalizedTexts: defaultMiddlewareLocalizedTexts,
             preChatSurveyResponse: "{}",
