@@ -1,12 +1,7 @@
-import React, { Dispatch, useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ChatInput } from "@microsoft/omnichannel-chat-components";
 import { hooks as WebChatHooks } from "botframework-webchat"; // Only for send, suggestions, card actions
-import useFacadeChatSDKStore from "../../hooks/useFacadeChatSDKStore";
 import type { SendBoxAttachment } from "botframework-webchat-core";
-import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
-import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
-import useChatContextStore from "../../hooks/useChatContextStore";
-import { ConversationState } from "../../contexts/common/ConversationState";
 import { useFileUploadProgress } from "../../hooks/useFileUploadProgress";
 import { getDefaultControlProps } from "./common/defaultProps/defaultControlProps";
 import { getDefaultStyleProps } from "./common/defaultProps/defaultStyleProps";
@@ -14,48 +9,43 @@ import { ISuggestionItem } from "@microsoft/omnichannel-chat-components/lib/type
 import { IChatInputStatefulProps } from "./interfaces/IChatButtonStatefulParams";
 import useTypingIndicator from "../../hooks/useTypingIndicator";
 import useOfflineStatus from "../../hooks/useOfflineStatus";
+import { IChatPreviewAttachment } from "@microsoft/omnichannel-chat-components/lib/types/components/chatinput/interfaces/IChatInputAttachmentProps";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const { useSuggestedActions, usePerformCardAction, useActivities } = WebChatHooks as any;
+const { useSuggestedActions, usePerformCardAction, useActivities } = WebChatHooks;
 
 export const ChatInputStateful: React.FC<IChatInputStatefulProps> = (props) => {
     const { suggestionsProps, chatInputProps } = props;
     const isOffline = useOfflineStatus();
+    const { simulateUpload, cancelUpload, getProgress } = useFileUploadProgress();
+    
     const [webChatSuggestedActions] = useSuggestedActions();
     const performCardAction = usePerformCardAction();
     const [activities] = useActivities();
+    const sendMessage = WebChatHooks.useSendMessage();
+    const { useStyleOptions } = WebChatHooks as any;
+    const [styleOptions] = useStyleOptions();
+    
+    
     const [shouldShowSuggestions, setShouldShowSuggestions] = useState(false);
     const [lastActivityId, setLastActivityId] = useState<string | null>(null);
-    const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    // Send eligibility now only depends on offline status (hideSendBox managed upstream)
-    const sendMessage = WebChatHooks.useSendMessage();
-    const [facadeChatSDK] = useFacadeChatSDKStore();
-    const { simulateUpload, cancelUpload, getProgress } = useFileUploadProgress();
-    const [previewAttachments, setPreviewAttachments] = useState<Array<{ 
-        id: string; 
-        text: string; 
-        _file: File;
-    }>>([]);
-    const isMinimized = state.appStates.isMinimized;
+    const [previewAttachments, setPreviewAttachments] = useState<IChatPreviewAttachment[]>([]);
     
     // Create attachment preview items with progress for ChatInput
-    const attachmentPreviewItems = useMemo(() => previewAttachments.map(att => ({
+    const attachmentPreviewItems: ReadonlyArray<IChatPreviewAttachment> = useMemo(() => previewAttachments.map(att => ({
         id: att.id,
-        text: att.text,
+        text: att.text || att.file?.name,
         progress: (() => { const p = getProgress(att.id); return p !== undefined ? p / 100 : undefined; })(),
-        _file: att._file
+        file: att.file
     })), [previewAttachments, getProgress]);
 
     // Handle file attachment selection (optimized)
     const handleFilesSelected = useCallback((files: File[]) => {
         if (!files?.length) return;
         const ts = Date.now();
-        const newItems = files.map((file, i) => ({
+        const newItems: IChatPreviewAttachment[] = files.map((file, i) => ({
             id: `${ts}-${i}`,
-            text: file.name,
-            _file: file,
             file,
-            blob: file
+            text: file.name
         }));
         setPreviewAttachments(prev => [...prev, ...newItems]);
         newItems.forEach(a => simulateUpload(a.id));
@@ -78,32 +68,23 @@ export const ChatInputStateful: React.FC<IChatInputStatefulProps> = (props) => {
         }
     }, [previewAttachments, cancelUpload]);
 
-    // Early return if component should be hidden
-    if (isMinimized || state.appStates.conversationState !== ConversationState.Active) {
-        return null;
-    }
-
     // Handle message sending
-    const handleSend = useCallback((message: string, attachments?: ReadonlyArray<{ id: string; text?: string; progress?: number; _file?: File; }>) => {
+    const handleSend = useCallback((message: string, attachments?: ReadonlyArray<IChatPreviewAttachment>) => {
         if (isOffline) return false;
-        const toSend = attachments?.length ? attachments : previewAttachments;
-        const webChatAttachments: SendBoxAttachment[] = toSend.filter(a => !!a._file).map(a => ({ blob: a._file as File }));
-        const text = message.trim();
-        if (!text && !webChatAttachments.length) return false;
+        const toSend = attachments?.length ? attachments : attachmentPreviewItems;
+        const files: File[] = toSend.map(a => a.file).filter((f): f is File => !!f);
+        const webChatAttachments: SendBoxAttachment[] = files.map(f => ({ blob: f }));
+        if (!message && !webChatAttachments.length) return false;
         try {
-            sendMessage(text || undefined, "keyboard", webChatAttachments.length ? { attachments: webChatAttachments } : undefined);
+            sendMessage(message || undefined, "keyboard", webChatAttachments.length ? { attachments: webChatAttachments } : undefined);
             setPreviewAttachments([]);
             return true;
         } catch {
             return false;
         }
-    }, [sendMessage, previewAttachments, isOffline]);
+    }, [sendMessage, attachmentPreviewItems, isOffline]);
 
-    const handleTextChange = useTypingIndicator({
-        enabled: true,
-        canSend: !isOffline,
-        sendTyping: () => facadeChatSDK?.sendTypingEvent()
-    });
+    const handleTextChange = useTypingIndicator({ enabled: !!styleOptions.sendTypingIndicator, canSend: !isOffline });
 
     // Handle suggestion clicks
     const handleSuggestionClick = useCallback((suggestion: ISuggestionItem) => {
@@ -112,29 +93,30 @@ export const ChatInputStateful: React.FC<IChatInputStatefulProps> = (props) => {
             const isCardActionObject = !!val && typeof val === "object" && "type" in (val as Record<string, unknown>);
 
             if (isCardActionObject) {
-                // Forward the original Web Chat card action to Web Chat to let existing middlewares handle it
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                performCardAction(val as any);
+                performCardAction(val);
             } else {
-                // Fallback: construct a minimal card action from suggestion fields
-                const rawValue = val ?? suggestion.text;
-                const valueStr = typeof rawValue === "string" ? rawValue : JSON.stringify(rawValue);
-                const type = suggestion.type ?? "imBack";
-
-                performCardAction({
-                    type,
-                    value: valueStr,
-                    title: suggestion.text,
-                    displayText: suggestion.displayText ?? suggestion.text
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                } as any);
+                console.error("Error performing card action:", suggestion);
             }
-
             setShouldShowSuggestions(false);
         } catch (error) {
             console.warn("Error performing card action:", error);
         }
     }, [performCardAction]);
+
+    // Convert WebChat actions to suggestions format
+    const convertedSuggestions = useMemo(() => {
+        if (!webChatSuggestedActions?.length || !shouldShowSuggestions) return [];
+        return webChatSuggestedActions.map((action: unknown) => {
+            const a = action as Record<string, unknown>;
+            return {
+                text: (a.title || a.text || a.displayText || "Action") as string,
+                value: a,
+                displayText: (a.displayText || a.title || a.text) as string,
+                type: (a.type || "postBack") as string,
+                disabled: false
+            };
+        });
+    }, [webChatSuggestedActions, shouldShowSuggestions]);
 
     // Build control props
     const controlProps = useMemo(() => {
@@ -171,20 +153,23 @@ export const ChatInputStateful: React.FC<IChatInputStatefulProps> = (props) => {
         ...chatInputProps?.styleProps
     }), [chatInputProps?.styleProps]);
 
-    // Convert WebChat actions to suggestions format
-    const convertedSuggestions = useMemo(() => {
-        if (!webChatSuggestedActions?.length || !shouldShowSuggestions) return [];
-        return webChatSuggestedActions.map((action: unknown) => {
-            const a = action as Record<string, unknown>;
-            return {
-                text: (a.title || a.text || a.displayText || "Action") as string,
-                value: a,
-                displayText: (a.displayText || a.title || a.text) as string,
-                type: (a.type || "postBack") as string,
-                disabled: false
-            };
-        });
-    }, [webChatSuggestedActions, shouldShowSuggestions]);
+    // Build suggestions props
+    const suggestedActionsProps = useMemo(() => {
+        const upstream = suggestionsProps || {};
+        return {
+            controlProps: {
+                ...upstream.controlProps,
+                suggestions: convertedSuggestions,
+                onSuggestionClick: handleSuggestionClick,
+                onSuggestionsClear: () => setShouldShowSuggestions(false),
+                autoHide: true,
+                horizontalAlignment: upstream.controlProps?.horizontalAlignment
+            },
+            styleProps: upstream.styleProps,
+            componentOverrides: upstream.componentOverrides
+        };
+    }, [suggestionsProps, convertedSuggestions, handleSuggestionClick]);
+
 
     // Monitor WebChat suggestions
     useEffect(() => {
@@ -206,22 +191,6 @@ export const ChatInputStateful: React.FC<IChatInputStatefulProps> = (props) => {
         }
     }, [activities, lastActivityId]);
 
-    // Build suggestions props in new structure (controlProps/styleProps/componentOverrides)
-    const suggestedActionsProps = useMemo(() => {
-        const upstream = suggestionsProps || {};
-        return {
-            controlProps: {
-                ...upstream.controlProps,
-                suggestions: convertedSuggestions,
-                onSuggestionClick: handleSuggestionClick,
-                onSuggestionsClear: () => setShouldShowSuggestions(false),
-                autoHide: true,
-                horizontalAlignment: upstream.controlProps?.horizontalAlignment
-            },
-            styleProps: upstream.styleProps,
-            componentOverrides: upstream.componentOverrides
-        };
-    }, [suggestionsProps, convertedSuggestions, handleSuggestionClick]);
 
     return (
         <ChatInput

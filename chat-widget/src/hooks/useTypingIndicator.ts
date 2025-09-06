@@ -1,15 +1,15 @@
 import { useCallback, useRef } from "react";
+import useFacadeChatSDKStore from "./useFacadeChatSDKStore";
 
 export interface UseTypingIndicatorOptions {
     enabled?: boolean;                 // Feature flag
     canSend?: boolean;                 // Unified gating flag (online + not offline)
     idleResetMs?: number;              // Override idle gap (default 2000)
     intervalMs?: number;               // Override periodic interval (default 4000)
-    sendTyping?: () => Promise<void> | void; // Transport function
 }
 
 // Internal defaults
-const DEFAULT_IDLE_RESET_MS = 2000;
+const DEFAULT_IDLE_RESET_MS = 1000;
 const DEFAULT_INTERVAL_MS = 4000;
 
 /**
@@ -22,15 +22,15 @@ export default function useTypingIndicator(options: UseTypingIndicatorOptions) {
         enabled = true,
         canSend,
         idleResetMs = DEFAULT_IDLE_RESET_MS,
-        intervalMs = DEFAULT_INTERVAL_MS,
-        sendTyping
+        intervalMs = DEFAULT_INTERVAL_MS
     } = options;
 
     const lastKeypressAtRef = useRef(0);
     const lastSentAtRef = useRef(0);
+    const [facadeChatSDK] = useFacadeChatSDKStore();
 
     const handleUserTextChange = useCallback((value: string) => {
-        if (!enabled || !sendTyping || !canSend) return;
+        if (!enabled || !canSend) return;
         const trimmed = value?.trim();
         if (!trimmed) return;
 
@@ -47,13 +47,13 @@ export default function useTypingIndicator(options: UseTypingIndicatorOptions) {
 
         lastKeypressAtRef.current = now;
         try {
-            const res = sendTyping();
+            const res = facadeChatSDK?.sendTypingEvent();
             if (res && typeof (res as Promise<void>).then === "function") {
                 (res as Promise<void>).catch(() => { /* swallow */ });
             }
             lastSentAtRef.current = now;
         } catch { /* non-fatal */ }
-    }, [enabled, canSend, idleResetMs, intervalMs, sendTyping]);
+    }, [enabled, canSend, idleResetMs, intervalMs]);
 
     return handleUserTextChange;
 }
