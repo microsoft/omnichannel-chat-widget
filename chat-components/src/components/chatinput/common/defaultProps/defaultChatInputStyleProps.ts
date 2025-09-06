@@ -23,7 +23,7 @@ export const defaultChatInputStyleProps: IChatInputStyleProps = {
     },
 
     inputFieldStyleProps: {
-        borderRadius: "15px"
+        borderRadius: "0px"
     },
 
     dragDropOverlayStyleProps: {

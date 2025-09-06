@@ -26,4 +26,6 @@ export const defaultChatInputControlProps: IChatInputControlProps = {
     // === Theme ===
     theme: webLightTheme,
 
+    hideSendBox: false
+
 };

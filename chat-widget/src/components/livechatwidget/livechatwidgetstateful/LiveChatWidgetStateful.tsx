@@ -797,21 +797,28 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // We permanently hide the legacy Web Chat send box (hideSendBox: true) and repurpose the incoming
     // webChatStyles.hideSendBox flag (if provided) to control visibility of the new Fluent ChatInput.
-    const showChatInput = webChatStyles?.hideSendBox !== false;
     const styleOptions = React.useMemo(() => ({
         ...webChatStyles,
         bubbleBackground,
         bubbleTextColor,
-        hideSendBox: true, // always hide webchat send box
+        hideSendBox: true, // always hide legacy webchat send box (ChatInput replaces it)
     }), [webChatStyles, bubbleBackground, bubbleTextColor]);
-
     // map Web Chat SendBox styles to ChatInput/Suggestions
     const mappedStyles = React.useMemo(() => mapWebChatSendBoxStyles(webChatStyles),
         [webChatStyles]
     );
     
+    const incomingHideSend = ((livechatProps.chatInputProps?.controlProps as unknown) as any)?.hideSendBox === true; // eslint-disable-line @typescript-eslint/no-explicit-any
     const chatInputProps = {
         ...livechatProps.chatInputProps,
+        controlProps: {
+            ...(livechatProps.chatInputProps?.controlProps || {}),
+            // Backward compatible mapping of legacy Web Chat hideSendBox flag -> ChatInput hideSendBox.
+            // Cast to any to avoid version skew between widget and components package type generations.
+            ...(webChatStyles.hideSendBox === true || incomingHideSend
+                ? { hideSendBox: true } as any // eslint-disable-line @typescript-eslint/no-explicit-any
+                : {})
+        },
         styleProps: {
             ...mappedStyles.chatInput,
             ...livechatProps.chatInputProps?.styleProps
@@ -904,7 +911,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...livechatProps} />)}
 
-                        {showChatInput && shouldShowWebChatContainer(state) && (<ChatInputStateful chatInputProps={chatInputProps} suggestionsProps={suggestionsProps} />)}
+                        {state.appStates.conversationState === ConversationState.Active &&
+                            !state.appStates.isMinimized &&
+                            !chatInputProps?.controlProps?.hideSendBox &&
+                            shouldShowWebChatContainer(state) && (
+                                <ChatInputStateful
+                                    chatInputProps={chatInputProps}
+                                    suggestionsProps={suggestionsProps}
+                                />
+                            )}
 
                         {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 

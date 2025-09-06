@@ -36,15 +36,18 @@ function ChatInput(props: {chatInputProps: IChatInputProps; suggestionsProps?: I
         const value = data?.value?.trim() || "";
         if (!value && !hasAttachments) return; // nothing to submit
         const attachments = hasAttachments ? attachmentPreviewItems : undefined;
-        try {
-            controlProps?.onSubmitText?.(value, attachments);
-            // Clear input only after successful submit
-            editorRef.current?.update(() => {
-                $getRoot().clear().select();
-            });
-            // Clear attachments after sent
+
+        const clearEditor = () => {
+            editorRef.current?.update(() => { $getRoot().clear().select(); });
             if (hasAttachments) {
                 controlProps?.attachmentProps?.onFilesChange?.([]);
+            }
+        };
+
+        try {
+            const result = controlProps?.onSubmitText?.(value, attachments);
+            if (result !== false) {
+                clearEditor();
             }
         } catch (err) {
             console.error("Error submitting chat input:", err);
@@ -124,10 +127,13 @@ function ChatInput(props: {chatInputProps: IChatInputProps; suggestionsProps?: I
         </CopilotProvider>
     );
 
-    // Return wrapped component
+    if (controlProps.hideSendBox === true) {
+        return null;
+    }
+
     return (
-        <div 
-            id={controlProps.chatInputId} 
+        <div
+            id={controlProps.chatInputId}
             className="lcw-chat-input-box"
             style={styleProps?.containerStyleProps}
         >

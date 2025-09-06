@@ -16,11 +16,11 @@ export interface IChatInputAttachmentItem {
 export interface IChatInputControlProps extends Omit<ChatInputProps, "onSubmit"> {
     
     // === event handlers ===
-    onSubmitText?: (value: string, attachments?: ReadonlyArray<IChatInputAttachmentItem>) => void;
+    onSubmitText?: (value: string, attachments?: ReadonlyArray<IChatInputAttachmentItem>) => void | boolean;
     onTextChange?: (value: string) => void;
     charactersRemainingMessage: (remaining: number) => string;
     onLineModeChange?: (newState: ChatInputLineModeData) => void;
-    
+
     // === Attachment configuration ===
     attachmentProps?: IChatInputAttachmentProps;
 
@@ -36,4 +36,6 @@ export interface IChatInputControlProps extends Omit<ChatInputProps, "onSubmit">
 
     // === Drag & Drop overlay text customization ===
     dragDropOverlayText?: string;
+
+    hideSendBox?: boolean;
 }

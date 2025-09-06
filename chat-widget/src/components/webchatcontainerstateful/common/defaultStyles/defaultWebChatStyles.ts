@@ -23,13 +23,14 @@ export const defaultWebChatStyles: StyleOptions = {
     rootHeight: "100%",
     rootWidth: "100%",
     sendBoxTextWrap: true,
-    sendBoxHeight: 60,
+    // sendBoxHeight: 60,
     sendBoxMaxHeight: 96,
     sendBoxBackground: "White",
     showAvatarInGroup: true,
     suggestedActionsStackedHeight: 125,
     suggestedActionsStackedOverflow: "scroll" as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     typingAnimationDuration: 3500,
+    uploadMultiple: true,
     emojiSet: {
         ":)": "😊",
         ":-)": "😊",
