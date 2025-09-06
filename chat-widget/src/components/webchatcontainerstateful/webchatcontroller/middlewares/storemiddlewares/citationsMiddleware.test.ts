@@ -11,7 +11,7 @@ describe("citationsMiddleware (focused)", () => {
     it("rewrites id and title when message prefix present and dispatches SET_CITATIONS", () => {
         const dispatch = jest.fn();
         const next = jest.fn();
-    const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
+        const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
 
         const action: any = {
             type: "PROCESS_ACTIVITY",
@@ -39,18 +39,18 @@ describe("citationsMiddleware (focused)", () => {
 
         middleware(action);
 
-    // middleware should populate the global citation map with the prefixed key
-    expect(dispatch).toHaveBeenCalled();
-    const dispatched = (dispatch as jest.Mock).mock.calls[0][0];
-    expect(dispatched.payload["cite:1757118829760_1"]).toBe("Body 1");
-    // text rewriting may be handled elsewhere; ensure next was invoked
-    expect(next).toHaveBeenCalledWith(action);
+        // middleware should populate the global citation map with the prefixed key
+        expect(dispatch).toHaveBeenCalled();
+        const dispatched = (dispatch as jest.Mock).mock.calls[0][0];
+        expect(dispatched.payload["cite:1757118829760_1"]).toBe("Body 1");
+        // text rewriting may be handled elsewhere; ensure next was invoked
+        expect(next).toHaveBeenCalledWith(action);
     });
 
     it("updates only the title when no message prefix is present", () => {
         const dispatch = jest.fn();
         const next = jest.fn();
-    const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
+        const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
 
         const action: any = {
             type: "PROCESS_ACTIVITY",
@@ -85,7 +85,7 @@ describe("citationsMiddleware (focused)", () => {
     it("leaves text unchanged and posts a Broadcast when gpt feedback is invalid JSON", () => {
         const dispatch = jest.fn();
         const next = jest.fn();
-    const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
+        const middleware = createCitationsMiddleware({} as any, dispatch)()(next);
 
         const action: any = {
             type: "PROCESS_ACTIVITY",
