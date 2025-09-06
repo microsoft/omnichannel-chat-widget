@@ -89,26 +89,26 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 }
 
                 const target = ev.target as HTMLElement;
-                let anchor = target.closest && (target.closest("a[data-citation-id]") as HTMLAnchorElement);
-                if (!anchor) {
-                    const possible = target.closest && (target.closest("a[href^=\"cite:\"]") as HTMLAnchorElement);
-                    anchor = possible || anchor;
-                }
+                // Only consider anchors whose href starts with the citation scheme
+                const anchor = target.closest && (target.closest("a[href^=\"cite:\"]") as HTMLAnchorElement);
 
                 if (anchor) {
                     ev.preventDefault();
                     citationOpeningRef.current = true;
-                    let text = anchor.getAttribute("data-citation-text") ?? "";
-                    if (!text) {
-                        try {
-                            const cid = anchor.getAttribute("data-citation-id") || anchor.getAttribute("href");
-                            // Prefer state-based citations injected by middleware
-                            if ((state as any)?.domainStates?.citations && cid) {
-                                text = (state as any).domainStates.citations[cid] ?? "";
-                            }
-                        } catch (e) {
-                            // ignore
+                    // Rely only on the href to identify the citation key
+                    let text = "";
+                    try {
+                        const cid = anchor.getAttribute("href");
+                        // Prefer state-based citations injected by middleware
+                        if ((state as any)?.domainStates?.citations && cid) {
+                            text = (state as any).domainStates.citations[cid] ?? "";
                         }
+                        // If state lookup failed, fall back to the anchor's title or innerText
+                        if (!text) {
+                            text = anchor.getAttribute("title") || anchor.innerText || "";
+                        }
+                    } catch (e) {
+                        // ignore
                     }
 
                     setCitationPaneText("");
