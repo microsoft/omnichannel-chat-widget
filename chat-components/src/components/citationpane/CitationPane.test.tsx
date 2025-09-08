@@ -371,8 +371,8 @@ it("renders top close button on the left when topCloseButtonPosition is 'topLeft
     };
 
     const { container } = render(<CitationPane controlProps={controlProps} />);
-    const topCloseButton = container.querySelector("button#default-top-close");
-    expect(topCloseButton).toHaveStyle("left: 8px");
+    const topCloseButton = container.querySelector("button#ocw-citation-pane-top-close");
+    expect(topCloseButton).toHaveStyle("left: 0.5em");
 });
 
 it("does not render top close button when hideTopCloseButton is true", () => {
@@ -381,7 +381,7 @@ it("does not render top close button when hideTopCloseButton is true", () => {
     };
 
     const { container } = render(<CitationPane controlProps={controlProps} />);
-    const topCloseButton = container.querySelector("button#default-top-close");
+    const topCloseButton = container.querySelector("button#ocw-citation-pane-top-close");
     expect(topCloseButton).not.toBeInTheDocument();
 });
 
@@ -391,7 +391,7 @@ it("does not render bottom close button when hideCloseButton is true", () => {
     };
 
     const { container } = render(<CitationPane controlProps={controlProps} />);
-    const bottomCloseButton = container.querySelector("button#default-close");
+    const bottomCloseButton = container.querySelector("button#ocw-citation-pane-close");
     expect(bottomCloseButton).not.toBeInTheDocument();
 });
 
@@ -415,7 +415,7 @@ it("calls onClose when top close button is clicked", () => {
     };
 
     const { container } = render(<CitationPane controlProps={controlProps} />);
-    const topCloseButton = container.querySelector("button#default-top-close");
+    const topCloseButton = container.querySelector("button#ocw-citation-pane-top-close");
     fireEvent.click(topCloseButton);
 
     expect(handleClose).toHaveBeenCalledTimes(1);
@@ -431,7 +431,7 @@ it("renders with custom styles", () => {
     const citationPane = container.firstChild as HTMLElement;
 
     expect(citationPane).toHaveStyle("background-color: blue");
-    expect(screen.getByText("Default Title")).toHaveStyle("color: white");
+    expect(screen.getByText("Citation")).toHaveStyle("color: white");
 });
 
 it("renders with custom class names", () => {

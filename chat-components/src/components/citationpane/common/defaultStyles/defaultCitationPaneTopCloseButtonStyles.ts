@@ -2,17 +2,17 @@ import { IStyle } from "@fluentui/react";
 
 export const defaultCitationPaneTopCloseButtonStyles: IStyle = {
     position: "absolute",
-    top: "8px",
-    right: "8px",
-    minWidth: "32px",
-    height: "32px",
+    top: "0.5em", // Scalable positioning
+    right: "0.5em", // Scalable positioning
+    minWidth: "2em", // Scalable minimum width
+    height: "2em", // Scalable height
     padding: "0",
-    fontSize: "16px",
+    fontSize: "1em", // Scalable font size
     fontWeight: "bold",
     color: "#605e5c",
     backgroundColor: "transparent",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "0.25em", // Scalable border radius
     cursor: "pointer",
     zIndex: 1000,
     ":hover": {
@@ -24,7 +24,7 @@ export const defaultCitationPaneTopCloseButtonStyles: IStyle = {
         color: "#201f1e"
     },
     ":focus": {
-        outline: "2px solid #605e5c",
-        outlineOffset: "2px"
+        outline: "0.125em solid #605e5c", // Scalable outline
+        outlineOffset: "0.125em" // Scalable offset
     }
 };
