@@ -34,6 +34,7 @@ export const Suggestions = (props: ISuggestionsProps) => {
             horizontalAlignment={controlProps.horizontalAlignment}
             action={componentOverrides.action}
             style={styleProps.containerStyleProps}
+            aria-label={controlProps.ariaLabel}
         >
             {dynamicStyles && <style>{dynamicStyles}</style>}
             {suggestions.map((suggestion, index) => {

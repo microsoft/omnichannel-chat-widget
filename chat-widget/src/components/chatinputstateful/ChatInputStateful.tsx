@@ -6,6 +6,7 @@ import type { SendBoxAttachment } from "botframework-webchat-core";
 import { getDefaultControlProps } from "./common/defaultProps/defaultControlProps";
 import { getDefaultStyleProps } from "./common/defaultProps/defaultStyleProps";
 import { IChatInputStatefulProps } from "./interfaces/IChatButtonStatefulParams";
+import { mapLocalizedStringsToChatInputProps, mapLocalizedStringsToSuggestionsProps } from "./common/utils/mapLocalizationStrings";
 import useTypingIndicator from "../../hooks/useTypingIndicator";
 import useOfflineStatus from "../../hooks/useOfflineStatus";
 import { useChatInputAttachments } from "./hooks/useChatInputAttachments";
@@ -15,10 +16,17 @@ import { useSuggestionsState } from "./hooks/useSuggestionsState";
 const { useStyleOptions } = WebChatHooks as any;
 
 export const ChatInputStateful = (props: IChatInputStatefulProps) => {
-    const { suggestionsProps, chatInputProps } = props;
+    const { suggestionsProps, chatInputProps, overrideLocalizedStrings } = props;
     const isOffline = useOfflineStatus();
     const sendMessage = WebChatHooks.useSendMessage();
     const [styleOptions] = useStyleOptions();
+
+
+    //  Localized Strings Mapping
+    const localizedStrings = useMemo(() => {
+        if (!overrideLocalizedStrings) return {};
+        return mapLocalizedStringsToChatInputProps(overrideLocalizedStrings);
+    }, [overrideLocalizedStrings]);
 
     // Attachments management hook
     const { previewAttachments, addFiles, removeAt, clearAttachments, onPaste } = useChatInputAttachments();
@@ -60,35 +68,23 @@ export const ChatInputStateful = (props: IChatInputStatefulProps) => {
     const sendTypingEnabled = Boolean((styleOptions as unknown as { sendTypingIndicator?: boolean })?.sendTypingIndicator);
     const handleTextChange = useTypingIndicator({ enabled: sendTypingEnabled, canSend: !isOffline });
 
-
-    // Build control props
-    const controlProps = useMemo(() => {
-        const defaultProps = getDefaultControlProps();
-        const customControlProps = chatInputProps?.controlProps;
-
-        return {
-            ...defaultProps,
-            ...customControlProps,
-            onSubmitText: handleSend,
-            onTextChange: handleTextChange,
-            onPaste: onPaste,
-            attachmentProps: {
-                ...defaultProps.attachmentProps,
-                ...customControlProps?.attachmentProps,
-                attachmentPreviewItems: previewAttachments,
-                onAttachmentRemove: handleRemoveAttachment,
-                onFilesChange: handleFilesChange,
-            },
-        };
-    }, [
-        handleSend,
-        handleTextChange,
-        onPaste,
-        handleFilesChange,
-        previewAttachments,
-        handleRemoveAttachment,
-        chatInputProps?.controlProps
-    ]);
+    // Ultra-simplified control props - following ChatButtonStateful pattern
+    const controlProps = useMemo(() => ({
+        ...getDefaultControlProps(),
+        ...chatInputProps?.controlProps,
+        ...localizedStrings,
+        onSubmitText: handleSend,
+        onTextChange: handleTextChange,
+        onPaste: onPaste,
+        attachmentProps: {
+            ...getDefaultControlProps().attachmentProps,
+            ...chatInputProps?.controlProps?.attachmentProps,
+            ...localizedStrings?.attachmentProps,
+            attachmentPreviewItems: previewAttachments,
+            onAttachmentRemove: handleRemoveAttachment,
+            onFilesChange: handleFilesChange,
+        },
+    }), [localizedStrings, chatInputProps?.controlProps, handleSend, handleTextChange, onPaste, previewAttachments, handleRemoveAttachment, handleFilesChange]);
 
     // Build style props
     const styleProps = useMemo(() => ({
@@ -96,8 +92,11 @@ export const ChatInputStateful = (props: IChatInputStatefulProps) => {
         ...chatInputProps?.styleProps
     }), [chatInputProps?.styleProps]);
 
-    // Suggestions props
-    const { suggestionsProps: mergedSuggestionsProps } = useSuggestionsState({ props: suggestionsProps });
+    // 🎯 EXTENSIBLE APPROACH: Use mapping function for suggestions localization
+    const { suggestionsProps: mergedSuggestionsProps } = useSuggestionsState({ 
+        props: suggestionsProps,
+        localizedStrings: overrideLocalizedStrings ? mapLocalizedStringsToSuggestionsProps(overrideLocalizedStrings) : undefined
+    });
 
     return (
         <ChatInput

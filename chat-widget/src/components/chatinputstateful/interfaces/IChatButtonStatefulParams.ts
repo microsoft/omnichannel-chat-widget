@@ -8,4 +8,8 @@ export interface IChatInputStatefulProps {
 
     // Props for the suggestions component
     suggestionsProps?: ISuggestionsProps;
+
+    // overrideLocalizedStrings props
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    overrideLocalizedStrings?: any;
 }

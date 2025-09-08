@@ -5,6 +5,9 @@ import type { ISuggestionsProps } from "@microsoft/omnichannel-chat-components/l
 export interface UseChatSuggestionsOptions {
     props?: ISuggestionsProps | undefined;
     autoHide?: boolean; // default true
+    localizedStrings?: {
+        ariaLabel?: string;
+    };
 }
 
 /**
@@ -14,10 +17,13 @@ export function useSuggestionsState(options?: UseChatSuggestionsOptions) {
     const { suggestions, setShouldShowSuggestions, onSuggestionClick } = useSuggestionsAdapter();
     const upstream = options?.props ?? {};
     const autoHide = options?.autoHide !== false; // default true
+    const localizedStrings = options?.localizedStrings;
 
     const suggestionsProps: ISuggestionsProps = useMemo(() => ({
         controlProps: {
             ...upstream.controlProps,
+            // Apply localized strings
+            ...(localizedStrings?.ariaLabel && { ariaLabel: localizedStrings.ariaLabel }),
             suggestions,
             onSuggestionClick: onSuggestionClick,
             onSuggestionsClear: () => setShouldShowSuggestions(false),
@@ -26,7 +32,7 @@ export function useSuggestionsState(options?: UseChatSuggestionsOptions) {
         },
         styleProps: upstream.styleProps,
         componentOverrides: upstream.componentOverrides
-    }), [upstream, suggestions, onSuggestionClick, setShouldShowSuggestions, autoHide]);
+    }), [upstream, localizedStrings, suggestions, onSuggestionClick, setShouldShowSuggestions, autoHide]);
 
     const hideSuggestions = useCallback(() => setShouldShowSuggestions(false), [setShouldShowSuggestions]);
     const showSuggestions = useCallback(() => setShouldShowSuggestions(true), [setShouldShowSuggestions]);

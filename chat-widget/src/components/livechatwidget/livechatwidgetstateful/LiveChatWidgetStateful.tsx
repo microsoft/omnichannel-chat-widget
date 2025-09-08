@@ -93,7 +93,7 @@ import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
 import ChatInputStateful from "../../chatinputstateful/ChatInputStateful";
-import { mapWebChatSendBoxStyles } from "../../chatinputstateful/utils/mapStyleOptionsToChatInput";
+import { mapWebChatSendBoxStyles } from "../../chatinputstateful/common/utils/mapStyleOptionsToChatInput";
 
 let uiTimer : ITimer;
 
@@ -833,6 +833,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     };
 
+    // Extract overrideLocalizedStrings from Web Chat props to pass to ChatInputStateful
+    const overrideLocalizedStrings = props.webChatContainerProps?.webChatProps?.overrideLocalizedStrings;
+
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>
@@ -912,7 +915,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...livechatProps} />)}
 
-                        {!chatInputProps?.controlProps?.hideSendBox && shouldShowChatInput(state) && ( <ChatInputStateful chatInputProps={chatInputProps} suggestionsProps={suggestionsProps}/>)}
+                        {!chatInputProps?.controlProps?.hideSendBox && shouldShowChatInput(state) && ( <ChatInputStateful chatInputProps={chatInputProps} suggestionsProps={suggestionsProps} overrideLocalizedStrings={overrideLocalizedStrings}/>)}
 
                         {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 

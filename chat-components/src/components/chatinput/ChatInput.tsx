@@ -16,6 +16,7 @@ import { $getRoot } from "lexical";
 import { ISuggestionsProps } from "../suggestions/interfaces/ISuggestionsProps";
 import { defaultChatInputControlProps } from "./common/defaultProps/defaultChatInputControlProps";
 import { deepMerge } from "../../common/utils";
+import { useDirection } from "../../hooks/useDirection";
 
 /**
  * ChatInput Component - A wrapper around Fluent UI Copilot ChatInput with integrated suggestions
@@ -28,6 +29,7 @@ function ChatInput(props: {chatInputProps: IChatInputProps; suggestionsProps?: I
     const componentOverrides = deepMerge(defaultChatInputProps.componentOverrides, chatInputProps.componentOverrides);
     const editorRef = useRef<LexicalEditor | null>(null);
     const attachmentPreviewItems = controlProps?.attachmentProps?.attachmentPreviewItems;
+    const direction = useDirection();
     
     const hasAttachments = Boolean(attachmentPreviewItems?.length); // check if attachments exist
 
@@ -135,6 +137,7 @@ function ChatInput(props: {chatInputProps: IChatInputProps; suggestionsProps?: I
         <div
             id={controlProps.chatInputId}
             className="lcw-chat-input-box"
+            dir={direction}
             style={styleProps?.containerStyleProps}
         >
             {chatInputComponent}
