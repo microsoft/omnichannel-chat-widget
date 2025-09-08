@@ -27,6 +27,7 @@ import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "..
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
+    shouldShowChatInput,
     shouldShowConfirmationPane,
     shouldShowEmailTranscriptPane,
     shouldShowHeader,
@@ -911,15 +912,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...livechatProps} />)}
 
-                        {state.appStates.conversationState === ConversationState.Active &&
-                            !state.appStates.isMinimized &&
-                            !chatInputProps?.controlProps?.hideSendBox &&
-                            shouldShowWebChatContainer(state) && (
-                                <ChatInputStateful
-                                    chatInputProps={chatInputProps}
-                                    suggestionsProps={suggestionsProps}
-                                />
-                            )}
+                        {!chatInputProps?.controlProps?.hideSendBox && shouldShowChatInput(state) && ( <ChatInputStateful chatInputProps={chatInputProps} suggestionsProps={suggestionsProps}/>)}
 
                         {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 

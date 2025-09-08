@@ -77,3 +77,7 @@ export const shouldShowCallingContainer = (state: ILiveChatWidgetContext) => {
     return (state.appStates.conversationState === ConversationState.Active) &&
         state.appStates.e2vvEnabled;
 };
+
+export const shouldShowChatInput = (state: ILiveChatWidgetContext) => {
+    return (state.appStates.conversationState === ConversationState.Active && !state.appStates.isMinimized);
+};
