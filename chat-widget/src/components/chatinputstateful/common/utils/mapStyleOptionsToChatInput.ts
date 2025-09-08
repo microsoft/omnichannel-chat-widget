@@ -1,7 +1,7 @@
 import { IChatInputStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatinput/interfaces/IChatInputStyleProps";
 import { ISuggestionsStyleProps } from "@microsoft/omnichannel-chat-components/lib/types/components/suggestions/interfaces/ISuggestionsStyleProps";
 
-// Keys related to ChatInput (send box + button)
+// Keys related to ChatInput
 const chatInputKeys = [
     "sendBoxButtonColor",
     "sendBoxButtonColorOnActive",
@@ -32,7 +32,7 @@ const chatInputKeys = [
     "sendBoxPlaceholderColor"
 ];
 
-// Keys related to suggestions (moved to ISuggestionsStyleProps)
+// Keys related to suggestions
 const suggestionKeys = [
     "suggestedActionBackgroundColor",
     "suggestedActionBorderColor",
