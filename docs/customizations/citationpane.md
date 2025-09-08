@@ -52,9 +52,9 @@ Completely replace default components with custom React elements:
 
 ```typescript
 interface ICitationPaneComponentOverrides {
-    title?: string;           // Custom title component (encoded string)
-    closeButton?: string;     // Custom bottom close button (encoded string)
-    topCloseButton?: string;  // Custom top close button (encoded string)
+    title?: React.ReactNode | string;           // Custom title component (React element or string)
+    closeButton?: React.ReactNode | string;     // Custom bottom close button (React element or string)
+    topCloseButton?: React.ReactNode | string;  // Custom top close button (React element or string)
 }
 ```
 
