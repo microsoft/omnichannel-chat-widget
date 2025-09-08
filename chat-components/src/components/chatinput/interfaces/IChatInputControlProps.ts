@@ -1,4 +1,3 @@
-import React from "react";
 import type { ChatInputLineModeData, ChatInputProps, SendButtonProps } from "@fluentui-copilot/react-chat-input";
 import type { Theme } from "@fluentui/react-components";
 import { IChatInputAttachmentProps } from "./IChatInputAttachmentProps";

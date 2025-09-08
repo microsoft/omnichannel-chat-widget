@@ -22,7 +22,7 @@ export const generateEventName = (controlId?: string, prefix?: string, suffix?: 
 };
 
 //Broadcast Error
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export const broadcastError = (elementId: string, error: any, propName: string, elementType: ElementType) => {
     const onJSONParseErrorEventName = generateEventName(elementId, propName, "JSONParseError");
     const onJSONParseErrorEvent: ICustomEvent = {
@@ -66,7 +66,7 @@ export const getSeconds = (time: number) => {
     return ("0" + Math.floor((time / 1000) % 60)).slice(-2);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export const addNoreferrerNoopenerTag = (htmlNode: any) => {
     const aNodes = htmlNode.getElementsByTagName("a");
     if (aNodes?.length > 0) {
@@ -110,4 +110,24 @@ export const replaceURLWithAnchor = (text: string | undefined, openInNewTab: boo
         return modifiedText;
     }
     return text;
+};
+
+//  deep merge utility
+export const deepMerge = <T>(target: T, source?: Partial<T>): T => {
+    if (!source) return { ...(target as any) };
+    const isPlain = (val: any) => !!val && typeof val === "object" && !Array.isArray(val) && !(val as any).$$typeof && !(val instanceof Date);
+    const output: any = { ...(target as any) };
+    for (const key in source) {
+        if (!Object.prototype.hasOwnProperty.call(source, key)) continue;
+        const sVal: any = (source as any)[key];
+        if (sVal === undefined) continue; // preserve existing target
+        const tVal: any = (target as any)[key];
+        if (sVal === null) { output[key] = null; continue; }
+        if (isPlain(tVal) && isPlain(sVal)) {
+            output[key] = deepMerge(tVal, sVal);
+        } else {
+            output[key] = sVal;
+        }
+    }
+    return output as T;
 };
