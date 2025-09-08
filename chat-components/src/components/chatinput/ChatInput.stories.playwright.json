@@ -1,40 +1,490 @@
 {
-    "stories": [
+  "stories": [
+    {
+      "id": "components-chatinput--default",
+      "title": "Default",
+      "name": "Default ChatInput",
+      "description": "Basic ChatInput component with default styling and placeholder text",
+      "tests": [
         {
-            "name": "ChatInput Default",
-            "path": "components-chatinput--default"
+          "name": "Default state render",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture default ChatInput appearance"
+            }
+          ]
         },
         {
-            "name": "ChatInput With Custom Placeholder",
-            "path": "components-chatinput--with-custom-placeholder"
-        },
-        {
-            "name": "ChatInput Disabled",
-            "path": "components-chatinput--disabled"
-        },
-        {
-            "name": "ChatInput With Character Limit",
-            "path": "components-chatinput--with-character-limit"
-        },
-        {
-            "name": "ChatInput With Custom Styling",
-            "path": "components-chatinput--with-custom-styling"
-        },
-        {
-            "name": "ChatInput Right To Left",
-            "path": "components-chatinput--right-to-left"
-        },
-        {
-            "name": "ChatInput With Attachment Button",
-            "path": "components-chatinput--with-attachment-button"
-        },
-        {
-            "name": "ChatInput With Attachments",
-            "path": "components-chatinput--with-attachments"
-        },
-        {
-            "name": "ChatInput With Custom Send Icon",
-            "path": "components-chatinput--with-custom-send-icon"
+          "name": "Text input interaction",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "Hello world",
+              "description": "Type text into ChatInput"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture ChatInput with typed text"
+            }
+          ]
         }
-    ]
+      ]
+    },
+    {
+      "id": "components-chatinput--with-custom-placeholder",
+      "title": "Custom Placeholder",
+      "name": "ChatInput with Custom Placeholder",
+      "description": "ChatInput component with customized placeholder text",
+      "tests": [
+        {
+          "name": "Custom placeholder display",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Verify custom placeholder text display"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--disabled",
+      "title": "Disabled",
+      "name": "Disabled ChatInput",
+      "description": "ChatInput component in disabled state",
+      "tests": [
+        {
+          "name": "Disabled state visual",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture disabled ChatInput styling"
+            }
+          ]
+        },
+        {
+          "name": "Disabled interaction test",
+          "actions": [
+            {
+              "type": "click",
+              "target": "[data-testid='chat-input'] input",
+              "description": "Attempt to click disabled input"
+            },
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "Should not work",
+              "description": "Attempt to type in disabled input"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Verify no text was entered"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--with-character-limit",
+      "title": "Character Limit",
+      "name": "ChatInput with Character Limit",
+      "description": "ChatInput component with enforced character limit",
+      "tests": [
+        {
+          "name": "Character limit display",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "Short text",
+              "description": "Type text under character limit"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture character count display"
+            }
+          ]
+        },
+        {
+          "name": "Character limit exceeded",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "This is a very long text that should exceed the character limit and trigger the warning message",
+              "description": "Type text exceeding character limit"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture character limit warning"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--with-custom-styling",
+      "title": "Custom Styling",
+      "name": "ChatInput with Custom Styling",
+      "description": "ChatInput component with custom styles applied",
+      "tests": [
+        {
+          "name": "Custom styling render",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture custom styling appearance"
+            }
+          ]
+        },
+        {
+          "name": "Custom styling with text",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "Testing custom styles",
+              "description": "Type text to test custom font styling"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture styled text display"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--right-to-left",
+      "title": "Right to Left",
+      "name": "RTL ChatInput",
+      "description": "ChatInput component with RTL text direction",
+      "tests": [
+        {
+          "name": "RTL layout render",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture RTL layout and Arabic placeholder"
+            }
+          ]
+        },
+        {
+          "name": "RTL text input",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "مرحبا بك في المحادثة",
+              "description": "Type Arabic text"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture RTL text input"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--auto-rtl-detection",
+      "title": "Auto RTL Detection",
+      "name": "Auto RTL Detection",
+      "description": "ChatInput component with automatic RTL detection",
+      "tests": [
+        {
+          "name": "Auto RTL detection visual",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture auto-detected RTL styling"
+            }
+          ]
+        },
+        {
+          "name": "Mixed text direction handling",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "Hello مرحبا World عالم",
+              "description": "Type mixed LTR/RTL text"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture mixed text direction rendering"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--with-attachment-button",
+      "title": "Attachment Button",
+      "name": "ChatInput with Attachment Button",
+      "description": "ChatInput component with file attachment capability",
+      "tests": [
+        {
+          "name": "Attachment button display",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture attachment button visibility"
+            }
+          ]
+        },
+        {
+          "name": "Attachment button interaction",
+          "actions": [
+            {
+              "type": "hover",
+              "target": "[data-testid='attachment-button']",
+              "description": "Hover over attachment button"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture attachment button hover state"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--with-attachments",
+      "title": "With Attachments",
+      "name": "ChatInput with Attachments",
+      "description": "ChatInput component showing attached files",
+      "tests": [
+        {
+          "name": "Attachment preview display",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture attachment preview display"
+            }
+          ]
+        },
+        {
+          "name": "Attachment overflow handling",
+          "actions": [
+            {
+              "type": "click",
+              "target": "[data-testid='attachment-overflow-menu']",
+              "description": "Click overflow menu for additional attachments"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture overflow menu display"
+            }
+          ]
+        },
+        {
+          "name": "Attachment progress indicator",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='attachment-progress']",
+              "description": "Capture upload progress indicator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--with-suggestions",
+      "title": "With Suggestions",
+      "name": "ChatInput with Suggestions",
+      "description": "ChatInput component with integrated suggestions",
+      "tests": [
+        {
+          "name": "Suggestions display",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture suggestions component display"
+            }
+          ]
+        },
+        {
+          "name": "Suggestion interaction",
+          "actions": [
+            {
+              "type": "hover",
+              "target": "[data-testid='suggestion-item']:first-child",
+              "description": "Hover over first suggestion"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture suggestion hover state"
+            }
+          ]
+        },
+        {
+          "name": "Suggestion click",
+          "actions": [
+            {
+              "type": "click",
+              "target": "[data-testid='suggestion-item']:first-child",
+              "description": "Click first suggestion"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture suggestion click result"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--with-custom-send-button",
+      "title": "Custom Send Button",
+      "name": "ChatInput with Custom Send Button",
+      "description": "ChatInput component with customized send button",
+      "tests": [
+        {
+          "name": "Custom send button display",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "Ready to send",
+              "description": "Type text to enable send button"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture custom send button styling"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--complete-example",
+      "title": "Complete Example",
+      "name": "Complete ChatInput Example",
+      "description": "Full-featured ChatInput with all capabilities",
+      "tests": [
+        {
+          "name": "Complete feature set display",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture complete ChatInput with all features"
+            }
+          ]
+        },
+        {
+          "name": "Full interaction workflow",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "Testing complete workflow",
+              "description": "Type message text"
+            },
+            {
+              "type": "click",
+              "target": "[data-testid='suggestion-item']:last-child",
+              "description": "Select a suggestion"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture complete interaction state"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "components-chatinput--hidden-send-box",
+      "title": "Hidden Send Box",
+      "name": "ChatInput with Hidden Send Box",
+      "description": "ChatInput component with send functionality hidden",
+      "tests": [
+        {
+          "name": "Hidden send box display",
+          "actions": [
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture ChatInput without send button"
+            }
+          ]
+        },
+        {
+          "name": "Input only interaction",
+          "actions": [
+            {
+              "type": "fill",
+              "target": "[data-testid='chat-input'] input",
+              "value": "Text input without send",
+              "description": "Type text in input-only mode"
+            },
+            {
+              "type": "screenshot",
+              "target": "[data-testid='chat-input']",
+              "description": "Capture text input without send capability"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "globalSetup": {
+    "viewport": { "width": 800, "height": 600 },
+    "theme": "light",
+    "locale": "en-US"
+  },
+  "testSuites": [
+    {
+      "name": "Visual Regression",
+      "stories": [
+        "components-chatinput--default",
+        "components-chatinput--disabled", 
+        "components-chatinput--with-custom-styling",
+        "components-chatinput--right-to-left"
+      ]
+    },
+    {
+      "name": "Interaction Testing",
+      "stories": [
+        "components-chatinput--with-attachment-button",
+        "components-chatinput--with-suggestions",
+        "components-chatinput--complete-example"
+      ]
+    },
+    {
+      "name": "Accessibility Testing",
+      "stories": [
+        "components-chatinput--disabled",
+        "components-chatinput--right-to-left",
+        "components-chatinput--auto-rtl-detection"
+      ]
+    }
+  ]
 }

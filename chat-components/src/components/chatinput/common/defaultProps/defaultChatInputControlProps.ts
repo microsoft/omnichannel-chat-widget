@@ -3,7 +3,7 @@ import { IChatInputControlProps } from "../../interfaces/IChatInputControlProps"
 import { defaultChatInputAttachmentProps } from "./defaultChatInputAttachmentProps";
 
 export const defaultChatInputControlProps: IChatInputControlProps = {
-    // === Spread attachment defaults ===
+    // === attachment defaults ===
     attachmentProps: defaultChatInputAttachmentProps,
 
     // === Core functionality ===
