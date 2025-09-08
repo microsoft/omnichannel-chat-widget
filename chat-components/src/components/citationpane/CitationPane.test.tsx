@@ -336,3 +336,125 @@ describe("Citation Pane component", () => {
         expect(screen.getByText("Item 2")).toBeInTheDocument();
     });
 });
+it("renders with default props", () => {
+    const { container } = render(<CitationPane {...defaultCitationPaneProps} />);
+    expect(container).toBeInTheDocument();
+});
+
+it("renders with custom title and content", () => {
+    const controlProps = {
+        id: "custom-citation",
+        titleText: "Custom Title",
+        contentHtml: "<p>Custom Content</p>",
+    };
+
+    render(<CitationPane controlProps={controlProps} />);
+
+    expect(screen.getByText("Custom Title")).toBeInTheDocument();
+    expect(screen.getByText("Custom Content")).toBeInTheDocument();
+});
+
+it("renders with custom direction (RTL)", () => {
+    const controlProps = {
+        dir: "rtl",
+        titleText: "عنوان",
+        contentHtml: "<p>محتوى</p>",
+    };
+
+    const { container } = render(<CitationPane controlProps={controlProps} />);
+    expect(container.firstChild).toHaveAttribute("dir", "rtl");
+});
+
+it("renders top close button on the left when topCloseButtonPosition is 'topLeft'", () => {
+    const controlProps = {
+        topCloseButtonPosition: "topLeft",
+    };
+
+    const { container } = render(<CitationPane controlProps={controlProps} />);
+    const topCloseButton = container.querySelector("button#ocw-citation-pane-top-close");
+    expect(topCloseButton).toHaveStyle("left: 8px");
+});
+
+it("does not render top close button when hideTopCloseButton is true", () => {
+    const controlProps = {
+        hideTopCloseButton: true,
+    };
+
+    const { container } = render(<CitationPane controlProps={controlProps} />);
+    const topCloseButton = container.querySelector("button#ocw-citation-pane-top-close");
+    expect(topCloseButton).not.toBeInTheDocument();
+});
+
+it("does not render bottom close button when hideCloseButton is true", () => {
+    const controlProps = {
+        hideCloseButton: true,
+    };
+
+    const { container } = render(<CitationPane controlProps={controlProps} />);
+    const bottomCloseButton = container.querySelector("button#ocw-citation-pane-close");
+    expect(bottomCloseButton).not.toBeInTheDocument();
+});
+
+it("calls onClose when bottom close button is clicked", () => {
+    const handleClose = jest.fn();
+    const controlProps = {
+        onClose: handleClose,
+    };
+
+    render(<CitationPane controlProps={controlProps} />);
+    const closeButton = screen.getByText("Close");
+    fireEvent.click(closeButton);
+
+    expect(handleClose).toHaveBeenCalledTimes(1);
+});
+
+it("calls onClose when top close button is clicked", () => {
+    const handleClose = jest.fn();
+    const controlProps = {
+        onClose: handleClose,
+    };
+
+    const { container } = render(<CitationPane controlProps={controlProps} />);
+    const topCloseButton = container.querySelector("button#ocw-citation-pane-top-close");
+    fireEvent.click(topCloseButton);
+
+    expect(handleClose).toHaveBeenCalledTimes(1);
+});
+
+it("renders with custom styles", () => {
+    const styleProps = {
+        generalStyleProps: { backgroundColor: "blue" },
+        titleStyleProps: { color: "white" },
+    };
+
+    const { container } = render(<CitationPane styleProps={styleProps} />);
+    const citationPane = container.firstChild as HTMLElement;
+
+    expect(citationPane).toHaveStyle("background-color: blue");
+    expect(screen.getByText("Citation")).toHaveStyle("color: white");
+});
+
+it("renders with custom class names", () => {
+    const classNames = {
+        containerClassName: "custom-container",
+        titleClassName: "custom-title",
+    };
+
+    const { container } = render(
+        <CitationPane styleProps={{ classNames }} />
+    );
+
+    expect(container.querySelector(".custom-container")).toBeInTheDocument();
+    expect(container.querySelector(".custom-title")).toBeInTheDocument();
+});
+
+it("renders dangerous HTML content safely", () => {
+    const controlProps = {
+        contentHtml: "<p><strong>Bold</strong> and <em>Italic</em></p>",
+    };
+
+    render(<CitationPane controlProps={controlProps} />);
+
+    expect(screen.getByText("Bold")).toBeInTheDocument();
+    expect(screen.getByText("Italic")).toBeInTheDocument();
+});
