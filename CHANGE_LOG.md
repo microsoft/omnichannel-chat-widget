@@ -625,41 +625,6 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
-
-- **Enhanced ChatInput Component with Fluent UI Copilot Integration**
-  - Migrated ChatInput to use `@fluentui-copilot/react-chat-input` with modern Lexical editor
-  - Added rich text editing capabilities and improved accessibility support
-  - Enhanced file attachment functionality with drag-and-drop support
-  - Integrated CopilotProvider and CopilotTheme for consistent theming
-  - Added editor reference support for programmatic control
-- **New Suggestions Component**
-  - Built on `@fluentui-copilot/react-copilot` for native suggestion functionality
-  - Support for multiple suggestion types: imBack, postBack, messageBack, openUrl
-  - Customizable appearance with flexible styling options (mode, appearance, size, shape)
-  - Auto-hide functionality and comprehensive accessibility features
-  - Horizontal alignment options and responsive design support
-  - Component override support for custom icons and action buttons
-- **Fluent UI Copilot Package Dependencies**
-  - Added `@fluentui-copilot/react-attachments`: ^0.13.4
-  - Added `@fluentui-copilot/react-chat-input`: ^0.15.4
-  - Added `@fluentui-copilot/react-copilot`: ^0.28.5
-  - Added `@fluentui-copilot/react-provider`: ^0.12.3
-  - Added `@fluentui-copilot/react-text-editor` for Lexical editor integration
-
-### Changed
-
-- **ChatInput Component Architecture**
-  - Refactored props structure with `controlProps`, `styleProps`, and `componentOverrides`
-  - Updated event handling for `onSubmitText` and `onTextChange`
-  - Enhanced error handling and form validation
-  - Improved integration with attachment system
-- **Styling System Updates**
-  - Added dynamic style generation utilities
-  - Enhanced CSS-in-JS support for component styling
-  - Improved responsive design capabilities
-  - Added support for Fluent UI Copilot theming system
-
 ## [1.1.13] - 2025-07-22
 
 ### Added
