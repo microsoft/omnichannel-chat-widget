@@ -409,61 +409,67 @@ const togglePosition = () => {
 
 ## Large Content Handling
 
-### 10. Scrollable Content Area
+The CitationPane component now includes built-in support for long content with automatic scrolling. The default styles include:
+
+- **Maximum height constraint**: `maxHeight: "80vh"` prevents the pane from becoming too tall
+- **Automatic scrolling**: Content area includes `overflow: "auto"` for scrollable content
+- **Flexible layout**: Uses flexbox to ensure proper positioning of title and close button
+
+### 10. Default Long Content Behavior
+
+```tsx
+// With the updated default styles, long content automatically becomes scrollable
+<CitationPane 
+    controlProps={{
+        titleText: "Long Document",
+        contentHtml: `
+            <div>
+                <h4>Chapter 1</h4>
+                <p>Very long content that will automatically scroll...</p>
+                <!-- More content -->
+            </div>
+        `,
+        closeButtonText: "Close"
+    }}
+    // No additional styling needed - scrolling works out of the box!
+/>
+```
+
+### 11. Custom Height Constraints
+
+For specific height requirements, you can override the default behavior:
 
 ```tsx
 <CitationPane 
     controlProps={{
-        titleText: "Extended Research Paper",
-        contentHtml: `
-            <div>
-                <h4>Abstract</h4>
-                <p>This comprehensive study examines the impact of modern web technologies...</p>
-                
-                <h4>Introduction</h4>
-                <p>The evolution of web technologies has fundamentally transformed...</p>
-                
-                <h4>Key Findings</h4>
-                <ul>
-                    <li>Responsive design adoption has reached 94%</li>
-                    <li>Accessibility considerations significantly impact satisfaction</li>
-                    <li>Performance optimization correlates with engagement</li>
-                </ul>
-                
-                <h4>Conclusion</h4>
-                <p>Modern web development requires a holistic approach...</p>
-            </div>
-        `,
+        titleText: "Custom Height Document",
+        contentHtml: `<!-- Your long content -->`,
         closeButtonText: "Close Paper"
     }}
     styleProps={{
         generalStyleProps: {
-            backgroundColor: "#ffffff",
-            border: "1px solid #d2d0ce",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.1)",
-            padding: "20px",
-            paddingTop: "45px",
-            width: "500px",
-            maxHeight: "600px",  // Enable scrolling for long content
-            display: "flex",
-            flexDirection: "column"
+            maxHeight: "600px",  // Custom maximum height
+            width: "500px"
         },
         contentStyleProps: {
-            fontSize: "14px",
-            lineHeight: "1.6",
-            overflow: "auto",    // Scrollable content
-            marginBottom: "16px",
-            flex: "1"
-        },
-        closeButtonStyleProps: {
-            alignSelf: "flex-end"
+            maxHeight: "400px",  // Specific content area height
+            overflowY: "scroll"  // Force scrollbar to always show
         }
     }}
 />
 ```
 
+### 12. Testing Extremely Long Content
+
+For testing purposes, the Storybook includes an `ExtremelyLongContent` story that demonstrates proper scrolling behavior with extensive text content, ensuring the pane remains within reasonable bounds while maintaining full content accessibility.
+
 ## Best Practices and Tips
+
+### Scrolling and Height Management
+
+1. **Default behavior**: The component now handles long content automatically with `maxHeight: "80vh"` and `overflow: "auto"`
+2. **Custom constraints**: Override `maxHeight` in `generalStyleProps` for specific requirements
+3. **Content-specific scrolling**: Use `contentStyleProps` to control just the content area scrolling behavior
 
 ### Accessibility Considerations
 
@@ -562,7 +568,8 @@ Explore all these examples and more in the Storybook:
 - **HiddenCloseOptions**: Various close button configurations
 - **CustomComponents**: Complete component overrides
 - **RTLSupport**: Right-to-left language support
-- **LargeContent**: Scrollable content handling
+- **LargeContent**: Scrollable content handling with custom styles
+- **ExtremelyLongContent**: Tests default scrolling behavior with very long text
 
 Each story demonstrates different aspects of the component's flexibility and can serve as implementation templates for your specific use cases.
 
