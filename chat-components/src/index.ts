@@ -3,6 +3,7 @@ export { default as Header } from "./components/header/Header";
 export { default as Footer } from "./components/footer/Footer";
 
 export { default as ConfirmationPane } from "./components/confirmationpane/ConfirmationPane";
+export { default as CitationPane } from "./components/citationpane/CitationPane";
 
 export { default as ChatButton } from "./components/chatbutton/ChatButton";
 
