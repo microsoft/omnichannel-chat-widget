@@ -59,6 +59,7 @@ function CitationPane(props: ICitationPaneProps) {
     };
 
     const topCloseButtonPosition = props.controlProps?.topCloseButtonPosition || defaultCitationPaneControlProps.topCloseButtonPosition;
+    
     const topCloseButtonStyles: IButtonStyles = {
         root: Object.assign({}, 
             defaultCitationPaneTopCloseButtonStyles, 
@@ -83,7 +84,7 @@ function CitationPane(props: ICitationPaneProps) {
                     <IconButton
                         onClick={handleTopClose}
                         id={elementId + "-top-close"}
-                        iconProps={{ iconName: "Cancel" }}
+                        iconProps={{ iconName: "ChromeClose" }}
                         ariaLabel={props.controlProps?.topCloseButtonAriaLabel || defaultCitationPaneControlProps.topCloseButtonAriaLabel}
                         styles={topCloseButtonStyles}
                         className={props.styleProps?.classNames?.topCloseButtonClassName}

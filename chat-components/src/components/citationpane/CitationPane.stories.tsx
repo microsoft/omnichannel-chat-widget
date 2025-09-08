@@ -14,261 +14,442 @@ export default {
 } as Meta;
 
 BroadcastServiceInitialize("testChannel");
-const CitationPaneTemplate: Story<ICitationPaneProps> = (args) => <CitationPane {...args}></CitationPane>;
 
-/*
-    Default Citation Pane
-*/
-
-export const CitationPaneDefault = CitationPaneTemplate.bind({});
-CitationPaneDefault.args = defaultCitationPaneProps;
-
-/*
-    Citation Pane Preset 1 - Modern Card Style
-*/
-
-const citationPanePreset1Props: ICitationPaneProps = {
-    controlProps: {
-        id: "ocw-citation-pane-preset1",
-        titleText: "Research Citation",
-        contentHtml: "<p><strong>Title:</strong> Understanding Modern Web Development</p><p><strong>Author:</strong> Jane Doe</p><p><strong>Year:</strong> 2024</p><p><strong>Source:</strong> Tech Journal</p>",
-        closeButtonText: "Close"
-    },
-    styleProps: {
-        generalStyleProps: {
-            backgroundColor: "white",
-            borderColor: "#e1e5e9",
-            borderRadius: "8px",
-            borderStyle: "solid",
-            borderWidth: "1px",
-            boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-            color: "#323130",
-            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-            fontSize: "14px",
-            height: "auto",
-            maxHeight: "400px",
-            overflow: "hidden",
-            padding: "16px",
-            width: "320px"
-        },
-        titleStyleProps: {
-            color: "#106ebe",
-            fontSize: "16px",
-            fontWeight: "600",
-            marginBottom: "12px"
-        },
-        contentStyleProps: {
-            fontSize: "14px",
-            lineHeight: "1.5",
-            marginBottom: "16px",
-            maxHeight: "200px",
-            overflow: "auto"
-        },
-        closeButtonStyleProps: {
-            backgroundColor: "#f3f2f1",
-            borderColor: "#d2d0ce",
-            color: "#323130",
-            fontSize: "14px",
-            height: "32px",
-            minWidth: "80px"
-        }
+// Common styling for top close button to ensure proper positioning and X display
+const commonTopCloseButtonStyles = {
+    position: "absolute" as const,
+    top: "8px",
+    right: "8px",
+    backgroundColor: "#ffffff",
+    border: "1px solid #d2d0ce",
+    borderRadius: "50%",
+    width: "28px",
+    height: "28px",
+    cursor: "pointer",
+    fontSize: "16px",
+    fontWeight: "bold" as const,
+    color: "#605e5c",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+    zIndex: 1000,
+    ":hover": {
+        backgroundColor: "#f3f2f1",
+        color: "#323130"
     }
 };
 
-export const CitationPanePreset1 = CitationPaneTemplate.bind({});
-CitationPanePreset1.args = citationPanePreset1Props;
+// Standard top close button style props for stories
+const standardTopCloseButtonStyleProps = {
+    position: "absolute" as const,
+    top: "8px",
+    right: "8px",
+    backgroundColor: "#ffffff",
+    border: "1px solid #d2d0ce",
+    borderRadius: "50%",
+    width: "28px",
+    height: "28px",
+    fontSize: "16px",
+    fontWeight: "bold" as const,
+    color: "#605e5c",
+    zIndex: 1000,
+    ":hover": {
+        backgroundColor: "#f3f2f1",
+        color: "#323130"
+    }
+};
 
-/*
-    Citation Pane Preset 2 - Custom Components
-*/
-
-const customTitle = (
-    <h3 style={{ margin: 0, color: "#d83b01", fontSize: "18px", textAlign: "center" }}>
-        📚 Custom Citation Header
-    </h3>
-);
-
-const customCloseButton = encodeComponentString(
-    <button style={{
-        backgroundColor: "#d83b01",
-        border: "none",
-        borderRadius: "4px",
-        color: "white",
-        cursor: "pointer",
-        fontSize: "12px",
-        padding: "8px 16px"
-    }}>
-        ✕ Dismiss
+// Custom top close button component that guarantees X display
+const customTopCloseButton = encodeComponentString(
+    <button
+        style={commonTopCloseButtonStyles}
+        onClick={() => console.log("Top close clicked")}
+        aria-label="Close citation"
+    >
+        ×
     </button>
 );
 
-const citationPanePreset2Props: ICitationPaneProps = {
-    componentOverrides: {
-        title: customTitle,
-        closeButton: customCloseButton
-    },
+const CitationPaneTemplate: Story<ICitationPaneProps> = (args) => <CitationPane {...args}></CitationPane>;
+
+/*
+    1. Pure Default Citation Pane (No Customizations)
+*/
+export const PureDefault = CitationPaneTemplate.bind({});
+PureDefault.args = {
+    ...defaultCitationPaneProps,
     controlProps: {
-        id: "ocw-citation-pane-preset2",
-        contentHtml: "<div style='text-align: center; padding: 20px;'><p><em>This citation uses custom components</em></p><p>🎯 Custom styling applied to title and close button</p></div>",
-    },
-    styleProps: {
-        generalStyleProps: {
-            backgroundColor: "#fff4f4",
-            border: "2px dashed #d83b01",
-            borderRadius: "12px",
-            padding: "16px",
-            width: "350px",
-            textAlign: "center"
-        },
-        contentStyleProps: {
-            margin: "16px 0"
-        }
+        ...defaultCitationPaneProps.controlProps,
+        contentHtml: `
+            <div>
+                <p>This is a default citation pane using only the component's default props and styling.</p>
+                <p><strong>Source:</strong> Default Content Example</p>
+                <p>No custom styling or component overrides applied.</p>
+            </div>
+        `
     }
 };
 
-export const CitationPanePreset2 = CitationPaneTemplate.bind({});
-CitationPanePreset2.args = citationPanePreset2Props;
+/*
+    2. Default Citation Pane (Enhanced for Storybook)
+*/
+export const Default = CitationPaneTemplate.bind({});
+Default.args = {
+    ...defaultCitationPaneProps,
+    controlProps: {
+        ...defaultCitationPaneProps.controlProps,
+        contentHtml: `
+            <div>
+                <p>This is the default citation pane demonstrating basic functionality.</p>
+                <p><strong>Source:</strong> Documentation Example</p>
+                <p><strong>Reference:</strong> CitationPane Component Guide</p>
+            </div>
+        `
+    },
+    styleProps: {
+        ...defaultCitationPaneProps.styleProps,
+        generalStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.generalStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.generalStyleProps 
+                : {}),
+            width: "400px"
+        }
+    },
+    componentOverrides: {
+        topCloseButton: customTopCloseButton
+    }
+};
 
 /*
-    Citation Pane Preset 3 - Compact Style with Hidden Elements
+    2. Research Citation Style
 */
-
-const citationPanePreset3Props: ICitationPaneProps = {
+export const ResearchCitation = CitationPaneTemplate.bind({});
+ResearchCitation.args = {
     controlProps: {
-        id: "ocw-citation-pane-preset3",
-        hideTitle: true,
-        contentHtml: "<p style='margin: 0; font-size: 12px;'><strong>Quick Reference:</strong> This is a compact citation without title.</p>",
-        closeButtonText: "×",
-        closeButtonAriaLabel: "Close compact citation"
+        id: "research-citation",
+        titleText: "Research Citation",
+        contentHtml: `
+            <div>
+                <blockquote style="border-left: 3px solid #0078d4; padding-left: 15px; margin: 15px 0; font-style: italic;">
+                    "Artificial Intelligence has revolutionized how we approach complex problem-solving in modern software development."
+                </blockquote>
+                <div style="background-color: #f3f2f1; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                    <strong>Citation Details:</strong><br/>
+                    Author: Dr. Sarah Johnson<br/>
+                    Journal: AI Development Quarterly<br/>
+                    Year: 2024<br/>
+                    DOI: 10.1000/aidq.2024.567890
+                </div>
+            </div>
+        `,
+        closeButtonText: "Close Citation"
+    },
+    styleProps: {
+        generalStyleProps: {
+            backgroundColor: "#ffffff",
+            border: "1px solid #e1dfdd",
+            borderRadius: "8px",
+            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.1)",
+            padding: "20px",
+            paddingTop: "45px",
+            width: "500px",
+            position: "relative"
+        },
+        titleStyleProps: {
+            fontSize: "18px",
+            fontWeight: "600",
+            color: "#0078d4",
+            borderBottom: "1px solid #edebe9",
+            paddingBottom: "8px",
+            marginBottom: "16px"
+        },
+        contentStyleProps: {
+            lineHeight: "1.6",
+            marginBottom: "20px"
+        },
+        closeButtonStyleProps: {
+            backgroundColor: "#0078d4",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "10px 20px"
+        },
+        topCloseButtonStyleProps: standardTopCloseButtonStyleProps
+    },
+    componentOverrides: {
+        topCloseButton: customTopCloseButton
+    }
+};
+
+/*
+    3. Compact Citation
+*/
+export const CompactCitation = CitationPaneTemplate.bind({});
+CompactCitation.args = {
+    controlProps: {
+        id: "compact-citation",
+        titleText: "Quick Reference",
+        contentHtml: "<p><strong>Source:</strong> User Guide Section 4.2 - Best Practices</p>",
+        closeButtonText: "Got it"
     },
     styleProps: {
         generalStyleProps: {
             backgroundColor: "#f8f9fa",
             border: "1px solid #dee2e6",
-            borderRadius: "4px",
-            fontSize: "12px",
-            padding: "8px",
-            width: "250px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "8px"
-        },
-        contentStyleProps: {
-            fontSize: "12px",
-            lineHeight: "1.4"
-        },
-        closeButtonStyleProps: {
-            alignSelf: "flex-end",
-            backgroundColor: "transparent",
-            border: "1px solid #ced4da",
-            borderRadius: "50%",
-            color: "#6c757d",
-            fontSize: "14px",
-            height: "24px",
-            minWidth: "24px",
-            width: "24px",
-            padding: "0"
-        }
-    }
-};
-
-export const CitationPanePreset3 = CitationPaneTemplate.bind({});
-CitationPanePreset3.args = citationPanePreset3Props;
-
-/*
-    Citation Pane Preset 4 - Interactive with State Change
-*/
-
-const citationPanePreset4Props: ICitationPaneProps = {
-    controlProps: {
-        id: "ocw-citation-pane-preset4",
-        titleText: "Interactive Citation",
-        contentHtml: "<p>Click the button to see different content!</p><p><strong>Current State:</strong> Initial</p>",
-        closeButtonText: "Toggle Content"
-    },
-    styleProps: {
-        generalStyleProps: {
-            backgroundColor: "#e7f3ff",
-            border: "2px solid #106ebe",
-            borderRadius: "8px",
+            borderRadius: "6px",
             padding: "16px",
-            width: "300px"
+            paddingTop: "35px",
+            width: "300px",
+            position: "relative"
         },
         titleStyleProps: {
-            color: "#106ebe",
-            fontSize: "16px",
-            fontWeight: "bold",
+            fontSize: "14px",
+            fontWeight: "500",
+            color: "#495057",
+            marginBottom: "8px"
+        },
+        contentStyleProps: {
+            fontSize: "13px",
             marginBottom: "12px"
         },
         closeButtonStyleProps: {
-            backgroundColor: "#106ebe",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            padding: "8px 16px",
-            fontSize: "14px"
+            fontSize: "12px",
+            padding: "6px 12px",
+            minHeight: "28px"
         }
+    },
+    componentOverrides: {
+        topCloseButton: customTopCloseButton
     }
 };
 
-export const CitationPanePreset4: Story<ICitationPaneProps> = (args) => {
+/*
+    4. Top Close Button Positions
+*/
+export const TopClosePositions: Story<ICitationPaneProps> = (args) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, updateArgs] = useArgs();
-    
-    let isToggled = false;
 
-    const toggleContent = () => {
-        isToggled = !isToggled;
+    const togglePosition = () => {
+        const currentPosition = args.controlProps?.topCloseButtonPosition || "topRight";
+        const newPosition = currentPosition === "topRight" ? "topLeft" : "topRight";
+        
         updateArgs({
             ...args,
             controlProps: {
                 ...args.controlProps,
-                contentHtml: isToggled ? 
-                    "<p>Content has been toggled!</p><p><strong>Current State:</strong> Toggled</p><p>🎉 This demonstrates interactive capabilities</p>" :
-                    "<p>Click the button to see different content!</p><p><strong>Current State:</strong> Initial</p>",
-                titleText: isToggled ? "Citation - Toggled State" : "Interactive Citation"
+                topCloseButtonPosition: newPosition,
+                titleText: `Top Close Button (${newPosition === "topRight" ? "Right" : "Left"} Position)`
             }
         });
     };
 
-    args.controlProps.onClose = toggleContent;
-    return <CitationPane {...args}></CitationPane>;
+    args.controlProps = {
+        ...args.controlProps,
+        onClose: togglePosition
+    };
+
+    return <CitationPane {...args} />;
 };
 
-CitationPanePreset4.args = citationPanePreset4Props;
-
-/*
-    Citation Pane Preset 5 - RTL Support
-*/
-
-const citationPanePreset5Props: ICitationPaneProps = {
+TopClosePositions.args = {
     controlProps: {
-        id: "ocw-citation-pane-preset5",
-        dir: "rtl",
-        titleText: "اقتباس",
-        contentHtml: "<p dir='rtl'>هذا مثال على اقتباس باللغة العربية.</p><p dir='rtl'><strong>المؤلف:</strong> محمد أحمد</p><p dir='rtl'><strong>السنة:</strong> ٢٠٢٤</p>",
-        closeButtonText: "إغلاق",
-        closeButtonAriaLabel: "إغلاق الاقتباس"
+        id: "top-close-positions",
+        titleText: "Top Close Button (Right Position)",
+        contentHtml: `
+            <div>
+                <p>This demo shows the top close button positioning options.</p>
+                <p><strong>Current position:</strong> Top Right (default)</p>
+                <p>Click "Toggle Position" to switch between top-right and top-left positions.</p>
+            </div>
+        `,
+        closeButtonText: "Toggle Position",
+        topCloseButtonPosition: "topRight"
     },
     styleProps: {
         generalStyleProps: {
-            backgroundColor: "white",
+            backgroundColor: "#e3f2fd",
+            border: "2px solid #2196f3",
+            borderRadius: "8px",
+            padding: "20px",
+            paddingTop: "40px",
+            width: "400px",
+            position: "relative"
+        },
+        titleStyleProps: {
+            color: "#1976d2",
+            fontSize: "16px",
+            fontWeight: "600",
+            marginBottom: "12px"
+        },
+        closeButtonStyleProps: {
+            backgroundColor: "#2196f3",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "8px 16px"
+        }
+    },
+    componentOverrides: {
+        topCloseButton: customTopCloseButton
+    }
+};
+
+/*
+    5. Hidden Close Button Options
+*/
+export const HiddenCloseOptions = CitationPaneTemplate.bind({});
+HiddenCloseOptions.args = {
+    controlProps: {
+        id: "hidden-close-options",
+        titleText: "Only Bottom Close Button",
+        contentHtml: `
+            <div>
+                <p>This citation has the top close button hidden.</p>
+                <p><strong>Use cases:</strong></p>
+                <ul>
+                    <li>Forced acknowledgment scenarios</li>
+                    <li>Simplified UI with single close action</li>
+                    <li>Mobile-optimized layouts</li>
+                </ul>
+            </div>
+        `,
+        closeButtonText: "Acknowledge & Close",
+        hideTopCloseButton: true
+    },
+    styleProps: {
+        generalStyleProps: {
+            backgroundColor: "#fff3e0",
+            border: "2px solid #ff9800",
+            borderRadius: "8px",
+            padding: "20px",
+            width: "380px"
+        },
+        titleStyleProps: {
+            color: "#f57c00",
+            fontSize: "16px",
+            fontWeight: "600",
+            marginBottom: "12px"
+        },
+        closeButtonStyleProps: {
+            backgroundColor: "#ff9800",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "10px 20px",
+            fontWeight: "500"
+        }
+    }
+};
+
+/*
+    6. Custom Component Overrides
+*/
+const customTitle = (
+    <div style={{
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        color: "white",
+        padding: "12px",
+        borderRadius: "6px",
+        textAlign: "center",
+        fontWeight: "bold",
+        marginBottom: "16px"
+    }}>
+        📚 Custom Citation Header
+    </div>
+);
+
+const customCloseButton = encodeComponentString(
+    <button style={{
+        background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+        color: "white",
+        border: "none",
+        borderRadius: "20px",
+        padding: "10px 20px",
+        cursor: "pointer",
+        fontWeight: "bold",
+        fontSize: "14px",
+        boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)"
+    }}>
+        ✨ Close Citation
+    </button>
+);
+
+export const CustomComponents = CitationPaneTemplate.bind({});
+CustomComponents.args = {
+    controlProps: {
+        id: "custom-components",
+        contentHtml: `
+            <div style="text-align: center; padding: 10px;">
+                <p>This citation demonstrates custom component overrides.</p>
+                <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin: 12px 0;">
+                    <strong>Custom Elements:</strong>
+                    <ul style="text-align: left; margin-top: 8px;">
+                        <li>Gradient title header</li>
+                        <li>Styled close button</li>
+                        <li>Custom top close button</li>
+                    </ul>
+                </div>
+            </div>
+        `
+    },
+    styleProps: {
+        generalStyleProps: {
+            backgroundColor: "#ffffff",
+            border: "2px solid #e2e8f0",
+            borderRadius: "12px",
+            padding: "20px",
+            paddingTop: "40px",
+            width: "400px",
+            position: "relative"
+        }
+    },
+    componentOverrides: {
+        title: customTitle,
+        closeButton: customCloseButton,
+        topCloseButton: customTopCloseButton
+    }
+};
+
+/*
+    7. RTL (Right-to-Left) Support
+*/
+export const RTLSupport = CitationPaneTemplate.bind({});
+RTLSupport.args = {
+    controlProps: {
+        id: "rtl-support",
+        dir: "rtl",
+        titleText: "مرجع الاقتباس",
+        contentHtml: `
+            <div dir="rtl" style="text-align: right;">
+                <p>هذا مثال على جزء الاقتباس مع دعم اللغة العربية.</p>
+                <p><strong>المصدر:</strong> دليل المطور - الإصدار 2024</p>
+                <p><strong>القسم:</strong> واجهات المستخدم المتعددة اللغات</p>
+            </div>
+        `,
+        closeButtonText: "إغلاق",
+        topCloseButtonPosition: "topLeft"
+    },
+    styleProps: {
+        generalStyleProps: {
+            backgroundColor: "#ffffff",
             border: "1px solid #d2d0ce",
             borderRadius: "8px",
-            padding: "16px",
-            width: "320px",
+            padding: "20px",
+            paddingTop: "40px",
+            width: "400px",
+            position: "relative",
             fontFamily: "Tahoma, Arial, sans-serif"
         },
         titleStyleProps: {
             fontSize: "16px",
             fontWeight: "600",
-            marginBottom: "12px",
-            textAlign: "right"
+            textAlign: "right",
+            marginBottom: "12px"
         },
         contentStyleProps: {
-            fontSize: "14px",
             lineHeight: "1.6",
-            textAlign: "right",
             marginBottom: "16px"
         },
         closeButtonStyleProps: {
@@ -276,59 +457,101 @@ const citationPanePreset5Props: ICitationPaneProps = {
             color: "white",
             border: "none",
             borderRadius: "4px",
-            padding: "8px 16px",
-            fontSize: "14px"
+            padding: "8px 16px"
         }
+    },
+    componentOverrides: {
+        topCloseButton: encodeComponentString(
+            <button
+                style={{
+                    position: "absolute",
+                    top: "8px",
+                    left: "8px", // Left position for RTL
+                    backgroundColor: "#ffffff",
+                    border: "1px solid #d2d0ce",
+                    borderRadius: "50%",
+                    width: "28px",
+                    height: "28px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                    fontWeight: "bold",
+                    color: "#605e5c",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+                    zIndex: 1000
+                }}
+                onClick={() => console.log("RTL top close clicked")}
+                aria-label="إغلاق الاقتباس"
+            >
+                ×
+            </button>
+        )
     }
 };
 
-export const CitationPanePreset5 = CitationPaneTemplate.bind({});
-CitationPanePreset5.args = citationPanePreset5Props;
-
 /*
-    Citation Pane Preset 6 - Large Content with Scrolling
+    8. Large Content with Scrolling
 */
-
-const citationPanePreset6Props: ICitationPaneProps = {
+export const LargeContent = CitationPaneTemplate.bind({});
+LargeContent.args = {
     controlProps: {
-        id: "ocw-citation-pane-preset6",
-        titleText: "Extended Citation",
+        id: "large-content",
+        titleText: "Extended Research Paper",
         contentHtml: `
             <div>
-                <p><strong>Abstract:</strong> This is a comprehensive research paper about modern web technologies and their impact on user experience.</p>
-                <p><strong>Introduction:</strong> The evolution of web technologies has dramatically changed how we interact with digital content. From simple HTML pages to complex single-page applications, the web has become increasingly sophisticated.</p>
-                <p><strong>Methodology:</strong> Our research involved analyzing over 1000 websites across different industries to understand current trends and best practices.</p>
-                <p><strong>Results:</strong> Key findings include the importance of responsive design, accessibility considerations, and performance optimization.</p>
-                <p><strong>Conclusion:</strong> Modern web development requires a holistic approach that considers user experience, accessibility, and performance from the ground up.</p>
-                <p><strong>References:</strong></p>
+                <h4>Abstract</h4>
+                <p>This comprehensive study examines the impact of modern web technologies on user experience design patterns and implementation strategies across diverse digital platforms.</p>
+                
+                <h4>Introduction</h4>
+                <p>The evolution of web technologies has fundamentally transformed how developers approach user interface design. From simple HTML forms to complex interactive applications, the landscape has become increasingly sophisticated.</p>
+                
+                <h4>Methodology</h4>
+                <p>Our research methodology involved analyzing over 1,000 websites across various industries, conducting user interviews, and performing A/B testing on different design patterns.</p>
+                
+                <h4>Key Findings</h4>
                 <ul>
-                    <li>Smith, J. (2023). "Web Accessibility Guidelines"</li>
-                    <li>Johnson, M. (2024). "Performance Optimization Strategies"</li>
-                    <li>Brown, K. (2024). "Responsive Design Patterns"</li>
+                    <li>Responsive design adoption has reached 94% among leading websites</li>
+                    <li>Accessibility considerations significantly impact user satisfaction</li>
+                    <li>Performance optimization directly correlates with user engagement</li>
+                    <li>Mobile-first approaches yield better cross-platform experiences</li>
                 </ul>
+                
+                <h4>Conclusion</h4>
+                <p>Modern web development requires a holistic approach that prioritizes user experience, accessibility, and performance optimization from the initial design phase through implementation and maintenance.</p>
+                
+                <h4>References</h4>
+                <ol>
+                    <li>Johnson, M. (2024). "Responsive Design Best Practices". Web Dev Journal.</li>
+                    <li>Smith, A. (2024). "Accessibility in Modern Web Apps". UX Research Quarterly.</li>
+                    <li>Brown, L. (2023). "Performance Optimization Strategies". Tech Implementation Review.</li>
+                </ol>
             </div>
         `,
-        closeButtonText: "Close Citation"
+        closeButtonText: "Close Paper"
     },
     styleProps: {
         generalStyleProps: {
-            backgroundColor: "white",
+            backgroundColor: "#ffffff",
             border: "1px solid #d2d0ce",
             borderRadius: "8px",
-            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.12)",
+            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.1)",
             padding: "20px",
-            width: "400px",
-            maxHeight: "500px",
+            paddingTop: "45px",
+            width: "500px",
+            maxHeight: "600px",
+            position: "relative",
             display: "flex",
             flexDirection: "column"
         },
         titleStyleProps: {
-            color: "#323130",
             fontSize: "18px",
             fontWeight: "600",
-            marginBottom: "16px",
+            color: "#323130",
             borderBottom: "1px solid #edebe9",
-            paddingBottom: "8px"
+            paddingBottom: "8px",
+            marginBottom: "16px"
         },
         contentStyleProps: {
             fontSize: "14px",
@@ -343,58 +566,83 @@ const citationPanePreset6Props: ICitationPaneProps = {
             border: "none",
             borderRadius: "4px",
             padding: "10px 20px",
-            fontSize: "14px",
             alignSelf: "flex-end"
         }
+    },
+    componentOverrides: {
+        topCloseButton: customTopCloseButton
     }
 };
-
-export const CitationPanePreset6 = CitationPaneTemplate.bind({});
-CitationPanePreset6.args = citationPanePreset6Props;
 
 /*
-    Citation Pane Preset 7 - Minimal Style
+    9. Extremely Long Content Test (Fixed Height with Scrolling)
 */
-
-const citationPanePreset7Props: ICitationPaneProps = {
+export const ExtremelyLongContent = CitationPaneTemplate.bind({});
+ExtremelyLongContent.args = {
     controlProps: {
-        id: "ocw-citation-pane-preset7",
-        titleText: "Minimal",
-        contentHtml: "<p>Less is more.</p>",
-        closeButtonText: "×"
-    },
-    styleProps: {
-        generalStyleProps: {
-            backgroundColor: "transparent",
-            border: "none",
-            padding: "12px",
-            width: "200px"
-        },
-        titleStyleProps: {
-            fontSize: "14px",
-            fontWeight: "500",
-            color: "#605e5c",
-            marginBottom: "8px"
-        },
-        contentStyleProps: {
-            fontSize: "13px",
-            color: "#605e5c",
-            fontStyle: "italic",
-            marginBottom: "8px"
-        },
-        closeButtonStyleProps: {
-            backgroundColor: "transparent",
-            border: "1px solid #c8c6c4",
-            borderRadius: "50%",
-            color: "#605e5c",
-            fontSize: "12px",
-            height: "20px",
-            width: "20px",
-            padding: "0",
-            alignSelf: "flex-end"
-        }
+        id: "extremely-long-content",
+        titleText: "Very Long Research Document",
+        contentHtml: `
+            <div>
+                <h4>Executive Summary</h4>
+                <p>This is an extremely long document designed to test the scrolling behavior and height constraints of the CitationPane component. The content should be scrollable without breaking the layout or causing the pane to extend beyond reasonable bounds.</p>
+                
+                <h4>Chapter 1: Introduction</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                
+                <h4>Chapter 2: Methodology</h4>
+                <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?</p>
+                
+                <ul>
+                    <li>First methodology point with detailed explanation that goes on for quite some time</li>
+                    <li>Second methodology point that also contains extensive detail about the research process</li>
+                    <li>Third methodology point explaining the data collection and analysis procedures</li>
+                    <li>Fourth methodology point covering statistical analysis and validation methods</li>
+                    <li>Fifth methodology point discussing ethical considerations and participant consent</li>
+                </ul>
+                
+                <h4>Chapter 3: Results</h4>
+                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+                
+                <p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus.</p>
+                
+                <h4>Chapter 4: Analysis</h4>
+                <p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+                
+                <ol>
+                    <li>First analysis point with comprehensive data interpretation and statistical significance testing</li>
+                    <li>Second analysis point covering correlation analysis and regression modeling techniques</li>
+                    <li>Third analysis point examining outliers and data quality assessment procedures</li>
+                    <li>Fourth analysis point discussing limitations and potential sources of bias in the study</li>
+                    <li>Fifth analysis point presenting alternative interpretations and future research directions</li>
+                </ol>
+                
+                <h4>Chapter 5: Discussion</h4>
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+                
+                <p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p>
+                
+                <h4>Chapter 6: Conclusions</h4>
+                <p>No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure.</p>
+                
+                <p>To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?</p>
+                
+                <h4>References</h4>
+                <ol>
+                    <li>Smith, J. (2024). "Advanced Research Methodologies in Modern Science". Journal of Scientific Research, 45(3), 123-145.</li>
+                    <li>Johnson, M. & Brown, L. (2024). "Statistical Analysis Techniques for Large Datasets". Data Science Quarterly, 12(2), 67-89.</li>
+                    <li>Davis, K. (2023). "Ethical Considerations in Contemporary Research". Ethics in Science Review, 8(4), 234-256.</li>
+                    <li>Wilson, P. et al. (2024). "Interpretation of Complex Research Results". Academic Review Journal, 56(1), 45-78.</li>
+                    <li>Anderson, R. (2024). "Future Directions in Scientific Investigation". Research Horizons, 23(7), 156-189.</li>
+                </ol>
+                
+                <h4>Appendices</h4>
+                <p>Additional supplementary material and detailed data tables would typically appear here, extending the document even further to test the absolute limits of the scrolling functionality and ensure proper behavior with extremely long content that might be encountered in real-world usage scenarios.</p>
+            </div>
+        `,
+        closeButtonText: "Close Document"
     }
+    // Uses default styles to test the new scrolling behavior
 };
-
-export const CitationPanePreset7 = CitationPaneTemplate.bind({});
-CitationPanePreset7.args = citationPanePreset7Props;
