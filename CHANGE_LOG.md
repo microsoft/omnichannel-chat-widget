@@ -624,6 +624,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- New CitationPane component to render citations in chat conversations.
+
 ## [1.1.13] - 2025-07-22
 
 ### Added
