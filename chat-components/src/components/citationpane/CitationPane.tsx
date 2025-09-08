@@ -1,4 +1,4 @@
-import { DefaultButton, IButtonStyles, IconButton, IStackStyles, Label, Stack } from "@fluentui/react";
+import { DefaultButton, IButtonStyles, IStackStyles, IconButton, Label, Stack } from "@fluentui/react";
 import { ElementType, EventNames } from "../../common/Constants";
 import React, { useCallback } from "react";
 
@@ -28,14 +28,14 @@ function CitationPane(props: ICitationPaneProps) {
     }, [props.controlProps, elementId]);
 
     const handleTopClose = useCallback(() => {
-        if (props.controlProps?.onClose) {
+        if (handleClose) {
             const customEvent = { 
                 elementType: ElementType.CitationPaneCloseButton, 
                 elementId: elementId + "-top-close", 
                 eventName: EventNames.OnClick 
             };
             BroadcastService.postMessage(customEvent);
-            props.controlProps?.onClose();
+            handleClose();
         }
     }, [props.controlProps, elementId]);
 
