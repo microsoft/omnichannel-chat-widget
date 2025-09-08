@@ -44,9 +44,6 @@ export const createInternetConnectionChangeHandler = async (state: ILiveChatWidg
                 Event: TelemetryEvent.NetworkDisconnected
             });
             NotificationHandler.notifyError(NotificationScenarios.InternetConnection, inMemoryState?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_BANNER_NO_INTERNET_CONNECTION as string);
-            BroadcastService.postMessage({
-                eventName: BroadcastEvent.NetworkDisconnected
-            });
         } else {
             TelemetryHelper.logActionEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.NetworkReconnected

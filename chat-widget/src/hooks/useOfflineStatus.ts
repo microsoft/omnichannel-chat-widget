@@ -2,8 +2,8 @@ import { useSyncExternalStore, useEffect } from "react";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { BroadcastEvent } from "../common/telemetry/TelemetryConstants";
 
-// Simple external store for offline status sourced from BroadcastService network events.
-let offline = false;
+// utility for offline status
+let offline = !navigator.onLine;
 let initialized = false;
 const listeners = new Set<() => void>();
 
@@ -12,13 +12,28 @@ const notify = () => listeners.forEach(l => l());
 function initSubscriptions() {
     if (initialized) return;
     initialized = true;
+    
     try {
-        BroadcastService.getMessageByEventName(BroadcastEvent.NetworkDisconnected).subscribe(() => {
+        // Listen to browser's native online/offline events
+        const handleOnline = () => {
+            if (offline) { offline = false; notify(); }
+        };
+        
+        const handleOffline = () => {
             if (!offline) { offline = true; notify(); }
-        });
+        };
+        
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+        
+        // Also listen to BroadcastService NetworkReconnected event for additional reconnection logic
         BroadcastService.getMessageByEventName(BroadcastEvent.NetworkReconnected).subscribe(() => {
             if (offline) { offline = false; notify(); }
         });
+        
+        // Update initial state based on current navigator.onLine
+        offline = !navigator.onLine;
+        
     // eslint-disable-next-line no-empty
     } catch { /* fail silent; remains online */ }
 }
