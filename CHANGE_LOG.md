@@ -8,13 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Adding runtimeId as part of events send to identify calls from different tabs.
-- Masking custom properties for message event telemetry
-
-### Fixed
-
 - Fixed adaptive card error color issue
-- Citations reference label styling issue
 - Ensuring sendbox is enabled when starting a new chat
 - A11Y fix for announcing incorrect bot initials and alt text
 
@@ -622,6 +616,10 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+### Added
+
+- New CitationPane component to render citations in chat conversations.
 
 ## [1.1.13] - 2025-07-22
 
