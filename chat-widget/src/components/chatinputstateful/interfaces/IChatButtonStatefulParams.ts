@@ -4,12 +4,8 @@ import { ISuggestionsProps } from "@microsoft/omnichannel-chat-components/lib/ty
 // Extended props to include chatInput props and suggestions props
 export interface IChatInputStatefulProps {
     // Props for the chat input component
-    chatInputProps: IChatInputProps;
+    chatInputProps?: IChatInputProps;
 
     // Props for the suggestions component
     suggestionsProps?: ISuggestionsProps;
-
-    // overrideLocalizedStrings props
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    overrideLocalizedStrings?: any;
 }

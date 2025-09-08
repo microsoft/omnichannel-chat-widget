@@ -92,8 +92,8 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
+import { useBuildChatInputProps, type ChatInputPropsBuilderConfig } from "../../chatinputstateful/common/utils/propsBuilder";
 import ChatInputStateful from "../../chatinputstateful/ChatInputStateful";
-import { mapWebChatSendBoxStyles } from "../../chatinputstateful/common/utils/mapStyleOptionsToChatInput";
 
 let uiTimer : ITimer;
 
@@ -804,37 +804,17 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         bubbleTextColor,
         hideSendBox: true, // always hide legacy webchat send box (ChatInput replaces it)
     }), [webChatStyles, bubbleBackground, bubbleTextColor]);
-    // map Web Chat SendBox styles to ChatInput/Suggestions
-    const mappedStyles = React.useMemo(() => mapWebChatSendBoxStyles(webChatStyles),
-        [webChatStyles]
-    );
-    
-    const incomingHideSend = ((livechatProps.chatInputProps?.controlProps as unknown) as any)?.hideSendBox === true; // eslint-disable-line @typescript-eslint/no-explicit-any
-    const chatInputProps = {
-        ...livechatProps.chatInputProps,
-        controlProps: {
-            ...(livechatProps.chatInputProps?.controlProps || {}),
-            // Backward compatible mapping of legacy Web Chat hideSendBox flag -> ChatInput hideSendBox.
-            // Cast to any to avoid version skew between widget and components package type generations.
-            ...(webChatStyles.hideSendBox === true || incomingHideSend
-                ? { hideSendBox: true } as any // eslint-disable-line @typescript-eslint/no-explicit-any
-                : {})
-        },
-        styleProps: {
-            ...mappedStyles.chatInput,
-            ...livechatProps.chatInputProps?.styleProps
-        }
-    };
-    const suggestionsProps = {
-        ...livechatProps.suggestionsProps,
-        styleProps: {
-            ...mappedStyles.suggestions,
-            ...livechatProps.suggestionsProps?.styleProps
-        }
-    };
-
-    // Extract overrideLocalizedStrings from Web Chat props to pass to ChatInputStateful
-    const overrideLocalizedStrings = props.webChatContainerProps?.webChatProps?.overrideLocalizedStrings;
+   
+    // Prop. building for chat input including webchat props mappings to ChatInput
+    const { chatInputProps, suggestionsProps } = React.useMemo(() => {
+        const config: ChatInputPropsBuilderConfig = {
+            baseChatInputProps: livechatProps.chatInputProps,
+            baseSuggestionsProps: livechatProps.suggestionsProps,
+            webChatStyles,
+            webChatProps
+        };
+        return useBuildChatInputProps(config);
+    }, [livechatProps.chatInputProps, livechatProps.suggestionsProps, webChatStyles, webChatProps]);
 
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
@@ -915,7 +895,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...livechatProps} />)}
 
-                        {!chatInputProps?.controlProps?.hideSendBox && shouldShowChatInput(state) && ( <ChatInputStateful chatInputProps={chatInputProps} suggestionsProps={suggestionsProps} overrideLocalizedStrings={overrideLocalizedStrings}/>)}
+                        {!chatInputProps?.controlProps?.hideSendBox && shouldShowChatInput(state) && ( <ChatInputStateful chatInputProps={chatInputProps} suggestionsProps={suggestionsProps}/>)}
 
                         {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 

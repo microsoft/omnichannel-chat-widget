@@ -59,17 +59,6 @@ jest.mock("./hooks/useChatInputAttachments", () => ({
     })
 }));
 
-jest.mock("./hooks/useSuggestionsState", () => ({
-    useSuggestionsState: ({ props }: any) => ({
-        suggestionsProps: props || {
-            controlProps: {
-                suggestions: [],
-                updateSuggestions: jest.fn()
-            }
-        }
-    })
-}));
-
 const defaultProps: IChatInputStatefulProps = {
     chatInputProps: {
         controlProps: {

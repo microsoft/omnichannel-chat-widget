@@ -2,13 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFileUploadProgress } from "../../../hooks/useFileUploadProgress";
 import { IChatPreviewAttachment } from "@microsoft/omnichannel-chat-components/lib/types/components/chatinput/interfaces/IChatInputAttachmentProps";
 
-// export interface ChatInputPreviewAttachment {
-//     id: string;
-//     text?: string;
-//     progress?: number; // 0-1 normalized
-//     file?: File;
-// }
-
 export function useChatInputAttachments() {
     const { simulateUpload, cancelUpload, getProgress } = useFileUploadProgress();
     const [attachments, setAttachments] = useState<IChatPreviewAttachment[]>([]);
