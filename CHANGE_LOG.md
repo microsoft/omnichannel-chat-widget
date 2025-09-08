@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Adding runtimeId as part of events send to identify calls from different tabs.
 - Masking custom properties for message event telemetry
-- New chatInput and suggestion component for chat input box.
+- New chatInput and suggestions component for chat input box.
 
 ### Fixed
 
