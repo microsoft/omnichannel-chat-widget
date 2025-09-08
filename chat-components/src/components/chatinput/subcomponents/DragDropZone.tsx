@@ -68,7 +68,7 @@ export const DragDropZone: React.FC<IDragDropZoneProps> = ({
                     if (type === "*/*") {
                         return true;
                     }
-                    return file.type.includes(type.replace("*", ""));
+                    return file.type.includes(type.replace(/\*/g, ""));
                 });
             });
         }
