@@ -68,13 +68,71 @@ describe("Citation Pane component", () => {
             ...defaultCitationPaneProps,
             controlProps: {
                 ...defaultCitationPaneProps.controlProps,
-                hideCloseButton: true
+                hideCloseButton: true,
+                hideTopCloseButton: true
             }
         };
 
         render(<CitationPane {...citationPanePropsHideCloseButton} />);
 
         expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    });
+
+    it("hides only bottom close button when hideCloseButton is true", () => {
+        const citationPanePropsHideBottomCloseButton: ICitationPaneProps = {
+            ...defaultCitationPaneProps,
+            controlProps: {
+                ...defaultCitationPaneProps.controlProps,
+                hideCloseButton: true
+            }
+        };
+
+        render(<CitationPane {...citationPanePropsHideBottomCloseButton} />);
+
+        // Should still have the top close button
+        const buttons = screen.getAllByRole("button");
+        expect(buttons).toHaveLength(1);
+        expect(buttons[0]).toHaveAttribute("id", "ocw-citation-pane-top-close");
+        // But should not have the bottom close button with text
+        expect(screen.queryByText("Close")).not.toBeInTheDocument();
+    });
+
+    it("hides only top close button when hideTopCloseButton is true", () => {
+        const citationPanePropsHideTopCloseButton: ICitationPaneProps = {
+            ...defaultCitationPaneProps,
+            controlProps: {
+                ...defaultCitationPaneProps.controlProps,
+                hideTopCloseButton: true
+            }
+        };
+
+        render(<CitationPane {...citationPanePropsHideTopCloseButton} />);
+
+        // Should only have the bottom close button
+        const buttons = screen.getAllByRole("button");
+        expect(buttons).toHaveLength(1);
+        expect(buttons[0]).toHaveTextContent("Close");
+    });
+
+    it("renders both top and bottom close buttons by default", () => {
+        const controlProps = {
+            id: "test-citation",
+            titleText: "Test Citation",
+            contentHtml: "<p>Test content</p>",
+            onClose: jest.fn()
+        };
+
+        const { container } = render(<CitationPane controlProps={controlProps} />);
+
+        const buttons = screen.getAllByRole("button");
+        expect(buttons).toHaveLength(2);
+        
+        // Find buttons by their IDs directly
+        const topCloseButton = container.querySelector("#test-citation-top-close");
+        expect(topCloseButton).toBeInTheDocument();
+        
+        const bottomCloseButton = container.querySelector("#test-citation-close");
+        expect(bottomCloseButton).toBeInTheDocument();
     });
 
     it("clicking close button calls onClose and posts broadcast", () => {
@@ -90,13 +148,37 @@ describe("Citation Pane component", () => {
 
         render(<CitationPane controlProps={controlProps} />);
 
-        const closeButton = screen.getByRole("button", { name: /Close citation/i });
+        const closeButton = screen.getByText("Close");
         fireEvent.click(closeButton);
 
         expect(handleClose).toHaveBeenCalledTimes(1);
         expect(BroadcastService.postMessage).toHaveBeenCalledWith({
             elementType: "CitationPaneCloseButton",
             elementId: "test-citation-close",
+            eventName: "OnClick"
+        });
+    });
+
+    it("clicking top close button calls onClose and posts broadcast", () => {
+        const { BroadcastService } = require("../../services/BroadcastService");
+        const handleClose = jest.fn();
+
+        const controlProps = {
+            id: "test-citation",
+            titleText: "Test Citation",
+            contentHtml: "<p>Test content</p>",
+            onClose: handleClose
+        };
+
+        const { container } = render(<CitationPane controlProps={controlProps} />);
+
+        const topCloseButton = container.querySelector("#test-citation-top-close");
+        fireEvent.click(topCloseButton);
+
+        expect(handleClose).toHaveBeenCalledTimes(1);
+        expect(BroadcastService.postMessage).toHaveBeenCalledWith({
+            elementType: "CitationPaneCloseButton",
+            elementId: "test-citation-top-close",
             eventName: "OnClick"
         });
     });
@@ -161,12 +243,14 @@ describe("Citation Pane component", () => {
     it("renders custom component overrides", () => {
         const customTitle = <h2>Custom Title Component</h2>;
         const customCloseButton = <button>Custom Close</button>;
+        const customTopCloseButton = <button>Custom Top Close</button>;
 
         const citationPanePropsWithOverrides: ICitationPaneProps = {
             ...defaultCitationPaneProps,
             componentOverrides: {
                 title: customTitle,
-                closeButton: customCloseButton
+                closeButton: customCloseButton,
+                topCloseButton: customTopCloseButton
             }
         };
 
@@ -174,6 +258,22 @@ describe("Citation Pane component", () => {
 
         expect(screen.getByText("Custom Title Component")).toBeInTheDocument();
         expect(screen.getByText("Custom Close")).toBeInTheDocument();
+        expect(screen.getByText("Custom Top Close")).toBeInTheDocument();
+    });
+
+    it("positions top close button on the left when topCloseButtonPosition is topLeft", () => {
+        const controlProps = {
+            id: "test-citation",
+            titleText: "Test Citation",
+            contentHtml: "<p>Test content</p>",
+            topCloseButtonPosition: "topLeft" as const,
+            onClose: jest.fn()
+        };
+
+        const { container } = render(<CitationPane controlProps={controlProps} />);
+        
+        const topCloseButton = container.querySelector("#test-citation-top-close");
+        expect(topCloseButton).toBeInTheDocument();
     });
 
     it("applies custom class names", () => {
@@ -181,7 +281,8 @@ describe("Citation Pane component", () => {
             containerClassName: "custom-container",
             titleClassName: "custom-title",
             contentClassName: "custom-content",
-            closeButtonClassName: "custom-close-button"
+            closeButtonClassName: "custom-close-button",
+            topCloseButtonClassName: "custom-top-close-button"
         };
 
         const citationPanePropsWithClassNames: ICitationPaneProps = {
@@ -198,6 +299,7 @@ describe("Citation Pane component", () => {
         expect(container.querySelector(".custom-title")).toBeInTheDocument();
         expect(container.querySelector(".custom-content")).toBeInTheDocument();
         expect(container.querySelector(".custom-close-button")).toBeInTheDocument();
+        expect(container.querySelector(".custom-top-close-button")).toBeInTheDocument();
     });
 
     it("handles missing onClose prop gracefully", () => {
@@ -210,7 +312,7 @@ describe("Citation Pane component", () => {
 
         render(<CitationPane controlProps={controlProps} />);
 
-        const closeButton = screen.getByRole("button");
+        const closeButton = screen.getByText("Close");
         
         // Should not throw an error when clicking
         expect(() => {

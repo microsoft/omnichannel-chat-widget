@@ -8,6 +8,9 @@ export interface ICitationPaneControlProps {
     hideCloseButton?: boolean;
     closeButtonText?: string;
     closeButtonAriaLabel?: string;
+    hideTopCloseButton?: boolean;
+    topCloseButtonAriaLabel?: string;
+    topCloseButtonPosition?: "topLeft" | "topRight";
     brightnessValueOnDim?: string;
     onClose?: () => void;
 }

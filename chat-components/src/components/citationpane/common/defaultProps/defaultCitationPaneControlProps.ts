@@ -8,6 +8,9 @@ export const defaultCitationPaneControlProps: ICitationPaneControlProps = {
     hideCloseButton: false,
     closeButtonText: "Close",
     closeButtonAriaLabel: "Close citation",
+    hideTopCloseButton: false,
+    topCloseButtonAriaLabel: "Close",
+    topCloseButtonPosition: "topRight",
     onClose: () => { 
         console.log("Citation pane close");
     }

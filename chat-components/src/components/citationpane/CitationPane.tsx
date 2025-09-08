@@ -1,4 +1,4 @@
-import { DefaultButton, IButtonStyles, IStackStyles, Label, Stack } from "@fluentui/react";
+import { DefaultButton, IButtonStyles, IconButton, IStackStyles, Label, Stack } from "@fluentui/react";
 import { ElementType, EventNames } from "../../common/Constants";
 import React, { useCallback } from "react";
 
@@ -10,6 +10,7 @@ import { defaultCitationPaneContentStyles } from "./common/defaultStyles/default
 import { defaultCitationPaneControlProps } from "./common/defaultProps/defaultCitationPaneControlProps";
 import { defaultCitationPaneGeneralStyles } from "./common/defaultStyles/defaultCitationPaneGeneralStyles";
 import { defaultCitationPaneTitleStyles } from "./common/defaultStyles/defaultCitationPaneTitleStyles";
+import { defaultCitationPaneTopCloseButtonStyles } from "./common/defaultStyles/defaultCitationPaneTopCloseButtonStyles";
 
 function CitationPane(props: ICitationPaneProps) {
     const elementId = props.controlProps?.id ?? defaultCitationPaneControlProps.id;
@@ -26,8 +27,22 @@ function CitationPane(props: ICitationPaneProps) {
         }
     }, [props.controlProps, elementId]);
 
+    const handleTopClose = useCallback(() => {
+        if (props.controlProps?.onClose) {
+            const customEvent = { 
+                elementType: ElementType.CitationPaneCloseButton, 
+                elementId: elementId + "-top-close", 
+                eventName: EventNames.OnClick 
+            };
+            BroadcastService.postMessage(customEvent);
+            props.controlProps?.onClose();
+        }
+    }, [props.controlProps, elementId]);
+
     const containerStyles: IStackStyles = {
-        root: Object.assign({}, defaultCitationPaneGeneralStyles, props.styleProps?.generalStyleProps)
+        root: Object.assign({}, defaultCitationPaneGeneralStyles, props.styleProps?.generalStyleProps, {
+            position: "relative" // Ensure container is positioned for absolute positioning of top close button
+        })
     };
 
     const titleStyles: IButtonStyles = {
@@ -43,6 +58,15 @@ function CitationPane(props: ICitationPaneProps) {
         root: Object.assign({}, defaultCitationPaneCloseButtonStyles, props.styleProps?.closeButtonStyleProps)
     };
 
+    const topCloseButtonPosition = props.controlProps?.topCloseButtonPosition || defaultCitationPaneControlProps.topCloseButtonPosition;
+    const topCloseButtonStyles: IButtonStyles = {
+        root: Object.assign({}, 
+            defaultCitationPaneTopCloseButtonStyles, 
+            props.styleProps?.topCloseButtonStyleProps,
+            topCloseButtonPosition === "topLeft" ? { left: "8px", right: "auto" } : { right: "8px", left: "auto" }
+        )
+    };
+
     return (
         <>
             <Stack 
@@ -53,6 +77,18 @@ function CitationPane(props: ICitationPaneProps) {
                 dir={props.controlProps?.dir || defaultCitationPaneControlProps.dir}
                 styles={containerStyles}
                 className={props.styleProps?.classNames?.containerClassName}>
+
+                {/* Top Close Button (X) */}
+                {!props.controlProps?.hideTopCloseButton && (decodeComponentString(props.componentOverrides?.topCloseButton) ||
+                    <IconButton
+                        onClick={handleTopClose}
+                        id={elementId + "-top-close"}
+                        iconProps={{ iconName: "Cancel" }}
+                        ariaLabel={props.controlProps?.topCloseButtonAriaLabel || defaultCitationPaneControlProps.topCloseButtonAriaLabel}
+                        styles={topCloseButtonStyles}
+                        className={props.styleProps?.classNames?.topCloseButtonClassName}
+                    />
+                )}
 
                 {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.title) ||
                     <Label 
@@ -70,6 +106,7 @@ function CitationPane(props: ICitationPaneProps) {
                     dangerouslySetInnerHTML={{ __html: props.controlProps?.contentHtml ?? "" }} 
                 />
 
+                {/* Bottom Close Button */}
                 {!props.controlProps?.hideCloseButton && (decodeComponentString(props.componentOverrides?.closeButton) ||
                     <DefaultButton
                         onClick={handleClose} 

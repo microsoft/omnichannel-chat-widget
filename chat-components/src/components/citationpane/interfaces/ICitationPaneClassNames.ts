@@ -3,4 +3,5 @@ export interface ICitationPaneClassNames {
     titleClassName?: string;
     contentClassName?: string;
     closeButtonClassName?: string;
+    topCloseButtonClassName?: string;
 }
