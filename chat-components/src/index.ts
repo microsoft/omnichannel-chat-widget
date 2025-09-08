@@ -40,8 +40,6 @@ export { default as IncomingCall } from "./components/callingcontainer/subcompon
 
 export { default as Timer } from "./components/callingcontainer/subcomponents/Timer/Timer";
 
-export { default as ChatInput } from "./components/chatinput/ChatInput";
-
 export {
     ModernChatIconBase64, LegacyChatIconBase64, CustomChatIconBase64, LoadingSpinnerBase64, AgentIconBase64,
     ChatReconnectIconBase64, CloseChatButtonIconBase64, MinimizeChatButtonIconBase64, ErrorIconBase64, AudioNotificationOffIconBase64,
