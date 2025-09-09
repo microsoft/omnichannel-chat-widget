@@ -65,9 +65,20 @@ beforeAll(async () => {
         ]
     };
 
+    // Firefox-specific options to improve rendering consistency
+    const firefoxOptions = {
+        ...browserOptions,
+        args: [
+            ...browserOptions.args,
+            "--disable-font-subpixel-positioning",
+            "--disable-gpu",
+            "--no-gpu-rasterization"
+        ]
+    };
+
     browser = {
         chromium: await playwright["chromium"].launch(browserOptions),
-        firefox: await playwright["firefox"].launch(browserOptions),
+        firefox: await playwright["firefox"].launch(firefoxOptions),
         webkit: await playwright["webkit"].launch(browserOptions),
     };
     
@@ -75,7 +86,7 @@ beforeAll(async () => {
         storybookEndpoint: "./storybook-static",
         getPage: async (browserType, options) => {
             const page = await browser[browserType].newPage({
-                // Set consistent viewport and device scale factor
+                // Set consistent viewport and device scale factor for all environments
                 viewport: { width: 1280, height: 720 },
                 deviceScaleFactor: 1,
                 // Disable animations for consistent screenshots
@@ -99,6 +110,29 @@ beforeAll(async () => {
                 document.documentElement.style.setProperty("-webkit-font-smoothing", "antialiased");
                 document.documentElement.style.setProperty("-moz-osx-font-smoothing", "grayscale");
                 document.documentElement.style.setProperty("text-rendering", "optimizeLegibility");
+                
+                // Force consistent sizing and prevent layout shifts
+                document.documentElement.style.setProperty("box-sizing", "border-box");
+                document.documentElement.style.setProperty("zoom", "1");
+                
+                // Wait for page load and apply consistent sizing
+                window.addEventListener('DOMContentLoaded', () => {
+                    // Set consistent container dimensions for Storybook
+                    const storyRoot = document.querySelector('#storybook-root');
+                    if (storyRoot) {
+                        storyRoot.style.width = '1280px';
+                        storyRoot.style.minHeight = '720px';
+                        storyRoot.style.position = 'relative';
+                        storyRoot.style.overflow = 'visible';
+                    }
+                    
+                    // Force consistent iframe dimensions if present
+                    const storyFrame = document.querySelector('#storybook-preview-iframe');
+                    if (storyFrame) {
+                        storyFrame.style.width = '1280px';
+                        storyFrame.style.height = '720px';
+                    }
+                });
             });
             
             return page;
