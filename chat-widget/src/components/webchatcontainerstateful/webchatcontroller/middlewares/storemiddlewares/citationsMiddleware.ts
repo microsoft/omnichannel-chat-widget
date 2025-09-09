@@ -115,7 +115,7 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
         });
 
         // Second, escape inline citation references that are NOT followed by a colon
-        // This handles cases like [1]​[2] in the middle of text that should be escaped for markdown
+        // This handles cases like "[1][2]"" in the middle of text that should be escaped for markdown
         updatedText = updatedText.replace(/\[(\d+)\](?!:)/g, (match, number) => {
             // Escape the brackets to prevent markdown from treating them as incomplete link syntax
             return `&#91;${number}&#93;`;
