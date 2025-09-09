@@ -622,6 +622,8 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Components
 
+## [Unreleased]
+
 ## [1.1.14]
 
 ### Added
