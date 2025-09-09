@@ -2,10 +2,10 @@ import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/Teleme
 
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
-import { executeReducer } from "../../../../../contexts/createReducer";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { LiveChatWidgetActionType } from "../../../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
+import { executeReducer } from "../../../../../contexts/createReducer";
 
 // Middleware that extracts citation metadata from incoming ACS activities and
 // updates in-memory app state with a global citation map. Also rewrites
@@ -27,6 +27,9 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
                 const citations = gptFeedback.summarizationOpenAIResponse?.result?.textCitations;
                 // Rewrite inline citation labels in activity.text to match the global map keys
                 const updatedText = replaceCitations(action.payload.activity.text, citations, messagePrefix);
+
+                console.error("LOPEZ Citation:Text =>", updatedText);
+
                 action.payload.activity.text = updatedText;
                 // Build a global citation map keyed by the prefixed citation id and
                 // dispatch it to app state so the UI container can render citations.
@@ -92,7 +95,11 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
     }
 
     try {
-        return text.replace(/\[(\d+)\]:\s(cite:\d+)\s"([^\\"]+)"/g, (match, number, citeId) => {
+        let updatedText = text;
+
+        // First, handle the citation reference definitions at the end (e.g., [1]: cite:1757450535119_1 "index.html")
+        // These should NOT be escaped as they are proper citation definitions
+        updatedText = updatedText.replace(/\[(\d+)\]:\s(cite:\d+)\s"([^\\"]+)"/g, (match, number, citeId) => {
             // Attempt to find a citation object matching the inline cite id and
             // update the displayed id/title. When a messagePrefix exists we
             // rewrite the id to the prefixed form so it aligns with the
@@ -106,6 +113,15 @@ const replaceCitations = (text: string, citations: Array<{ id: string; title: st
             }
             return match;
         });
+
+        // Second, escape inline citation references that are NOT followed by a colon
+        // This handles cases like [1]​[2] in the middle of text that should be escaped for markdown
+        updatedText = updatedText.replace(/\[(\d+)\](?!:)/g, (match, number) => {
+            // Escape the brackets to prevent markdown from treating them as incomplete link syntax
+            return `&#91;${number}&#93;`;
+        });
+
+        return updatedText;
     } catch (error) {
         TelemetryHelper.logActionEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.CitationMiddlewareFailed,
