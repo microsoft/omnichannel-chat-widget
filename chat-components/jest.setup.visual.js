@@ -20,12 +20,25 @@ beforeAll(async () => {
     setConfig({
         storybookEndpoint: "./storybook-static",
         getPage: async (browserType, options) => {
-            const page = await browser[browserType].newPage(options);
+            const page = await browser[browserType].newPage({
+                viewport: { width: 1280, height: 720 }, // Consistent viewport for local and CI
+                deviceScaleFactor: 1, // Consistent DPI scaling
+                ...options
+            });
             return page;
         },
         afterScreenshot: async (page) => {
             await page.close();
         },
+        screenshotOptions: {
+            // Target ONLY the Firefox custom-components screenshot (ID: kF8sVvQpcm8X)
+            clip: (screenshotInfo) => {
+                if (screenshotInfo.screenshotId === 'kF8sVvQpcm8X') {
+                    return { x: 0, y: 0, width: 800, height: 600 };
+                }
+                return undefined; // Default behavior for all other screenshots
+            }
+        }
     });
 });
 
