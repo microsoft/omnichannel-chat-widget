@@ -15,24 +15,24 @@ export default {
 
 BroadcastServiceInitialize("testChannel");
 
-// Common styling for top close button to ensure proper positioning and X display - using scalable units
+// Common styling for top close button to ensure proper positioning and X display - using fixed px units for visual test consistency
 const commonTopCloseButtonStyles = {
     position: "absolute" as const,
-    top: "0.5em", // Scalable positioning
-    right: "0.5em", // Scalable positioning
+    top: "8px", // Fixed positioning for visual tests
+    right: "8px", // Fixed positioning for visual tests
     backgroundColor: "#ffffff",
     border: "1px solid #d2d0ce",
     borderRadius: "50%",
-    width: "1.75em", // Scalable width
-    height: "1.75em", // Scalable height
+    width: "28px", // Fixed width for visual tests
+    height: "28px", // Fixed height for visual tests
     cursor: "pointer",
-    fontSize: "1em", // Scalable font size
+    fontSize: "16px", // Fixed font size for visual tests
     fontWeight: "bold" as const,
     color: "#605e5c",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0px 0.0625em 0.1875em rgba(0, 0, 0, 0.1)", // Scalable shadow
+    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)", // Fixed shadow for visual tests
     zIndex: 1000,
     ":hover": {
         backgroundColor: "#f3f2f1",
@@ -40,17 +40,17 @@ const commonTopCloseButtonStyles = {
     }
 };
 
-// Standard top close button style props for stories - using scalable units
+// Standard top close button style props for stories - using fixed px units for visual test consistency
 const standardTopCloseButtonStyleProps = {
     position: "absolute" as const,
-    top: "0.5em", // Scalable positioning
-    right: "0.5em", // Scalable positioning
+    top: "8px", // Fixed positioning for visual tests
+    right: "8px", // Fixed positioning for visual tests
     backgroundColor: "#ffffff",
     border: "1px solid #d2d0ce",
     borderRadius: "50%",
-    width: "1.75em", // Scalable width
-    height: "1.75em", // Scalable height
-    fontSize: "1em", // Scalable font size
+    width: "28px", // Fixed width for visual tests
+    height: "28px", // Fixed height for visual tests
+    fontSize: "16px", // Fixed font size for visual tests
     fontWeight: "bold" as const,
     color: "#605e5c",
     zIndex: 1000,
@@ -520,21 +520,21 @@ RTLSupport.args = {
             <button
                 style={{
                     position: "absolute",
-                    top: "0.5em", // Scalable positioning
-                    left: "0.5em", // Scalable left position for RTL
+                    top: "8px", // Fixed positioning for visual tests
+                    left: "8px", // Fixed left position for RTL visual tests
                     backgroundColor: "#ffffff",
                     border: "1px solid #d2d0ce",
                     borderRadius: "50%",
-                    width: "1.75em", // Scalable width
-                    height: "1.75em", // Scalable height
+                    width: "28px", // Fixed width for visual tests
+                    height: "28px", // Fixed height for visual tests
                     cursor: "pointer",
-                    fontSize: "1em", // Scalable font size
+                    fontSize: "16px", // Fixed font size for visual tests
                     fontWeight: "bold",
                     color: "#605e5c",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0px 0.0625em 0.1875em rgba(0, 0, 0, 0.1)", // Scalable shadow
+                    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)", // Fixed shadow for visual tests
                     zIndex: 1000
                 }}
                 onClick={() => console.log("RTL top close clicked")}
