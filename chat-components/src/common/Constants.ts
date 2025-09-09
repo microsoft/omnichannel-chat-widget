@@ -44,6 +44,7 @@ export enum ElementType {
     ReconnectChatPane = "ReconnectChatPane",
     ConfirmationPaneConfirmButton = "ConfirmationPaneConfirmButton",
     ConfirmationPaneCancelButton = "ConfirmationPaneCancelButton",
+    CitationPaneCloseButton = "CitationPaneCloseButton", 
     PreChatSurveySubmitButton = "PreChatSurveySubmitButton",
     PreChatSurveyError = "PreChatSurveyError",
     IncomingCallDeclineCallButton = "IncomingCallDeclineCallButton",
