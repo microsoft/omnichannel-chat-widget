@@ -33,7 +33,7 @@ beforeAll(async () => {
         screenshotOptions: {
             // Target ONLY the Firefox custom-components screenshot (ID: kF8sVvQpcm8X)
             clip: (screenshotInfo) => {
-                if (screenshotInfo.screenshotId === 'kF8sVvQpcm8X') {
+                if (screenshotInfo.screenshotId === "kF8sVvQpcm8X") {
                     return { x: 0, y: 0, width: 800, height: 600 };
                 }
                 return undefined; // Default behavior for all other screenshots
