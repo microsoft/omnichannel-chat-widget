@@ -15,24 +15,24 @@ export default {
 
 BroadcastServiceInitialize("testChannel");
 
-// Common styling for top close button to ensure proper positioning and X display
+// Common styling for top close button to ensure proper positioning and X display - using fixed px units for visual test consistency
 const commonTopCloseButtonStyles = {
     position: "absolute" as const,
-    top: "8px",
-    right: "8px",
+    top: "8px", // Fixed positioning for visual tests
+    right: "8px", // Fixed positioning for visual tests
     backgroundColor: "#ffffff",
     border: "1px solid #d2d0ce",
     borderRadius: "50%",
-    width: "28px",
-    height: "28px",
+    width: "28px", // Fixed width for visual tests
+    height: "28px", // Fixed height for visual tests
     cursor: "pointer",
-    fontSize: "16px",
+    fontSize: "16px", // Fixed font size for visual tests
     fontWeight: "bold" as const,
     color: "#605e5c",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)", // Fixed shadow for visual tests
     zIndex: 1000,
     ":hover": {
         backgroundColor: "#f3f2f1",
@@ -40,17 +40,17 @@ const commonTopCloseButtonStyles = {
     }
 };
 
-// Standard top close button style props for stories
+// Standard top close button style props for stories - using fixed px units for visual test consistency
 const standardTopCloseButtonStyleProps = {
     position: "absolute" as const,
-    top: "8px",
-    right: "8px",
+    top: "8px", // Fixed positioning for visual tests
+    right: "8px", // Fixed positioning for visual tests
     backgroundColor: "#ffffff",
     border: "1px solid #d2d0ce",
     borderRadius: "50%",
-    width: "28px",
-    height: "28px",
-    fontSize: "16px",
+    width: "28px", // Fixed width for visual tests
+    height: "28px", // Fixed height for visual tests
+    fontSize: "16px", // Fixed font size for visual tests
     fontWeight: "bold" as const,
     color: "#605e5c",
     zIndex: 1000,
@@ -112,8 +112,7 @@ Default.args = {
         generalStyleProps: {
             ...(typeof defaultCitationPaneProps.styleProps?.generalStyleProps === "object" 
                 ? defaultCitationPaneProps.styleProps.generalStyleProps 
-                : {}),
-            width: "400px"
+                : {})
         }
     },
     componentOverrides: {
@@ -126,15 +125,17 @@ Default.args = {
 */
 export const ResearchCitation = CitationPaneTemplate.bind({});
 ResearchCitation.args = {
+    ...defaultCitationPaneProps,
     controlProps: {
+        ...defaultCitationPaneProps.controlProps,
         id: "research-citation",
         titleText: "Research Citation",
         contentHtml: `
             <div>
-                <blockquote style="border-left: 3px solid #0078d4; padding-left: 15px; margin: 15px 0; font-style: italic;">
+                <blockquote style="border-left: 0.1875em solid #0078d4; padding-left: 0.9375em; margin: 0.9375em 0; font-style: italic;">
                     "Artificial Intelligence has revolutionized how we approach complex problem-solving in modern software development."
                 </blockquote>
-                <div style="background-color: #f3f2f1; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                <div style="background-color: #f3f2f1; padding: 0.625em; border-radius: 0.25em; margin: 0.625em 0;">
                     <strong>Citation Details:</strong><br/>
                     Author: Dr. Sarah Johnson<br/>
                     Journal: AI Development Quarterly<br/>
@@ -146,36 +147,47 @@ ResearchCitation.args = {
         closeButtonText: "Close Citation"
     },
     styleProps: {
+        ...defaultCitationPaneProps.styleProps,
         generalStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.generalStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.generalStyleProps 
+                : {}),
             backgroundColor: "#ffffff",
             border: "1px solid #e1dfdd",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.1)",
-            padding: "20px",
-            paddingTop: "45px",
-            width: "500px",
+            borderRadius: "0.5em", // Scalable border radius
+            boxShadow: "0px 0.25em 1em rgba(0, 0, 0, 0.1)", // Scalable shadow
+            padding: "1.25em", // Scalable padding
+            paddingTop: "2.8em", // Scalable top padding
             position: "relative"
         },
         titleStyleProps: {
-            fontSize: "18px",
+            ...(typeof defaultCitationPaneProps.styleProps?.titleStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.titleStyleProps 
+                : {}),
+            fontSize: "1.125em", // Scalable font size (18px equivalent)
             fontWeight: "600",
             color: "#0078d4",
             borderBottom: "1px solid #edebe9",
-            paddingBottom: "8px",
-            marginBottom: "16px"
+            paddingBottom: "0.5em", // Scalable padding
+            marginBottom: "1em" // Scalable margin
         },
         contentStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.contentStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.contentStyleProps 
+                : {}),
             lineHeight: "1.6",
-            marginBottom: "20px"
+            marginBottom: "1.25em" // Scalable margin
         },
         closeButtonStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
+                : {}),
             backgroundColor: "#0078d4",
             color: "white",
             border: "none",
-            borderRadius: "4px",
-            padding: "10px 20px"
-        },
-        topCloseButtonStyleProps: standardTopCloseButtonStyleProps
+            borderRadius: "0.25em", // Scalable border radius
+            padding: "0.625em 1.25em" // Scalable padding
+        }
     },
     componentOverrides: {
         topCloseButton: customTopCloseButton
@@ -187,36 +199,50 @@ ResearchCitation.args = {
 */
 export const CompactCitation = CitationPaneTemplate.bind({});
 CompactCitation.args = {
+    ...defaultCitationPaneProps,
     controlProps: {
+        ...defaultCitationPaneProps.controlProps,
         id: "compact-citation",
         titleText: "Quick Reference",
         contentHtml: "<p><strong>Source:</strong> User Guide Section 4.2 - Best Practices</p>",
         closeButtonText: "Got it"
     },
     styleProps: {
+        ...defaultCitationPaneProps.styleProps,
         generalStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.generalStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.generalStyleProps 
+                : {}),
             backgroundColor: "#f8f9fa",
             border: "1px solid #dee2e6",
-            borderRadius: "6px",
-            padding: "16px",
-            paddingTop: "35px",
-            width: "300px",
+            borderRadius: "0.375em", // Scalable border radius
+            padding: "1em", // Scalable padding
+            paddingTop: "2.2em", // Scalable top padding
             position: "relative"
         },
         titleStyleProps: {
-            fontSize: "14px",
+            ...(typeof defaultCitationPaneProps.styleProps?.titleStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.titleStyleProps 
+                : {}),
+            fontSize: "0.875em", // Scalable font size (14px equivalent)
             fontWeight: "500",
             color: "#495057",
-            marginBottom: "8px"
+            marginBottom: "0.5em" // Scalable margin
         },
         contentStyleProps: {
-            fontSize: "13px",
-            marginBottom: "12px"
+            ...(typeof defaultCitationPaneProps.styleProps?.contentStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.contentStyleProps 
+                : {}),
+            fontSize: "0.8125em", // Scalable font size (13px equivalent)
+            marginBottom: "0.75em" // Scalable margin
         },
         closeButtonStyleProps: {
-            fontSize: "12px",
-            padding: "6px 12px",
-            minHeight: "28px"
+            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
+                : {}),
+            fontSize: "0.75em", // Scalable font size (12px equivalent)
+            padding: "0.375em 0.75em", // Scalable padding
+            minHeight: "1.75em" // Scalable min height
         }
     },
     componentOverrides: {
@@ -271,24 +297,23 @@ TopClosePositions.args = {
         generalStyleProps: {
             backgroundColor: "#e3f2fd",
             border: "2px solid #2196f3",
-            borderRadius: "8px",
-            padding: "20px",
-            paddingTop: "40px",
-            width: "400px",
+            borderRadius: "0.5em", // Scalable border radius
+            padding: "1.25em", // Scalable padding
+            paddingTop: "2.5em", // Scalable top padding
             position: "relative"
         },
         titleStyleProps: {
             color: "#1976d2",
-            fontSize: "16px",
+            fontSize: "1em", // Scalable font size
             fontWeight: "600",
-            marginBottom: "12px"
+            marginBottom: "0.75em" // Scalable margin
         },
         closeButtonStyleProps: {
             backgroundColor: "#2196f3",
             color: "white",
             border: "none",
-            borderRadius: "4px",
-            padding: "8px 16px"
+            borderRadius: "0.25em", // Scalable border radius
+            padding: "0.5em 1em" // Scalable padding
         }
     },
     componentOverrides: {
@@ -301,7 +326,9 @@ TopClosePositions.args = {
 */
 export const HiddenCloseOptions = CitationPaneTemplate.bind({});
 HiddenCloseOptions.args = {
+    ...defaultCitationPaneProps,
     controlProps: {
+        ...defaultCitationPaneProps.controlProps,
         id: "hidden-close-options",
         titleText: "Only Bottom Close Button",
         contentHtml: `
@@ -319,25 +346,34 @@ HiddenCloseOptions.args = {
         hideTopCloseButton: true
     },
     styleProps: {
+        ...defaultCitationPaneProps.styleProps,
         generalStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.generalStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.generalStyleProps 
+                : {}),
             backgroundColor: "#fff3e0",
             border: "2px solid #ff9800",
-            borderRadius: "8px",
-            padding: "20px",
-            width: "380px"
+            borderRadius: "0.5em", // Scalable border radius
+            padding: "1.25em" // Scalable padding
         },
         titleStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.titleStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.titleStyleProps 
+                : {}),
             color: "#f57c00",
-            fontSize: "16px",
+            fontSize: "1em", // Scalable font size
             fontWeight: "600",
-            marginBottom: "12px"
+            marginBottom: "0.75em" // Scalable margin
         },
         closeButtonStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
+                : {}),
             backgroundColor: "#ff9800",
             color: "white",
             border: "none",
-            borderRadius: "4px",
-            padding: "10px 20px",
+            borderRadius: "0.25em", // Scalable border radius
+            padding: "0.625em 1.25em", // Scalable padding
             fontWeight: "500"
         }
     }
@@ -350,11 +386,11 @@ const customTitle = (
     <div style={{
         background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         color: "white",
-        padding: "12px",
-        borderRadius: "6px",
+        padding: "0.75em", // Scalable padding
+        borderRadius: "0.375em", // Scalable border radius
         textAlign: "center",
         fontWeight: "bold",
-        marginBottom: "16px"
+        marginBottom: "1em" // Scalable margin
     }}>
         📚 Custom Citation Header
     </div>
@@ -365,12 +401,12 @@ const customCloseButton = encodeComponentString(
         background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
         color: "white",
         border: "none",
-        borderRadius: "20px",
-        padding: "10px 20px",
+        borderRadius: "1.25em", // Scalable border radius
+        padding: "0.625em 1.25em", // Scalable padding
         cursor: "pointer",
         fontWeight: "bold",
-        fontSize: "14px",
-        boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)"
+        fontSize: "0.875em", // Scalable font size
+        boxShadow: "0px 0.1875em 0.375em rgba(0, 0, 0, 0.2)" // Scalable shadow
     }}>
         ✨ Close Citation
     </button>
@@ -378,14 +414,16 @@ const customCloseButton = encodeComponentString(
 
 export const CustomComponents = CitationPaneTemplate.bind({});
 CustomComponents.args = {
+    ...defaultCitationPaneProps,
     controlProps: {
+        ...defaultCitationPaneProps.controlProps,
         id: "custom-components",
         contentHtml: `
-            <div style="text-align: center; padding: 10px;">
+            <div style="text-align: center; padding: 0.625em;">
                 <p>This citation demonstrates custom component overrides.</p>
-                <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin: 12px 0;">
+                <div style="background: #f8f9fa; padding: 0.75em; border-radius: 0.375em; margin: 0.75em 0;">
                     <strong>Custom Elements:</strong>
-                    <ul style="text-align: left; margin-top: 8px;">
+                    <ul style="text-align: left; margin-top: 0.5em;">
                         <li>Gradient title header</li>
                         <li>Styled close button</li>
                         <li>Custom top close button</li>
@@ -395,13 +433,16 @@ CustomComponents.args = {
         `
     },
     styleProps: {
+        ...defaultCitationPaneProps.styleProps,
         generalStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.generalStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.generalStyleProps 
+                : {}),
             backgroundColor: "#ffffff",
             border: "2px solid #e2e8f0",
-            borderRadius: "12px",
-            padding: "20px",
-            paddingTop: "40px",
-            width: "400px",
+            borderRadius: "0.75em", // Scalable border radius
+            padding: "1.25em", // Scalable padding
+            paddingTop: "2.5em", // Scalable top padding
             position: "relative"
         }
     },
@@ -417,7 +458,9 @@ CustomComponents.args = {
 */
 export const RTLSupport = CitationPaneTemplate.bind({});
 RTLSupport.args = {
+    ...defaultCitationPaneProps,
     controlProps: {
+        ...defaultCitationPaneProps.controlProps,
         id: "rtl-support",
         dir: "rtl",
         titleText: "مرجع الاقتباس",
@@ -432,32 +475,44 @@ RTLSupport.args = {
         topCloseButtonPosition: "topLeft"
     },
     styleProps: {
+        ...defaultCitationPaneProps.styleProps,
         generalStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.generalStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.generalStyleProps 
+                : {}),
             backgroundColor: "#ffffff",
             border: "1px solid #d2d0ce",
-            borderRadius: "8px",
-            padding: "20px",
-            paddingTop: "40px",
-            width: "400px",
+            borderRadius: "0.5em", // Scalable border radius
+            padding: "1.25em", // Scalable padding
+            paddingTop: "2.5em", // Scalable top padding
             position: "relative",
             fontFamily: "Tahoma, Arial, sans-serif"
         },
         titleStyleProps: {
-            fontSize: "16px",
+            ...(typeof defaultCitationPaneProps.styleProps?.titleStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.titleStyleProps 
+                : {}),
+            fontSize: "1em", // Scalable font size
             fontWeight: "600",
             textAlign: "right",
-            marginBottom: "12px"
+            marginBottom: "0.75em" // Scalable margin
         },
         contentStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.contentStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.contentStyleProps 
+                : {}),
             lineHeight: "1.6",
-            marginBottom: "16px"
+            marginBottom: "1em" // Scalable margin
         },
         closeButtonStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
+                : {}),
             backgroundColor: "#0078d4",
             color: "white",
             border: "none",
-            borderRadius: "4px",
-            padding: "8px 16px"
+            borderRadius: "0.25em", // Scalable border radius
+            padding: "0.5em 1em" // Scalable padding
         }
     },
     componentOverrides: {
@@ -465,21 +520,21 @@ RTLSupport.args = {
             <button
                 style={{
                     position: "absolute",
-                    top: "8px",
-                    left: "8px", // Left position for RTL
+                    top: "8px", // Fixed positioning for visual tests
+                    left: "8px", // Fixed left position for RTL visual tests
                     backgroundColor: "#ffffff",
                     border: "1px solid #d2d0ce",
                     borderRadius: "50%",
-                    width: "28px",
-                    height: "28px",
+                    width: "28px", // Fixed width for visual tests
+                    height: "28px", // Fixed height for visual tests
                     cursor: "pointer",
-                    fontSize: "16px",
+                    fontSize: "16px", // Fixed font size for visual tests
                     fontWeight: "bold",
                     color: "#605e5c",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+                    boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)", // Fixed shadow for visual tests
                     zIndex: 1000
                 }}
                 onClick={() => console.log("RTL top close clicked")}
@@ -496,7 +551,9 @@ RTLSupport.args = {
 */
 export const LargeContent = CitationPaneTemplate.bind({});
 LargeContent.args = {
+    ...defaultCitationPaneProps,
     controlProps: {
+        ...defaultCitationPaneProps.controlProps,
         id: "large-content",
         titleText: "Extended Research Paper",
         contentHtml: `
@@ -532,40 +589,52 @@ LargeContent.args = {
         closeButtonText: "Close Paper"
     },
     styleProps: {
+        ...defaultCitationPaneProps.styleProps,
         generalStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.generalStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.generalStyleProps 
+                : {}),
             backgroundColor: "#ffffff",
             border: "1px solid #d2d0ce",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 16px rgba(0, 0, 0, 0.1)",
-            padding: "20px",
-            paddingTop: "45px",
-            width: "500px",
-            maxHeight: "600px",
+            borderRadius: "0.5em", // Scalable border radius
+            boxShadow: "0px 0.25em 1em rgba(0, 0, 0, 0.1)", // Scalable shadow
+            padding: "1.25em", // Scalable padding
+            paddingTop: "2.8em", // Scalable top padding
+            maxHeight: "37.5em", // Scalable max height (600px equivalent at 16px base)
             position: "relative",
             display: "flex",
             flexDirection: "column"
         },
         titleStyleProps: {
-            fontSize: "18px",
+            ...(typeof defaultCitationPaneProps.styleProps?.titleStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.titleStyleProps 
+                : {}),
+            fontSize: "1.125em", // Scalable font size (18px equivalent)
             fontWeight: "600",
             color: "#323130",
             borderBottom: "1px solid #edebe9",
-            paddingBottom: "8px",
-            marginBottom: "16px"
+            paddingBottom: "0.5em", // Scalable padding
+            marginBottom: "1em" // Scalable margin
         },
         contentStyleProps: {
-            fontSize: "14px",
+            ...(typeof defaultCitationPaneProps.styleProps?.contentStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.contentStyleProps 
+                : {}),
+            fontSize: "0.875em", // Scalable font size (14px equivalent)
             lineHeight: "1.6",
             overflow: "auto",
-            marginBottom: "16px",
+            marginBottom: "1em", // Scalable margin
             flex: "1"
         },
         closeButtonStyleProps: {
+            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
+                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
+                : {}),
             backgroundColor: "#0078d4",
             color: "white",
             border: "none",
-            borderRadius: "4px",
-            padding: "10px 20px",
+            borderRadius: "0.25em", // Scalable border radius
+            padding: "0.625em 1.25em", // Scalable padding
             alignSelf: "flex-end"
         }
     },

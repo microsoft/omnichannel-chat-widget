@@ -618,6 +618,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.14]
+
 ### Added
 
 - New CitationPane component to render citations in chat conversations.

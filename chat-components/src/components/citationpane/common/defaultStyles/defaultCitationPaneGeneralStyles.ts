@@ -2,16 +2,15 @@ import { IStyle } from "@fluentui/react";
 
 export const defaultCitationPaneGeneralStyles: IStyle = {
     position: "relative", // Required for absolute positioning of top close button
-    paddingTop: "40px", // Space for top close button to prevent overlap
-    padding: "16px",
+    paddingTop: "2.5em", // Space for top close button to prevent overlap (scalable)
+    padding: "1em", // Scalable padding using em units
     backgroundColor: "#ffffff",
     border: "1px solid #d2d0ce",
-    borderRadius: "8px",
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+    borderRadius: "0.5em", // Scalable border radius
+    boxShadow: "0px 0.125em 0.25em rgba(0, 0, 0, 0.1)", // Scalable shadow
     display: "flex",
     flexDirection: "column",
-    minHeight: "120px", // Minimum height to ensure proper layout
-    maxHeight: "80vh", // Prevent the pane from becoming too tall on screen
+    minHeight: "7.5em", // Minimum height to ensure proper layout (scalable)
+    maxHeight: "30em", // Container-relative height instead of viewport-based
     overflow: "hidden" // Hide overflow on container, let content area handle scrolling
 };
-

@@ -1,7 +1,7 @@
 {
   "version": "4",
   "stories": {
-    "stateless-components-citation-pane--citation-pane-default": {
+    "stateless-components-citation-pane--pure-default": {
       "actionSets": [
         {
           "actions": [],
@@ -36,7 +36,7 @@
         }
       ]
     },
-    "stateless-components-citation-pane--citation-pane-preset-1": {
+    "stateless-components-citation-pane--default": {
       "actionSets": [
         {
           "actions": [],
@@ -89,7 +89,7 @@
         }
       ]
     },
-    "stateless-components-citation-pane--citation-pane-preset-2": {
+    "stateless-components-citation-pane--research-citation": {
       "actionSets": [
         {
           "actions": [],
@@ -142,7 +142,7 @@
         }
       ]
     },
-    "stateless-components-citation-pane--citation-pane-preset-3": {
+    "stateless-components-citation-pane--compact-citation": {
       "actionSets": [
         {
           "actions": [],
@@ -195,7 +195,7 @@
         }
       ]
     },
-    "stateless-components-citation-pane--citation-pane-preset-4": {
+    "stateless-components-citation-pane--top-close-positions": {
       "actionSets": [
         {
           "actions": [],
@@ -207,7 +207,7 @@
             {
               "name": "click",
               "args": {
-                "selector": "html>body>#root>div>div>button"
+                "selector": "#top-close-positions-close"
               }
             },
             {
@@ -271,7 +271,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>#root>div>div>button"
+                    "selector": "#top-close-positions-close"
                   }
                 },
                 {
@@ -298,7 +298,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>#root>div>div>button"
+                    "selector": "#top-close-positions-close"
                   }
                 },
                 {
@@ -325,7 +325,7 @@
                 {
                   "name": "click",
                   "args": {
-                    "selector": "html>body>#root>div>div>button"
+                    "selector": "#top-close-positions-close"
                   }
                 },
                 {
@@ -347,7 +347,7 @@
         }
       ]
     },
-    "stateless-components-citation-pane--citation-pane-preset-5": {
+    "stateless-components-citation-pane--hidden-close-options": {
       "actionSets": [
         {
           "actions": [],
@@ -400,7 +400,7 @@
         }
       ]
     },
-    "stateless-components-citation-pane--citation-pane-preset-6": {
+    "stateless-components-citation-pane--custom-components": {
       "actionSets": [
         {
           "actions": [],
@@ -447,7 +447,7 @@
         }
       ]
     },
-    "stateless-components-citation-pane--citation-pane-preset-7": {
+    "stateless-components-citation-pane--rtl-support": {
       "actionSets": [
         {
           "actions": [],
@@ -489,6 +489,100 @@
           ],
           "browserType": "webkit",
           "id": "0-QL__OKEivz",
+          "index": 2,
+          "title": "init"
+        }
+      ]
+    },
+    "stateless-components-citation-pane--large-content": {
+      "actionSets": [
+        {
+          "actions": [],
+          "id": "56yT09ZHLmC4",
+          "title": "init"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "rlLGVjocMCIR",
+          "index": 0,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "kF8sVvQpcm8Z",
+          "index": 1,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "0-QL__OKEivA",
+          "index": 2,
+          "title": "init"
+        }
+      ]
+    },
+    "stateless-components-citation-pane--extremely-long-content": {
+      "actionSets": [
+        {
+          "actions": [],
+          "id": "56yT09ZHLmC5",
+          "title": "init"
+        }
+      ],
+      "screenshots": [
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "chromium",
+          "id": "rlLGVjocMCIS",
+          "index": 0,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "firefox",
+          "id": "kF8sVvQpcm90",
+          "index": 1,
+          "title": "init"
+        },
+        {
+          "actionSets": [
+            {
+              "actions": [],
+              "title": "init"
+            }
+          ],
+          "browserType": "webkit",
+          "id": "0-QL__OKEivB",
           "index": 2,
           "title": "init"
         }

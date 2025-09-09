@@ -64,7 +64,7 @@ function CitationPane(props: ICitationPaneProps) {
         root: Object.assign({}, 
             defaultCitationPaneTopCloseButtonStyles, 
             props.styleProps?.topCloseButtonStyleProps,
-            topCloseButtonPosition === "topLeft" ? { left: "8px", right: "auto" } : { right: "8px", left: "auto" }
+            topCloseButtonPosition === "topLeft" ? { left: "0.5em", right: "auto" } : { right: "0.5em", left: "auto" }
         )
     };
 
