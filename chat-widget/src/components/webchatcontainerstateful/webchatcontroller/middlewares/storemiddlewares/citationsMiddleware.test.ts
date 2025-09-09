@@ -146,8 +146,8 @@ describe("citationsMiddleware (focused)", () => {
         // Inline citation references should be escaped (not followed by colon)
         expect(action.payload.activity.text).toContain("&#91;1&#93;​&#91;2&#93;");
         // Citation definitions should remain properly formatted (followed by colon)
-        expect(action.payload.activity.text).toContain("[1]: cite:1757450535119_1757450535119_1 \"index.html\"");
-        expect(action.payload.activity.text).toContain("[2]: cite:1757450535119_1757450535119_2 \"nuanceActivity.html\"");
+        expect(action.payload.activity.text).toContain("[1]: cite:1757450535119_1 \"index.html\"");
+        expect(action.payload.activity.text).toContain("[2]: cite:1757450535119_2 \"nuanceActivity.html\"");
         expect(next).toHaveBeenCalledWith(action);
     });
 });
