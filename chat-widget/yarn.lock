@@ -2571,10 +2571,21 @@
   resolved "https://registry.npmjs.org/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.11.tgz#f9515b3d56a1e516d7a6e48136c943eef913121f"
   integrity sha512-e2CCDYu4ZGMU9CNM6MNQUk4OZFWjPCxvMph4qfzdFFpiSDau5J+MMnccUT/qAeUcBvZktFFKCbDiFwPQrK3E6g==
 
-"@microsoft/omnichannel-chat-components@1.1.13":
-  version "1.1.13"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-1.1.13.tgz#07e72240ad3f629ec077f467b5e9edb6117767c9"
-  integrity sha512-Y/DMf/6gyaFHmMqHHaKyF0+VCuoAgSlM25sHDfW2+vqCA9MV37WbsWPIcCCD6dK8uoN4eLBeoryEXxNhJHbsew==
+"@microsoft/omnichannel-chat-components@.\\microsoft-omnichannel-chat-components-v1.1.14-CMPT-2.tgz":
+  version "1.1.14-CMPT-2"
+  resolved ".\\microsoft-omnichannel-chat-components-v1.1.14-CMPT-2.tgz#95abfbcdd4daf622b10b9ed18ffc171012182a8a"
+  dependencies:
+    "@fluentui/react" "^8.46.0"
+    adaptivecards "^2.10.0"
+    botframework-webchat "4.18.1-main.20250515.4c7400a"
+    broadcast-channel "^4.5.0"
+    jest-transform-stub "^2.0.0"
+    rxjs "^5.0.3"
+    styled-components "^5.3.1"
+
+"@microsoft/omnichannel-chat-components@.\\microsoft-omnichannel-chat-components-v1.1.14-CMPT-3.tgz":
+  version "1.1.14-CMPT-3"
+  resolved ".\\microsoft-omnichannel-chat-components-v1.1.14-CMPT-3.tgz#9fcf6f8ff4c98a0d470675fdff518a702bc2ccfb"
   dependencies:
     "@fluentui/react" "^8.46.0"
     adaptivecards "^2.10.0"

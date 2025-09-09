@@ -1,27 +1,21 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useState } from "react";
 import { createTimer, findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, preventFocusToMoveOutOfElement, setTabIndices } from "../../common/utils";
-import { defaultCitationContentCSS, defaultCitationPaneStyles } from "./common/defaultProps/defaultCitationPaneProps";
 
 import CitationDim from "./CitationDim";
+import { CitationPane } from "@microsoft/omnichannel-chat-components";
+import { ICitationPaneStatefulProps } from "./interfaces/ICitationPaneStatefulProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ITimer } from "../../common/interfaces/ITimer";
-import { IconButton } from "@fluentui/react";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { defaultCitationPaneStyles } from "./common/defaultProps/defaultCitationPaneProps";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
 let uiTimer : ITimer;
 
-export interface ICitationPaneProps {
-    id?: string;
-    title?: string;
-    onClose?: () => void;
-    contentHtml?: string;
-}
-
-export const CitationPaneStateful = (props: ICitationPaneProps) => {
+export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -124,37 +118,20 @@ export const CitationPaneStateful = (props: ICitationPaneProps) => {
     // still close overlays but hide the pane itself to avoid flashes.
     const hiddenStyle: React.CSSProperties = { visibility: isReady ? "visible" : "hidden", pointerEvents: isReady ? "auto" : "none" };
 
+    const controlProps = {
+        id: controlId,
+        dir: state.domainStates.globalDir,
+        titleText: props.title,
+        contentHtml: props.contentHtml,
+        brightnessValueOnDim: "0.2",
+        onClose: handleClose
+    } as any;
+
     return (
         <>
             <CitationDim brightness="0.2" />
-            <div id={controlId} role="dialog" aria-modal={true} style={Object.assign({}, mergedStyle, hiddenStyle, { display: "flex", flexDirection: "column", zIndex: 10001 })}>
-                {/* Header with close button */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
-                    <div className="ms-Label" style={{ fontWeight: 600 }}>{props.title ?? "Citation"}</div>
-                    <IconButton
-                        iconProps={{ iconName: "Cancel" }}
-                        ariaLabel="Close citation"
-                        title="Close"
-                        styles={{ root: { marginLeft: 8 } }}
-                        onClick={handleClose}
-                    />
-                </div>
-
-                {/* Scrollable content area styles are provided from defaults to avoid
-                    leaking inline styles in the component file. */}
-                <style>{defaultCitationContentCSS(controlId)}</style>
-
-                <div className="citation-content" dangerouslySetInnerHTML={{ __html: props.contentHtml ?? "" }} />
-
-                {/* Footer with close button */}
-                <div style={{ textAlign: "right", marginTop: 8 }}>
-                    <IconButton
-                        iconProps={{ iconName: "Cancel" }}
-                        ariaLabel="Close citation"
-                        title="Close"
-                        onClick={handleClose}
-                    />
-                </div>
+            <div style={Object.assign({}, mergedStyle, hiddenStyle, { display: "flex", flexDirection: "column", zIndex: 10001 })}>
+                <CitationPane controlProps={controlProps} />
             </div>
         </>
     );
