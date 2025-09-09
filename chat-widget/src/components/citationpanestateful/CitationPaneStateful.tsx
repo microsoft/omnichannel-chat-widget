@@ -29,7 +29,7 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
 
-    const controlId = props.id ?? "ocw-citation-pane";
+    const controlId = "ocw-citation-pane";
 
     // Pane style computed to match the webchat widget container bounds so the pane
     // stays within the widget and scrolls only vertically. We also track an
@@ -124,14 +124,18 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
         titleText: props.title,
         contentHtml: props.contentHtml,
         brightnessValueOnDim: "0.2",
-        onClose: handleClose
+        onClose: handleClose,
+        ...props?.controlProps
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any;
 
     return (
         <>
             <CitationDim brightness="0.2" />
             <div style={Object.assign({}, mergedStyle, hiddenStyle, { display: "flex", flexDirection: "column", zIndex: 10001 })}>
-                <CitationPane controlProps={controlProps} />
+                <CitationPane 
+                    controlProps={controlProps} 
+                    styleProps={props?.styleProps} />
             </div>
         </>
     );
