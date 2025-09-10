@@ -4,10 +4,29 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Widget
 
-
 ## [Unreleased]
 
+### Added
+
+- Adding runtimeId as part of events send to identify calls from different tabs.
+- Masking custom properties for message event telemetry
+
 ### Fixed
+
+- Fixed adaptive card error color issue
+- Citations reference label styling issue
+- Ensuring sendbox is enabled when starting a new chat
+- A11Y fix for announcing incorrect bot initials and alt text
+- Fixed carousel attachments alignment issue
+
+### Security
+
+- CVE-2022-25883 : ensure semver 7.5.4 is default, other libs used for testing are using a lower version
+
+## [1.8.2] - 2025-08-20
+
+### Fixed
+
 - Fixed agent user role in mock adapter to properly display agent messages in chat interface and also links in agent and customer messages
 - Fixed startchat and endchat sychronization
 - Fixed regression in ChatButtonStateful and LiveChatWidgetStateful components affecting control props order and out-of-office state logic
@@ -61,7 +80,6 @@ All notable changes to this project will be documented in this file.
 - Log `FormsError` telemetry events from `CustomerVoice`
 - Add ChatSDKExceptionDetails to telemetry in startChatErrorHandler for enhanced error debugging
 - Support conversational post chat survey with Microsoft Copilot Studio survey provider
-
 
 ### Fixed
 
@@ -606,6 +624,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.14]
+
+### Added
+
+- New CitationPane component to render citations in chat conversations.
+
 ## [1.1.13] - 2025-07-22
 
 ### Added
@@ -621,7 +645,6 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Uptake [botframework-webchat@4.18.1-main.20250213.4c7400a](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-main.20250213.4c7400a)
-
 
 ## [1.1.11] - 2025-05-22
 

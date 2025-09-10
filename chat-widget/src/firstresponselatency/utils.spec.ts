@@ -1,5 +1,5 @@
 import { MessagePayload, ScenarioType } from "./Constants";
-import { buildMessagePayload, getScenarioType, isHistoryMessage, polyfillMessagePayloadForEvent } from "./util";
+import { buildMessagePayload, getScenarioType, isHistoryMessage, maskPayloadText, polyfillMessagePayloadForEvent } from "./util";
 
 import { Constants } from "../common/Constants";
 import { IActivity } from "botframework-directlinejs";
@@ -173,4 +173,42 @@ describe("util.ts", () => {
             expect(result).toBe(ScenarioType.ReceivedMessageStrategy);
         });
     });
+
+    // add tests for maskPayloadText
+    describe("maskPayloadText", () => {
+        it("should mask the text content of the payload", () => {
+            const payload: MessagePayload = {
+                text: "Hello, world!",
+                type: Constants.message,
+                timestamp: Date.now().toString(),
+                userId: "user123",
+                tags: [],
+                messageType: "",
+                Id: "123",
+                role: "user",
+                isChatComplete: false,
+            };
+
+            const result = maskPayloadText(payload);
+            expect(result.text).toBe("*contents hidden*");
+        });
+
+        it("should return the original payload if no text is present", () => {
+            const payload: MessagePayload = {
+                text: "",
+                type: Constants.message,
+                timestamp: Date.now().toString(),
+                userId: "user123",
+                tags: [],
+                messageType: "",
+                Id: "123",
+                role: "user",
+                isChatComplete: false,
+            };
+
+            const result = maskPayloadText(payload);
+            expect(result.text).toBe("*contents hidden*");
+        });
+    });
 });
+

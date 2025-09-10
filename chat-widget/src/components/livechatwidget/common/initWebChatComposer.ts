@@ -1,6 +1,7 @@
 import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { changeLanguageCodeFormatForWebChat, getConversationDetailsCall } from "../../../common/utils";
+import { getOverriddenLocalizedStrings, localizedStringsBotInitialsMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/localizedStringsBotInitialsMiddleware";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../../common/Constants";
@@ -26,6 +27,7 @@ import createAttachmentUploadValidatorMiddleware from "../../webchatcontainersta
 import { createAvatarMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware";
 import createCallActionMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/callActionMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
+import { createCitationsMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/citationsMiddleware";
 import createConversationEndMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/conversationEndMiddleware";
 import createCustomEventMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/customEventMiddleware";
 import createDataMaskingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/dataMaskingMiddleware";
@@ -70,6 +72,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
     if (!webChatStore) {
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const addConversationalSurveyTagsCallback = (action: any) => {
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
             const isConversationalSurvey = inMemoryState.appStates?.isConversationalSurvey;
@@ -127,12 +130,14 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
             createMessageTimeStampMiddleware,
             createMessageSequenceIdOverrideMiddleware,
+            createCitationsMiddleware,
             gifUploadMiddleware,
             htmlPlayerMiddleware,
             htmlTextMiddleware(honorsTargetInHTMLLinks),
             createMaxMessageSizeValidator(localizedTexts),
             sanitizationMiddleware,
             createCallActionMiddleware(),
+            localizedStringsBotInitialsMiddleware(),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );
@@ -190,6 +195,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         onTelemetry: createWebChatTelemetry(),
         cardActionMiddleware: createCardActionMiddleware(props.webChatContainerProps?.botMagicCode || undefined),
         sendTypingIndicator: true,
+        overrideLocalizedStrings: getOverriddenLocalizedStrings(props.webChatContainerProps?.webChatProps?.overrideLocalizedStrings),
         ...props.webChatContainerProps?.webChatProps
     };
 

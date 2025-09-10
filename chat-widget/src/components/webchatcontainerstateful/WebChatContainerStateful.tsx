@@ -197,7 +197,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         }
 
         .webchat__bubble__content>div#ms_lcw_webchat_adaptive_card .ac-textBlock {
-            color: ${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color} !important;
+            color: ${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color};
         }
 
         .webchat__stacked-layout__content div.webchat__stacked-layout__message-row div.webchat__bubble--from-user {
@@ -306,7 +306,23 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             overflow-y: unset;
             }
 
-        
+        /* Custom styles for carousel hero cards */
+		ul.webchat__carousel-filmstrip__attachments .ac-image {
+			width: 200px !important;
+			height: 150px !important;
+			object-fit: cover !important;
+			border-radius: 8px !important;
+			border: 1px solid #e0e0e0 !important;
+		}
+
+		.webchat__carousel-filmstrip-attachment .webchat__bubble {
+			height: 100% !important;
+		}
+
+		.webchat__carousel-filmstrip-attachment .webchat__bubble #ms_lcw_webchat_adaptive_card {
+			height: 100% !important;
+		}
+
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
