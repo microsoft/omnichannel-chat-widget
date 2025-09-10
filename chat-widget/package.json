@@ -128,7 +128,7 @@
     "prepush": "yarn lint && yarn danger:prepush",
     "danger:prepush": "yarn danger local --dangerfile dangerfile.js --base main",
     "pretest:visual": "yarn playwright install",
-    "prepare": "husky",
+    "prepare": "husky && yarn build",
     "clean": "rimraf lib",
     "dev": "concurrently \"yarn build:esm:watch\" \"webpack --config ./webpack.config.cjs --watch\""
   },
