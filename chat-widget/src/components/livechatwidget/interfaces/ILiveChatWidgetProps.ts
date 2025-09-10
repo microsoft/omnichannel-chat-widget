@@ -2,6 +2,7 @@ import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
 import { IAudioNotificationProps } from "../../footerstateful/audionotificationstateful/interfaces/IAudioNotificationProps";
 import { ICallingContainerProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/interfaces/ICallingContainerProps";
 import { IChatButtonProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonProps";
+import { IChatInputProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatinput/interfaces/IChatInputProps";
 import { IConfirmationPaneStatefulProps } from "../../confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps";
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
 import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
@@ -28,6 +29,7 @@ import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetr
 import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { IAppInsightsConfig } from "../../../common/telemetry/interfaces/IAppInsightsConfig";
+import { ISuggestionsProps } from "@microsoft/omnichannel-chat-components/lib/types/components/suggestions/interfaces/ISuggestionsProps";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -74,4 +76,6 @@ export interface ILiveChatWidgetProps {
     mock?: IMockProps;
     featureConfigProps?: IFeatureConfigProps;
     appInsightsConfig?: IAppInsightsConfig;
+    chatInputProps?: IChatInputProps;
+    suggestionsProps?: ISuggestionsProps;
 }

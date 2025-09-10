@@ -111,7 +111,7 @@ export const preventFocusToMoveOutOfElement = (elementId: string) => {
 };
 
 export const setFocusOnSendBox = () => {
-    const sendBoxSelector = "textarea[data-id=\"webchat-sendbox-input\"]";
+    const sendBoxSelector = `#${Constants.chatInputId} [contenteditable="true"], #${Constants.chatInputId} textarea, #${Constants.chatInputId} input`;
     setFocusOnElement(sendBoxSelector);
 };
 

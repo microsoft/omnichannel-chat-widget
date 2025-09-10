@@ -27,6 +27,7 @@ import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "..
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
+    shouldShowChatInput,
     shouldShowConfirmationPane,
     shouldShowEmailTranscriptPane,
     shouldShowHeader,
@@ -91,6 +92,8 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
+import { useBuildChatInputProps, type ChatInputPropsBuilderConfig } from "../../chatinputstateful/common/utils/propsBuilder";
+import ChatInputStateful from "../../chatinputstateful/ChatInputStateful";
 
 let uiTimer : ITimer;
 
@@ -793,11 +796,25 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
     const userID = directLine.getState ? directLine?.getState("acs.userId") : "teamsvisitor";
 
+    // We permanently hide the legacy Web Chat send box (hideSendBox: true) and repurpose the incoming
+    // webChatStyles.hideSendBox flag (if provided) to control visibility of the new Fluent ChatInput.
     const styleOptions = React.useMemo(() => ({
         ...webChatStyles,
         bubbleBackground,
-        bubbleTextColor
+        bubbleTextColor,
+        hideSendBox: true, // always hide legacy webchat send box (ChatInput replaces it)
     }), [webChatStyles, bubbleBackground, bubbleTextColor]);
+   
+    // Prop. building for chat input including webchat props mappings to ChatInput
+    const { chatInputProps, suggestionsProps } = React.useMemo(() => {
+        const config: ChatInputPropsBuilderConfig = {
+            baseChatInputProps: livechatProps.chatInputProps,
+            baseSuggestionsProps: livechatProps.suggestionsProps,
+            webChatStyles,
+            webChatProps
+        };
+        return useBuildChatInputProps(config);
+    }, [livechatProps.chatInputProps, livechatProps.suggestionsProps, webChatStyles, webChatProps]);
 
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
@@ -877,6 +894,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {!livechatProps.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...livechatProps.callingContainerProps} />}
 
                         {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...livechatProps} />)}
+
+                        {!chatInputProps?.controlProps?.hideSendBox && shouldShowChatInput(state) && ( <ChatInputStateful chatInputProps={chatInputProps} suggestionsProps={suggestionsProps}/>)}
 
                         {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 

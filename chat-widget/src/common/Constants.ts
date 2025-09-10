@@ -30,6 +30,9 @@ export class Constants {
     public static readonly userParticipantTypeTag = "User";
     public static readonly botParticipantTypeTag = "Bot";
 
+    // chatInput
+    public static readonly chatInputId = "lcw-chat-input-wrapper";
+
     // channelDataMiddleware
     public static readonly channelIdKey = "ChannelId-";
     public static readonly ChannelId = "lcw";
@@ -175,7 +178,7 @@ export class HtmlClassNames {
 }
 
 export class HtmlElementSelectors {
-    public static readonly sendBoxSelector = "textarea[data-id=\"webchat-sendbox-input\"]"
+    public static readonly sendBoxSelector = `#${Constants.chatInputId} [contenteditable="true"], #${Constants.chatInputId} textarea, #${Constants.chatInputId} input`;
 }
 
 export class HtmlAttributeNames {
