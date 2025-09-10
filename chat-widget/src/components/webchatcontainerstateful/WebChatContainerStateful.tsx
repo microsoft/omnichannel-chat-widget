@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
@@ -31,6 +29,7 @@ import { useChatContextStore } from "../..";
 let uiTimer : ITimer;
 
 const broadcastChannelMessageEvent = "message";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const postActivity = (activity: any) => { 
     // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
@@ -100,8 +99,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                     try {
                         const cid = anchor.getAttribute("href");
                         // Prefer state-based citations injected by middleware
-                        if ((state as any)?.domainStates?.citations && cid) {
-                            text = (state as any).domainStates.citations[cid] ?? "";
+                        if (state?.domainStates?.citations && cid) {
+                            text = state.domainStates.citations[cid] ?? "";
                         }
                         // If state lookup failed, fall back to the anchor's title or innerText
                         if (!text) {
@@ -111,16 +110,13 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                         // ignore
                     }
 
-                    setCitationPaneText("");
                     setCitationPaneOpen(true);
-                    requestAnimationFrame(() => {
-                        requestAnimationFrame(() => {
-                            setCitationPaneText(text);
-                            setTimeout(() => {
-                                citationOpeningRef.current = false;
-                            }, 250);
-                        });
-                    });
+                    setCitationPaneText(text);
+                    
+                    // Simple debounce - reset guard after a short delay
+                    setTimeout(() => {
+                        citationOpeningRef.current = false;
+                    }, 100);
                 }
             } catch (e) {
                 citationOpeningRef.current = false;

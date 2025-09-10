@@ -1,5 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 
+import { ICitation } from "../../../interfaces/ICitation";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
@@ -19,6 +20,8 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
         if (isApplicable(action)) {
 
             try {
+                const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+
                 // Use the producer-supplied messageid as a stable per-message prefix
                 // when present. Do not derive a prefix from activity.id or timestamps.
                 const messagePrefix = action.payload?.activity?.messageid ?? "";
@@ -35,7 +38,8 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
                     const citationMap: Record<string, string> = {};
 
                     if (citations && Array.isArray(citations)) {
-                        (citations as unknown as Array<{ id?: string; text?: string; title?: string }> ).forEach((citation) => {
+                        (citations as ICitation[]).forEach((citation) => {
+                            console.log("Processing citation:", citation);
                             if (citation?.id) {
                                 // Preserve the 'cite:' scheme so renderer click handling remains consistent
                                 const idWithoutScheme = citation.id.replace(/^cite:/, "");
@@ -46,7 +50,7 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
                     }
 
                     // Read current in-memory state to merge with existing citations
-                    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+                    //const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                     const existingCitations = inMemoryState?.domainStates?.citations || {};
                     const updatedCitations = { ...existingCitations, ...citationMap };
                     // Always dispatch to app state

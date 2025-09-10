@@ -15,8 +15,8 @@ export interface ILiveChatWidgetContext {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         chatToken: any;
         renderingMiddlewareProps: IRenderingMiddlewareProps | undefined;
-    // Map of citation id (e.g. "cite:1") => content HTML/text (populated by middleware)
-    citations?: Record<string, string>;
+        //Map of citation id (e.g. "cite:1") => content HTML/text (populated by middleware)
+        citations?: Record<string, string>;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         postChatContext: any;
         middlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts | undefined;
