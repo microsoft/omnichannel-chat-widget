@@ -39,10 +39,6 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
 
                     if (citations && Array.isArray(citations)) {
                         (citations as ICitation[]).forEach((citation) => {
-                            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                                Event: TelemetryEvent.CitationProcessed,
-                                CitationDetails: citation
-                            });
                             if (citation?.id) {
                                 // Preserve the 'cite:' scheme so renderer click handling remains consistent
                                 const idWithoutScheme = citation.id.replace(/^cite:/, "");
