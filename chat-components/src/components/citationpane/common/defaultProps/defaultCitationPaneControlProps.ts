@@ -1,10 +1,11 @@
+import { HtmlAttributeNames } from "../../../../../../chat-widget/src/common/Constants";
 import { ICitationPaneControlProps } from "../../interfaces/ICitationPaneControlProps";
 
 export const defaultCitationPaneControlProps: ICitationPaneControlProps = {
-    id: "ocw-citation-pane",
+    id: HtmlAttributeNames.ocwCitationPaneClassName,
     dir: "ltr",
     hideTitle: false,
-    titleText: "Citation",
+    titleText: HtmlAttributeNames.ocwCitationPaneTitle,
     hideCloseButton: false,
     closeButtonText: "Close",
     closeButtonAriaLabel: "Close citation",

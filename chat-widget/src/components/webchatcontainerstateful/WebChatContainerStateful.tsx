@@ -157,8 +157,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 localStorage;
                 sessionStorage;
             } catch (error) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 if (!(window as any).TPCWarningShown) {
                     NotificationHandler.notifyWarning(NotificationScenarios.TPC, localizedTexts?.THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE ?? "");
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (window as any).TPCWarningShown = true;
                 }
             }
@@ -373,7 +375,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             <BasicWebChat></BasicWebChat>
         </Stack>
         {citationPaneOpen && (
-            <CitationPaneStateful id="ocw-citation-pane" title="Citation" contentHtml={citationPaneText} onClose={() => setCitationPaneOpen(false)} />
+            <CitationPaneStateful id={HtmlAttributeNames.ocwCitationPaneClassName} title={HtmlAttributeNames.ocwCitationPaneTitle} contentHtml={citationPaneText} onClose={() => setCitationPaneOpen(false)} />
         )}
         </>
     );

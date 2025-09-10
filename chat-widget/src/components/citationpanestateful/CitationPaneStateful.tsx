@@ -4,6 +4,7 @@ import { createTimer, findAllFocusableElement, findParentFocusableElementsWithou
 
 import CitationDim from "./CitationDim";
 import { CitationPane } from "@microsoft/omnichannel-chat-components";
+import { HtmlAttributeNames } from "../../common/Constants";
 import { ICitationPaneStatefulProps } from "./interfaces/ICitationPaneStatefulProps";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -29,7 +30,7 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
 
-    const controlId = "ocw-citation-pane";
+    const controlId = HtmlAttributeNames.ocwCitationPaneClassName;
 
     // Pane style computed to match the webchat widget container bounds so the pane
     // stays within the widget and scrolls only vertically. We also track an
