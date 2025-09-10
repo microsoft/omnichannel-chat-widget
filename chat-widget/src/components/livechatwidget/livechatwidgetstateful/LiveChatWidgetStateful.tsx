@@ -820,6 +820,36 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 background: ${scrollbarProps.thumbHoverColor};
             }
 
+            /* Windows High Contrast mode support */
+            @media (prefers-contrast: high) {
+                ::-webkit-scrollbar-track {
+                    background: ButtonFace;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    background: ButtonText;
+                }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: Highlight;
+                }
+            }
+
+            /* Legacy Windows High Contrast mode support */
+            @media (-ms-high-contrast: active) {
+                ::-webkit-scrollbar-track {
+                    background: ButtonFace;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    background: ButtonText;
+                }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: Highlight;
+                }
+            }
+
             .webchat__basic-transcript__activity-markdown-body > :last-child {
                 margin-bottom: 0px;
             }
