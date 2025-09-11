@@ -1,4 +1,4 @@
-import { IConfirmationPaneLocalizedTexts } from "./IConfirmationPaneLocalizedText";
+import { IConfirmationPaneLocalizedTexts } from "./IConfirmationPaneLocalizedTexts";
 import { IConfirmationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/confirmationpane/interfaces/IConfirmationPaneProps";
 
 export interface IConfirmationPaneStatefulProps extends IConfirmationPaneProps {

@@ -56,13 +56,27 @@ jobs:
         run : yarn build-storybook
       - name: VRT Tests
         working-directory: chat-widget
-        run: yarn test:visual
+        run: |
+          echo "::group::Running Visual Regression Tests"
+          yarn test:visual --verbose --no-coverage --passWithNoTests --testFailureExitCode=1 || echo "::error::Visual tests failed - check artifacts for details"
+          echo "::endgroup::"
+      - name: List failed test artifacts
+        if: failure()
+        working-directory: chat-widget
+        run: |
+          echo "::group::Failed Test Artifacts"
+          Get-ChildItem -Path "." -Recurse -Include "*__diff_output__*", "*__received__*", "*test-results*" -ErrorAction SilentlyContinue | ForEach-Object { Write-Output "📁 $($_.FullName)" }
+          echo "::endgroup::"
+        shell: powershell
       - name: Upload VRT Tests failures screenshots
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: VRT Failure Screenshots
-          path: 'chat-widget/**/__diff_output__/*.png'
+          path: |
+            chat-widget/**/__diff_output__/*.png
+            chat-widget/**/__received__/*.png
+            chat-widget/**/test-results/*.xml
       - name: Build package
         working-directory: chat-widget
         run: yarn build
