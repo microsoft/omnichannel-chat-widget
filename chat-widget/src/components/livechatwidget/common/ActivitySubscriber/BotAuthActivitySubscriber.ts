@@ -43,29 +43,33 @@ const extractSasUrl = async (attachment: any) => {
     return sasUrl;
 };
 
-const fetchBotAuthConfig = async (retries: number, interval: number): Promise<any> => {
+const fetchBotAuthConfig = (timeoutMs: number): Promise<boolean | undefined> => {
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
+        Event: TelemetryEvent.SetBotAuthProviderFetchConfig
     });
 
-    const botAuthConfigRequestEvent: ICustomEvent = { eventName: BroadcastEvent.BotAuthConfigRequest };
-    BroadcastService.postMessage(botAuthConfigRequestEvent);
-    const listener = BroadcastService.getMessageByEventName(BroadcastEvent.BotAuthConfigResponse)
-        .subscribe((data) => {
-            response = data.payload?.response !== undefined ? data.payload?.response : response;
-            listener.unsubscribe();
-        });
+    return new Promise((resolve) => {
+        let settled = false;
 
-    if (response !== undefined) {
-        //return response;
-        return response;
-    }
+        const timeout = setTimeout(() => {
+            if (!settled) {
+                settled = true;
+                resolve(undefined);
+            }
+        }, timeoutMs);
 
-    if (retries === 1) { // Base Case
-        throw new Error();
-    }
-    await delay(interval);
-    return await fetchBotAuthConfig(--retries, interval);
+        const sub = BroadcastService
+            .getMessageByEventName(BroadcastEvent.BotAuthConfigResponse)
+            .subscribe(data => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timeout);
+                sub.unsubscribe();
+                resolve(data.payload?.response);
+            });
+
+        BroadcastService.postMessage({ eventName: BroadcastEvent.BotAuthConfigRequest });
+    });
 };
 
 export class BotAuthActivitySubscriber implements IActivitySubscriber {
