@@ -10,6 +10,7 @@ import { TelemetryManager } from "../../../../common/telemetry/TelemetryManager"
 
 const supportedSignInCardContentTypes = ["application/vnd.microsoft.card.signin", "application/vnd.microsoft.card.oauth"];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
+const delay = (t: number | undefined) => new Promise(resolve => setTimeout(resolve, t));
 
 const extractSignInId = (signInUrl: string) => {
     const result = botOauthUrlRegex.exec(signInUrl);
