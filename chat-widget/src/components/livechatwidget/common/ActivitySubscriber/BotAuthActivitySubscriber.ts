@@ -41,51 +41,31 @@ const extractSasUrl = async (attachment: any) => {
     return sasUrl;
 };
 
-const fetchBotAuthConfig = async (retries: number, interval: number): Promise<boolean | undefined> => {
+const fetchBotAuthConfig = async (retries: number, interval: number): Promise<any> => {
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-        Event: TelemetryEvent.SetBotAuthProviderFetchConfig
+        Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
     });
 
-    for (let attempt = 1; attempt <= retries; attempt++) {
-        const result = await new Promise<boolean | undefined>((resolve) => {
-            let finished = false;
-            let sub: { unsubscribe: () => void } | undefined;
-
-            const cleanup = () => {
-                if (sub) {
-                    try { sub.unsubscribe(); } catch { }
-                    sub = undefined;
-                }
-            };
-
-            const timeoutId = setTimeout(() => {
-                if (finished) return;
-                finished = true;
-                cleanup();
-                resolve(undefined);
-            }, interval);
-
-            sub = BroadcastService
-                .getMessageByEventName(BroadcastEvent.BotAuthConfigResponse)
-                .subscribe(data => {
-                    if (finished) return;
-                    finished = true;
-                    clearTimeout(timeoutId);
-                    cleanup();
-                    resolve(data.payload?.response);
-                });
-
-            BroadcastService.postMessage({ eventName: BroadcastEvent.BotAuthConfigRequest });
+    const botAuthConfigRequestEvent: ICustomEvent = { eventName: BroadcastEvent.BotAuthConfigRequest };
+    BroadcastService.postMessage(botAuthConfigRequestEvent);
+    
+    let response: boolean | undefined;
+    const listener = BroadcastService.getMessageByEventName(BroadcastEvent.BotAuthConfigResponse)
+        .subscribe((data) => {
+            response = data.payload?.response !== undefined ? data.payload?.response : response;
+            listener.unsubscribe();
         });
 
-        if (result === true || result === false) {
-            return result;
-        }
-        if (attempt === retries) {
-            return undefined;
-        }
+    if (retries === 1) { // Base Case
+        throw new Error();
     }
-    return undefined;
+    await delay(interval);
+
+    if (response !== undefined) {
+        return response;
+    }
+
+    return await fetchBotAuthConfig(--retries, interval);
 };
 
 export class BotAuthActivitySubscriber implements IActivitySubscriber {
@@ -143,31 +123,28 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
         } else {
             BroadcastService.postMessage(event);
         }
-        
-        const configResponse = await fetchBotAuthConfig(this.fetchBotAuthConfigRetries, this.fetchBotAuthConfigRetryInterval);
-        
-        if (configResponse === false) {
-            TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.SetBotAuthProviderHideCard,
-            });
-            return; // keep hidden
-        }
-        
-        if (configResponse === undefined) { 
+        try {
+            const response = await fetchBotAuthConfig(this.fetchBotAuthConfigRetries, this.fetchBotAuthConfigRetryInterval);
+            if (response === false) {
+                TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.SetBotAuthProviderHideCard,
+                });
+            } else {
+                TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.SetBotAuthProviderDisplayCard,
+                });
+                return activity;
+            }
+        } catch {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.SetBotAuthProviderNotFound,
             });
-            // Allow future attempt if config eventually appears
+            //this is to ensure listener continues waiting for response
             if (this.signInCardSeen.has(signInId)) {
                 this.signInCardSeen.delete(signInId);
             }
-            return activity; // show card by returning activity
+            return activity;
         }
-        
-        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-            Event: TelemetryEvent.SetBotAuthProviderDisplayCard,
-        });
-        return activity;
     }
 
     public async next(activity: any): Promise<any> {
