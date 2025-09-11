@@ -217,6 +217,8 @@ export class HtmlAttributeNames {
     public static readonly adaptiveCardTextBlockClassName = "ac-textBlock";
     public static readonly adaptiveCardToggleInputClassName = "ac-toggleInput";
     public static readonly adaptiveCardActionSetClassName = "ac-actionSet";
+    public static readonly ocwCitationPaneClassName = "ocw-citation-pane";
+    public static readonly ocwCitationPaneTitle = "Citation";
 }
 
 export class WebChatMiddlewareConstants {

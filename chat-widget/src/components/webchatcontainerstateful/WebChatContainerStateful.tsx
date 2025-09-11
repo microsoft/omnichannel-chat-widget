@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import ChatWidgetEvents from "../livechatwidget/common/ChatWidgetEvents";
+import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -33,6 +32,7 @@ import { useChatContextStore } from "../..";
 let uiTimer: ITimer;
 
 const broadcastChannelMessageEvent = "message";
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const postActivity = (activity: any) => {
     // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
@@ -66,6 +66,16 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         });
     }, []);
 
+    // Citation pane state
+    const [citationPaneOpen, setCitationPaneOpen] = useState(false);
+    const [citationPaneText, setCitationPaneText] = useState("");
+
+    // Guard to prevent handling multiple rapid clicks which could cause
+    // the dim layer and pane to re-render out of sync and create a flicker.
+    const citationOpeningRef = useRef(false);
+
+    // ...existing code...
+
     useEffect(() => {
         const handler = async () => {
             await PersistentConversationHandler.pullHistory();
@@ -81,6 +91,56 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
+
+    // Delegated click handler for citation anchors. Placed after state is
+    // available so we can prefer reading citations from app state and fall
+    // back to the legacy window map for backward-compatibility in tests.
+    useEffect(() => {
+        const clickHandler = (ev: MouseEvent) => {
+            try {
+                if (citationOpeningRef.current) {
+                    return;
+                }
+
+                const target = ev.target as HTMLElement;
+                // Only consider anchors whose href starts with the citation scheme
+                const anchor = target.closest && (target.closest("a[href^=\"cite:\"]") as HTMLAnchorElement);
+
+                if (anchor) {
+                    ev.preventDefault();
+                    citationOpeningRef.current = true;
+                    // Rely only on the href to identify the citation key
+                    let text = "";
+                    try {
+                        const cid = anchor.getAttribute("href");
+                        // Prefer state-based citations injected by middleware
+                        if (state?.domainStates?.citations && cid) {
+                            text = state.domainStates.citations[cid] ?? "";
+                        }
+                        // If state lookup failed, fall back to the anchor's title or innerText
+                        if (!text) {
+                            text = anchor.getAttribute("title") || anchor.innerText || "";
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+
+                    setCitationPaneOpen(true);
+                    setCitationPaneText(text);
+                    
+                    // Simple debounce - reset guard after a short delay
+                    setTimeout(() => {
+                        citationOpeningRef.current = false;
+                    }, 100);
+                }
+            } catch (e) {
+                citationOpeningRef.current = false;
+            }
+        };
+
+        document.addEventListener("click", clickHandler);
+        return () => document.removeEventListener("click", clickHandler);
+    }, [state]);
 
     const containerStyles: IStackStyles = {
         root: Object.assign(
@@ -112,8 +172,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 localStorage;
                 sessionStorage;
             } catch (error) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 if (!(window as any).TPCWarningShown) {
                     NotificationHandler.notifyWarning(NotificationScenarios.TPC, localizedTexts?.THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE ?? "");
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (window as any).TPCWarningShown = true;
                 }
             }
@@ -330,6 +392,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 <BasicWebChat></BasicWebChat>
             </div>
         </Stack>
+        {citationPaneOpen && (
+            <CitationPaneStateful id={HtmlAttributeNames.ocwCitationPaneClassName} title={HtmlAttributeNames.ocwCitationPaneTitle} contentHtml={citationPaneText} onClose={() => setCitationPaneOpen(false)} />
+        )}
         </>
     );
 };

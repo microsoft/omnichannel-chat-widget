@@ -18,6 +18,9 @@ export enum LiveChatWidgetActionType {
     */
     SET_MIDDLEWARE_LOCALIZED_TEXTS,
 
+    // New: store citation map produced by the citations middleware
+    SET_CITATIONS,
+
     /*
         Parameters:
         - dir: The global direction prop that will apply to each component if noit specified
