@@ -6,6 +6,17 @@ import { toMatchScreenshots } from "storybook-addon-playwright";
 
 expect.extend({ toMatchScreenshots });
 
+// Enhanced error reporting for visual tests
+const originalFail = global.fail;
+global.fail = (message) => {
+    console.error(`❌ Visual Test Failure: ${message}`);
+    if (originalFail) {
+        originalFail(message);
+    } else {
+        throw new Error(message);
+    }
+};
+
 let browser = {};
 
 //Making Timeout to 50s
@@ -26,12 +37,19 @@ beforeAll(async () => {
             return page;
         },
         afterScreenshot: async (page) => {
-            console.log("End of visual test for :, ", page.url());
+            console.log(`✅ Completed visual test for: ${page.url()}`);
             await page.close();
         },
         beforeScreenshot: async (page) => {
-            console.log("Start of visual test for :, ", page.url());
+            console.log(`🔍 Starting visual test for: ${page.url()}`);
             await page.waitForLoadState("load",{ timeout: 10000 });
+        },
+        onScreenshotError: async (error, page) => {
+            console.error(`❌ Visual test FAILED for: ${page.url()}`);
+            console.error(`   Error: ${error.message}`);
+            console.error(`   Expected screenshot path: ${error.expectedPath || "unknown"}`);
+            console.error(`   Received screenshot path: ${error.receivedPath || "unknown"}`);
+            console.error(`   Diff screenshot path: ${error.diffPath || "unknown"}`);
         },
 
     });
