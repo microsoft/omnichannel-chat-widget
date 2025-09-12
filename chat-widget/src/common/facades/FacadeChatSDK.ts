@@ -430,4 +430,51 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("getReconnectableChats", () => this.chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams));
 
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    public async fetchPersistentConversationHistory(options: { pageSize?: number | string; pageToken?: string } = {}): Promise<any> {
+        const omnichannelConfig = this.chatSDK.omnichannelConfig;
+        const authToken = this.token;
+        const authCodeNone = this.chatSDK.OCClient?.configuration?.authCodeNonce;
+        
+        if (!omnichannelConfig || !omnichannelConfig.orgUrl || !omnichannelConfig.orgId || !omnichannelConfig.widgetId) {
+            throw new Error("Missing required omnichannelConfig properties for persistent chat history");
+        }
+
+        const requestUrl = `${omnichannelConfig.orgUrl}/livechatconnector/auth/organization/${omnichannelConfig.orgId}/widgetapp/${omnichannelConfig.widgetId}/conversation/history`;
+        const url = new URL(requestUrl);
+
+        if (options.pageSize) {
+            url.searchParams.append("pageSize", `${options.pageSize}`);
+        }
+
+        const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+            "Authcodenonce": `${authCodeNone}`,
+            "Authenticatedusertoken": `${authToken}`
+        };
+
+        if (options.pageToken) {
+            headers["PageToken"] = `${options.pageToken}`;
+        }
+
+        try {
+            console.log("LOPEZ Fetching History with URL:", url.toString());
+            const response = await fetch(url, {
+                method: "GET",
+                headers: headers
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log("LOPEZ Response History =>", data);
+                return data;
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+        } catch (err) {
+            console.error("LOPEZ Error fetching persistent conversation history:", err);
+            throw err;
+        }
+    }
 }
