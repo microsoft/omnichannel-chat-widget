@@ -44,7 +44,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             }
 
             // Use Case: If ended by Agent, stay chat in InActive state
-            let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+            const isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
             if (isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
                 state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
@@ -243,6 +243,7 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
             proactiveChatInNewWindow: false
         }
     });
+    dispatch({ type: LiveChatWidgetActionType.SET_CITATIONS, payload: {} });
 
     // Clear live chat context only if chat widget is fully closed to support transcript calls after sessionclose is called
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
