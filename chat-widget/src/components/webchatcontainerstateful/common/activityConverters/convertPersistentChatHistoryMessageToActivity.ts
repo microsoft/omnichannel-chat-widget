@@ -19,7 +19,6 @@ const convertStringValueToInt = (value: any) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const convertPersistentChatHistoryMessageToActivity = (message: any) => {
-    console.log("LOPEZ :: HELLO");
     const {additionalData, attachments, content, created, from, transcriptOriginalMessageId} = message;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const activity: any = {

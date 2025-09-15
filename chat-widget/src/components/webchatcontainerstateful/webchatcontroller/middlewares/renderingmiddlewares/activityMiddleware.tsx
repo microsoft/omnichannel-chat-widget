@@ -90,11 +90,14 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             return <LazyLoadActivity />;
         }
         
-        console.log("LOPEZ",card);
         if (isTagIncluded(card, Constants.persistentChatHistoryMessageTag)) {
+            const userMessageStyles = { ...defaultUserMessageStyles, ...userMessageStyleProps };
+
+            console.log("LOPEZ :: Rendering persistent message", card.activity);
+
             return (...renderArgs: any) => {
                 return (
-                    <div className="history-message" style={{ border: "3px dotted rgb(100, 108, 255)", padding: "5px" }}>
+                    <div className={card.activity.from.role === DirectLineSenderRole.User ? Constants.sentMessageClassName : Constants.receivedMessageClassName} style={userMessageStyles}>
                         {next(...args)(...renderArgs)}
                         <div style={{ fontSize: "12px" }}>
                             <span> Pull #{card.activity.channelData.count} </span>

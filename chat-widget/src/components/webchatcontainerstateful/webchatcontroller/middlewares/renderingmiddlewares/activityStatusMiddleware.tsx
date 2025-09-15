@@ -27,7 +27,6 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
     const current_tags = tags, current_name = name, current_role = role, current_timestamp = timestamp;
     let sameTimestampGroupTemp: boolean = sameTimestampGroup;
 
-    console.log("LOPEZ:: TAGS", tags);
     if (tags.includes(Constants.persistentChatHistoryMessageTag)) {
         return <HistoryMessageTimestamp args={args} />;
     }

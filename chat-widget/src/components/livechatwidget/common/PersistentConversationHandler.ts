@@ -81,11 +81,8 @@ class PersistentConversationHandler {
     }
 
     public static async fetchHistoryMessages() {
-
-        console.log("LOPEZ :: PErsistent 00");
         // Prevent additional pulls if the last pull was already made
         if (!PersistentConversationHandler.shouldPull()) {
-            console.log("LOPEZ , not calls");
             return [];
         }
         
@@ -95,12 +92,10 @@ class PersistentConversationHandler {
 
         if (PersistentConversationHandler.pageToken) {
             options.pageToken = PersistentConversationHandler.pageToken;
-        }
-    
+        }    
         
         const response = await PersistentConversationHandler.fetchPersistentConversationHistory(options);
 
-        console.log("LOPEZ :: PErsistent 1", response);
         const {chatMessages: messages, nextPageToken: pageToken} = response;
 
         PersistentConversationHandler.pageToken = pageToken || null;
@@ -114,11 +109,8 @@ class PersistentConversationHandler {
     }
 
     public static async pullHistory() {
-
-        console.log("LOPEZ :: pullHistory 0");
+        
         const messages = await PersistentConversationHandler.fetchHistoryMessages();
-
-        console.log("LOPEZ :: pullHistory 1", messages);
         // Reorder messages in descending order by timestamp
         const messagesDescOrder = [...messages];
         messagesDescOrder.reverse();

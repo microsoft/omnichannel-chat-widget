@@ -81,7 +81,6 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // ...existing code...
 
     useEffect(() => {
-        console.log("LOPEZ :: useEffect for ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY");
         const handler = async () => {
             console.log("Received event to fetch persistent chat history");
             await PersistentConversationHandler.pullHistory();
