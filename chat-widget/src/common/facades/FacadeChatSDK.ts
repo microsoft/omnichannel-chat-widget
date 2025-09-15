@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
-import { ChatAdapter, ChatSDKMessage, GetAgentAvailabilityResponse, GetLiveChatTranscriptResponse, GetVoiceVideoCallingResponse, IFileInfo, IRawMessage, MaskingRules, OmnichannelChatSDK, VoiceVideoCallingOptionalParams } from "@microsoft/omnichannel-chat-sdk";
+import { ChatAdapter, ChatSDKMessage, GetAgentAvailabilityResponse, GetLiveChatTranscriptResponse, GetPersistentChatHistoryResponse, GetVoiceVideoCallingResponse, IFileInfo, IRawMessage, MaskingRules, OmnichannelChatSDK, VoiceVideoCallingOptionalParams } from "@microsoft/omnichannel-chat-sdk";
 import { IFacadeChatSDKInput, PingResponse } from "./types/IFacadeChatSDKInput";
 import { getAuthClientFunction, handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 
@@ -17,6 +17,7 @@ import GetChatTokenOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core
 import GetConversationDetailsOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetConversationDetailsOptionalParams";
 import GetLiveChatConfigOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetLiveChatConfigOptionalParams";
 import GetLiveChatTranscriptOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetLiveChatTranscriptOptionalParams";
+import GetPersistentChatHistoryOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetPersistentChatHistoryOptionalParams";
 import IChatToken from "@microsoft/omnichannel-chat-sdk/lib/external/IC3Adapter/IChatToken";
 import IFileMetadata from "@microsoft/omnichannel-ic3core/lib/model/IFileMetadata";
 import IMessage from "@microsoft/omnichannel-ic3core/lib/model/IMessage";
@@ -29,7 +30,6 @@ import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
-import { WidgetLoadCustomErrorString } from "../Constants";
 import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
@@ -431,50 +431,7 @@ export class FacadeChatSDK {
 
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public async fetchPersistentConversationHistory(options: { pageSize?: number | string; pageToken?: string } = {}): Promise<any> {
-        const omnichannelConfig = this.chatSDK.omnichannelConfig;
-        const authToken = this.token;
-        const authCodeNone = this.chatSDK.OCClient?.configuration?.authCodeNonce;
-        
-        if (!omnichannelConfig || !omnichannelConfig.orgUrl || !omnichannelConfig.orgId || !omnichannelConfig.widgetId) {
-            throw new Error("Missing required omnichannelConfig properties for persistent chat history");
-        }
-
-        const requestUrl = `${omnichannelConfig.orgUrl}/livechatconnector/auth/organization/${omnichannelConfig.orgId}/widgetapp/${omnichannelConfig.widgetId}/conversation/history`;
-        const url = new URL(requestUrl);
-
-        if (options.pageSize) {
-            url.searchParams.append("pageSize", `${options.pageSize}`);
-        }
-
-        const headers: Record<string, string> = {
-            "Content-Type": "application/json",
-            "Authcodenonce": `${authCodeNone}`,
-            "Authenticatedusertoken": `${authToken}`
-        };
-
-        if (options.pageToken) {
-            headers["PageToken"] = `${options.pageToken}`;
-        }
-
-        try {
-            console.log("LOPEZ Fetching History with URL:", url.toString());
-            const response = await fetch(url, {
-                method: "GET",
-                headers: headers
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                console.log("LOPEZ Response History =>", data);
-                return data;
-            } else {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-        } catch (err) {
-            console.error("LOPEZ Error fetching persistent conversation history:", err);
-            throw err;
-        }
+    public async fetchPersistentConversationHistory(getPersistentChatHistoryOptionalParams: GetPersistentChatHistoryOptionalParams = {}): Promise<GetPersistentChatHistoryResponse> {
+        return this.validateAndExecuteCall("getPersistentChatHistory", () => this.chatSDK.getPersistentChatHistory(getPersistentChatHistoryOptionalParams));
     }
 }

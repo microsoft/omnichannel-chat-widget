@@ -90,6 +90,7 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             return <LazyLoadActivity />;
         }
         
+        console.log("LOPEZ",card);
         if (isTagIncluded(card, Constants.persistentChatHistoryMessageTag)) {
             return (...renderArgs: any) => {
                 return (

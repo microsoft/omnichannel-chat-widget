@@ -16,6 +16,7 @@ class LazyLoadHandler {
         }
 
         const callback: IntersectionObserverCallback = (entries: IntersectionObserverEntry[]) => {
+            console.log("LOPEZ  L:: LazyLoadeer");
             if (LazyLoadHandler.paused) {
                 return;
             }

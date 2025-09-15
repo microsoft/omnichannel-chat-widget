@@ -17,6 +17,9 @@ const WebChatEventSubscribers = (props: WebChatEventSubscribersProps) => {
 
     useEffect(() => {
         if (connectivityStatus === "connected") {
+            props.persistentChatHistoryEnabled = true;
+
+            console.log("LOPEZ  : props.persistentChatHistoryEnabled ", props.persistentChatHistoryEnabled);
             if (props.persistentChatHistoryEnabled === true) {
                 setTimeout(() => {
                     dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
