@@ -92,6 +92,11 @@ export const ChatInputStateful = (props: IChatInputStatefulProps) => {
         handleFilesChange
     ]);
 
+    // Create callback for clearing suggestions
+    const handleSuggestionsClear = useCallback(() => {
+        setShouldShowSuggestions(false);
+    }, [setShouldShowSuggestions]);
+
     const finalSuggestionsProps = React.useMemo(() => ({
         ...suggestionsProps,
         controlProps: {
@@ -99,14 +104,14 @@ export const ChatInputStateful = (props: IChatInputStatefulProps) => {
             // Runtime suggestions lifecycle
             suggestions,
             onSuggestionClick,
-            onSuggestionsClear: () => setShouldShowSuggestions(false),
+            onSuggestionsClear: handleSuggestionsClear,
             autoHide: true
         }
     }), [
         suggestionsProps,
         suggestions,
         onSuggestionClick,
-        setShouldShowSuggestions
+        handleSuggestionsClear
     ]);
 
     return (

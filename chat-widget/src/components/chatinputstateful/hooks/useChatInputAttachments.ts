@@ -84,9 +84,11 @@ export function useChatInputAttachments() {
     })), [attachments, getProgress]);
 
     // Cleanup any in-progress simulations on unmount
-    useEffect(() => () => {
-        attachments.forEach(a => cancelUpload(a.id));
-    }, []);
+    useEffect(() => {
+        return () => {
+            attachments.forEach(a => cancelUpload(a.id));
+        };
+    }, [attachments, cancelUpload]);
 
     return {
         attachments,

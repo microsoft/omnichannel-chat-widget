@@ -8,6 +8,17 @@ import { getDefaultStyleProps } from "../defaultProps/defaultStyleProps";
 import { IChatInputStatefulProps } from "../../interfaces/IChatButtonStatefulParams";
 
 /**
+ * Simple deep merge utility for objects
+ */
+function deepMerge<T extends Record<string, unknown>>(target: T | undefined, source: T | undefined): T | undefined {
+    if (!target && !source) return undefined;
+    if (!target) return source;
+    if (!source) return target;
+    
+    return { ...target, ...source } as T;
+}
+
+/**
  * Configuration for building ChatInput and Suggestions props
  */
 export interface ChatInputPropsBuilderConfig {
@@ -54,26 +65,44 @@ export function buildChatInputAndSuggestionsProps(config: ChatInputPropsBuilderC
         : {};
 
     // 3. BUILD CHATINPUT CONTROL PROPS (WebChat integration + additional props)
+    // Extract nested props for deep merge to prevent overwriting
+    const { 
+        sendButtonProps: localizedSendButtonProps, 
+        attachmentProps: localizedAttachmentProps,
+        ...localizedPropsWithoutNested 
+    } = chatInputLocalizedStrings;
+    
     const chatInputControlProps = {
         // Start with defaults
         ...getDefaultControlProps(),
         // Apply base props
         ...baseChatInputProps?.controlProps,
-        // Apply localization
-        ...chatInputLocalizedStrings,
+        // Apply localization (excluding nested props to avoid overwrite)
+        ...localizedPropsWithoutNested,
+        // Deep merge sendButtonProps to preserve all customized props
+        sendButtonProps: deepMerge(
+            deepMerge(
+                getDefaultControlProps().sendButtonProps,
+                baseChatInputProps?.controlProps?.sendButtonProps
+            ),
+            localizedSendButtonProps
+        ),
+        // Deep merge attachmentProps (including WebChat mappings)
+        attachmentProps: deepMerge(
+            deepMerge(
+                getDefaultControlProps().attachmentProps,
+                baseChatInputProps?.controlProps?.attachmentProps
+            ),
+            {
+                ...localizedAttachmentProps,
+                // Apply WebChat upload configuration with fallbacks to base props
+                attachmentAccept: uploadAccept ?? baseChatInputProps?.controlProps?.attachmentProps?.attachmentAccept,
+                attachmentMultiple: uploadMultiple ?? baseChatInputProps?.controlProps?.attachmentProps?.attachmentMultiple,
+                showAttachButton: hideUploadButton ?? baseChatInputProps?.controlProps?.attachmentProps?.showAttachButton,
+            }
+        ),
         // Apply hide sendbox logic with proper fallback
         hideSendBox: webChatStyles?.hideSendBox ?? baseChatInputProps?.controlProps?.hideSendBox,
-
-        // Build attachment props (base configuration + WebChat mappings)
-        attachmentProps: {
-            ...getDefaultControlProps().attachmentProps,
-            ...baseChatInputProps?.controlProps?.attachmentProps,
-            ...chatInputLocalizedStrings?.attachmentProps,
-            // Apply WebChat upload configuration with fallbacks to base props
-            attachmentAccept: uploadAccept ?? baseChatInputProps?.controlProps?.attachmentProps?.attachmentAccept,
-            attachmentMultiple: uploadMultiple ?? baseChatInputProps?.controlProps?.attachmentProps?.attachmentMultiple,
-            showAttachButton: hideUploadButton ?? baseChatInputProps?.controlProps?.attachmentProps?.showAttachButton,
-        }
     };
 
     // 4. BUILD CHATINPUT STYLE PROPS (combining all sources)

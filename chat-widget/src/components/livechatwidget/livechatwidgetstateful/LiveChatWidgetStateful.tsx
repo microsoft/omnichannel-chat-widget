@@ -805,16 +805,15 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         hideSendBox: true, // always hide legacy webchat send box (ChatInput replaces it)
     }), [webChatStyles, bubbleBackground, bubbleTextColor]);
    
-    // Prop. building for chat input including webchat props mappings to ChatInput
-    const { chatInputProps, suggestionsProps } = React.useMemo(() => {
-        const config: ChatInputPropsBuilderConfig = {
-            baseChatInputProps: livechatProps.chatInputProps,
-            baseSuggestionsProps: livechatProps.suggestionsProps,
-            webChatStyles,
-            webChatProps
-        };
-        return useBuildChatInputProps(config);
-    }, [livechatProps.chatInputProps, livechatProps.suggestionsProps, webChatStyles, webChatProps]);
+    // Prop building for chat input including webchat props mappings to ChatInput
+    const config: ChatInputPropsBuilderConfig = React.useMemo(() => ({
+        baseChatInputProps: livechatProps.chatInputProps,
+        baseSuggestionsProps: livechatProps.suggestionsProps,
+        webChatStyles,
+        webChatProps
+    }), [livechatProps.chatInputProps, livechatProps.suggestionsProps, webChatStyles, webChatProps]);
+    
+    const { chatInputProps, suggestionsProps } = useBuildChatInputProps(config);
 
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (

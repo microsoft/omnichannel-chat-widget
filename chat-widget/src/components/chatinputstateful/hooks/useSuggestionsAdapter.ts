@@ -41,7 +41,7 @@ export function useSuggestionsAdapter() {
         } catch (e) {
             console.warn("Suggestion action error", e);
         }
-    }, [performCardAction]);
+    }, [performCardAction, setShouldShowSuggestions]);
 
     useEffect(() => {
         if (webChatSuggestedActions?.length > 0) {

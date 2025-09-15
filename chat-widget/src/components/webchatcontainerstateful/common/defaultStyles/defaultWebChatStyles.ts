@@ -23,7 +23,6 @@ export const defaultWebChatStyles: StyleOptions = {
     rootHeight: "100%",
     rootWidth: "100%",
     sendBoxTextWrap: true,
-    // sendBoxHeight: 60,
     sendBoxMaxHeight: 96,
     sendBoxBackground: "White",
     showAvatarInGroup: true,
