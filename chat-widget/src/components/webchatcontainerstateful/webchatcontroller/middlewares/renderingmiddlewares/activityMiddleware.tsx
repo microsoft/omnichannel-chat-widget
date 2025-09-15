@@ -99,23 +99,13 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
                 return (
                     <div className={card.activity.from.role === DirectLineSenderRole.User ? Constants.sentMessageClassName : Constants.receivedMessageClassName} style={userMessageStyles}>
                         {next(...args)(...renderArgs)}
-                        <div style={{ fontSize: "12px" }}>
-                            <span> Pull #{card.activity.channelData.count} </span>
-                            <span> ConvId: {card.activity.channelData.conversationId} </span>
-                        </div>
                     </div>
                 );
             };
         }
+
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
-            return (
-                <>
-                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", fontFamily: "Segoe UI", fontSize: "12px", color: "rgb(96, 94, 92)" }}>
-                        <span> [ConvId: {card.activity.channelData.conversationId}] </span>
-                    </div>
-                    <ConversationDividerActivity />
-                </>
-            );
+            return (<ConversationDividerActivity />);
         }
 
 
