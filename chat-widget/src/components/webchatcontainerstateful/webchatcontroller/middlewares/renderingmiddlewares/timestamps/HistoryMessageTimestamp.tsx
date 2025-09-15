@@ -14,7 +14,11 @@ export const HistoryMessageTimestamp = ({ args }: any) => {
         activity
     } = args;
     const { timestamp } = activity;
-    
+    const { from } = activity;
+    const { name, role } = from;
+
+    console.log("LOPEZ :: Persistent history activity", activity);
+    console.log("LOPEZ :: Persistent history name", name);
     const contentStyles = {
         ...defaultTimestampContentStyles,
         ...state.domainStates.renderingMiddlewareProps?.timestampContentStyleProps
@@ -28,7 +32,7 @@ export const HistoryMessageTimestamp = ({ args }: any) => {
 
     return (
         <Stack style={contentStyles} dir={dir} horizontal>
-            <span> {getLocalizedTimestamp(timestamp)}</span>
+            {role === "bot" ? `${name} : ${getLocalizedTimestamp(timestamp)}` : `${getLocalizedTimestamp(timestamp)}`}
         </Stack>
     );
 };
