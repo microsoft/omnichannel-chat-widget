@@ -63,6 +63,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
     const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
 
+
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -82,12 +83,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
     useEffect(() => {
         const handler = async () => {
-            console.log("Received event to fetch persistent chat history");
             await PersistentConversationHandler.pullHistory();
         };
 
         window.addEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
-
         return () => {
             window.removeEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
         };
@@ -400,7 +399,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
-                <WebChatEventSubscribers />
+                <WebChatEventSubscribers persistentChatHistoryEnabled={ props.featureConfigProps?.persistentChatHistoryEnabled } />
                 <BasicWebChat></BasicWebChat>
             </div>
         </Stack>

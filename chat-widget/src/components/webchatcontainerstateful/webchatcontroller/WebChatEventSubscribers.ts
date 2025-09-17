@@ -17,9 +17,7 @@ const WebChatEventSubscribers = (props: WebChatEventSubscribersProps) => {
 
     useEffect(() => {
         if (connectivityStatus === "connected") {
-            props.persistentChatHistoryEnabled = true;
 
-            console.log("### PENDING TO FIGURE IT OUT WHAT TO DO WITH THIS PROPSP :LOPEZ  : props.persistentChatHistoryEnabled ", props.persistentChatHistoryEnabled);
             if (props.persistentChatHistoryEnabled === true) {
                 setTimeout(() => {
                     dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
@@ -28,7 +26,7 @@ const WebChatEventSubscribers = (props: WebChatEventSubscribersProps) => {
                             from: {
                                 role: "bot"
                             },
-                            timestamp: 0, // Set to 0 to stay at the top of the chat history
+                            timestamp: 0,
                             type: "message",
                             channelData: {
                                 tags: [Constants.persistentChatHistoryMessagePullTriggerTag]
