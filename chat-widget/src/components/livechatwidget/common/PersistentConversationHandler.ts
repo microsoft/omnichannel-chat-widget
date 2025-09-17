@@ -76,13 +76,25 @@ class PersistentConversationHandler {
         return !PersistentConversationHandler.isLastPull;
     }
 
+    public static reset() {
+        console.log("LOPEZ :: Reset");
+        PersistentConversationHandler.isLastPull = false;
+        PersistentConversationHandler.pageToken = null;
+        PersistentConversationHandler.lastMessage = null;
+        PersistentConversationHandler.count = 0;
+    }
+
     public static async fetchPersistentConversationHistory(options: { pageSize?: number; pageToken?: string | undefined }) {
         return PersistentConversationHandler.facadeChatSDK.fetchPersistentConversationHistory(options);
     }
 
     public static async fetchHistoryMessages() {
         // Prevent additional pulls if the last pull was already made
+        console.log("LOPEZ :: Checking if should pull history. isLastPull:", PersistentConversationHandler.isLastPull); 
+        console.log("LOPEZ :: Current pageToken:", PersistentConversationHandler.pageToken);
+
         if (!PersistentConversationHandler.shouldPull()) {
+            console.log("LOPEZ:: No more history to pull.");
             return [];
         }
         
@@ -90,27 +102,40 @@ class PersistentConversationHandler {
             pageSize: PersistentConversationHandler.pageSize
         };
 
-        if (PersistentConversationHandler.pageToken) {
-            options.pageToken = PersistentConversationHandler.pageToken;
-        }    
+        console.log("LOPEZ :: ok , about to call");
+        options.pageToken = PersistentConversationHandler.pageToken || undefined;
         
-        const response = await PersistentConversationHandler.fetchPersistentConversationHistory(options);
+        console.log("LOPEZ :: Fetching history with options:", options);
+        
+        try {
+            const response = await PersistentConversationHandler.fetchPersistentConversationHistory(options);
+  
+            console.log("LOPEZ :: Response", response);
+            const {chatMessages: messages, nextPageToken: pageToken} = response;
+  
+            PersistentConversationHandler.pageToken = pageToken || null;
+      
+            // 'pageToken' is null on the last pull
+            if (pageToken === null) {
+                console.log("LOPEZ:: Last Pull");
+                PersistentConversationHandler.isLastPull = true;
+            }
 
-        const {chatMessages: messages, nextPageToken: pageToken} = response;
-
-        PersistentConversationHandler.pageToken = pageToken || null;
-    
-        // 'pageToken' is null on the last pull
-        if (pageToken === null) {
-            PersistentConversationHandler.isLastPull = true;
+            return messages;
+        } catch (error) {
+            console.error(error);
+        
         }
         
-        return messages;
+        console.warn("LOPEZ :: whatevs");
+        return [];
     }
 
     public static async pullHistory() {
-        
+        console.log("LOPEZ :: pull history");
         const messages = await PersistentConversationHandler.fetchHistoryMessages();
+
+        console.log("LOPEZ :: messages", messages);
         // Reorder messages in descending order by timestamp
         const messagesDescOrder = [...messages];
         messagesDescOrder.reverse();
@@ -159,5 +184,6 @@ class PersistentConversationHandler {
         PersistentConversationHandler.count += 1;
     }
 }
+
 
 export default PersistentConversationHandler;

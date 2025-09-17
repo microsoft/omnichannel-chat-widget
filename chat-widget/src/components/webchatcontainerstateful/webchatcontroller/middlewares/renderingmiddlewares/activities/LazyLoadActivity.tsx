@@ -11,81 +11,88 @@ class LazyLoadHandler {
     public static observer: IntersectionObserver | null = null;
 
     public static useLazyLoadObserver() {
+        console.log("Initializing LazyLoadObserver...");
         if (LazyLoadHandler.initialized) {
+            console.log("LazyLoadObserver already initialized.");
             return;
         }
 
         const callback: IntersectionObserverCallback = (entries: IntersectionObserverEntry[]) => {
+            console.log("IntersectionObserver callback triggered.", entries);
             if (LazyLoadHandler.paused) {
+                console.log("LazyLoadHandler is paused. Ignoring callback.");
                 return;
             }
 
             entries.forEach(entry => {
-
-                // Only trigger when element starts intersecting (entering the view)
+                console.log("Intersection entry:", entry);
                 if (entry.isIntersecting && entry.intersectionRatio > 0) {
+                    console.log("Element is intersecting. Fetching persistent chat history.");
                     dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
-                    
-                    // Pause to prevent multiple rapid calls
+
                     LazyLoadHandler.paused = true;
-                    
-                    // Simple approach: just move scroll down after a delay
                     setTimeout(() => {
                         LazyLoadHandler.moveScrollDown();
                         LazyLoadHandler.paused = false;
-                        
-                        // Recreate observer after new content is loaded to ensure it's still working
+
                         setTimeout(() => {
                             LazyLoadHandler.reset();
                         }, 1000);
                     }, 2000);
                 } else if (!entry.isIntersecting) {
-                    console.log("LOPEZ  Lazy load:: Element exiting view - no action");
+                    console.log("Element is not intersecting. No action taken.");
                 }
             });
         };
 
-        // Try to find the webchat container, wait a bit if not found
         const setupObserver = () => {
+            console.log("Setting up IntersectionObserver...");
             const webchatContainer = document.querySelector(".webchat__basic-transcript__scrollable");
             const rootContainer = document.getElementById(LazyLoadHandler.rootId);
-            
+
+            if (!webchatContainer && !rootContainer) {
+                console.error("Neither webchatContainer nor rootContainer found. Observer setup failed.");
+                return;
+            }
 
             const options: IntersectionObserverInit = {
                 root: webchatContainer || rootContainer,
-                rootMargin: "20px 0px 0px 0px", // Reduced to 20px - less than our 30px scroll adjustment
-                threshold: 0.05 // Trigger when 5% of the element is visible
+                rootMargin: "20px 0px 0px 0px",
+                threshold: 0.05
             };
 
             const observer = new IntersectionObserver(callback, options);
             const targetElement = document.getElementById(LazyLoadHandler.targetId);
-            
+
             if (targetElement) {
+                console.log("Target element found. Observing:", targetElement);
                 observer.observe(targetElement);
                 LazyLoadHandler.observer = observer;
+            } else {
+                console.error("Target element not found. Observer setup incomplete.");
             }
         };
 
-        // Try immediately, then retry if needed
         const targetElement = document.getElementById(LazyLoadHandler.targetId);
         if (targetElement) {
             setupObserver();
         } else {
-            // Retry after a short delay
+            console.warn("Target element not found. Retrying setup after delay.");
             setTimeout(setupObserver, 500);
         }
-        
+
         LazyLoadHandler.initialized = true;
     }
 
     public static moveScrollDown() {
-        // Try to find the webchat scrollable container
+        console.log("Attempting to move scroll down...");
         const scrollContainer = document.querySelector(".webchat__basic-transcript__scrollable") as HTMLElement;
-        
+
         if (!scrollContainer) {
-            // Fallback to the root container
+            console.warn("Scroll container not found. Falling back to root container.");
             const fallbackContainer = document.getElementById(LazyLoadHandler.rootId);
             if (!fallbackContainer) {
+                console.error("Fallback container not found. Cannot adjust scroll.");
                 return;
             }
             LazyLoadHandler.adjustScroll(fallbackContainer);
@@ -96,28 +103,29 @@ class LazyLoadHandler {
     }
 
     public static adjustScroll(scrollContainer: HTMLElement) {
-        // Move scroll down enough to exit the rootMargin zone (20px) plus some buffer
+        console.log("Adjusting scroll for container:", scrollContainer);
         const currentScrollTop = scrollContainer.scrollTop;
-        const moveDownBy = 35; // pixels to move down - more than the 20px rootMargin
-        
-        scrollContainer.scrollTop = currentScrollTop + moveDownBy;
-        
+        const moveDownBy = 35;
 
+        scrollContainer.scrollTop = currentScrollTop + moveDownBy;
+        console.log(`Scroll moved down by ${moveDownBy}px. New scrollTop: ${scrollContainer.scrollTop}`);
     }
 
     public static reset() {
+        console.log("Resetting LazyLoadHandler...");
         LazyLoadHandler.unmount();
         LazyLoadHandler.initialized = false;
-        // Re-setup after a short delay to ensure DOM is ready
         setTimeout(() => {
             LazyLoadHandler.useLazyLoadObserver();
         }, 100);
     }
 
     public static unmount() {
+        console.log("Unmounting LazyLoadHandler...");
         const targetElement = document.getElementById(LazyLoadHandler.targetId);
         if (targetElement) {
             LazyLoadHandler.observer?.unobserve(targetElement);
+            console.log("Observer unobserved target element.");
         }
 
         LazyLoadHandler.observer = null;

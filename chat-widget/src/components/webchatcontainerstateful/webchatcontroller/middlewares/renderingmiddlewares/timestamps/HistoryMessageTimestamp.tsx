@@ -35,10 +35,6 @@ export const HistoryMessageTimestamp = ({ args }: any) => {
         }
     };
 
-
-    console.log(
-        "LOPEZ :: HistoryMessageTimestamp", { name, role, timestamp }
-    );
     return (
         <Stack style={contentStyles} dir={dir}>
             {role === "bot" && <>

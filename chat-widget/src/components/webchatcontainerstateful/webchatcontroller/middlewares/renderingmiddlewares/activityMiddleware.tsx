@@ -93,8 +93,6 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         if (isTagIncluded(card, Constants.persistentChatHistoryMessageTag)) {
             const userMessageStyles = { ...defaultUserMessageStyles, ...userMessageStyleProps };
 
-            console.log("LOPEZ :: Rendering persistent message", card.activity);
-
             return (...renderArgs: any) => {
                 return (
                     <div className={card.activity.from.role === DirectLineSenderRole.User ? Constants.sentMessageClassName : Constants.receivedMessageClassName} style={userMessageStyles}>
