@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 
 import ChatWidgetEvents from "../../../../../livechatwidget/common/ChatWidgetEvents";
-import { defaultSystemMessageStyles } from "../defaultStyles/defaultSystemMessageStyles";
+import { LazyLoadActivityConstants } from "./Constants";
+import LoadInlineBannerActivity from "./LoadInlineBannerActivity";
+import { defaultInlineBannerStyle } from "../defaultStyles/defaultInLineBannerStyle";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
 
 class LazyLoadHandler {
@@ -37,8 +39,8 @@ class LazyLoadHandler {
         };
 
         const setupObserver = () => {
-            console.log("Setting up IntersectionObserver...");
-            const webchatContainer = document.querySelector(".webchat__basic-transcript__scrollable");
+
+            const webchatContainer = document.querySelector(LazyLoadActivityConstants.SCROLL_ID);
             const rootContainer = document.getElementById(LazyLoadHandler.rootId);
 
             if (!webchatContainer && !rootContainer) {
@@ -72,7 +74,7 @@ class LazyLoadHandler {
     }
 
     public static moveScrollDown() {
-        const scrollContainer = document.querySelector(".webchat__basic-transcript__scrollable") as HTMLElement;
+        const scrollContainer = document.querySelector(LazyLoadActivityConstants.SCROLL_ID) as HTMLElement;
 
         if (!scrollContainer) {
             const fallbackContainer = document.getElementById(LazyLoadHandler.rootId);
@@ -113,16 +115,7 @@ class LazyLoadHandler {
 }
 
 const LazyLoadActivity = () => {
-    const style: React.CSSProperties = {
-        ...defaultSystemMessageStyles,
-        visibility: "visible",
-        height: "20px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        margin: "5px 10px",
-        cursor: "pointer"
-    };
+    const style = defaultInlineBannerStyle;
 
     useEffect(() => {
         LazyLoadHandler.useLazyLoadObserver();
@@ -137,14 +130,7 @@ const LazyLoadActivity = () => {
     }, []);
 
     return (
-        <>
-            <div 
-                id={LazyLoadHandler.targetId} 
-                style={style}
-            >
-                Retrieving any previous conversations...
-            </div>
-        </>
+        <LoadInlineBannerActivity id={LazyLoadHandler.targetId} style={style} />
     );
 };
 
