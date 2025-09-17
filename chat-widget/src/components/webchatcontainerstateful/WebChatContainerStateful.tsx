@@ -5,7 +5,6 @@ import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
-import ChatWidgetEvents from "../livechatwidget/common/ChatWidgetEvents";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
@@ -30,6 +29,7 @@ import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/ren
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
+import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
 
 let uiTimer: ITimer;
 
@@ -61,8 +61,7 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
-    const [facadeChatSDK]: [FacadeChatSDK, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
-
+    const [facadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
 
     useEffect(() => {
         uiTimer = createTimer();
@@ -79,29 +78,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // the dim layer and pane to re-render out of sync and create a flicker.
     const citationOpeningRef = useRef(false);
 
-    // ...existing code...
-
-    useEffect(() => {
-        const handler = async () => {
-            await PersistentConversationHandler.pullHistory();
-        };
-
-        window.addEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
-        return () => {
-            window.removeEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
-        };
-    }, []);
+    usePersistentChatHistory(facadeChatSDK);
 
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
-
-    // Initialize the FacadeChatSDK in PersistentConversationHandler
-    useEffect(() => {
-        if (facadeChatSDK) {
-            PersistentConversationHandler.setFacadeChatSDK(facadeChatSDK);
-        }
-    }, [facadeChatSDK]);
 
     // Delegated click handler for citation anchors. Placed after state is
     // available so we can prefer reading citations from app state and fall

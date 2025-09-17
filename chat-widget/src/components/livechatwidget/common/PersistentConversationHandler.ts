@@ -60,7 +60,6 @@ import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
  * ```
  */
 class PersistentConversationHandler {
-    static facadeChatSDK: FacadeChatSDK;
     static isLastPull = false;
     static pageSize = 4;
     static pageToken: string | null = null;
@@ -68,9 +67,6 @@ class PersistentConversationHandler {
     static lastMessage: any = null;
     static count = 0;
 
-    public static setFacadeChatSDK(facadeChatSDK: FacadeChatSDK): void {
-        PersistentConversationHandler.facadeChatSDK = facadeChatSDK;
-    }
 
     public static shouldPull(): boolean {
         return !PersistentConversationHandler.isLastPull;
@@ -84,58 +80,41 @@ class PersistentConversationHandler {
         PersistentConversationHandler.count = 0;
     }
 
-    public static async fetchPersistentConversationHistory(options: { pageSize?: number; pageToken?: string | undefined }) {
-        return PersistentConversationHandler.facadeChatSDK.fetchPersistentConversationHistory(options);
-    }
-
-    public static async fetchHistoryMessages() {
+    public static async fetchHistoryMessages(facadeChatSDK: FacadeChatSDK) {
         // Prevent additional pulls if the last pull was already made
-        console.log("LOPEZ :: Checking if should pull history. isLastPull:", PersistentConversationHandler.isLastPull); 
-        console.log("LOPEZ :: Current pageToken:", PersistentConversationHandler.pageToken);
-
         if (!PersistentConversationHandler.shouldPull()) {
-            console.log("LOPEZ:: No more history to pull.");
             return [];
         }
-        
+
         const options: { pageSize?: number; pageToken?: string | undefined } = {
             pageSize: PersistentConversationHandler.pageSize
         };
 
-        console.log("LOPEZ :: ok , about to call");
         options.pageToken = PersistentConversationHandler.pageToken || undefined;
-        
-        console.log("LOPEZ :: Fetching history with options:", options);
-        
+
         try {
-            const response = await PersistentConversationHandler.fetchPersistentConversationHistory(options);
-  
-            console.log("LOPEZ :: Response", response);
-            const {chatMessages: messages, nextPageToken: pageToken} = response;
-  
+            const response = await facadeChatSDK.fetchPersistentConversationHistory(options);
+
+            const { chatMessages: messages, nextPageToken: pageToken } = response;
+
             PersistentConversationHandler.pageToken = pageToken || null;
-      
-            // 'pageToken' is null on the last pull
+
             if (pageToken === null) {
-                console.log("LOPEZ:: Last Pull");
                 PersistentConversationHandler.isLastPull = true;
             }
 
             return messages;
         } catch (error) {
             console.error(error);
-        
+
         }
-        
-        console.warn("LOPEZ :: whatevs");
         return [];
     }
 
-    public static async pullHistory() {
-        console.log("LOPEZ :: pull history");
-        const messages = await PersistentConversationHandler.fetchHistoryMessages();
+    public static async pullHistory(facadeChatSDK: FacadeChatSDK) {
 
-        console.log("LOPEZ :: messages", messages);
+        const messages = await PersistentConversationHandler.fetchHistoryMessages(facadeChatSDK);
+
         // Reorder messages in descending order by timestamp
         const messagesDescOrder = [...messages];
         messagesDescOrder.reverse();
@@ -155,7 +134,7 @@ class PersistentConversationHandler {
                     }
                 };
             }
-        
+
             // Render separator between different conversations
             if (PersistentConversationHandler.lastMessage?.channelData?.conversationId !== activity.channelData.conversationId) {
                 const sequenceId = activity.channelData["webchat:sequence-id"] + 1;
@@ -170,11 +149,11 @@ class PersistentConversationHandler {
                     timestamp: new Date(timestamp).toISOString(),
                 };
             }
-        
-            dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {activity});
+
+            dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity });
 
             if (dividerActivity) {
-                dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {activity: dividerActivity});
+                dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity: dividerActivity });
                 dividerActivity = null;
             }
 
