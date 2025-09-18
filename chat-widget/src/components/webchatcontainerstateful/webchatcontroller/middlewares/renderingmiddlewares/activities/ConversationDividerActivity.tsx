@@ -1,9 +1,13 @@
+import { IPersistentChatHistoryProps } from "../../../../../livechatwidget/interfaces/IPersistentChatHistoryProps";
 import React from "react";
+import { defaultPersistentChatHistoryProps } from "../../../../../livechatwidget/common/defaultProps/defaultPersistentChatHistoryProps";
+import { mergeStyles } from "@fluentui/react";
 
-const ConversationDividerActivity = () => {
-    return (
-        <div style={{border: "1px solid rgb(96, 94, 92, 0.5)", margin: "10px 20%"}} />
+const ConversationDividerActivity = (props: IPersistentChatHistoryProps) => {
+    const styleApplied = mergeStyles(
+        defaultPersistentChatHistoryProps.dividerActivityStyle,
+        props.dividerActivityStyle
     );
+    return <div className={styleApplied} />;
 };
-
 export default ConversationDividerActivity;
