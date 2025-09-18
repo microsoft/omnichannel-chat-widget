@@ -1,17 +1,14 @@
 import ChatWidgetEvents from "../../livechatwidget/common/ChatWidgetEvents";
 import { Constants } from "../../../common/Constants";
+import { IPersistentChatHistoryProps } from "../../livechatwidget/interfaces/IPersistentChatHistoryProps";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 import { hooks } from "botframework-webchat-component";
 import { useEffect } from "react";
 
-interface WebChatEventSubscribersProps {
-    persistentChatHistoryEnabled?: boolean;
-}
-
 /**
  * Component under Composer to access WebChat hooks and events.
  */
-const WebChatEventSubscribers = (props: WebChatEventSubscribersProps) => {
+const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
     const { useConnectivityStatus } = hooks;
     const [connectivityStatus] = useConnectivityStatus();
 

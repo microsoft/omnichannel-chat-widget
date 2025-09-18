@@ -20,6 +20,7 @@ import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/ty
 import { IMockProps } from "./IMockProps";
 import { INotificationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/INotificationPaneProps";
 import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneProps";
+import {IPersistentChatHistoryProps} from "./IPersistentChatHistoryProps";
 import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestateful/interfaces/IPostChatSurveyPaneStatefulProps";
 import { IPreChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneProps";
 import { IProactiveChatPaneStatefulProps } from "../../proactivechatpanestateful/interfaces/IProactiveChatPaneStatefulProps";
@@ -76,4 +77,5 @@ export interface ILiveChatWidgetProps {
     mock?: IMockProps;
     featureConfigProps?: IFeatureConfigProps;
     appInsightsConfig?: IAppInsightsConfig;
+    persistentChatHistory : IPersistentChatHistoryProps;
 }

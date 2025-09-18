@@ -3,28 +3,41 @@ import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/teleme
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatWidgetEvents from "./ChatWidgetEvents";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
+import { IPersistentChatHistoryProps } from "../interfaces/IPersistentChatHistoryProps";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import conversationDividerActivity from "../../webchatcontainerstateful/common/activities/conversationDividerActivity";
 import convertPersistentChatHistoryMessageToActivity from "../../webchatcontainerstateful/common/activityConverters/convertPersistentChatHistoryMessageToActivity";
+import { defaultPersistentChatHistoryProps } from "./defaultProps/defaultPersistentChatHistoryProps";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 
 class PersistentConversationHandler {
     private isLastPull = false;
-    private pageSize: number;
+    private pageSize: number = defaultPersistentChatHistoryProps.pageSize;
     private pageToken: string | null = null;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private lastMessage: any = null; // Replace `any` with a proper type
     private count = 0;
+    private appliedProps: IPersistentChatHistoryProps | null = null;
+    private facadeChatSDK: FacadeChatSDK;
+
+    constructor(facadeChatSDK: FacadeChatSDK, props: IPersistentChatHistoryProps) {
+        this.facadeChatSDK = facadeChatSDK;
+        this.appliedPropsHandler(props);
+    }
+
+    private appliedPropsHandler(props: IPersistentChatHistoryProps) {
+        this.appliedProps = {
+            ...defaultPersistentChatHistoryProps,
+            ...props,
+        };
+
+        this.pageSize = this.appliedProps.pageSize || defaultPersistentChatHistoryProps.pageSize;
+    }
 
     private resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
         this.reset();
     });
-    facadeChatSDK: FacadeChatSDK;
 
-    constructor(facadeChatSDK: FacadeChatSDK, pageSize = 4) {
-        this.facadeChatSDK = facadeChatSDK;
-        this.pageSize = pageSize;
-    }
 
     public reset() {
         this.isLastPull = false;
@@ -50,7 +63,7 @@ class PersistentConversationHandler {
                 if (activity) {
                     dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity });
                     const dividerActivity = this.createDividerActivity(activity);
-                    
+
                     if (dividerActivity) {
                         dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity: dividerActivity });
                     }
@@ -118,7 +131,7 @@ class PersistentConversationHandler {
 
             // Increment the count after assigning it to the activity
             this.count += 1;
-            
+
             return activity;
         } catch (error) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {

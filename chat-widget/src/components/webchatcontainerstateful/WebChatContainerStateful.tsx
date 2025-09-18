@@ -77,7 +77,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // the dim layer and pane to re-render out of sync and create a flicker.
     const citationOpeningRef = useRef(false);
 
-    usePersistentChatHistory(facadeChatSDK);
+    usePersistentChatHistory(facadeChatSDK, props.persistentChatHistory);
 
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
@@ -379,7 +379,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
-                <WebChatEventSubscribers persistentChatHistoryEnabled={ props.featureConfigProps?.persistentChatHistoryEnabled } />
+                <WebChatEventSubscribers persistentChatHistoryEnabled= { props.persistentChatHistory?.persistentChatHistoryEnabled } />
                 <BasicWebChat></BasicWebChat>
             </div>
         </Stack>
