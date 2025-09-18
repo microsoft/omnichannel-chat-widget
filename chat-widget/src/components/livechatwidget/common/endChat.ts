@@ -12,6 +12,7 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import PersistentConversationHandler from "./PersistentConversationHandler";
 import { StyleOptions } from "botframework-webchat";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
@@ -20,7 +21,6 @@ import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstat
 import { executeReducer } from "../../../contexts/createReducer";
 import { isPersistentEnabled } from "./reconnectChatHelper";
 import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
-import PersistentConversationHandler from "./PersistentConversationHandler";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, setWebChatStyles: any, adapter: any) => {
@@ -172,7 +172,9 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             postMessageToOtherTab = false;
         } finally {
             endChatStateCleanUp(dispatch);
-            PersistentConversationHandler.reset();
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.PersistentConversationReset
+            });
             facadeChatSDK.destroy();
         }
     }
@@ -199,7 +201,9 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
-            PersistentConversationHandler.reset();
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.PersistentConversationReset
+            });
 
             closeChatWidget(dispatch, setWebChatStyles, props);
             facadeChatSDK.destroy();

@@ -15,7 +15,6 @@ import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
-import PersistentConversationHandler from "../livechatwidget/common/PersistentConversationHandler";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";

@@ -5,22 +5,25 @@ import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import PersistentConversationHandler from "../../livechatwidget/common/PersistentConversationHandler";
 
 const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined) => {
-    const isListenerAdded = useRef(false);
+    const handlerRef = useRef<PersistentConversationHandler | null>(null);
 
     useEffect(() => {
+        if (!facadeChatSDK) {
+            return;
+        }
+
+        // Initialize a new instance of PersistentConversationHandler
+        handlerRef.current = new PersistentConversationHandler(facadeChatSDK);
+
         const handler = async () => {
-            if (facadeChatSDK) {
-                await PersistentConversationHandler.pullHistory(facadeChatSDK);
-            }
+            await handlerRef.current?.pullHistory();
         };
 
         window.addEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
-        isListenerAdded.current = true;
 
         return () => {
             window.removeEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
-            isListenerAdded.current = false;
-
+            handlerRef.current?.reset(); // Reset the handler state on cleanup
         };
     }, [facadeChatSDK]);
 };

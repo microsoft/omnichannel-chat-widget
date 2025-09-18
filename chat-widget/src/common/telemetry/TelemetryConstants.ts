@@ -60,11 +60,13 @@ export enum BroadcastEvent {
     SyncMinimize = "SyncMinimize",
     OnWidgetError = "OnWidgetError",
     FMLTrackingCompletedAck = "FMLTrackingCompletedAck",
-    FMLTrackingCompleted = "FMLTrackingCompleted"
+    FMLTrackingCompleted = "FMLTrackingCompleted",
+    PersistentConversationReset = "PersistentConversationReset"
 }
 
 // Events being logged
 export enum TelemetryEvent {
+    FetchPersistentChatHistoryFailed = "FetchPersistentChatHistoryFailed",
     CallAdded = "CallAdded",
     LocalVideoStreamAdded = "LocalVideoStreamAdded",
     LocalVideoStreamRemoved = "LocalVideoStreamRemoved",
@@ -295,6 +297,7 @@ export enum TelemetryEvent {
 
     AppInsightsInitialized = "AppInsightsInitialized",
     AppInsightsInitFailed = "AppInsightsInitFailed",
+    ConvertPersistentChatHistoryMessageToActivityFailed = "ConvertPersistentChatHistoryMessageToActivityFailed",
 
 }
 

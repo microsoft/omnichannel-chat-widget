@@ -66,7 +66,6 @@ class LazyLoadHandler {
         if (targetElement) {
             setupObserver();
         } else {
-            console.warn("Target element not found. Retrying setup after delay.");
             setTimeout(setupObserver, 500);
         }
 
@@ -79,7 +78,6 @@ class LazyLoadHandler {
         if (!scrollContainer) {
             const fallbackContainer = document.getElementById(LazyLoadHandler.rootId);
             if (!fallbackContainer) {
-                console.error("Fallback container not found. Cannot adjust scroll.");
                 return;
             }
             LazyLoadHandler.adjustScroll(fallbackContainer);
