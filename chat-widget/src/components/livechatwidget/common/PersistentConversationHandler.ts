@@ -15,7 +15,7 @@ class PersistentConversationHandler {
     private isLastPull = false;
 
     // Number of messages to fetch per page
-    private pageSize: number = defaultPersistentChatHistoryProps.pageSize;
+    private pageSize = 4;
 
     // Token for fetching the next page of messages
     private pageToken: string | null = null;
@@ -45,7 +45,7 @@ class PersistentConversationHandler {
             ...props,
         };
 
-        this.pageSize = this.appliedProps.pageSize || defaultPersistentChatHistoryProps.pageSize;
+        this.pageSize = this.appliedProps?.pageSize || 4;
     }
 
     // Subscribes to the reset event to handle conversation resets
