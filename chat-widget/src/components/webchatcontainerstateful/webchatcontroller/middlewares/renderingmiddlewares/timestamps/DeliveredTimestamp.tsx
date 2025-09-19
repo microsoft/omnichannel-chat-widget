@@ -7,7 +7,7 @@ import { Stack } from "@fluentui/react";
 import { defaultMiddlewareLocalizedTexts } from "../../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultTimestampContentStyles } from "../defaultStyles/defaultTimestampContentStyles";
 import { getTimestampHourMinute } from "../../../../../../common/utils";
-import { useChatContextStore } from "../../../../../..";
+import useChatContextStore from "../../../../../../hooks/useChatContextStore";
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 export const DeliveredTimestamp = ({ args, role, name }: any) => {
