@@ -33,11 +33,9 @@ export class AddActivitySubscriber implements IActivitySubscriber {
             if (event?.detail?.payload?.activity) {
                 const activity = event.detail.payload.activity;
                 const activityId = activity.id;
-                console.log(" LOPEZ :333: tricky tracatelas : ", activity?.identifier);
 
                 if (activity.identifier){
                     if (this.processedActivityIds.has(activity?.identifier)) {
-                        console.error(`Triqui Tracatelas :: Duplicate activity detected with identifier: ${activity?.identifier}. Skipping processing.`);
                         return; // Skip processing if already handled
                     }
                     // Add the activity ID to the processed set
@@ -47,7 +45,6 @@ export class AddActivitySubscriber implements IActivitySubscriber {
                 // Check if activity has an ID and if it has already been processed
                 if (activityId) {
                     if (this.processedActivityIds.has(activityId)) {
-                        console.error(`Triqui Tracatelas :: Duplicate activity detected with ID: ${activityId}. Skipping processing.`);
                         return; // Skip processing if already handled
                     }
                     

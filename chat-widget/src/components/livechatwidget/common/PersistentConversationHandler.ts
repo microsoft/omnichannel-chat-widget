@@ -19,6 +19,8 @@ class PersistentConversationHandler {
     private count = 0;
     private appliedProps: IPersistentChatHistoryProps | null = null;
     private facadeChatSDK: FacadeChatSDK;
+    private pageTokenInTransitSet: Set<string> = new Set();
+    private isCurrentlyPulling = false;
 
     constructor(facadeChatSDK: FacadeChatSDK, props: IPersistentChatHistoryProps) {
         this.facadeChatSDK = facadeChatSDK;
@@ -44,14 +46,47 @@ class PersistentConversationHandler {
         this.pageToken = null;
         this.lastMessage = null;
         this.count = 0;
+        this.isCurrentlyPulling = false;
+        this.pageTokenInTransitSet.clear();
         this.resetEventListener.unsubscribe();
     }
 
     public async pullHistory() {
-        const messages = await this.fetchHistoryMessages();
-        const messagesDescOrder = [...messages].reverse();
 
-        this.processHistoryMessages(messagesDescOrder);
+        // Prevent concurrent pulls regardless of pageToken
+        if (this.isCurrentlyPulling) {
+            console.log("LOPEZ :: Already pulling history, skipping to avoid duplicate pull.");
+            return;
+        }
+
+        // Additional check for specific pageToken duplicates
+        if (this.pageToken && this.pageTokenInTransitSet.has(this.pageToken)) {
+            console.log("LOPEZ :: Already pulling this pageToken, skipping to avoid duplicate pull.");
+            return;
+        }
+        
+        // Mark as currently pulling
+        this.isCurrentlyPulling = true;
+        
+        if (this.pageToken) {
+            this.pageTokenInTransitSet.add(this.pageToken);
+        }
+        
+        try {
+            const messages = await this.fetchHistoryMessages();
+            
+            const messagesDescOrder = [...messages].reverse();
+
+            this.processHistoryMessages(messagesDescOrder);
+        } finally {
+            // Always clear the pulling flag when done
+            this.isCurrentlyPulling = false;
+            
+            // Remove pageToken from transit set if it was added
+            if (this.pageToken) {
+                this.pageTokenInTransitSet.delete(this.pageToken);
+            }
+        }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

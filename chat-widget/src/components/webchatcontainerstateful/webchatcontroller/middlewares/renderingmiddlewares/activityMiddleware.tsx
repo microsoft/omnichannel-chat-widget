@@ -23,6 +23,7 @@ import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyl
 import { escapeHtml } from "../../../../../common/utils";
 
 const loggedSystemMessages = new Array<string>();
+let lastRenderedAt = 0; // Track last rendered receivedAt timestamp for deduplication
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties) => {
     const systemMessageStyles = { ...defaultSystemMessageStyles, ...systemMessageStyleProps };
@@ -73,6 +74,7 @@ const isDataTagsPresent = (card: any) => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createActivityMiddleware = (renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties, userMessageStyleProps?: React.CSSProperties) => () => (next: any) => (...args: any) => {
     const [card] = args;
+    
     if (card.activity) {
         if (card.activity.from?.role === DirectLineSenderRole.Channel) {
             return () => false;
@@ -87,6 +89,20 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         }
 
         if (isTagIncluded(card, Constants.persistentChatHistoryMessagePullTriggerTag)) {
+            // console.log("LOPEZ :: Rendering Lazy Load Trigger", card);  
+            // add a deduping mechanism here based on card.activity.channelData.webChat.receivedAt , which is an epoch, track the last one rendered and only allow to render if the values is equal or greater
+
+            const receivedAt = card.activity.channelData.webChat.receivedAt;
+
+            if (receivedAt < lastRenderedAt) {
+                console.warn("LOPEZ :: LAZY LOAD  :2: Skipping rendering Lazy Load Trigger - already rendered", card);
+                card.activity = null;
+                return () => false;
+            }
+
+            lastRenderedAt = receivedAt;
+            console.error("LOPEZ :: LAZY LOAD :: Rendering Lazy Load Trigger - rendering", card);
+
             return <LazyLoadActivity />;
         }
         
@@ -103,6 +119,7 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         }
 
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
+            console.log("LOPEZ :: Rendering Conversation Divider", card);
             return (<ConversationDividerActivity />);
         }
 
