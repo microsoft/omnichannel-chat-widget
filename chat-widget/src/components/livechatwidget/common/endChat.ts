@@ -12,7 +12,6 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
-import PersistentConversationHandler from "./PersistentConversationHandler";
 import { StyleOptions } from "botframework-webchat";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
@@ -298,6 +297,7 @@ export const endVoiceVideoCallIfOngoing = async (facadeChatSDK: FacadeChatSDK, d
 const closeChatWidget = (dispatch: Dispatch<ILiveChatWidgetAction>, setWebChatStyles: any, props: ILiveChatWidgetProps) => {
     // Embedded chat
     dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed });
+    dispatch({ type: LiveChatWidgetActionType.UPDATE_HISTORY_PULL_MANIFEST, payload: {} });
 
     // if customer is setting the hideSendbox, we should not alter its value
     if (props?.webChatContainerProps?.webChatStyles?.hideSendBox === true) return;

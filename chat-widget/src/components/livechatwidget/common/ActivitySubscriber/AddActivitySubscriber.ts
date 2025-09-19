@@ -17,6 +17,11 @@ export class AddActivitySubscriber implements IActivitySubscriber {
     public observer: any;
     
     /**
+     * Set to track processed activity IDs to prevent duplicate processing.
+     */
+    private processedActivityIds: Set<string> = new Set();
+    
+    /**
      * Constructor initializes the `AddActivitySubscriber` and sets up an event listener
      * for the `ChatWidgetEvents.ADD_ACTIVITY` event. When the event is triggered, it checks
      * if the event payload contains an `activity` and notifies the observer.
@@ -26,8 +31,22 @@ export class AddActivitySubscriber implements IActivitySubscriber {
         window.addEventListener(ChatWidgetEvents.ADD_ACTIVITY, (event: any) => {
             // Check if the event contains the expected payload and activity
             if (event?.detail?.payload?.activity) {
+                const activity = event.detail.payload.activity;
+                const activityId = activity.id;
+                
+                // Check if activity has an ID and if it has already been processed
+                if (activityId) {
+                    if (this.processedActivityIds.has(activityId)) {
+                        console.error(`Duplicate activity detected with ID: ${activityId}. Skipping processing.`);
+                        return;
+                    }
+                    
+                    // Add the activity ID to the processed set
+                    this.processedActivityIds.add(activityId);
+                }
+                
                 // Notify the observer with the new activity
-                this.observer?.next(event.detail.payload.activity);
+                this.observer?.next(activity);
             }
         });
     }

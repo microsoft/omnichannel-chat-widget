@@ -34,6 +34,8 @@ export interface ILiveChatWidgetContext {
         confirmationPaneConfirmedOptionClicked: boolean; //shows if confirmation pane already displayed
         confirmationState: ConfirmationState;
         startChatFailureType: StartChatFailureType;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        historyPullManifest: Record<string, any[]>;
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in

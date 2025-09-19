@@ -1,6 +1,6 @@
 import { IPersistentChatHistoryProps } from "../../interfaces/IPersistentChatHistoryProps";
 
-export const defaultPersistentChatHistoryProps : IPersistentChatHistoryProps = {
+export const defaultPersistentChatHistoryProps: IPersistentChatHistoryProps = {
     persistentChatHistoryEnabled: true,
     pageSize: 4,
     dividerActivityStyle: {

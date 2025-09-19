@@ -9,36 +9,33 @@ import { useEffect } from "react";
  * Component under Composer to access WebChat hooks and events.
  */
 const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
-    const { useConnectivityStatus } = hooks; // Hook to get WebChat connectivity status
+    const { useConnectivityStatus } = hooks;
     const [connectivityStatus] = useConnectivityStatus();
 
     useEffect(() => {
         if (connectivityStatus === "connected") {
-            // Check if persistent chat history is enabled
+
             if (props.persistentChatHistoryEnabled === true) {
                 setTimeout(() => {
-                    // Dispatch event to fetch persistent chat history
                     dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
-
-                    // Dispatch event to add a bot activity indicating history pull
                     dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {
                         activity: {
                             from: {
                                 role: "bot"
                             },
-                            timestamp: 0, // Placeholder timestamp
+                            timestamp: 0,
                             type: "message",
                             channelData: {
-                                tags: [Constants.persistentChatHistoryMessagePullTriggerTag] // Tag for history pull trigger
+                                tags: [Constants.persistentChatHistoryMessagePullTriggerTag]
                             }
                         }
                     });
-                }, 2000); // Delay to ensure connectivity is stable
+                }, 2000);
             }
         }
-    }, [connectivityStatus, props.persistentChatHistoryEnabled]); // Re-run effect if connectivity status or persistent history flag changes
+    }, [connectivityStatus, props.persistentChatHistoryEnabled]);
 
-    return undefined; // No UI rendered by this component
+    return undefined;
 };
 
 export default WebChatEventSubscribers;

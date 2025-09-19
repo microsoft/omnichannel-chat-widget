@@ -8,6 +8,7 @@ const ConversationDividerActivity = (props: IPersistentChatHistoryProps) => {
         defaultPersistentChatHistoryProps.dividerActivityStyle,
         props.dividerActivityStyle
     );
+    
     return <div className={styleApplied} />;
 };
 export default ConversationDividerActivity;

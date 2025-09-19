@@ -11,98 +11,78 @@ import { defaultPersistentChatHistoryProps } from "./defaultProps/defaultPersist
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 
 class PersistentConversationHandler {
-    // Indicates whether the last page of messages has been pulled
     private isLastPull = false;
-
-    // Number of messages to fetch per page
-    private pageSize = 4;
-
-    // Token for fetching the next page of messages
+    private pageSize = 4
     private pageToken: string | null = null;
-
-    // Stores the last processed message
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private lastMessage: any = null; // Replace `any` with a proper type
-
-    // Counter for assigning unique metadata to activities
     private count = 0;
-
-    // Stores the applied properties for persistent chat history
     private appliedProps: IPersistentChatHistoryProps | null = null;
-
-    // Instance of the FacadeChatSDK for interacting with the chat service
     private facadeChatSDK: FacadeChatSDK;
 
     constructor(facadeChatSDK: FacadeChatSDK, props: IPersistentChatHistoryProps) {
         this.facadeChatSDK = facadeChatSDK;
-        this.appliedPropsHandler(props); // Merge default and provided properties
+        this.appliedPropsHandler(props);
     }
 
-    // Merges default properties with the provided properties
     private appliedPropsHandler(props: IPersistentChatHistoryProps) {
         this.appliedProps = {
             ...defaultPersistentChatHistoryProps,
             ...props,
         };
 
-        this.pageSize = this.appliedProps?.pageSize || 4;
+        //this.pageSize = this.appliedProps.pageSize || defaultPersistentChatHistoryProps.pageSize;
     }
 
-    // Subscribes to the reset event to handle conversation resets
     private resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
         this.reset();
     });
 
-    // Resets the handler state
+
     public reset() {
         this.isLastPull = false;
         this.pageToken = null;
         this.lastMessage = null;
         this.count = 0;
-        this.resetEventListener.unsubscribe(); // Unsubscribe from the reset event
+        this.resetEventListener.unsubscribe();
     }
 
-    // Pulls the persistent chat history
     public async pullHistory() {
-        const messages = await this.fetchHistoryMessages(); // Fetch messages from the chat service
-        const messagesDescOrder = [...messages].reverse(); // Reverse the order of messages
+        const messages = await this.fetchHistoryMessages();
+        const messagesDescOrder = [...messages].reverse();
 
-        this.processHistoryMessages(messagesDescOrder); // Process the fetched messages
+        this.processHistoryMessages(messagesDescOrder);
     }
 
-    // Processes the fetched messages and converts them to activities
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private processHistoryMessages(messagesDescOrder: any[]) {
         for (const message of messagesDescOrder) {
             try {
-                const activity = this.processMessageToActivity(message); // Convert message to activity
+                const activity = this.processMessageToActivity(message);
 
                 if (activity) {
-                    dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity }); // Dispatch the activity
-
-                    const dividerActivity = this.createDividerActivity(activity); // Create a divider activity if needed
+                    dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity });
+                    const dividerActivity = this.createDividerActivity(activity);
 
                     if (dividerActivity) {
-                        dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity: dividerActivity }); // Dispatch the divider activity
+                        dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity: dividerActivity });
                     }
-
-                    this.lastMessage = activity; // Update the last processed message
+                    this.lastMessage = activity;
                 }
 
             } catch (error) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.ConvertPersistentChatHistoryMessageToActivityFailed,
                     ExceptionDetails: error,
-                }); // Log telemetry for conversion failure
+                });
             }
         }
     }
 
-    // Fetches the persistent chat history messages
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private async fetchHistoryMessages(): Promise<any[]> {
         if (!this.shouldPull()) {
-            return []; // Exit if no more messages should be pulled
+            return [];
         }
 
         const options = {
@@ -113,10 +93,10 @@ class PersistentConversationHandler {
         try {
             const response = await this.facadeChatSDK.fetchPersistentConversationHistory(options);
             const { chatMessages: messages, nextPageToken: pageToken } = response;
-            this.pageToken = pageToken || null; // Update the page token
+            this.pageToken = pageToken || null;
 
             if (pageToken === null) {
-                this.isLastPull = true; // Mark as last pull if no next page token
+                this.isLastPull = true;
             }
 
             return messages;
@@ -124,7 +104,7 @@ class PersistentConversationHandler {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.FetchPersistentChatHistoryFailed,
                 ExceptionDetails: error,
-            }); // Log telemetry for fetch failure
+            });
 
             this.isLastPull = true;
             this.pageToken = null;
@@ -132,56 +112,54 @@ class PersistentConversationHandler {
         }
     }
 
-    // Determines whether more messages should be pulled
     private shouldPull(): boolean {
-        return !this.isLastPull; // Pull if not the last page
+        return !this.isLastPull;
     }
 
-    // Converts a message to an activity
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private processMessageToActivity(message: any): any {
         try {
-            const activity = convertPersistentChatHistoryMessageToActivity(message); // Convert message to activity
+            const activity = convertPersistentChatHistoryMessageToActivity(message);
 
-            activity.id = activity.id || `activity-${this.count}`; // Assign a unique ID if missing
+            activity.id = activity.id || `activity-${this.count}`;
             activity.channelData = {
                 ...activity.channelData,
                 metadata: {
-                    count: this.count, // Add metadata with the current count
+                    count: this.count,
                 },
             };
 
-            this.count += 1; // Increment the count
+            // Increment the count after assigning it to the activity
+            this.count += 1;
 
             return activity;
         } catch (error) {
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.ConvertPersistentChatHistoryMessageToActivityFailed,
                 ExceptionDetails: error,
-            }); // Log telemetry for conversion failure
+            });
             throw error;
         }
     }
 
-    // Creates a divider activity if the conversation ID has changed
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private createDividerActivity(activity: any): any | null {
-        if (this.lastMessage?.channelData?.conversationId !== activity.channelData.conversationId) {
-            const sequenceId = activity.channelData["webchat:sequence-id"] + 1; // Increment sequence ID
-            const timestamp = new Date(activity.timestamp).getTime() + 1; // Increment timestamp
 
+        if (this.lastMessage?.channelData?.conversationId !== activity.channelData.conversationId) {
+            const sequenceId = activity.channelData["webchat:sequence-id"] + 1;
+            const timestamp = new Date(activity.timestamp).getTime() + 1;
             return {
                 ...conversationDividerActivity,
                 channelData: {
                     ...conversationDividerActivity.channelData,
-                    conversationId: activity.channelData.conversationId, // Update conversation ID
-                    "webchat:sequence-id": sequenceId, // Update sequence ID
+                    conversationId: activity.channelData.conversationId,
+                    "webchat:sequence-id": sequenceId,
                 },
-                timestamp: new Date(timestamp).toISOString(), // Update timestamp
+                timestamp: new Date(timestamp).toISOString(),
             };
         }
 
-        return null; // Return null if no divider activity is needed
+        return null;
     }
 }
 

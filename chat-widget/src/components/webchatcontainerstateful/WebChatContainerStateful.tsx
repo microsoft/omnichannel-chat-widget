@@ -77,12 +77,13 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // the dim layer and pane to re-render out of sync and create a flicker.
     const citationOpeningRef = useRef(false);
 
-    usePersistentChatHistory(facadeChatSDK, props.persistentChatHistory);
 
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
 
+
+    usePersistentChatHistory(facadeChatSDK, props.persistentChatHistory);
     // Delegated click handler for citation anchors. Placed after state is
     // available so we can prefer reading citations from app state and fall
     // back to the legacy window map for backward-compatibility in tests.
@@ -118,7 +119,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
                     setCitationPaneOpen(true);
                     setCitationPaneText(text);
-                    
+
                     // Simple debounce - reset guard after a short delay
                     setTimeout(() => {
                         citationOpeningRef.current = false;
@@ -379,8 +380,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
-                <WebChatEventSubscribers persistentChatHistoryEnabled= { props.persistentChatHistory?.persistentChatHistoryEnabled } />
-                <BasicWebChat></BasicWebChat>
+                <WebChatEventSubscribers persistentChatHistoryEnabled={props.persistentChatHistory?.persistentChatHistoryEnabled} />                <BasicWebChat></BasicWebChat>
             </div>
         </Stack>
         {citationPaneOpen && (
