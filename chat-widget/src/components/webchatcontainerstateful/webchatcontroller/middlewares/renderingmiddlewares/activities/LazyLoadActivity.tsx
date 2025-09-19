@@ -126,11 +126,6 @@ class LazyLoadHandler {
         const callback: IntersectionObserverCallback = (entries: IntersectionObserverEntry[]) => {
             // Guard clauses: Don't trigger if paused, already processing, or no more history available
             if (LazyLoadHandler.paused || LazyLoadHandler.pendingScrollAction || !LazyLoadHandler.hasMoreHistoryAvailable) {
-                console.log("LOPEZ :: Intersection observer triggered but conditions not met:", {
-                    paused: LazyLoadHandler.paused,
-                    pendingScrollAction: LazyLoadHandler.pendingScrollAction,
-                    hasMoreHistoryAvailable: LazyLoadHandler.hasMoreHistoryAvailable
-                });
                 return;
             }
 
@@ -139,10 +134,8 @@ class LazyLoadHandler {
                 if (entry.isIntersecting && entry.intersectionRatio > 0) {
                     // Double-check history availability at trigger time
                     if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                        console.log("LOPEZ :: History no longer available at trigger time, ignoring intersection");
                         return;
                     }
-                    console.log("LOPEZ :: Intersection detected, triggering lazy load");
                     LazyLoadHandler.handleLazyLoadTrigger();
                 }
             });
@@ -159,7 +152,6 @@ class LazyLoadHandler {
             const { container: scrollContainer } = LazyLoadHandler.findScrollContainer();
             
             if (!scrollContainer) {
-                console.warn("LOPEZ ::  No scroll container found for lazy load observer. Retrying...");
                 // Schedule retry with faster timeout for better responsiveness
                 const timeoutId = window.setTimeout(() => {
                     LazyLoadHandler.retryTimeouts.delete(timeoutId);
@@ -247,9 +239,6 @@ class LazyLoadHandler {
             LazyLoadHandler.handleLazyLoadTrigger();
         } else {
             // System not ready, provide immediate feedback and queue action
-            console.log("LOPEZ :: LazyLoad not ready, providing immediate scroll feedback");
-            
-            // Give immediate visual feedback to user
             LazyLoadHandler.executeImmediateScrollFeedback();
             
             // Queue the full lazy load action to execute when system is ready
@@ -281,7 +270,6 @@ class LazyLoadHandler {
             requestAnimationFrame(() => {
                 if (container) {
                     container.scrollTop = immediateScrollTarget;
-                    console.log("LOPEZ :: Immediate scroll feedback provided while initializing");
                 }
             });
         }
@@ -333,19 +321,16 @@ class LazyLoadHandler {
     public static checkVisibilityAndTrigger() {
         // Don't trigger if no more history is available
         if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-            console.log("LOPEZ :: No more history available, skipping visibility check");
             return;
         }
         
         const targetElement = document.getElementById(LazyLoadHandler.targetId);
         if (!targetElement) {
-            console.log("LOPEZ :: Target element not found, skipping visibility check");
             return;
         }
 
         const { container } = LazyLoadHandler.findScrollContainer();
         if (!container) {
-            console.log("LOPEZ :: Container not found, skipping visibility check");
             return;
         }
 
@@ -362,7 +347,6 @@ class LazyLoadHandler {
         );
 
         if (isVisible) {
-            console.log("LOPEZ :: Target element is visible, triggering lazy load");
             LazyLoadHandler.handleImmediateScrollRequest();
         }
     }
@@ -383,7 +367,6 @@ class LazyLoadHandler {
     private static handleLazyLoadTrigger() {
         // Final guard: Don't proceed if no more history is available
         if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-            console.log("LOPEZ :: handleLazyLoadTrigger called but no more history available, aborting");
             return;
         }
 
@@ -393,7 +376,6 @@ class LazyLoadHandler {
 
         // Dispatch custom event to trigger chat history fetching
         // This event is handled by other parts of the chat system
-        console.log("LOPEZ ::CALLING FTCH :: LazyLoad trigger activated, fetching more chat history");
         dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
 
         // Wait for content to load before performing scroll adjustment
@@ -419,7 +401,6 @@ class LazyLoadHandler {
     private static executeReliableScroll() {
         // Guard: Don't execute scroll if no more history is available
         if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-            console.log("LOPEZ :: Aborting executeReliableScroll - no more history available");
             LazyLoadHandler.finishScrollAction();
             return;
         }
@@ -428,7 +409,6 @@ class LazyLoadHandler {
         const { container, isScrollable } = LazyLoadHandler.findScrollContainer();
         
         if (!container || !isScrollable) {
-            console.warn("LOPEZ ::  No scrollable container found. Scheduling retry...");
             LazyLoadHandler.scheduleScrollRetry();
             return;
         }
@@ -467,13 +447,11 @@ class LazyLoadHandler {
     private static attemptScroll() {
         // Guard: Don't attempt scroll if no more history is available
         if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-            console.log("LOPEZ :: Aborting scroll attempt - no more history available");
             LazyLoadHandler.finishScrollAction();
             return;
         }
 
         if (!LazyLoadHandler.scrollState) {
-            console.error("LOPEZ ::  Scroll state is not defined");
             LazyLoadHandler.finishScrollAction();
             return;
         }
@@ -487,7 +465,6 @@ class LazyLoadHandler {
         requestAnimationFrame(() => {
             // Double-check history availability before applying scroll
             if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                console.log("LOPEZ :: Aborting scroll in frame 1 - no more history available");
                 LazyLoadHandler.finishScrollAction();
                 return;
             }
@@ -500,7 +477,6 @@ class LazyLoadHandler {
             requestAnimationFrame(() => {
                 // Triple-check history availability before verification
                 if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                    console.log("LOPEZ :: Aborting scroll in frame 2 - no more history available");
                     LazyLoadHandler.finishScrollAction();
                     return;
                 }
@@ -509,10 +485,8 @@ class LazyLoadHandler {
                 const scrollSucceeded = Math.abs(actualScrollTop - targetScrollTop) < 5; // 5px tolerance for success
                 
                 if (scrollSucceeded) {
-                    console.log("LOPEZ ::  Scroll action completed successfully");
                     LazyLoadHandler.finishScrollAction();
                 } else if (attemptCount < maxAttempts) {
-                    console.log(`LOPEZ ::  Scroll attempt ${attemptCount} failed. Retrying...`);
                     // Retry with exponential backoff (100ms * attempt number)
                     const timeoutId = window.setTimeout(() => {
                         LazyLoadHandler.retryTimeouts.delete(timeoutId);
@@ -520,7 +494,6 @@ class LazyLoadHandler {
                     }, 100 * attemptCount); // Exponential backoff
                     LazyLoadHandler.retryTimeouts.add(timeoutId);
                 } else {
-                    console.warn("LOPEZ ::  Maximum scroll attempts reached. Continuing with operation...");
                     LazyLoadHandler.finishScrollAction();
                 }
             });
@@ -557,7 +530,6 @@ class LazyLoadHandler {
     private static scheduleScrollRetry() {
         // Don't schedule retry if no more history is available
         if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-            console.log("LOPEZ :: Aborting scheduleScrollRetry - no more history available");
             LazyLoadHandler.finishScrollAction();
             return;
         }
@@ -695,7 +667,6 @@ class LazyLoadHandler {
     public static adjustScroll(scrollContainer: HTMLElement) {
         // Validate container is scrollable before attempting scroll
         if (!LazyLoadHandler.isElementScrollable(scrollContainer)) {
-            console.warn("LOPEZ :: Container is not scrollable, skipping scroll adjustment");
             return;
         }
 
@@ -717,7 +688,6 @@ class LazyLoadHandler {
      * Also removes the trigger element from the DOM to prevent further triggering.
      */
     public static handleNoMoreHistoryAvailable() {
-        console.log("LOPEZ :: No more history available, disabling lazy loading");
         LazyLoadHandler.hasMoreHistoryAvailable = false;
         LazyLoadHandler.paused = true;
         LazyLoadHandler.pendingScrollAction = false; // Reset this to prevent stuck states
@@ -736,8 +706,6 @@ class LazyLoadHandler {
         
         // Clear scroll state
         LazyLoadHandler.scrollState = null;
-        
-        console.log("LOPEZ :: All lazy loading operations stopped and cleaned up");
     }
 
     /**
@@ -849,7 +817,7 @@ const LazyLoadActivity = () => {
         const handleScroll = () => {
             if (!LazyLoadHandler.isReady) {
                 // System not ready, but user is scrolling - check if we should trigger
-                const scrollTimeoutId = window.setTimeout(() => {
+                window.setTimeout(() => {
                     LazyLoadHandler.checkVisibilityAndTrigger();
                 }, 100); // Small delay to debounce rapid scroll events
                 
@@ -871,7 +839,7 @@ const LazyLoadActivity = () => {
         // Find container and attach scroll listener
         const { container } = LazyLoadHandler.findScrollContainer();
         if (container) {
-            container.addEventListener('scroll', handleScroll, { passive: true });
+            container.addEventListener("scroll", handleScroll, { passive: true });
         }
 
         // Cleanup function - critical for preventing memory leaks
@@ -881,7 +849,7 @@ const LazyLoadActivity = () => {
             // Remove event listeners
             window.removeEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
             if (container) {
-                container.removeEventListener('scroll', handleScroll);
+                container.removeEventListener("scroll", handleScroll);
             }
             
             // Perform complete system cleanup
@@ -891,7 +859,6 @@ const LazyLoadActivity = () => {
 
     // Don't render if no more history is available
     if (!hasMoreHistory) {
-        console.log("LOPEZ :: LazyLoadActivity not rendering - no more history available");
         return null;
     }
 

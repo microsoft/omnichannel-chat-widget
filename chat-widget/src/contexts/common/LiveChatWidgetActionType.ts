@@ -300,5 +300,4 @@ export enum LiveChatWidgetActionType {
         null payload, simply returns the existing inMemory state
     */
     GET_IN_MEMORY_STATE,
-    UPDATE_HISTORY_PULL_MANIFEST,
 }

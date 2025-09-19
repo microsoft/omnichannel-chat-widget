@@ -33,7 +33,7 @@ class PersistentConversationHandler {
             ...props,
         };
 
-        //this.pageSize = this.appliedProps.pageSize || defaultPersistentChatHistoryProps.pageSize;
+        this.pageSize = this.appliedProps.pageSize || 4;
     }
 
     private resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
@@ -55,13 +55,11 @@ class PersistentConversationHandler {
 
         // Prevent concurrent pulls regardless of pageToken
         if (this.isCurrentlyPulling) {
-            console.log("LOPEZ :: Already pulling history, skipping to avoid duplicate pull.");
             return;
         }
 
         // Additional check for specific pageToken duplicates
         if (this.pageToken && this.pageTokenInTransitSet.has(this.pageToken)) {
-            console.log("LOPEZ :: Already pulling this pageToken, skipping to avoid duplicate pull.");
             return;
         }
         
@@ -75,14 +73,9 @@ class PersistentConversationHandler {
         try {
             const messages = await this.fetchHistoryMessages();
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            //const messages: any[] = [];
             
-            // LOPEZ: When simulating zero messages, mark as last pull to prevent infinite triggering
             if (messages.length === 0) {
                 this.isLastPull = true;
-                console.log("LOPEZ :: No messages to pull, marking as last pull and dispatching no-more-history event");
-                dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
                 return;
             }
             

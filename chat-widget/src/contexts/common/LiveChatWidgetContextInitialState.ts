@@ -65,8 +65,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             transcriptRequestId: "",
             confirmationPaneConfirmedOptionClicked: false,
             confirmationState: ConfirmationState.NotSet,
-            startChatFailureType: StartChatFailureType.Generic,
-            historyPullManifest: {}
+            startChatFailureType: StartChatFailureType.Generic
         },
         appStates: {
             conversationState: ConversationState.Closed,

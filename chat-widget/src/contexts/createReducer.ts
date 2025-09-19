@@ -751,24 +751,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     isConversationalSurvey: action.payload as boolean
                 }
             };
-
-        case LiveChatWidgetActionType.UPDATE_HISTORY_PULL_MANIFEST:
-            inMemory = {
-                ...inMemory,
-                domainStates: {
-                    ...inMemory.domainStates,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    historyPullManifest: action.payload as Record<string, any>
-                }
-            };
-            return {
-                ...state,
-                domainStates: {
-                    ...state.domainStates,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    historyPullManifest: action.payload as Record<string, any>
-                }
-            };
         default:
             return state;
     }

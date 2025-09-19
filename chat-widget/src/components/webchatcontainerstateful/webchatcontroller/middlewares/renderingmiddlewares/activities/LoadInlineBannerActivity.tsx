@@ -13,7 +13,6 @@ const LoadInlineBannerActivity = (props: any) => {
         <>
             <div id={props.id} style={props.style}>
                 {localizedTexts.PREVIOUS_MESSAGES_LOADING}
-                huevos
             </div>
         </>
     );
