@@ -11,8 +11,16 @@ const LoadInlineBannerActivity = (props: any) => {
     
     return (
         <>
-            <div id={props.id} style={props.style}>
-                {localizedTexts.PREVIOUS_MESSAGES_LOADING}
+            <div 
+                id={props.id} 
+                style={props.style}
+                role="status"
+                aria-live="polite"
+                aria-label={localizedTexts.PREVIOUS_MESSAGES_LOADING}
+                aria-busy="true"
+            >
+                <span aria-hidden="true"> {localizedTexts.PREVIOUS_MESSAGES_LOADING} </span>
+                
             </div>
         </>
     );
