@@ -9,13 +9,13 @@
  * 3. Decodes certain html characters that came through from chat services
  ******/
 
+import LazyLoadActivity, { LazyLoadHandler } from "./activities/LazyLoadActivity";
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 
 import { Constants } from "../../../../../common/Constants";
 import ConversationDividerActivity from "./activities/ConversationDividerActivity";
 import { DirectLineActivityType } from "../../enums/DirectLineActivityType";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
-import LazyLoadActivity from "./activities/LazyLoadActivity";
 import React from "react";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
@@ -89,6 +89,12 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         }
 
         if (isTagIncluded(card, Constants.persistentChatHistoryMessagePullTriggerTag)) {
+            // Check if more history is available before rendering
+            if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+                console.log("LOPEZ :: LAZY LOAD :: No more history available, skipping LazyLoadActivity rendering");
+                return () => false;
+            }
+
             // console.log("LOPEZ :: Rendering Lazy Load Trigger", card);  
             // add a deduping mechanism here based on card.activity.channelData.webChat.receivedAt , which is an epoch, track the last one rendered and only allow to render if the values is equal or greater
 
@@ -101,9 +107,17 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             }
 
             lastRenderedAt = receivedAt;
-            console.error("LOPEZ :: LAZY LOAD :: Rendering Lazy Load Trigger - rendering", card);
+            console.log("LOPEZ :: LAZY LOAD :: Rendering Lazy Load Trigger - rendering", card);
 
-            return <LazyLoadActivity />;
+            // Return a function that checks availability at render time
+            return () => {
+                // Double-check at render time in case history availability changed
+                if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+                    console.log("LOPEZ :: LAZY LOAD :: No more history available at render time, returning null");
+                    return null;
+                }
+                return <LazyLoadActivity />;
+            };
         }
         
         if (isTagIncluded(card, Constants.persistentChatHistoryMessageTag)) {

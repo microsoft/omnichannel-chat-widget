@@ -24,7 +24,7 @@
  * 5. Resets observer for next lazy load cycle
  */
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import ChatWidgetEvents from "../../../../../livechatwidget/common/ChatWidgetEvents";
 import { LazyLoadActivityConstants } from "./Constants";
@@ -82,8 +82,11 @@ class LazyLoadHandler {
     private static retryTimeouts: Set<number> = new Set();  // Tracks all setTimeout IDs for cleanup
     
     // Readiness and queue system (handles minimize/maximize scenarios)
-    private static isReady = false;                          // System readiness flag
+    public static isReady = false;                          // System readiness flag
     private static initializationQueue: (() => void)[] = []; // Queue for actions during initialization
+    
+    // History availability state
+    public static hasMoreHistoryAvailable = true;          // Tracks if more history can be loaded
 
     /**
      * Main initialization method for the lazy loading system
@@ -121,14 +124,25 @@ class LazyLoadHandler {
          * @param entries - Array of intersection observer entries
          */
         const callback: IntersectionObserverCallback = (entries: IntersectionObserverEntry[]) => {
-            // Guard clauses: Don't trigger if paused or already processing
-            if (LazyLoadHandler.paused || LazyLoadHandler.pendingScrollAction) {
+            // Guard clauses: Don't trigger if paused, already processing, or no more history available
+            if (LazyLoadHandler.paused || LazyLoadHandler.pendingScrollAction || !LazyLoadHandler.hasMoreHistoryAvailable) {
+                console.log("LOPEZ :: Intersection observer triggered but conditions not met:", {
+                    paused: LazyLoadHandler.paused,
+                    pendingScrollAction: LazyLoadHandler.pendingScrollAction,
+                    hasMoreHistoryAvailable: LazyLoadHandler.hasMoreHistoryAvailable
+                });
                 return;
             }
 
             entries.forEach(entry => {
                 // Check if element is intersecting with any visibility
                 if (entry.isIntersecting && entry.intersectionRatio > 0) {
+                    // Double-check history availability at trigger time
+                    if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+                        console.log("LOPEZ :: History no longer available at trigger time, ignoring intersection");
+                        return;
+                    }
+                    console.log("LOPEZ :: Intersection detected, triggering lazy load");
                     LazyLoadHandler.handleLazyLoadTrigger();
                 }
             });
@@ -317,11 +331,23 @@ class LazyLoadHandler {
      * Uses getBoundingClientRect() to calculate visibility manually.
      */
     public static checkVisibilityAndTrigger() {
+        // Don't trigger if no more history is available
+        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+            console.log("LOPEZ :: No more history available, skipping visibility check");
+            return;
+        }
+        
         const targetElement = document.getElementById(LazyLoadHandler.targetId);
-        if (!targetElement) return;
+        if (!targetElement) {
+            console.log("LOPEZ :: Target element not found, skipping visibility check");
+            return;
+        }
 
         const { container } = LazyLoadHandler.findScrollContainer();
-        if (!container) return;
+        if (!container) {
+            console.log("LOPEZ :: Container not found, skipping visibility check");
+            return;
+        }
 
         // Get bounding rectangles for visibility calculation
         const targetRect = targetElement.getBoundingClientRect();
@@ -355,6 +381,12 @@ class LazyLoadHandler {
      * Timing: Uses 300ms delay to allow content loading before scroll adjustment
      */
     private static handleLazyLoadTrigger() {
+        // Final guard: Don't proceed if no more history is available
+        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+            console.log("LOPEZ :: handleLazyLoadTrigger called but no more history available, aborting");
+            return;
+        }
+
         // Set flags to prevent overlapping operations
         LazyLoadHandler.pendingScrollAction = true;  // Block new scroll actions
         LazyLoadHandler.paused = true;               // Pause intersection observer
@@ -385,6 +417,13 @@ class LazyLoadHandler {
      * If no suitable container is found, schedules a retry.
      */
     private static executeReliableScroll() {
+        // Guard: Don't execute scroll if no more history is available
+        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+            console.log("LOPEZ :: Aborting executeReliableScroll - no more history available");
+            LazyLoadHandler.finishScrollAction();
+            return;
+        }
+
         // Find container using multiple fallback strategies
         const { container, isScrollable } = LazyLoadHandler.findScrollContainer();
         
@@ -426,6 +465,13 @@ class LazyLoadHandler {
      * after the browser has had time to process the scroll change.
      */
     private static attemptScroll() {
+        // Guard: Don't attempt scroll if no more history is available
+        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+            console.log("LOPEZ :: Aborting scroll attempt - no more history available");
+            LazyLoadHandler.finishScrollAction();
+            return;
+        }
+
         if (!LazyLoadHandler.scrollState) {
             console.error("LOPEZ ::  Scroll state is not defined");
             LazyLoadHandler.finishScrollAction();
@@ -439,12 +485,26 @@ class LazyLoadHandler {
         // Perform scroll using requestAnimationFrame for smooth execution
         // Frame 1: Apply the scroll
         requestAnimationFrame(() => {
+            // Double-check history availability before applying scroll
+            if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+                console.log("LOPEZ :: Aborting scroll in frame 1 - no more history available");
+                LazyLoadHandler.finishScrollAction();
+                return;
+            }
+
             if (container) {
                 container.scrollTop = targetScrollTop;
             }
             
             // Frame 2: Verify scroll occurred after browser has processed the change
             requestAnimationFrame(() => {
+                // Triple-check history availability before verification
+                if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+                    console.log("LOPEZ :: Aborting scroll in frame 2 - no more history available");
+                    LazyLoadHandler.finishScrollAction();
+                    return;
+                }
+
                 const actualScrollTop = container ? container.scrollTop : 0;
                 const scrollSucceeded = Math.abs(actualScrollTop - targetScrollTop) < 5; // 5px tolerance for success
                 
@@ -495,10 +555,17 @@ class LazyLoadHandler {
      * Provides a longer delay to allow container to become ready.
      */
     private static scheduleScrollRetry() {
+        // Don't schedule retry if no more history is available
+        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+            console.log("LOPEZ :: Aborting scheduleScrollRetry - no more history available");
+            LazyLoadHandler.finishScrollAction();
+            return;
+        }
+
         const timeoutId = window.setTimeout(() => {
             LazyLoadHandler.retryTimeouts.delete(timeoutId);
-            // Only retry if we're still in a pending scroll action state
-            if (LazyLoadHandler.pendingScrollAction) {
+            // Only retry if we're still in a pending scroll action state and have more history
+            if (LazyLoadHandler.pendingScrollAction && LazyLoadHandler.hasMoreHistoryAvailable) {
                 LazyLoadHandler.executeReliableScroll();
             }
         }, 1000); // 1 second delay for container readiness
@@ -532,7 +599,7 @@ class LazyLoadHandler {
      * 
      * @returns Object containing container element and scrollability status
      */
-    private static findScrollContainer(): { container: HTMLElement | null; isScrollable: boolean } {
+    public static findScrollContainer(): { container: HTMLElement | null; isScrollable: boolean } {
         // Primary: Look for the specific webchat scroll container
         const webchatContainer = document.querySelector(LazyLoadActivityConstants.SCROLL_ID) as HTMLElement;
         if (webchatContainer && LazyLoadHandler.isElementScrollable(webchatContainer)) {
@@ -643,6 +710,37 @@ class LazyLoadHandler {
     }
 
     /**
+     * Handles the NO_MORE_HISTORY_AVAILABLE event
+     * 
+     * Called when there's no more chat history to load.
+     * Disables further lazy loading attempts and cleans up the observer.
+     * Also removes the trigger element from the DOM to prevent further triggering.
+     */
+    public static handleNoMoreHistoryAvailable() {
+        console.log("LOPEZ :: No more history available, disabling lazy loading");
+        LazyLoadHandler.hasMoreHistoryAvailable = false;
+        LazyLoadHandler.paused = true;
+        LazyLoadHandler.pendingScrollAction = false; // Reset this to prevent stuck states
+        
+        // Clear all pending timeouts to stop any scheduled operations
+        LazyLoadHandler.retryTimeouts.forEach(timeoutId => {
+            clearTimeout(timeoutId);
+        });
+        LazyLoadHandler.retryTimeouts.clear();
+        
+        // Disconnect observer to prevent further triggering
+        if (LazyLoadHandler.observer) {
+            LazyLoadHandler.observer.disconnect();
+            LazyLoadHandler.observer = null;
+        }
+        
+        // Clear scroll state
+        LazyLoadHandler.scrollState = null;
+        
+        console.log("LOPEZ :: All lazy loading operations stopped and cleaned up");
+    }
+
+    /**
      * Resets the lazy load system for the next cycle
      * 
      * This method prepares the system for the next lazy load operation:
@@ -656,6 +754,7 @@ class LazyLoadHandler {
         LazyLoadHandler.unmount();                    // Clean up current state
         LazyLoadHandler.initialized = false;         // Reset initialization flag
         LazyLoadHandler.isReady = false;            // Reset readiness flag
+        LazyLoadHandler.hasMoreHistoryAvailable = true; // Reset history availability flag
         LazyLoadHandler.initializationQueue = [];   // Clear action queue
         
         // Reinitialize with faster timing for better responsiveness
@@ -717,9 +816,11 @@ class LazyLoadHandler {
  * - Scroll event monitoring for immediate responsiveness
  * - Proper cleanup on unmount
  * - Handles minimize/maximize scenarios
+ * - Reactive rendering based on history availability
  */
 const LazyLoadActivity = () => {
     const style = defaultInlineBannerStyle;
+    const [hasMoreHistory, setHasMoreHistory] = useState(LazyLoadHandler.hasMoreHistoryAvailable);
 
     useEffect(() => {
         // Initialize the lazy load observer system
@@ -757,6 +858,16 @@ const LazyLoadActivity = () => {
             }
         };
 
+        // Event listener for NO_MORE_HISTORY_AVAILABLE
+        const handleNoMoreHistory = () => {
+            LazyLoadHandler.handleNoMoreHistoryAvailable();
+            // Update React state to trigger re-render and hide component
+            setHasMoreHistory(false);
+        };
+
+        // Add event listener for no more history signal
+        window.addEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
+
         // Find container and attach scroll listener
         const { container } = LazyLoadHandler.findScrollContainer();
         if (container) {
@@ -767,7 +878,8 @@ const LazyLoadActivity = () => {
         return () => {
             clearTimeout(initTimeoutId);
             
-            // Remove scroll event listener
+            // Remove event listeners
+            window.removeEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
             if (container) {
                 container.removeEventListener('scroll', handleScroll);
             }
@@ -777,6 +889,12 @@ const LazyLoadActivity = () => {
         };
     }, []); // Empty dependency array - only run on mount/unmount
 
+    // Don't render if no more history is available
+    if (!hasMoreHistory) {
+        console.log("LOPEZ :: LazyLoadActivity not rendering - no more history available");
+        return null;
+    }
+
     // Render the trigger element that the intersection observer watches
     return (
         <LoadInlineBannerActivity id={LazyLoadHandler.targetId} style={style} />
@@ -784,3 +902,4 @@ const LazyLoadActivity = () => {
 };
 
 export default LazyLoadActivity;
+export { LazyLoadHandler };

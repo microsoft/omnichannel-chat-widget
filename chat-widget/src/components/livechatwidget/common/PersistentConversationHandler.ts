@@ -74,8 +74,19 @@ class PersistentConversationHandler {
         
         try {
             const messages = await this.fetchHistoryMessages();
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            //const messages: any[] = [];
             
-            const messagesDescOrder = [...messages].reverse();
+            // LOPEZ: When simulating zero messages, mark as last pull to prevent infinite triggering
+            if (messages.length === 0) {
+                this.isLastPull = true;
+                console.log("LOPEZ :: No messages to pull, marking as last pull and dispatching no-more-history event");
+                dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+                return;
+            }
+            
+            const messagesDescOrder = [...messages]?.reverse();
 
             this.processHistoryMessages(messagesDescOrder);
         } finally {
