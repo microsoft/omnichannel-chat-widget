@@ -156,6 +156,7 @@ class PersistentConversationHandler {
                     "webchat:sequence-id": sequenceId,
                 },
                 timestamp: new Date(timestamp).toISOString(),
+                identifier : `divider-${activity.channelData.conversationId}`
             };
         }
 
