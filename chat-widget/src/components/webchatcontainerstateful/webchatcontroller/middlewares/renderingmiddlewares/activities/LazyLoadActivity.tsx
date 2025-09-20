@@ -31,6 +31,7 @@ import { LazyLoadActivityConstants } from "./Constants";
 import LoadInlineBannerActivity from "./LoadInlineBannerActivity";
 import { defaultInlineBannerStyle } from "../defaultStyles/defaultInLineBannerStyle";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
+import { ILiveChatWidgetProps } from "../../../../../livechatwidget/interfaces/ILiveChatWidgetProps";
 
 /**
  * Interface defining the state of a scroll operation
@@ -786,8 +787,7 @@ class LazyLoadHandler {
  * - Handles minimize/maximize scenarios
  * - Reactive rendering based on history availability
  */
-const LazyLoadActivity = () => {
-    const style = defaultInlineBannerStyle;
+const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
     const [hasMoreHistory, setHasMoreHistory] = useState(LazyLoadHandler.hasMoreHistoryAvailable);
 
     useEffect(() => {
@@ -864,7 +864,7 @@ const LazyLoadActivity = () => {
 
     // Render the trigger element that the intersection observer watches
     return (
-        <LoadInlineBannerActivity id={LazyLoadHandler.targetId} style={style} />
+        <LoadInlineBannerActivity {...(props || {})} id={LazyLoadHandler.targetId} />
     );
 };
 

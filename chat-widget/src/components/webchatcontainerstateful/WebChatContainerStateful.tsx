@@ -26,6 +26,7 @@ import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/
 import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
 import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
+import { isPersistentChatEnabled } from "../livechatwidget/common/liveChatConfigUtils";
 import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
@@ -82,10 +83,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
 
-    const isPersistenChatEnabled = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) || isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+    const isPersistentChatEnabledForWidget = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) || isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
 
-    if (props.persistentChatHistory?.persistentChatHistoryEnabled && isPersistenChatEnabled) {
+    if (props.persistentChatHistory?.persistentChatHistoryEnabled && isPersistentChatEnabledForWidget) {
         usePersistentChatHistory(facadeChatSDK, props.persistentChatHistory);
     }
     // Delegated click handler for citation anchors. Placed after state is
@@ -384,7 +385,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
-                { isPersistenChatEnabled && <WebChatEventSubscribers persistentChatHistoryEnabled={props.persistentChatHistory?.persistentChatHistoryEnabled}/>}
+                { isPersistentChatEnabledForWidget && <WebChatEventSubscribers persistentChatHistoryEnabled={props.persistentChatHistory?.persistentChatHistoryEnabled}/>}
                 <BasicWebChat></BasicWebChat>
             </div>
         </Stack>

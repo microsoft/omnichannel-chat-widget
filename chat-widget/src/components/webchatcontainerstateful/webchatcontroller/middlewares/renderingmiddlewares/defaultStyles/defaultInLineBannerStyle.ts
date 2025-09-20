@@ -1,6 +1,7 @@
 import { defaultSystemMessageStyles } from "./defaultSystemMessageStyles";
+import { IStyle } from "@fluentui/react"; // Adjust the import path if necessary
 
-export const defaultInlineBannerStyle = {
+export const defaultInlineBannerStyle : IStyle = {
     ...defaultSystemMessageStyles,
     visibility: "visible",
     height: "20px",
