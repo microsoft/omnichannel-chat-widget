@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Ensuring sendbox is enabled when starting a new chat
 - A11Y fix for announcing incorrect bot initials and alt text
 - Fixed carousel attachments alignment issue
+- Bot authentication activity adaptive card visibility
 
 ### Changed
 - Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
