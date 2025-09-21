@@ -27,11 +27,11 @@
 import React, { useEffect, useState } from "react";
 
 import ChatWidgetEvents from "../../../../../livechatwidget/common/ChatWidgetEvents";
+import { ILiveChatWidgetProps } from "../../../../../livechatwidget/interfaces/ILiveChatWidgetProps";
 import { LazyLoadActivityConstants } from "./Constants";
 import LoadInlineBannerActivity from "./LoadInlineBannerActivity";
 import { defaultInlineBannerStyle } from "../defaultStyles/defaultInLineBannerStyle";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
-import { ILiveChatWidgetProps } from "../../../../../livechatwidget/interfaces/ILiveChatWidgetProps";
 
 /**
  * Interface defining the state of a scroll operation

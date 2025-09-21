@@ -91,7 +91,6 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         if (isTagIncluded(card, Constants.persistentChatHistoryMessagePullTriggerTag)) {
             // Check if more history is available before rendering
             if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                console.log("LOPEZ :: LAZY LOAD :: No more history available, skipping LazyLoadActivity rendering");
                 return () => false;
             }
 
@@ -104,13 +103,11 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             }
 
             lastRenderedAt = receivedAt;
-            console.log("LOPEZ :: LAZY LOAD :: Rendering Lazy Load Trigger - rendering", card);
 
             // Return a function that checks availability at render time
             return () => {
                 // Double-check at render time in case history availability changed
                 if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                    console.log("LOPEZ :: LAZY LOAD :: No more history available at render time, returning null");
                     return null;
                 }
                 return <LazyLoadActivity />;
@@ -130,18 +127,8 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         }
 
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
-            TelemetryHelper.logEvent(
-                TelemetryEvent.ConversationDividerRendered,
-                {
-                    activityId: card?.activity?.id,
-                    activityType: card?.activity?.type,
-                    channelId: card?.activity?.channelId
-                },
-                LogLevel.INFO
-            );
             return (<ConversationDividerActivity />);
         }
-
 
         if (card.activity.text
             && card.activity.type === DirectLineActivityType.Message) {
