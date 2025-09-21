@@ -34,7 +34,7 @@ export class AddActivitySubscriber implements IActivitySubscriber {
                 const activity = event.detail.payload.activity;
                 const activityId = activity.id;
 
-                if (activity.identifier){
+                if (activity.identifier) {
                     if (this.processedActivityIds.has(activity?.identifier)) {
                         return; // Skip processing if already handled
                     }
