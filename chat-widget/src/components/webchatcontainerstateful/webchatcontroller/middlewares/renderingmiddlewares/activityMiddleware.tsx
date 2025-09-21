@@ -131,7 +131,15 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         }
 
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
-            console.log("LOPEZ :: Rendering Conversation Divider", card);
+            TelemetryHelper.logEvent(
+                TelemetryEvent.ConversationDividerRendered,
+                {
+                    activityId: card?.activity?.id,
+                    activityType: card?.activity?.type,
+                    channelId: card?.activity?.channelId
+                },
+                LogLevel.INFO
+            );
             return (<ConversationDividerActivity />);
         }
 
