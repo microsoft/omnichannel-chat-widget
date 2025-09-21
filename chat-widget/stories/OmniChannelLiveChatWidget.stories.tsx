@@ -1,11 +1,10 @@
-import React from "react";
-
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
-import { Meta } from "@storybook/react/types-6-0";
-import { Story } from "@storybook/react";
-import { LiveChatWidget } from "../src";
 import { ILiveChatWidgetProps } from "../src/components/livechatwidget/interfaces/ILiveChatWidgetProps";
+import { LiveChatWidget } from "../src";
+import { Meta } from "@storybook/react/types-6-0";
 import { MockChatSDK } from "../src/components/webchatcontainerstateful/common/mockchatsdk";
+import React from "react";
+import { Story } from "@storybook/react";
 
 export default {
     title: "Stateful Components/Live Chat Widget",
@@ -40,6 +39,9 @@ const liveChatWidgetDefaultProps: ILiveChatWidgetProps = {
             top: "20px",
             left: "20px"
         }
+    },
+    persistentChatHistory: {
+        persistentChatHistoryEnabled: false
     },
     telemetryConfig: telemetryConfigGlobal
 };
@@ -119,6 +121,9 @@ const liveChatWidgetDefaultWithSurveyProps: ILiveChatWidgetProps = {
                 overflow: "auto"
             }
         }
+    },
+    persistentChatHistory: {
+        persistentChatHistoryEnabled: false
     },
     telemetryConfig: telemetryConfigGlobal
 };
@@ -357,6 +362,9 @@ const liveChatWidgetCustom: ILiveChatWidgetProps = {
                 backgroundColor: "#1b1a19"
             }
         }
+    },
+    persistentChatHistory: {
+        persistentChatHistoryEnabled: false
     },
     telemetryConfig: telemetryConfigGlobal
 };
