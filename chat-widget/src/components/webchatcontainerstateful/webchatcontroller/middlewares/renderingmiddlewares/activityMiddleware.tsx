@@ -95,7 +95,6 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
                 return () => false;
             }
 
-            // add a deduping mechanism here based on card.activity.channelData.webChat.receivedAt , which is an epoch, track the last one rendered and only allow to render if the values is equal or greater
 
             const receivedAt = card.activity.channelData.webChat.receivedAt;
 
