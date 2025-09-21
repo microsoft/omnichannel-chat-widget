@@ -100,7 +100,6 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             const receivedAt = card.activity.channelData.webChat.receivedAt;
 
             if (receivedAt < lastRenderedAt) {
-                console.warn("LOPEZ :: LAZY LOAD  :2: Skipping rendering Lazy Load Trigger - already rendered", card);
                 card.activity = null;
                 return () => false;
             }
