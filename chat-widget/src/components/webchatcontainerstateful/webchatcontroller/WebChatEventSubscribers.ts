@@ -17,7 +17,6 @@ const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
 
             if (props.persistentChatHistoryEnabled === true) {
                 setTimeout(() => {
-                    console.log("LOPEZ :: CALLING FETCH");
                     dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
                     dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {
                         activity: {

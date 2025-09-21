@@ -95,13 +95,10 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
                 return () => false;
             }
 
-            // console.log("LOPEZ :: Rendering Lazy Load Trigger", card);  
-            // add a deduping mechanism here based on card.activity.channelData.webChat.receivedAt , which is an epoch, track the last one rendered and only allow to render if the values is equal or greater
 
             const receivedAt = card.activity.channelData.webChat.receivedAt;
 
             if (receivedAt < lastRenderedAt) {
-                console.warn("LOPEZ :: LAZY LOAD  :2: Skipping rendering Lazy Load Trigger - already rendered", card);
                 card.activity = null;
                 return () => false;
             }
@@ -133,7 +130,15 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         }
 
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
-            console.log("LOPEZ :: Rendering Conversation Divider", card);
+            TelemetryHelper.logEvent(
+                TelemetryEvent.ConversationDividerRendered,
+                {
+                    activityId: card?.activity?.id,
+                    activityType: card?.activity?.type,
+                    channelId: card?.activity?.channelId
+                },
+                LogLevel.INFO
+            );
             return (<ConversationDividerActivity />);
         }
 

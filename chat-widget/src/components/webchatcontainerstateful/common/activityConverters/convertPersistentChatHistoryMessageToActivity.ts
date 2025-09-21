@@ -82,6 +82,8 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
             timestamp
         };
     }
+    // If neither content nor attachments are present, return null to indicate no activity could be created.
+    return null;
 };
 
 export default convertPersistentChatHistoryMessageToActivity;

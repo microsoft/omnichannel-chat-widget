@@ -4,9 +4,9 @@ const dispatchCustomEvent = (name: string, payload?: any) => {
     const eventDetails = payload ? { detail: { payload } } : undefined;
     try {
         event = new CustomEvent(name, eventDetails);
-    } catch {
+    } catch (error) {
 
-        console.error("Error dispatching custom event:", name, payload);
+        console.error("Error dispatching custom event:", name, payload, error);
     }
 
     if (event) {

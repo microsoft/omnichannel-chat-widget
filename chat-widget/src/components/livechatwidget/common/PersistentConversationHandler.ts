@@ -185,7 +185,8 @@ class PersistentConversationHandler {
     private createDividerActivity(activity: any): any | null {
 
         if (this.lastMessage?.channelData?.conversationId !== activity.channelData.conversationId) {
-            const sequenceId = activity.channelData["webchat:sequence-id"] + 1;
+            const rawSequenceId = activity.channelData["webchat:sequence-id"];
+            const sequenceId = typeof rawSequenceId === "number" && !isNaN(rawSequenceId) ? rawSequenceId + 1 : 1;
             const timestamp = new Date(activity.timestamp).getTime() + 1;
             return {
                 ...conversationDividerActivity,
