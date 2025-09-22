@@ -404,20 +404,4 @@ describe("WebChatEventSubscribers", () => {
             expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
         });
     });
-
-    describe("Console Logging", () => {
-        it("should log when calling fetch", () => {
-            const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
-            render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            const timeoutCallback = mockSetTimeout.mock.calls[0][0];
-            timeoutCallback();
-            
-            expect(consoleSpy).toHaveBeenCalledWith("LOPEZ :: CALLING FETCH");
-            
-            consoleSpy.mockRestore();
-        });
-    });
 });
