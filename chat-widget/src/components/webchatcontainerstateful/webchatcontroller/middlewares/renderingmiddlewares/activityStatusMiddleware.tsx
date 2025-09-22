@@ -13,7 +13,7 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
         activity: {
             channelData: {
                 tags
-            } = {},
+            },
             from: {
                 name,
                 role
@@ -40,6 +40,7 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
                 timestamp
             }
         } = args;
+        
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const next_name = name, next_timestamp = timestamp;
         const timestampCurrentInMillisecond = Date.parse(current_timestamp);
