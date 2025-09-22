@@ -5,7 +5,7 @@ import { ILiveChatWidgetContext } from "../../../../../../contexts/common/ILiveC
 import { Stack } from "@fluentui/react";
 import { defaultMiddlewareLocalizedTexts } from "../../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultTimestampContentStyles } from "../defaultStyles/defaultTimestampContentStyles";
-import { useChatContextStore } from "../../../../../..";
+import useChatContextStore from "../../../../../../hooks/useChatContextStore";
 
 /* eslint @typescript-eslint/no-explicit-any: "off" */
 export const SendingTimestamp = () => {

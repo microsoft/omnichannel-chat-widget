@@ -1,5 +1,3 @@
-/* eslint @typescript-eslint/no-explicit-any: "off" */
-
 import * as React from "react";
 
 import { getUnreadMessageCount, registerVisibilityListener } from "./getUnreadMessageCount";
@@ -12,19 +10,45 @@ import { version as chatComponentVersion } from "@microsoft/omnichannel-chat-com
 import { version as chatSdkVersion } from "@microsoft/omnichannel-chat-sdk/package.json";
 import { version as chatWidgetVersion } from "../../package.json";
 import { getCustomizationJson } from "./getCustomizationJson";
-import { memoryDataStore } from "./Common/MemoryDataStore";
 import getMockChatSDKIfApplicable from "./getMockChatSDKIfApplicable";
+import { memoryDataStore } from "./Common/MemoryDataStore";
 
 let liveChatWidgetProps;
 
-const main = async () => {
+async function fetchAuthTokenViaNetlify() {
+    const url = "https://omnichannel-auth-server.netlify.app/.netlify/functions/api/login";
+    const lwiContexts = {
+        Name: { value: "Contoso", isDisplayable: "true" },
+        Email: { value: "foo@microsoft.com", isDisplayable: "true" },
+        Secret: { value: "***" }
+    };
+    const data = {
+        contactid: "edward",
+        expiry: 10 * 60,
+        lwicontexts: JSON.stringify(lwiContexts)
+    };
+    const payload = {
+        method: "POST",
+        body: JSON.stringify(data)
+    };
+    try {
+        const response = await fetch(url, payload);
+        if (response.ok) {
+            const authToken = await response.text();
+            return authToken;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+    return "";
+}
 
+async function main() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const orgId = urlParams.get("data-org-id");
     const orgUrl = urlParams.get("data-org-url");
     const appId = urlParams.get("data-app-id");
-
     const script = document.getElementById("oc-lcw-script");
     const customizationJson = await getCustomizationJson();
     const omnichannelConfig = {
@@ -32,103 +56,94 @@ const main = async () => {
         orgUrl: orgUrl ?? script?.getAttribute("data-org-url"),
         widgetId: appId ?? script?.getAttribute("data-app-id")
     };
-
-    let chatSDK = new OmnichannelChatSDK(omnichannelConfig);
+    const authToken = await fetchAuthTokenViaNetlify();
+    const chatSDKConfig = {
+        getAuthToken: () => authToken || ""
+    };
+    let chatSDK = new OmnichannelChatSDK(omnichannelConfig, chatSDKConfig);
     chatSDK = getMockChatSDKIfApplicable(chatSDK, customizationJson);
-
-    await chatSDK.initialize({useParallelLoad: true});
+    await chatSDK.initialize({ useParallelLoad: true });
     const chatConfig = await chatSDK.getLiveChatConfig();
     memoryDataStore();
     await getUnreadMessageCount();
     await registerVisibilityListener();
-    const switchConfig = (config) => {
-        liveChatWidgetProps = config;
+
+    function switchConfig(config) {
         liveChatWidgetProps = {
-            ...liveChatWidgetProps,
-            chatSDK: chatSDK,
-            chatConfig: chatConfig,
+            ...config,
+            chatSDK,
+            chatConfig,
             telemetryConfig: {
-                chatWidgetVersion: chatWidgetVersion,
-                chatComponentVersion: chatComponentVersion,
+                chatWidgetVersion,
+                chatComponentVersion,
                 OCChatSDKVersion: chatSdkVersion
             }
         };
-
         ReactDOM.render(
             <LiveChatWidget {...liveChatWidgetProps} />,
             document.getElementById("oc-lcw-container")
         );
-    };
+    }
 
-    const setCustomContext = () => {
+    function setCustomContext() {
         const setCustomContextEvent = {
             eventName: "SetCustomContext",
             payload: {
-                "contextKey1": {"value": "contextValue1", "isDisplayable": true},
-                "contextKey2": {"value": 12.34, "isDisplayable": false},
-                "contextKey3": {"value": true}
+                contextKey1: { value: "contextValue1", isDisplayable: true },
+                contextKey2: { value: 12.34, isDisplayable: false },
+                contextKey3: { value: true }
             }
         };
         BroadcastService.postMessage(setCustomContextEvent);
-    };
+    }
 
-    const startChat = (context) => {
+    function startChat(context) {
         const setCustomContextEvent = {
             eventName: "StartChat",
-            payload: {
-                customContext: context
-            }
+            payload: { customContext: context }
         };
         BroadcastService.postMessage(setCustomContextEvent);
-    };
+    }
 
-    const endChat = () => {
-        const endChatEvent = {
-            eventName: "InitiateEndChat"
-        };
+    function endChat() {
+        const endChatEvent = { eventName: "InitiateEndChat" };
         BroadcastService.postMessage(endChatEvent);
-    };
+    }
 
-    const startProactiveChat = () => {
+    function startProactiveChat() {
         const startProactiveChatEvent = {
             eventName: "StartProactiveChat",
             payload: {
-                notificationConfig: {
-                    message: "Hi, how may I help you?" // title text
-                },
-                enablePreChat: true, // enablePreChat
+                notificationConfig: { message: "Hi, how may I help you?" },
+                enablePreChat: true,
                 inNewWindow: false
             }
         };
         BroadcastService.postMessage(startProactiveChatEvent);
-    };
+    }
 
-
-    const sendCustomEvent = (payload) => {
-        const customEvent = {
-            eventName: "sendCustomEvent",
-            payload
-        };
+    function sendCustomEvent(payload) {
+        const customEvent = { eventName: "sendCustomEvent", payload };
         BroadcastService.postMessage(customEvent);
-    };
+    }
 
-    const setOnCustomEvent = (callback) => {
-        BroadcastService.getMessageByEventName("onCustomEvent").subscribe((event) => {
+    function setOnCustomEvent(callback) {
+        BroadcastService.getMessageByEventName("onCustomEvent").subscribe(event => {
             if (event && typeof callback === "function") {
                 callback(event);
             }
         });
-    };
+    }
 
-    window["switchConfig"] = switchConfig;
-    window["startProactiveChat"] = startProactiveChat;
-    window["startChat"] = startChat;
-    window["endChat"] = endChat;
-    window["setCustomContext"] = setCustomContext;
-    window["sendCustomEvent"] = sendCustomEvent;
-    window["setOnCustomEvent"] = setOnCustomEvent;
+    window.switchConfig = switchConfig;
+    window.startProactiveChat = startProactiveChat;
+    window.startChat = startChat;
+    window.endChat = endChat;
+    window.setCustomContext = setCustomContext;
+    window.sendCustomEvent = sendCustomEvent;
+    window.setOnCustomEvent = setOnCustomEvent;
 
     switchConfig(customizationJson);
-};
+}
 
 main();

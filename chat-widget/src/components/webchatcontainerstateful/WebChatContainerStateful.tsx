@@ -7,6 +7,7 @@ import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/util
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
+import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
@@ -16,6 +17,7 @@ import { NotificationHandler } from "./webchatcontroller/notification/Notificati
 import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
+import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
 import { defaultAdaptiveCardStyles } from "./common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
@@ -24,13 +26,16 @@ import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/
 import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
 import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
+import { isPersistentChatEnabled } from "../livechatwidget/common/liveChatConfigUtils";
 import { useChatContextStore } from "../..";
+import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
+import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
 
-let uiTimer : ITimer;
+let uiTimer: ITimer;
 
 const broadcastChannelMessageEvent = "message";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const postActivity = (activity: any) => { 
+const postActivity = (activity: any) => {
     // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
         type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
@@ -56,6 +61,8 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
+    const [facadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
+
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -71,12 +78,17 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // the dim layer and pane to re-render out of sync and create a flicker.
     const citationOpeningRef = useRef(false);
 
-    // ...existing code...
 
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const {webChatContainerProps, contextDataStore} = props;
+    const { webChatContainerProps, contextDataStore } = props;
 
+    const isPersistentChatEnabledForWidget = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) || isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+
+
+    if (props.persistentChatHistory?.persistentChatHistoryEnabled && isPersistentChatEnabledForWidget) {
+        usePersistentChatHistory(facadeChatSDK, props.persistentChatHistory);
+    }
     // Delegated click handler for citation anchors. Placed after state is
     // available so we can prefer reading citations from app state and fall
     // back to the legacy window map for backward-compatibility in tests.
@@ -112,7 +124,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
                     setCitationPaneOpen(true);
                     setCitationPaneText(text);
-                    
+
                     // Simple debounce - reset guard after a short delay
                     setTimeout(() => {
                         citationOpeningRef.current = false;
@@ -339,11 +351,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         // we had a nasty bug long time ago with crashing borders messing with the sendbox, so if customer adds this value, they need to deal with that
         .webchat__bubble:not(.webchat__bubble--from-user) .webchat__bubble__content {
-            border-radius: ${webChatContainerProps?.webChatStyles?.bubbleBorderRadius?? 0 } !important; /* Override border-radius */
+            border-radius: ${webChatContainerProps?.webChatStyles?.bubbleBorderRadius ?? 0} !important; /* Override border-radius */
         }
 
         .webchat__stacked-layout_container>div {
-            background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background?? ""}
+            background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background ?? ""}
         }
         .webchat__toast_text {
             display: flex;
@@ -372,7 +384,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-            <BasicWebChat></BasicWebChat>
+            <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
+                { isPersistentChatEnabledForWidget && <WebChatEventSubscribers persistentChatHistoryEnabled={props.persistentChatHistory?.persistentChatHistoryEnabled}/>}
+                <BasicWebChat></BasicWebChat>
+            </div>
         </Stack>
         {citationPaneOpen && (
             <CitationPaneStateful id={HtmlAttributeNames.ocwCitationPaneClassName} title={HtmlAttributeNames.ocwCitationPaneTitle} contentHtml={citationPaneText} onClose={() => setCitationPaneOpen(false)} />

@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
-import { ChatAdapter, ChatSDKMessage, GetAgentAvailabilityResponse, GetLiveChatTranscriptResponse, GetVoiceVideoCallingResponse, IFileInfo, IRawMessage, MaskingRules, OmnichannelChatSDK, VoiceVideoCallingOptionalParams } from "@microsoft/omnichannel-chat-sdk";
+import { ChatAdapter, ChatSDKMessage, GetAgentAvailabilityResponse, GetLiveChatTranscriptResponse, GetPersistentChatHistoryResponse, GetVoiceVideoCallingResponse, IFileInfo, IRawMessage, MaskingRules, OmnichannelChatSDK, VoiceVideoCallingOptionalParams } from "@microsoft/omnichannel-chat-sdk";
 import { IFacadeChatSDKInput, PingResponse } from "./types/IFacadeChatSDKInput";
 import { getAuthClientFunction, handleAuthentication } from "../../components/livechatwidget/common/authHelper";
 
@@ -17,6 +17,7 @@ import GetChatTokenOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core
 import GetConversationDetailsOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetConversationDetailsOptionalParams";
 import GetLiveChatConfigOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetLiveChatConfigOptionalParams";
 import GetLiveChatTranscriptOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetLiveChatTranscriptOptionalParams";
+import GetPersistentChatHistoryOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/GetPersistentChatHistoryOptionalParams";
 import IChatToken from "@microsoft/omnichannel-chat-sdk/lib/external/IC3Adapter/IChatToken";
 import IFileMetadata from "@microsoft/omnichannel-ic3core/lib/model/IFileMetadata";
 import IMessage from "@microsoft/omnichannel-ic3core/lib/model/IMessage";
@@ -29,7 +30,6 @@ import { ParticipantsRemovedEvent } from "@azure/communication-signaling";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
-import { WidgetLoadCustomErrorString } from "../Constants";
 import { isNullOrEmptyString } from "../utils";
 
 export class FacadeChatSDK {
@@ -429,5 +429,9 @@ export class FacadeChatSDK {
         
         return this.validateAndExecuteCall("getReconnectableChats", () => this.chatSDK.OCClient.getReconnectableChats(reconnectableChatsParams));
 
+    }
+
+    public async fetchPersistentConversationHistory(getPersistentChatHistoryOptionalParams: GetPersistentChatHistoryOptionalParams = {}): Promise<GetPersistentChatHistoryResponse> {
+        return this.validateAndExecuteCall("getPersistentChatHistory", () => this.chatSDK.getPersistentChatHistory(getPersistentChatHistoryOptionalParams));
     }
 }

@@ -171,6 +171,9 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             postMessageToOtherTab = false;
         } finally {
             endChatStateCleanUp(dispatch);
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.PersistentConversationReset
+            });
             facadeChatSDK.destroy();
         }
     }
@@ -197,6 +200,10 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
             // Always allow to close the chat for embedded mode irrespective of end chat errors
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.PersistentConversationReset
+            });
+
             closeChatWidget(dispatch, setWebChatStyles, props);
             facadeChatSDK.destroy();
         }

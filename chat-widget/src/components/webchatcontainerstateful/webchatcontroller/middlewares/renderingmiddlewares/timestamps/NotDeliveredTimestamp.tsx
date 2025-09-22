@@ -10,9 +10,9 @@ import { defaultTimestampFailedStyles } from "../defaultStyles/defaultTimestampF
 import { defaultTimestampRetryStyles } from "../defaultStyles/defaultTimestampRetryStyles";
 import { getTimestampHourMinute } from "../../../../../../common/utils";
 import { hooks } from "botframework-webchat";
-import { useChatContextStore } from "../../../../../..";
+import useChatContextStore from "../../../../../../hooks/useChatContextStore";
 
-/* eslint @typescript-eslint/no-explicit-any: "off" */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NotDeliveredTimestamp = ({ args }: any) => {
     const timestampRef = useRef();
 
