@@ -112,10 +112,10 @@ As of the latest version, the component has been fully converted to use scalable
 - **Font sizes**: Scale proportionally with browser zoom and parent font context
 - **Button dimensions**: Both top and bottom close buttons scale appropriately
 - **Content area**: Scrollable content maintains proper proportions at all zoom levels
-- **Maximum height**: Changed from viewport-relative (`80vh`) to container-relative (`30em`) for better scaling
+- **Container sizing**: Uses percentage-based dimensions (`height: "85%", width: "85%"`) for responsive scaling
 
 #### Detailed Conversion:
-- **General container**: `padding: "1em"`, `paddingTop: "2.5em"`, `maxHeight: "30em"`
+- **General container**: `padding: "1em"`, `paddingTop: "2.5em"`, responsive sizing
 - **Close buttons**: `minHeight: "2em"`, `padding: "0.5em 1em"`
 - **Top close button**: `width: "2em"`, `height: "2em"`, positioned with `top: "0.5em"`
 - **Content area**: Uses relative units for font sizing and spacing
@@ -176,7 +176,7 @@ styleProps={{
         padding: "20px",        // Fixed at all zoom levels
         fontSize: "16px",       // Won't scale with browser zoom or parent context
         borderRadius: "8px",    // Fixed radius
-        maxHeight: "80vh"       // Viewport-relative, doesn't work well in containers
+        height: "400px"         // Fixed height, doesn't adapt to container
     }
 }}
 ```
@@ -242,7 +242,88 @@ styleProps={{
 
 ## Advanced Styling Examples
 
-### 4. Research Paper Style
+### 4. Enhanced Professional Style (Modern Color Scheme)
+
+```tsx
+<CitationPane 
+    controlProps={{
+        titleText: "Citation Reference",
+        contentHtml: `
+            <div style="padding: 0.75em;">
+                <p><strong>Source:</strong> Advanced User Interface Design Principles</p>
+                <p><strong>Author:</strong> Dr. Sarah Mitchell, UI/UX Research Institute</p>
+                <p><strong>Published:</strong> March 2024</p>
+                <div style="margin-top: 1em; padding: 0.75em; background-color: rgba(255,255,255,0.8); border-radius: 0.375em; border-left: 0.25em solid #6c757d;">
+                    <em>"Modern citation interfaces should balance accessibility with visual hierarchy to enhance user comprehension and engagement."</em>
+                </div>
+            </div>
+        `,
+        closeButtonText: "Close Citation",
+        brightnessValueOnDim: "0.3"
+    }}
+    styleProps={{
+        generalStyleProps: {
+            background: "linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)",
+            border: "1px solid #dee2e6",
+            borderRadius: "0.75em",
+            boxShadow: "0 0.5em 2em rgba(0, 0, 0, 0.15), 0 0.25em 0.5em rgba(0, 0, 0, 0.1)",
+            padding: "1.5em",
+            paddingTop: "3em",
+            fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+            // No width specified - allows natural scaling
+        },
+        titleStyleProps: {
+            fontSize: "1.25em",
+            fontWeight: "600",
+            color: "#495057",
+            marginBottom: "1em",
+            paddingBottom: "0.75em",
+            borderBottom: "2px solid #e9ecef",
+            textAlign: "center" as const
+        },
+        contentStyleProps: {
+            fontSize: "0.95em",
+            lineHeight: "1.6",
+            color: "#6c757d",
+            marginBottom: "1.25em"
+        },
+        closeButtonStyleProps: {
+            background: "linear-gradient(135deg, #6c757d 0%, #495057 100%)",
+            color: "#ffffff",
+            border: "none",
+            borderRadius: "0.5em",
+            padding: "0.75em 1.5em",
+            fontSize: "0.9em",
+            fontWeight: "500",
+            cursor: "pointer",
+            boxShadow: "0 0.25em 0.5em rgba(108, 117, 125, 0.3)",
+            transition: "all 0.2s ease"
+        },
+        topCloseButtonStyleProps: {
+            backgroundColor: "#ffffff",
+            color: "#6c757d",
+            border: "1px solid #dee2e6",
+            borderRadius: "50%",
+            width: "2.25em",
+            height: "2.25em",
+            fontSize: "1.1em",
+            fontWeight: "600",
+            cursor: "pointer",
+            position: "absolute" as const,
+            top: "0.75em",
+            right: "0.75em",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 0.125em 0.375em rgba(0, 0, 0, 0.1)",
+            transition: "all 0.2s ease"
+        }
+    }}
+/>
+```
+<img src="../.attachments/customizations-citation-pane.png" width="450">
+
+### 5. Research Paper Style
 
 ```tsx
 <CitationPane 
@@ -552,7 +633,7 @@ const togglePosition = () => {
 
 The CitationPane component now includes built-in support for long content with automatic scrolling. The default styles include:
 
-- **Maximum height constraint**: `maxHeight: "30em"` prevents the pane from becoming too tall
+- **Responsive sizing**: Uses percentage-based dimensions (`height: "85%", width: "85%`) for container adaptation
 - **Automatic scrolling**: Content area includes `overflow: "auto"` for scrollable content
 - **Flexible layout**: Uses flexbox to ensure proper positioning of title and close button
 
@@ -589,8 +670,8 @@ For specific height requirements, you can override the default behavior:
     }}
     styleProps={{
         generalStyleProps: {
-            maxHeight: "37.5em",  // Custom maximum height (600px equivalent)
-            width: "31.25em"      // Scalable width (500px equivalent)
+            height: "75%",        // Custom height percentage
+            width: "75%"          // Custom width percentage
         },
         contentStyleProps: {
             maxHeight: "25em",    // Specific content area height (400px equivalent)
@@ -608,8 +689,8 @@ For testing purposes, the Storybook includes an `ExtremelyLongContent` story tha
 
 ### Scrolling and Height Management
 
-1. **Default behavior**: The component now handles long content automatically with `maxHeight: "80vh"` and `overflow: "auto"`
-2. **Custom constraints**: Override `maxHeight` in `generalStyleProps` for specific requirements
+1. **Default behavior**: The component handles long content automatically with responsive sizing (`height: "85%"`) and `overflow: "auto"`
+2. **Custom constraints**: Override dimensions in `generalStyleProps` for specific requirements
 3. **Content-specific scrolling**: Use `contentStyleProps` to control just the content area scrolling behavior
 
 ### Accessibility Considerations
