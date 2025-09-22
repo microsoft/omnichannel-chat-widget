@@ -13,7 +13,7 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
         activity: {
             channelData: {
                 tags
-            },
+            } = {},
             from: {
                 name,
                 role
@@ -27,10 +27,9 @@ export const activityStatusMiddleware = () => (next: any) => (args: any) => {
     const current_tags = tags, current_name = name, current_role = role, current_timestamp = timestamp;
     let sameTimestampGroupTemp: boolean = sameTimestampGroup;
 
-    if (tags.includes(Constants.persistentChatHistoryMessageTag)) {
+    if (tags?.includes(Constants.persistentChatHistoryMessageTag)) {
         return <HistoryMessageTimestamp args={args} />;
     }
-
 
     if (args[WebChatMiddlewareConstants.nextVisibleActivity]) {
         const {
