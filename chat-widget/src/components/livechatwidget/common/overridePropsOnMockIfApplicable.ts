@@ -22,7 +22,7 @@ const overridePropsOnMockIfApplicable = (props: ILiveChatWidgetProps) => {
         props.webChatContainerProps = {
             ...props.webChatContainerProps,
             webChatProps: {
-                disabled: true,
+                disabled: props?.mock?.mockMessages && props?.mock?.mockMessages.length > 0 ? false : true,
                 ...props.webChatContainerProps.webChatProps,
                 overrideLocalizedStrings: {
                     TEXT_INPUT_PLACEHOLDER: "Send a message . . .",
