@@ -3,6 +3,7 @@ import { IAppInsightsConfig } from "../../../common/telemetry/interfaces/IAppIns
 import { IAudioNotificationProps } from "../../footerstateful/audionotificationstateful/interfaces/IAudioNotificationProps";
 import { ICallingContainerProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/interfaces/ICallingContainerProps";
 import { IChatButtonProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonProps";
+import { ICitationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/citationpane/interfaces/ICitationPaneProps";
 import { ICitationPaneStatefulProps } from "../../citationpanestateful/interfaces/ICitationPaneStatefulProps";
 import { IConfirmationPaneStatefulProps } from "../../confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps";
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
@@ -76,4 +77,5 @@ export interface ILiveChatWidgetProps {
     mock?: IMockProps;
     featureConfigProps?: IFeatureConfigProps;
     appInsightsConfig?: IAppInsightsConfig;
+    citationProp: ICitationPaneProps;
 }
