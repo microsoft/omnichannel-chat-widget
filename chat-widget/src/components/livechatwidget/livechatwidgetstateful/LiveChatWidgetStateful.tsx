@@ -820,6 +820,29 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 background: ${scrollbarProps.thumbHoverColor};
             }
 
+            /* High Contrast mode support - optimized for all variants */
+            @media (prefers-contrast: high), (-ms-high-contrast: active), (forced-colors: active) {
+                ::-webkit-scrollbar-track {
+                    background: Canvas !important;
+                    border: 1px solid CanvasText !important;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    background: CanvasText !important;
+                    border: 1px solid Canvas !important;
+                    min-height: 20px !important;
+                }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: Highlight !important;
+                    border: 1px solid CanvasText !important;
+                }
+
+                ::-webkit-scrollbar-corner {
+                    background: Canvas !important;
+                }
+            }
+
             .webchat__basic-transcript__activity-markdown-body > :last-child {
                 margin-bottom: 0px;
             }

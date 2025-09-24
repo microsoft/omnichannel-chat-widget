@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Double check conversation state before handling end conversation
+- Enhance support for customization  for citation pane
 - Adding Citation Handler to support citation pane rendering in chat widget.
 - Adding runtimeId as part of events send to identify calls from different tabs.
 - Masking custom properties for message event telemetry
@@ -16,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - A11Y fix for announcing incorrect bot initials and alt text
 - Fixed carousel attachments alignment issue
 - Bot authentication activity adaptive card visibility
+- Fixed scrollbar thumb visibility in Windows High Contrast mode
 
 ### Changed
 - Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
