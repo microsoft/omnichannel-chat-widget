@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
-
+- Double check conversation state before handling end conversation
 - Enhance support for customization  for citation pane
 - Adding Citation Handler to support citation pane rendering in chat widget.
 - Adding runtimeId as part of events send to identify calls from different tabs.
