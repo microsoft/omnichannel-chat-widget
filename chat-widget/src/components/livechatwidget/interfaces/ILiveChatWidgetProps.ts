@@ -77,5 +77,5 @@ export interface ILiveChatWidgetProps {
     mock?: IMockProps;
     featureConfigProps?: IFeatureConfigProps;
     appInsightsConfig?: IAppInsightsConfig;
-    citationProp: ICitationPaneProps;
+    citationProp?: ICitationPaneProps;
 }
