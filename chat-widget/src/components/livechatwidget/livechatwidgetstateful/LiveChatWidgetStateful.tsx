@@ -409,6 +409,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }
 
+
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventReceived,
                 Description: "Start chat event received."
@@ -443,7 +444,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
                         height: inMemoryState?.domainStates?.widgetSize?.height,
-                        width: inMemoryState?.domainStates?.widgetSize?.width
+                        width: inMemoryState?.domainStates?.widgetSize?.width,
+                        lcwRuntimeId: TelemetryManager.InternalTelemetryData.lcwRuntimeId
                     }
                 });
                 return;
