@@ -1,6 +1,7 @@
-import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
-import { Activity, Attachment, Message, User } from "botframework-directlinejs";
+import { Activity, Attachment, AttachmentLayout, CardAction, Message, User } from "botframework-directlinejs";
+
 import { Subscriber } from "rxjs/Subscriber";
+import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 export const customerUser: User = {
     id: "usedId",
@@ -96,6 +97,41 @@ export const postBotAttachmentActivity = (activityObserver: Subscriber<Activity>
             },
             attachments,
             type: "message",
+            timestamp: new Date().toISOString()
+        });
+    }, delay);
+};
+
+export const postAgentAttachmentActivity = (activityObserver: Subscriber<Activity> | undefined, attachments: Attachment[] = [], delay = 1000, attachmentLayout?: AttachmentLayout): void => {
+    setTimeout(() => {
+        activityObserver?.next({
+            id: uuidv4(),
+            from: {
+                ...agentUser
+            },
+            attachments,
+            attachmentLayout,
+            type: "message",
+            timestamp: new Date().toISOString()
+        });
+    }, delay);
+};
+
+export const postAgentSuggestedActionsActivity = (
+    activityObserver: Subscriber<Activity> | undefined, 
+    text: string, 
+    suggestedActions: { actions: CardAction[]; to?: string[]; },
+    delay = 1000
+): void => {
+    setTimeout(() => {
+        activityObserver?.next({
+            id: uuidv4(),
+            from: {
+                ...agentUser
+            },
+            text,
+            type: "message",
+            suggestedActions,
             timestamp: new Date().toISOString()
         });
     }, delay);
