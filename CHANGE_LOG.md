@@ -6,7 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Adding lcwRuntimeId field to the payload for Maximize events
+
 ### Added
+
 - Double check conversation state before handling end conversation
 - Enhance support for customization  for citation pane
 - Adding Citation Handler to support citation pane rendering in chat widget.
@@ -20,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
 
 ### Changed
+
 - make citation props optional
 - Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
 
