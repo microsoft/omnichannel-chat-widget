@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, LiveWorkItemState, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
 import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../common/utils";
 import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
 
@@ -140,8 +140,24 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
 
     if (!skipEndChatSDK && facadeChatSDK?.getChatSDK()?.conversation) {
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+        let isSessionEnded = inMemoryState?.appStates?.chatDisconnectEventReceived;
+        if (!isSessionEnded) {
+            // double check by fetching the latest conversation details
+            const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
+            if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
+                dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
+                    Description: "Checking conversation details upon endChat. Chat disconnected.",
+                    CustomProperties: {
+                        conversationDetails
+                    }
+                });
+                isSessionEnded = true;
+            }
+        }
         const endChatOptionalParameters : EndChatOptionalParams = {
-            isSessionEnded : inMemoryState?.appStates?.chatDisconnectEventReceived
+            isSessionEnded
         };
 
         try {

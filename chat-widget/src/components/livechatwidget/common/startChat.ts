@@ -101,7 +101,8 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
                         height: state?.domainStates?.widgetSize?.height,
-                        width: state?.domainStates?.widgetSize?.width
+                        width: state?.domainStates?.widgetSize?.width,
+                        runtimeId : TelemetryManager?.InternalTelemetryData?.lcwRuntimeId
                     }
                 });
             }
