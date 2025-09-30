@@ -78,6 +78,6 @@ export interface ILiveChatWidgetProps {
     mock?: IMockProps;
     featureConfigProps?: IFeatureConfigProps;
     appInsightsConfig?: IAppInsightsConfig;
-    persistentChatHistory?: IPersistentChatHistoryProps;
+    persistentChatHistoryProps?: IPersistentChatHistoryProps;
     citationProp?: ICitationPaneProps;
 }
