@@ -37,19 +37,7 @@ import { TelemetryHelper } from "../../../../../../common/telemetry/TelemetryHel
 import { createTimer } from "../../../../../../common/utils";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
 
-/**
- * Interface for tracking session-level telemetry metrics
- */
-interface LazyLoadTelemetryMetrics {
-    initializationTime: number;
-    scrollOperations: number;
-    scrollFailures: number;
-    containerRetries: number;
-    targetElementRetries: number;
-    lastOperationTimestamp: number;
-}
-
-/**
+/*
  * Interface defining the state of a scroll operation
  * Used to track and verify scroll actions for reliability
  */
@@ -799,7 +787,7 @@ class LazyLoadHandler {
         LazyLoadHandler.unmount();                    // Clean up current state
         LazyLoadHandler.initialized = false;         // Reset initialization flag
         LazyLoadHandler.isReady = false;            // Reset readiness flag
-        LazyLoadHandler.setHasMoreHistoryAvailable(true, "reset method"); // Reset history availability flag
+        LazyLoadHandler.setHasMoreHistoryAvailable(true); // Reset history availability flag
         LazyLoadHandler.initializationQueue = [];   // Clear action queue
         LazyLoadHandler.resetPending = false;       // Clear pending reset flag
         
