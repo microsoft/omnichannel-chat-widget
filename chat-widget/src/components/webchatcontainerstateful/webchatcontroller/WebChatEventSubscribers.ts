@@ -1,9 +1,12 @@
+import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { useEffect, useState } from "react";
 
 import ChatWidgetEvents from "../../livechatwidget/common/ChatWidgetEvents";
 import { Constants } from "../../../common/Constants";
 import { IPersistentChatHistoryProps } from "../../livechatwidget/interfaces/IPersistentChatHistoryProps";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "./WebChatStoreLoader";
+import { createTimer } from "../../../common/utils";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 
 /**
@@ -13,6 +16,7 @@ import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
     const [isConnected, setIsConnected] = useState(false);
     const [storeReady, setStoreReady] = useState(false);
+    const storeWaitTimer = createTimer();
 
     useEffect(() => {
 
@@ -20,10 +24,20 @@ const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
             return;
         }
 
+        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.LCWWebChatStorePollingStarted,
+            Description: "WebChat store polling started"
+        });
+
         // Wait for WebChat store to be available
         const waitForStore = () => {
             if (WebChatStoreLoader.store) {
                 setStoreReady(true);
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                    Event: TelemetryEvent.LCWWebChatStoreReady,
+                    Description: "WebChat store ready",
+                    ElapsedTimeInMilliseconds: storeWaitTimer.milliSecondsElapsed
+                });
                 return true;
             }
             return false;
@@ -60,6 +74,12 @@ const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
 
                     if (newIsConnected && !isConnected) {
                         setIsConnected(true);
+                        
+                        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                            Event: TelemetryEvent.LCWWebChatConnected,
+                            Description: "WebChat connection established, dispatching events"
+                        });
+                        
                         // Dispatch events when connection is established
                         setTimeout(() => {
                             dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
@@ -78,10 +98,18 @@ const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
                         }, 2000);
                     } else if (!newIsConnected && isConnected) {
                         setIsConnected(false);
+                        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.WARN, {
+                            Event: TelemetryEvent.LCWWebChatDisconnected,
+                            Description: "WebChat connection lost"
+                        });
                     }
                 }
             } catch (error) {
-                console.error("[WebChatEventSubscribers] Connection status check failed:", error);
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
+                    Event: TelemetryEvent.LCWWebChatConnectionCheckFailed,
+                    Description: "WebChat connection status check failed",
+                    ExceptionDetails: error
+                });
             }
         };
 

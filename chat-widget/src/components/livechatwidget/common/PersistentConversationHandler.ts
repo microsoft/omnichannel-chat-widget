@@ -7,6 +7,7 @@ import { IPersistentChatHistoryProps } from "../interfaces/IPersistentChatHistor
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import conversationDividerActivity from "../../webchatcontainerstateful/common/activities/conversationDividerActivity";
 import convertPersistentChatHistoryMessageToActivity from "../../webchatcontainerstateful/common/activityConverters/convertPersistentChatHistoryMessageToActivity";
+import { createTimer } from "../../../common/utils";
 import { defaultPersistentChatHistoryProps } from "./defaultProps/defaultPersistentChatHistoryProps";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 
@@ -28,6 +29,12 @@ class PersistentConversationHandler {
     constructor(facadeChatSDK: FacadeChatSDK, props: IPersistentChatHistoryProps) {
         this.facadeChatSDK = facadeChatSDK;
         this.appliedPropsHandler(props);
+        
+        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.LCWPersistentConversationHandlerInitialized,
+            Description: "PersistentConversationHandler initialized",
+            CustomProperties: { pageSize: this.pageSize }
+        });
     }
 
     private appliedPropsHandler(props: IPersistentChatHistoryProps) {
@@ -59,9 +66,14 @@ class PersistentConversationHandler {
     }
 
     public async pullHistory() {
+        const pullTimer = createTimer();
 
         // Prevent concurrent pulls regardless of pageToken
         if (this.isCurrentlyPulling) {
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.WARN, {
+                Event: TelemetryEvent.LCWPersistentHistoryPullBlocked,
+                Description: "History pull blocked - already in progress"
+            });
             return;
         }
 
@@ -84,12 +96,28 @@ class PersistentConversationHandler {
                 this.isLastPull = true;
                 // Dispatch event to notify UI that no more history is available
                 dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+                
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                    Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
+                    Description: "History pull completed - no more messages",
+                    ElapsedTimeInMilliseconds: pullTimer.milliSecondsElapsed
+                });
                 return;
             }
 
             const messagesDescOrder = [...messages]?.reverse();
 
             this.processHistoryMessages(messagesDescOrder);
+            
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
+                Description: "History pull completed successfully",
+                ElapsedTimeInMilliseconds: pullTimer.milliSecondsElapsed,
+                CustomProperties: { 
+                    messageCount: messages.length,
+                    totalProcessed: this.count 
+                }
+            });
         } finally {
             // Always clear the pulling flag when done
             this.isCurrentlyPulling = false;

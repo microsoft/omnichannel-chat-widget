@@ -1,9 +1,11 @@
+import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { useEffect, useRef } from "react";
 
 import ChatWidgetEvents from "../../livechatwidget/common/ChatWidgetEvents";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { IPersistentChatHistoryProps } from "../../livechatwidget/interfaces/IPersistentChatHistoryProps";
 import PersistentConversationHandler from "../../livechatwidget/common/PersistentConversationHandler";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 
 const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined, props : IPersistentChatHistoryProps) => {
     const handlerRef = useRef<PersistentConversationHandler | null>(null);
@@ -13,10 +15,33 @@ const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined, prop
             return;
         }
 
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXLCWPersistentChatHistoryInitialized,
+            Description: "Persistent chat history hook initialized"
+        });
+
         handlerRef.current = new PersistentConversationHandler(facadeChatSDK, props);
 
         const handler = async () => {
-            await handlerRef.current?.pullHistory();
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.LCWPersistentChatHistoryFetchStarted,
+                Description: "Persistent chat history fetch started"
+            });
+            
+            try {
+                await handlerRef.current?.pullHistory();
+                
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                    Event: TelemetryEvent.LCWPersistentChatHistoryFetchCompleted,
+                    Description: "Persistent chat history fetch completed successfully"
+                });
+            } catch (error) {
+                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
+                    Event: TelemetryEvent.LCWPersistentChatHistoryFetchFailed,
+                    Description: "Persistent chat history fetch failed",
+                    ExceptionDetails: error
+                });
+            }
         };
 
         window.addEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);

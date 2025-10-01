@@ -29,6 +29,7 @@
  * 5. Resets observer for next lazy load cycle
  */
 
+import { LogLevel, TelemetryEvent } from "../../../../../../common/telemetry/TelemetryConstants";
 import React, { useEffect, useState } from "react";
 
 import { BroadcastEvent } from "../../../../../../common/telemetry/TelemetryConstants";
@@ -37,7 +38,21 @@ import ChatWidgetEvents from "../../../../../livechatwidget/common/ChatWidgetEve
 import { ILiveChatWidgetProps } from "../../../../../livechatwidget/interfaces/ILiveChatWidgetProps";
 import { LazyLoadActivityConstants } from "./Constants";
 import LoadInlineBannerActivity from "./LoadInlineBannerActivity";
+import { TelemetryHelper } from "../../../../../../common/telemetry/TelemetryHelper";
+import { createTimer } from "../../../../../../common/utils";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
+
+/**
+ * Interface for tracking session-level telemetry metrics
+ */
+interface LazyLoadTelemetryMetrics {
+    initializationTime: number;
+    scrollOperations: number;
+    scrollFailures: number;
+    containerRetries: number;
+    targetElementRetries: number;
+    lastOperationTimestamp: number;
+}
 
 /**
  * Interface defining the state of a scroll operation
@@ -91,10 +106,27 @@ class LazyLoadHandler {
     // Flag to track if a reset is needed when component mounts
     public static resetPending = false;
     
+    // Telemetry tracking - lifecycle events only
+    private static initTimer = createTimer();
+    
+    // Simple lifecycle logging without complex state tracking
+    public static logLifecycleEvent(event: TelemetryEvent, description: string, elapsedTime?: number) {
+        try {
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: event,
+                Description: description,
+                ...(elapsedTime && { ElapsedTimeInMilliseconds: elapsedTime })
+            });
+        } catch (error) {
+            // Silent fail - don't break functionality for telemetry issues
+        }
+    }
+    
     // Broadcast event subscription for marking reset needed when chat is closed/reopened
     private static resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
+        LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadReset, "LazyLoad reset triggered");
         LazyLoadHandler.resetPending = true;
-        LazyLoadHandler.setHasMoreHistoryAvailable(true, "PersistentConversationReset event"); // Reset this immediately so activityMiddleware doesn't block rendering
+        LazyLoadHandler.setHasMoreHistoryAvailable(true); // Reset this immediately so activityMiddleware doesn't block rendering
         LazyLoadHandler.unmount(); // Clean up current state immediately
 
     });
@@ -109,7 +141,7 @@ class LazyLoadHandler {
     })();          // Tracks if more history can be loaded
 
     // Debug method to track what's changing hasMoreHistoryAvailable
-    public static setHasMoreHistoryAvailable(value: boolean, source: string) {
+    public static setHasMoreHistoryAvailable(value: boolean) {
         LazyLoadHandler.hasMoreHistoryAvailable = value;
     }
 
@@ -119,7 +151,7 @@ class LazyLoadHandler {
      */
     public static directReset() {
         LazyLoadHandler.resetPending = true;
-        LazyLoadHandler.setHasMoreHistoryAvailable(true, "directReset method");
+        LazyLoadHandler.setHasMoreHistoryAvailable(true);
         LazyLoadHandler.unmount();
     }
 
@@ -145,13 +177,18 @@ class LazyLoadHandler {
         
         // Auto-correct stale state: if hasMoreHistoryAvailable is false but we're trying to initialize, reset it
         if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-            LazyLoadHandler.setHasMoreHistoryAvailable(true, "auto-correction in useLazyLoadObserver");
+            LazyLoadHandler.setHasMoreHistoryAvailable(true);
         }
         
         // Prevent duplicate initialization
         if (LazyLoadHandler.initialized) {
             return;
         }
+
+        // Start initialization timing
+        LazyLoadHandler.initTimer = createTimer();
+        
+        LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadInitializationStarted, "LazyLoad observer initialization started");
 
         // Reset readiness during initialization to handle user interactions
         LazyLoadHandler.isReady = false;
@@ -220,6 +257,9 @@ class LazyLoadHandler {
                     LazyLoadHandler.initialized = true;
                     LazyLoadHandler.isReady = true; // Mark system as ready
                     
+                    // Log successful initialization
+                    LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadInitializationCompleted, "LazyLoad observer initialization completed", LazyLoadHandler.initTimer.milliSecondsElapsed);
+                    
                     // Process any actions that were queued during initialization
                     LazyLoadHandler.processInitializationQueue();                    
                 }
@@ -251,6 +291,7 @@ class LazyLoadHandler {
 
         // Max attempts reached, log error
         if (attempt >= maxAttempts) {
+            LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadTargetElementNotFound, "Target element not found after max attempts");
             return;
         }
 
@@ -729,9 +770,11 @@ class LazyLoadHandler {
      * Also removes the trigger element from the DOM to prevent further triggering.
      */
     public static handleNoMoreHistoryAvailable() {
-        LazyLoadHandler.setHasMoreHistoryAvailable(false, "handleNoMoreHistoryAvailable");
+        LazyLoadHandler.setHasMoreHistoryAvailable(false);
         LazyLoadHandler.paused = true;
         LazyLoadHandler.pendingScrollAction = false; // Reset this to prevent stuck states
+        
+        LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadNoMoreHistory, "No more history available");
         
         // Clear all pending timeouts to stop any scheduled operations
         LazyLoadHandler.retryTimeouts.forEach(timeoutId => {
@@ -818,6 +861,7 @@ class LazyLoadHandler {
      * This is different from reset() which prepares the system for a new chat session.
      */
     public static destroy() {
+        LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadDestroyed, "LazyLoad component destroyed");
         LazyLoadHandler.unmount();
         
         // Clean up broadcast event subscription
@@ -849,6 +893,8 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
     const [hasMoreHistory, setHasMoreHistory] = useState(LazyLoadHandler.hasMoreHistoryAvailable);
 
     useEffect(() => {
+        
+        LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadActivityMounted, "LazyLoadActivity component mounted");
         
         // Check if a reset was pending from a previous chat session
         if (LazyLoadHandler.resetPending) {
