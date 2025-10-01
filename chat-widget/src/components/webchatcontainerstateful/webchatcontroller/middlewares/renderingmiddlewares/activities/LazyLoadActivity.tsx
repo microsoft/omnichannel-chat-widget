@@ -99,9 +99,7 @@ class LazyLoadHandler {
     private static initializationQueue: (() => void)[] = []; // Queue for actions during initialization
     
     // History availability state
-    public static hasMoreHistoryAvailable = (() => {
-        return true;
-    })();          // Tracks if more history can be loaded
+    public static hasMoreHistoryAvailable = true;          // Tracks if more history can be loaded
 
     // Debug method to track what's changing hasMoreHistoryAvailable
     public static setHasMoreHistoryAvailable(value: boolean, source: string) {
