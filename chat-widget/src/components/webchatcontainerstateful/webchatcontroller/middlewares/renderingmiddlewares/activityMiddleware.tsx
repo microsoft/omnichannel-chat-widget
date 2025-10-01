@@ -92,7 +92,7 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
             
             // Safety check: if this is a new chat session and flag is false, auto-correct it
             if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                LazyLoadHandler.setHasMoreHistoryAvailable(true, "activityMiddleware auto-correction");
+                LazyLoadHandler.setHasMoreHistoryAvailable(true);
             }
             
             const receivedAt = card?.activity?.channelData?.webChat?.receivedAt;
