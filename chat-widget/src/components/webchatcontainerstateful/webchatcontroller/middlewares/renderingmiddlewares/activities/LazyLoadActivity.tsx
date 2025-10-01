@@ -756,7 +756,7 @@ class LazyLoadHandler {
         LazyLoadHandler.unmount();                    // Clean up current state
         LazyLoadHandler.initialized = false;         // Reset initialization flag
         LazyLoadHandler.isReady = false;            // Reset readiness flag
-        LazyLoadHandler.hasMoreHistoryAvailable = true; // Reset history availability flag
+        LazyLoadHandler.setHasMoreHistoryAvailable(true, "reset method"); // Reset history availability flag
         LazyLoadHandler.initializationQueue = [];   // Clear action queue
         LazyLoadHandler.resetPending = false;       // Clear pending reset flag
         
