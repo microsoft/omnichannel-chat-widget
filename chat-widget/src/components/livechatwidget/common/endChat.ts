@@ -188,9 +188,6 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             postMessageToOtherTab = false;
         } finally {
             endChatStateCleanUp(dispatch);
-            /*BroadcastService.postMessage({
-                eventName: BroadcastEvent.PersistentConversationReset
-            });*/
             facadeChatSDK.destroy();
         }
     }

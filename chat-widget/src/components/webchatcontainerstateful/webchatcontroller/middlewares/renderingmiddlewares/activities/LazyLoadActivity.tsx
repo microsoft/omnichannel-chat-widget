@@ -14,12 +14,7 @@
  * 
  * Architecture:
  * - LazyLoadHandler: Static class managing all lazy load logic
- * - LazyLoadActivity: React component providing the         LazyLoadHandler.unmount();                    // Clean up current state
-        LazyLoadHandler.initialized = false;         // Reset initialization flag
-        LazyLoadHandler.isReady = false;            // Reset readiness flag
-        LazyLoadHandler.setHasMoreHistoryAvailable(true, "reset method"); // Reset history availability flag
-        LazyLoadHandler.initializationQueue = [];   // Clear action queue
-        LazyLoadHandler.resetPending = false;       // Clear pending reset flag
+ * - LazyLoadActivity: React component providing the UI and lifecycle integration for lazy loading
  * 
  * Flow:
  * 1. Component renders a trigger element at the top of chat history
@@ -136,9 +131,7 @@ class LazyLoadHandler {
     private static initializationQueue: (() => void)[] = []; // Queue for actions during initialization
     
     // History availability state
-    public static hasMoreHistoryAvailable = (() => {
-        return true;
-    })();          // Tracks if more history can be loaded
+    public static hasMoreHistoryAvailable = true;          // Tracks if more history can be loaded
 
     // Debug method to track what's changing hasMoreHistoryAvailable
     public static setHasMoreHistoryAvailable(value: boolean) {
@@ -806,7 +799,7 @@ class LazyLoadHandler {
         LazyLoadHandler.unmount();                    // Clean up current state
         LazyLoadHandler.initialized = false;         // Reset initialization flag
         LazyLoadHandler.isReady = false;            // Reset readiness flag
-        LazyLoadHandler.hasMoreHistoryAvailable = true; // Reset history availability flag
+        LazyLoadHandler.setHasMoreHistoryAvailable(true, "reset method"); // Reset history availability flag
         LazyLoadHandler.initializationQueue = [];   // Clear action queue
         LazyLoadHandler.resetPending = false;       // Clear pending reset flag
         
