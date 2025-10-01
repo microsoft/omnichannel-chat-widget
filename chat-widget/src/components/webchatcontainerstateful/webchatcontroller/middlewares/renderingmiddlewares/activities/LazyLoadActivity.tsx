@@ -14,7 +14,12 @@
  * 
  * Architecture:
  * - LazyLoadHandler: Static class managing all lazy load logic
- * - LazyLoadActivity: React component providing the trigger element
+ * - LazyLoadActivity: React component providing the         LazyLoadHandler.unmount();                    // Clean up current state
+        LazyLoadHandler.initialized = false;         // Reset initialization flag
+        LazyLoadHandler.isReady = false;            // Reset readiness flag
+        LazyLoadHandler.setHasMoreHistoryAvailable(true, "reset method"); // Reset history availability flag
+        LazyLoadHandler.initializationQueue = [];   // Clear action queue
+        LazyLoadHandler.resetPending = false;       // Clear pending reset flag
  * 
  * Flow:
  * 1. Component renders a trigger element at the top of chat history
@@ -26,11 +31,12 @@
 
 import React, { useEffect, useState } from "react";
 
+import { BroadcastEvent } from "../../../../../../common/telemetry/TelemetryConstants";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatWidgetEvents from "../../../../../livechatwidget/common/ChatWidgetEvents";
 import { ILiveChatWidgetProps } from "../../../../../livechatwidget/interfaces/ILiveChatWidgetProps";
 import { LazyLoadActivityConstants } from "./Constants";
 import LoadInlineBannerActivity from "./LoadInlineBannerActivity";
-import { defaultInlineBannerStyle } from "../defaultStyles/defaultInLineBannerStyle";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
 
 /**
@@ -82,12 +88,40 @@ class LazyLoadHandler {
     // Timeout and queue management
     private static retryTimeouts: Set<number> = new Set();  // Tracks all setTimeout IDs for cleanup
     
+    // Flag to track if a reset is needed when component mounts
+    public static resetPending = false;
+    
+    // Broadcast event subscription for marking reset needed when chat is closed/reopened
+    private static resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
+        LazyLoadHandler.resetPending = true;
+        LazyLoadHandler.setHasMoreHistoryAvailable(true, "PersistentConversationReset event"); // Reset this immediately so activityMiddleware doesn't block rendering
+        LazyLoadHandler.unmount(); // Clean up current state immediately
+
+    });
+    
     // Readiness and queue system (handles minimize/maximize scenarios)
     public static isReady = false;                          // System readiness flag
     private static initializationQueue: (() => void)[] = []; // Queue for actions during initialization
     
     // History availability state
-    public static hasMoreHistoryAvailable = true;          // Tracks if more history can be loaded
+    public static hasMoreHistoryAvailable = (() => {
+        return true;
+    })();          // Tracks if more history can be loaded
+
+    // Debug method to track what's changing hasMoreHistoryAvailable
+    public static setHasMoreHistoryAvailable(value: boolean, source: string) {
+        LazyLoadHandler.hasMoreHistoryAvailable = value;
+    }
+
+    /**
+     * Direct reset method that can be called externally
+     * This bypasses the broadcast system for more reliable resets
+     */
+    public static directReset() {
+        LazyLoadHandler.resetPending = true;
+        LazyLoadHandler.setHasMoreHistoryAvailable(true, "directReset method");
+        LazyLoadHandler.unmount();
+    }
 
     /**
      * Main initialization method for the lazy loading system
@@ -108,6 +142,12 @@ class LazyLoadHandler {
      * - threshold: 0.05 (5%) visibility required to trigger
      */
     public static useLazyLoadObserver() {
+        
+        // Auto-correct stale state: if hasMoreHistoryAvailable is false but we're trying to initialize, reset it
+        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+            LazyLoadHandler.setHasMoreHistoryAvailable(true, "auto-correction in useLazyLoadObserver");
+        }
+        
         // Prevent duplicate initialization
         if (LazyLoadHandler.initialized) {
             return;
@@ -157,7 +197,7 @@ class LazyLoadHandler {
                 const timeoutId = window.setTimeout(() => {
                     LazyLoadHandler.retryTimeouts.delete(timeoutId);
                     setupObserver();
-                }, 200); // Faster retry for better responsiveness
+                }, 100); // Reduced from 200ms to 100ms for faster container detection
                 LazyLoadHandler.retryTimeouts.add(timeoutId);
                 return;
             }
@@ -214,11 +254,11 @@ class LazyLoadHandler {
             return;
         }
 
-        // Schedule retry with exponential backoff (100ms * attempt number)
+        // Schedule retry with exponential backoff (50ms * attempt number for faster initial attempts)
         const timeoutId = window.setTimeout(() => {
             LazyLoadHandler.retryTimeouts.delete(timeoutId);
             LazyLoadHandler.waitForTargetElement(callback, maxAttempts, attempt + 1);
-        }, 100 * attempt); // Exponential backoff
+        }, 50 * attempt); // Reduced from 100ms to 50ms for faster element detection
         LazyLoadHandler.retryTimeouts.add(timeoutId);
     }
 
@@ -305,7 +345,7 @@ class LazyLoadHandler {
                 const timeoutId = window.setTimeout(() => {
                     LazyLoadHandler.retryTimeouts.delete(timeoutId);
                     action();
-                }, 100);
+                }, 25); // Reduced from 100ms to 25ms for faster processing
                 LazyLoadHandler.retryTimeouts.add(timeoutId);
             }
         }
@@ -380,11 +420,11 @@ class LazyLoadHandler {
         dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
 
         // Wait for content to load before performing scroll adjustment
-        // 300ms provides good balance between responsiveness and content loading
+        // 200ms provides good balance between responsiveness and content loading
         const timeoutId = window.setTimeout(() => {
             LazyLoadHandler.retryTimeouts.delete(timeoutId);
             LazyLoadHandler.executeReliableScroll();
-        }, 300); // Reduced from 500ms to 300ms for better responsiveness
+        }, 200); // Reduced from 300ms to 200ms for faster response
         LazyLoadHandler.retryTimeouts.add(timeoutId);
     }
 
@@ -689,7 +729,7 @@ class LazyLoadHandler {
      * Also removes the trigger element from the DOM to prevent further triggering.
      */
     public static handleNoMoreHistoryAvailable() {
-        LazyLoadHandler.hasMoreHistoryAvailable = false;
+        LazyLoadHandler.setHasMoreHistoryAvailable(false, "handleNoMoreHistoryAvailable");
         LazyLoadHandler.paused = true;
         LazyLoadHandler.pendingScrollAction = false; // Reset this to prevent stuck states
         
@@ -725,12 +765,14 @@ class LazyLoadHandler {
         LazyLoadHandler.isReady = false;            // Reset readiness flag
         LazyLoadHandler.hasMoreHistoryAvailable = true; // Reset history availability flag
         LazyLoadHandler.initializationQueue = [];   // Clear action queue
+        LazyLoadHandler.resetPending = false;       // Clear pending reset flag
         
         // Reinitialize with faster timing for better responsiveness
         const timeoutId = window.setTimeout(() => {
+            
             LazyLoadHandler.retryTimeouts.delete(timeoutId);
             LazyLoadHandler.useLazyLoadObserver();
-        }, 50); // Faster reset (50ms) for better responsiveness
+        }, 25); // Reduced from 50ms to 25ms for faster reset
         LazyLoadHandler.retryTimeouts.add(timeoutId);
     }
 
@@ -746,7 +788,6 @@ class LazyLoadHandler {
      * Critical for preventing memory leaks and ensuring clean component unmounting.
      */
     public static unmount() {
-        // Clear all pending timeouts to prevent memory leaks
         LazyLoadHandler.retryTimeouts.forEach(timeoutId => {
             clearTimeout(timeoutId);
         });
@@ -766,6 +807,23 @@ class LazyLoadHandler {
         LazyLoadHandler.scrollState = null;
         LazyLoadHandler.isReady = false;
         LazyLoadHandler.initializationQueue = [];
+        // Note: Don't reset resetPending here as it needs to persist across unmount/mount cycles
+    }
+
+    /**
+     * Complete cleanup including broadcast event listener
+     * 
+     * This method is used for final cleanup when the LazyLoadActivity component is being destroyed completely.
+     * It includes unsubscribing from broadcast events and performing complete cleanup.
+     * This is different from reset() which prepares the system for a new chat session.
+     */
+    public static destroy() {
+        LazyLoadHandler.unmount();
+        
+        // Clean up broadcast event subscription
+        if (LazyLoadHandler.resetEventListener) {
+            LazyLoadHandler.resetEventListener.unsubscribe();
+        }
     }
 }
 
@@ -791,6 +849,14 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
     const [hasMoreHistory, setHasMoreHistory] = useState(LazyLoadHandler.hasMoreHistoryAvailable);
 
     useEffect(() => {
+        
+        // Check if a reset was pending from a previous chat session
+        if (LazyLoadHandler.resetPending) {
+            LazyLoadHandler.resetPending = false;
+            LazyLoadHandler.reset();
+            return; // Early return since reset() will reinitialize everything
+        }
+        
         // Initialize the lazy load observer system
         LazyLoadHandler.useLazyLoadObserver();
         
@@ -804,7 +870,7 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             // Check if target is already visible after initialization
             // This handles cases where user scrolled during initialization
             LazyLoadHandler.checkVisibilityAndTrigger();
-        }, 500); // Reduced from 1000ms for better responsiveness
+        }, 200); // Reduced from 500ms to 200ms for faster initial load
 
         /**
          * Scroll Event Handler for Immediate Responsiveness
@@ -819,10 +885,8 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
                 // System not ready, but user is scrolling - check if we should trigger
                 window.setTimeout(() => {
                     LazyLoadHandler.checkVisibilityAndTrigger();
-                }, 100); // Small delay to debounce rapid scroll events
+                }, 50); // Reduced from 100ms to 50ms for faster response
                 
-                // Note: This timeout is not tracked in retryTimeouts since it's short-lived
-                // and will be automatically cleaned up when component unmounts
             }
         };
 
@@ -852,8 +916,8 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
                 container.removeEventListener("scroll", handleScroll);
             }
             
-            // Perform complete system cleanup
-            LazyLoadHandler.unmount();
+            // Perform complete system cleanup including broadcast event listener
+            LazyLoadHandler.destroy();
         };
     }, []); // Empty dependency array - only run on mount/unmount
 

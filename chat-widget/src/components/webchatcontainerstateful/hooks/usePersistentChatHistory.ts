@@ -13,7 +13,6 @@ const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined, prop
             return;
         }
 
-        // Initialize a new instance of PersistentConversationHandler
         handlerRef.current = new PersistentConversationHandler(facadeChatSDK, props);
 
         const handler = async () => {
@@ -24,7 +23,7 @@ const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined, prop
 
         return () => {
             window.removeEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
-            handlerRef.current?.reset(); // Reset the handler state on cleanup
+            handlerRef.current?.destroy(); // Call destroy instead of reset to properly clean up
         };
     }, [facadeChatSDK]);
 };

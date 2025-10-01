@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 
-import { defaultMiddlewareLocalizedTexts } from "../../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { ILiveChatWidgetProps } from "../../../../../livechatwidget/interfaces/ILiveChatWidgetProps";
 import { defaultInlineBannerStyle } from "../defaultStyles/defaultInLineBannerStyle";
+import { defaultMiddlewareLocalizedTexts } from "../../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { mergeStyles } from "@fluentui/merge-styles";
 
-const LoadInlineBannerActivity = ({ webChatContainerProps, persistentChatHistory, id }: { webChatContainerProps?: ILiveChatWidgetProps['webChatContainerProps']; persistentChatHistory?: ILiveChatWidgetProps['persistentChatHistory']; id: string }) => {
+const LoadInlineBannerActivity = ({ webChatContainerProps, persistentChatHistory, id }: { webChatContainerProps?: ILiveChatWidgetProps["webChatContainerProps"]; persistentChatHistory?: ILiveChatWidgetProps["persistentChatHistoryProps"]; id: string }) => {
     const localizedTexts = useMemo(() => ({
         ...defaultMiddlewareLocalizedTexts,
         ...webChatContainerProps?.localizedTexts

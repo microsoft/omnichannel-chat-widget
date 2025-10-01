@@ -10,17 +10,20 @@ import convertPersistentChatHistoryMessageToActivity from "../../webchatcontaine
 import { defaultPersistentChatHistoryProps } from "./defaultProps/defaultPersistentChatHistoryProps";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 
+/**
+ * Class responsible for handling persistent conversation history
+ */
 class PersistentConversationHandler {
+    private appliedProps: IPersistentChatHistoryProps = { ...defaultPersistentChatHistoryProps };
     private isLastPull = false;
-    private pageSize = 4
     private pageToken: string | null = null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private lastMessage: any = null; // Replace `any` with a proper type
-    private count = 0;
-    private appliedProps: IPersistentChatHistoryProps | null = null;
     private facadeChatSDK: FacadeChatSDK;
-    private pageTokenInTransitSet: Set<string> = new Set();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private lastMessage: any = null;
+    private count = 0;
+    private pageSize = 4;
     private isCurrentlyPulling = false;
+    private pageTokenInTransitSet = new Set<string>();
 
     constructor(facadeChatSDK: FacadeChatSDK, props: IPersistentChatHistoryProps) {
         this.facadeChatSDK = facadeChatSDK;
@@ -48,6 +51,10 @@ class PersistentConversationHandler {
         this.count = 0;
         this.isCurrentlyPulling = false;
         this.pageTokenInTransitSet.clear();
+    }
+
+    public destroy() {
+        // Only unsubscribe when the handler is being destroyed completely
         this.resetEventListener.unsubscribe();
     }
 
@@ -62,30 +69,31 @@ class PersistentConversationHandler {
         if (this.pageToken && this.pageTokenInTransitSet.has(this.pageToken)) {
             return;
         }
-        
+
         // Mark as currently pulling
         this.isCurrentlyPulling = true;
-        
+
         if (this.pageToken) {
             this.pageTokenInTransitSet.add(this.pageToken);
         }
-        
+
         try {
             const messages = await this.fetchHistoryMessages();
 
-            
-            if (messages.length === 0) {
+            if (messages === null || messages?.length === 0) {
                 this.isLastPull = true;
+                // Dispatch event to notify UI that no more history is available
+                dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
                 return;
             }
-            
+
             const messagesDescOrder = [...messages]?.reverse();
 
             this.processHistoryMessages(messagesDescOrder);
         } finally {
             // Always clear the pulling flag when done
             this.isCurrentlyPulling = false;
-            
+
             // Remove pageToken from transit set if it was added
             if (this.pageToken) {
                 this.pageTokenInTransitSet.delete(this.pageToken);
@@ -120,6 +128,7 @@ class PersistentConversationHandler {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private async fetchHistoryMessages(): Promise<any[]> {
+
         if (!this.shouldPull()) {
             return [];
         }
@@ -136,8 +145,14 @@ class PersistentConversationHandler {
 
             if (pageToken === null) {
                 this.isLastPull = true;
+                // Dispatch event when we reach the end of available history
+                dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
             }
 
+            // if chatMessages is null, return empty array
+            if (!messages) {
+                return [];
+            }
             return messages;
         } catch (error) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -147,6 +162,8 @@ class PersistentConversationHandler {
 
             this.isLastPull = true;
             this.pageToken = null;
+            // Dispatch event when there's an error to stop loading banner
+            dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
             return [];
         }
     }
@@ -196,7 +213,7 @@ class PersistentConversationHandler {
                     "webchat:sequence-id": sequenceId,
                 },
                 timestamp: new Date(timestamp).toISOString(),
-                identifier : `divider-${activity.channelData.conversationId}`
+                identifier: `divider-${activity.channelData.conversationId}`
             };
         }
 

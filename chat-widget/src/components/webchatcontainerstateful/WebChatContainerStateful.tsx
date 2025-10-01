@@ -83,11 +83,12 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isPersistentChatEnabledForWidget = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) || isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
 
-    if (props.persistentChatHistory?.persistentChatHistoryEnabled && isPersistentChatEnabledForWidget) {
-        usePersistentChatHistory(facadeChatSDK, props.persistentChatHistory);
+    if (props?.persistentChatHistoryProps?.persistentChatHistoryEnabled && isPersistentChatEnabledForWidget) {
+        usePersistentChatHistory(facadeChatSDK, props.persistentChatHistoryProps);
     }
     // Delegated click handler for citation anchors. Placed after state is
     // available so we can prefer reading citations from app state and fall
@@ -385,8 +386,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
-                { isPersistentChatEnabledForWidget && <WebChatEventSubscribers persistentChatHistoryEnabled={props.persistentChatHistory?.persistentChatHistoryEnabled}/>}
-                <BasicWebChat></BasicWebChat>
+                { isPersistentChatEnabledForWidget && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
+                <BasicWebChat></BasicWebChat>  
             </div>
         </Stack>
         {citationPaneOpen && (

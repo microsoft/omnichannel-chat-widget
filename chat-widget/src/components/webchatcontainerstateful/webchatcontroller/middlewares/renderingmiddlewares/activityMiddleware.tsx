@@ -89,13 +89,13 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         }
 
         if (isTagIncluded(card, Constants.persistentChatHistoryMessagePullTriggerTag)) {
-            // Check if more history is available before rendering
+            
+            // Safety check: if this is a new chat session and flag is false, auto-correct it
             if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                return () => false;
+                LazyLoadHandler.setHasMoreHistoryAvailable(true, "activityMiddleware auto-correction");
             }
-
-
-            const receivedAt = card.activity.channelData.webChat.receivedAt;
+            
+            const receivedAt = card?.activity?.channelData?.webChat?.receivedAt;
 
             if (receivedAt < lastRenderedAt) {
                 card.activity = null;
