@@ -111,7 +111,8 @@ describe("WebChatEventSubscribers", () => {
             
             expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
             expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
-        });        it("should set up store polling when store is not initially available", () => {
+        });
+        it("should set up store polling when store is not initially available", () => {
             mockWebChatStoreLoader.store = null;
 
             render(<WebChatEventSubscribers {...defaultProps} />);
