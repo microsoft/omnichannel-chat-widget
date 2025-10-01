@@ -14,12 +14,7 @@
  * 
  * Architecture:
  * - LazyLoadHandler: Static class managing all lazy load logic
- * - LazyLoadActivity: React component providing the         LazyLoadHandler.unmount();                    // Clean up current state
-        LazyLoadHandler.initialized = false;         // Reset initialization flag
-        LazyLoadHandler.isReady = false;            // Reset readiness flag
-        LazyLoadHandler.setHasMoreHistoryAvailable(true, "reset method"); // Reset history availability flag
-        LazyLoadHandler.initializationQueue = [];   // Clear action queue
-        LazyLoadHandler.resetPending = false;       // Clear pending reset flag
+ * - LazyLoadActivity: React component providing the UI and lifecycle integration for lazy loading
  * 
  * Flow:
  * 1. Component renders a trigger element at the top of chat history
