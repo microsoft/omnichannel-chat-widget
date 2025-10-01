@@ -1,12 +1,13 @@
 import "@testing-library/jest-dom";
 
+import React, { act } from "react";
 import { cleanup, render } from "@testing-library/react";
 
 import ChatWidgetEvents from "../../livechatwidget/common/ChatWidgetEvents";
 import { Constants } from "../../../common/Constants";
 import { IPersistentChatHistoryProps } from "../../livechatwidget/interfaces/IPersistentChatHistoryProps";
-import React from "react";
 import WebChatEventSubscribers from "./WebChatEventSubscribers";
+import { WebChatStoreLoader } from "./WebChatStoreLoader";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 
 // Mock dependencies
@@ -21,19 +22,38 @@ jest.mock("../../../common/Constants", () => ({
     }
 }));
 
-// Mock botframework-webchat-component hooks
-const mockUseConnectivityStatus = jest.fn();
-jest.mock("botframework-webchat-component", () => ({
-    hooks: {
-        useConnectivityStatus: () => mockUseConnectivityStatus()
+// Mock WebChatStoreLoader
+jest.mock("./WebChatStoreLoader", () => ({
+    WebChatStoreLoader: {
+        store: null
     }
 }));
 
 const mockDispatchCustomEvent = dispatchCustomEvent as jest.MockedFunction<typeof dispatchCustomEvent>;
+const mockWebChatStoreLoader = WebChatStoreLoader as jest.Mocked<typeof WebChatStoreLoader>;
 
-// Mock timers before any imports
-const mockSetTimeout = jest.fn();
-global.setTimeout = mockSetTimeout;
+// Create spies for timer functions
+let setIntervalSpy: jest.SpyInstance;
+let setTimeoutSpy: jest.SpyInstance;
+let clearIntervalSpy: jest.SpyInstance;
+
+const defaultProps: IPersistentChatHistoryProps = {
+    persistentChatHistoryEnabled: true
+};
+
+// Set up spies before all tests
+beforeAll(() => {
+    setIntervalSpy = jest.spyOn(global, "setInterval");
+    setTimeoutSpy = jest.spyOn(global, "setTimeout");
+    clearIntervalSpy = jest.spyOn(global, "clearInterval");
+});
+
+// Clean up spies after all tests
+afterAll(() => {
+    setIntervalSpy?.mockRestore();
+    setTimeoutSpy?.mockRestore();
+    clearIntervalSpy?.mockRestore();
+});
 
 describe("WebChatEventSubscribers", () => {
     const defaultProps: IPersistentChatHistoryProps = {
@@ -42,17 +62,37 @@ describe("WebChatEventSubscribers", () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        mockSetTimeout.mockClear();
-        mockUseConnectivityStatus.mockReturnValue(["disconnected"]);
+
+        // Reset WebChatStoreLoader
+        mockWebChatStoreLoader.store = null;
+        
+        // Set up mock implementations for each test
+        setIntervalSpy.mockImplementation((callback, delay) => {
+            // Return a mock timer ID without executing the callback
+            return 123 as any;
+        });
+        setTimeoutSpy.mockImplementation((callback, delay) => {
+            // Return a mock timer ID without executing the callback
+            return 456 as any;
+        });
+        clearIntervalSpy.mockImplementation(() => {});
     });
 
     afterEach(() => {
         cleanup();
+        
+        // Clear mock calls but don't restore spies
+        setIntervalSpy?.mockClear();
+        setTimeoutSpy?.mockClear();
+        clearIntervalSpy?.mockClear();
     });
 
     describe("Component Rendering", () => {
         it("should render without throwing", () => {
             expect(() => {
+                const defaultProps: IPersistentChatHistoryProps = {
+                    persistentChatHistoryEnabled: true
+                };
                 render(<WebChatEventSubscribers {...defaultProps} />);
             }).not.toThrow();
         });
@@ -64,212 +104,285 @@ describe("WebChatEventSubscribers", () => {
     });
 
     describe("Connectivity Status Handling", () => {
-        it("should not dispatch events when disconnected", () => {
-            mockUseConnectivityStatus.mockReturnValue(["disconnected"]);
+        it("should not dispatch events when store is not available", () => {
+            mockWebChatStoreLoader.store = null;
             
             render(<WebChatEventSubscribers {...defaultProps} />);
             
-            expect(mockSetTimeout).not.toHaveBeenCalled();
+            expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
             expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
+        });        it("should set up store polling when store is not initially available", () => {
+            mockWebChatStoreLoader.store = null;
+
+            render(<WebChatEventSubscribers {...defaultProps} />);
+
+            expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
         });
 
-        it("should not dispatch events when connecting", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connecting"]);
-            
-            render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            expect(mockSetTimeout).not.toHaveBeenCalled();
-            expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
-        });
+        it("should dispatch events when store becomes available and connection is established", () => {
+            // Start with no store
+            mockWebChatStoreLoader.store = null;
 
-        it("should dispatch events when connected and persistent chat history is enabled", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
             render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
-            
-            // Execute the timeout callback manually
-            const timeoutCallback = mockSetTimeout.mock.calls[0][0];
-            timeoutCallback();
-            
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(2);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
-                activity: {
-                    from: {
-                        role: "bot"
-                    },
-                    timestamp: 0,
-                    type: "message",
-                    channelData: {
-                        tags: [Constants.persistentChatHistoryMessagePullTriggerTag]
-                    }
-                }
+
+            // Simulate store becoming available
+            mockWebChatStoreLoader.store = {
+                getState: jest.fn().mockReturnValue({
+                    connectivityStatus: "connected"
+                })
+            };
+
+            // Simulate the interval check that finds the store
+            act(() => {
+                const storeCheckCallback = setIntervalSpy.mock.calls[0][0];
+                storeCheckCallback();
             });
+
+            // Should clear the interval when store is found
+            expect(clearIntervalSpy).toHaveBeenCalled();
+            // Should set up connection monitoring at 1000ms intervals
+            expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
+            expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 1000);
+
+            // Simulate connection status check
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[1][0];
+                connectionCheckCallback();
+            });
+
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
         });
 
         it("should not dispatch events when persistent chat history is disabled", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
             const propsWithDisabledHistory = {
                 ...defaultProps,
                 persistentChatHistoryEnabled: false
             };
-            
+
             render(<WebChatEventSubscribers {...propsWithDisabledHistory} />);
-            
-            expect(mockSetTimeout).not.toHaveBeenCalled();
+
+            expect(setIntervalSpy).not.toHaveBeenCalled();
+            expect(setTimeoutSpy).not.toHaveBeenCalled();
             expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
         });
 
         it("should not dispatch events when persistent chat history is undefined", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
             const propsWithUndefinedHistory = {
                 persistentChatHistoryEnabled: undefined
             } as IPersistentChatHistoryProps;
-            
+
             render(<WebChatEventSubscribers {...propsWithUndefinedHistory} />);
-            
-            expect(mockSetTimeout).not.toHaveBeenCalled();
+
+            expect(setIntervalSpy).not.toHaveBeenCalled();
+            expect(setTimeoutSpy).not.toHaveBeenCalled();
             expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
         });
 
         it("should handle null persistent chat history enabled", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
             const propsWithNullHistory = {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 persistentChatHistoryEnabled: null as any
             } as IPersistentChatHistoryProps;
-            
+
             render(<WebChatEventSubscribers {...propsWithNullHistory} />);
-            
-            expect(mockSetTimeout).not.toHaveBeenCalled();
+
+            expect(setIntervalSpy).not.toHaveBeenCalled();
+            expect(setTimeoutSpy).not.toHaveBeenCalled();
             expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
         });
     });
 
     describe("State Changes", () => {
-        it("should respond to connectivity status changes", () => {
-            mockUseConnectivityStatus.mockReturnValue(["disconnected"]);
-            
-            const { rerender } = render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            // Initially disconnected - no events
-            expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
-            
-            // Change to connected
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            rerender(<WebChatEventSubscribers {...defaultProps} />);
-            
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
+        it("should respond to store availability changes", () => {
+            // Start with no store
+            mockWebChatStoreLoader.store = null;
+
+            render(<WebChatEventSubscribers {...defaultProps} />);
+
+            // Initially should set up polling
+            expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
+
+            // Store becomes available
+            mockWebChatStoreLoader.store = {
+                getState: jest.fn().mockReturnValue({
+                    connectivityStatus: "disconnected"
+                })
+            };
+
+            // Execute the polling callback
+            act(() => {
+                const storeCheckCallback = setIntervalSpy.mock.calls[0][0];
+                storeCheckCallback();
+            });
+
+            expect(clearIntervalSpy).toHaveBeenCalled();
         });
 
         it("should respond to persistent chat history enabled changes", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
             const propsDisabled = {
                 persistentChatHistoryEnabled: false
             };
-            
+
             const { rerender } = render(<WebChatEventSubscribers {...propsDisabled} />);
-            
-            // Initially disabled - no events
-            expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
-            
+
+            // Initially disabled - no polling
+            expect(setIntervalSpy).not.toHaveBeenCalled();
+
             // Enable persistent chat history
             rerender(<WebChatEventSubscribers {...defaultProps} />);
-            
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
+
+            // Should start polling for store
+            expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
         });
 
-        it("should handle multiple state changes correctly", () => {
-            mockUseConnectivityStatus.mockReturnValue(["disconnected"]);
-            
-            const { rerender } = render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            // disconnected -> connecting
-            mockUseConnectivityStatus.mockReturnValue(["connecting"]);
-            rerender(<WebChatEventSubscribers {...defaultProps} />);
-            expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
-            
-            // connecting -> connected
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            rerender(<WebChatEventSubscribers {...defaultProps} />);
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
-            
-            // connected -> disconnected
-            mockUseConnectivityStatus.mockReturnValue(["disconnected"]);
-            rerender(<WebChatEventSubscribers {...defaultProps} />);
-            
-            // Should not have additional timeout calls for disconnected state
-            expect(mockSetTimeout).toHaveBeenCalledTimes(1);
+        it("should handle connection state transitions", () => {
+            // Set up store with disconnected state initially
+            mockWebChatStoreLoader.store = {
+                getState: jest.fn().mockReturnValue({
+                    connectivityStatus: "disconnected"
+                })
+            };
+
+            render(<WebChatEventSubscribers {...defaultProps} />);
+
+            // Should set up connection monitoring
+            expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 1000);
+
+            // Execute connection check - first call (disconnected, no state change needed)
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+                connectionCheckCallback();
+            });
+
+            // Since the component starts with isConnected = false and status is disconnected, 
+            // no timeout should be set yet
+            expect(setTimeoutSpy).not.toHaveBeenCalled();
+
+            // Change mock to return connected
+            mockWebChatStoreLoader.store.getState.mockReturnValue({
+                connectivityStatus: "connected"
+            });
+
+            // Execute connection check - second call (newly connected)
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+                connectionCheckCallback();
+            });
+
+            // Should now dispatch timeout for the new connection
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
         });
     });
 
     describe("Timeout Behavior", () => {
-        it("should use 2000ms timeout for dispatching events", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
+        it("should use 2000ms timeout for dispatching events when connected", () => {
+            mockWebChatStoreLoader.store = {
+                getState: jest.fn().mockReturnValue({
+                    connectivityStatus: "connected"
+                })
+            };
+
             render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
-            
+
+            // Execute connection check
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+                connectionCheckCallback();
+            });
+
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
+
             // Execute timeout callback manually
-            const timeoutCallback = mockSetTimeout.mock.calls[0][0];
+            const timeoutCallback = setTimeoutSpy.mock.calls[0][0];
             timeoutCallback();
-            
+
             expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(2);
         });
 
         it("should not dispatch events if timeout callback is not executed", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
+            mockWebChatStoreLoader.store = {
+                getState: jest.fn().mockReturnValue({
+                    connectivityStatus: "connected"
+                })
+            };
+
             render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
-            
+
+            // Execute connection check
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+                connectionCheckCallback();
+            });
+
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
+
             // Don't execute callback - events should not be dispatched
             expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
         });
 
-        it("should handle multiple renders with timeouts correctly", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
-            const { rerender } = render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            // First render sets timeout
-            expect(mockSetTimeout).toHaveBeenCalledTimes(1);
-            
-            // Rerender with same props - effect may or may not re-run depending on React's optimization
-            rerender(<WebChatEventSubscribers {...defaultProps} />);
-            
-            // The effect might not re-run if React optimizes away the render with identical props
-            expect(mockSetTimeout).toHaveBeenCalledTimes(1);
+        it("should handle multiple connection checks correctly", () => {
+            const mockGetState = jest.fn()
+                .mockReturnValueOnce({ connectivityStatus: "connected" }) // First call - already connected
+                .mockReturnValueOnce({ connectivityStatus: "connected" }); // Second call - still connected
+
+            mockWebChatStoreLoader.store = {
+                getState: mockGetState
+            };
+
+            render(<WebChatEventSubscribers {...defaultProps} />);
+
+            const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+
+            // First check - newly connected (component starts with isConnected = false)
+            act(() => {
+                connectionCheckCallback();
+            });
+            expect(setTimeoutSpy).toHaveBeenCalledTimes(1);
+
+            // Second check - still connected (no new timeout)
+            act(() => {
+                connectionCheckCallback();
+            });
+            expect(setTimeoutSpy).toHaveBeenCalledTimes(1);
         });
     });
 
     describe("Event Dispatching", () => {
         beforeEach(() => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
+            mockWebChatStoreLoader.store = {
+                getState: jest.fn().mockReturnValue({
+                    connectivityStatus: "connected"
+                })
+            };
         });
 
         it("should dispatch FETCH_PERSISTENT_CHAT_HISTORY event first", () => {
             render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            const timeoutCallback = mockSetTimeout.mock.calls[0][0];
+
+            // Execute connection check to trigger timeout
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+                connectionCheckCallback();
+            });
+
+            const timeoutCallback = setTimeoutSpy.mock.calls[0][0];
             timeoutCallback();
-            
+
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
         });
 
         it("should dispatch ADD_ACTIVITY event with correct activity structure", () => {
             render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            const timeoutCallback = mockSetTimeout.mock.calls[0][0];
+
+            // Execute connection check to trigger timeout
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+                connectionCheckCallback();
+            });
+
+            const timeoutCallback = setTimeoutSpy.mock.calls[0][0];
             timeoutCallback();
-            
+
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: {
                     from: {
@@ -286,16 +399,22 @@ describe("WebChatEventSubscribers", () => {
 
         it("should include correct activity properties", () => {
             render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            const timeoutCallback = mockSetTimeout.mock.calls[0][0];
+
+            // Execute connection check to trigger timeout
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+                connectionCheckCallback();
+            });
+
+            const timeoutCallback = setTimeoutSpy.mock.calls[0][0];
             timeoutCallback();
-            
+
             const addActivityCall = mockDispatchCustomEvent.mock.calls.find(
                 call => call[0] === ChatWidgetEvents.ADD_ACTIVITY
             );
-            
+
             expect(addActivityCall).toBeDefined();
-            expect(addActivityCall![1]).toEqual({
+            expect(addActivityCall?.[1]).toEqual({
                 activity: {
                     from: { role: "bot" },
                     timestamp: 0,
@@ -309,99 +428,169 @@ describe("WebChatEventSubscribers", () => {
 
         it("should include correct constant tag", () => {
             render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            const timeoutCallback = mockSetTimeout.mock.calls[0][0];
+
+            // Execute connection check to trigger timeout
+            act(() => {
+                const connectionCheckCallback = setIntervalSpy.mock.calls[0][0];
+                connectionCheckCallback();
+            });
+
+            const timeoutCallback = setTimeoutSpy.mock.calls[0][0];
             timeoutCallback();
-            
+
             const addActivityCall = mockDispatchCustomEvent.mock.calls.find(
                 call => call[0] === ChatWidgetEvents.ADD_ACTIVITY
             );
-            
-            const activity = addActivityCall![1].activity;
+
+            const activity = addActivityCall?.[1].activity;
             expect(activity.channelData.tags).toContain(Constants.persistentChatHistoryMessagePullTriggerTag);
             expect(activity.channelData.tags).toHaveLength(1);
         });
     });
+});
 
-    describe("Dependencies Array", () => {
-        it("should re-run effect when connectivity status changes", () => {
-            mockUseConnectivityStatus.mockReturnValue(["disconnected"]);
-            
-            const { rerender } = render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            // Change connectivity status
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            rerender(<WebChatEventSubscribers {...defaultProps} />);
-            
-            // Effect should have re-run
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
+describe("Dependencies Array", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        mockWebChatStoreLoader.store = null;
+        
+        // Set up mock implementations for each test
+        setIntervalSpy.mockImplementation((callback, delay) => {
+            return 123 as any;
         });
-
-        it("should re-run effect when persistentChatHistoryEnabled changes", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
-            const propsDisabled = { persistentChatHistoryEnabled: false };
-            const { rerender } = render(<WebChatEventSubscribers {...propsDisabled} />);
-            
-            // Change persistent chat history enabled
-            rerender(<WebChatEventSubscribers {...defaultProps} />);
-            
-            // Effect should have re-run
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
+        setTimeoutSpy.mockImplementation((callback, delay) => {
+            return 456 as any;
         });
-
-        it("should not re-run effect when unrelated props change", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
-            const props1 = { 
-                ...defaultProps, 
-                someOtherProp: "value1" 
-            } as any;
-            const props2 = { 
-                ...defaultProps, 
-                someOtherProp: "value2" 
-            } as any;
-            
-            const { rerender } = render(<WebChatEventSubscribers {...props1} />);
-            
-            // First render should set timeout
-            expect(mockSetTimeout).toHaveBeenCalledTimes(1);
-            
-            // Rerender with different unrelated prop - React may or may not re-run effect
-            rerender(<WebChatEventSubscribers {...props2} />);
-            
-            // Since only the effect dependencies matter, timeout should only be called once
-            expect(mockSetTimeout).toHaveBeenCalledTimes(1);
-        });
+        clearIntervalSpy.mockImplementation(() => {});
     });
 
-    describe("Edge Cases", () => {
-        it("should handle empty props object", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected"]);
-            
-            expect(() => {
-                render(<WebChatEventSubscribers {...{}} />);
-            }).not.toThrow();
-            
-            expect(mockSetTimeout).not.toHaveBeenCalled();
-            expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
+    afterEach(() => {
+        cleanup();
+        setIntervalSpy?.mockClear();
+        setTimeoutSpy?.mockClear();
+        clearIntervalSpy?.mockClear();
+    });
+
+    it("should set up store polling when persistent chat history is enabled", () => {
+        mockWebChatStoreLoader.store = null;
+        
+        const testProps = { persistentChatHistoryEnabled: true };
+        render(<WebChatEventSubscribers {...testProps} />);
+
+        expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
+    });
+
+    it("should not set up polling when persistent echat history is disabled", () => {
+        const propsDisabled = { persistentChatHistoryEnabled: false };
+
+        render(<WebChatEventSubscribers {...propsDisabled} />);
+
+        expect(setIntervalSpy).not.toHaveBeenCalled();
+    });
+
+    it("should respond to props changes", () => {
+        const propsDisabled = { persistentChatHistoryEnabled: false };
+        const { rerender } = render(<WebChatEventSubscribers {...propsDisabled} />);
+
+        expect(setIntervalSpy).not.toHaveBeenCalled();
+
+        // Enable persistent chat history with fresh props
+        const propsEnabled = { persistentChatHistoryEnabled: true };
+        rerender(<WebChatEventSubscribers {...propsEnabled} />);
+
+        expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
+    });
+});
+
+describe("Edge Cases", () => {
+    it("should handle empty props object", () => {
+        // Ensure clean state
+        mockWebChatStoreLoader.store = null;
+        
+        expect(() => {
+            render(<WebChatEventSubscribers {...{}} />);
+        }).not.toThrow();
+
+        expect(setIntervalSpy).not.toHaveBeenCalled();
+        expect(setTimeoutSpy).not.toHaveBeenCalled();
+        expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
+    });
+
+    it("should handle store error gracefully", () => {
+        // Start with no store, then make it available but with errors
+        mockWebChatStoreLoader.store = null;
+        
+        const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+        
+        const testProps = { persistentChatHistoryEnabled: true };
+        render(<WebChatEventSubscribers {...testProps} />);
+
+        // Should set up store polling
+        expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
+
+        // Make store available but with error-throwing getState
+        mockWebChatStoreLoader.store = {
+            getState: jest.fn(() => {
+                throw new Error("Store error");
+            })
+        };
+
+        // Execute store check first (this should find the store and trigger storeReady state)
+        act(() => {
+            const storeCheckCallback = setIntervalSpy.mock.calls[0][0];
+            storeCheckCallback();
         });
 
-        it("should handle unknown connectivity status", () => {
-            mockUseConnectivityStatus.mockReturnValue(["unknown" as any]);
-            
-            render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            expect(mockSetTimeout).not.toHaveBeenCalled();
-            expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
+        // Now should have connection monitoring interval set up
+        expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 1000);
+
+        // Execute connection check (this should throw the error)
+        act(() => {
+            const connectionCheckCallback = setIntervalSpy.mock.calls[1][0];
+            connectionCheckCallback();
         });
 
-        it("should handle connectivity status as array with multiple values", () => {
-            mockUseConnectivityStatus.mockReturnValue(["connected", "extra-value"] as any);
-            
-            render(<WebChatEventSubscribers {...defaultProps} />);
-            
-            expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 2000);
+        expect(consoleSpy).toHaveBeenCalledWith(
+            "[WebChatEventSubscribers] Connection status check failed:",
+            expect.any(Error)
+        );
+
+        consoleSpy.mockRestore();
+    });
+
+    it("should handle undefined connectivity status", () => {
+        // Start with no store
+        mockWebChatStoreLoader.store = null;
+
+        const testProps = { persistentChatHistoryEnabled: true };
+        render(<WebChatEventSubscribers {...testProps} />);
+
+        // Should set up store polling
+        expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 100);
+
+        // Make store available with undefined connectivity status
+        mockWebChatStoreLoader.store = {
+            getState: jest.fn().mockReturnValue({
+                connectivityStatus: undefined
+            })
+        };
+
+        // Execute store check first (this should find the store and trigger storeReady state)
+        act(() => {
+            const storeCheckCallback = setIntervalSpy.mock.calls[0][0];
+            storeCheckCallback();
         });
+
+        // Now should have connection monitoring interval set up
+        expect(setIntervalSpy).toHaveBeenCalledWith(expect.any(Function), 1000);
+
+        // Execute connection check (should not trigger timeout due to undefined status)
+        act(() => {
+            const connectionCheckCallback = setIntervalSpy.mock.calls[1][0];
+            connectionCheckCallback();
+        });
+
+        expect(setTimeoutSpy).not.toHaveBeenCalled();
+        expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
     });
 });

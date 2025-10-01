@@ -13,7 +13,8 @@ import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 jest.mock("../../../common/utils/dispatchCustomEvent");
 jest.mock("./ChatWidgetEvents", () => ({
     ADD_ACTIVITY: "ADD_ACTIVITY",
-    FETCH_PERSISTENT_CHAT_HISTORY: "FETCH_PERSISTENT_CHAT_HISTORY"
+    FETCH_PERSISTENT_CHAT_HISTORY: "FETCH_PERSISTENT_CHAT_HISTORY",
+    NO_MORE_HISTORY_AVAILABLE: "NO_MORE_HISTORY_AVAILABLE"
 }));
 jest.mock("../../../common/telemetry/TelemetryHelper");
 jest.mock("@microsoft/omnichannel-chat-components", () => ({
@@ -122,10 +123,16 @@ describe("PersistentConversationHandler", () => {
 
     describe("Reset Functionality", () => {
         it("should reset all state properties", () => {
-            // Simulate some state changes
-            handler.pullHistory(); // This would set some internal state
+            // Simulate some state changes by calling pullHistory first
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: [],
+                nextPageToken: "test-token"
+            });
             
-            handler.reset();
+            handler.pullHistory();
+            
+            // Call destroy instead of reset to test unsubscription
+            handler.destroy();
 
             // Test that reset event listener was unsubscribed
             expect(mockSubscription.unsubscribe).toHaveBeenCalled();
@@ -188,7 +195,8 @@ describe("PersistentConversationHandler", () => {
             await handler.pullHistory();
 
             expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalled();
-            expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
+            // Should dispatch NO_MORE_HISTORY_AVAILABLE event
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
         });
 
         it("should handle fetch error", async () => {
@@ -374,7 +382,8 @@ describe("PersistentConversationHandler", () => {
 
             await handler.pullHistory();
 
-            expect(mockDispatchCustomEvent).not.toHaveBeenCalled();
+            // Should still dispatch NO_MORE_HISTORY_AVAILABLE for null pageToken
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
         });
     });
 
@@ -432,12 +441,17 @@ describe("PersistentConversationHandler", () => {
 
             await handler.pullHistory();
 
-            // Should only dispatch the two activities, and one divider is created
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.ADD_ACTIVITY, {
+            // Should dispatch:
+            // 1. NO_MORE_HISTORY_AVAILABLE (from fetchHistoryMessages when pageToken is null)
+            // 2. ADD_ACTIVITY for activity2
+            // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
+            // 4. ADD_ACTIVITY for activity1 (no divider since same conversation)
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4);
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
             });
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(3, ChatWidgetEvents.ADD_ACTIVITY, {
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(4, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
             });
         });
@@ -455,9 +469,13 @@ describe("PersistentConversationHandler", () => {
 
             await handler.pullHistory();
 
-            // Should only dispatch the activity, no divider for first message
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(2);
-            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.ADD_ACTIVITY, {
+            // Should dispatch:
+            // 1. NO_MORE_HISTORY_AVAILABLE (from fetchHistoryMessages when pageToken is null)
+            // 2. ADD_ACTIVITY for activity1
+            // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3);
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
             });
         });
