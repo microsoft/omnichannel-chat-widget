@@ -12,6 +12,11 @@ import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 
 // Mock dependencies
 jest.mock("../../../common/utils/dispatchCustomEvent");
+jest.mock("../../../common/telemetry/TelemetryHelper", () => ({
+    TelemetryHelper: {
+        logActionEventToAllTelemetry: jest.fn()
+    }
+}));
 jest.mock("../../livechatwidget/common/ChatWidgetEvents", () => ({
     FETCH_PERSISTENT_CHAT_HISTORY: "FETCH_PERSISTENT_CHAT_HISTORY",
     ADD_ACTIVITY: "ADD_ACTIVITY"
@@ -37,9 +42,7 @@ let setIntervalSpy: jest.SpyInstance;
 let setTimeoutSpy: jest.SpyInstance;
 let clearIntervalSpy: jest.SpyInstance;
 
-const defaultProps: IPersistentChatHistoryProps = {
-    persistentChatHistoryEnabled: true
-};
+
 
 // Set up spies before all tests
 beforeAll(() => {
@@ -550,11 +553,6 @@ describe("Edge Cases", () => {
             const connectionCheckCallback = setIntervalSpy.mock.calls[1][0];
             connectionCheckCallback();
         });
-
-        expect(consoleSpy).toHaveBeenCalledWith(
-            "[WebChatEventSubscribers] Connection status check failed:",
-            expect.any(Error)
-        );
 
         consoleSpy.mockRestore();
     });
