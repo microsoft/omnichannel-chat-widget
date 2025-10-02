@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Fixed carousel attachments alignment issue
 - Bot authentication activity adaptive card visibility
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
+- Improved designer mode to take mock messages as input
 
 ### Changed
 
