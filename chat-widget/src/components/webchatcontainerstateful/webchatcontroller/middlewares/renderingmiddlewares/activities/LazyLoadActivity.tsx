@@ -439,6 +439,7 @@ class LazyLoadHandler {
 
         // Dispatch custom event to trigger chat history fetching
         // This event is handled by other parts of the chat system
+        console.log("LOPEZ :: LazyLoadHandler dispatching FETCH_PERSISTENT_CHAT_HISTORY event");
         dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
 
         // Wait for content to load before performing scroll adjustment
@@ -751,6 +752,7 @@ class LazyLoadHandler {
      * Also removes the trigger element from the DOM to prevent further triggering.
      */
     public static handleNoMoreHistoryAvailable() {
+        console.log("LOPEZ :: LazyLoadHandler.handleNoMoreHistoryAvailable called");
         LazyLoadHandler.setHasMoreHistoryAvailable(false);
         LazyLoadHandler.paused = true;
         LazyLoadHandler.pendingScrollAction = false; // Reset this to prevent stuck states
@@ -872,16 +874,48 @@ class LazyLoadHandler {
  */
 const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
     const [hasMoreHistory, setHasMoreHistory] = useState(LazyLoadHandler.hasMoreHistoryAvailable);
-
+    
     useEffect(() => {
         
         LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadActivityMounted, "LazyLoadActivity component mounted");
+        
+        // Set up event listeners FIRST - before any early returns
+        // Event listener for NO_MORE_HISTORY_AVAILABLE
+        const handleNoMoreHistory = () => {
+            LazyLoadHandler.handleNoMoreHistoryAvailable();
+            // Update React state to trigger re-render and hide component
+            setHasMoreHistory(false);
+        };
+
+        // Event listener for PersistentConversationReset to sync React state
+        // This fixes the issue where banner doesn't appear in start chat + close chat + start chat sequence
+        // by ensuring React state (hasMoreHistory) is synchronized with handler state when reset occurs
+        const handlePersistentConversationReset = () => {
+            // Update React state to trigger re-render and show component for new chat session
+            setHasMoreHistory(true);
+        };
+
+        // Add event listener for no more history signal
+        window.addEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
+        
+        // Add event listener for persistent conversation reset
+        const resetSubscription = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(handlePersistentConversationReset);
+
+        // Sync React state with handler state on mount in case they're out of sync
+        if (hasMoreHistory !== LazyLoadHandler.hasMoreHistoryAvailable) {
+            setHasMoreHistory(LazyLoadHandler.hasMoreHistoryAvailable);
+        }
         
         // Check if a reset was pending from a previous chat session
         if (LazyLoadHandler.resetPending) {
             LazyLoadHandler.resetPending = false;
             LazyLoadHandler.reset();
-            return; // Early return since reset() will reinitialize everything
+            
+            // Still need to return cleanup function even after reset
+            return () => {
+                window.removeEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
+                resetSubscription.unsubscribe();
+            };
         }
         
         // Initialize the lazy load observer system
@@ -917,16 +951,6 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             }
         };
 
-        // Event listener for NO_MORE_HISTORY_AVAILABLE
-        const handleNoMoreHistory = () => {
-            LazyLoadHandler.handleNoMoreHistoryAvailable();
-            // Update React state to trigger re-render and hide component
-            setHasMoreHistory(false);
-        };
-
-        // Add event listener for no more history signal
-        window.addEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
-
         // Find container and attach scroll listener
         const { container } = LazyLoadHandler.findScrollContainer();
         if (container) {
@@ -939,6 +963,7 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             
             // Remove event listeners
             window.removeEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
+            resetSubscription.unsubscribe();
             if (container) {
                 container.removeEventListener("scroll", handleScroll);
             }

@@ -6,6 +6,7 @@ import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { IPersistentChatHistoryProps } from "../../livechatwidget/interfaces/IPersistentChatHistoryProps";
 import PersistentConversationHandler from "../../livechatwidget/common/PersistentConversationHandler";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
 
 const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined, props : IPersistentChatHistoryProps) => {
     const handlerRef = useRef<PersistentConversationHandler | null>(null);
@@ -30,6 +31,8 @@ const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined, prop
             
             try {
                 await handlerRef.current?.pullHistory();
+
+                dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.LCWPersistentChatHistoryFetchCompleted,

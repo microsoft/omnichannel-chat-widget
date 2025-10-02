@@ -6,6 +6,7 @@ import { defaultMiddlewareLocalizedTexts } from "../../../../common/defaultProps
 import { mergeStyles } from "@fluentui/merge-styles";
 
 const LoadInlineBannerActivity = ({ webChatContainerProps, persistentChatHistory, id }: { webChatContainerProps?: ILiveChatWidgetProps["webChatContainerProps"]; persistentChatHistory?: ILiveChatWidgetProps["persistentChatHistoryProps"]; id: string }) => {
+    
     const localizedTexts = useMemo(() => ({
         ...defaultMiddlewareLocalizedTexts,
         ...webChatContainerProps?.localizedTexts

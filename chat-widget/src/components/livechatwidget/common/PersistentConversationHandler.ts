@@ -96,6 +96,8 @@ class PersistentConversationHandler {
                 this.isLastPull = true;
                 // Dispatch event to notify UI that no more history is available
                 dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+                // Also hide the loading banner
+                dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
@@ -108,6 +110,9 @@ class PersistentConversationHandler {
             const messagesDescOrder = [...messages]?.reverse();
 
             this.processHistoryMessages(messagesDescOrder);
+            
+            // Dispatch event to hide the loading banner after messages are processed
+            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
             
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
@@ -158,6 +163,10 @@ class PersistentConversationHandler {
     private async fetchHistoryMessages(): Promise<any[]> {
 
         if (!this.shouldPull()) {
+            console.log("LOPEZ  :: shouldPull() returned false, dispatching events to hide banner");
+            // Dispatch event to ensure banner is hidden when no more pulls are needed
+            dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
             return [];
         }
 
@@ -167,7 +176,13 @@ class PersistentConversationHandler {
         };
 
         try {
+
+            console.log("LOPEZ  :: Fetching persistent chat history with options:", options);
+            
             const response = await this.facadeChatSDK.fetchPersistentConversationHistory(options);
+
+            console.log("LOPEZ  :: Received response from fetchPersistentConversationHistory:", response);
+            
             const { chatMessages: messages, nextPageToken: pageToken } = response;
             this.pageToken = pageToken || null;
 
@@ -177,10 +192,23 @@ class PersistentConversationHandler {
                 dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
             }
 
+            console.log("LOPEZ  :: Fetched persistent chat history messages:", messages, "Next page token:", pageToken);
+
             // if chatMessages is null, return empty array
             if (!messages) {
+                console.warn("LOPEZ  :: No messages found");
+                this.isLastPull = true;
+                // Dispatch event when we reach the end of available history
+                console.log("LOPEZ  :: Dispatching NO_MORE_HISTORY_AVAILABLE (no messages case)");
+                dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+                // Also hide the loading banner
+                console.log("LOPEZ  :: Dispatching HIDE_LOADING_BANNER (no messages case)");
+                dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 return [];
             }
+            console.log("LOPEZ  :: Returning messages:", messages);
+            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
+
             return messages;
         } catch (error) {
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
@@ -192,6 +220,8 @@ class PersistentConversationHandler {
             this.pageToken = null;
             // Dispatch event when there's an error to stop loading banner
             dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+            // Also hide the loading banner
+            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
             return [];
         }
     }
