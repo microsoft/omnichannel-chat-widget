@@ -145,7 +145,6 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
             // double check by fetching the latest conversation details
             const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
             if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
-                dispatch({ type: LiveChatWidgetActionType.SET_CHAT_DISCONNECT_EVENT_RECEIVED, payload: true });
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
                     Description: "Checking conversation details upon endChat. Chat disconnected.",
