@@ -439,7 +439,6 @@ class LazyLoadHandler {
 
         // Dispatch custom event to trigger chat history fetching
         // This event is handled by other parts of the chat system
-        console.log("LOPEZ :: LazyLoadHandler dispatching FETCH_PERSISTENT_CHAT_HISTORY event");
         dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
 
         // Wait for content to load before performing scroll adjustment
@@ -752,7 +751,6 @@ class LazyLoadHandler {
      * Also removes the trigger element from the DOM to prevent further triggering.
      */
     public static handleNoMoreHistoryAvailable() {
-        console.log("LOPEZ :: LazyLoadHandler.handleNoMoreHistoryAvailable called");
         LazyLoadHandler.setHasMoreHistoryAvailable(false);
         LazyLoadHandler.paused = true;
         LazyLoadHandler.pendingScrollAction = false; // Reset this to prevent stuck states
