@@ -46,7 +46,7 @@ function CitationPane(props: ICitationPaneProps) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleEscKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (e.code === KeyCodes.ESCAPE) {
+        if (e.key === 'Escape') {
             handleClose();
         }
     }, [handleClose]);
