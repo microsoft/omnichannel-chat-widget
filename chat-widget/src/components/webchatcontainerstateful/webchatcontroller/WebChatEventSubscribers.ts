@@ -117,7 +117,7 @@ const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
         checkConnectionStatus();
 
         // Set up interval to check connection status
-        const interval = setInterval(checkConnectionStatus, 1000); // Check every 5 seconds instead of 1
+        const interval = setInterval(checkConnectionStatus, 1000);
 
         return () => {
             clearInterval(interval);

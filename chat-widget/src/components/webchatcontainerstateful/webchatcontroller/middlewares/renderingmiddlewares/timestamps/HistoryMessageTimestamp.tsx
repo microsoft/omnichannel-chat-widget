@@ -24,14 +24,14 @@ export const HistoryMessageTimestamp = ({ args }: any) => {
         ...state.domainStates.renderingMiddlewareProps?.timestampContentStyleProps
     };
 
-    const getTimeElement = (timestamp: string): string | JSX.Element => {
+    const getTimeElement = (timestamp: string): JSX.Element => {
         const timeString = getTimestampHourMinute(timestamp);
         const isAmPmFormat = timeString.toLowerCase().includes("am") || timeString.toLowerCase().includes("pm");
 
         if (dir === "rtl" && isAmPmFormat) {
-            return <span dir="ltr">{getTimestampHourMinute(timestamp)}</span>;
+            return <span dir="ltr">{timeString}</span>;
         } else {
-            return <span dir={dir}>{getTimestampHourMinute(timestamp)}</span>;
+            return <span dir={dir}>{timeString}</span>;
         }
     };
 

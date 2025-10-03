@@ -385,7 +385,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-            <div id="ms_lcw_webchat_root" style={{ height: "inherit", width: "inherit" }}>
+            <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
                 { isPersistentChatEnabledForWidget && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
                 <BasicWebChat></BasicWebChat>  
             </div>
