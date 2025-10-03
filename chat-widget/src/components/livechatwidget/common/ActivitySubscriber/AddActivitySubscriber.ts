@@ -1,3 +1,5 @@
+import { BroadcastEvent } from "../../../../common/telemetry/TelemetryConstants";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatWidgetEvents from "../ChatWidgetEvents";
 import { IActivitySubscriber } from "./IActivitySubscriber";
 
@@ -22,13 +24,26 @@ export class AddActivitySubscriber implements IActivitySubscriber {
     private processedActivityIds: Set<string> = new Set();
     
     /**
+     * Event listener reference for cleanup
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private activityEventListener: (event: any) => void;
+    
+    /**
+     * Subscription for PersistentConversationReset event
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private resetEventListener: any;
+    
+    /**
      * Constructor initializes the `AddActivitySubscriber` and sets up an event listener
      * for the `ChatWidgetEvents.ADD_ACTIVITY` event. When the event is triggered, it checks
      * if the event payload contains an `activity` and notifies the observer.
      */
     constructor() {
+        // Create a bound event listener function for proper cleanup
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        window.addEventListener(ChatWidgetEvents.ADD_ACTIVITY, (event: any) => {
+        this.activityEventListener = (event: any) => {
             // Check if the event contains the expected payload and activity
             if (event?.detail?.payload?.activity) {
                 const activity = event.detail.payload.activity;
@@ -55,6 +70,22 @@ export class AddActivitySubscriber implements IActivitySubscriber {
                 // Notify the observer with the new activity
                 this.observer?.next(activity);
             }
+        };
+        
+        // Add the event listener
+        window.addEventListener(ChatWidgetEvents.ADD_ACTIVITY, this.activityEventListener);
+        
+        // Subscribe to reset events for cleanup
+        this.resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
+            this.reset();
+            // Clean up the window event listener when conversation resets
+            if (this.activityEventListener) {
+                window.removeEventListener(ChatWidgetEvents.ADD_ACTIVITY, this.activityEventListener);
+            }
+            // Unsubscribe from the reset event to prevent accumulation
+            if (this.resetEventListener) {
+                this.resetEventListener.unsubscribe();
+            }
         });
     }
 
@@ -68,5 +99,12 @@ export class AddActivitySubscriber implements IActivitySubscriber {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async next(activity: any) {
         return activity;
+    }
+
+    /**
+     * Reset the processed activity IDs when a conversation resets
+     */
+    public reset() {
+        this.processedActivityIds.clear();
     }
 }
