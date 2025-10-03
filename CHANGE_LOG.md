@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Ensuring sendbox is enabled when starting a new chat
 - A11Y fix for announcing incorrect bot initials and alt text
 - Fixed carousel attachments alignment issue
+- Fixed keyboard focus issue for suggested actions previous and next button
 
 ### Security
 
