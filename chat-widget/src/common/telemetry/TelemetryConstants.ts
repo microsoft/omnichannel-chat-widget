@@ -321,6 +321,11 @@ export enum TelemetryEvent {
     LCWLazyLoadNoMoreHistory = "LCWLazyLoadNoMoreHistory",
     LCWLazyLoadDestroyed = "LCWLazyLoadDestroyed",
 
+    // SecureEventBus events
+    SecureEventBusUnauthorizedDispatch = "SecureEventBusUnauthorizedDispatch",
+    SecureEventBusListenerError = "SecureEventBusListenerError",
+    SecureEventBusDispatchError = "SecureEventBusDispatchError",
+
 }
 
 export interface TelemetryInput {
@@ -393,6 +398,9 @@ export class TelemetryConstants {
             case TelemetryEvent.PostChatWorkflowFromAgent:
             case TelemetryEvent.PostChatWorkflowFromBot:
             case TelemetryEvent.AppStatesException:
+            case TelemetryEvent.SecureEventBusUnauthorizedDispatch:
+            case TelemetryEvent.SecureEventBusListenerError:
+            case TelemetryEvent.SecureEventBusDispatchError:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:

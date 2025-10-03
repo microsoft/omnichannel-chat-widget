@@ -1,16 +1,22 @@
+import SecureEventBus from "./SecureEventBus";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dispatchCustomEvent = (name: string, payload?: any) => {
-    let event: CustomEvent | null = null;
-    const eventDetails = payload ? { detail: { payload } } : undefined;
     try {
-        event = new CustomEvent(name, eventDetails);
+        const eventBus = SecureEventBus.getInstance();
+        const authToken = eventBus.getAuthToken();
+        
+        // Dispatch through the secure event bus instead of global window
+        const success = eventBus.dispatch(name, payload, authToken);
+        
+        if (!success) {
+            console.error("Failed to dispatch secure event:", name);
+        }
+        
+        console.log("LOPEZ :: Secure Event Dispatched:", name, payload);
+
     } catch (error) {
-
-        console.error("Error dispatching custom event:", name, payload, error);
-    }
-
-    if (event) {
-        window.dispatchEvent(event);
+        console.error("Error dispatching secure custom event:", name, payload, error);
     }
 };
 

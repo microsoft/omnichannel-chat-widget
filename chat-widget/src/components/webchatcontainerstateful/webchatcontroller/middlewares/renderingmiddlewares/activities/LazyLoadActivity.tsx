@@ -36,6 +36,7 @@ import LoadInlineBannerActivity from "./LoadInlineBannerActivity";
 import { TelemetryHelper } from "../../../../../../common/telemetry/TelemetryHelper";
 import { createTimer } from "../../../../../../common/utils";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
+import SecureEventBus from "../../../../../../common/utils/SecureEventBus";
 
 /*
  * Interface defining the state of a scroll operation
@@ -95,7 +96,7 @@ class LazyLoadHandler {
     // Simple lifecycle logging without complex state tracking
     public static logLifecycleEvent(event: TelemetryEvent, description: string, elapsedTime?: number) {
         try {
-            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: event,
                 Description: description,
                 ...(elapsedTime && { ElapsedTimeInMilliseconds: elapsedTime })
@@ -893,8 +894,9 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             setHasMoreHistory(true);
         };
 
-        // Add event listener for no more history signal
-        window.addEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
+        // Add secure event listener for no more history signal
+        const eventBus = SecureEventBus.getInstance();
+        const unsubscribeNoMoreHistory = eventBus.subscribe(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
         
         // Add event listener for persistent conversation reset
         const resetSubscription = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(handlePersistentConversationReset);
@@ -911,7 +913,7 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             
             // Still need to return cleanup function even after reset
             return () => {
-                window.removeEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
+                unsubscribeNoMoreHistory();
                 resetSubscription.unsubscribe();
             };
         }
@@ -960,7 +962,7 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             clearTimeout(initTimeoutId);
             
             // Remove event listeners
-            window.removeEventListener(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
+            unsubscribeNoMoreHistory();
             resetSubscription.unsubscribe();
             if (container) {
                 container.removeEventListener("scroll", handleScroll);

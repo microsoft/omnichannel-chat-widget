@@ -70,7 +70,7 @@ class PersistentConversationHandler {
 
         // Prevent concurrent pulls regardless of pageToken
         if (this.isCurrentlyPulling) {
-            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.WARN, {
+            TelemetryHelper.logActionEvent(LogLevel.WARN, {
                 Event: TelemetryEvent.LCWPersistentHistoryPullBlocked,
                 Description: "History pull blocked - already in progress"
             });
@@ -99,7 +99,7 @@ class PersistentConversationHandler {
                 // Also hide the loading banner
                 dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 
-                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
                     Description: "History pull completed - no more messages",
                     ElapsedTimeInMilliseconds: pullTimer.milliSecondsElapsed
@@ -114,7 +114,7 @@ class PersistentConversationHandler {
             // Dispatch event to hide the loading banner after messages are processed
             dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
             
-            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
                 Description: "History pull completed successfully",
                 ElapsedTimeInMilliseconds: pullTimer.milliSecondsElapsed,

@@ -7,6 +7,7 @@ import { IPersistentChatHistoryProps } from "../../livechatwidget/interfaces/IPe
 import PersistentConversationHandler from "../../livechatwidget/common/PersistentConversationHandler";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
+import SecureEventBus from "../../../common/utils/SecureEventBus";
 
 const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined, props : IPersistentChatHistoryProps) => {
     const handlerRef = useRef<PersistentConversationHandler | null>(null);
@@ -47,10 +48,12 @@ const usePersistentChatHistory = (facadeChatSDK: FacadeChatSDK | undefined, prop
             }
         };
 
-        window.addEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
+        // Subscribe to the secure event bus instead of global window events
+        const eventBus = SecureEventBus.getInstance();
+        const unsubscribe = eventBus.subscribe(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
 
         return () => {
-            window.removeEventListener(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY, handler);
+            unsubscribe();
             handlerRef.current?.destroy(); // Call destroy instead of reset to properly clean up
         };
     }, [facadeChatSDK]);

@@ -2,6 +2,7 @@ import { BroadcastEvent } from "../../../../common/telemetry/TelemetryConstants"
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatWidgetEvents from "../ChatWidgetEvents";
 import { IActivitySubscriber } from "./IActivitySubscriber";
+import SecureEventBus from "../../../../common/utils/SecureEventBus";
 
 /**
  * The `AddActivitySubscriber` class is responsible for subscribing to the `ADD_ACTIVITY` event
@@ -24,10 +25,9 @@ export class AddActivitySubscriber implements IActivitySubscriber {
     private processedActivityIds: Set<string> = new Set();
     
     /**
-     * Event listener reference for cleanup
+     * Unsubscribe function for the secure event listener
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private activityEventListener: (event: any) => void;
+    private unsubscribeFromSecureEvent: (() => void) | null = null;
     
     /**
      * Subscription for PersistentConversationReset event
@@ -36,17 +36,18 @@ export class AddActivitySubscriber implements IActivitySubscriber {
     private resetEventListener: any;
     
     /**
-     * Constructor initializes the `AddActivitySubscriber` and sets up an event listener
+     * Constructor initializes the `AddActivitySubscriber` and sets up a secure event listener
      * for the `ChatWidgetEvents.ADD_ACTIVITY` event. When the event is triggered, it checks
      * if the event payload contains an `activity` and notifies the observer.
      */
     constructor() {
-        // Create a bound event listener function for proper cleanup
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        this.activityEventListener = (event: any) => {
-            // Check if the event contains the expected payload and activity
-            if (event?.detail?.payload?.activity) {
-                const activity = event.detail.payload.activity;
+        const eventBus = SecureEventBus.getInstance();
+        
+        // Subscribe to the secure event bus instead of global window events
+        this.unsubscribeFromSecureEvent = eventBus.subscribe(ChatWidgetEvents.ADD_ACTIVITY, (payload) => {
+            
+            if (payload?.activity) {
+                const activity = payload.activity;
                 const activityId = activity.id;
 
                 if (activity.identifier) {
@@ -70,17 +71,15 @@ export class AddActivitySubscriber implements IActivitySubscriber {
                 // Notify the observer with the new activity
                 this.observer?.next(activity);
             }
-        };
-        
-        // Add the event listener
-        window.addEventListener(ChatWidgetEvents.ADD_ACTIVITY, this.activityEventListener);
+        });
         
         // Subscribe to reset events for cleanup
         this.resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
             this.reset();
-            // Clean up the window event listener when conversation resets
-            if (this.activityEventListener) {
-                window.removeEventListener(ChatWidgetEvents.ADD_ACTIVITY, this.activityEventListener);
+            // Clean up the secure event listener when conversation resets
+            if (this.unsubscribeFromSecureEvent) {
+                this.unsubscribeFromSecureEvent();
+                this.unsubscribeFromSecureEvent = null;
             }
             // Unsubscribe from the reset event to prevent accumulation
             if (this.resetEventListener) {
