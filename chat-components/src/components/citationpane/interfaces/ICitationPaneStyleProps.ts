@@ -6,6 +6,10 @@ export interface ICitationPaneStyleProps {
     titleStyleProps?: IStyle;
     contentStyleProps?: IStyle;
     closeButtonStyleProps?: IStyle;
+    closeButtonHoveredStyleProps?: IStyle;
+    closeButtonFocusedStyleProps?: IStyle;
     topCloseButtonStyleProps?: IStyle;
+    topCloseButtonHoveredStyleProps?: IStyle;
+    topCloseButtonFocusedStyleProps?: IStyle;
     classNames?: ICitationPaneClassNames;
 }
