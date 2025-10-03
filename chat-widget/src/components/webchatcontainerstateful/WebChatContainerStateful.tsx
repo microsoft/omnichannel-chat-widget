@@ -308,6 +308,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 			height: 100% !important;
 		}
 
+        /* Suggested actions carousel previous/next navigation focus */
+        .webchat__suggested-actions--carousel-layout[role="toolbar"]:focus { outline: none !important; }
+        .react-film__flipper:focus { outline: none !important; }
+        .react-film__flipper:focus .react-film__flipper__body { outline: dashed 1px #666 !important; outline-offset: 3px !important; }
+
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <BasicWebChat></BasicWebChat>
