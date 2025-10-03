@@ -4,6 +4,8 @@ export { default as Footer } from "./components/footer/Footer";
 
 export { default as ConfirmationPane } from "./components/confirmationpane/ConfirmationPane";
 
+export { default as CitationPane } from "./components/citationpane/CitationPane";
+
 export { default as ChatButton } from "./components/chatbutton/ChatButton";
 
 export { default as InputValidationPane } from "./components/inputvalidationpane/InputValidationPane";

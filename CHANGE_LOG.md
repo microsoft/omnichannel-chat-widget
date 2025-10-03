@@ -6,19 +6,30 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
-
-- Adding runtimeId as part of events send to identify calls from different tabs.
-- Masking custom properties for message event telemetry
-
 ### Fixed
 
+- Fixed issue where link post chat survey not displayed
+- Adding lcwRuntimeId field to the payload for Maximize events
+
+### Added
+
+- Double check conversation state before handling end conversation
+- Enhance support for customization  for citation pane
+- Adding Citation Handler to support citation pane rendering in chat widget.
+- Adding runtimeId as part of events send to identify calls from different tabs.
+- Masking custom properties for message event telemetry
 - Fixed adaptive card error color issue
-- Citations reference label styling issue
 - Ensuring sendbox is enabled when starting a new chat
 - A11Y fix for announcing incorrect bot initials and alt text
 - Fixed carousel attachments alignment issue
+- Bot authentication activity adaptive card visibility
+- Fixed scrollbar thumb visibility in Windows High Contrast mode
 - Fixed keyboard focus issue for suggested actions previous and next button
+
+### Changed
+
+- make citation props optional
+- Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
 
 ### Security
 
@@ -624,6 +635,12 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.14]
+
+### Added
+
+- New CitationPane component to render citations in chat conversations.
 
 ## [1.1.13] - 2025-07-22
 

@@ -409,6 +409,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }
 
+
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventReceived,
                 Description: "Start chat event received."
@@ -443,7 +444,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
                         height: inMemoryState?.domainStates?.widgetSize?.height,
-                        width: inMemoryState?.domainStates?.widgetSize?.width
+                        width: inMemoryState?.domainStates?.widgetSize?.width,
+                        lcwRuntimeId: TelemetryManager.InternalTelemetryData.lcwRuntimeId
                     }
                 });
                 return;
@@ -818,6 +820,29 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
             ::-webkit-scrollbar-thumb:hover {
                 background: ${scrollbarProps.thumbHoverColor};
+            }
+
+            /* High Contrast mode support - optimized for all variants */
+            @media (prefers-contrast: high), (-ms-high-contrast: active), (forced-colors: active) {
+                ::-webkit-scrollbar-track {
+                    background: Canvas !important;
+                    border: 1px solid CanvasText !important;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    background: CanvasText !important;
+                    border: 1px solid Canvas !important;
+                    min-height: 20px !important;
+                }
+
+                ::-webkit-scrollbar-thumb:hover {
+                    background: Highlight !important;
+                    border: 1px solid CanvasText !important;
+                }
+
+                ::-webkit-scrollbar-corner {
+                    background: Canvas !important;
+                }
             }
 
             .webchat__basic-transcript__activity-markdown-body > :last-child {

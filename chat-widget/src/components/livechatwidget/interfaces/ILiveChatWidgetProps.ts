@@ -1,7 +1,10 @@
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";
+import { IAppInsightsConfig } from "../../../common/telemetry/interfaces/IAppInsightsConfig";
 import { IAudioNotificationProps } from "../../footerstateful/audionotificationstateful/interfaces/IAudioNotificationProps";
 import { ICallingContainerProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/interfaces/ICallingContainerProps";
 import { IChatButtonProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonProps";
+import { ICitationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/citationpane/interfaces/ICitationPaneProps";
+import { ICitationPaneStatefulProps } from "../../citationpanestateful/interfaces/ICitationPaneStatefulProps";
 import { IConfirmationPaneStatefulProps } from "../../confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps";
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
 import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
@@ -27,7 +30,6 @@ import { IStartChatErrorPaneProps } from "../../startchaterrorpanestateful/inter
 import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetryConfig";
 import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
-import { IAppInsightsConfig } from "../../../common/telemetry/interfaces/IAppInsightsConfig";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -57,6 +59,7 @@ export interface ILiveChatWidgetProps {
     preChatSurveyPaneProps?: IPreChatSurveyPaneProps;
     proactiveChatPaneProps?: IProactiveChatPaneStatefulProps;
     reconnectChatPaneProps?: IReconnectChatPaneStatefulProps;
+    citationPaneProps?: ICitationPaneStatefulProps;
     startChatErrorPaneProps?: IStartChatErrorPaneProps;
     styleProps?: ILiveChatWidgetStyleProps;
     telemetryConfig: ITelemetryConfig;
@@ -74,4 +77,5 @@ export interface ILiveChatWidgetProps {
     mock?: IMockProps;
     featureConfigProps?: IFeatureConfigProps;
     appInsightsConfig?: IAppInsightsConfig;
+    citationProp?: ICitationPaneProps;
 }
