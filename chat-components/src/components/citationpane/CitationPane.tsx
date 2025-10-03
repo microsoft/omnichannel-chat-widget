@@ -1,15 +1,20 @@
 import { DefaultButton, IButtonStyles, IStackStyles, IconButton, Label, Stack } from "@fluentui/react";
-import { ElementType, EventNames } from "../../common/Constants";
+import { ElementType, EventNames, KeyCodes } from "../../common/Constants";
 import React, { useCallback } from "react";
 
 import { BroadcastService } from "../../services/BroadcastService";
 import { ICitationPaneProps } from "./interfaces/ICitationPaneProps";
+import { ICustomEvent } from "../../interfaces/ICustomEvent";
 import { decodeComponentString } from "../../common/decodeComponentString";
+import { defaultCitationPaneCloseButtonFocusedStyles } from "./common/defaultStyles/defaultCitationPaneCloseButtonFocusedStyles";
+import { defaultCitationPaneCloseButtonHoveredStyles } from "./common/defaultStyles/defaultCitationPaneCloseButtonHoveredStyles";
 import { defaultCitationPaneCloseButtonStyles } from "./common/defaultStyles/defaultCitationPaneCloseButtonStyles";
 import { defaultCitationPaneContentStyles } from "./common/defaultStyles/defaultCitationPaneContentStyles";
 import { defaultCitationPaneControlProps } from "./common/defaultProps/defaultCitationPaneControlProps";
 import { defaultCitationPaneGeneralStyles } from "./common/defaultStyles/defaultCitationPaneGeneralStyles";
 import { defaultCitationPaneTitleStyles } from "./common/defaultStyles/defaultCitationPaneTitleStyles";
+import { defaultCitationPaneTopCloseButtonFocusedStyles } from "./common/defaultStyles/defaultCitationPaneTopCloseButtonFocusedStyles";
+import { defaultCitationPaneTopCloseButtonHoveredStyles } from "./common/defaultStyles/defaultCitationPaneTopCloseButtonHoveredStyles";
 import { defaultCitationPaneTopCloseButtonStyles } from "./common/defaultStyles/defaultCitationPaneTopCloseButtonStyles";
 
 function CitationPane(props: ICitationPaneProps) {
@@ -17,7 +22,7 @@ function CitationPane(props: ICitationPaneProps) {
 
     const handleClose = useCallback(() => {
         if (props.controlProps?.onClose) {
-            const customEvent = { 
+            const customEvent: ICustomEvent = { 
                 elementType: ElementType.CitationPaneCloseButton, 
                 elementId: elementId + "-close", 
                 eventName: EventNames.OnClick 
@@ -29,7 +34,7 @@ function CitationPane(props: ICitationPaneProps) {
 
     const handleTopClose = useCallback(() => {
         if (handleClose) {
-            const customEvent = { 
+            const customEvent: ICustomEvent = { 
                 elementType: ElementType.CitationPaneCloseButton, 
                 elementId: elementId + "-top-close", 
                 eventName: EventNames.OnClick 
@@ -38,6 +43,13 @@ function CitationPane(props: ICitationPaneProps) {
             handleClose();
         }
     }, [props.controlProps, elementId]);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleEscKeyDown = useCallback((e: any) => {
+        if (e.code === KeyCodes.ESCAPE) {
+            handleClose();
+        }
+    }, [handleClose]);
 
     const containerStyles: IStackStyles = {
         root: Object.assign({}, defaultCitationPaneGeneralStyles, props.styleProps?.generalStyleProps, {
@@ -55,7 +67,10 @@ function CitationPane(props: ICitationPaneProps) {
     };
 
     const closeButtonStyles: IButtonStyles = {
-        root: Object.assign({}, defaultCitationPaneCloseButtonStyles, props.styleProps?.closeButtonStyleProps)
+        root: Object.assign({}, defaultCitationPaneCloseButtonStyles, props.styleProps?.closeButtonStyleProps),
+        rootHovered: Object.assign({}, defaultCitationPaneCloseButtonHoveredStyles, props.styleProps?.closeButtonHoveredStyleProps),
+        rootFocused: Object.assign({}, defaultCitationPaneCloseButtonFocusedStyles, props.styleProps?.closeButtonFocusedStyleProps),
+        rootPressed: Object.assign({}, defaultCitationPaneCloseButtonHoveredStyles, props.styleProps?.closeButtonHoveredStyleProps)
     };
 
     const topCloseButtonPosition = props.controlProps?.topCloseButtonPosition || defaultCitationPaneControlProps.topCloseButtonPosition;
@@ -65,7 +80,10 @@ function CitationPane(props: ICitationPaneProps) {
             defaultCitationPaneTopCloseButtonStyles, 
             props.styleProps?.topCloseButtonStyleProps,
             topCloseButtonPosition === "topLeft" ? { left: "0.5em", right: "auto" } : { right: "0.5em", left: "auto" }
-        )
+        ),
+        rootHovered: Object.assign({}, defaultCitationPaneTopCloseButtonHoveredStyles, props.styleProps?.topCloseButtonHoveredStyleProps),
+        rootFocused: Object.assign({}, defaultCitationPaneTopCloseButtonFocusedStyles, props.styleProps?.topCloseButtonFocusedStyleProps),
+        rootPressed: Object.assign({}, defaultCitationPaneTopCloseButtonHoveredStyles, props.styleProps?.topCloseButtonHoveredStyleProps)
     };
 
     return (
@@ -77,7 +95,9 @@ function CitationPane(props: ICitationPaneProps) {
                 aria-describedby={elementId + "-content"} 
                 dir={props.controlProps?.dir || defaultCitationPaneControlProps.dir}
                 styles={containerStyles}
-                className={props.styleProps?.classNames?.containerClassName}>
+                className={props.styleProps?.classNames?.containerClassName}
+                onKeyDown={handleEscKeyDown}
+                tabIndex={-1}>
 
                 {/* Top Close Button (X) */}
                 {!props.controlProps?.hideTopCloseButton && (decodeComponentString(props.componentOverrides?.topCloseButton) ||
@@ -107,11 +127,11 @@ function CitationPane(props: ICitationPaneProps) {
                     dangerouslySetInnerHTML={{ __html: props.controlProps?.contentHtml ?? "" }} 
                 />
 
-                {/* Bottom Close Button */}
+                {/* Bottom Close Button - Hidden at high zoom levels for better A11Y */}
                 {!props.controlProps?.hideCloseButton && (decodeComponentString(props.componentOverrides?.closeButton) ||
                     <DefaultButton
-                        onClick={handleClose} 
-                        id={elementId + "-close"} 
+                        onClick={handleClose}
+                        id={elementId + "-close"}
                         text={props.controlProps?.closeButtonText || defaultCitationPaneControlProps.closeButtonText}
                         ariaLabel={props.controlProps?.closeButtonAriaLabel || defaultCitationPaneControlProps.closeButtonAriaLabel}
                         styles={closeButtonStyles}
