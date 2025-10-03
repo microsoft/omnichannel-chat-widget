@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 
 - make citation props optional
 - Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.15)
 
 ### Security
 
