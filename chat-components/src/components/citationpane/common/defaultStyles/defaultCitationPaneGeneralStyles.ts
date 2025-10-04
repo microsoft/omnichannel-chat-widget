@@ -2,8 +2,10 @@ import { IStyle } from "@fluentui/react";
 
 export const defaultCitationPaneGeneralStyles: IStyle = {
     position: "relative", // Required for absolute positioning of top close button
-    paddingTop: "2.5em", // Space for top close button to prevent overlap (scalable)
-    padding: "1em", // Scalable padding using em units
+    paddingTop: "2em", // Reduced space for top close button (scalable)
+    paddingLeft: "0.75em", // Reduced left padding (scalable)
+    paddingRight: "0.75em", // Reduced right padding (scalable)
+    paddingBottom: "0.75em", // Reduced bottom padding (scalable)
     backgroundColor: "#ffffff",
     border: "1px solid #d2d0ce",
     borderRadius: "0.5em", // Scalable border radius

@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Fixed carousel attachments alignment issue
 - Bot authentication activity adaptive card visibility
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
+- Improved designer mode to take mock messages as input
 - Fixed keyboard focus issue for suggested actions previous and next button
 
 ### Changed
@@ -635,6 +636,12 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.15]
+
+### Fixed
+
+- Citation pane will hide bottom close button at high zoom to prevent block of the content
 
 ## [1.1.14]
 

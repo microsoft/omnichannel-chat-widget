@@ -143,8 +143,7 @@ ResearchCitation.args = {
                     DOI: 10.1000/aidq.2024.567890
                 </div>
             </div>
-        `,
-        closeButtonText: "Close Citation"
+        `
     },
     styleProps: {
         ...defaultCitationPaneProps.styleProps,
@@ -177,16 +176,6 @@ ResearchCitation.args = {
                 : {}),
             lineHeight: "1.6",
             marginBottom: "1.25em" // Scalable margin
-        },
-        closeButtonStyleProps: {
-            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
-                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
-                : {}),
-            backgroundColor: "#0078d4",
-            color: "white",
-            border: "none",
-            borderRadius: "0.25em", // Scalable border radius
-            padding: "0.625em 1.25em" // Scalable padding
         }
     },
     componentOverrides: {
@@ -204,8 +193,7 @@ CompactCitation.args = {
         ...defaultCitationPaneProps.controlProps,
         id: "compact-citation",
         titleText: "Quick Reference",
-        contentHtml: "<p><strong>Source:</strong> User Guide Section 4.2 - Best Practices</p>",
-        closeButtonText: "Got it"
+        contentHtml: "<p><strong>Source:</strong> User Guide Section 4.2 - Best Practices</p>"
     },
     styleProps: {
         ...defaultCitationPaneProps.styleProps,
@@ -235,14 +223,6 @@ CompactCitation.args = {
                 : {}),
             fontSize: "0.8125em", // Scalable font size (13px equivalent)
             marginBottom: "0.75em" // Scalable margin
-        },
-        closeButtonStyleProps: {
-            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
-                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
-                : {}),
-            fontSize: "0.75em", // Scalable font size (12px equivalent)
-            padding: "0.375em 0.75em", // Scalable padding
-            minHeight: "1.75em" // Scalable min height
         }
     },
     componentOverrides: {
@@ -290,7 +270,6 @@ TopClosePositions.args = {
                 <p>Click "Toggle Position" to switch between top-right and top-left positions.</p>
             </div>
         `,
-        closeButtonText: "Toggle Position",
         topCloseButtonPosition: "topRight"
     },
     styleProps: {
@@ -307,13 +286,6 @@ TopClosePositions.args = {
             fontSize: "1em", // Scalable font size
             fontWeight: "600",
             marginBottom: "0.75em" // Scalable margin
-        },
-        closeButtonStyleProps: {
-            backgroundColor: "#2196f3",
-            color: "white",
-            border: "none",
-            borderRadius: "0.25em", // Scalable border radius
-            padding: "0.5em 1em" // Scalable padding
         }
     },
     componentOverrides: {
@@ -342,7 +314,6 @@ HiddenCloseOptions.args = {
                 </ul>
             </div>
         `,
-        closeButtonText: "Acknowledge & Close",
         hideTopCloseButton: true
     },
     styleProps: {
@@ -364,17 +335,6 @@ HiddenCloseOptions.args = {
             fontSize: "1em", // Scalable font size
             fontWeight: "600",
             marginBottom: "0.75em" // Scalable margin
-        },
-        closeButtonStyleProps: {
-            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
-                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
-                : {}),
-            backgroundColor: "#ff9800",
-            color: "white",
-            border: "none",
-            borderRadius: "0.25em", // Scalable border radius
-            padding: "0.625em 1.25em", // Scalable padding
-            fontWeight: "500"
         }
     }
 };
@@ -394,22 +354,6 @@ const customTitle = (
     }}>
         📚 Custom Citation Header
     </div>
-);
-
-const customCloseButton = encodeComponentString(
-    <button style={{
-        background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-        color: "white",
-        border: "none",
-        borderRadius: "1.25em", // Scalable border radius
-        padding: "0.625em 1.25em", // Scalable padding
-        cursor: "pointer",
-        fontWeight: "bold",
-        fontSize: "0.875em", // Scalable font size
-        boxShadow: "0px 0.1875em 0.375em rgba(0, 0, 0, 0.2)" // Scalable shadow
-    }}>
-        ✨ Close Citation
-    </button>
 );
 
 export const CustomComponents = CitationPaneTemplate.bind({});
@@ -448,7 +392,6 @@ CustomComponents.args = {
     },
     componentOverrides: {
         title: customTitle,
-        closeButton: customCloseButton,
         topCloseButton: customTopCloseButton
     }
 };
@@ -471,7 +414,6 @@ RTLSupport.args = {
                 <p><strong>القسم:</strong> واجهات المستخدم المتعددة اللغات</p>
             </div>
         `,
-        closeButtonText: "إغلاق",
         topCloseButtonPosition: "topLeft"
     },
     styleProps: {
@@ -503,16 +445,6 @@ RTLSupport.args = {
                 : {}),
             lineHeight: "1.6",
             marginBottom: "1em" // Scalable margin
-        },
-        closeButtonStyleProps: {
-            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
-                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
-                : {}),
-            backgroundColor: "#0078d4",
-            color: "white",
-            border: "none",
-            borderRadius: "0.25em", // Scalable border radius
-            padding: "0.5em 1em" // Scalable padding
         }
     },
     componentOverrides: {
@@ -585,8 +517,7 @@ LargeContent.args = {
                     <li>Brown, L. (2023). "Performance Optimization Strategies". Tech Implementation Review.</li>
                 </ol>
             </div>
-        `,
-        closeButtonText: "Close Paper"
+        `
     },
     styleProps: {
         ...defaultCitationPaneProps.styleProps,
@@ -625,17 +556,6 @@ LargeContent.args = {
             overflow: "auto",
             marginBottom: "1em", // Scalable margin
             flex: "1"
-        },
-        closeButtonStyleProps: {
-            ...(typeof defaultCitationPaneProps.styleProps?.closeButtonStyleProps === "object" 
-                ? defaultCitationPaneProps.styleProps.closeButtonStyleProps 
-                : {}),
-            backgroundColor: "#0078d4",
-            color: "white",
-            border: "none",
-            borderRadius: "0.25em", // Scalable border radius
-            padding: "0.625em 1.25em", // Scalable padding
-            alignSelf: "flex-end"
         }
     },
     componentOverrides: {
@@ -710,8 +630,106 @@ ExtremelyLongContent.args = {
                 <h4>Appendices</h4>
                 <p>Additional supplementary material and detailed data tables would typically appear here, extending the document even further to test the absolute limits of the scrolling functionality and ensure proper behavior with extremely long content that might be encountered in real-world usage scenarios.</p>
             </div>
-        `,
-        closeButtonText: "Close Document"
+        `
     }
     // Uses default styles to test the new scrolling behavior
+};
+
+/*
+    Enhanced Styling Demo - Demonstrates button hover, focused, and pressed states
+*/
+export const EnhancedStyling = CitationPaneTemplate.bind({});
+EnhancedStyling.args = {
+    controlProps: {
+        id: "oc-lcw-citationpane-enhanced",
+        titleText: "Enhanced Styling Demo",
+        contentHtml: `
+            <div>
+                <p>This story demonstrates the enhanced styling capabilities including:</p>
+                <ul>
+                    <li><strong>Button hover states</strong> - Hover over the buttons to see visual feedback</li>
+                    <li><strong>Button focused states</strong> - Tab to the buttons to see focus indicators</li>
+                    <li><strong>Keyboard support</strong> - Press ESC key to close the pane</li>
+                    <li><strong>Consistent IStyle usage</strong> - All styling uses FluentUI IStyle objects</li>
+                </ul>
+                <p>Try interacting with both the top X button and the bottom Close button to experience the enhanced styling.</p>
+                <p><em>Press the ESC key to close this citation pane and test keyboard interaction.</em></p>
+            </div>
+        `,
+        onClose: () => {
+            console.log("Enhanced styling demo closed");
+        }
+    },
+    styleProps: {
+        generalStyleProps: {
+            backgroundColor: "#f8f9fa",
+            border: "2px solid #e9ecef",
+            borderRadius: "8px",
+            padding: "20px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+            maxWidth: "400px",
+            margin: "20px"
+        },
+        titleStyleProps: {
+            color: "#495057",
+            fontSize: "18px",
+            fontWeight: "600",
+            marginBottom: "15px",
+            borderBottom: "2px solid #dee2e6",
+            paddingBottom: "8px"
+        },
+        contentStyleProps: {
+            color: "#6c757d",
+            fontSize: "14px",
+            lineHeight: "1.6"
+        },
+        // Bottom close button enhanced styling
+        closeButtonStyleProps: {
+            backgroundColor: "#007bff",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            padding: "8px 16px",
+            fontSize: "14px",
+            fontWeight: "500",
+            minHeight: "36px"
+        },
+        closeButtonHoveredStyleProps: {
+            backgroundColor: "#0056b3",
+            color: "white",
+            transform: "scale(1.02)",
+            boxShadow: "0 2px 8px rgba(0, 123, 255, 0.3)"
+        },
+        closeButtonFocusedStyleProps: {
+            border: "3px solid #80bdff",
+            outline: "none",
+            backgroundColor: "#0056b3"
+        },
+        // Top close button enhanced styling
+        topCloseButtonStyleProps: {
+            backgroundColor: "#6c757d",
+            color: "white",
+            border: "none",
+            borderRadius: "50%",
+            width: "32px",
+            height: "32px",
+            fontSize: "18px",
+            fontWeight: "bold",
+            position: "absolute" as const,
+            top: "12px",
+            right: "12px",
+            zIndex: 1000
+        },
+        topCloseButtonHoveredStyleProps: {
+            backgroundColor: "#495057",
+            color: "white",
+            transform: "scale(1.1)",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)"
+        },
+        topCloseButtonFocusedStyleProps: {
+            border: "3px solid #80bdff",
+            outline: "none",
+            backgroundColor: "#495057"
+        }
+    }
 };
