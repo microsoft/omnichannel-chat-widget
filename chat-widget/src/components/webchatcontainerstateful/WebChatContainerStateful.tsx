@@ -371,9 +371,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 		}
 
         /* Suggested actions carousel previous/next navigation focus */
-        .webchat__suggested-actions--carousel-layout[role="toolbar"]:focus { outline: none !important; }
-        .react-film__flipper:focus { outline: none !important; }
-        .react-film__flipper:focus .react-film__flipper__body { outline: dashed 1px #666 !important; outline-offset: 3px !important; }
+       .react-film__flipper:focus-visible .react-film__flipper__body {
+            outline: ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderStyle ?? "dashed"} ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderWidth ?? "1px"} ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderColor ?? "#605E5C"} !important;
+            outline-offset: ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorInset ?? "2px"} !important;
 
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
