@@ -637,6 +637,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.15]
+
 ### Fixed
 
 - Citation pane will hide bottom close button at high zoom to prevent block of the content
