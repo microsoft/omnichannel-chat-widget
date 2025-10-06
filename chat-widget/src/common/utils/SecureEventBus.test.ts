@@ -1,5 +1,20 @@
 import SecureEventBus from "./SecureEventBus";
 import ChatWidgetEvents from "../../components/livechatwidget/common/ChatWidgetEvents";
+import { TelemetryHelper } from "../telemetry/TelemetryHelper";
+
+// Mock BroadcastService to prevent telemetry errors in tests
+jest.mock("@microsoft/omnichannel-chat-components", () => ({
+    BroadcastService: {
+        postMessage: jest.fn()
+    }
+}));
+
+// Mock TelemetryHelper to track telemetry calls
+jest.mock("../telemetry/TelemetryHelper", () => ({
+    TelemetryHelper: {
+        logActionEvent: jest.fn()
+    }
+}));
 
 // Mock CustomEvent for Node.js test environment
 (global as any).CustomEvent = class CustomEvent {
@@ -32,8 +47,9 @@ describe("SecureEventBus", () => {
 
     describe("Security Features", () => {
         it("should block unauthorized event dispatch attempts", () => {
-            const consoleSpy = jest.spyOn(console, "error").mockImplementation();
             const mockCallback = jest.fn();
+            const mockTelemetryHelper = TelemetryHelper.logActionEvent as jest.Mock;
+            mockTelemetryHelper.mockClear();
             
             eventBus.subscribe("test-event", mockCallback);
             
@@ -42,12 +58,12 @@ describe("SecureEventBus", () => {
             
             expect(result).toBe(false);
             expect(mockCallback).not.toHaveBeenCalled();
-            expect(consoleSpy).toHaveBeenCalledWith(
-                "[SecureEventBus] Unauthorized event dispatch attempt blocked:",
-                "test-event"
+            expect(mockTelemetryHelper).toHaveBeenCalledWith(
+                expect.any(String), // LogLevel.ERROR
+                expect.objectContaining({
+                    Description: expect.stringContaining("Unauthorized event dispatch attempt blocked: test-event")
+                })
             );
-            
-            consoleSpy.mockRestore();
         });
 
         it("should allow authenticated event dispatch", () => {
@@ -139,7 +155,8 @@ describe("SecureEventBus", () => {
         });
 
         it("should handle errors in listeners gracefully", () => {
-            const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+            const mockTelemetryHelper = TelemetryHelper.logActionEvent as jest.Mock;
+            mockTelemetryHelper.mockClear();
             const errorCallback = jest.fn(() => { throw new Error("Listener error"); });
             const normalCallback = jest.fn();
             
@@ -151,12 +168,12 @@ describe("SecureEventBus", () => {
             
             expect(result).toBe(true); // Should still return true
             expect(normalCallback).toHaveBeenCalled(); // Other listeners should still work
-            expect(consoleSpy).toHaveBeenCalledWith(
-                "[SecureEventBus] Error in event listener:",
-                expect.any(Error)
+            expect(mockTelemetryHelper).toHaveBeenCalledWith(
+                expect.any(String), // LogLevel.ERROR
+                expect.objectContaining({
+                    Description: expect.stringContaining("Error in event listener for event: test-event")
+                })
             );
-            
-            consoleSpy.mockRestore();
         });
 
         it("should return true when dispatching to events with no listeners", () => {

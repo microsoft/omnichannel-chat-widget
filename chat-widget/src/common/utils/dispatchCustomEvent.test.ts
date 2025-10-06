@@ -2,6 +2,13 @@ import dispatchCustomEvent from "./dispatchCustomEvent";
 import SecureEventBus from "./SecureEventBus";
 import ChatWidgetEvents from "../../components/livechatwidget/common/ChatWidgetEvents";
 
+// Mock BroadcastService to prevent telemetry errors in tests
+jest.mock("@microsoft/omnichannel-chat-components", () => ({
+    BroadcastService: {
+        postMessage: jest.fn()
+    }
+}));
+
 describe("dispatchCustomEvent Security Integration", () => {
     let eventBus: SecureEventBus;
 
