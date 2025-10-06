@@ -57,8 +57,6 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
-    console.log("LOPEZ  :FIX::7");
-
     // Create a font family that includes emoji support, based on the primary font or default
     const webChatStyles = props.webChatContainerProps?.webChatStyles ?? defaultWebChatContainerStatefulProps.webChatStyles;
     const primaryFont = webChatStyles?.primaryFont ?? defaultWebChatContainerStatefulProps.webChatStyles?.primaryFont;
@@ -66,9 +64,6 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
     const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
     
-    console.log("LOPEZ DEBUG - primaryFont:", primaryFont);
-    console.log("LOPEZ DEBUG - fontFamilyWithEmojis:", fontFamilyWithEmojis);
-
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
