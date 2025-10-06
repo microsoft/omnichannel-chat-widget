@@ -805,42 +805,42 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     return directLine && (
         <>
             <style>{`
-            .webchat__basic-transcript__scrollable::-webkit-scrollbar {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar {
                 width: ${scrollbarProps.width};
             }
 
-            .webchat__basic-transcript__scrollable::-webkit-scrollbar-track {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-track {
                 background: ${scrollbarProps.trackBackgroundColor};
             }
 
-            .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb {
                 background: ${scrollbarProps.thumbBackgroundColor};
                 border-radius: ${scrollbarProps.thumbBorderRadius};
             }
 
-            .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb:hover {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb:hover {
                 background: ${scrollbarProps.thumbHoverColor};
             }
 
             /* High Contrast mode support - optimized for all variants */
             @media (prefers-contrast: high), (-ms-high-contrast: active), (forced-colors: active) {
-                .webchat__basic-transcript__scrollable::-webkit-scrollbar-track {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-track {
                     background: Canvas !important;
                     border: 1px solid CanvasText !important;
                 }
 
-                .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb {
                     background: CanvasText !important;
                     border: 1px solid Canvas !important;
                     min-height: 20px !important;
                 }
 
-                .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb:hover {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb:hover {
                     background: Highlight !important;
                     border: 1px solid CanvasText !important;
                 }
 
-                .webchat__basic-transcript__scrollable::-webkit-scrollbar-corner {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-corner {
                     background: Canvas !important;
                 }
             }
