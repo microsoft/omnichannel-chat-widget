@@ -1,6 +1,6 @@
 import { Message } from "botframework-directlinejs";
 
-enum LiveChatWidgetMockType {
+export enum LiveChatWidgetMockType {
     Test = "Test",
     Demo = "Demo",
     Designer = "Designer"
