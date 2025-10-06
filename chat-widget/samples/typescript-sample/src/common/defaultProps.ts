@@ -2,7 +2,7 @@
 
 import { ChatReconnectIconBase64, CloseChatButtonIconBase64, ModernChatIconBase64, ProactiveChatBannerBase64 } from "@microsoft/omnichannel-chat-components";
 
-import { ILiveChatWidgetProps } from "@microsoft/omnichannel-chat-widget/lib/types/components/livechatwidget/interfaces/ILiveChatWidgetProps";//
+import { ILiveChatWidgetProps } from "@microsoft/omnichannel-chat-widget/lib/types/components/livechatwidget/interfaces/ILiveChatWidgetProps";
 import { ITelemetryConfig } from "@microsoft/omnichannel-chat-widget/lib/types/common/telemetry/interfaces/ITelemetryConfig";
 import { NewMessageNotificationSoundBase64 } from "../../../../src/assets/Audios";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
@@ -183,7 +183,7 @@ export const defaultProps: ILiveChatWidgetProps = {
                     margin: "0 5px",
                     color: "#FFFFFF",
                     fontSize: 12,
-                    fontFamily: "Segoe UI, Arial, sans-serif"
+                    fontFamily: "'Segoe UI', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', Arial, sans-serif"
                 },
                 itemFocusStyleProps: {
                     outline: "2px solid #FFFFFF",
@@ -353,7 +353,7 @@ export const defaultProps: ILiveChatWidgetProps = {
                 textAlign: "center",
                 position: "absolute",
                 fontSize: "14px",
-                fontFamily: "Segoe UI,Arial,sans-serif",
+                fontFamily: "'Segoe UI', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', Arial, sans-serif",
                 minHeight: "24px",
                 minWidth: "24px"
             },
@@ -369,7 +369,7 @@ export const defaultProps: ILiveChatWidgetProps = {
                 color: "#262626",
                 textOverflow: "ellipsis !important",
                 lineHeight: "19px",
-                fontFamily: "'Segoe UI',Arial,sans-serif",
+                fontFamily: "'Segoe UI', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', Arial, sans-serif",
                 display: "block",
                 margin: "0px 14px 0px 14px",
                 width: "90px",
@@ -384,7 +384,7 @@ export const defaultProps: ILiveChatWidgetProps = {
                 color: "#666",
                 overflow: "hidden",
                 padding: "0px",
-                fontFamily: "'Segoe UI',Arial,sans-serif",
+                fontFamily: "'Segoe UI', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', Arial, sans-serif",
                 display: "block",
                 alignItems: "center",
                 margin: "0px 14px 0px 14px",
@@ -451,7 +451,7 @@ export const defaultProps: ILiveChatWidgetProps = {
                 backgroundColor: "#FFFFFF",
                 borderRadius: "2px",
                 color: "black",
-                fontFamily: "Segoe UI, Arial, sans-serif",
+                fontFamily: "'Segoe UI', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', Arial, sans-serif",
                 fontSize: "14px",
                 padding: "10px 20px",
                 position: "absolute",

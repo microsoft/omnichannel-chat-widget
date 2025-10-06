@@ -17,6 +17,7 @@ import { NotificationScenarios } from "./webchatcontroller/enums/NotificationSce
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
+import { createIOSOptimizedEmojiFont } from "./common/utils/fontUtils";
 import { defaultAdaptiveCardStyles } from "./common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultReceivedMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultReceivedMessageAnchorStyles";
@@ -55,6 +56,18 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 };
 
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
+
+    console.log("LOPEZ  :FIX::7");
+
+    // Create a font family that includes emoji support, based on the primary font or default
+    const webChatStyles = props.webChatContainerProps?.webChatStyles ?? defaultWebChatContainerStatefulProps.webChatStyles;
+    const primaryFont = webChatStyles?.primaryFont ?? defaultWebChatContainerStatefulProps.webChatStyles?.primaryFont;
+    
+    // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
+    const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
+    
+    console.log("LOPEZ DEBUG - primaryFont:", primaryFont);
+    console.log("LOPEZ DEBUG - fontFamilyWithEmojis:", fontFamilyWithEmojis);
 
     useEffect(() => {
         uiTimer = createTimer();
@@ -369,6 +382,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 		.webchat__carousel-filmstrip-attachment .webchat__bubble #ms_lcw_webchat_adaptive_card {
 			height: 100% !important;
 		}
+
+        .webchat__auto-resize-textarea__textarea.webchat__send-box-text-box__html-text-area {
+            font-family: ${fontFamilyWithEmojis} !important;
+        }
 
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
