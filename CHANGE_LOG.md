@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed issue where link post chat survey not displayed
 - Adding lcwRuntimeId field to the payload for Maximize events
+- Scrollbar selector contained to only widget div
 
 ### Added
 
