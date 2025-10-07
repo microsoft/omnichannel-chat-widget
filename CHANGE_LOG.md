@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- IOS mobile doesnt display emoji when typing.
 - Fix 400% zoom issue on citation pane
 - Missing export for LiveChatWidgetMockType in index.ts
 - Fixed issue where link post chat survey not displayed
