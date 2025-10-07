@@ -385,6 +385,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 title={props.citationPaneProps?.title || HtmlAttributeNames.ocwCitationPaneTitle} 
                 contentHtml={citationPaneText} 
                 onClose={() => setCitationPaneOpen(false)}
+                componentOverrides={props.citationPaneProps?.componentOverrides}
                 controlProps={props.citationPaneProps?.controlProps}
                 styleProps={props.citationPaneProps?.styleProps} />
         )}

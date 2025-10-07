@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix 400% zoom issue on citation pane
+- Missing export for LiveChatWidgetMockType in index.ts
 - Fixed issue where link post chat survey not displayed
 - Adding lcwRuntimeId field to the payload for Maximize events
 - Scrollbar selector contained to only widget div
@@ -32,6 +34,7 @@ All notable changes to this project will be documented in this file.
 
 - make citation props optional
 - Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.15)
 
 ### Security
 
