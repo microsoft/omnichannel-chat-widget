@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - Bot authentication activity adaptive card visibility
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
 - Improved designer mode to take mock messages as input
+- Fixed keyboard focus issue for suggested actions previous and next button
 
 ### Changed
 
