@@ -13,15 +13,16 @@ declare global {
 }
 
 enum AllowedKeys {
-  LogLevel = "LogLevel",
-  Description = "Description",
-  ExceptionDetails = "ExceptionDetails",
-  ChannelId = "ChannelId",
-  LCWRuntimeId = "ClientSessionId",
-  ConversationId = "LiveWorkItemId",
-  ChatId = "ChatThreadId",
+  Scenario = "Scenario",
+  ConversationStage = "ConversationStage",
   OrganizationId = "OrganizationId",
-  ElapsedTimeInMilliseconds = "DurationInMilliseconds"
+  ConversationId = "LiveWorkItemId",
+  OperationName = "OperationName",
+  ElapsedTimeInMilliseconds = "Duration",
+  Description = "Description",
+  ChannelId = "ChannelType",
+  LCWRuntimeId = "ClientSessionId", // optional
+  ChatId = "ChatThreadId", // optional
 }
 
 let initializationPromise: Promise<void> | null = null;
@@ -93,10 +94,10 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
                 if (!_logger) return;
                 const eventName = telemetryInput?.payload?.Event;
                 const telemetryInfo = telemetryInput?.telemetryInfo?.telemetryInfo;
-                const eventProperties = setEventProperties(telemetryInfo);
                 
                 if (eventName) {
                     const trackingEventName = getTrackingEventName(logLevel, eventName);
+                    const eventProperties = setEventProperties(telemetryInfo, trackingEventName);
                     _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
                 }
             } catch (error) {
@@ -112,7 +113,7 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function setEventProperties(telemetryInfo?: any): ICustomProperties {
+    function setEventProperties(eventName: string, telemetryInfo?: any): ICustomProperties {
         const eventProperties: ICustomProperties = {};
         if (telemetryInfo) {
             for (const key in AllowedKeys) {
@@ -123,6 +124,15 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
                 }
             }
         }
+
+        // Add new columns
+        eventProperties[AllowedKeys.Scenario] = "Conversation Diagnostics";
+        eventProperties[AllowedKeys.ConversationStage] = "CSR Engagement";
+        eventProperties[AllowedKeys.OperationName] = eventName.includes(": ") ? eventName.split(": ")[1] : eventName;
+        if (telemetryInfo?.ExceptionDetails) {
+            eventProperties[AllowedKeys.Description] = JSON.stringify(telemetryInfo.ExceptionDetails);
+        }
+
         return eventProperties;
     }
 
