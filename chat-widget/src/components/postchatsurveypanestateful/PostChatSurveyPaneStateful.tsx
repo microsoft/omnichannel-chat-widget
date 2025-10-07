@@ -13,9 +13,12 @@ import { PostChatSurveyMode } from "./enums/PostChatSurveyMode";
 import { PostChatSurveyPane } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { defaultGeneralPostChatSurveyPaneStyleProps } from "./common/defaultStyleProps/defaultgeneralPostChatSurveyPaneStyleProps";
-import { findAllFocusableElement } from "../../common/utils";
+import { createTimer, findAllFocusableElement } from "../../common/utils";
 import useChatContextStore from "../../hooks/useChatContextStore";
 import isValidSurveyUrl from "./common/isValidSurveyUrl";
+import { ITimer } from "../../common/interfaces/ITimer";
+
+let uiTimer : ITimer;
 
 const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, locale: string, compact: boolean, customerVoiceSurveyCorrelationId: string, showMultiLingual = false) => {
     const surveyLinkParams = new URLSearchParams({
@@ -29,6 +32,14 @@ const generateSurveyInviteLink = (surveyInviteLink: string, isEmbed: boolean, lo
 };
 
 export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulProps) => {
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXPostChatPaneStarted,
+            Description: "Postchat survey pane loading started.",
+        });
+    }, []);
+
     const [state]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
 
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPostChatSurveyPaneStyleProps, props.styleProps?.generalStyleProps,
@@ -91,7 +102,11 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             firstElement[0].focus();
         }
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, { Event: TelemetryEvent.PostChatSurveyLoaded });
-
+        TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.UXPostChatPaneCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            Description: "Postchat survey pane loading completed."
+        });
         //Customer Voice Telemetry Events
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         window.addEventListener("message", (message: any) => {
