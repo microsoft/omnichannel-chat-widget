@@ -6,14 +6,23 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Fixed
-
-- Fixed issue where link post chat survey not displayed
-- Adding lcwRuntimeId field to the payload for Maximize events
-
 ### Added
 
 - Adding support to fetch history messages for persistent chat
+
+## [1.8.3] - 2025-10-07
+
+### Fixed
+
+- IOS mobile doesnt display emoji when typing.
+- Fix 400% zoom issue on citation pane
+- Missing export for LiveChatWidgetMockType in index.ts
+- Fixed issue where link post chat survey not displayed
+- Adding lcwRuntimeId field to the payload for Maximize events
+- Scrollbar selector contained to only widget div
+
+### Added
+
 - Double check conversation state before handling end conversation
 - Enhance support for customization  for citation pane
 - Adding Citation Handler to support citation pane rendering in chat widget.
@@ -26,11 +35,13 @@ All notable changes to this project will be documented in this file.
 - Bot authentication activity adaptive card visibility
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
 - Improved designer mode to take mock messages as input
+- Fixed keyboard focus issue for suggested actions previous and next button
 
 ### Changed
 
 - make citation props optional
 - Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.15)
 
 ### Security
 

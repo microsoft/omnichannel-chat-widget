@@ -1,6 +1,6 @@
-import dispatchCustomEvent from "./dispatchCustomEvent";
-import SecureEventBus from "./SecureEventBus";
 import ChatWidgetEvents from "../../components/livechatwidget/common/ChatWidgetEvents";
+import SecureEventBus from "./SecureEventBus";
+import dispatchCustomEvent from "./dispatchCustomEvent";
 
 // Mock BroadcastService to prevent telemetry errors in tests
 jest.mock("@microsoft/omnichannel-chat-components", () => ({
@@ -44,22 +44,6 @@ describe("dispatchCustomEvent Security Integration", () => {
         
         // This should not throw but should log an error
         dispatchCustomEvent("", null);
-        
-        consoleSpy.mockRestore();
-    });
-
-    it("should log debug messages when events are dispatched", () => {
-        const consoleSpy = jest.spyOn(console, "log").mockImplementation();
-        const mockCallback = jest.fn();
-        
-        eventBus.subscribe("test-event", mockCallback);
-        dispatchCustomEvent("test-event", { test: true });
-        
-        expect(consoleSpy).toHaveBeenCalledWith(
-            "LOPEZ :: Secure Event Dispatched:",
-            "test-event",
-            { test: true }
-        );
         
         consoleSpy.mockRestore();
     });

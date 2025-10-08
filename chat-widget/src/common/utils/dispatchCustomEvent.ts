@@ -12,9 +12,6 @@ const dispatchCustomEvent = (name: string, payload?: any) => {
         if (!success) {
             console.error("Failed to dispatch secure event:", name);
         }
-        
-        console.log("LOPEZ :: Secure Event Dispatched:", name, payload);
-
     } catch (error) {
         console.error("Error dispatching secure custom event:", name, payload, error);
     }

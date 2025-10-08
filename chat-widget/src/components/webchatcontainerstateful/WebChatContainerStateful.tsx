@@ -19,6 +19,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
+import { createIOSOptimizedEmojiFont } from "./common/utils/fontUtils";
 import { defaultAdaptiveCardStyles } from "./common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultReceivedMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultReceivedMessageAnchorStyles";
@@ -63,6 +64,13 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
     const [facadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
 
+    // Create a font family that includes emoji support, based on the primary font or default
+    const webChatStyles = props.webChatContainerProps?.webChatStyles ?? defaultWebChatContainerStatefulProps.webChatStyles;
+    const primaryFont = webChatStyles?.primaryFont ?? defaultWebChatContainerStatefulProps.webChatStyles?.primaryFont;
+    
+    // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
+    const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
+    
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -383,6 +391,15 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 			height: 100% !important;
 		}
 
+        .webchat__auto-resize-textarea__textarea.webchat__send-box-text-box__html-text-area {
+            font-family: ${fontFamilyWithEmojis} !important;
+        }
+
+        /* Suggested actions carousel previous/next navigation focus */
+        .webchat__suggested-actions .webchat__suggested-actions__carousel .react-film__flipper:focus-visible .react-film__flipper__body {
+            outline: ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderStyle ?? "dashed"} ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderWidth ?? "1px"} ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderColor ?? "#605E5C"} !important;
+            outline-offset: ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorInset ?? "2px"} !important;
+
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
@@ -396,6 +413,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 title={props.citationPaneProps?.title || HtmlAttributeNames.ocwCitationPaneTitle} 
                 contentHtml={citationPaneText} 
                 onClose={() => setCitationPaneOpen(false)}
+                componentOverrides={props.citationPaneProps?.componentOverrides}
                 controlProps={props.citationPaneProps?.controlProps}
                 styleProps={props.citationPaneProps?.styleProps} />
         )}

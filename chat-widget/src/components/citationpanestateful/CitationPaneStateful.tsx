@@ -178,6 +178,7 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
             <CitationDim brightness={controlProps.brightnessValueOnDim} />
             <div style={wrapperStyles}>
                 <CitationPane 
+                    componentOverrides={props?.componentOverrides}
                     controlProps={controlProps} 
                     styleProps={mergedStyleProps} />
             </div>

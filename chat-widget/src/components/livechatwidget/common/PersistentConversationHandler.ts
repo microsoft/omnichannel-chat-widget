@@ -174,9 +174,9 @@ class PersistentConversationHandler {
             pageToken: this.pageToken || undefined,
         };
 
-        try {            
-            const response = await this.facadeChatSDK.fetchPersistentConversationHistory(options);
-            
+        try {           
+            const response = await this.facadeChatSDK?.fetchPersistentConversationHistory(options);
+
             const { chatMessages: messages, nextPageToken: pageToken } = response;
             this.pageToken = pageToken || null;
 
@@ -195,10 +195,12 @@ class PersistentConversationHandler {
                 dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 return [];
             }
+
             dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
 
             return messages;
         } catch (error) {
+
             TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.FetchPersistentChatHistoryFailed,
                 ExceptionDetails: error,

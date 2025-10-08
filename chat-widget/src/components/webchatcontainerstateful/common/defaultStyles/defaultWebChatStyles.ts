@@ -19,7 +19,7 @@ export const defaultWebChatStyles: StyleOptions = {
     bubbleTextColor: "White",
     hideSendBox: false,
     hideUploadButton: true,
-    primaryFont: "Segoe UI, Arial, sans-serif",
+    primaryFont: "Segoe UI, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Noto Color Emoji\"",
     rootHeight: "100%",
     rootWidth: "100%",
     sendBoxTextWrap: true,
