@@ -120,14 +120,14 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
                 }
             }
         }
-
+        // Include exception details in description for error events
         if (telemetryInfo?.ExceptionDetails) {
             eventProperties[AllowedKeys.Description] = JSON.stringify(telemetryInfo.ExceptionDetails);
         }
 
-        const rawCustomProps = telemetryInfo?.CustomProperties;
-        const customProperties: { ConversationStage?: string } | undefined =
-            typeof rawCustomProps === "string" ? JSON.parse(rawCustomProps) : rawCustomProps;
+        const customProperties = typeof telemetryInfo?.CustomProperties === "string"
+            ? JSON.parse(telemetryInfo.CustomProperties)
+            : telemetryInfo?.CustomProperties;
         const conversationStage = customProperties?.ConversationStage ?? ConversationStage.CSREngagement;
         // Additional properties
         eventProperties["ConversationStage"] = conversationStage;
