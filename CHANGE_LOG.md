@@ -19,6 +19,10 @@ All notable changes to this project will be documented in this file.
 - A11Y fix for announcing incorrect bot initials and alt text
 - Fixed carousel attachments alignment issue
 
+### Changed
+
+- Refined AppInsights telemetry with updated metadata and events
+
 ### Security
 
 - CVE-2022-25883 : ensure semver 7.5.4 is default, other libs used for testing are using a lower version
