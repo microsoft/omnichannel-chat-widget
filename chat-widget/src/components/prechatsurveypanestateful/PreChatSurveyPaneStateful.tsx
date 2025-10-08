@@ -1,5 +1,5 @@
 import { HtmlAttributeNames, Regex } from "../../common/Constants";
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { ConversationStage, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 import { createTimer, extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
 
@@ -30,6 +30,9 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXPrechatPaneStart,
             Description: "Prechat survey pane loading started.",
+            CustomProperties: {
+                ConversationStage: ConversationStage.Initialization
+            }
         });
     }, []);
     
@@ -76,7 +79,10 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         onSubmit: async (values: { index: number, label: any, id: any, value: string }[]) => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.PrechatSubmitted,
-                Description: "Prechat survey submitted."
+                Description: "Prechat survey submitted.",
+                CustomProperties: {
+                    ConversationStage: ConversationStage.Initialization
+                }
             });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading });
 
@@ -157,7 +163,10 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXPrechatPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            Description: "Prechat survey pane loading completed."
+            Description: "Prechat survey pane loading completed.",
+            CustomProperties: {
+                ConversationStage: ConversationStage.Initialization
+            }
         });
     }, []);
 

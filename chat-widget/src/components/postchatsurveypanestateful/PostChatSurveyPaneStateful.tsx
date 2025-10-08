@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { ConversationStage, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect } from "react";
 
 import { ParticipantType } from "../../common/Constants";
@@ -37,6 +37,9 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXPostChatPaneStarted,
             Description: "Postchat survey pane loading started.",
+            CustomProperties: {
+                ConversationStage: ConversationStage.ConversationEnd
+            }
         });
     }, []);
 
@@ -105,7 +108,10 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXPostChatPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
-            Description: "Postchat survey pane loading completed."
+            Description: "Postchat survey pane loading completed.",
+            CustomProperties: {
+                ConversationStage: ConversationStage.ConversationEnd
+            }
         });
         //Customer Voice Telemetry Events
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -118,19 +124,22 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted,
-                    Description: "Customer Voice form response submitted."
+                    Description: "Customer Voice form response submitted.",
+                    CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
                 });
             } else if (data === CustomerVoiceEvents.FormResponseError) {
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
                     Event: TelemetryEvent.CustomerVoiceFormResponseError,
                     Description: "Customer Voice form response error.",
-                    ExceptionDetails: { message: "Customer Voice form response error." }
+                    ExceptionDetails: { message: "Customer Voice form response error." },
+                    CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
                 });
             } else if (typeof(data) === "string" && data.startsWith(CustomerVoiceEvents.FormsError)) {
                 TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
                     Event: TelemetryEvent.CustomerVoiceFormsError,
                     Description: "Customer Voice failed to load with forms error.",
-                    ExceptionDetails: { message: `Customer Voice forms error details: ${data}` }
+                    ExceptionDetails: { message: `Customer Voice forms error details: ${data}` },
+                    CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
                 });
             }
         });

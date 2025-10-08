@@ -1,5 +1,5 @@
 import { IChatSDKLogger } from "../interfaces/IChatSDKLogger";
-import { LogLevel, TelemetryEvent, TelemetryInput } from "../TelemetryConstants";
+import { ConversationStage, LogLevel, TelemetryEvent, TelemetryInput } from "../TelemetryConstants";
 import ScenarioMarker from "../ScenarioMarker";
 import { TelemetryHelper } from "../TelemetryHelper";
 import { AppInsightsTelemetryMessage } from "../../Constants";
@@ -13,16 +13,19 @@ declare global {
 }
 
 enum AllowedKeys {
-  Scenario = "Scenario",
-  ConversationStage = "ConversationStage",
   OrganizationId = "OrganizationId",
   ConversationId = "LiveWorkItemId",
-  OperationName = "OperationName",
   ElapsedTimeInMilliseconds = "Duration",
   Description = "Description",
   ChannelId = "ChannelType",
-  LCWRuntimeId = "ClientSessionId", // optional
-  ChatId = "ChatThreadId", // optional
+  LCWRuntimeId = "ClientSessionId",
+}
+
+// Keys that are added separately, not from telemetryInfo
+enum AdditionalAllowedKeys {
+  Scenario = "Scenario",
+  ConversationStage = "ConversationStage",
+  OperationName = "OperationName",
 }
 
 let initializationPromise: Promise<void> | null = null;
@@ -97,7 +100,8 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
                 
                 if (eventName) {
                     const trackingEventName = getTrackingEventName(logLevel, eventName);
-                    const eventProperties = setEventProperties(telemetryInfo, trackingEventName);
+                    const eventProperties = setEventProperties(trackingEventName, telemetryInfo);
+                    console.log("Event logged to Application Insights:", { name: trackingEventName, properties: eventProperties });
                     _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
                 }
             } catch (error) {
@@ -117,7 +121,7 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
         const eventProperties: ICustomProperties = {};
         if (telemetryInfo) {
             for (const key in AllowedKeys) {
-                const finalKey = AllowedKeys[key as keyof typeof AllowedKeys]; // get renamed keys for LCWRuntimeId, ConversationId, ChatId
+                const finalKey = AllowedKeys[key as keyof typeof AllowedKeys]; // get renamed keys for LCWRuntimeId, ConversationId
                 const value = telemetryInfo[key];
                 if (value !== undefined && value !== null && value !== "") {
                     eventProperties[finalKey] = value;
@@ -125,13 +129,17 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
             }
         }
 
-        // Add new columns
-        eventProperties[AllowedKeys.Scenario] = "Conversation Diagnostics";
-        eventProperties[AllowedKeys.ConversationStage] = "CSR Engagement";
-        eventProperties[AllowedKeys.OperationName] = eventName.includes(": ") ? eventName.split(": ")[1] : eventName;
         if (telemetryInfo?.ExceptionDetails) {
             eventProperties[AllowedKeys.Description] = JSON.stringify(telemetryInfo.ExceptionDetails);
         }
+
+        const rawCustomProps = telemetryInfo?.CustomProperties;
+        const customProperties: { ConversationStage?: string } | undefined =
+            typeof rawCustomProps === "string" ? JSON.parse(rawCustomProps) : rawCustomProps;
+        const conversationStage = customProperties?.ConversationStage ?? ConversationStage.CSREngagement;
+        eventProperties[AdditionalAllowedKeys.ConversationStage] = conversationStage;
+        eventProperties[AdditionalAllowedKeys.Scenario] = "Conversation Diagnostics";
+        eventProperties[AdditionalAllowedKeys.OperationName] = eventName.includes(": ") ? eventName.split(": ")[1] : eventName;
 
         return eventProperties;
     }

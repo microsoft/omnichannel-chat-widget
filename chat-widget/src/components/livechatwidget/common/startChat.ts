@@ -1,4 +1,4 @@
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, ConversationStage, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { Constants, LiveWorkItemState, WidgetLoadTelemetryMessage } from "../../../common/Constants";
 import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isNullOrUndefined, isUndefinedOrEmpty } from "../../../common/utils";
@@ -155,7 +155,8 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.WidgetLoadStarted,
-            Description: "Widget start chat started."
+            Description: "Widget start chat started.",
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
 
         //Check if chat retrieved from cache
