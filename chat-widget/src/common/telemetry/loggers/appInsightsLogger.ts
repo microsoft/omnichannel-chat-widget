@@ -125,12 +125,21 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
             eventProperties[AllowedKeys.Description] = JSON.stringify(telemetryInfo.ExceptionDetails);
         }
 
-        const customProperties = typeof telemetryInfo?.CustomProperties === "string"
-            ? JSON.parse(telemetryInfo.CustomProperties)
-            : telemetryInfo?.CustomProperties;
-        const conversationStage = customProperties?.ConversationStage ?? ConversationStage.CSREngagement;
+        const customProperties = (() => {
+            if (!telemetryInfo?.CustomProperties) {
+                return {};
+            }
+            try {
+                return typeof telemetryInfo.CustomProperties === "string"
+                    ? JSON.parse(telemetryInfo.CustomProperties)
+                    : telemetryInfo.CustomProperties;
+            } catch (error) {
+                console.warn("Failed to parse CustomProperties:", error);
+                return {};
+            }
+        })();
         // Additional properties
-        eventProperties["ConversationStage"] = conversationStage;
+        eventProperties["ConversationStage"] = customProperties.ConversationStage ?? ConversationStage.CSREngagement;
         eventProperties["Scenario"] = "Conversation Diagnostics";
         eventProperties["OperationName"] = eventName.includes(": ") ? eventName.split(": ")[1] : eventName;
 
