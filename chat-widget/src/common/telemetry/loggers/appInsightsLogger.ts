@@ -21,13 +21,6 @@ enum AllowedKeys {
   LCWRuntimeId = "ClientSessionId",
 }
 
-// Keys that are added separately, not from telemetryInfo
-enum AdditionalAllowedKeys {
-  Scenario = "Scenario",
-  ConversationStage = "ConversationStage",
-  OperationName = "OperationName",
-}
-
 let initializationPromise: Promise<void> | null = null;
 
 export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
@@ -101,7 +94,6 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
                 if (eventName) {
                     const trackingEventName = getTrackingEventName(logLevel, eventName);
                     const eventProperties = setEventProperties(trackingEventName, telemetryInfo);
-                    console.log("Event logged to Application Insights:", { name: trackingEventName, properties: eventProperties });
                     _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
                 }
             } catch (error) {
@@ -137,9 +129,10 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
         const customProperties: { ConversationStage?: string } | undefined =
             typeof rawCustomProps === "string" ? JSON.parse(rawCustomProps) : rawCustomProps;
         const conversationStage = customProperties?.ConversationStage ?? ConversationStage.CSREngagement;
-        eventProperties[AdditionalAllowedKeys.ConversationStage] = conversationStage;
-        eventProperties[AdditionalAllowedKeys.Scenario] = "Conversation Diagnostics";
-        eventProperties[AdditionalAllowedKeys.OperationName] = eventName.includes(": ") ? eventName.split(": ")[1] : eventName;
+        // Additional properties
+        eventProperties["ConversationStage"] = conversationStage;
+        eventProperties["Scenario"] = "Conversation Diagnostics";
+        eventProperties["OperationName"] = eventName.includes(": ") ? eventName.split(": ")[1] : eventName;
 
         return eventProperties;
     }
