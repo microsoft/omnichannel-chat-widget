@@ -11,7 +11,6 @@ import { TelemetryManager } from "../../../../common/telemetry/TelemetryManager"
 const supportedSignInCardContentTypes = ["application/vnd.microsoft.card.signin", "application/vnd.microsoft.card.oauth"];
 const botOauthUrlRegex = /[\S]+.botframework.com\/api\/oauth\/signin\?signin=([\S]+)/;
 const delay = (t: number | undefined) => new Promise(resolve => setTimeout(resolve, t));
-let response: boolean | undefined;
 
 const extractSignInId = (signInUrl: string) => {
     const result = botOauthUrlRegex.exec(signInUrl);
@@ -50,21 +49,23 @@ const fetchBotAuthConfig = async (retries: number, interval: number): Promise<an
 
     const botAuthConfigRequestEvent: ICustomEvent = { eventName: BroadcastEvent.BotAuthConfigRequest };
     BroadcastService.postMessage(botAuthConfigRequestEvent);
+    
+    let response: boolean | undefined;
     const listener = BroadcastService.getMessageByEventName(BroadcastEvent.BotAuthConfigResponse)
         .subscribe((data) => {
             response = data.payload?.response !== undefined ? data.payload?.response : response;
             listener.unsubscribe();
         });
 
-    if (response !== undefined) {
-        //return response;
-        return response;
-    }
-
     if (retries === 1) { // Base Case
         throw new Error();
     }
     await delay(interval);
+
+    if (response !== undefined) {
+        return response;
+    }
+
     return await fetchBotAuthConfig(--retries, interval);
 };
 

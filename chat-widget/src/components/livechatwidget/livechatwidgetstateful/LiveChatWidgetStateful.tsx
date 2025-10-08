@@ -410,6 +410,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 dispatch({ type: LiveChatWidgetActionType.SET_CUSTOM_CONTEXT, payload: msg?.payload?.customContext });
             }
 
+
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventReceived,
                 Description: "Start chat event received."
@@ -444,7 +445,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     eventName: BroadcastEvent.MaximizeChat,
                     payload: {
                         height: inMemoryState?.domainStates?.widgetSize?.height,
-                        width: inMemoryState?.domainStates?.widgetSize?.width
+                        width: inMemoryState?.domainStates?.widgetSize?.width,
+                        lcwRuntimeId: TelemetryManager.InternalTelemetryData.lcwRuntimeId
                     }
                 });
                 return;
@@ -806,21 +808,44 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     return directLine && (
         <>
             <style>{`
-            ::-webkit-scrollbar {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar {
                 width: ${scrollbarProps.width};
             }
 
-            ::-webkit-scrollbar-track {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-track {
                 background: ${scrollbarProps.trackBackgroundColor};
             }
 
-            ::-webkit-scrollbar-thumb {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb {
                 background: ${scrollbarProps.thumbBackgroundColor};
                 border-radius: ${scrollbarProps.thumbBorderRadius};
             }
 
-            ::-webkit-scrollbar-thumb:hover {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb:hover {
                 background: ${scrollbarProps.thumbHoverColor};
+            }
+
+            /* High Contrast mode support - optimized for all variants */
+            @media (prefers-contrast: high), (-ms-high-contrast: active), (forced-colors: active) {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-track {
+                    background: Canvas !important;
+                    border: 1px solid CanvasText !important;
+                }
+
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb {
+                    background: CanvasText !important;
+                    border: 1px solid Canvas !important;
+                    min-height: 20px !important;
+                }
+
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb:hover {
+                    background: Highlight !important;
+                    border: 1px solid CanvasText !important;
+                }
+
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-corner {
+                    background: Canvas !important;
+                }
             }
 
             .webchat__basic-transcript__activity-markdown-body > :last-child {

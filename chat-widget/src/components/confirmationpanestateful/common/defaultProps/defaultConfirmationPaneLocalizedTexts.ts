@@ -1,4 +1,4 @@
-import { IConfirmationPaneLocalizedTexts } from "../../interfaces/IConfirmationPaneLocalizedText";
+import { IConfirmationPaneLocalizedTexts } from "../../interfaces/IConfirmationPaneLocalizedTexts";
 
 export const defaultConfirmationPaneLocalizedTexts: IConfirmationPaneLocalizedTexts = {
     CLOSE_CONFIRMATION_DIALOG_TITLE_FOR_EMAIL_AND_DOWNLOAD_TRANSCRIPT_ENABLED: "Want a copy of this chat?",

@@ -28,7 +28,7 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
 
     const [facadeChatSDK, setFacadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useState<FacadeChatSDK | undefined>(undefined);
 
-    const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock?.type);
+    const chatSDK = getMockChatSDKIfApplicable(props.chatSDK, props?.mock);
 
     const disableReauthentication = props.featureConfigProps?.disableReauthentication === true;
 

@@ -1,5 +1,5 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { ConfirmationState, Constants, ConversationEndEntity, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
+import { ConfirmationState, Constants, ConversationEndEntity, LiveWorkItemState, ParticipantType, PrepareEndChatDescriptionConstants } from "../../../common/Constants";
 import { getConversationDetailsCall, getWidgetEndChatEventName } from "../../../common/utils";
 import { getPostChatContext, initiatePostChat } from "./renderSurveyHelpers";
 
@@ -44,7 +44,7 @@ const prepareEndChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Facade
             }
 
             // Use Case: If ended by Agent, stay chat in InActive state
-            let isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+            const isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
             if (isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
                 state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
                 dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
@@ -140,8 +140,23 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
 
     if (!skipEndChatSDK && facadeChatSDK?.getChatSDK()?.conversation) {
         const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+        let isSessionEnded = inMemoryState?.appStates?.chatDisconnectEventReceived;
+        if (!isSessionEnded) {
+            // double check by fetching the latest conversation details
+            const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
+            if (conversationDetails?.state === LiveWorkItemState.WrapUp || conversationDetails?.state === LiveWorkItemState.Closed) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.ChatDisconnectThreadEventReceived,
+                    Description: "Checking conversation details upon endChat. Chat disconnected.",
+                    CustomProperties: {
+                        conversationDetails
+                    }
+                });
+                isSessionEnded = true;
+            }
+        }
         const endChatOptionalParameters : EndChatOptionalParams = {
-            isSessionEnded : inMemoryState?.appStates?.chatDisconnectEventReceived
+            isSessionEnded
         };
 
         try {
@@ -243,6 +258,7 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
             proactiveChatInNewWindow: false
         }
     });
+    dispatch({ type: LiveChatWidgetActionType.SET_CITATIONS, payload: {} });
 
     // Clear live chat context only if chat widget is fully closed to support transcript calls after sessionclose is called
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });

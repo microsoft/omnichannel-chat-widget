@@ -128,7 +128,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createDataMaskingMiddleware(state.domainStates.liveChatConfig?.DataMaskingInfo as IDataMaskingInfo),
             createMessageTimeStampMiddleware,
             createMessageSequenceIdOverrideMiddleware,
-            createCitationsMiddleware,
+            createCitationsMiddleware(state, dispatch),
             gifUploadMiddleware,
             htmlPlayerMiddleware,
             htmlTextMiddleware(honorsTargetInHTMLLinks),

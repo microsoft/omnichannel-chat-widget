@@ -1,8 +1,12 @@
-enum LiveChatWidgetMockType {
+import { Message } from "botframework-directlinejs";
+
+export enum LiveChatWidgetMockType {
     Test = "Test",
-    Demo = "Demo"
+    Demo = "Demo",
+    Designer = "Designer"
 }
 
 export interface IMockProps {
-    type: LiveChatWidgetMockType
+    type: LiveChatWidgetMockType,
+    mockMessages?: Message[];
 }
