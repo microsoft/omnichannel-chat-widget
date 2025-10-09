@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Adding support to fetch history messages for persistent chat
+
 ## [1.8.3] - 2025-10-07
 
 ### Fixed
