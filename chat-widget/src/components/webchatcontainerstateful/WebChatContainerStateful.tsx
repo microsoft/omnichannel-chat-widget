@@ -32,6 +32,23 @@ import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
 
+// Types for better type safety
+interface LcwFcbConfiguration {
+    lcwPersistentChatHistoryEnabled?: boolean;
+}
+
+interface LiveChatConfigAuthSettings {
+    msdyn_javascriptclientfunction?: string;
+}
+
+interface ExtendedChatConfig {
+    LcwFcbConfiguration?: LcwFcbConfiguration;
+    LiveChatConfigAuthSettings?: LiveChatConfigAuthSettings;
+    LiveWSAndLiveChatEngJoin?: {
+        msdyn_conversationmode?: string;
+    };
+}
+
 let uiTimer: ITimer;
 
 const broadcastChannelMessageEvent = "message";
@@ -91,12 +108,24 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isPersistentChatEnabledForWidget = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) || isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+    // Type the chatConfig properly to avoid 'any' usage
+    const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
+    
+    const isHistoryEnabledInConfig = extendedChatConfig?.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled;
+    const isHistoryEnabledViaProps = props?.persistentChatHistoryProps?.persistentChatHistoryEnabled;
 
+    const isPersistentChatEnabledForWidget = !!(extendedChatConfig?.LiveChatConfigAuthSettings?.msdyn_javascriptclientfunction) || 
+        isPersistentChatEnabled(extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
-    if (props?.persistentChatHistoryProps?.persistentChatHistoryEnabled && isPersistentChatEnabledForWidget) {
-        usePersistentChatHistory(facadeChatSDK, props.persistentChatHistoryProps);
+    // Persistent chat history is enabled if explicitly set via props, or if enabled in config
+    // Props take precedence over config settings
+    const isPersistentHistoryEnabled = isHistoryEnabledViaProps || isHistoryEnabledInConfig;
+
+    // Check if both persistent chat and widget support are enabled
+    const shouldLoadPersistentHistoryMessages = isPersistentHistoryEnabled && isPersistentChatEnabledForWidget;
+
+    if (shouldLoadPersistentHistoryMessages) {
+        usePersistentChatHistory(facadeChatSDK, props?.persistentChatHistoryProps ?? {});
     }
     // Delegated click handler for citation anchors. Placed after state is
     // available so we can prefer reading citations from app state and fall
@@ -403,7 +432,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
-                { isPersistentChatEnabledForWidget && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
+                {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
                 <BasicWebChat></BasicWebChat>  
             </div>
         </Stack>
