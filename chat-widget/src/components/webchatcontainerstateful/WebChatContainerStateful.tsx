@@ -91,12 +91,20 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
 
+    // pending to add LcwFcbConfiguration in ChatConfig, by now using any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const persistentChatHistoryConfigEnabled = (props.chatConfig as any).LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled;
+    const persistentChatHistoryEnabledViaProps = props?.persistentChatHistoryProps?.persistentChatHistoryEnabled;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isPersistentChatEnabledForWidget = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) || isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
+    // if persistentChatHistoryEnabledViaProps is true, then shallWeEnablePersistentChatHistory = true, otherwise use persistentChatHistoryConfigEnabled
+    // but if persistentChatHistoryEnabledViaProps is false , and persistentChatHistoryEnabledViaProps is true, shallWeEnablePersistentChatHistory should be trye = false
+    const shallWeEnablePersistentChatHistory = persistentChatHistoryEnabledViaProps || persistentChatHistoryConfigEnabled;
 
-    if (props?.persistentChatHistoryProps?.persistentChatHistoryEnabled && isPersistentChatEnabledForWidget) {
-        usePersistentChatHistory(facadeChatSDK, props.persistentChatHistoryProps);
+    if (shallWeEnablePersistentChatHistory && isPersistentChatEnabledForWidget) {
+        usePersistentChatHistory(facadeChatSDK, props?.persistentChatHistoryProps ?? {});
     }
     // Delegated click handler for citation anchors. Placed after state is
     // available so we can prefer reading citations from app state and fall
@@ -403,7 +411,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
-                { isPersistentChatEnabledForWidget && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
+                { (isPersistentChatEnabledForWidget && shallWeEnablePersistentChatHistory) && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
                 <BasicWebChat></BasicWebChat>  
             </div>
         </Stack>
