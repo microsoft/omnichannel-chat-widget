@@ -1,4 +1,4 @@
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, ConversationStage, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { Components, StyleOptions } from "botframework-webchat";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType, WidgetLoadCustomErrorString } from "../../../common/Constants";
@@ -101,6 +101,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXLiveChatWidgetStart,
             Description: "Live chat widget loading started.",
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
     }, []);
 
@@ -456,7 +457,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
             TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
-                Description: "Received InitiateEndChat BroadcastEvent."
+                Description: "Received InitiateEndChat BroadcastEvent.",
+                CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
             });
 
             // This is to ensure to get latest state from cache in multitab
@@ -727,7 +729,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXLiveChatWidgetCompleted,
             Description: "Live chat widget loading completed.",
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
     }, []);
 

@@ -61,7 +61,7 @@ const renderSurvey = async (postChatContext: any, state: ILiveChatWidgetContext,
 // Function for embed mode postchat workflow which is essentially same for both customer and agent
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const embedModePostChatWorkflow = async (postChatContext: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null })
+    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
     if (inMemoryState.appStates.conversationState === ConversationState.Closed) {
         return;
     }
@@ -78,7 +78,7 @@ const embedModePostChatWorkflow = async (postChatContext: any, state: ILiveChatW
         dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.PostchatLoading });
 
         await addDelayInMs(Constants.PostChatLoadingDurationInMs);
-        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null })
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         if (inMemoryState.appStates.conversationState === ConversationState.Closed) {
             return;
         }
@@ -97,7 +97,7 @@ const embedModePostChatWorkflow = async (postChatContext: any, state: ILiveChatW
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initiatePostChat = async (props: ILiveChatWidgetProps, conversationDetailsParam: any, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, postchatContext: any) => {
-    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null })
+    const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
     if (inMemoryState.appStates.conversationState === ConversationState.Closed) {
         // If the conversation is closed, we need to reset the state
         return;
@@ -127,7 +127,7 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
             if (state?.domainStates?.postChatContext === undefined) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const context: any = await facadeChatSDK.getPostChatSurveyContext();
-                TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
+                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.PostChatContextCallSucceed,
                     Description: PostChatSurveyTelemetryMessage.PostChatContextCallSucceed
                 });
@@ -143,7 +143,7 @@ const getPostChatContext = async (facadeChatSDK: FacadeChatSDK, state: ILiveChat
             }
         }
     } catch (error) {
-        TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.ERROR, {
+        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.PostChatContextCallFailed,
             Description: PostChatSurveyTelemetryMessage.PostChatContextCallFailed,
             ExceptionDetails: {
