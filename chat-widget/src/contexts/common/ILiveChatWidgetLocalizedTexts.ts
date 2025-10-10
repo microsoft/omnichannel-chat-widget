@@ -1,4 +1,5 @@
 export interface ILiveChatWidgetLocalizedTexts {
+    PREVIOUS_MESSAGES_LOADING?: string;
 
     /*
      * Error message shown when the file uploaded is null.

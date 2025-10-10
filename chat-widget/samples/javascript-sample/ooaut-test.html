@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.23/jsrsasign-all-min.js"></script>
+
+  <title>Sample App</title>
+</head>
+
+<body style="margin: 0">
+  <script>
+
+
+  // Store the generated JWT and its expiration time
+  let cachedJwt = null;
+  let cachedJwtExp = null;
+
+  function authFunction(callback) {
+    return "";
+  };
+
+
+    function lcw() {
+      return {
+
+        getAuthToken: authFunction,
+        styleProps: {
+          generalStyles: {
+            width: "360px",
+            height: "560px",
+            bottom: "20px",
+            right: "20px"
+          }
+        },
+        chatButtonProps: {
+          styleProps: {
+            generalStyleProps: {
+              position: "absolute"
+            }
+          }
+        },
+        webChatContainerProps: {
+          webChatStyles: {
+            hideUploadButton: false
+          },
+          botMagicCode: {
+            disabled: false,
+            fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
+          }
+        },
+      }
+    }
+
+    // browser compatibility
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+    eventer(messageEvent, function (e) {
+      try {
+        if (e.data.key) {
+          localStorage.setItem(e.data.key, e.data.data);
+        }
+      }
+      catch (ex) {
+        console.log(ex);
+      }
+    });
+
+    // Raise event after data found in localStorage
+    if (localStorage.getItem("LcwChatWidgetState")) {
+      var evt = new CustomEvent("lcw:onWidgetStateUpdated", {
+        detail: {
+          key: "LcwChatWidgetState",
+          data: widgetData
+        }
+      });
+      window.dispatchEvent(evt);
+    }
+  </script>
+  <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
+  <script id="oc-lcw-script" src="../../dist/out.js" 
+  data-customization-callback="lcw" 
+  data-app-id="" 
+  data-org-id=""
+  data-org-url=""
+  
+  ></script>
+</body>
+
+</html>
