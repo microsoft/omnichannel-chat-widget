@@ -243,7 +243,6 @@ function InputValidationPane(props: IInputValidationPaneProps) {
                         <Stack
                             className={props.styleProps?.classNames?.invalidInputErrorMessageClassName}
                             styles={invalidInputErrorMessageStyles}
-                            aria-label={props.controlProps?.invalidInputErrorMessageText || defaultInputValidationPaneControlProps.invalidInputErrorMessageText}
                             tabIndex={-1}
                             role={"alert"}
                             id={elementId + "-invalidinputerrormessage"}>
