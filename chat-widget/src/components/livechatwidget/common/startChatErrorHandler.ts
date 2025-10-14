@@ -133,7 +133,7 @@ export const logStartChatComplete = (additionalMessage?: string) => {
         descriptionString += `. ${additionalMessage}`;
     }
 
-    TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
+    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
         Event: TelemetryEvent.StartChatComplete,
         Description: descriptionString,
     });

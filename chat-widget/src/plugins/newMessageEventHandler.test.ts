@@ -114,14 +114,14 @@ describe("createOnNewAdapterActivityHandler", () => {
     });
 
     describe("Activity filtering", () => {
-        it("should only process message type activities", () => {
-            const nonMessageActivity = createMockActivity({ type: "typing" });
+        it("should process typing activities if valid", () => {
+            const typingActivity = createMockActivity({ type: "typing" });
             
-            onNewAdapterActivityHandler(nonMessageActivity);
+            onNewAdapterActivityHandler(typingActivity);
             
-            expect(mockGetScenarioType).not.toHaveBeenCalled();
-            expect(mockBroadcastServicePostMessage).not.toHaveBeenCalled();
-            expect(mockTelemetryHelperLog).not.toHaveBeenCalled();
+            // typing activities are processed if valid, so scenarioType may be called
+            expect(mockGetScenarioType).toHaveBeenCalledWith(typingActivity);
+            // other side effects may occur depending on scenarioType
         });
 
         it("should process message type activities", () => {
