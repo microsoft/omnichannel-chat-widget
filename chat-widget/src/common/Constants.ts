@@ -62,6 +62,7 @@ export class Constants {
     public static readonly averageWaitTimeMessageTag = "averagewaittime";
     public static readonly message = "message";
     public static readonly hiddenTag = "Hidden";
+    public static readonly typing = "typing";
 
     // messageTimestampMiddleware
     public static readonly prefixTimestampTag = "ServerMessageTimestamp_";

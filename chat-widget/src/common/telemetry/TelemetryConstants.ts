@@ -325,6 +325,7 @@ export enum TelemetryEvent {
     SecureEventBusUnauthorizedDispatch = "SecureEventBusUnauthorizedDispatch",
     SecureEventBusListenerError = "SecureEventBusListenerError",
     SecureEventBusDispatchError = "SecureEventBusDispatchError",
+    StartChatComplete = "StartChatComplete",
 
 }
 
