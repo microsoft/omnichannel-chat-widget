@@ -127,6 +127,18 @@ export const logWidgetLoadComplete = (additionalMessage?: string) => {
     });
 };
 
+export const logStartChatComplete = (additionalMessage?: string) => {
+    let descriptionString = "Start chat complete";
+    if (additionalMessage) {
+        descriptionString += `. ${additionalMessage}`;
+    }
+
+    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+        Event: TelemetryEvent.StartChatComplete,
+        Description: descriptionString,
+    });
+};
+
 const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const exDetails: any = {

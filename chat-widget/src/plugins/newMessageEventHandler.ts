@@ -97,6 +97,9 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         const messageHasNoAttachments = !(activity as any)?.attachments || (activity as any)?.attachments.length === 0;
 
         if (messageHasNoTags && messageHasNoText && messageHasNoAttachments) {
+            if (activity?.type === Constants.typing) {
+                return true;
+            }
             return false;
         }
         return true;
@@ -115,7 +118,6 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             historyMessageStrategy(polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId));
             return;
         }
-
         firstResponseLatencyTracker.stopClock(payload);
 
         const newMessageReceivedEvent: ICustomEvent = {
@@ -134,7 +136,7 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     };
 
     const raiseMessageEvent = (activity: IActivity) => {
-        if (activity?.type === Constants.message) {
+        if (activity?.type === Constants.message || activity?.type === Constants.typing) {
             const scenarioType = getScenarioType(activity);
             switch (scenarioType) {
                 case ScenarioType.UserSendMessageStrategy:
