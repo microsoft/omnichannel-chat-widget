@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Adding lcwRuntimeId field to the payload for Maximize events
 - Scrollbar selector contained to only widget div
 - Fixed duplicate email error announcement for Android talkback
+- Added role to retry element for failed messages
 
 ### Added
 
