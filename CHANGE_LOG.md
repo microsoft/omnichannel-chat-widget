@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Adding support to fetch history messages for persistent chat
 - Add use of `config.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled` to enable persistent chat history feature
+- Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
 
 ## [1.8.3] - 2025-10-07
 
