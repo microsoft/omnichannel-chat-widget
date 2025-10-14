@@ -751,7 +751,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     isConversationalSurvey: action.payload as boolean
                 }
             };
-
         case LiveChatWidgetActionType.GET_IN_MEMORY_STATE:
             return inMemory;
         default:

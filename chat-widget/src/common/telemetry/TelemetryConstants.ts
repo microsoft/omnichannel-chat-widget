@@ -60,11 +60,13 @@ export enum BroadcastEvent {
     SyncMinimize = "SyncMinimize",
     OnWidgetError = "OnWidgetError",
     FMLTrackingCompletedAck = "FMLTrackingCompletedAck",
-    FMLTrackingCompleted = "FMLTrackingCompleted"
+    FMLTrackingCompleted = "FMLTrackingCompleted",
+    PersistentConversationReset = "PersistentConversationReset"
 }
 
 // Events being logged
 export enum TelemetryEvent {
+    FetchPersistentChatHistoryFailed = "FetchPersistentChatHistoryFailed",
     CallAdded = "CallAdded",
     LocalVideoStreamAdded = "LocalVideoStreamAdded",
     LocalVideoStreamRemoved = "LocalVideoStreamRemoved",
@@ -295,6 +297,34 @@ export enum TelemetryEvent {
 
     AppInsightsInitialized = "AppInsightsInitialized",
     AppInsightsInitFailed = "AppInsightsInitFailed",
+    ConvertPersistentChatHistoryMessageToActivityFailed = "ConvertPersistentChatHistoryMessageToActivityFailed",
+    UXLCWPersistentChatHistoryInitialized = "UXLCWPersistentChatHistoryInitialized",
+    LCWPersistentChatHistoryFetchStarted = "LCWPersistentChatHistoryFetchStarted",
+    LCWPersistentChatHistoryFetchCompleted = "LCWPersistentChatHistoryFetchCompleted",
+    LCWPersistentChatHistoryFetchFailed = "LCWPersistentChatHistoryFetchFailed",
+    LCWWebChatStorePollingStarted = "LCWWebChatStorePollingStarted",
+    LCWWebChatStoreReady = "LCWWebChatStoreReady",
+    LCWWebChatConnected = "LCWWebChatConnected",
+    LCWWebChatDisconnected = "LCWWebChatDisconnected",
+    LCWWebChatConnectionCheckFailed = "LCWWebChatConnectionCheckFailed",
+    LCWPersistentConversationHandlerInitialized = "LCWPersistentConversationHandlerInitialized",
+    LCWPersistentHistoryPullBlocked = "LCWPersistentHistoryPullBlocked",
+    LCWPersistentHistoryPullCompleted = "LCWPersistentHistoryPullCompleted",
+    LCWLazyLoadInitializationStarted = "LCWLazyLoadInitializationStarted",
+    LCWLazyLoadContainerNotFound = "LCWLazyLoadContainerNotFound",
+    LCWLazyLoadInitializationCompleted = "LCWLazyLoadInitializationCompleted",
+    LCWLazyLoadSessionMetrics = "LCWLazyLoadSessionMetrics",
+    LCWLazyLoadTargetElementNotFound = "LCWLazyLoadTargetElementNotFound",
+    LCWLazyLoadScrollFailed = "LCWLazyLoadScrollFailed",
+    LCWLazyLoadActivityMounted = "LCWLazyLoadActivityMounted",
+    LCWLazyLoadReset = "LCWLazyLoadReset",
+    LCWLazyLoadNoMoreHistory = "LCWLazyLoadNoMoreHistory",
+    LCWLazyLoadDestroyed = "LCWLazyLoadDestroyed",
+
+    // SecureEventBus events
+    SecureEventBusUnauthorizedDispatch = "SecureEventBusUnauthorizedDispatch",
+    SecureEventBusListenerError = "SecureEventBusListenerError",
+    SecureEventBusDispatchError = "SecureEventBusDispatchError",
 
 }
 
@@ -368,6 +398,9 @@ export class TelemetryConstants {
             case TelemetryEvent.PostChatWorkflowFromAgent:
             case TelemetryEvent.PostChatWorkflowFromBot:
             case TelemetryEvent.AppStatesException:
+            case TelemetryEvent.SecureEventBusUnauthorizedDispatch:
+            case TelemetryEvent.SecureEventBusListenerError:
+            case TelemetryEvent.SecureEventBusDispatchError:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
