@@ -35,6 +35,11 @@ export class Constants {
     public static readonly ChannelId = "lcw";
     public static readonly CustomerTag = "FromCustomer";
 
+    // LCW only tags (Only applicable on client-side for additional processing, not recognized by service)
+    public static persistentChatHistoryMessageTag = "PersistentChatHistory";
+    public static persistentChatHistoryMessagePullTriggerTag = "PersistentChatHistoryMessagePullTrigger";
+    public static conversationDividerTag = "ConversationDivider"; 
+
     // gifUploadMiddleware
     public static readonly GifContentType = "image/gif";
 
@@ -57,6 +62,7 @@ export class Constants {
     public static readonly averageWaitTimeMessageTag = "averagewaittime";
     public static readonly message = "message";
     public static readonly hiddenTag = "Hidden";
+    public static readonly typing = "typing";
 
     // messageTimestampMiddleware
     public static readonly prefixTimestampTag = "ServerMessageTimestamp_";

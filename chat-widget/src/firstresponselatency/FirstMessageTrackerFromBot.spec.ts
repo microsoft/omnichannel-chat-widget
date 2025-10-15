@@ -36,7 +36,7 @@ describe("createTrackingForFirstMessage", () => {
 
     it("should track and log first valid bot message", () => {
         createTrackingForFirstMessage();
-        trigger(TelemetryEvent.WidgetLoadComplete, {});
+        trigger(TelemetryEvent.StartChatComplete, {});
         const message = { payload: { Id: "1", role: "bot", tags: [], messageType: "botMessage", text: "hi", type: "botMessage", userId: "bot", isChatComplete: false } };
         trigger("NewMessageReceived", message);
         expect(TelemetryHelper.logActionEvent).toHaveBeenCalledWith(LogLevel.INFO, expect.objectContaining({

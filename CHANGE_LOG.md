@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- Adding support to fetch history messages for persistent chat
+- Add use of `config.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled` to enable persistent chat history feature
+- Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
+
 ## [1.8.3] - 2025-10-07
 
 ### Fixed
@@ -16,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - Fixed issue where link post chat survey not displayed
 - Adding lcwRuntimeId field to the payload for Maximize events
 - Scrollbar selector contained to only widget div
+- Fixed duplicate email error announcement for Android talkback
+- Added role to retry element for failed messages
 
 ### Added
 

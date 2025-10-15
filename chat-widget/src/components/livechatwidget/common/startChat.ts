@@ -3,7 +3,7 @@ import { Constants, LiveWorkItemState, WidgetLoadTelemetryMessage } from "../../
 import { TelemetryManager, TelemetryTimers } from "../../../common/telemetry/TelemetryManager";
 import { checkContactIdError, createTimer, getConversationDetailsCall, getStateFromCache, getWidgetCacheIdfromProps, isNullOrEmptyString, isNullOrUndefined, isUndefinedOrEmpty } from "../../../common/utils";
 import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "./reconnectChatHelper";
-import { handleStartChatError, logWidgetLoadComplete } from "./startChatErrorHandler";
+import { handleStartChatError, logStartChatComplete, logWidgetLoadComplete } from "./startChatErrorHandler";
 
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -184,7 +184,9 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             const startTime = (new Date().getTime());
             createTrackingForFirstMessage();
             await facadeChatSDK.startChat(startChatOptionalParams);
+            logStartChatComplete();
             isStartChatSuccessful = true;
+
             await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, props);
 
         } catch (error) {

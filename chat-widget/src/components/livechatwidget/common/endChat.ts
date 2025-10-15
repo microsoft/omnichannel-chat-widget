@@ -11,6 +11,7 @@ import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
+import { LazyLoadHandler } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activities/LazyLoadActivity";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { StyleOptions } from "botframework-webchat";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
@@ -211,7 +212,14 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
         } finally {
             dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
             dispatch({ type: LiveChatWidgetActionType.SET_POST_CHAT_CONTEXT, payload: undefined });
-            // Always allow to close the chat for embedded mode irrespective of end chat errors
+
+            // Call direct reset to ensure LazyLoadHandler gets reset regardless of broadcast timing
+            LazyLoadHandler.directReset();
+            
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.PersistentConversationReset
+            });
+
             closeChatWidget(dispatch, setWebChatStyles, props);
             facadeChatSDK.destroy();
         }
