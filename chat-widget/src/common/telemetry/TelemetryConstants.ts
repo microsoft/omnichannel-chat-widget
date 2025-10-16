@@ -295,6 +295,8 @@ export enum TelemetryEvent {
     UXCitationPaneCompleted = "UXCitationPaneCompleted",
     UXLiveChatWidgetStart = "UXLiveChatWidgetStart",
     UXLiveChatWidgetCompleted = "UXLiveChatWidgetCompleted",
+    UXPostChatPaneStarted = "UXPostChatPaneStarted",
+    UXPostChatPaneCompleted = "UXPostChatPaneCompleted",
 
     AppInsightsInitialized = "AppInsightsInitialized",
     AppInsightsInitFailed = "AppInsightsInitFailed",
@@ -462,4 +464,10 @@ export class TelemetryConstants {
     public static mapEventToScenario(eventTypeOrScenarioType: TelemetryEvent): ScenarioType {
         return TelemetryConstants.map(eventTypeOrScenarioType);
     }
+}
+
+export enum ConversationStage {
+    Initialization = "Initialization",
+    CSREngagement = "CSR Engagement",
+    ConversationEnd = "Conversation End"
 }

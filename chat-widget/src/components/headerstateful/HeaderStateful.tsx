@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { ConversationStage, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 
 import { ConfirmationState } from "../../common/Constants";
@@ -64,7 +64,8 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
         onCloseClick: async () => {
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.HeaderCloseButtonClicked,
-                Description: "Header Close action started."
+                Description: "Header Close action started.",
+                CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
             });
 
             if (localConfirmationPaneState.current !== ConfirmationState.Ok) {
@@ -77,7 +78,8 @@ export const HeaderStateful = (props: IHeaderStatefulParams) => {
             }
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.CloseChatActionCompleted,
-                Description: "Header Close action completed."
+                Description: "Header Close action completed.",
+                CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
             });
             const closeButtonId = props.headerProps?.controlProps?.closeButtonProps?.id ?? `${controlProps.id}-close-button`;
             if (closeButtonId) {
