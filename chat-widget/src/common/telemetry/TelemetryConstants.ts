@@ -112,10 +112,11 @@ export enum TelemetryEvent {
     EndChatFailed = "EndChatFailed",
     SettingCustomContext = "SettingCustomContext",
     WebChatLoaded = "WebChatLoaded",
+    PersistentChatHistoryEnabled = "PersistentChatHistoryEnabled",
     LCWChatButtonActionCompleted = "LCWChatButtonActionCompleted",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
-
+    
     WidgetLoadStarted = "WidgetLoadStarted",
     WidgetLoadComplete = "WidgetLoadComplete",
     WidgetLoadFailed = "WidgetLoadFailed",
