@@ -22,7 +22,6 @@ All notable changes to this project will be documented in this file.
 - Fixed issue where link post chat survey not displayed
 - Adding lcwRuntimeId field to the payload for Maximize events
 - Scrollbar selector contained to only widget div
-- Fixed duplicate email error announcement for Android talkback
 - Added role to retry element for failed messages
 
 ### Added
@@ -655,6 +654,12 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.16] - 2025-10-14
+
+### Fixed
+
+- Fixed duplicate email error announcement for Android talkback
 
 ## [1.1.15]
 
