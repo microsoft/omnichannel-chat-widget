@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - [A11Y] Added focus on citation pane close button when citation pane is opened
+- [A11Y] Divider hack to force screen readers to mention it 
+- [A11Y] Update of initials from agent to update DOM, for proper mention by screen readers
 - Adding support to fetch history messages for persistent chat
 - Add use of `config.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled` to enable persistent chat history feature
 - Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
