@@ -40,7 +40,7 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
     const [paneStyle, setPaneStyle] = useState<React.CSSProperties | null>(null);
     const [isReady, setIsReady] = useState(false);
 
-    // Move focus to the container
+    // Initial focus pattern (mirrors ConfirmationPaneStateful): focus first focusable element (will re-attempt after visibility becomes true)
     useEffect(() => {
         preventFocusToMoveOutOfElement(controlId as string);
         const focusableElements: HTMLElement[] | null = findAllFocusableElement(`#${controlId}`);
@@ -58,6 +58,23 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
+
+    // Retry focus once pane is actually visible (isReady) in case initial attempt occurred while wrapper was visibility:hidden
+    useEffect(() => {
+        if (!isReady) return;
+        const focusableElements: HTMLElement[] | null = findAllFocusableElement(`#${controlId}`);
+        if (focusableElements && focusableElements.length > 0) {
+            const first = focusableElements[0];
+            // If focused element is not already inside the pane, move focus
+            if (!first.contains(document.activeElement) && !(document.activeElement && (document.activeElement as HTMLElement).id.startsWith(controlId))) {
+                requestAnimationFrame(() => {
+                    if (first.isConnected) {
+                        first.focus({ preventScroll: true });
+                    }
+                });
+            }
+        }
+    }, [isReady, controlId]);
 
     // Compute the widget bounds and set pane style accordingly (95% of widget size
     // and centered inside the widget). If the widget container can't be found,

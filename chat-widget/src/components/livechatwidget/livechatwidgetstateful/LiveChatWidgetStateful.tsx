@@ -804,6 +804,13 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         bubbleTextColor
     }), [webChatStyles, bubbleBackground, bubbleTextColor]);
 
+    // React to dynamic bot avatar initials updates from context
+    useEffect(() => {
+        if (state.domainStates.botAvatarInitials && state.domainStates.botAvatarInitials !== webChatStyles.botAvatarInitials) {
+            setWebChatStyles((styles: StyleOptions) => ({ ...styles, botAvatarInitials: state.domainStates.botAvatarInitials! }));
+        }
+    }, [state.domainStates.botAvatarInitials]);
+
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>

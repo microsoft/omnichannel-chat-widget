@@ -34,6 +34,7 @@ export interface ILiveChatWidgetContext {
         confirmationPaneConfirmedOptionClicked: boolean; //shows if confirmation pane already displayed
         confirmationState: ConfirmationState;
         startChatFailureType: StartChatFailureType;
+        botAvatarInitials?: string; // Current bot avatar initials (reactive)
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in
