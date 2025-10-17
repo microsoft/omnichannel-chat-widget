@@ -300,4 +300,10 @@ export enum LiveChatWidgetActionType {
         null payload, simply returns the existing inMemory state
     */
     GET_IN_MEMORY_STATE,
+
+    /*
+        Parameters:
+        string: Sets/updates current bot avatar initials (used for dynamic refresh of persistent messages)
+    */
+    SET_BOT_AVATAR_INITIALS,
 }

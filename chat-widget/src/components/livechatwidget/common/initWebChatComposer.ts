@@ -137,7 +137,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createMaxMessageSizeValidator(localizedTexts),
             sanitizationMiddleware,
             createCallActionMiddleware(),
-            localizedStringsBotInitialsMiddleware(),
+            // Pass a callback so middleware can push initials into React context for reactivity
+            localizedStringsBotInitialsMiddleware((initials: string) => {
+                dispatch({ type: LiveChatWidgetActionType.SET_BOT_AVATAR_INITIALS, payload: initials });
+            }),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );
