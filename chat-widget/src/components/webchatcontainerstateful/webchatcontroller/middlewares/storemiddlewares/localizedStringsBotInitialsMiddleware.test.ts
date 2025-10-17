@@ -6,6 +6,19 @@ import { Constants } from "../../../../../common/Constants";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
+// Mock BroadcastService from chat-components to avoid initialization side-effects in unit tests
+jest.mock("@microsoft/omnichannel-chat-components", () => ({
+    BroadcastService: {
+        postMessage: jest.fn()
+    }
+}));
+
+
+
+
+
+
+
 // Mock getIconText utility
 const mockGetIconText = jest.fn();
 jest.mock("../../../../../common/utils", () => ({
