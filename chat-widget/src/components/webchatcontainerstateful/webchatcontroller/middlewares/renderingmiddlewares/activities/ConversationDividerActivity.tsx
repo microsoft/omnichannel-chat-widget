@@ -13,14 +13,37 @@ const ConversationDividerActivity = (props: IPersistentChatHistoryProps) => {
     const ariaLabel = props.dividerActivityAriaLabel
         || defaultMiddlewareLocalizedTexts.CONVERSATION_DIVIDER_ARIA_LABEL;
 
-    // Using role="separator" to ensure screen readers announce a meaningful role.
-    // Providing an aria-label so it isn't announced with unrelated surrounding text like "WC said:".
+    // Create a simple separator that screen readers can detect without being interactive
+    // Preserve the visual divider styling while making it accessible
+    // Use a ref to programmatically remove only the "EL said:" prefix from the label
+    const dividerRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        if (dividerRef.current) {
+            // Find and hardcode the text in the label div to just show the divider label
+            const article = dividerRef.current.closest(".webchat__basic-transcript__activity");
+            if (article) {
+                const labelDiv = article.querySelector("div[id*=\"webchat__basic-transcript__active-descendant-label--\"]");
+                if (labelDiv) {
+                    // Hardcode the text to just the aria label
+                    (labelDiv as HTMLElement).textContent = ariaLabel || "";
+                }
+            }
+        }
+    }, [ariaLabel]);
+
     return (
         <div
+            ref={dividerRef}
             role="separator"
             aria-label={ariaLabel}
             aria-hidden={false}
             className={styleApplied}
+            data-accessibility-divider="true"
+            style={{ 
+                // Add accessibility enhancements
+                position: "relative"
+            }}
         />
     );
 };
