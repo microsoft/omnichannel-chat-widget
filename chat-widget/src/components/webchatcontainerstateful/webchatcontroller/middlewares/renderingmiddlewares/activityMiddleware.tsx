@@ -17,9 +17,9 @@ import ConversationDividerActivity from "./activities/ConversationDividerActivit
 import { DirectLineActivityType } from "../../enums/DirectLineActivityType";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
 import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
-import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import React from "react";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
+import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
 import { escapeHtml } from "../../../../../common/utils";
@@ -134,7 +134,13 @@ export const createActivityMiddleware = (
         }
 
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
+            
             const conversationDividerLabel = localizedTexts?.CONVERSATION_DIVIDER_ARIA_LABEL || defaultMiddlewareLocalizedTexts.CONVERSATION_DIVIDER_ARIA_LABEL;
+
+            // this is a hack to trick the screen reader, visually displays a  divider, but  by adding the text to the empty activity, 
+            // it forces the rendering of an article elment with content inside for the screen reader to announce.
+            // The  divider is insider an infinite world of articles, so the aria label is not effective, hence the hack.
+            card.activity.text = conversationDividerLabel;
             return (<ConversationDividerActivity dividerActivityAriaLabel={conversationDividerLabel} />);
         }
 
