@@ -51,6 +51,10 @@ All notable changes to this project will be documented in this file.
 - Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
 - Uptake [@microsoft/omnichannel-chat-components@1.1.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.15)
 
+### Changed
+
+- Refined AppInsights telemetry with updated metadata and events
+
 ### Security
 
 - CVE-2022-25883 : ensure semver 7.5.4 is default, other libs used for testing are using a lower version
