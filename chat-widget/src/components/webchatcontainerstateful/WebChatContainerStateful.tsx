@@ -16,6 +16,7 @@ import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetAc
 import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { TelemetryManager } from "../../common/telemetry/TelemetryManager";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
@@ -46,6 +47,7 @@ interface ExtendedChatConfig {
     LiveChatConfigAuthSettings?: LiveChatConfigAuthSettings;
     LiveWSAndLiveChatEngJoin?: {
         msdyn_conversationmode?: string;
+        msdyn_enablepersistentchatpreviousconversations?: boolean;
     };
 }
 
@@ -111,20 +113,26 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // Type the chatConfig properly to avoid 'any' usage
     const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
     
-    const isHistoryEnabledInConfig = extendedChatConfig?.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled;
     const isHistoryEnabledViaProps = props?.persistentChatHistoryProps?.persistentChatHistoryEnabled;
-
+    const isHistoryEnabledInConfig = extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_enablepersistentchatpreviousconversations;
+    const isHistoryEnabledViaFCB = extendedChatConfig?.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled;
+    
     const isPersistentChatEnabledForWidget = !!(extendedChatConfig?.LiveChatConfigAuthSettings?.msdyn_javascriptclientfunction) || 
         isPersistentChatEnabled(extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
-    // Persistent chat history is enabled if explicitly set via props, or if enabled in config
-    // Props take precedence over config settings
-    const isPersistentHistoryEnabled = isHistoryEnabledViaProps || isHistoryEnabledInConfig;
+    // isPersistentHistoryEnabled can only be  true if isHistoryEnabledViaFCB is true, and next conditions are met:
+    // 1. isHistoryEnabledViaProps is true (takes precedence over config)
+    // 2. isHistoryEnabledInConfig is true and isHistoryEnabledViaProps is undefined
+    const isPersistentHistoryEnabled = isHistoryEnabledViaProps || (isHistoryEnabledInConfig && !isHistoryEnabledViaProps);
 
     // Check if both persistent chat and widget support are enabled
-    const shouldLoadPersistentHistoryMessages = isPersistentHistoryEnabled && isPersistentChatEnabledForWidget;
+    const shouldLoadPersistentHistoryMessages = isPersistentHistoryEnabled && isHistoryEnabledViaFCB && isPersistentChatEnabledForWidget;
 
     if (shouldLoadPersistentHistoryMessages) {
+        
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.PersistentChatHistoryEnabled
+        });
         usePersistentChatHistory(facadeChatSDK, props?.persistentChatHistoryProps ?? {});
     }
     // Delegated click handler for citation anchors. Placed after state is
