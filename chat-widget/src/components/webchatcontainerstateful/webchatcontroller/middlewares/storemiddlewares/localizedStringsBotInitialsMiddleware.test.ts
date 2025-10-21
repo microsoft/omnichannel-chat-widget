@@ -1,8 +1,23 @@
 import "@testing-library/jest-dom";
+
+import { getOverriddenLocalizedStrings, localizedStringsBotInitialsMiddleware } from "./localizedStringsBotInitialsMiddleware";
+
 import { Constants } from "../../../../../common/Constants";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
-import { localizedStringsBotInitialsMiddleware, getOverriddenLocalizedStrings } from "./localizedStringsBotInitialsMiddleware";
+
+// Mock BroadcastService from chat-components to avoid initialization side-effects in unit tests
+jest.mock("@microsoft/omnichannel-chat-components", () => ({
+    BroadcastService: {
+        postMessage: jest.fn()
+    }
+}));
+
+
+
+
+
+
 
 // Mock getIconText utility
 const mockGetIconText = jest.fn();
@@ -160,6 +175,18 @@ describe("localizedStringsBotInitialsMiddleware", () => {
             // Assert - should keep previous initials
             const overriddenStrings = getOverriddenLocalizedStrings()({});
             expect(overriddenStrings.ACTIVITY_BOT_SAID_ALT).toBe("AB said:");
+        });
+
+        it("should invoke external callback when initials change", () => {
+            const callback = jest.fn();
+            const action: IWebChatAction = {
+                type: WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY,
+                payload: { activity: { from: { name: "Jane Roe", role: "bot" } } }
+            };
+            const mw = localizedStringsBotInitialsMiddleware(callback)({ dispatch: jest.fn() })(nextMock);
+            mockGetIconText.mockReturnValue("JR");
+            mw(action);
+            expect(callback).toHaveBeenCalledWith("JR");
         });
     });
 });

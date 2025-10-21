@@ -137,7 +137,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             createMaxMessageSizeValidator(localizedTexts),
             sanitizationMiddleware,
             createCallActionMiddleware(),
-            localizedStringsBotInitialsMiddleware(),
+            // Pass a callback so middleware can push initials into React context for reactivity
+            localizedStringsBotInitialsMiddleware((initials: string) => {
+                dispatch({ type: LiveChatWidgetActionType.SET_BOT_AVATAR_INITIALS, payload: initials });
+            }),
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );
@@ -184,7 +187,12 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         dir: state.domainStates.globalDir,
         locale: changeLanguageCodeFormatForWebChat(getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid)),
         store: webChatStore,
-        activityMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityMiddleware ? undefined : createActivityMiddleware(renderMarkdown, state.domainStates.renderingMiddlewareProps?.systemMessageStyleProps, state.domainStates.renderingMiddlewareProps?.userMessageStyleProps),
+        activityMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityMiddleware ? undefined : createActivityMiddleware(
+            renderMarkdown,
+            state.domainStates.renderingMiddlewareProps?.systemMessageStyleProps,
+            state.domainStates.renderingMiddlewareProps?.userMessageStyleProps,
+            localizedTexts
+        ),
         attachmentMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAttachmentMiddleware ? undefined : createAttachmentMiddleware(state.domainStates.renderingMiddlewareProps?.attachmentProps?.enableInlinePlaying ?? defaultAttachmentProps.enableInlinePlaying),
         activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : createActivityStatusMiddleware(getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid)),
         toastMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableToastMiddleware ? undefined: createToastMiddleware(props.notificationPaneProps, endChat),

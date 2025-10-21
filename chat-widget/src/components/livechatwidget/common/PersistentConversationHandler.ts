@@ -43,7 +43,8 @@ class PersistentConversationHandler {
             ...props,
         };
 
-        this.pageSize = this.appliedProps.pageSize || 4;
+        // if the props is not existent or is not  anumber then default to 4
+        this.pageSize = this.appliedProps?.pageSize !== undefined && !isNaN(this.appliedProps.pageSize) ? this.appliedProps.pageSize : 4;
     }
 
     private resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {

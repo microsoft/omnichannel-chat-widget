@@ -16,8 +16,10 @@ import { Constants } from "../../../../../common/Constants";
 import ConversationDividerActivity from "./activities/ConversationDividerActivity";
 import { DirectLineActivityType } from "../../enums/DirectLineActivityType";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
+import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
 import React from "react";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
+import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
 import { escapeHtml } from "../../../../../common/utils";
@@ -72,7 +74,12 @@ const isDataTagsPresent = (card: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createActivityMiddleware = (renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties, userMessageStyleProps?: React.CSSProperties) => () => (next: any) => (...args: any) => {
+export const createActivityMiddleware = (
+    renderMarkdown: (text: string) => string,
+    systemMessageStyleProps?: React.CSSProperties,
+    userMessageStyleProps?: React.CSSProperties,
+    localizedTexts?: ILiveChatWidgetLocalizedTexts
+) => () => (next: any) => (...args: any) => {
     const [card] = args;
     
     if (card.activity) {
@@ -127,7 +134,9 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
         }
 
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
-            return (<ConversationDividerActivity />);
+            const conversationDividerLabel = localizedTexts?.CONVERSATION_DIVIDER_ARIA_LABEL || defaultMiddlewareLocalizedTexts.CONVERSATION_DIVIDER_ARIA_LABEL;
+            // Pass the computed localized text to the divider component
+            return (<ConversationDividerActivity dividerActivityAriaLabel={conversationDividerLabel} />);
         }
 
         if (card.activity.text
