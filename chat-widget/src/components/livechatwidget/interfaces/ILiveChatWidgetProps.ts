@@ -3,10 +3,10 @@ import { IAppInsightsConfig } from "../../../common/telemetry/interfaces/IAppIns
 import { IAudioNotificationProps } from "../../footerstateful/audionotificationstateful/interfaces/IAudioNotificationProps";
 import { ICallingContainerProps } from "@microsoft/omnichannel-chat-components/lib/types/components/callingcontainer/interfaces/ICallingContainerProps";
 import { IChatButtonProps } from "@microsoft/omnichannel-chat-components/lib/types/components/chatbutton/interfaces/IChatButtonProps";
-import { ICitationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/citationpane/interfaces/ICitationPaneProps";
 import { ICitationPaneStatefulProps } from "../../citationpanestateful/interfaces/ICitationPaneStatefulProps";
 import { IConfirmationPaneStatefulProps } from "../../confirmationpanestateful/interfaces/IConfirmationPaneStatefulProps";
 import { IContextDataStore } from "../../../common/interfaces/IContextDataStore";
+import { ICitationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/citationpane/interfaces/ICitationPaneProps";
 import { IDownloadTranscriptProps } from "../../footerstateful/downloadtranscriptstateful/interfaces/IDownloadTranscriptProps";
 import { IDraggableChatWidgetProps } from "./IDraggableChatWidgetProps";
 import { IEmailTranscriptPaneProps } from "../../emailtranscriptpanestateful/interfaces/IEmailTranscriptPaneProps";
@@ -21,6 +21,7 @@ import { ILoadingPaneProps } from "@microsoft/omnichannel-chat-components/lib/ty
 import { IMockProps } from "./IMockProps";
 import { INotificationPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/notificationpane/interfaces/INotificationPaneProps";
 import { IOOOHPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/outofofficehourspane/interfaces/IOOOHPaneProps";
+import {IPersistentChatHistoryProps} from "./IPersistentChatHistoryProps";
 import { IPostChatSurveyPaneStatefulProps } from "../../postchatsurveypanestateful/interfaces/IPostChatSurveyPaneStatefulProps";
 import { IPreChatSurveyPaneProps } from "@microsoft/omnichannel-chat-components/lib/types/components/prechatsurveypane/interfaces/IPreChatSurveyPaneProps";
 import { IProactiveChatPaneStatefulProps } from "../../proactivechatpanestateful/interfaces/IProactiveChatPaneStatefulProps";
@@ -83,4 +84,5 @@ export interface ILiveChatWidgetProps {
     messageSubject?: SimpleSubject<OmnichannelMessageOptional[]>;
     flightMessageSubject?: FlightMessageSubject<ChatSDKMessage>;
     attachmentUpdateSubject?: AttachmentMessageSubject<AttachmentUpdateMessage>;
+    persistentChatHistoryProps?: IPersistentChatHistoryProps;
 }

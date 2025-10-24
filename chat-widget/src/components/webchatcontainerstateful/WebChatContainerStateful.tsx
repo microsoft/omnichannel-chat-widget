@@ -7,6 +7,7 @@ import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/util
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
+import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
@@ -15,8 +16,11 @@ import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetAc
 import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { TelemetryManager } from "../../common/telemetry/TelemetryManager";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
+import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
+import { createIOSOptimizedEmojiFont } from "./common/utils/fontUtils";
 import { defaultAdaptiveCardStyles } from "./common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultReceivedMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultReceivedMessageAnchorStyles";
@@ -24,14 +28,35 @@ import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/
 import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
 import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
+import { isPersistentChatEnabled } from "../livechatwidget/common/liveChatConfigUtils";
 import { useChatContextStore } from "../..";
 import {App, FlightMessageSubject, OmnichannelMessage} from "copilot-lcw";
+import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
+import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
 
-let uiTimer : ITimer;
+// Types for better type safety
+interface LcwFcbConfiguration {
+    lcwPersistentChatHistoryEnabled?: boolean;
+}
+
+interface LiveChatConfigAuthSettings {
+    msdyn_javascriptclientfunction?: string;
+}
+
+interface ExtendedChatConfig {
+    LcwFcbConfiguration?: LcwFcbConfiguration;
+    LiveChatConfigAuthSettings?: LiveChatConfigAuthSettings;
+    LiveWSAndLiveChatEngJoin?: {
+        msdyn_conversationmode?: string;
+        msdyn_enablepersistentchatpreviousconversations?: boolean;
+    };
+}
+
+let uiTimer: ITimer;
 
 const broadcastChannelMessageEvent = "message";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const postActivity = (activity: any) => { 
+const postActivity = (activity: any) => {
     // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
         type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
@@ -56,6 +81,16 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 };
 
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
+
+    const [facadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
+
+    // Create a font family that includes emoji support, based on the primary font or default
+    const webChatStyles = props.webChatContainerProps?.webChatStyles ?? defaultWebChatContainerStatefulProps.webChatStyles;
+    const primaryFont = webChatStyles?.primaryFont ?? defaultWebChatContainerStatefulProps.webChatStyles?.primaryFont;
+    
+    // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
+    const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
+    
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -71,12 +106,36 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // the dim layer and pane to re-render out of sync and create a flicker.
     const citationOpeningRef = useRef(false);
 
-    // ...existing code...
 
     const { BasicWebChat } = Components;
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const {webChatContainerProps, contextDataStore} = props;
+    const { webChatContainerProps, contextDataStore } = props;
 
+    // Type the chatConfig properly to avoid 'any' usage
+    const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
+    
+    const isHistoryEnabledViaProps = props?.persistentChatHistoryProps?.persistentChatHistoryEnabled;
+    const isHistoryEnabledInConfig = extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_enablepersistentchatpreviousconversations;
+    const isHistoryEnabledViaFCB = extendedChatConfig?.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled;
+    
+    const isPersistentChatEnabledForWidget = !!(extendedChatConfig?.LiveChatConfigAuthSettings?.msdyn_javascriptclientfunction) || 
+        isPersistentChatEnabled(extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+
+    // isPersistentHistoryEnabled can only be  true if isHistoryEnabledViaFCB is true, and next conditions are met:
+    // 1. isHistoryEnabledViaProps is true (takes precedence over config)
+    // 2. isHistoryEnabledInConfig is true and isHistoryEnabledViaProps is undefined
+    const isPersistentHistoryEnabled = isHistoryEnabledViaProps || (isHistoryEnabledInConfig && !isHistoryEnabledViaProps);
+
+    // Check if both persistent chat and widget support are enabled
+    const shouldLoadPersistentHistoryMessages = isPersistentHistoryEnabled && isHistoryEnabledViaFCB && isPersistentChatEnabledForWidget;
+
+    if (shouldLoadPersistentHistoryMessages) {
+        
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.PersistentChatHistoryEnabled
+        });
+        usePersistentChatHistory(facadeChatSDK, props?.persistentChatHistoryProps ?? {});
+    }
     // Delegated click handler for citation anchors. Placed after state is
     // available so we can prefer reading citations from app state and fall
     // back to the legacy window map for backward-compatibility in tests.
@@ -112,7 +171,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
                     setCitationPaneOpen(true);
                     setCitationPaneText(text);
-                    
+
                     // Simple debounce - reset guard after a short delay
                     setTimeout(() => {
                         citationOpeningRef.current = false;
@@ -339,11 +398,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         // we had a nasty bug long time ago with crashing borders messing with the sendbox, so if customer adds this value, they need to deal with that
         .webchat__bubble:not(.webchat__bubble--from-user) .webchat__bubble__content {
-            border-radius: ${webChatContainerProps?.webChatStyles?.bubbleBorderRadius?? 0 } !important; /* Override border-radius */
+            border-radius: ${webChatContainerProps?.webChatStyles?.bubbleBorderRadius ?? 0} !important; /* Override border-radius */
         }
 
         .webchat__stacked-layout_container>div {
-            background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background?? ""}
+            background: ${(props?.webChatContainerProps?.containerStyles as IRawStyle)?.background ?? ""}
         }
         .webchat__toast_text {
             display: flex;
@@ -370,14 +429,27 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 			height: 100% !important;
 		}
 
+        .webchat__auto-resize-textarea__textarea.webchat__send-box-text-box__html-text-area {
+            font-family: ${fontFamilyWithEmojis} !important;
+        }
+
+        /* Suggested actions carousel previous/next navigation focus */
+        .webchat__suggested-actions .webchat__suggested-actions__carousel .react-film__flipper:focus-visible .react-film__flipper__body {
+            outline: ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderStyle ?? "dashed"} ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderWidth ?? "1px"} ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorBorderColor ?? "#605E5C"} !important;
+            outline-offset: ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorInset ?? "2px"} !important;
+
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-            <div><BasicWebChat></BasicWebChat></div>
-            {/* <App messageSubject={props.messageSubject} 
+
+            <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
+                {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
+                <BasicWebChat></BasicWebChat>
+                {/* <App messageSubject={props.messageSubject} 
                 flightMessageSubject={props.flightMessageSubject}
                 attachmentMessageSubject={props.attachmentUpdateSubject}
                 eventHandler={(event) => console.log(event)}
-            /> */}
+            /> */}  
+            </div>
         </Stack>
         {citationPaneOpen && (
             <CitationPaneStateful 
@@ -385,6 +457,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 title={props.citationPaneProps?.title || HtmlAttributeNames.ocwCitationPaneTitle} 
                 contentHtml={citationPaneText} 
                 onClose={() => setCitationPaneOpen(false)}
+                componentOverrides={props.citationPaneProps?.componentOverrides}
                 controlProps={props.citationPaneProps?.controlProps}
                 styleProps={props.citationPaneProps?.styleProps} />
         )}

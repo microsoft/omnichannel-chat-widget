@@ -608,6 +608,22 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                 }
             };
 
+        case LiveChatWidgetActionType.SET_BOT_AVATAR_INITIALS:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    botAvatarInitials: action.payload as string
+                }
+            };
+            return {
+                ...state,
+                domainStates: {
+                    ...state.domainStates,
+                    botAvatarInitials: action.payload as string
+                }
+            };
+
         case LiveChatWidgetActionType.SET_WIDGET_INSTANCE_ID:
             inMemory = {
                 ...inMemory,
@@ -755,7 +771,6 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     isConversationalSurvey: action.payload as boolean
                 }
             };
-
         case LiveChatWidgetActionType.GET_IN_MEMORY_STATE:
             return inMemory;
         default:

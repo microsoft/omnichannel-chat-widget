@@ -1,5 +1,5 @@
 import { ChatSDKError, ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
-import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { ConversationStage, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { PrepareEndChatDescriptionConstants, WidgetLoadCustomErrorString, WidgetLoadTelemetryMessage } from "../../../common/Constants";
 import { callingStateCleanUp, chatSDKStateCleanUp, closeChatStateCleanUp, endChatStateCleanUp } from "./endChat";
 
@@ -110,7 +110,8 @@ const logWidgetLoadFailed = (ex?: ChatSDKError) => {
         Event: TelemetryEvent.WidgetLoadFailed,
         Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
-        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
+        CustomProperties: { ConversationStage: ConversationStage.Initialization }
     });
 };
 
@@ -124,6 +125,18 @@ export const logWidgetLoadComplete = (additionalMessage?: string) => {
         Event: TelemetryEvent.WidgetLoadComplete,
         Description: descriptionString,
         ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+    });
+};
+
+export const logStartChatComplete = (additionalMessage?: string) => {
+    let descriptionString = "Start chat complete";
+    if (additionalMessage) {
+        descriptionString += `. ${additionalMessage}`;
+    }
+
+    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+        Event: TelemetryEvent.StartChatComplete,
+        Description: descriptionString,
     });
 };
 
@@ -143,7 +156,8 @@ const logWidgetLoadCompleteWithError = (ex: ChatSDKError) => {
         Event: TelemetryEvent.WidgetLoadFailed,
         Description: "Widget load complete with error",
         ExceptionDetails: exDetails,
-        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
+        CustomProperties: { ConversationStage: ConversationStage.Initialization }
     });
 };
 
@@ -172,7 +186,8 @@ export const logWidgetLoadWithUnexpectedError = (ex: any) => { // eslint-disable
         Event: TelemetryEvent.WidgetLoadFailed,
         Description: "Widget load with unexpected error",
         ExceptionDetails: exDetails,
-        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed
+        ElapsedTimeInMilliseconds: TelemetryTimers?.WidgetLoadTimer?.milliSecondsElapsed,
+        CustomProperties: { ConversationStage: ConversationStage.Initialization }
     });
 };
 

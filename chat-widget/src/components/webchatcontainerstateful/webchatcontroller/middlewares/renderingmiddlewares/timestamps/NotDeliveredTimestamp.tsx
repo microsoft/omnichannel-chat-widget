@@ -10,9 +10,9 @@ import { defaultTimestampFailedStyles } from "../defaultStyles/defaultTimestampF
 import { defaultTimestampRetryStyles } from "../defaultStyles/defaultTimestampRetryStyles";
 import { getTimestampHourMinute } from "../../../../../../common/utils";
 import { hooks } from "botframework-webchat";
-import { useChatContextStore } from "../../../../../..";
+import useChatContextStore from "../../../../../../hooks/useChatContextStore";
 
-/* eslint @typescript-eslint/no-explicit-any: "off" */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const NotDeliveredTimestamp = ({ args }: any) => {
     const timestampRef = useRef();
 
@@ -66,6 +66,7 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
             <span style={failedTextStyles}> {state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_NOT_DELIVERED ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_NOT_DELIVERED} </span>
             <span> &nbsp;-&nbsp; </span>
             <span style={retryTextStyles}
+                role="button"
                 onClick={onRetryClick} onKeyDown={onRetryKeyEnter} tabIndex={0}> {state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_RETRY ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_RETRY} </span>
         </Stack>
     );

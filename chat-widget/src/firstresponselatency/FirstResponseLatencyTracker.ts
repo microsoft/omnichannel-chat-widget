@@ -3,6 +3,7 @@ import { MessagePayload, TrackingMessage } from "./Constants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
+import { Constants } from "../common/Constants";
 
 export class FirstResponseLatencyTracker {
 
@@ -89,13 +90,15 @@ export class FirstResponseLatencyTracker {
         this.stopTrackingMessage = this.createTrackingMessage(payload, "botMessage");
         // calculating elapsed time
         const elapsedTime = (this.stopTrackingMessage?.checkTime ?? 0) - (this.startTrackingMessage?.checkTime ?? 0);
+
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.MessageLapTrack,
             Description: "First response latency tracking",
             CustomProperties: {
                 elapsedTime,
                 userMessage: this.startTrackingMessage,
-                botMessage: this.stopTrackingMessage
+                botMessage: this.stopTrackingMessage,
+                type: payload?.type
             }
         });
     }
@@ -131,7 +134,10 @@ export class FirstResponseLatencyTracker {
     public stopClock(payload: MessagePayload): void {
         try {
             if (!payload || !payload.Id) {
-                throw new Error("Invalid payload");
+                if (payload?.type !==  Constants.typing) {
+                    throw new Error("Invalid payload");
+                }
+
             }
 
             // Only allow stopTracking if sender is valid and tracking is active
@@ -143,7 +149,9 @@ export class FirstResponseLatencyTracker {
             if (this.isABotConversation && this.isTracking) {
                 this.stopTracking(payload);
             }
+
         } catch (e) {
+
             TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.MessageStopLapTrackError,
                 Description: "Error while stopping the clock",

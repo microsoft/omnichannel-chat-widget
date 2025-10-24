@@ -47,9 +47,12 @@ jest.mock("../../../firstresponselatency/FirstMessageTrackerFromBot", () => ({
     createTrackingForFirstMessage: jest.fn()
 }));
 
+// Include logStartChatComplete in the mock; startChat.ts now calls it after facadeChatSDK.startChat.
+// Previously missing this caused TypeError: logStartChatComplete is not a function when the real implementation was replaced.
 jest.mock("./startChatErrorHandler", () => ({
     handleStartChatError: jest.fn(),
-    logWidgetLoadComplete: jest.fn()
+    logWidgetLoadComplete: jest.fn(),
+    logStartChatComplete: jest.fn()
 }));
 
 jest.mock("./endChat", () => ({

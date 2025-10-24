@@ -37,16 +37,32 @@ Comprehensive styling options for all visual elements:
 
 ```typescript
 interface ICitationPaneStyleProps {
-    generalStyleProps?: IStyle;        // Container/wrapper styles
-    titleStyleProps?: IStyle;          // Title text styles
-    contentStyleProps?: IStyle;        // Content area styles
-    closeButtonStyleProps?: IStyle;    // Bottom close button styles
-    topCloseButtonStyleProps?: IStyle; // Top close button (X) styles
-    classNames?: ICitationPaneClassNames; // CSS class name overrides
+    generalStyleProps?: IStyle;                 // Container/wrapper styles
+    titleStyleProps?: IStyle;                   // Title text styles
+    contentStyleProps?: IStyle;                 // Content area styles
+    closeButtonStyleProps?: IStyle;             // Bottom close button styles
+    closeButtonHoveredStyleProps?: IStyle;      // Bottom close button hover state
+    closeButtonFocusedStyleProps?: IStyle;      // Bottom close button focus state
+    topCloseButtonStyleProps?: IStyle;          // Top close button (X) styles
+    topCloseButtonHoveredStyleProps?: IStyle;   // Top close button hover state
+    topCloseButtonFocusedStyleProps?: IStyle;   // Top close button focus state
+    classNames?: ICitationPaneClassNames;       // CSS class name overrides
 }
 ```
 
-### Component Overrides
+### ICitationPaneClassNames
+
+CSS class name overrides for styling individual elements:
+
+```typescript
+interface ICitationPaneClassNames {
+    containerClassName?: string;     // Main container wrapper
+    titleClassName?: string;         // Title text element
+    contentClassName?: string;       // Content area element
+    closeButtonClassName?: string;   // Bottom close button
+    topCloseButtonClassName?: string; // Top close button (X)
+}
+```
 
 Completely replace default components with custom React elements:
 
@@ -684,6 +700,67 @@ For specific height requirements, you can override the default behavior:
 ### 12. Testing Extremely Long Content
 
 For testing purposes, the Storybook includes an `ExtremelyLongContent` story that demonstrates proper scrolling behavior with extensive text content, ensuring the pane remains within reasonable bounds while maintaining full content accessibility.
+
+### 13. Interactive Button States
+
+```tsx
+<CitationPane 
+    controlProps={{
+        titleText: "Interactive Button Demo",
+        contentHtml: "<p>Hover over the buttons to see the interactive states.</p>",
+        closeButtonText: "Close"
+    }}
+    styleProps={{
+        generalStyleProps: {
+            backgroundColor: "#ffffff",
+            border: "1px solid #d2d0ce",
+            borderRadius: "0.5em",
+            padding: "1.25em",
+            paddingTop: "2.5em"
+        },
+        closeButtonStyleProps: {
+            backgroundColor: "#0078d4",
+            color: "white",
+            border: "none",
+            borderRadius: "0.25em",
+            padding: "0.625em 1.25em",
+            cursor: "pointer",
+            transition: "all 0.2s ease"
+        },
+        closeButtonHoveredStyleProps: {
+            backgroundColor: "#106ebe",
+            transform: "translateY(-1px)",
+            boxShadow: "0 0.25em 0.5em rgba(0, 120, 212, 0.3)"
+        },
+        closeButtonFocusedStyleProps: {
+            backgroundColor: "#005a9e",
+            outline: "2px solid #ffffff",
+            outlineOffset: "2px"
+        },
+        topCloseButtonStyleProps: {
+            backgroundColor: "#ffffff",
+            color: "#323130",
+            border: "1px solid #d2d0ce",
+            borderRadius: "50%",
+            width: "2em",
+            height: "2em",
+            cursor: "pointer",
+            transition: "all 0.2s ease"
+        },
+        topCloseButtonHoveredStyleProps: {
+            backgroundColor: "#f3f2f1",
+            borderColor: "#c8c6c4",
+            transform: "scale(1.05)"
+        },
+        topCloseButtonFocusedStyleProps: {
+            backgroundColor: "#edebe9",
+            borderColor: "#0078d4",
+            outline: "2px solid #0078d4",
+            outlineOffset: "1px"
+        }
+    }}
+/>
+```
 
 ## Best Practices and Tips
 

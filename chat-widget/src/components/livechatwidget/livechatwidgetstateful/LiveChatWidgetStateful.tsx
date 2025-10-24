@@ -1,4 +1,4 @@
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, ConversationStage, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
 import { Components, StyleOptions } from "botframework-webchat";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType, WidgetLoadCustomErrorString } from "../../../common/Constants";
@@ -109,6 +109,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXLiveChatWidgetStart,
             Description: "Live chat widget loading started.",
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
     }, []);
 
@@ -465,7 +466,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
             TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
-                Description: "Received InitiateEndChat BroadcastEvent."
+                Description: "Received InitiateEndChat BroadcastEvent.",
+                CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
             });
 
             // This is to ensure to get latest state from cache in multitab
@@ -798,7 +800,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXLiveChatWidgetCompleted,
             Description: "Live chat widget loading completed.",
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
     }, []);
 
@@ -885,46 +888,54 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }), [webChatStyles, bubbleBackground, bubbleTextColor]);
     const renderCopilotLCW = true;
     console.log("debugging: updated liveChatWidgetStateful: webChatProps ", webChatProps, " directline: ", directLine, " windows directline: ", (window as any).customDirectline ?? "");
+
+    // React to dynamic bot avatar initials updates from context
+    useEffect(() => {
+        if (state.domainStates.botAvatarInitials && state.domainStates.botAvatarInitials !== webChatStyles.botAvatarInitials) {
+            setWebChatStyles((styles: StyleOptions) => ({ ...styles, botAvatarInitials: state.domainStates.botAvatarInitials! }));
+        }
+    }, [state.domainStates.botAvatarInitials]);
+
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>
             <style>{`
-            ::-webkit-scrollbar {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar {
                 width: ${scrollbarProps.width};
             }
 
-            ::-webkit-scrollbar-track {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-track {
                 background: ${scrollbarProps.trackBackgroundColor};
             }
 
-            ::-webkit-scrollbar-thumb {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb {
                 background: ${scrollbarProps.thumbBackgroundColor};
                 border-radius: ${scrollbarProps.thumbBorderRadius};
             }
 
-            ::-webkit-scrollbar-thumb:hover {
+            #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb:hover {
                 background: ${scrollbarProps.thumbHoverColor};
             }
 
             /* High Contrast mode support - optimized for all variants */
             @media (prefers-contrast: high), (-ms-high-contrast: active), (forced-colors: active) {
-                ::-webkit-scrollbar-track {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-track {
                     background: Canvas !important;
                     border: 1px solid CanvasText !important;
                 }
 
-                ::-webkit-scrollbar-thumb {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb {
                     background: CanvasText !important;
                     border: 1px solid Canvas !important;
                     min-height: 20px !important;
                 }
 
-                ::-webkit-scrollbar-thumb:hover {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-thumb:hover {
                     background: Highlight !important;
                     border: 1px solid CanvasText !important;
                 }
 
-                ::-webkit-scrollbar-corner {
+                #oc-lcw .webchat__basic-transcript__scrollable::-webkit-scrollbar-corner {
                     background: Canvas !important;
                 }
             }

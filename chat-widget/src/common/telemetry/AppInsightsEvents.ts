@@ -1,8 +1,5 @@
 export const AppInsightsEventMapping: Record<string, string> = {
     "LCWChatButtonClicked": "LCWChatButtonActionStarted",
-    "WidgetLoadStarted": "WidgetStartChatStarted",
-    "WidgetLoadComplete": "WidgetStartChatCompleted",
-    "WidgetLoadFailed": "WidgetStartChatFailed",
     "PrechatSubmitted": "PrechatSubmitCompleted",
     "StartChatEventRecevied": "StartChatEventReceivedCompleted",
     "EndChatEventReceived": "EndChatEventReceivedCompleted",
@@ -18,7 +15,9 @@ export const AppInsightsEventMapping: Record<string, string> = {
     "MessageSent": "MessageSentCompleted",
     "MessageReceived": "MessageReceivedCompleted",
     "SystemMessageReceived": "SystemMessageReceivedCompleted",
-    "RehydrateMessageReceived": "RehydrateMessageReceivedCompleted",
+    "RehydrateMessageReceived": "ChatHistoryMessageReceivedCompleted",
     "CustomContextReceived": "CustomContextReceivedCompleted",
-    "PostChatContextCallSucceed": "PostChatContextCallCompleted",
+    "NewTokenValidationStarted": "AuthTokenValidationStarted",
+    "NewTokenValidationCompleted": "AuthTokenValidationCompleted",
+    "NewTokenValidationFailed": "AuthTokenValidationFailed",
 };

@@ -1,4 +1,4 @@
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import { ConversationStage, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, setFocusOnElement } from "../../common/utils";
 
@@ -25,7 +25,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXLCWChatButtonLoadingStart,
-            Description: "Chat button loading started"
+            Description: "Chat button loading started",
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
     }, []);
     
@@ -44,7 +45,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonClicked,
-            Description: "Chat button click action started"
+            Description: "Chat button click action started",
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
         
         if (state.appStates.isMinimized) {
@@ -60,7 +62,8 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
 
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.LCWChatButtonActionCompleted,
-            Description: "Chat button action completed"
+            Description: "Chat button action completed",
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
     };
 
@@ -112,8 +115,9 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXLCWChatButtonLoadingCompleted,
             Description: "Chat button loading completed",
-            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
-        }); 
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
+            CustomProperties: { ConversationStage: ConversationStage.Initialization }
+        });
     }, []);
 
     useEffect(() => {

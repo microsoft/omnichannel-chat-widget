@@ -6,9 +6,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- [A11Y] Added focus on citation pane close button when citation pane is opened
+- [A11Y] Divider hack to force screen readers to mention it 
+- [A11Y] Update of initials from agent to update DOM, for proper mention by screen readers
+- Adding new logic based on config to define when persistent chat history is enabled
+- Adding support to fetch history messages for persistent chat
+- Add use of `config.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled` to enable persistent chat history feature
+- Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
+
+### Changed
+
+- Uptake [@microsoft/omnichannel-chat-components@1.1.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.16)
+
+## [1.8.3] - 2025-10-07
+
 ### Fixed
 
+- IOS mobile doesnt display emoji when typing.
+- Fix 400% zoom issue on citation pane
+- Missing export for LiveChatWidgetMockType in index.ts
+- Fixed issue where link post chat survey not displayed
 - Adding lcwRuntimeId field to the payload for Maximize events
+- Scrollbar selector contained to only widget div
+- Added role to retry element for failed messages
 
 ### Added
 
@@ -23,11 +45,18 @@ All notable changes to this project will be documented in this file.
 - Fixed carousel attachments alignment issue
 - Bot authentication activity adaptive card visibility
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
+- Improved designer mode to take mock messages as input
+- Fixed keyboard focus issue for suggested actions previous and next button
 
 ### Changed
 
 - make citation props optional
 - Uptake [@microsoft/omnichannel-chat-components@1.1.14](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.14)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.15](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.15)
+
+### Changed
+
+- Refined AppInsights telemetry with updated metadata and events
 
 ### Security
 
@@ -633,6 +662,18 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.16] - 2025-10-14
+
+### Fixed
+
+- Fixed duplicate email error announcement for Android talkback
+
+## [1.1.15]
+
+### Fixed
+
+- Citation pane will hide bottom close button at high zoom to prevent block of the content
 
 ## [1.1.14]
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/display-name */
 /******
  * ActivityMiddleware
  * 
@@ -7,18 +9,23 @@
  * 3. Decodes certain html characters that came through from chat services
  ******/
 
+import LazyLoadActivity, { LazyLoadHandler } from "./activities/LazyLoadActivity";
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 
 import { Constants } from "../../../../../common/Constants";
+import ConversationDividerActivity from "./activities/ConversationDividerActivity";
 import { DirectLineActivityType } from "../../enums/DirectLineActivityType";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
+import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
 import React from "react";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
+import { defaultMiddlewareLocalizedTexts } from "../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultSystemMessageStyles } from "./defaultStyles/defaultSystemMessageStyles";
 import { defaultUserMessageStyles } from "./defaultStyles/defaultUserMessageStyles";
 import { escapeHtml } from "../../../../../common/utils";
 
 const loggedSystemMessages = new Array<string>();
+let lastRenderedAt = 0; // Track last rendered receivedAt timestamp for deduplication
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties) => {
     const systemMessageStyles = { ...defaultSystemMessageStyles, ...systemMessageStyleProps };
@@ -67,8 +74,14 @@ const isDataTagsPresent = (card: any) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createActivityMiddleware = (renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties, userMessageStyleProps?: React.CSSProperties) => () => (next: any) => (...args: any) => {
+export const createActivityMiddleware = (
+    renderMarkdown: (text: string) => string,
+    systemMessageStyleProps?: React.CSSProperties,
+    userMessageStyleProps?: React.CSSProperties,
+    localizedTexts?: ILiveChatWidgetLocalizedTexts
+) => () => (next: any) => (...args: any) => {
     const [card] = args;
+    
     if (card.activity) {
         if (card.activity.from?.role === DirectLineSenderRole.Channel) {
             return () => false;
@@ -80,6 +93,50 @@ export const createActivityMiddleware = (renderMarkdown: (text: string) => strin
 
         if (isTagIncluded(card, Constants.systemMessageTag)) {
             return handleSystemMessage(next, args, card, renderMarkdown, systemMessageStyleProps);
+        }
+
+        if (isTagIncluded(card, Constants.persistentChatHistoryMessagePullTriggerTag)) {
+            
+            // Safety check: if this is a new chat session and flag is false, auto-correct it
+            if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+                LazyLoadHandler.setHasMoreHistoryAvailable(true);
+            }
+            
+            const receivedAt = card?.activity?.channelData?.webChat?.receivedAt;
+
+            if (receivedAt < lastRenderedAt) {
+                card.activity = null;
+                return () => false;
+            }
+
+            lastRenderedAt = receivedAt;
+
+            // Return a function that checks availability at render time
+            return () => {
+                // Double-check at render time in case history availability changed
+                if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+                    return null;
+                }
+                return <LazyLoadActivity />;
+            };
+        }
+        
+        if (isTagIncluded(card, Constants.persistentChatHistoryMessageTag)) {
+            const userMessageStyles = { ...defaultUserMessageStyles, ...userMessageStyleProps };
+
+            return (...renderArgs: any) => {
+                return (
+                    <div className={card.activity.from.role === DirectLineSenderRole.User ? Constants.sentMessageClassName : Constants.receivedMessageClassName} style={userMessageStyles}>
+                        {next(...args)(...renderArgs)}
+                    </div>
+                );
+            };
+        }
+
+        if (isTagIncluded(card, Constants.conversationDividerTag)) {
+            const conversationDividerLabel = localizedTexts?.CONVERSATION_DIVIDER_ARIA_LABEL || defaultMiddlewareLocalizedTexts.CONVERSATION_DIVIDER_ARIA_LABEL;
+            // Pass the computed localized text to the divider component
+            return (<ConversationDividerActivity dividerActivityAriaLabel={conversationDividerLabel} />);
         }
 
         if (card.activity.text

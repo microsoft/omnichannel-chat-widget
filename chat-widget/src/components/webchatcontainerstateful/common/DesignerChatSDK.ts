@@ -1,13 +1,19 @@
 import { DesignerChatAdapter } from "./DesignerChatAdapter";
+import { Message } from "botframework-directlinejs";
 import { MockChatSDK } from "./mockchatsdk";
 
 export class DesignerChatSDK extends MockChatSDK {
     constructor() {
         super();
     }
+    /**
+     * Create a chat adapter for the designer. Uses this.mockMessages if set.
+     */
+    public mockMessages?: Message[];
 
     public createChatAdapter() {
-        return new DesignerChatAdapter();
+        const adapter = new DesignerChatAdapter(this.mockMessages);
+        return adapter;
     }
 
     public localeId = this.getLiveChatConfig().ChatWidgetLanguage.msdyn_localeid;

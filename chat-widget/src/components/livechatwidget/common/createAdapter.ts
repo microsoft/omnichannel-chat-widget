@@ -1,3 +1,4 @@
+import { AddActivitySubscriber } from "./ActivitySubscriber/AddActivitySubscriber";
 import { BotAuthActivitySubscriber } from "./ActivitySubscriber/BotAuthActivitySubscriber";
 import { ChatAdapterShim } from "./ChatAdapterShim";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
@@ -52,6 +53,8 @@ export const createAdapter = async (facadeChatSDK: FacadeChatSDK, props?: ILiveC
         };
 
         adapter = new ChatAdapterShim(adapter);
+        adapter.addSubscriber(new AddActivitySubscriber());
+
         adapter.addSubscriber(new PauseActivitySubscriber());
         adapter.addSubscriber(new BotAuthActivitySubscriber(botAuthActivitySubscriberOptionalParams));
         // Remove this code after ICM ID:544623085 is fixed

@@ -10,9 +10,13 @@ export const defaultCitationPaneCloseButtonStyles: IStyle = {
     cursor: "pointer",
     fontSize: "1em", // Use relative font size for better scaling
     fontWeight: "500",
-    minHeight: "2em", // Scalable minimum height
-    minWidth: "5em", // Scalable minimum width
+    minHeight: "2.75em", // A11Y compliant minimum height (44px at 16px base)
+    minWidth: "5.5em", // A11Y compliant minimum width (88px at 16px base)
     padding: "0.5em 1em", // Scalable padding
+    // Responsive hiding at high zoom levels for better content space
+    "@media (min-resolution: 2.5dppx), (min-resolution: 240dpi)": {
+        display: "none" // Hide at 250%+ zoom to preserve content space
+    },
     selectors: {
         ":hover": {
             backgroundColor: "#e1dfdd",
@@ -22,5 +26,9 @@ export const defaultCitationPaneCloseButtonStyles: IStyle = {
             outline: "0.125em solid #0078d4", // Scalable outline
             outlineOffset: "0.125em" // Scalable offset
         },
-    },
+        ":active": {
+            backgroundColor: "#d2d0ce",
+            borderColor: "#c8c6c4"
+        }
+    }
 };

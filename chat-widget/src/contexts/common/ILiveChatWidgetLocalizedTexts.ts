@@ -1,4 +1,11 @@
 export interface ILiveChatWidgetLocalizedTexts {
+    PREVIOUS_MESSAGES_LOADING?: string;
+
+    /**
+     * Aria label announced by screen readers for the conversation history divider element.
+     * e.g. "Conversation history divider" or localized equivalent.
+     */
+    CONVERSATION_DIVIDER_ARIA_LABEL?: string;
 
     /*
      * Error message shown when the file uploaded is null.

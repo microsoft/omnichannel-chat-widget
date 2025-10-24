@@ -30,5 +30,7 @@ export const defaultMiddlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts = {
     THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE: "Allow sites to save/read cookies in browser settings. Reloading page starts a new chat.",
     MIDDLEWARE_BANNER_FILE_IS_MALICIOUS: "{0} has been blocked because the file may contain a malware.",
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS: "Email will be sent after chat ends!",
-    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR: "Email {0} could not be saved, try again later."    
+    MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR: "Email {0} could not be saved, try again later.",
+    PREVIOUS_MESSAGES_LOADING: "Loading previous messages...",
+    CONVERSATION_DIVIDER_ARIA_LABEL: "Conversation history divider"
 };

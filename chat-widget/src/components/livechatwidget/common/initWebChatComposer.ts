@@ -1,6 +1,7 @@
 import { ConversationEndEntity, ParticipantType } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { changeLanguageCodeFormatForWebChat, getConversationDetailsCall } from "../../../common/utils";
+import { getOverriddenLocalizedStrings, localizedStringsBotInitialsMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/localizedStringsBotInitialsMiddleware";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../../common/Constants";
@@ -20,6 +21,7 @@ import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontro
 import attachmentProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentProcessingMiddleware";
 import channelDataMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/channelDataMiddleware";
 import { createActivityMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware";
+import { createActivityStatusMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware";
 import { createAttachmentMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
 import createAttachmentUploadValidatorMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentUploadValidatorMiddleware";
 import { createAvatarMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware";
@@ -47,7 +49,6 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
-import { localizedStringsBotInitialsMiddleware, getOverriddenLocalizedStrings } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/localizedStringsBotInitialsMiddleware";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -71,6 +72,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
     if (!webChatStore) {
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const addConversationalSurveyTagsCallback = (action: any) => {
             const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
             const isConversationalSurvey = inMemoryState.appStates?.isConversationalSurvey;
@@ -216,9 +218,14 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         dir: state.domainStates.globalDir,
         locale: changeLanguageCodeFormatForWebChat(getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid)),
         store: webChatStore,
-        activityMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityMiddleware ? undefined : createActivityMiddleware(renderMarkdown, state.domainStates.renderingMiddlewareProps?.systemMessageStyleProps, state.domainStates.renderingMiddlewareProps?.userMessageStyleProps),
+        activityMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityMiddleware ? undefined : createActivityMiddleware(
+            renderMarkdown,
+            state.domainStates.renderingMiddlewareProps?.systemMessageStyleProps,
+            state.domainStates.renderingMiddlewareProps?.userMessageStyleProps,
+            localizedTexts
+        ),
         attachmentMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAttachmentMiddleware ? undefined : createAttachmentMiddleware(state.domainStates.renderingMiddlewareProps?.attachmentProps?.enableInlinePlaying ?? defaultAttachmentProps.enableInlinePlaying),
-        activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : defaultWebChatContainerStatefulProps.webChatProps?.activityStatusMiddleware,
+        activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : createActivityStatusMiddleware(getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid)),
         toastMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableToastMiddleware ? undefined: createToastMiddleware(props.notificationPaneProps, endChat),
         renderMarkdown,
         avatarMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAvatarMiddleware ? undefined : createAvatarMiddleware(state.domainStates.renderingMiddlewareProps?.avatarStyleProps, state.domainStates.renderingMiddlewareProps?.avatarTextStyleProps),

@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/omnichannel-chat-widget",
-  "version": "1.8.3-0",
+  "version": "1.8.4-0",
   "description": "Microsoft Omnichannel Chat Widget",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",
@@ -87,8 +87,8 @@
     "@azure/core-tracing": "^1.2.0",
     "@fluentui-copilot/react-copilot-chat": "^0.12.5",
     "@microsoft/applicationinsights-web": "^3.3.6",
-    "@microsoft/omnichannel-chat-components": "1.1.14",
-    "@microsoft/omnichannel-chat-sdk": "^1.11.6",
+    "@microsoft/omnichannel-chat-components": "1.1.16",
+    "@microsoft/omnichannel-chat-sdk": "^1.11.7-main.3418dc3",
     "@opentelemetry/api": "^1.9.0",
     "abort-controller": "^3",
     "abort-controller-es5": "^2.0.1",

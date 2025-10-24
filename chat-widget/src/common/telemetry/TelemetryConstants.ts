@@ -60,11 +60,13 @@ export enum BroadcastEvent {
     SyncMinimize = "SyncMinimize",
     OnWidgetError = "OnWidgetError",
     FMLTrackingCompletedAck = "FMLTrackingCompletedAck",
-    FMLTrackingCompleted = "FMLTrackingCompleted"
+    FMLTrackingCompleted = "FMLTrackingCompleted",
+    PersistentConversationReset = "PersistentConversationReset"
 }
 
 // Events being logged
 export enum TelemetryEvent {
+    FetchPersistentChatHistoryFailed = "FetchPersistentChatHistoryFailed",
     CallAdded = "CallAdded",
     LocalVideoStreamAdded = "LocalVideoStreamAdded",
     LocalVideoStreamRemoved = "LocalVideoStreamRemoved",
@@ -110,10 +112,11 @@ export enum TelemetryEvent {
     EndChatFailed = "EndChatFailed",
     SettingCustomContext = "SettingCustomContext",
     WebChatLoaded = "WebChatLoaded",
+    PersistentChatHistoryEnabled = "PersistentChatHistoryEnabled",
     LCWChatButtonActionCompleted = "LCWChatButtonActionCompleted",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
-
+    
     WidgetLoadStarted = "WidgetLoadStarted",
     WidgetLoadComplete = "WidgetLoadComplete",
     WidgetLoadFailed = "WidgetLoadFailed",
@@ -292,9 +295,40 @@ export enum TelemetryEvent {
     UXCitationPaneCompleted = "UXCitationPaneCompleted",
     UXLiveChatWidgetStart = "UXLiveChatWidgetStart",
     UXLiveChatWidgetCompleted = "UXLiveChatWidgetCompleted",
+    UXPostChatPaneStarted = "UXPostChatPaneStarted",
+    UXPostChatPaneCompleted = "UXPostChatPaneCompleted",
 
     AppInsightsInitialized = "AppInsightsInitialized",
     AppInsightsInitFailed = "AppInsightsInitFailed",
+    ConvertPersistentChatHistoryMessageToActivityFailed = "ConvertPersistentChatHistoryMessageToActivityFailed",
+    UXLCWPersistentChatHistoryInitialized = "UXLCWPersistentChatHistoryInitialized",
+    LCWPersistentChatHistoryFetchStarted = "LCWPersistentChatHistoryFetchStarted",
+    LCWPersistentChatHistoryFetchCompleted = "LCWPersistentChatHistoryFetchCompleted",
+    LCWPersistentChatHistoryFetchFailed = "LCWPersistentChatHistoryFetchFailed",
+    LCWWebChatStorePollingStarted = "LCWWebChatStorePollingStarted",
+    LCWWebChatStoreReady = "LCWWebChatStoreReady",
+    LCWWebChatConnected = "LCWWebChatConnected",
+    LCWWebChatDisconnected = "LCWWebChatDisconnected",
+    LCWWebChatConnectionCheckFailed = "LCWWebChatConnectionCheckFailed",
+    LCWPersistentConversationHandlerInitialized = "LCWPersistentConversationHandlerInitialized",
+    LCWPersistentHistoryPullBlocked = "LCWPersistentHistoryPullBlocked",
+    LCWPersistentHistoryPullCompleted = "LCWPersistentHistoryPullCompleted",
+    LCWLazyLoadInitializationStarted = "LCWLazyLoadInitializationStarted",
+    LCWLazyLoadContainerNotFound = "LCWLazyLoadContainerNotFound",
+    LCWLazyLoadInitializationCompleted = "LCWLazyLoadInitializationCompleted",
+    LCWLazyLoadSessionMetrics = "LCWLazyLoadSessionMetrics",
+    LCWLazyLoadTargetElementNotFound = "LCWLazyLoadTargetElementNotFound",
+    LCWLazyLoadScrollFailed = "LCWLazyLoadScrollFailed",
+    LCWLazyLoadActivityMounted = "LCWLazyLoadActivityMounted",
+    LCWLazyLoadReset = "LCWLazyLoadReset",
+    LCWLazyLoadNoMoreHistory = "LCWLazyLoadNoMoreHistory",
+    LCWLazyLoadDestroyed = "LCWLazyLoadDestroyed",
+
+    // SecureEventBus events
+    SecureEventBusUnauthorizedDispatch = "SecureEventBusUnauthorizedDispatch",
+    SecureEventBusListenerError = "SecureEventBusListenerError",
+    SecureEventBusDispatchError = "SecureEventBusDispatchError",
+    StartChatComplete = "StartChatComplete",
 
 }
 
@@ -368,6 +402,9 @@ export class TelemetryConstants {
             case TelemetryEvent.PostChatWorkflowFromAgent:
             case TelemetryEvent.PostChatWorkflowFromBot:
             case TelemetryEvent.AppStatesException:
+            case TelemetryEvent.SecureEventBusUnauthorizedDispatch:
+            case TelemetryEvent.SecureEventBusListenerError:
+            case TelemetryEvent.SecureEventBusDispatchError:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
@@ -427,4 +464,10 @@ export class TelemetryConstants {
     public static mapEventToScenario(eventTypeOrScenarioType: TelemetryEvent): ScenarioType {
         return TelemetryConstants.map(eventTypeOrScenarioType);
     }
+}
+
+export enum ConversationStage {
+    Initialization = "Initialization",
+    CSREngagement = "CSR Engagement",
+    ConversationEnd = "Conversation End"
 }

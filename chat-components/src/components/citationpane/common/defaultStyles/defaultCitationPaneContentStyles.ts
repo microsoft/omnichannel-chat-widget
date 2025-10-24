@@ -6,5 +6,5 @@ export const defaultCitationPaneContentStyles: IStyle = {
     marginBottom: "0", // No bottom margin since close button has top margin
     flex: "1", // Allow content to grow and push close button to bottom
     overflow: "auto", // Enable scrolling for long content
-    paddingRight: "0.25em" // Small padding to prevent scrollbar from touching border (scalable)
+    paddingRight: "0.125em" // Reduced padding to give more space for text at high zoom (scalable)
 };

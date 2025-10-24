@@ -32,7 +32,7 @@ export const createTrackingForFirstMessage = () => {
      * Starts tracking the time for the first bot message after widget loads.
      * Sets a 5-second timeout to auto-reset if no bot message is received.
      */
-    const widgetLoadListener = BroadcastService.getMessageByEventName(TelemetryEvent.WidgetLoadComplete).subscribe(() => {
+    const widgetLoadListener = BroadcastService.getMessageByEventName(TelemetryEvent.StartChatComplete).subscribe(() => {
         if (isTracking) return;
         isTracking = true;
         startTime = new Date().getTime();
@@ -90,7 +90,8 @@ export const createTrackingForFirstMessage = () => {
                 CustomProperties: {
                     elapsedTime,
                     widgetLoadedAt: startTime,
-                    botMessage: stopTrackingMessage
+                    botMessage: stopTrackingMessage,
+                    type: payload?.type
                 }
             });
             disconnectListener();

@@ -7,6 +7,7 @@ import { ILiveChatWidgetProps } from "../../components/livechatwidget/interfaces
 import { StartChatFailureType } from "./StartChatFailureType";
 import { defaultClientDataStoreProvider } from "../../common/storage/default/defaultClientDataStoreProvider";
 import { defaultMiddlewareLocalizedTexts } from "../../components/webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
+import { defaultWebChatStyles } from "../../components/webchatcontainerstateful/common/defaultStyles/defaultWebChatStyles";
 
 export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps) => {
 
@@ -41,6 +42,10 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         initialStateFromCache.domainStates.liveChatConfig = props.chatConfig;
         // Cache the result of isOutsideOperatingHours() to ensure consistency
         initialStateFromCache.appStates.outsideOperatingHours = outsideOperatingHours;
+        // Backward compatibility: if botAvatarInitials not cached (older sessions), seed with default
+        if (!initialStateFromCache.domainStates.botAvatarInitials) {
+            initialStateFromCache.domainStates.botAvatarInitials = defaultWebChatStyles.botAvatarInitials as string;
+        }
         return initialStateFromCache;
     }
 
@@ -65,7 +70,8 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             transcriptRequestId: "",
             confirmationPaneConfirmedOptionClicked: false,
             confirmationState: ConfirmationState.NotSet,
-            startChatFailureType: StartChatFailureType.Generic
+            startChatFailureType: StartChatFailureType.Generic,
+            botAvatarInitials: defaultWebChatStyles.botAvatarInitials as string
         },
         appStates: {
             conversationState: ConversationState.Closed,
