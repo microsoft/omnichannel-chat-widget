@@ -136,6 +136,40 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             sanitizationMiddleware,
             createCallActionMiddleware(),
             localizedStringsBotInitialsMiddleware(),
+            ({ dispatch }: {dispatch: (payload: any) => void}) =>
+                (next: any) =>
+                    (action: any) => {
+                        if (action.type === "DIRECT_LINE/CONNECT_FULFILLED") {
+                            console.log("debugging: custom store invoked: ", action);
+                            dispatch({
+                                type: "DIRECT_LINE/POST_ACTIVITY",
+                                meta: { method: "keyboard" },
+                                payload: {
+                                    activity: {
+                                        channelData: { postBack: true, RegardingLiveWorkItemId: "abcd1122" },
+                                        name: "startConversation",
+                                        type: "event",
+                                        value: {
+                                            RegardingLiveWorkItemId: "ccbbdd"
+                                        }
+                                    },
+                                },
+                            });
+                            setTimeout(() => {                                
+                                dispatch({
+                                    type: "WEB_CHAT/SEND_EVENT",
+                                    payload: {
+                                        name: "triggerOrderStatus",
+                                        type: "event",
+                                        value: {
+                                            OrderId: "abcdfsef"
+                                        }
+                                    }
+                                });
+                            }, 5*1000);
+                        }
+                        return next(action);
+                    },
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ...(props.webChatContainerProps?.storeMiddlewares as any[] ?? [])
         );

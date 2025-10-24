@@ -3,7 +3,7 @@
       "version": "0.0.1",
       "dependencies": {
         "@fluentui/react": "^8.123.1",
-        "@microsoft/omnichannel-chat-widget": "^1.8.2-main.d82a79b",
+        "@microsoft/omnichannel-chat-widget": "1.8.3",
         "broadcast-channel": "^7.1.0",
         "crypto-browserify": "^3.12.0",
         "md5-typescript": "^1.0.5",
@@ -34,7 +34,7 @@
         "webpack-dev-server": "^5.2.2"
       },
       "scripts": {
-        "start": "webpack serve --open",
+        "start": "webpack serve --open --port 4001",
         "build": "webpack --mode development"
       },
       "browserslist": {

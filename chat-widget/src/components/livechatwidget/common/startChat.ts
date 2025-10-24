@@ -24,6 +24,7 @@ import { isPersistentChatEnabled } from "./liveChatConfigUtils";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
+import { DirectLineConnection } from "../livechatwidgetstateful/directLineConnection";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let optionalParams: StartChatOptionalParams = {};
@@ -248,6 +249,11 @@ const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch:
     // New adapter creation
     const newAdapter = await createAdapter(facadeChatSDK, props);
     setAdapter(newAdapter);
+    const directLineInstance = await DirectLineConnection.getInstance().getIBotConnection();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).customDirectline = directLineInstance.customDirectline;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).customStore = directLineInstance.customStore;
 
     const chatToken = await facadeChatSDK?.getChatToken();
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });

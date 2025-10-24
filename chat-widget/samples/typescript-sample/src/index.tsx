@@ -5,19 +5,31 @@ import * as OcChatWidgetPackageInfo from "@microsoft/omnichannel-chat-widget/pac
 import React, { useEffect, useState } from "react";
 
 import { CoffeeChatIconBase64 } from "../src/common/assets";
-import { LiveChatWidget } from "@microsoft/omnichannel-chat-widget";
+import { LiveChatWidget, BroadcastService } from "@microsoft/omnichannel-chat-widget";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import ReactDOM from "react-dom/client";
 import { defaultProps } from "../src/common/defaultProps";
 
 const getOmnichannelChatConfig = () => {
+    // persistant chat with link survey
     const omnichannelConfig = {
-        orgId: "<org-id>",
-        orgUrl: "<org-url>",
-        widgetId: "<widget-id>",
+        orgId: "b3405482-62a4-f011-bbc7-000d3a32c974",
+        orgUrl: "https://m-b3405482-62a4-f011-bbc7-000d3a32c974.preprod.omnichannelengagementhub.com",
+        widgetId: "edd4746e-a9be-4df2-8dd0-ea1edf5607af"
     };
     return omnichannelConfig;
 };
+
+function endChat() {
+    // Use imported BroadcastService directly
+    const endChatEvent = {
+        eventName: "InitiateEndChat"
+    };
+    setTimeout(() => {
+        BroadcastService.postMessage(endChatEvent);
+        console.log("InitiateEndChat event sent to widget");
+    }, 10*1000);
+}
 
 const App = () => {
     // To avoid webpack 5 warning and soon obsolete code, rename the packageinfo variable
@@ -28,7 +40,7 @@ const App = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [liveChatWidgetProps, setLiveChatWidgetProps] = useState<any>();
     const omnichannelConfig = getOmnichannelChatConfig();
-
+    const jwt_2025 = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYWFhYWFhYS0wMDAwLTExMTEtMjIyMi1iYmJiYmJiYmJiYmIiLCJsd2ljb250ZXh0cyI6IntcIm1zZHluX2NhcnR2YWx1ZVwiOlwiMTAwMDBcIiwgXCJtc2R5bl9pc3ZpcFwiOlwiZmFsc2VcIiwgXCJwb3J0YWxjb250YWN0aWRcIjpcImFhYWFhYWFhLTAwMDAtMTExMS0yMjIyLWJiYmJiYmJiYmJiYlwifSIsImlhdCI6MTU0MjYyMjA3MSwiaXNzIjoiY29udG9zb2hlbHAuY29tIiwiZXhwIjoxODQyNjI1NjcyLCJuYmYiOjE1NDI2MjIwNzJ9.MKKITr-1H24MKkbhPY0cBmFD-K6_M1kVHpsAPEv9oibBrby8vktrpnkl4PXpF1UaE9h1jFxzgQwAYReZpf9pZt_2ht5Gu_zLoBCTSqh73xudYJKkoaLJx3dNHkTsKglaB3zGItKsOWjY2Cs4v5e0OwHM0VFAZ0v6ahiFgZODLll7ChloQ7Yet74rr9evQBsbNVWDgFFZ-E3XbfV73yc9yviE7eC2B8Gph09apTAkxbYqNThMoUeQTQHR9p8AAHADIU2VzLIsaCTzYVTpZ4chpeEcem3QxQlEmjWiNDxxkix0N-b9gz4a0CPqMSwLHKndk15Q79nzmDGwRw2mzbFG2w";
     useEffect(() => {
         const init = async () => {
             const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
@@ -102,6 +114,10 @@ const App = () => {
                     chatWidgetVersion: OcChatWidgetPkgInfo.version,
                     chatComponentVersion: OcChatComponentPkgInfo.version,
                     OCChatSDKVersion: OcSdkPkginfo.version
+                },
+                getAuthToken: (callback: any) => {
+                    console.log("getOmnichannel auth token been invoked", callback);
+                    return jwt_2025;
                 }
             };
 
@@ -113,6 +129,12 @@ const App = () => {
 
     return (
         <div>
+            <div >
+                <label>{"@microsoft/omnichannel-chat-widget: 1.8.3"}</label>
+                <button onClick={endChat}>
+                End Chat after 10s (BroadcastService)
+                </button>
+            </div>
             {liveChatWidgetProps && <LiveChatWidget {...liveChatWidgetProps} />}
         </div>
     );

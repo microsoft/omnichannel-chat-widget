@@ -30,6 +30,8 @@ import { IStartChatErrorPaneProps } from "../../startchaterrorpanestateful/inter
 import { ITelemetryConfig } from "../../../common/telemetry/interfaces/ITelemetryConfig";
 import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
+import { OmnichannelMessage, ChatSDKMessage, FlightMessageSubject, SimpleSubject, OmnichannelMessageOptional, AttachmentUpdateMessage } from "copilot-lcw";
+import { AttachmentMessageSubject } from "copilot-lcw/dist/attachmentMessageSubject";
 
 export interface ILiveChatWidgetProps {
     audioNotificationProps?: IAudioNotificationProps;
@@ -78,4 +80,7 @@ export interface ILiveChatWidgetProps {
     featureConfigProps?: IFeatureConfigProps;
     appInsightsConfig?: IAppInsightsConfig;
     citationProp?: ICitationPaneProps;
+    messageSubject?: SimpleSubject<OmnichannelMessageOptional[]>;
+    flightMessageSubject?: FlightMessageSubject<ChatSDKMessage>;
+    attachmentUpdateSubject?: AttachmentMessageSubject<AttachmentUpdateMessage>;
 }

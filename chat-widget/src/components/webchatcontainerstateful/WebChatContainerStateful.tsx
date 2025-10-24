@@ -25,6 +25,7 @@ import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/r
 import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { useChatContextStore } from "../..";
+import {App, FlightMessageSubject, OmnichannelMessage} from "copilot-lcw";
 
 let uiTimer : ITimer;
 
@@ -55,7 +56,6 @@ const createMagicCodeSuccessResponse = (signin: string) => {
 };
 
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
-
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -372,7 +372,12 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-            <BasicWebChat></BasicWebChat>
+            <div><BasicWebChat></BasicWebChat></div>
+            {/* <App messageSubject={props.messageSubject} 
+                flightMessageSubject={props.flightMessageSubject}
+                attachmentMessageSubject={props.attachmentUpdateSubject}
+                eventHandler={(event) => console.log(event)}
+            /> */}
         </Stack>
         {citationPaneOpen && (
             <CitationPaneStateful 

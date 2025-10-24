@@ -570,7 +570,7 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                 ...action.payload as ILiveChatWidgetContext
             };
 
-        case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY:
+        case LiveChatWidgetActionType.SET_CONVERSATION_ENDED_BY: {
             inMemory = {
                 ...inMemory,
                 appStates: {
@@ -578,13 +578,17 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     conversationEndedBy: action.payload as ConversationEndEntity
                 }
             };
-            return {
+            console.log("debugging: received set_conversation ended by event: latest inMemory: ", inMemory);
+            const newState = {
                 ...state,
                 appStates: {
                     ...state.appStates,
                     conversationEndedBy: action.payload as ConversationEndEntity
                 }
             };
+            console.log("debugging: received set_conversation ended by event: latest: newState: ", newState);
+            return newState;
+        }
 
         case LiveChatWidgetActionType.SET_WIDGET_SIZE:
             inMemory = {

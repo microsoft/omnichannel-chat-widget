@@ -10,6 +10,7 @@
 
 <body style="margin: 0">
   <script>
+    let jwt_2025 = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYWFhYWFhYS0wMDAwLTExMTEtMjIyMi1iYmJiYmJiYmJiYmIiLCJsd2ljb250ZXh0cyI6IntcIm1zZHluX2NhcnR2YWx1ZVwiOlwiMTAwMDBcIiwgXCJtc2R5bl9pc3ZpcFwiOlwiZmFsc2VcIiwgXCJwb3J0YWxjb250YWN0aWRcIjpcImFhYWFhYWFhLTAwMDAtMTExMS0yMjIyLWJiYmJiYmJiYmJiYlwifSIsImlhdCI6MTU0MjYyMjA3MSwiaXNzIjoiY29udG9zb2hlbHAuY29tIiwiZXhwIjoxODQyNjI1NjcyLCJuYmYiOjE1NDI2MjIwNzJ9.MKKITr-1H24MKkbhPY0cBmFD-K6_M1kVHpsAPEv9oibBrby8vktrpnkl4PXpF1UaE9h1jFxzgQwAYReZpf9pZt_2ht5Gu_zLoBCTSqh73xudYJKkoaLJx3dNHkTsKglaB3zGItKsOWjY2Cs4v5e0OwHM0VFAZ0v6ahiFgZODLll7ChloQ7Yet74rr9evQBsbNVWDgFFZ-E3XbfV73yc9yviE7eC2B8Gph09apTAkxbYqNThMoUeQTQHR9p8AAHADIU2VzLIsaCTzYVTpZ4chpeEcem3QxQlEmjWiNDxxkix0N-b9gz4a0CPqMSwLHKndk15Q79nzmDGwRw2mzbFG2w"
     function lcw() {
       return {
         styleProps: {
@@ -36,6 +37,10 @@
             fwdUrl: 'http://localhost:8000/sample/MagicCodeForwarder.html'
           }
         },
+        getAuthToken: (callback) => {
+            console.log("getOmnichannel auth token been invoked", callback);
+            return jwt_2025;
+        }
       }
     }
 
@@ -65,11 +70,85 @@
       });
       window.dispatchEvent(evt);
     }
+
+
+    function convertToJwtToken(payloadToEncrypt){
+        return function(callback){
+          
+
+            console.time("jwt_time");
+            callback(jwt_2025);
+            console.timeEnd("jwt_time");
+        }
+    }
+    window.getOmnichannelAuthToken = (callback) => {
+        console.log("getOmnichannel auth token been invoked");
+        let payload = {};
+        convertToJwtToken(payload)(callback);
+    };
+
+    // Function to send initEndChat event to the chat widget
+    function endChat() {
+        // Import BroadcastService from the widget
+        if (window.Microsoft && window.Microsoft.Omnichannel && window.Microsoft.Omnichannel.LiveChatWidget && window.Microsoft.Omnichannel.LiveChatWidget.SDK) {
+            const BroadcastService = window.Microsoft.Omnichannel.LiveChatWidget.SDK.BroadcastService;
+            
+            const endChatEvent = {
+                eventName: "InitiateEndChat"
+            };
+            
+            BroadcastService.postMessage(endChatEvent);
+            console.log("InitiateEndChat event sent to widget");
+        } else {
+            console.error("BroadcastService not available. Make sure the widget is loaded.");
+        }
+    }
+
+    // Alternative method using direct postMessage
+    function endChatAlternative() {
+        const endChatEvent = {
+            eventName: "InitiateEndChat"
+        };
+        
+        // Try to post message to the widget iframe if it exists
+        const widgetFrame = document.querySelector('#oc-lcw-container iframe');
+        if (widgetFrame) {
+            widgetFrame.contentWindow.postMessage(endChatEvent, '*');
+            console.log("InitiateEndChat event sent via postMessage");
+        } else {
+            // Fallback: broadcast to all windows
+            window.postMessage(endChatEvent, '*');
+            console.log("InitiateEndChat event broadcasted");
+        }
+    }
+
+
   </script>
+  
+  <!-- Add some buttons to test the endChat functionality -->
+  <div style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <button onclick="endChat()" style="margin: 10px; padding: 10px 20px; background: #0078d4; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      End Chat (BroadcastService)
+    </button>
+    <button onclick="endChatAlternative()" style="margin: 10px; padding: 10px 20px; background: #d13438; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      End Chat (PostMessage)
+    </button>
+  </div>
+  
   <div id="oc-lcw-container" style="width: 370px; height: 100%; position: fixed; right: 0; bottom: 0"></div>
-  <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" 
-data-app-id="" data-lcw-version="prod" data-org-id="" data-org-url="">
-</script>
+  <!-- <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" 
+  data-app-id="aa93b293-99e2-4f5e-a98b-159123b5a12a" data-lcw-version="prod" data-org-id="caf979e3-887e-f011-b4c0-000d3a340b7a" data-org-url="https://m-caf979e3-887e-f011-b4c0-000d3a340b7a.preprod.omnichannelengagementhub.com"></script> -->
+  <!-- <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" 
+  data-app-id="8516e53d-b3f3-453d-9100-450406847d5f" data-lcw-version="prod" data-org-id="caf979e3-887e-f011-b4c0-000d3a340b7a" data-org-url="https://m-caf979e3-887e-f011-b4c0-000d3a340b7a.preprod.omnichannelengagementhub.com" data-render-mobile="true"></script> -->
+  
+  
+  <!-- persist chat with link -->
+     <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" 
+  data-app-id="edd4746e-a9be-4df2-8dd0-ea1edf5607af" data-lcw-version="prod" data-org-id="b3405482-62a4-f011-bbc7-000d3a32c974" data-org-url="https://m-b3405482-62a4-f011-bbc7-000d3a32c974.preprod.omnichannelengagementhub.com"></script>
+
+    <!-- persist chat with NO link -->
+     <!-- <script id="oc-lcw-script" src="../../dist/out.js" data-customization-callback="lcw" 
+  data-app-id="a395332b-189e-4134-b93e-e183e003fc61" data-lcw-version="prod" data-org-id="b3405482-62a4-f011-bbc7-000d3a32c974" data-org-url="https://m-b3405482-62a4-f011-bbc7-000d3a32c974.preprod.omnichannelengagementhub.com"></script> -->
 </body>
 </html>
 

@@ -1,11 +1,7 @@
-
 import path from "path";
-import type { Configuration } from "webpack";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { Configuration } from "webpack";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as webpackDevServer from "webpack-dev-server";
 
 const disableFullyQualifiedNameResolutions = {
     test: /\.m?js/,
@@ -44,25 +40,27 @@ const config: Configuration = {
             "react-native$": "react-native-web"
         },
         fallback: {
-            assert: "assert",
-            crypto: "crypto-browserify",
-            stream: "stream-browserify"
+            assert: require.resolve("assert"),
+            crypto: require.resolve("crypto-browserify"),
+            stream: require.resolve("stream-browserify")
         },
     },
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
     },
-    // plugins: [
-    //     new CopyWebpackPlugin({
-    //         patterns: [
-    //             {
-    //                 from: path.resolve(__dirname, "public"),
-    //                 to: path.resolve(__dirname, "dist"),
-    //             },
-    //         ],
-    //     }),
-    // ]
+    devServer: {
+        static: path.join(__dirname, "dist"),
+        compress: true,
+        port: 4000,
+        open: "chrome",
+        client: {
+            overlay: {
+                warnings: false,
+                errors: true
+            }
+        }
+    },
 };
 
 export default config;

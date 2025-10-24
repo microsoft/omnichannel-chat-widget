@@ -11,8 +11,7 @@
       "resolveJsonModule": true,
       "isolatedModules": true,
       "noEmit": true,
-      "jsx": "react",
-      "module": "es2020"
+      "jsx": "react"
     },
     "include": ["src"]
   }

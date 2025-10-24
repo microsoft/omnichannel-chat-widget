@@ -91,8 +91,16 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
+import { ACSMessageLocal, AttachmentUpdateMessage, OmnichannelMessageOptional, SimpleSubject} from "copilot-lcw";
+import { FlightMessageSubject } from "copilot-lcw";
+import { ChatSDKMessage } from "@microsoft/omnichannel-chat-sdk";
+import OmnichannelMessage from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OmnichannelMessage";
+import { AttachmentMessageSubject } from "copilot-lcw";
 
 let uiTimer : ITimer;
+const messageSubject = new SimpleSubject<OmnichannelMessageOptional[]>();
+const flightMessageSubject = new FlightMessageSubject<ChatSDKMessage>();
+const attachmentUpdateSubject = new AttachmentMessageSubject<AttachmentUpdateMessage>();
 
 export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
@@ -120,6 +128,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         (props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background);
     const bubbleTextColor = props.webChatContainerProps?.webChatStyles?.bubbleTextColor ??
         (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color);
+
 
     // Process general styles
     const generalStyles: IStackStyles = {
@@ -540,10 +549,41 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         };
     }, []);
 
+    const downloadAttachment = async (val: OmnichannelMessage, attachmentUpdateSubject: AttachmentMessageSubject<AttachmentUpdateMessage>) => {
+        if (!val.fileMetadata) return;
+        const blob = await facadeChatSDK.downloadFileAttachment(val.fileMetadata);
+        const blobUrl = URL.createObjectURL(blob);
+        if (blobUrl) {
+            console.log("debugging: download completed: ", blobUrl);
+            attachmentUpdateSubject.sendUpdate({
+                id: val.id,
+                blobUrl
+            });
+        }
+    };
+
+    //todo: cache the result; valid if repeated message will be delivered
+    const handleAttachments = (val: OmnichannelMessage) => {
+        if (val.fileMetadata?.id) {
+            void downloadAttachment(val, attachmentUpdateSubject);
+        }
+    };
+
     useEffect(() => {
         // On new message
         if (state.appStates.conversationState === ConversationState.Active) {
-            facadeChatSDK?.onNewMessage(() => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            facadeChatSDK?.onNewMessage((val: OmnichannelMessage) => {
+                console.log("debugging: on new message received val: ", val);
+                // if (val.content) {
+                // }
+                try {
+                    console.log("debugging: invoke next: ", val.content);
+                    messageSubject.next([val]);
+                    handleAttachments(val);
+                } catch (error) {
+                    console.log("debugging: failed to emit next", error);
+                }
                 // Track the message count
                 currentMessageCountRef.current++;
                 dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: currentMessageCountRef.current + 1 });
@@ -553,6 +593,37 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     eventName: BroadcastEvent.NewMessageNotification
                 });
             }, {disablePolling: true});
+
+            facadeChatSDK?.getMessages().then((messages) => {
+                if (!messages || messages.length === 0) return;
+                
+                console.log("debugging: old messages retrieved: ", messages);
+                messageSubject.next(messages as OmnichannelMessage[] || []);
+
+                for (const message of messages) {
+                    void handleAttachments(message as OmnichannelMessage);
+                }
+            });
+
+
+            // {
+            //     "threadId": "19:acsV2_GFfPYHfXY1-XpzmFfnQBXOFACGIR26obc2yv4rQ8KmE1@thread.v2",
+            //     "sender": {
+            //         "kind": "communicationUser",
+            //         "communicationUserId": "8:acs:a703fdc1-4fdd-4dbf-b944-f01b67a63d54_00000029-6dbc-f924-45f7-3a3a0d004278"
+            //     },
+            //     "senderDisplayName": "# Aurora User",
+            //     "recipient": {
+            //         "kind": "communicationUser",
+            //         "communicationUserId": "8:acs:a703fdc1-4fdd-4dbf-b944-f01b67a63d54_0000002a-4106-7b3e-e947-09bd4560b674"
+            //     },
+            //     "version": "1759345211452",
+            //     "receivedOn": "2025-10-01T19:00:11.452Z"
+            // }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            facadeChatSDK?.onTypingEvent((event: any) => {
+                console.log("debugging: on typing event received: ", event);
+            });
 
             facadeChatSDK?.onAgentEndSession((event) => {  
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
@@ -770,7 +841,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         },
         props.webChatContainerProps);
 
-    const livechatProps = { ...props, downloadTranscriptProps };
+    const livechatProps = { ...props,
+        downloadTranscriptProps,
+        messageSubject,
+        flightMessageSubject,
+        attachmentUpdateSubject
+    };
 
     const chatWidgetDraggableConfig = {
         elementId: widgetElementId,
@@ -791,16 +867,24 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Add 'omnichannel-chat-widget' OC User Agent if not already set
     setOcUserAgent(facadeChatSDK.getChatSDK());
-
-    const directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
+    let directLine = null;
+    directLine = livechatProps.webChatContainerProps?.directLine ?? adapter ?? defaultWebChatContainerStatefulProps.directLine;
     const userID = directLine.getState ? directLine?.getState("acs.userId") : "teamsvisitor";
 
+    //if ((window as any).customDirectline) directLine = (window as any).customDirectline;
+    //const customStore = (window as any).customStore;
+    // const customDirectline = (window as any).customDirectline;
+    // if (customDirectline) {
+    //     directLine = customDirectline;
+    // }
+    // const ReactWebChat = (window as any).ReactWebChat;
     const styleOptions = React.useMemo(() => ({
         ...webChatStyles,
         bubbleBackground,
         bubbleTextColor
     }), [webChatStyles, bubbleBackground, bubbleTextColor]);
-
+    const renderCopilotLCW = true;
+    console.log("debugging: updated liveChatWidgetStateful: webChatProps ", webChatProps, " directline: ", directLine, " windows directline: ", (window as any).customDirectline ?? "");
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>
@@ -875,6 +959,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer
                     {...webChatProps}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     userID={userID}
                     styleOptions={styleOptions}
                     directLine={directLine}>
@@ -901,7 +986,69 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
                         {!livechatProps.controlProps?.hideCallingContainer && shouldShowCallingContainer(state) && <CallingContainerStateful voiceVideoCallingSdk={voiceVideoCallingSDK} {...livechatProps.callingContainerProps} />}
 
-                        {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) || <WebChatContainerStateful {...livechatProps} />)}
+                        {!livechatProps.controlProps?.hideWebChatContainer && shouldShowWebChatContainer(state) && (decodeComponentString(livechatProps.componentOverrides?.webChatContainer) ||
+                            <WebChatContainerStateful {...livechatProps} />
+                        // || ( renderCopilotLCW && <App messageSubject={messageSubject}/> || <WebChatContainerStateful {...livechatProps} />)
+                        )}
+
+                        {/* {
+                            "content": "test",
+                            "senderDisplayName": "Customer",
+                            "metadata": {
+                                "deliveryMode": "bridged",
+                                "widgetId": "8516e53d-b3f3-453d-9100-450406847d5f",
+                                "clientActivityId": "mnkh970e5c",
+                                "tags": "ChannelId-lcw,FromCustomer"
+                            }
+                        } */}
+                        {/* {<button onClick={() => {
+                            const ts = Date.now();
+                            const payload = `Random message generated at: ${ts}`;
+                            const clientActivityId = `mock${ts}`;
+                            const outBoundMessage = {
+                                "content":  payload,
+                                // "createdOn": new Date().toISOString(),
+                                "timestamp": new Date(),
+                                "metadata": {
+                                    "deliveryMode": "bridged",
+                                    "tags": "ChannlId-lcw,FromCustomer,client_activity_id:" + clientActivityId,
+                                    "clientActivityId": clientActivityId
+                                }
+                            } as ChatSDKMessage;
+                            facadeChatSDK.sendMessage(outBoundMessage);
+                            flightMessageSubject.sendFlightMessage(outBoundMessage);
+                            setTimeout(() => {
+                                facadeChatSDK?.getMessages().then((messages) => {
+                                    if (!messages || messages.length === 0) return;
+                                    console.log("debugging: retrieve message after send ", messages);
+                                    messageSubject.next(messages as OmnichannelMessage[] || []);
+
+                                    for (const message of messages) {
+                                        void handleAttachments(message as OmnichannelMessage);
+                                    }
+                                });
+                            }, 2 * 1000);
+                            
+                        }}>{"send test message"}</button>} */}
+
+                        {/* {<button onClick={() => {
+                            const ts = Date.now();
+                            const payload = `Random message generated at: ${ts}`;
+                            const clientActivityId = `mock${ts}`;
+                            const outBoundMessage = {
+                                "content":  payload,
+                                // "createdOn": new Date().toISOString(),
+                                "timestamp": new Date(),
+                                "metadata": {
+                                    "deliveryMode": "bridged",
+                                    "tags": "ChannlId-lcw,FromCustomer,client_activity_id:" + clientActivityId,
+                                    "clientActivityId": clientActivityId
+                                }
+                            } as ChatSDKMessage;
+                            facadeChatSDK.sendMessage(outBoundMessage);
+                            flightMessageSubject.sendFlightMessage(outBoundMessage);
+                            
+                        }}>{"send test attachment"}</button>} */}
 
                         {!livechatProps.controlProps?.hideConfirmationPane && shouldShowConfirmationPane(state) && (decodeComponentString(livechatProps.componentOverrides?.confirmationPane) || <ConfirmationPaneStateful {...confirmationPaneProps} setPostChatContext={setPostChatContextRelay} prepareEndChat={prepareEndChatRelay} />)}
 
@@ -912,6 +1059,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {createFooter(livechatProps, state)}
 
                         {shouldShowEmailTranscriptPane(state) && (decodeComponentString(livechatProps.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...livechatProps.emailTranscriptPane} />)}
+
+                        {/* {customDirectline && customStore && <ReactWebChat
+                            directLine={customDirectline}
+                            store={customStore}
+                        ></ReactWebChat>} */}
                     </Stack>
                 </Composer>
             </DraggableChatWidget>
