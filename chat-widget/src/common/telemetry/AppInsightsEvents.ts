@@ -1,7 +1,7 @@
 export const AppInsightsEventMapping: Record<string, string> = {
     "LCWChatButtonClicked": "LCWChatButtonActionStarted",
-    "UXLCWChatButtonLoadingStart": "ChatButtonLoadingStart",
-    "UXLCWChatButtonLoadingCompleted": "ChatButtonLoadingCompleted",
+    "UXLCWChatButtonLoadingStart": "LiveChatWidgetChatButtonLoadingStarted",
+    "UXLCWChatButtonLoadingCompleted": "LiveChatWidgetChatButtonLoadingCompleted",
     "UXPrechatPaneStart": "PrechatSurveyStarted",
     "UXPrechatPaneCompleted": "PrechatSurveyCompleted",
     "PrechatSubmitted": "PrechatSurveySubmitCompleted",
