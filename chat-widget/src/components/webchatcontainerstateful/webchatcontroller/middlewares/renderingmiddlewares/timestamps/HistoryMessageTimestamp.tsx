@@ -12,6 +12,7 @@ import useChatContextStore from "../../../../../../hooks/useChatContextStore";
 export const HistoryMessageTimestamp = ({ args }: any) => {
     const [state,]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const dir = state.domainStates.renderingMiddlewareProps?.timestampDir ?? state.domainStates.globalDir;
+    
     const {
         activity: {
             timestamp,
