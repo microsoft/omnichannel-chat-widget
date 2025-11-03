@@ -31,7 +31,11 @@ export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
                 // Rewrite inline citation labels in activity.text to match the global map keys
                 const updatedText = replaceCitations(action.payload.activity.text, citations, messagePrefix);
 
-                action.payload.activity.text = updatedText;
+                // Create new activity object to avoid mutation
+                action.payload.activity = {
+                    ...action.payload.activity,
+                    text: updatedText
+                };
                 // Build a global citation map keyed by the prefixed citation id and
                 // dispatch it to app state so the UI container can render citations.
                 try {

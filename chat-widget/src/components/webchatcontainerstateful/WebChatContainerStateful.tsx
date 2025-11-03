@@ -7,6 +7,7 @@ import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/util
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
+import { ExtendedChatConfig } from "./interfaces/IExtendedChatConffig";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
@@ -16,7 +17,6 @@ import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetAc
 import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { TelemetryManager } from "../../common/telemetry/TelemetryManager";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
 import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
@@ -32,24 +32,6 @@ import { isPersistentChatEnabled } from "../livechatwidget/common/liveChatConfig
 import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
-
-// Types for better type safety
-interface LcwFcbConfiguration {
-    lcwPersistentChatHistoryEnabled?: boolean;
-}
-
-interface LiveChatConfigAuthSettings {
-    msdyn_javascriptclientfunction?: string;
-}
-
-interface ExtendedChatConfig {
-    LcwFcbConfiguration?: LcwFcbConfiguration;
-    LiveChatConfigAuthSettings?: LiveChatConfigAuthSettings;
-    LiveWSAndLiveChatEngJoin?: {
-        msdyn_conversationmode?: string;
-        msdyn_enablepersistentchatpreviousconversations?: boolean;
-    };
-}
 
 let uiTimer: ITimer;
 
@@ -113,20 +95,14 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // Type the chatConfig properly to avoid 'any' usage
     const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
     
-    const isHistoryEnabledViaProps = props?.persistentChatHistoryProps?.persistentChatHistoryEnabled;
     const isHistoryEnabledInConfig = extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_enablepersistentchatpreviousconversations;
     const isHistoryEnabledViaFCB = extendedChatConfig?.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled;
     
     const isPersistentChatEnabledForWidget = !!(extendedChatConfig?.LiveChatConfigAuthSettings?.msdyn_javascriptclientfunction) || 
         isPersistentChatEnabled(extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
-    // isPersistentHistoryEnabled can only be  true if isHistoryEnabledViaFCB is true, and next conditions are met:
-    // 1. isHistoryEnabledViaProps is true (takes precedence over config)
-    // 2. isHistoryEnabledInConfig is true and isHistoryEnabledViaProps is undefined
-    const isPersistentHistoryEnabled = isHistoryEnabledViaProps || (isHistoryEnabledInConfig && !isHistoryEnabledViaProps);
-
     // Check if both persistent chat and widget support are enabled
-    const shouldLoadPersistentHistoryMessages = isPersistentHistoryEnabled && isHistoryEnabledViaFCB && isPersistentChatEnabledForWidget;
+    const shouldLoadPersistentHistoryMessages = isHistoryEnabledInConfig && isHistoryEnabledViaFCB && isPersistentChatEnabledForWidget;
 
     if (shouldLoadPersistentHistoryMessages) {
         
@@ -440,7 +416,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         `}</style>
         <Stack styles={containerStyles} className="webchat__stacked-layout_container">
             <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
-                {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
+                {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers />}
                 <BasicWebChat></BasicWebChat>  
             </div>
         </Stack>

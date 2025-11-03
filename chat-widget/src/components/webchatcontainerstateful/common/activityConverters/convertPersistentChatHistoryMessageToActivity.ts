@@ -50,12 +50,18 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
 
         if (tags) {
             const formattedTags = additionalData.tags.split(",");
-            activity.channelData.tags = [...activity.channelData.tags, ...formattedTags];
+            activity.channelData = {
+                ...activity.channelData,
+                tags: [...activity.channelData.tags, ...formattedTags]
+            };
         }
     }
 
     if (from?.user?.displayName) {
-        activity.from.name = from.user.displayName;  
+        activity.from = {
+            ...activity.from,
+            name: from.user.displayName
+        };
     }
 
     if (from?.application?.displayName === "Customer") {
