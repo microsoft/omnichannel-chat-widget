@@ -102,7 +102,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         isPersistentChatEnabled(extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
     // Check if both persistent chat and widget support are enabled
-    const shouldLoadPersistentHistoryMessages = isHistoryEnabledInConfig && isHistoryEnabledViaFCB && isPersistentChatEnabledForWidget;
+    const shouldLoadPersistentHistoryMessages = true;//isHistoryEnabledInConfig && isHistoryEnabledViaFCB && isPersistentChatEnabledForWidget;
 
     if (shouldLoadPersistentHistoryMessages) {
         

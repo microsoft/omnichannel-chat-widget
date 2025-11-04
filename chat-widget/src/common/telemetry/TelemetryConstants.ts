@@ -322,6 +322,7 @@ export enum TelemetryEvent {
     LCWLazyLoadActivityMounted = "LCWLazyLoadActivityMounted",
     LCWLazyLoadReset = "LCWLazyLoadReset",
     LCWLazyLoadNoMoreHistory = "LCWLazyLoadNoMoreHistory",
+    LCWLazyLoadHistoryError = "LCWLazyLoadHistoryError",
     LCWLazyLoadDestroyed = "LCWLazyLoadDestroyed",
 
     // SecureEventBus events

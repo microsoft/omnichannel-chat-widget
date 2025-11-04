@@ -207,12 +207,9 @@ class PersistentConversationHandler {
                 ExceptionDetails: error,
             });
 
-            this.isLastPull = true;
-            this.pageToken = null;
-            // Dispatch event when there's an error to stop loading banner
-            dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-            // Also hide the loading banner
-            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
+            // On error, dispatch HISTORY_LOAD_ERROR to hide loading banner without marking conversation as ended
+            // This allows recovery on the next attempt (e.g., transient network errors)
+            dispatchCustomEvent(ChatWidgetEvents.HISTORY_LOAD_ERROR);
             return [];
         }
     }
