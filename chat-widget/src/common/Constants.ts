@@ -160,6 +160,8 @@ export class Constants {
     public static readonly customEventValue = "customEventValue";
     public static readonly Hidden = "Hidden";
     public static readonly EndConversationDueToOverflow = "endconversationduetooverflow";
+
+    public static readonly SkipSessionCloseForPersistentChatFlag = "skipSessionCloseForPersistentChat";
 }
 
 export const Regex = class {
@@ -294,7 +296,8 @@ export enum ConversationEndEntity {
     Customer = "Customer",
     Agent = "Agent", // Currently covers both for human agent and bot
     Bot = "Bot",
-    NotSet = "NotSet"
+    NotSet = "NotSet",
+    CustomerEvent = "CustomerEvent"
 }
 
 export enum ConfirmationState {
@@ -381,6 +384,7 @@ export class PrepareEndChatDescriptionConstants {
     public static readonly PrepareEndChatError = "There's an error while preparing to end chat. Closing chat widget.";
     public static readonly WidgetLoadFailedAfterSessionInit = "SessionInit was successful, but widget load failed. Ending chat to avoid ghost chats in OC.";
     public static readonly InitiateEndChatReceived = "Received InitiateEndChat BroadcastEvent while conversation state is not Active. Ending chat.";
+    public static readonly InitiateEndChatReceivedActiveChat = "Received InitiateEndChat BroadcastEvent while conversation state is Active. Updating conversation states.";
     public static readonly EndChatReceivedFromOtherTabs = "Received EndChat BroadcastEvent from other tabs. Closing this chat.";
     public static readonly CustomerCloseChatOnFailureOrPostChat = "Customer is trying to close chat widget on start chat failure or post chat pane.";
     public static readonly CustomerCloseInactiveChat = "Chat was Inactive and customer is trying to close chat widget or refreshing the page.";
