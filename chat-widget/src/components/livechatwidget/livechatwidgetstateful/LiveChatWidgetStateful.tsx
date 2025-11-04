@@ -310,7 +310,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         BroadcastService.getMessageByEventName(BroadcastEvent.StartProactiveChat).subscribe((msg: ICustomEvent) => {
 
-            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartProactiveChatEventReceived,
                 Description: "Start proactive chat event received."
             });
@@ -413,7 +413,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
 
 
-            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.StartChatEventReceived,
                 Description: "Start chat event received."
             });

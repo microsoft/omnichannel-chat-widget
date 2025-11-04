@@ -122,13 +122,13 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             if (data === CustomerVoiceEvents.ResponsePageLoaded) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceResponsePageLoaded });
             } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
-                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted,
                     Description: "Customer Voice form response submitted.",
                     CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
                 });
             } else if (data === CustomerVoiceEvents.FormResponseError) {
-                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.CustomerVoiceFormResponseError,
                     Description: "Customer Voice form response error.",
                     ExceptionDetails: { message: "Customer Voice form response error." },
