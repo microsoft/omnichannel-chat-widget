@@ -97,8 +97,6 @@ class PersistentConversationHandler {
                 this.isLastPull = true;
                 // Dispatch event to notify UI that no more history is available
                 dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-                // Also hide the loading banner
-                dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
@@ -111,9 +109,6 @@ class PersistentConversationHandler {
             const messagesDescOrder = [...messages]?.reverse();
 
             this.processHistoryMessages(messagesDescOrder);
-            
-            // Dispatch event to hide the loading banner after messages are processed
-            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
             
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
@@ -166,7 +161,6 @@ class PersistentConversationHandler {
         if (!this.shouldPull()) {
             // Dispatch event to ensure banner is hidden when no more pulls are needed
             dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
             return [];
         }
 
@@ -192,12 +186,8 @@ class PersistentConversationHandler {
                 this.isLastPull = true;
                 // Dispatch event when we reach the end of available history
                 dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-                // Also hide the loading banner
-                dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 return [];
             }
-
-            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
 
             return messages;
         } catch (error) {

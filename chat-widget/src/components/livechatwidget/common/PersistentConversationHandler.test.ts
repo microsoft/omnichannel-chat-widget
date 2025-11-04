@@ -15,7 +15,7 @@ jest.mock("./ChatWidgetEvents", () => ({
     ADD_ACTIVITY: "ADD_ACTIVITY",
     FETCH_PERSISTENT_CHAT_HISTORY: "FETCH_PERSISTENT_CHAT_HISTORY",
     NO_MORE_HISTORY_AVAILABLE: "NO_MORE_HISTORY_AVAILABLE",
-    HIDE_LOADING_BANNER: "HIDE_LOADING_BANNER"
+    HISTORY_LOAD_ERROR: "HISTORY_LOAD_ERROR"
 }));
 jest.mock("../../../common/telemetry/TelemetryHelper");
 jest.mock("@microsoft/omnichannel-chat-components", () => ({
@@ -181,7 +181,7 @@ describe("PersistentConversationHandler", () => {
                 pageToken: undefined
             });
             
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(5); // 2 activities + 1 divider + 2 HIDE_LOADING_BANNER calls
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3); // 2 activities + 1 divider
             expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
             });
@@ -444,21 +444,17 @@ describe("PersistentConversationHandler", () => {
 
             // Should dispatch:
             // 1. NO_MORE_HISTORY_AVAILABLE (from fetchHistoryMessages when pageToken is null)
-            // 2. HIDE_LOADING_BANNER (from fetchHistoryMessages)
-            // 3. ADD_ACTIVITY for activity2
-            // 4. ADD_ACTIVITY for divider (since lastMessage is initially null)
-            // 5. ADD_ACTIVITY for activity1 (no divider since same conversation)
-            // 6. HIDE_LOADING_BANNER (from pullHistory completion)
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(6);
+            // 2. ADD_ACTIVITY for activity2
+            // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
+            // 4. ADD_ACTIVITY for activity1 (no divider since same conversation)
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.HIDE_LOADING_BANNER);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(3, ChatWidgetEvents.ADD_ACTIVITY, {
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
             });
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(5, ChatWidgetEvents.ADD_ACTIVITY, {
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(4, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
             });
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(6, ChatWidgetEvents.HIDE_LOADING_BANNER);
         });
 
         it("should handle first message (no previous message)", async () => {
@@ -476,14 +472,11 @@ describe("PersistentConversationHandler", () => {
 
             // Should dispatch:
             // 1. NO_MORE_HISTORY_AVAILABLE (from fetchHistoryMessages when pageToken is null)
-            // 2. HIDE_LOADING_BANNER (from fetchHistoryMessages)
-            // 3. ADD_ACTIVITY for activity1
-            // 4. ADD_ACTIVITY for divider (since lastMessage is initially null)
-            // 5. HIDE_LOADING_BANNER (from pullHistory completion)
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(5);
+            // 2. ADD_ACTIVITY for activity1
+            // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.HIDE_LOADING_BANNER);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(3, ChatWidgetEvents.ADD_ACTIVITY, {
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
             });
         });
