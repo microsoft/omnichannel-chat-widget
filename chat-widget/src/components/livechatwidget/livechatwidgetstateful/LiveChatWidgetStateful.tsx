@@ -728,7 +728,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             return;
         }
         
-        const isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+        const isConversationalSurveyEnabled = inMemoryState?.appStates?.isConversationalSurveyEnabled;
 
         // In conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
         // Hence setting ConversationState to InActive will be done later in the post chat flows
