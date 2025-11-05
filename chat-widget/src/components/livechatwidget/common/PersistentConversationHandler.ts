@@ -22,7 +22,8 @@ class PersistentConversationHandler {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private lastMessage: any = null;
     private count = 0;
-    private pageSize = 4;
+    private pageSize = defaultPersistentChatHistoryProps.pageSize;
+
     private isCurrentlyPulling = false;
     private pageTokenInTransitSet = new Set<string>();
 
@@ -33,7 +34,7 @@ class PersistentConversationHandler {
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.LCWPersistentConversationHandlerInitialized,
             Description: "PersistentConversationHandler initialized",
-            CustomProperties: { pageSize: this.pageSize }
+            CustomProperties: { pageSize: defaultPersistentChatHistoryProps.pageSize }
         });
     }
 
@@ -44,7 +45,7 @@ class PersistentConversationHandler {
         };
 
         // if the props is not existent or is not  anumber then default to 4
-        this.pageSize = this.appliedProps?.pageSize !== undefined && !isNaN(this.appliedProps.pageSize) ? this.appliedProps.pageSize : 4;
+        this.pageSize = this.appliedProps?.pageSize !== undefined && !isNaN(this.appliedProps.pageSize) ? this.appliedProps.pageSize : defaultPersistentChatHistoryProps.pageSize;
     }
 
     private resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {

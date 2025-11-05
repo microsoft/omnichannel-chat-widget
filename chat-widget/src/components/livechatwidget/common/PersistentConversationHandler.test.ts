@@ -36,7 +36,7 @@ jest.mock("../../webchatcontainerstateful/common/activities/conversationDividerA
 jest.mock("../../webchatcontainerstateful/common/activityConverters/convertPersistentChatHistoryMessageToActivity");
 jest.mock("./defaultProps/defaultPersistentChatHistoryProps", () => ({
     defaultPersistentChatHistoryProps: {
-        pageSize: 4,
+        pageSize: 10,
         persistentChatHistoryEnabled: true
     }
 }));
@@ -52,7 +52,7 @@ describe("PersistentConversationHandler", () => {
     let mockSubscription: { unsubscribe: jest.Mock };
     
     const defaultProps: IPersistentChatHistoryProps = {
-        pageSize: 4,
+        pageSize: 10,
         persistentChatHistoryEnabled: true
     };
 
@@ -177,7 +177,7 @@ describe("PersistentConversationHandler", () => {
             await handler.pullHistory();
 
             expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledWith({
-                pageSize: 4,
+                pageSize: 10,
                 pageToken: undefined
             });
             
@@ -516,7 +516,7 @@ describe("PersistentConversationHandler", () => {
             await handler.pullHistory();
 
             expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledWith({
-                pageSize: 4,
+                pageSize: 10,
                 pageToken: undefined
             });
 
@@ -529,7 +529,7 @@ describe("PersistentConversationHandler", () => {
             await handler.pullHistory();
 
             expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledWith({
-                pageSize: 4,
+                pageSize: 10,
                 pageToken: "token123"
             });
         });
