@@ -93,7 +93,19 @@ class PersistentConversationHandler {
         try {
             const messages = await this.fetchHistoryMessages();
 
-            if (messages === null || messages?.length === 0) {
+            // Handle error case - null indicates an error occurred
+            // Don't mark as last pull to allow retry on next attempt
+            if (messages === null) {
+                TelemetryHelper.logActionEvent(LogLevel.WARN, {
+                    Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
+                    Description: "History pull failed - error occurred, will retry on next scroll",
+                    ElapsedTimeInMilliseconds: pullTimer.milliSecondsElapsed
+                });
+                return;
+            }
+
+            // Handle legitimate end of history - empty array
+            if (messages.length === 0) {
                 this.isLastPull = true;
                 // Dispatch event to notify UI that no more history is available
                 dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
@@ -156,7 +168,7 @@ class PersistentConversationHandler {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private async fetchHistoryMessages(): Promise<any[]> {
+    private async fetchHistoryMessages(): Promise<any[] | null> {
 
         if (!this.shouldPull()) {
             // Dispatch event to ensure banner is hidden when no more pulls are needed
@@ -199,8 +211,9 @@ class PersistentConversationHandler {
 
             // On error, dispatch HISTORY_LOAD_ERROR to hide loading banner without marking conversation as ended
             // This allows recovery on the next attempt (e.g., transient network errors)
+            // Return null to distinguish error from legitimate empty history
             dispatchCustomEvent(ChatWidgetEvents.HISTORY_LOAD_ERROR);
-            return [];
+            return null;
         }
     }
 

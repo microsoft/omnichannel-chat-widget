@@ -200,7 +200,7 @@ describe("PersistentConversationHandler", () => {
             expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
         });
 
-        it("should handle fetch error", async () => {
+        it("should handle fetch error and allow retry", async () => {
             const error = new Error("Fetch failed");
             mockFacadeChatSDK.fetchPersistentConversationHistory.mockRejectedValue(error);
 
@@ -212,6 +212,27 @@ describe("PersistentConversationHandler", () => {
                     ExceptionDetails: error
                 })
             );
+            
+            // Should dispatch HISTORY_LOAD_ERROR instead of NO_MORE_HISTORY_AVAILABLE
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.HISTORY_LOAD_ERROR);
+            
+            // Should NOT dispatch NO_MORE_HISTORY_AVAILABLE on error
+            expect(mockDispatchCustomEvent).not.toHaveBeenCalledWith(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+            
+            // Should be able to retry after error (reset mock and try again)
+            mockDispatchCustomEvent.mockClear();
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: [createMockMessage("msg1")],
+                nextPageToken: null
+            });
+            
+            mockConvertMessage.mockReturnValue(createMockActivity("activity1"));
+            
+            await handler.pullHistory();
+            
+            // Second attempt should succeed
+            expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledTimes(2);
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.ADD_ACTIVITY, expect.any(Object));
         });
 
         it("should prevent concurrent pulls", async () => {
@@ -531,7 +552,7 @@ describe("PersistentConversationHandler", () => {
     });
 
     describe("Error Handling", () => {
-        it("should handle SDK fetch errors gracefully", async () => {
+        it("should handle SDK fetch errors gracefully and allow retry", async () => {
             const error = new Error("Network error");
             mockFacadeChatSDK.fetchPersistentConversationHistory.mockRejectedValue(error);
 
@@ -543,6 +564,21 @@ describe("PersistentConversationHandler", () => {
                     ExceptionDetails: error
                 })
             );
+            
+            // Should dispatch HISTORY_LOAD_ERROR to allow recovery
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.HISTORY_LOAD_ERROR);
+            
+            // Verify we can retry - reset and try again
+            mockDispatchCustomEvent.mockClear();
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: [],
+                nextPageToken: null
+            });
+            
+            await handler.pullHistory();
+            
+            // Should successfully call SDK again (indicating retry capability)
+            expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledTimes(2);
         });
 
         it("should handle activity conversion errors gracefully", async () => {
