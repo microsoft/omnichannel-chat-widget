@@ -313,6 +313,7 @@ export enum TelemetryEvent {
     LCWPersistentConversationHandlerInitialized = "LCWPersistentConversationHandlerInitialized",
     LCWPersistentHistoryPullBlocked = "LCWPersistentHistoryPullBlocked",
     LCWPersistentHistoryPullCompleted = "LCWPersistentHistoryPullCompleted",
+    LCWPersistentHistoryReturnedNull = "LCWPersistentHistoryReturnedNull",
     LCWLazyLoadInitializationStarted = "LCWLazyLoadInitializationStarted",
     LCWLazyLoadContainerNotFound = "LCWLazyLoadContainerNotFound",
     LCWLazyLoadInitializationCompleted = "LCWLazyLoadInitializationCompleted",

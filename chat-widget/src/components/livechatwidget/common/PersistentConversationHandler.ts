@@ -44,7 +44,7 @@ class PersistentConversationHandler {
             ...props,
         };
 
-        // if the props is not existent or is not  anumber then default to 4
+        // if the props is not existent or is not  anumber then default to defaultPersistentChatHistoryProps.pageSize
         this.pageSize = this.appliedProps?.pageSize !== undefined && !isNaN(this.appliedProps.pageSize) ? this.appliedProps.pageSize : defaultPersistentChatHistoryProps.pageSize;
     }
 
@@ -96,10 +96,10 @@ class PersistentConversationHandler {
 
             // Handle error case - null indicates an error occurred
             // Don't mark as last pull to allow retry on next attempt
-            if (messages === null) {
+            if (messages == null) {
                 TelemetryHelper.logActionEvent(LogLevel.WARN, {
-                    Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
-                    Description: "History pull failed - error occurred, will retry on next scroll",
+                    Event: TelemetryEvent.LCWPersistentHistoryReturnedNull,
+                    Description: "History pull returned null - Possible error occurred, will retry on next scroll",
                     ElapsedTimeInMilliseconds: pullTimer.milliSecondsElapsed
                 });
                 return;
