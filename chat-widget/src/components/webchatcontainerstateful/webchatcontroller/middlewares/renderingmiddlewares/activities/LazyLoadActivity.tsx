@@ -82,7 +82,7 @@ class LazyLoadHandler {
     
     // Scroll operation state
     private static scrollState: ScrollState | null = null;  // Current scroll operation tracking
-    private static pendingScrollAction = false;             // Prevents concurrent scroll operations
+    public static pendingScrollAction = false;              // Prevents concurrent scroll operations (public for event handlers)
     
     // Timeout and queue management
     private static retryTimeouts: Set<number> = new Set();  // Tracks all setTimeout IDs for cleanup
@@ -886,6 +886,21 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             setHasMoreHistory(false);
         };
 
+        // Event listener for HISTORY_LOAD_ERROR - hides banner temporarily without disabling future loads
+        const handleHistoryLoadError = () => {
+            // Temporarily hide the banner by pausing, but keep hasMoreHistory true to allow retry
+            LazyLoadHandler.paused = true;
+            LazyLoadHandler.pendingScrollAction = false;
+            
+            // Re-enable after a delay to allow retry on next scroll
+            // Note: This timeout is intentionally not tracked as it's scoped to the component lifecycle
+            window.setTimeout(() => {
+                LazyLoadHandler.paused = false;
+            }, 2000); // 2 second delay before allowing retry
+            
+            LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadHistoryError, "History load error - will retry on next scroll");
+        };
+
         // Event listener for PersistentConversationReset to sync React state
         // This fixes the issue where banner doesn't appear in start chat + close chat + start chat sequence
         // by ensuring React state (hasMoreHistory) is synchronized with handler state when reset occurs
@@ -897,6 +912,9 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
         // Add secure event listener for no more history signal
         const eventBus = SecureEventBus.getInstance();
         const unsubscribeNoMoreHistory = eventBus.subscribe(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
+        
+        // Add event listener for history load errors
+        const unsubscribeHistoryError = eventBus.subscribe(ChatWidgetEvents.HISTORY_LOAD_ERROR, handleHistoryLoadError);
         
         // Add event listener for persistent conversation reset
         const resetSubscription = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(handlePersistentConversationReset);
@@ -914,6 +932,7 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             // Still need to return cleanup function even after reset
             return () => {
                 unsubscribeNoMoreHistory();
+                unsubscribeHistoryError();
                 resetSubscription.unsubscribe();
             };
         }
@@ -963,6 +982,7 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             
             // Remove event listeners
             unsubscribeNoMoreHistory();
+            unsubscribeHistoryError();
             resetSubscription.unsubscribe();
             if (container) {
                 container.removeEventListener("scroll", handleScroll);

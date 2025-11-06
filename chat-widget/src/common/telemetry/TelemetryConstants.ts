@@ -313,6 +313,7 @@ export enum TelemetryEvent {
     LCWPersistentConversationHandlerInitialized = "LCWPersistentConversationHandlerInitialized",
     LCWPersistentHistoryPullBlocked = "LCWPersistentHistoryPullBlocked",
     LCWPersistentHistoryPullCompleted = "LCWPersistentHistoryPullCompleted",
+    LCWPersistentHistoryReturnedNull = "LCWPersistentHistoryReturnedNull",
     LCWLazyLoadInitializationStarted = "LCWLazyLoadInitializationStarted",
     LCWLazyLoadContainerNotFound = "LCWLazyLoadContainerNotFound",
     LCWLazyLoadInitializationCompleted = "LCWLazyLoadInitializationCompleted",
@@ -322,6 +323,7 @@ export enum TelemetryEvent {
     LCWLazyLoadActivityMounted = "LCWLazyLoadActivityMounted",
     LCWLazyLoadReset = "LCWLazyLoadReset",
     LCWLazyLoadNoMoreHistory = "LCWLazyLoadNoMoreHistory",
+    LCWLazyLoadHistoryError = "LCWLazyLoadHistoryError",
     LCWLazyLoadDestroyed = "LCWLazyLoadDestroyed",
 
     // SecureEventBus events

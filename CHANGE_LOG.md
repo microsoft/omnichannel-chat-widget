@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [Persistent Chat History] Remove prop to disable persistent chat history from customer side, and enhancement of error handling
 - IOS mobile doesnt display emoji when typing.
 - Fix 400% zoom issue on citation pane
 - Missing export for LiveChatWidgetMockType in index.ts

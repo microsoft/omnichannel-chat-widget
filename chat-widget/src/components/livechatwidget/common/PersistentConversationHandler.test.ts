@@ -15,7 +15,7 @@ jest.mock("./ChatWidgetEvents", () => ({
     ADD_ACTIVITY: "ADD_ACTIVITY",
     FETCH_PERSISTENT_CHAT_HISTORY: "FETCH_PERSISTENT_CHAT_HISTORY",
     NO_MORE_HISTORY_AVAILABLE: "NO_MORE_HISTORY_AVAILABLE",
-    HIDE_LOADING_BANNER: "HIDE_LOADING_BANNER"
+    HISTORY_LOAD_ERROR: "HISTORY_LOAD_ERROR"
 }));
 jest.mock("../../../common/telemetry/TelemetryHelper");
 jest.mock("@microsoft/omnichannel-chat-components", () => ({
@@ -36,7 +36,7 @@ jest.mock("../../webchatcontainerstateful/common/activities/conversationDividerA
 jest.mock("../../webchatcontainerstateful/common/activityConverters/convertPersistentChatHistoryMessageToActivity");
 jest.mock("./defaultProps/defaultPersistentChatHistoryProps", () => ({
     defaultPersistentChatHistoryProps: {
-        pageSize: 4,
+        pageSize: 10,
         persistentChatHistoryEnabled: true
     }
 }));
@@ -52,7 +52,7 @@ describe("PersistentConversationHandler", () => {
     let mockSubscription: { unsubscribe: jest.Mock };
     
     const defaultProps: IPersistentChatHistoryProps = {
-        pageSize: 4,
+        pageSize: 10,
         persistentChatHistoryEnabled: true
     };
 
@@ -177,11 +177,11 @@ describe("PersistentConversationHandler", () => {
             await handler.pullHistory();
 
             expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledWith({
-                pageSize: 4,
+                pageSize: 10,
                 pageToken: undefined
             });
             
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(5); // 2 activities + 1 divider + 2 HIDE_LOADING_BANNER calls
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3); // 2 activities + 1 divider
             expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
             });
@@ -200,7 +200,7 @@ describe("PersistentConversationHandler", () => {
             expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
         });
 
-        it("should handle fetch error", async () => {
+        it("should handle fetch error and allow retry", async () => {
             const error = new Error("Fetch failed");
             mockFacadeChatSDK.fetchPersistentConversationHistory.mockRejectedValue(error);
 
@@ -212,6 +212,27 @@ describe("PersistentConversationHandler", () => {
                     ExceptionDetails: error
                 })
             );
+            
+            // Should dispatch HISTORY_LOAD_ERROR instead of NO_MORE_HISTORY_AVAILABLE
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.HISTORY_LOAD_ERROR);
+            
+            // Should NOT dispatch NO_MORE_HISTORY_AVAILABLE on error
+            expect(mockDispatchCustomEvent).not.toHaveBeenCalledWith(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
+            
+            // Should be able to retry after error (reset mock and try again)
+            mockDispatchCustomEvent.mockClear();
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: [createMockMessage("msg1")],
+                nextPageToken: null
+            });
+            
+            mockConvertMessage.mockReturnValue(createMockActivity("activity1"));
+            
+            await handler.pullHistory();
+            
+            // Second attempt should succeed
+            expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledTimes(2);
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.ADD_ACTIVITY, expect.any(Object));
         });
 
         it("should prevent concurrent pulls", async () => {
@@ -444,21 +465,17 @@ describe("PersistentConversationHandler", () => {
 
             // Should dispatch:
             // 1. NO_MORE_HISTORY_AVAILABLE (from fetchHistoryMessages when pageToken is null)
-            // 2. HIDE_LOADING_BANNER (from fetchHistoryMessages)
-            // 3. ADD_ACTIVITY for activity2
-            // 4. ADD_ACTIVITY for divider (since lastMessage is initially null)
-            // 5. ADD_ACTIVITY for activity1 (no divider since same conversation)
-            // 6. HIDE_LOADING_BANNER (from pullHistory completion)
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(6);
+            // 2. ADD_ACTIVITY for activity2
+            // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
+            // 4. ADD_ACTIVITY for activity1 (no divider since same conversation)
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.HIDE_LOADING_BANNER);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(3, ChatWidgetEvents.ADD_ACTIVITY, {
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
             });
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(5, ChatWidgetEvents.ADD_ACTIVITY, {
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(4, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
             });
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(6, ChatWidgetEvents.HIDE_LOADING_BANNER);
         });
 
         it("should handle first message (no previous message)", async () => {
@@ -476,14 +493,11 @@ describe("PersistentConversationHandler", () => {
 
             // Should dispatch:
             // 1. NO_MORE_HISTORY_AVAILABLE (from fetchHistoryMessages when pageToken is null)
-            // 2. HIDE_LOADING_BANNER (from fetchHistoryMessages)
-            // 3. ADD_ACTIVITY for activity1
-            // 4. ADD_ACTIVITY for divider (since lastMessage is initially null)
-            // 5. HIDE_LOADING_BANNER (from pullHistory completion)
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(5);
+            // 2. ADD_ACTIVITY for activity1
+            // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.HIDE_LOADING_BANNER);
-            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(3, ChatWidgetEvents.ADD_ACTIVITY, {
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
             });
         });
@@ -502,7 +516,7 @@ describe("PersistentConversationHandler", () => {
             await handler.pullHistory();
 
             expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledWith({
-                pageSize: 4,
+                pageSize: 10,
                 pageToken: undefined
             });
 
@@ -515,7 +529,7 @@ describe("PersistentConversationHandler", () => {
             await handler.pullHistory();
 
             expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledWith({
-                pageSize: 4,
+                pageSize: 10,
                 pageToken: "token123"
             });
         });
@@ -538,7 +552,7 @@ describe("PersistentConversationHandler", () => {
     });
 
     describe("Error Handling", () => {
-        it("should handle SDK fetch errors gracefully", async () => {
+        it("should handle SDK fetch errors gracefully and allow retry", async () => {
             const error = new Error("Network error");
             mockFacadeChatSDK.fetchPersistentConversationHistory.mockRejectedValue(error);
 
@@ -550,6 +564,21 @@ describe("PersistentConversationHandler", () => {
                     ExceptionDetails: error
                 })
             );
+            
+            // Should dispatch HISTORY_LOAD_ERROR to allow recovery
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.HISTORY_LOAD_ERROR);
+            
+            // Verify we can retry - reset and try again
+            mockDispatchCustomEvent.mockClear();
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: [],
+                nextPageToken: null
+            });
+            
+            await handler.pullHistory();
+            
+            // Should successfully call SDK again (indicating retry capability)
+            expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledTimes(2);
         });
 
         it("should handle activity conversion errors gracefully", async () => {

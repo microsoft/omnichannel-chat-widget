@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 import ChatWidgetEvents from "../../livechatwidget/common/ChatWidgetEvents";
 import { Constants } from "../../../common/Constants";
-import { IPersistentChatHistoryProps } from "../../livechatwidget/interfaces/IPersistentChatHistoryProps";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "./WebChatStoreLoader";
 import { createTimer } from "../../../common/utils";
