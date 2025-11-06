@@ -91,6 +91,8 @@ import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
+import { getPostChatContext, initiatePostChat } from "../common/renderSurveyHelpers";
+import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
 
 let uiTimer : ITimer;
 
@@ -453,21 +455,91 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
+        const handleInitiateEndChatForPersistentChat = async (msg: ICustomEvent, conversationDetails: {
+            state?: string,
+            canRenderPostChat?: string
+        }) => {
+
+            //If the payload does NOT include the skipSessionCloseForPersistentChat flag, default is false. Upon receiving the customer event, always ending session from C2.
+            const skipSessionCloseForPersistentChat = typeof(msg?.payload?.[Constants.SkipSessionCloseForPersistentChatFlag]) === Constants.String && (msg?.payload?.[Constants.SkipSessionCloseForPersistentChatFlag] as string).toLowerCase() === Constants.true || msg?.payload?.[Constants.SkipSessionCloseForPersistentChatFlag] === true;
+
+            TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.EndChatEventReceived,
+                Description: "Processing initiateEndChat for persistent chat",
+                CustomProperties: { conversationDetails }
+            });
+            const conversationState = conversationDetails?.state;
+            if (conversationState !== LiveWorkItemState.Closed && conversationState !== LiveWorkItemState.WrapUp) {
+                if (skipSessionCloseForPersistentChat) {
+                    if (conversationDetails.canRenderPostChat?.toLowerCase() === "true") {
+                        
+                        TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
+                            Event: TelemetryEvent.EndChatEventReceived,
+                            Description: "Processing initiateEndChat, fetching postChatContext"
+                        });
+                        const postchatContext: PostChatContext = await getPostChatContext(facadeChatSDK, state, dispatch) ?? state?.domainStates?.postChatContext;
+                        if (postchatContext) {
+                            TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
+                                Event: TelemetryEvent.EndChatEventReceived,
+                                Description: "Processing initiateEndChat, initiatePostChat",
+                                CustomProperties: {
+                                    postchatContext
+                                }
+                            });
+                            await initiatePostChat(props, conversationDetails, state, dispatch, postchatContext);
+                        }
+                    }
+                } else {
+                    const skipEndChatSDK = false;
+                    const skipCloseChat = false;
+                    TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
+                        Event: TelemetryEvent.EndChatEventReceived,
+                        Description: "Processing initiateEndChat, trigger endChat",
+                    });
+                    await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
+                }
+                
+            }
+            //if conversation already closed, it is safe to unmount it upon receiving the closeChat event
+            else {
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.CloseChat
+                });
+            }
+        };
+
         // End chat
-        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async () => {
+        BroadcastService.getMessageByEventName(BroadcastEvent.InitiateEndChat).subscribe(async (msg: ICustomEvent) => {
             TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EndChatEventReceived,
                 Description: "Received InitiateEndChat BroadcastEvent.",
-                CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
+                CustomProperties: { ConversationStage: ConversationStage.ConversationEnd, payload: msg?.payload }
             });
 
-            // This is to ensure to get latest state from cache in multitab
+            const conversationDetails = await getConversationDetailsCall(facadeChatSDK);
+            const { chatConfig } = props;
+            const isPersistent = isPersistentEnabled(chatConfig);
+            TelemetryHelper.logSDKEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.EndChatEventReceived,
+                Description: "Processing initiateEndChat, fetched conversation details",
+                CustomProperties: {
+                    conversationDetails,
+                    isPersistent
+                }
+            });
+
+            if (isPersistent && conversationDetails) {
+                await handleInitiateEndChatForPersistentChat(msg, conversationDetails);
+                return;
+            }
+
             const persistedState = getStateFromCache(getWidgetCacheIdfromProps(props));
-
-            if (persistedState &&
-                persistedState.appStates.conversationState === ConversationState.Active) {
-
-                // We need to simulate states for closing chat, in order to messup with close confirmation pane.
+            if (persistedState && persistedState.appStates.conversationState === ConversationState.Active) {
+                TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.PrepareEndChat,
+                    Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceivedActiveChat
+                });
+                //We need to simulate states for closing chat, in order to messup with close confirmation pane.
                 dispatch({ type: LiveChatWidgetActionType.SET_CONFIRMATION_STATE, payload: ConfirmationState.Ok });
                 dispatch({ type: LiveChatWidgetActionType.SET_SHOW_CONFIRMATION, payload: false });
 
@@ -479,12 +551,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     Event: TelemetryEvent.PrepareEndChat,
                     Description: PrepareEndChatDescriptionConstants.InitiateEndChatReceived
                 });
-                endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
+                await endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat);
             }
-
-            BroadcastService.postMessage({
-                eventName: BroadcastEvent.CloseChat
-            });
         });
 
         // End chat on browser unload
@@ -630,13 +698,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     }, [state.domainStates.confirmationState]);
 
     useEffect(() => {
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
         // Do not process anything during initialization
-        if (state?.appStates?.conversationEndedBy === ConversationEndEntity.NotSet) {
+        if (inMemoryState?.appStates?.conversationEndedBy === ConversationEndEntity.NotSet) {
+            TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.PrepareEndChat,
+                Description: "conversationEndedBy is not set"
+            });
             return;
         }
-
+        
         // If start chat failed, and C2 is trying to close chat widget
-        if (state?.appStates?.startChatFailed || state?.appStates?.conversationState === ConversationState.Postchat) {
+        if (inMemoryState?.appStates?.startChatFailed || inMemoryState?.appStates?.conversationState === ConversationState.Postchat) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.CustomerCloseChatOnFailureOrPostChat
@@ -644,9 +717,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, true, false, true);
             return;
         }
-
+        
         // Scenario -> Chat was InActive and closing the chat (Refresh scenario on post chat)
-        if (state?.appStates?.conversationState === ConversationState.InActive) {
+        if (inMemoryState?.appStates?.conversationState === ConversationState.InActive) {
             TelemetryHelper.logSDKEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.PrepareEndChat,
                 Description: PrepareEndChatDescriptionConstants.CustomerCloseInactiveChat
@@ -654,19 +727,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, false, false, true);
             return;
         }
-
-        const isConversationalSurveyEnabled = state.appStates.isConversationalSurveyEnabled;
+        
+        const isConversationalSurveyEnabled = inMemoryState?.appStates?.isConversationalSurveyEnabled;
 
         // In conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
         // Hence setting ConversationState to InActive will be done later in the post chat flows
-        if (!isConversationalSurveyEnabled && (state?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
-            state?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
-            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive }); 
+        if (!isConversationalSurveyEnabled && inMemoryState?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
+                    inMemoryState?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) {
+            dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
         }
-
+        
         // All other cases
-        prepareEndChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
-
+        prepareEndChat(props, facadeChatSDK, inMemoryState, dispatch, setAdapter, setWebChatStyles, adapter);
     }, [state?.appStates?.conversationEndedBy]);
 
     // Publish chat widget state

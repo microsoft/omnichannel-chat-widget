@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Add use of `config.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled` to enable persistent chat history feature
 - Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
 - Added support for AppInsightsInstrumentationKey from chat config
+- Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
 
 ### Changed
 
