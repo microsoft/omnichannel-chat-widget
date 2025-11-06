@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Adding support to fetch history messages for persistent chat
 - Add use of `config.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled` to enable persistent chat history feature
 - Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
+- Added support for AppInsightsInstrumentationKey from chat config
 - Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
 
 ### Changed
@@ -31,6 +32,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [Persistent Chat History] Remove prop to disable persistent chat history from customer side, and enhancement of error handling
 - IOS mobile doesnt display emoji when typing.
 - Fix 400% zoom issue on citation pane
 - Missing export for LiveChatWidgetMockType in index.ts

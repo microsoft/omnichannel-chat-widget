@@ -21,4 +21,5 @@ export interface IInternalTelemetryData {
     channelId?: string;
     chatWidgetVersion?: string;
     chatComponentVersion?: string;
+    chatConfigAppInsightsKey?: string;
 }

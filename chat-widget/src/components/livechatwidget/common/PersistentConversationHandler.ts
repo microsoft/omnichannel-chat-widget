@@ -22,7 +22,8 @@ class PersistentConversationHandler {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private lastMessage: any = null;
     private count = 0;
-    private pageSize = 4;
+    private pageSize = defaultPersistentChatHistoryProps.pageSize;
+
     private isCurrentlyPulling = false;
     private pageTokenInTransitSet = new Set<string>();
 
@@ -33,7 +34,7 @@ class PersistentConversationHandler {
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.LCWPersistentConversationHandlerInitialized,
             Description: "PersistentConversationHandler initialized",
-            CustomProperties: { pageSize: this.pageSize }
+            CustomProperties: { pageSize: defaultPersistentChatHistoryProps.pageSize }
         });
     }
 
@@ -43,8 +44,8 @@ class PersistentConversationHandler {
             ...props,
         };
 
-        // if the props is not existent or is not  anumber then default to 4
-        this.pageSize = this.appliedProps?.pageSize !== undefined && !isNaN(this.appliedProps.pageSize) ? this.appliedProps.pageSize : 4;
+        // if the props is not existent or is not a number then default to defaultPersistentChatHistoryProps.pageSize
+        this.pageSize = this.appliedProps?.pageSize !== undefined && !isNaN(this.appliedProps.pageSize) ? this.appliedProps.pageSize : defaultPersistentChatHistoryProps.pageSize;
     }
 
     private resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
@@ -93,12 +94,22 @@ class PersistentConversationHandler {
         try {
             const messages = await this.fetchHistoryMessages();
 
-            if (messages === null || messages?.length === 0) {
+            // Handle error case - null indicates an error occurred
+            // Don't mark as last pull to allow retry on next attempt
+            if (messages == null) {
+                TelemetryHelper.logActionEvent(LogLevel.WARN, {
+                    Event: TelemetryEvent.LCWPersistentHistoryReturnedNull,
+                    Description: "History pull returned null - Possible error occurred, will retry on next scroll",
+                    ElapsedTimeInMilliseconds: pullTimer.milliSecondsElapsed
+                });
+                return;
+            }
+
+            // Handle legitimate end of history - empty array
+            if (messages.length === 0) {
                 this.isLastPull = true;
                 // Dispatch event to notify UI that no more history is available
                 dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-                // Also hide the loading banner
-                dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 
                 TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
@@ -111,9 +122,6 @@ class PersistentConversationHandler {
             const messagesDescOrder = [...messages]?.reverse();
 
             this.processHistoryMessages(messagesDescOrder);
-            
-            // Dispatch event to hide the loading banner after messages are processed
-            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
             
             TelemetryHelper.logActionEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.LCWPersistentHistoryPullCompleted,
@@ -161,12 +169,11 @@ class PersistentConversationHandler {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private async fetchHistoryMessages(): Promise<any[]> {
+    private async fetchHistoryMessages(): Promise<any[] | null> {
 
         if (!this.shouldPull()) {
             // Dispatch event to ensure banner is hidden when no more pulls are needed
             dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
             return [];
         }
 
@@ -192,12 +199,8 @@ class PersistentConversationHandler {
                 this.isLastPull = true;
                 // Dispatch event when we reach the end of available history
                 dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-                // Also hide the loading banner
-                dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
                 return [];
             }
-
-            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
 
             return messages;
         } catch (error) {
@@ -207,13 +210,11 @@ class PersistentConversationHandler {
                 ExceptionDetails: error,
             });
 
-            this.isLastPull = true;
-            this.pageToken = null;
-            // Dispatch event when there's an error to stop loading banner
-            dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
-            // Also hide the loading banner
-            dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
-            return [];
+            // On error, dispatch HISTORY_LOAD_ERROR to hide loading banner without marking conversation as ended
+            // This allows recovery on the next attempt (e.g., transient network errors)
+            // Return null to distinguish error from legitimate empty history
+            dispatchCustomEvent(ChatWidgetEvents.HISTORY_LOAD_ERROR);
+            return null;
         }
     }
 

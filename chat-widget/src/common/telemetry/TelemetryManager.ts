@@ -63,10 +63,15 @@ export const RegisterLoggers = () => {
                 });
             }
 
-            if (TelemetryManager.InternalTelemetryData?.appInsightsConfig?.appInsightsDisabled === false) {
-                if (TelemetryManager.InternalTelemetryData?.appInsightsConfig.appInsightsKey) {
-                    loggers.push(appInsightsLogger(TelemetryManager.InternalTelemetryData?.appInsightsConfig.appInsightsKey));
-                }
+            const chatConfigAppInsightsKey = TelemetryManager.InternalTelemetryData?.chatConfigAppInsightsKey;
+            const appInsightsKeyFromUser = TelemetryManager.InternalTelemetryData?.appInsightsConfig?.appInsightsKey;
+            // when chatConfig has AppInsightsInstrumentationKey
+            if (chatConfigAppInsightsKey) {
+                loggers.push(appInsightsLogger(chatConfigAppInsightsKey));
+            }
+            // when key set through appInsightsConfig
+            else if (appInsightsKeyFromUser && TelemetryManager.InternalTelemetryData?.appInsightsConfig?.appInsightsDisabled === false) {
+                loggers.push(appInsightsLogger(appInsightsKeyFromUser));
             }
         }
     };
