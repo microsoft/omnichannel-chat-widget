@@ -44,7 +44,7 @@ class PersistentConversationHandler {
             ...props,
         };
 
-        // if the props is not existent or is not  anumber then default to defaultPersistentChatHistoryProps.pageSize
+        // if the props is not existent or is not a number then default to defaultPersistentChatHistoryProps.pageSize
         this.pageSize = this.appliedProps?.pageSize !== undefined && !isNaN(this.appliedProps.pageSize) ? this.appliedProps.pageSize : defaultPersistentChatHistoryProps.pageSize;
     }
 
