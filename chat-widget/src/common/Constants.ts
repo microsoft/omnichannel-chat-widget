@@ -296,8 +296,7 @@ export enum ConversationEndEntity {
     Customer = "Customer",
     Agent = "Agent", // Currently covers both for human agent and bot
     Bot = "Bot",
-    NotSet = "NotSet",
-    CustomerEvent = "CustomerEvent"
+    NotSet = "NotSet"
 }
 
 export enum ConfirmationState {
