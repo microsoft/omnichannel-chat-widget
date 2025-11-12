@@ -13,7 +13,7 @@ If you plan to host Live Chat Widget script on another domain, which is not same
 ### **Components**
 
 #### **1. In-Memory Store**
-When third-party cookie are blocked, widget gets its intial state from in-memory store. This store is hooked up with an event listner, so when the `localStorage` is updated in-memory store gets notification and update itself.
+When third-party cookie are blocked, widget gets its initial state from in-memory store. This store is hooked up with an event listener, so when the `localStorage` is updated in-memory store gets notification and update itself.
 
 ```
 export class CacheManager {
@@ -76,9 +76,9 @@ export const inMemoryDataStore = () => {
 };
 ```
 
-#### 2. **Initialize in-meomry Data store**
+#### 2. **Initialize in-memory Data store**
 
-Do not forget to intialize the in-memory data store in your main method:
+Do not forget to initialize the in-memory data store in your main method:
 
 ```
 const main = async () => {
