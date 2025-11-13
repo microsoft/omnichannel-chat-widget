@@ -226,5 +226,140 @@ describe("FacadeChatSDK", () => {
             await expect(facadeChatSDK["validateAndExecuteCall"]("testFunction", mockFn)).rejects.toThrow("Authentication Setup Error: Token validation failed - GetAuthToken function is not present");
         });
     });
+
+    describe("sendReadReceipt", () => {
+        const mockMessageId = "test-message-123";
+
+        beforeEach(() => {
+            // Mock the chatSDK.sendReadReceipt method
+            jest.spyOn(facadeChatSDK["chatSDK"], "sendReadReceipt").mockResolvedValue();
+            // Mock console.error to prevent noise during tests
+            jest.spyOn(console, 'error').mockImplementation(() => {});
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
+        it("should call chatSDK.sendReadReceipt with correct messageId when token is valid", async () => {
+            // Mock tokenRing to return valid token
+            jest.spyOn(facadeChatSDK as any, "tokenRing").mockResolvedValue({ 
+                result: true, 
+                message: "Token is valid" 
+            });
+
+            await facadeChatSDK.sendReadReceipt(mockMessageId);
+
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledWith(mockMessageId);
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledTimes(1);
+        });
+
+        it("should throw authentication error when token is invalid", async () => {
+            // Mock tokenRing to return invalid token
+            jest.spyOn(facadeChatSDK as any, "tokenRing").mockResolvedValue({ 
+                result: false, 
+                message: "Token is invalid" 
+            });
+
+            await expect(facadeChatSDK.sendReadReceipt(mockMessageId))
+                .rejects
+                .toThrow("Authentication Setup Error: Token validation failed - GetAuthToken function is not present");
+            
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).not.toHaveBeenCalled();
+        });
+
+        it("should work when SDK is mocked", async () => {
+            // Set SDK as mocked
+            facadeChatSDK["sdkMocked"] = true;
+
+            await facadeChatSDK.sendReadReceipt(mockMessageId);
+
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledWith(mockMessageId);
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledTimes(1);
+        });
+
+        it("should work when authentication is not required", async () => {
+            // Set authentication as not required
+            facadeChatSDK["isAuthenticated"] = false;
+
+            await facadeChatSDK.sendReadReceipt(mockMessageId);
+
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledWith(mockMessageId);
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledTimes(1);
+        });
+
+        it("should handle chatSDK.sendReadReceipt errors", async () => {
+            const mockError = new Error("Network error");
+            jest.spyOn(facadeChatSDK["chatSDK"], "sendReadReceipt").mockRejectedValue(mockError);
+            jest.spyOn(facadeChatSDK as any, "tokenRing").mockResolvedValue({ 
+                result: true, 
+                message: "Token is valid" 
+            });
+
+            await expect(facadeChatSDK.sendReadReceipt(mockMessageId))
+                .rejects
+                .toThrow("Network error");
+
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledWith(mockMessageId);
+        });
+
+        it("should validate input parameter", async () => {
+            jest.spyOn(facadeChatSDK as any, "tokenRing").mockResolvedValue({ 
+                result: true, 
+                message: "Token is valid" 
+            });
+
+            // Test with empty string
+            await facadeChatSDK.sendReadReceipt("");
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledWith("");
+
+            // Test with null (TypeScript won't allow this, but testing runtime behavior)
+            await facadeChatSDK.sendReadReceipt(null as any);
+            expect(facadeChatSDK["chatSDK"].sendReadReceipt).toHaveBeenCalledWith(null);
+        });
+
+        it("should work with facade disabled", async () => {
+            // Create a new instance with facade disabled
+            const input: IFacadeChatSDKInput = {
+                chatSDK: new OmnichannelChatSDK({
+                    orgId: "your-org-id",
+                    orgUrl: "https://your-org-url", 
+                    widgetId: "your-widget-id"
+                }),
+                chatConfig: {
+                    ChatWidgetLanguage: undefined,
+                    DataMaskingInfo: undefined,
+                    LiveChatConfigAuthSettings: undefined,
+                    LiveChatVersion: 0,
+                    LiveWSAndLiveChatEngJoin: undefined,
+                    allowedFileExtensions: "",
+                    maxUploadFileSize: ""
+                },
+                getAuthToken: jest.fn(),
+                isAuthenticated: true,
+                isSDKMocked: false
+            };
+            const facadeChatSDKDisabled = new FacadeChatSDK(input, true); // facade disabled
+
+            jest.spyOn(facadeChatSDKDisabled["chatSDK"], "sendReadReceipt").mockResolvedValue();
+
+            await facadeChatSDKDisabled.sendReadReceipt(mockMessageId);
+
+            expect(facadeChatSDKDisabled["chatSDK"].sendReadReceipt).toHaveBeenCalledWith(mockMessageId);
+        });
+
+        it("should return a Promise<void>", async () => {
+            jest.spyOn(facadeChatSDK as any, "tokenRing").mockResolvedValue({ 
+                result: true, 
+                message: "Token is valid" 
+            });
+
+            const result = facadeChatSDK.sendReadReceipt(mockMessageId);
+            expect(result).toBeInstanceOf(Promise);
+            
+            const resolvedResult = await result;
+            expect(resolvedResult).toBeUndefined();
+        });
+    });
     
 });
