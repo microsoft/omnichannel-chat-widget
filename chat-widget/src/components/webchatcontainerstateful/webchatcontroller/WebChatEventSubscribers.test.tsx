@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import "@testing-library/jest-dom";
 
 import React, { act } from "react";
@@ -70,14 +72,15 @@ describe("WebChatEventSubscribers", () => {
         mockWebChatStoreLoader.store = null;
         
         // Set up mock implementations for each test
-        setIntervalSpy.mockImplementation((callback, delay) => {
+        setIntervalSpy.mockImplementation(() => {
             // Return a mock timer ID without executing the callback
             return 123 as any;
         });
-        setTimeoutSpy.mockImplementation((callback, delay) => {
+        setTimeoutSpy.mockImplementation(() => {
             // Return a mock timer ID without executing the callback
             return 456 as any;
         });
+        /* eslint-disable @typescript-eslint/no-empty-function */
         clearIntervalSpy.mockImplementation(() => {});
     });
 
@@ -459,12 +462,13 @@ describe("Dependencies Array", () => {
         mockWebChatStoreLoader.store = null;
         
         // Set up mock implementations for each test
-        setIntervalSpy.mockImplementation((callback, delay) => {
+        setIntervalSpy.mockImplementation(() => {
             return 123 as any;
         });
-        setTimeoutSpy.mockImplementation((callback, delay) => {
+        setTimeoutSpy.mockImplementation(() => {
             return 456 as any;
         });
+        /* eslint-disable @typescript-eslint/no-empty-function */
         clearIntervalSpy.mockImplementation(() => {});
     });
 

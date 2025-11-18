@@ -2,12 +2,11 @@
 
 import "@testing-library/jest-dom";
 
-import { initStartChat, prepareStartChat, setPreChatAndInitiateChat } from "./startChat";
+import { initStartChat } from "./startChat";
 
 import { ActivityStreamHandler } from "./ActivityStreamHandler";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
-import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { cleanup } from "@testing-library/react";

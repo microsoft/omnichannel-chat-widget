@@ -807,6 +807,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     // React to dynamic bot avatar initials updates from context
     useEffect(() => {
         if (state.domainStates.botAvatarInitials && state.domainStates.botAvatarInitials !== webChatStyles.botAvatarInitials) {
+            /* eslint-disable-next-line @typescript-eslint/no-non-null-assertion */
             setWebChatStyles((styles: StyleOptions) => ({ ...styles, botAvatarInitials: state.domainStates.botAvatarInitials! }));
         }
     }, [state.domainStates.botAvatarInitials]);

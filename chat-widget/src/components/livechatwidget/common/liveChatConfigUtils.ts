@@ -9,6 +9,7 @@ export const isPostChatSurveyEnabled = async (facadeChatSDK: FacadeChatSDK) : Pr
     return postChatEnabled === "true";
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getPostChatSurveyConfig = async (facadeChatSDK: FacadeChatSDK) : Promise<any> => {
     const chatConfig = await facadeChatSDK.getLiveChatConfig();
     const postChatEnabled = chatConfig.LiveWSAndLiveChatEngJoin
