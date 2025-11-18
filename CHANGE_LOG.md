@@ -25,7 +25,8 @@ All notable changes to this project will be documented in this file.
 - updated AppInsights events to traces and renamed custom property fields
 
 ### Fixed
-
+- Fixed disconnection banner persisting when closing and reopening chat widget
+- Fixed bubble text color overidding certain adaptive card element colors like title and label
 - Remove property to override CSAC flag for persistent chat history
 - Fix override of names for agent and customer in persistent chat history messages
 
