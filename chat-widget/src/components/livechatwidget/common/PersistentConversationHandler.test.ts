@@ -274,7 +274,8 @@ describe("PersistentConversationHandler", () => {
             const secondPull = handler.pullHistory();
             
             // Try to start third pull with same pageToken (should be ignored)
-            
+            const thirdPull = handler.pullHistory();
+
             // Resolve second pull
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             resolveSecond!({
