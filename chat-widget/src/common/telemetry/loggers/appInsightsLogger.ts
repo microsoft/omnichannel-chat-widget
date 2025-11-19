@@ -13,11 +13,11 @@ declare global {
 }
 
 enum AllowedKeys {
-  OrganizationId = "OrganizationId",
-  ConversationId = "LiveWorkItemId",
+  OrganizationId = "powerplatform.analytics.resource.organization.id",
+  ConversationId = "powerplatform.analytics.resource.id",
   ElapsedTimeInMilliseconds = "Duration",
-  Description = "Description",
-  ChannelId = "ChannelType",
+  Description = "omnichannel.description",
+  ChannelId = "omnichannel.channel.type",
   LCWRuntimeId = "ClientSessionId",
 }
 
@@ -94,7 +94,7 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
                 if (eventName) {
                     const trackingEventName = getTrackingEventName(logLevel, eventName);
                     const eventProperties = setEventProperties(trackingEventName, telemetryInfo);
-                    _logger.trackEvent({ name: trackingEventName, properties: eventProperties });
+                    _logger.trackTrace({ message: trackingEventName, properties: eventProperties });
                 }
             } catch (error) {
                 console.error("Error in logging telemetry to Application Insights:", error);
@@ -141,7 +141,7 @@ export const appInsightsLogger = (appInsightsKey: string): IChatSDKLogger => {
         // Additional properties
         eventProperties["ConversationStage"] = customProperties.ConversationStage ?? ConversationStage.CSREngagement;
         eventProperties["Scenario"] = "Conversation Diagnostics";
-        eventProperties["OperationName"] = eventName.includes(": ") ? eventName.split(": ")[1] : eventName;
+        eventProperties["powerplatform.analytics.subscenario"] = eventName.includes(": ") ? eventName.split(": ")[1] : eventName;
 
         return eventProperties;
     }
