@@ -2,7 +2,7 @@ import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Cons
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getDeviceType, parseBooleanFromConfig, setFocusOnSendBox } from "../../common/utils";
+import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
