@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file.
 - Updated AppInsights events
 
 ### Fixed
+
+- Fixed issue with persistent chat history not computing properly flags for history messages.
 - Fixed disconnection banner persisting when closing and reopening chat widget
 - Fixed bubble text color overidding certain adaptive card element colors like title and label
 - Remove property to override CSAC flag for persistent chat history
