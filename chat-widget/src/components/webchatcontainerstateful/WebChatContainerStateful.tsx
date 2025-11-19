@@ -98,8 +98,6 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // Determine if persistent chat history should be loaded based on all conditions
     const shouldLoadPersistentHistoryMessages = shouldLoadPersistentChatHistory(extendedChatConfig);
 
-    console.log("*************** shouldLoadPersistentHistoryMessages ******************", shouldLoadPersistentHistoryMessages);
-
     if (shouldLoadPersistentHistoryMessages) {
         
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
