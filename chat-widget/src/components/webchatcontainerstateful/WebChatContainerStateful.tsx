@@ -2,7 +2,7 @@ import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Cons
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
+import { createTimer, getDeviceType, parseBooleanFromConfig, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
@@ -28,7 +28,7 @@ import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/
 import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
 import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
 import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
-import { isPersistentChatEnabled } from "../livechatwidget/common/liveChatConfigUtils";
+import { shouldLoadPersistentChatHistory } from "../livechatwidget/common/liveChatConfigUtils";
 import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
@@ -95,14 +95,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // Type the chatConfig properly to avoid 'any' usage
     const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
     
-    const isHistoryEnabledInConfig = extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_enablepersistentchatpreviousconversations;
-    const isHistoryEnabledViaFCB = extendedChatConfig?.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled;
-    
-    const isPersistentChatEnabledForWidget = !!(extendedChatConfig?.LiveChatConfigAuthSettings?.msdyn_javascriptclientfunction) || 
-        isPersistentChatEnabled(extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+    // Determine if persistent chat history should be loaded based on all conditions
+    const shouldLoadPersistentHistoryMessages = shouldLoadPersistentChatHistory(extendedChatConfig);
 
-    // Check if both persistent chat and widget support are enabled
-    const shouldLoadPersistentHistoryMessages = isHistoryEnabledInConfig && isHistoryEnabledViaFCB && isPersistentChatEnabledForWidget;
+    console.log("*************** shouldLoadPersistentHistoryMessages ******************", shouldLoadPersistentHistoryMessages);
 
     if (shouldLoadPersistentHistoryMessages) {
         
