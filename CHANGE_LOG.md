@@ -22,10 +22,12 @@ All notable changes to this project will be documented in this file.
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.16)
 - Updated AppInsights events
+- updated AppInsights events to traces and renamed custom property fields
 
 ### Fixed
 
 - Fixed issue with persistent chat history not computing properly flags for history messages.
+- Fixed uncaught exception error in post chat survey when closing the survey
 - Fixed disconnection banner persisting when closing and reopening chat widget
 - Fixed bubble text color overidding certain adaptive card element colors like title and label
 - Remove property to override CSAC flag for persistent chat history
