@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.16)
 - Updated AppInsights events
+- updated AppInsights events to traces and renamed custom property fields
 
 ### Fixed
 - Fixed uncaught exception error in post chat survey when closing the survey
