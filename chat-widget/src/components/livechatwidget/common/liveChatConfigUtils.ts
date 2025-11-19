@@ -57,9 +57,9 @@ export const shouldLoadPersistentChatHistory = (extendedChatConfig: ExtendedChat
     }
 
     // Check if history is enabled in admin config (handles both boolean and string "true"/"false")
-    const isHistoryEnabledInConfig = true; /*parseBooleanFromConfig(
+    const isHistoryEnabledInConfig = parseBooleanFromConfig(
         extendedChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_enablepersistentchatpreviousconversations
-    );*/
+    );
 
     if (!isHistoryEnabledInConfig) {
         return false;
