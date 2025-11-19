@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - updated AppInsights events to traces and renamed custom property fields
 
 ### Fixed
+- Fixed uncaught exception error in post chat survey when closing the survey
 - Fixed disconnection banner persisting when closing and reopening chat widget
 - Fixed bubble text color overidding certain adaptive card element colors like title and label
 - Remove property to override CSAC flag for persistent chat history
