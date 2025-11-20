@@ -90,6 +90,7 @@
     "@microsoft/omnichannel-chat-components": "1.1.16",
     "@microsoft/omnichannel-chat-sdk": "^1.11.7-main.3418dc3",
     "@opentelemetry/api": "^1.9.0",
+    "@typespec/ts-http-runtime": "^0.3.2",
     "abort-controller": "^3",
     "abort-controller-es5": "^2.0.1",
     "copilot-lcw": ".\\copilot-lcw-1.0.15.tgz",

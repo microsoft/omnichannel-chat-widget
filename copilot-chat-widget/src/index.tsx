@@ -146,10 +146,10 @@ setTimeout(() => {
 
 simulateLoadAttachment();
 
-// setInterval(() => {
-//   console.log("debugging: polled raw messages");
-//   getMessages();
-// }, 10 * 1000);
+setInterval(() => {
+  console.log("debugging: polled raw messages");
+  getMessages();
+}, 20 * 1000);
 
 const chatSdkMock = new ChatSdkClientMock();
 const acsAdapter = chatSdkMock.getAcsAdapter();
@@ -175,7 +175,7 @@ root.render(
         return `You have ${characterRemaining} characters left.`
       }}
       maxLength={4000}
-      placeholderValue={"Input message here 5:15:55pm"}
+      placeholderValue={"Input message here: " + new Date(Date.now()).toISOString()}
       onSubmit={(_e, data) => {
         // const outboundMessage = constructOutboundPlainTextMessage(data.value);
         // const inAirMessage = addLocalMessage(outboundMessage, reloadMessage);

@@ -39,6 +39,9 @@ module.exports = {
             crypto: require.resolve("crypto-browserify"),
             stream: require.resolve("stream-browserify"),
             vm: require.resolve("vm-browserify"),
+            "@typespec/ts-http-runtime/internal/logger": path.resolve(__dirname, "node_modules/@typespec/ts-http-runtime/dist/browser/logger/internal.js"),
+            "@typespec/ts-http-runtime/internal/policies": path.resolve(__dirname, "node_modules/@typespec/ts-http-runtime/dist/browser/policies/internal.js"),
+            "@typespec/ts-http-runtime/internal/util": path.resolve(__dirname, "node_modules/@typespec/ts-http-runtime/dist/browser/util/internal.js")
         },
     },
     module: {

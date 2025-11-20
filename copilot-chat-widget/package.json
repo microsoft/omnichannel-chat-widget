@@ -1,6 +1,6 @@
 {
   "name": "copilot-lcw",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "A poc component for demo fluentAI.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",

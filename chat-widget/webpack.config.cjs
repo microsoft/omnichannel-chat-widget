@@ -11,7 +11,12 @@ module.exports = {
         publicPath: "/chat-widget/dist/",
     },
     resolve: {
-        extensions: [".Webpack.js", ".web.js", ".ts", ".js", ".jsx", ".tsx"]
+        extensions: [".Webpack.js", ".web.js", ".ts", ".js", ".jsx", ".tsx"],
+        alias: {
+            "@typespec/ts-http-runtime/internal/logger": path.resolve(__dirname, "node_modules/@typespec/ts-http-runtime/dist/browser/logger/internal.js"),
+            "@typespec/ts-http-runtime/internal/policies": path.resolve(__dirname, "node_modules/@typespec/ts-http-runtime/dist/browser/policies/internal.js"),
+            "@typespec/ts-http-runtime/internal/util": path.resolve(__dirname, "node_modules/@typespec/ts-http-runtime/dist/browser/util/internal.js")
+        }
     },
     devServer: {
         static: {

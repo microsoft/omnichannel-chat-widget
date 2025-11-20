@@ -443,12 +443,12 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
             <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
                 {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers persistentChatHistoryEnabled={props?.persistentChatHistoryProps?.persistentChatHistoryEnabled}/>}
-                <BasicWebChat></BasicWebChat>
-                {/* <App messageSubject={props.messageSubject} 
-                flightMessageSubject={props.flightMessageSubject}
-                attachmentMessageSubject={props.attachmentUpdateSubject}
-                eventHandler={(event) => console.log(event)}
-            /> */}  
+                {/* <BasicWebChat></BasicWebChat> */}
+                <App messageSubject={props.messageSubject} 
+                    flightMessageSubject={props.flightMessageSubject}
+                    attachmentMessageSubject={props.attachmentUpdateSubject}
+                    eventHandler={(event) => console.log(event)}
+                />
             </div>
         </Stack>
         {citationPaneOpen && (

@@ -1012,7 +1012,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                                 "tags": "ChannelId-lcw,FromCustomer"
                             }
                         } */}
-                        {/* {<button onClick={() => {
+                        {<button onClick={() => {
                             const ts = Date.now();
                             const payload = `Random message generated at: ${ts}`;
                             const clientActivityId = `mock${ts}`;
@@ -1040,7 +1040,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                                 });
                             }, 2 * 1000);
                             
-                        }}>{"send test message"}</button>} */}
+                        }}>{"send test message"}</button>}
 
                         {/* {<button onClick={() => {
                             const ts = Date.now();
