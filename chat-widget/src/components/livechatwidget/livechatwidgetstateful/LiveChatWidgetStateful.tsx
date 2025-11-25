@@ -732,8 +732,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
         // In conversational survey, we need to check post chat survey logics before we set ConversationState to InActive
         // Hence setting ConversationState to InActive will be done later in the post chat flows
-        if (!isConversationalSurveyEnabled && inMemoryState?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
-                    inMemoryState?.appStates?.conversationEndedBy === ConversationEndEntity.Bot) {
+        if (!isConversationalSurveyEnabled && (inMemoryState?.appStates?.conversationEndedBy === ConversationEndEntity.Agent ||
+                    inMemoryState?.appStates?.conversationEndedBy === ConversationEndEntity.Bot)) {
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.InActive });
         }
         
