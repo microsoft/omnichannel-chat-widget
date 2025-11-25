@@ -30,9 +30,10 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
+    console.log("OOHH shouldShowWebChatContainer", state);
     return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
         state.appStates.conversationState === ConversationState.InActive ||
-        (state.appStates.conversationState === ConversationState.Postchat && state.appStates.isConversationalSurveyEnabled && state.appStates.isConversationalSurvey));
+        (!state.appStates.chatDisconnectEventReceived && (state.appStates.conversationState === ConversationState.Postchat && state.appStates.isConversationalSurveyEnabled && state.appStates.isConversationalSurvey)));
 };
 
 export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
