@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Remove property to override CSAC flag for persistent chat history
 - Fix override of names for agent and customer in persistent chat history messages
 - Fixed logic to present post-chat survey after an MCS bot ends the conversation
+- Fixed lint configuration during build
 
 ## [1.8.3] - 2025-10-07
 

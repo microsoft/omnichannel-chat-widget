@@ -3,7 +3,7 @@ import "regenerator-runtime/runtime";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { ConversationMode, WidgetLoadCustomErrorString } from "../../../common/Constants";
 import { checkContactIdError, isNullOrEmptyString, isNullOrUndefined } from "../../../common/utils";
-import { handleAuthentication, removeAuthTokenProvider } from "./authHelper";
+import { removeAuthTokenProvider } from "./authHelper";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatConfig from "@microsoft/omnichannel-chat-sdk/lib/core/ChatConfig";

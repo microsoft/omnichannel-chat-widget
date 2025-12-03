@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import SecureEventBus from "./SecureEventBus";
 import ChatWidgetEvents from "../../components/livechatwidget/common/ChatWidgetEvents";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
