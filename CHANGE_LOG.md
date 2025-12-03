@@ -15,15 +15,30 @@ All notable changes to this project will be documented in this file.
 - Adding support to fetch history messages for persistent chat
 - Add use of `config.LcwFcbConfiguration?.lcwPersistentChatHistoryEnabled` to enable persistent chat history feature
 - Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
+- Added support for AppInsightsInstrumentationKey from chat config
+- Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
 
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.16)
+- Updated AppInsights events
+- updated AppInsights events to traces and renamed custom property fields
+
+### Fixed
+
+- Fixed issue with persistent chat history not properly computing flags for history messages.
+- Fixed uncaught exception error in post chat survey when closing the survey
+- Fixed disconnection banner persisting when closing and reopening chat widget
+- Fixed bubble text color overidding certain adaptive card element colors like title and label
+- Remove property to override CSAC flag for persistent chat history
+- Fix override of names for agent and customer in persistent chat history messages
+- Fixed logic to present post-chat survey after an MCS bot ends the conversation
 
 ## [1.8.3] - 2025-10-07
 
 ### Fixed
 
+- [Persistent Chat History] Remove prop to disable persistent chat history from customer side, and enhancement of error handling
 - IOS mobile doesnt display emoji when typing.
 - Fix 400% zoom issue on citation pane
 - Missing export for LiveChatWidgetMockType in index.ts

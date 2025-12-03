@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 import ChatWidgetEvents from "../../livechatwidget/common/ChatWidgetEvents";
 import { Constants } from "../../../common/Constants";
-import { IPersistentChatHistoryProps } from "../../livechatwidget/interfaces/IPersistentChatHistoryProps";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "./WebChatStoreLoader";
 import { createTimer } from "../../../common/utils";
@@ -13,16 +12,13 @@ import dispatchCustomEvent from "../../../common/utils/dispatchCustomEvent";
  * Component to handle persistent chat history events.
  * Uses WebChatStoreLoader instead of hooks to avoid context issues.
  */
-const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
+const WebChatEventSubscribers = () => {
     const [isConnected, setIsConnected] = useState(false);
     const [storeReady, setStoreReady] = useState(false);
     const storeWaitTimer = createTimer();
-
+    // Type the chatConfig properly to avoid 'any' usage
+    
     useEffect(() => {
-
-        if (!props.persistentChatHistoryEnabled) {
-            return;
-        }
 
         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.LCWWebChatStorePollingStarted,
@@ -57,11 +53,11 @@ const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
             };
         }
 
-    }, [props.persistentChatHistoryEnabled]);
+    }, []);
 
     useEffect(() => {
 
-        if (!props.persistentChatHistoryEnabled || !storeReady) {
+        if (!storeReady) {
             return;
         }
 
@@ -122,7 +118,7 @@ const WebChatEventSubscribers = (props: IPersistentChatHistoryProps) => {
         return () => {
             clearInterval(interval);
         };
-    }, [isConnected, props.persistentChatHistoryEnabled, storeReady]);
+    }, [isConnected, storeReady]);
 
     return null;
 };

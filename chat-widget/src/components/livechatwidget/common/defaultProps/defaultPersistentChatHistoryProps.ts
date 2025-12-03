@@ -1,8 +1,7 @@
 import { IPersistentChatHistoryProps } from "../../interfaces/IPersistentChatHistoryProps";
 
 export const defaultPersistentChatHistoryProps: IPersistentChatHistoryProps = {
-    persistentChatHistoryEnabled: true,
-    pageSize: 4,
+    pageSize: 10,
     dividerActivityStyle: {
         border: "1px solid rgb(96, 94, 92, 0.5)",
         margin: "10px 20%"

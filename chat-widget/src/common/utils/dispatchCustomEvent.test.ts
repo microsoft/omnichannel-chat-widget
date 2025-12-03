@@ -78,21 +78,21 @@ describe("dispatchCustomEvent Security Integration", () => {
 
     it("should maintain event isolation between different event types", () => {
         const addActivityCallback = jest.fn();
-        const hideLoadingCallback = jest.fn();
+        const noMoreHistoryCallback = jest.fn();
         
         eventBus.subscribe(ChatWidgetEvents.ADD_ACTIVITY, addActivityCallback);
-        eventBus.subscribe(ChatWidgetEvents.HIDE_LOADING_BANNER, hideLoadingCallback);
+        eventBus.subscribe(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, noMoreHistoryCallback);
         
         // Dispatch to ADD_ACTIVITY
         dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, { activity: "test" });
         
         expect(addActivityCallback).toHaveBeenCalledWith({ activity: "test" });
-        expect(hideLoadingCallback).not.toHaveBeenCalled();
+        expect(noMoreHistoryCallback).not.toHaveBeenCalled();
         
-        // Dispatch to HIDE_LOADING_BANNER
-        dispatchCustomEvent(ChatWidgetEvents.HIDE_LOADING_BANNER);
+        // Dispatch to NO_MORE_HISTORY_AVAILABLE
+        dispatchCustomEvent(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
         
-        expect(hideLoadingCallback).toHaveBeenCalledWith(undefined);
+        expect(noMoreHistoryCallback).toHaveBeenCalledWith(undefined);
         expect(addActivityCallback).toHaveBeenCalledTimes(1); // Should still be 1
     });
 });

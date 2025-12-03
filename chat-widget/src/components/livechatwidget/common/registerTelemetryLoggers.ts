@@ -27,6 +27,8 @@ export const registerTelemetryLoggers = (props: ILiveChatWidgetProps, dispatch: 
 
         if (props.chatConfig) {
             telemetryData = TelemetryHelper.addChatConfigDataToTelemetry(props?.chatConfig, telemetryData);
+            //store AppInsights instrumentation key from chatConfig if present
+            telemetryData.chatConfigAppInsightsKey = props.chatConfig.LiveWSAndLiveChatEngJoin?.AppInsightsInstrumentationKey;
         }
 
         if (!props.chatSDK?.omnichannelConfig?.orgId || props.chatSDK?.omnichannelConfig?.orgId.trim().length === 0 ) {

@@ -13,6 +13,8 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LazyLoadHandler } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activities/LazyLoadActivity";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
+import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
+import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
 import { StyleOptions } from "botframework-webchat";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../../../common/telemetry/TelemetryManager";
@@ -191,6 +193,18 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
         }
     }
 
+    //moving logic below to before processing skipCloseChat logic to avoid race conditions of postMessage for endChatEvent for other tabs vs postMessage for CloseChat
+    //TODO: clarify if this postMessageToOtherTab actually works in production.
+    if (postMessageToOtherTab) {
+        const endChatEventName = await getEndChatEventName(facadeChatSDK, props);
+        BroadcastService.postMessage({
+            eventName: endChatEventName,
+            payload: {
+                runtimeId: TelemetryManager.InternalTelemetryData.lcwRuntimeId
+            }
+        });
+    }
+
     if (!skipCloseChat) {
         try {
             adapter?.end();
@@ -222,17 +236,16 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
 
             closeChatWidget(dispatch, setWebChatStyles, props);
             facadeChatSDK.destroy();
+            
+            //always post the close chat event after chat closed and cleanup completed
+            BroadcastService.postMessage({
+                eventName: BroadcastEvent.CloseChat
+            });
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.CloseChatCall,
+                Description: "Broadcasted close chat event"
+            });
         }
-    }
-
-    if (postMessageToOtherTab) {
-        const endChatEventName = await getEndChatEventName(facadeChatSDK, props);
-        BroadcastService.postMessage({
-            eventName: endChatEventName,
-            payload: {
-                runtimeId: TelemetryManager.InternalTelemetryData.lcwRuntimeId
-            }
-        });
     }
 };
 
@@ -267,6 +280,9 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
         }
     });
     dispatch({ type: LiveChatWidgetActionType.SET_CITATIONS, payload: {} });
+
+    // Dismiss the chat disconnect notification banner if it was shown
+    NotificationHandler.dismissNotification(NotificationScenarios.ChatDisconnect);
 
     // Clear live chat context only if chat widget is fully closed to support transcript calls after sessionclose is called
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });

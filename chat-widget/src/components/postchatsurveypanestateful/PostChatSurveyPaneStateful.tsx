@@ -50,19 +50,19 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
 
     let surveyInviteLink = "";
     const surveyMode = (state?.appStates?.selectedSurveyMode === PostChatSurveyMode.Embed);
-    if (state.domainStates.postChatContext.botSurveyInviteLink && // Bot survey enabled
+    if (state.domainStates.postChatContext?.botSurveyInviteLink && // Bot survey enabled
         state.appStates.postChatParticipantType === ParticipantType.Bot) { // Only Bot has engaged
         surveyInviteLink = generateSurveyInviteLink(
-            state.domainStates.postChatContext.botSurveyInviteLink,
+            state.domainStates.postChatContext?.botSurveyInviteLink,
             surveyMode,
-            state.domainStates.postChatContext.botFormsProLocale,
+            state.domainStates.postChatContext?.botFormsProLocale,
             props.isCustomerVoiceSurveyCompact ?? true,
             props.customerVoiceSurveyCorrelationId || "");
     } else {
         surveyInviteLink = generateSurveyInviteLink(
-            state.domainStates.postChatContext.surveyInviteLink,
+            state.domainStates.postChatContext?.surveyInviteLink,
             surveyMode,
-            state.domainStates.postChatContext.formsProLocale,
+            state.domainStates.postChatContext?.formsProLocale,
             props.isCustomerVoiceSurveyCompact ?? true,
             props.customerVoiceSurveyCorrelationId || "");
     }
@@ -122,13 +122,13 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
             if (data === CustomerVoiceEvents.ResponsePageLoaded) {
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.CustomerVoiceResponsePageLoaded });
             } else if (data === CustomerVoiceEvents.FormResponseSubmitted) {
-                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.CustomerVoiceFormResponseSubmitted,
                     Description: "Customer Voice form response submitted.",
                     CustomProperties: { ConversationStage: ConversationStage.ConversationEnd }
                 });
             } else if (data === CustomerVoiceEvents.FormResponseError) {
-                TelemetryHelper.logActionEventToAllTelemetry(LogLevel.ERROR, {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.CustomerVoiceFormResponseError,
                     Description: "Customer Voice form response error.",
                     ExceptionDetails: { message: "Customer Voice form response error." },
