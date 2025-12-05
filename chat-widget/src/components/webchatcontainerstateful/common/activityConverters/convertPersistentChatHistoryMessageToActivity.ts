@@ -44,11 +44,11 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
 
     if (additionalData?.tags) {
         const {tags} = additionalData;
-            const formattedTags = additionalData.tags.split(",");
-            activity.channelData = {
-                ...activity.channelData,
-                tags: [...activity.channelData.tags, ...formattedTags]
-            };
+        const formattedTags = additionalData.tags.split(",");
+        activity.channelData = {
+            ...activity.channelData,
+            tags: [...activity.channelData.tags, ...formattedTags]
+        };
     }
 
     if (additionalData?.ConversationId) {
