@@ -43,18 +43,17 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
     }
 
     if (additionalData?.tags) {
-        const {tags, ConversationId} = additionalData;
-        if (ConversationId) {
-            activity.channelData.conversationId = ConversationId;
-        }
-
-        if (tags) {
+        const {tags} = additionalData;
             const formattedTags = additionalData.tags.split(",");
             activity.channelData = {
                 ...activity.channelData,
                 tags: [...activity.channelData.tags, ...formattedTags]
             };
-        }
+    }
+
+    if (additionalData?.ConversationId) {
+        const {ConversationId} = additionalData;
+        activity.channelData.conversationId = ConversationId;
     }
 
     if (from?.user?.displayName) {
