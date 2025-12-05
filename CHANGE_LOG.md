@@ -34,7 +34,7 @@ All notable changes to this project will be documented in this file.
 - Fix override of names for agent and customer in persistent chat history messages
 - Fixed logic to present post-chat survey after an MCS bot ends the conversation
 - Fixed lint configuration during build
--Fixed issue with persistent chat history bot messages activity divider
+- Fixed issue with persistent chat history bot messages activity divider
 
 ## [1.8.3] - 2025-10-07
 
