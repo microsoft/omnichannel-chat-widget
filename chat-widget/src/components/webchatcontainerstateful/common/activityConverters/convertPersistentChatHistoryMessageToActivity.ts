@@ -43,7 +43,6 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
     }
 
     if (additionalData?.tags) {
-        const {tags} = additionalData;
         const formattedTags = additionalData.tags.split(",");
         activity.channelData = {
             ...activity.channelData,
@@ -52,8 +51,7 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
     }
 
     if (additionalData?.ConversationId) {
-        const {ConversationId} = additionalData;
-        activity.channelData.conversationId = ConversationId;
+        activity.channelData.conversationId = additionalData.ConversationId;
     }
 
     if (from?.user?.displayName) {
