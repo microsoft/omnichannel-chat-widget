@@ -1,35 +1,43 @@
-import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
-import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
-import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
+import {Constants, HtmlAttributeNames, HtmlClassNames} from "../../common/Constants";
+import {IRawStyle, IStackStyles, Stack} from "@fluentui/react";
+import {LogLevel, TelemetryEvent} from "../../common/telemetry/TelemetryConstants";
+import React, {Dispatch, useEffect, useRef, useState} from "react";
+import {createTimer, getDeviceType, setFocusOnSendBox} from "../../common/utils";
 
-import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
+import {BotMagicCodeStore} from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
-import { Components } from "botframework-webchat";
-import { ExtendedChatConfig } from "./interfaces/IExtendedChatConffig";
-import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
-import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
-import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
-import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
-import { ITimer } from "../../common/interfaces/ITimer";
-import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
-import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
-import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
-import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
-import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
+import {Components} from "botframework-webchat";
+import {ExtendedChatConfig} from "./interfaces/IExtendedChatConffig";
+import {FacadeChatSDK} from "../../common/facades/FacadeChatSDK";
+import {ILiveChatWidgetAction} from "../../contexts/common/ILiveChatWidgetAction";
+import {ILiveChatWidgetContext} from "../../contexts/common/ILiveChatWidgetContext";
+import {ILiveChatWidgetProps} from "../livechatwidget/interfaces/ILiveChatWidgetProps";
+import {ITimer} from "../../common/interfaces/ITimer";
+import {LiveChatWidgetActionType} from "../../contexts/common/LiveChatWidgetActionType";
+import {NotificationHandler} from "./webchatcontroller/notification/NotificationHandler";
+import {NotificationScenarios} from "./webchatcontroller/enums/NotificationScenarios";
+import {TelemetryHelper} from "../../common/telemetry/TelemetryHelper";
+import {WebChatActionType} from "./webchatcontroller/enums/WebChatActionType";
 import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
-import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
-import { createIOSOptimizedEmojiFont } from "./common/utils/fontUtils";
-import { defaultAdaptiveCardStyles } from "./common/defaultStyles/defaultAdaptiveCardStyles";
-import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
-import { defaultReceivedMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultReceivedMessageAnchorStyles";
-import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSentMessageAnchorStyles";
-import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
-import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
-import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
-import { shouldLoadPersistentChatHistory } from "../livechatwidget/common/liveChatConfigUtils";
-import { useChatContextStore } from "../..";
+import {WebChatStoreLoader} from "./webchatcontroller/WebChatStoreLoader";
+import {createIOSOptimizedEmojiFont} from "./common/utils/fontUtils";
+import {defaultAdaptiveCardStyles} from "./common/defaultStyles/defaultAdaptiveCardStyles";
+import {defaultMiddlewareLocalizedTexts} from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
+import {
+    defaultReceivedMessageAnchorStyles
+} from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultReceivedMessageAnchorStyles";
+import {
+    defaultSentMessageAnchorStyles
+} from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSentMessageAnchorStyles";
+import {
+    defaultSystemMessageBoxStyles
+} from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
+import {
+    defaultUserMessageBoxStyles
+} from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
+import {defaultWebChatContainerStatefulProps} from "./common/defaultProps/defaultWebChatContainerStatefulProps";
+import {shouldLoadPersistentChatHistory} from "../livechatwidget/common/liveChatConfigUtils";
+import {useChatContextStore} from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
 
@@ -38,231 +46,235 @@ let uiTimer: ITimer;
 const broadcastChannelMessageEvent = "message";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const postActivity = (activity: any) => {
-  // eslint-disable-line @typescript-eslint/no-explicit-any
-  return {
-    type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
-    meta: { method: "keyboard" },
-    payload: {
-      activity: {
-        channelData: undefined,
-        text: "",
-        textFormat: "plain",
-        type: Constants.message,
-        ...activity
-      }
-    }
-  };
+    // eslint-disable-line @typescript-eslint/no-explicit-any
+    return {
+        type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
+        meta: {method: "keyboard"},
+        payload: {
+            activity: {
+                channelData: undefined,
+                text: "",
+                textFormat: "plain",
+                type: Constants.message,
+                ...activity
+            }
+        }
+    };
 };
 
 const createMagicCodeSuccessResponse = (signin: string) => {
-  return {
-    signin,
-    result: "Success"
-  };
+    return {
+        signin,
+        result: "Success"
+    };
 };
 
 export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
-  const [facadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
+    const [facadeChatSDK]: [FacadeChatSDK | undefined, (facadeChatSDK: FacadeChatSDK) => void] = useFacadeSDKStore();
 
-  // Create a font family that includes emoji support, based on the primary font or default
-  const webChatStyles = props.webChatContainerProps?.webChatStyles ?? defaultWebChatContainerStatefulProps.webChatStyles;
-  const primaryFont = webChatStyles?.primaryFont ?? defaultWebChatContainerStatefulProps.webChatStyles?.primaryFont;
+    // Create a font family that includes emoji support, based on the primary font or default
+    const webChatStyles = props.webChatContainerProps?.webChatStyles ?? defaultWebChatContainerStatefulProps.webChatStyles;
+    const primaryFont = webChatStyles?.primaryFont ?? defaultWebChatContainerStatefulProps.webChatStyles?.primaryFont;
 
-  // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
-  const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
+    // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
+    const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
 
-  useEffect(() => {
-    uiTimer = createTimer();
-    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-      Event: TelemetryEvent.UXWebchatContainerCompleted
-    });
-  }, []);
+    useEffect(() => {
+        uiTimer = createTimer();
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXWebchatContainerCompleted
+        });
+    }, []);
 
-  // Citation pane state
-  const [citationPaneOpen, setCitationPaneOpen] = useState(false);
-  const [citationPaneText, setCitationPaneText] = useState("");
+    // Citation pane state
+    const [citationPaneOpen, setCitationPaneOpen] = useState(false);
+    const [citationPaneText, setCitationPaneText] = useState("");
 
-  // Guard to prevent handling multiple rapid clicks which could cause
-  // the dim layer and pane to re-render out of sync and create a flicker.
-  const citationOpeningRef = useRef(false);
+    // Guard to prevent handling multiple rapid clicks which could cause
+    // the dim layer and pane to re-render out of sync and create a flicker.
+    const citationOpeningRef = useRef(false);
 
 
-  const { BasicWebChat } = Components;
-  const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-  const { webChatContainerProps, contextDataStore } = props;
+    const {BasicWebChat} = Components;
+    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const {webChatContainerProps, contextDataStore} = props;
 
-  // Type the chatConfig properly to avoid 'any' usage
-  const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
+    // Type the chatConfig properly to avoid 'any' usage
+    const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
 
-  // Determine if persistent chat history should be loaded based on all conditions
-  const shouldLoadPersistentHistoryMessages = shouldLoadPersistentChatHistory(extendedChatConfig);
+    // Determine if persistent chat history should be loaded based on all conditions
+    const shouldLoadPersistentHistoryMessages = shouldLoadPersistentChatHistory(extendedChatConfig);
 
-  if (shouldLoadPersistentHistoryMessages) {
+    if (shouldLoadPersistentHistoryMessages) {
 
-    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-      Event: TelemetryEvent.PersistentChatHistoryEnabled
-    });
-    usePersistentChatHistory(facadeChatSDK, props?.persistentChatHistoryProps ?? {});
-  }
-  // Delegated click handler for citation anchors. Placed after state is
-  // available so we can prefer reading citations from app state and fall
-  // back to the legacy window map for backward-compatibility in tests.
-  useEffect(() => {
-    const clickHandler = (ev: MouseEvent) => {
-      try {
-        if (citationOpeningRef.current) {
-          return;
-        }
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.PersistentChatHistoryEnabled
+        });
+        usePersistentChatHistory(facadeChatSDK, props?.persistentChatHistoryProps ?? {});
+    }
+    // Delegated click handler for citation anchors. Placed after state is
+    // available so we can prefer reading citations from app state and fall
+    // back to the legacy window map for backward-compatibility in tests.
+    useEffect(() => {
+        const clickHandler = (ev: MouseEvent) => {
+            try {
+                if (citationOpeningRef.current) {
+                    return;
+                }
 
-        const target = ev.target as HTMLElement;
-        // Only consider anchors whose href starts with the citation scheme
-        const anchor = target.closest && (target.closest("a[href^=\"cite:\"]") as HTMLAnchorElement);
+                const target = ev.target as HTMLElement;
+                // Only consider anchors whose href starts with the citation scheme
+                const anchor = target.closest && (target.closest("a[href^=\"cite:\"]") as HTMLAnchorElement);
 
-        if (anchor) {
-          ev.preventDefault();
-          citationOpeningRef.current = true;
-          // Rely only on the href to identify the citation key
-          let text = "";
-          try {
-            const cid = anchor.getAttribute("href");
-            // Prefer state-based citations injected by middleware
-            if (state?.domainStates?.citations && cid) {
-              text = state.domainStates.citations[cid] ?? "";
+                if (anchor) {
+                    ev.preventDefault();
+                    citationOpeningRef.current = true;
+                    // Rely only on the href to identify the citation key
+                    let text = "";
+                    try {
+                        const cid = anchor.getAttribute("href");
+                        // Prefer state-based citations injected by middleware
+                        if (state?.domainStates?.citations && cid) {
+                            text = state.domainStates.citations[cid] ?? "";
+                        }
+                        // If state lookup failed, fall back to the anchor's title or innerText
+                        if (!text) {
+                            text = anchor.getAttribute("title") || anchor.innerText || "";
+                        }
+                    } catch (e) {
+                        // ignore
+                    }
+
+                    setCitationPaneOpen(true);
+                    setCitationPaneText(text);
+
+                    // Simple debounce - reset guard after a short delay
+                    setTimeout(() => {
+                        citationOpeningRef.current = false;
+                    }, 100);
+                }
+            } catch (e) {
+                citationOpeningRef.current = false;
             }
-            // If state lookup failed, fall back to the anchor's title or innerText
-            if (!text) {
-              text = anchor.getAttribute("title") || anchor.innerText || "";
-            }
-          } catch (e) {
-            // ignore
-          }
+        };
 
-          setCitationPaneOpen(true);
-          setCitationPaneText(text);
+        document.addEventListener("click", clickHandler);
+        return () => document.removeEventListener("click", clickHandler);
+    }, [state]);
 
-          // Simple debounce - reset guard after a short delay
-          setTimeout(() => {
-            citationOpeningRef.current = false;
-          }, 100);
-        }
-      } catch (e) {
-        citationOpeningRef.current = false;
-      }
+    const containerStyles: IStackStyles = {
+        root: Object.assign(
+            {}, defaultWebChatContainerStatefulProps.containerStyles, webChatContainerProps?.containerStyles,
+            {display: state.appStates.isMinimized ? "none" : ""}) // Use this instead of removing WebChat from the picture so that the activity observer inside the adapter is not invoked
     };
 
-    document.addEventListener("click", clickHandler);
-    return () => document.removeEventListener("click", clickHandler);
-  }, [state]);
-
-  const containerStyles: IStackStyles = {
-    root: Object.assign(
-      {}, defaultWebChatContainerStatefulProps.containerStyles, webChatContainerProps?.containerStyles,
-      { display: state.appStates.isMinimized ? "none" : "" }) // Use this instead of removing WebChat from the picture so that the activity observer inside the adapter is not invoked
-  };
-
-  const localizedTexts = {
-    ...defaultMiddlewareLocalizedTexts,
-    ...webChatContainerProps?.localizedTexts
-  };
-
-  useEffect(() => {
-    if (getDeviceType() !== "standard" && webChatContainerProps?.webChatHistoryMobileAccessibilityLabel !== undefined) {
-      const chatHistoryElement = document.querySelector(`.${HtmlClassNames.webChatHistoryContainer}`);
-
-      if (chatHistoryElement) {
-        chatHistoryElement.setAttribute(HtmlAttributeNames.ariaLabel, webChatContainerProps.webChatHistoryMobileAccessibilityLabel);
-      }
-    }
-    dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: webChatContainerProps?.renderingMiddlewareProps });
-    dispatch({ type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts });
-    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-      Event: TelemetryEvent.WebChatLoaded
-    });
-
-    if (props.webChatContainerProps?.renderingMiddlewareProps?.disableThirdPartyCookiesAlert !== true && !contextDataStore) {
-      try {
-        localStorage;
-        sessionStorage;
-      } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (!(window as any).TPCWarningShown) {
-          NotificationHandler.notifyWarning(NotificationScenarios.TPC, localizedTexts?.THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE ?? "");
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (window as any).TPCWarningShown = true;
-        }
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!props.webChatContainerProps?.botMagicCode?.disabled) {
-      return;
-    }
-
-    if (!(window as any).BroadcastChannel) { // eslint-disable-line @typescript-eslint/no-explicit-any
-      TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-        Event: TelemetryEvent.SuppressBotMagicCodeFailed,
-        Description: "BroadcastChannel not supported by default on current browser"
-      });
-
-      return;
-    }
-
-    const magicCodeBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
-    const magicCodeResponseBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeResponseBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
-
-    const eventListener = (event: { data: any; }) => { // eslint-disable-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
-      const { data } = event;
-      if (BotMagicCodeStore.botOAuthSignInId === data.signin) {
-        const { signin, code } = data;
-        const text = `${code}`;
-        const action = postActivity({
-          text,
-          channelData: {
-            tags: [Constants.hiddenTag]
-          }
-        });
-
-        WebChatStoreLoader.store.dispatch(action);
-
-        const response = createMagicCodeSuccessResponse(signin);
-        magicCodeResponseBroadcastChannel.postMessage(response);
-
-        TelemetryHelper.logActionEvent(LogLevel.INFO, {
-          Event: TelemetryEvent.SuppressBotMagicCodeSucceeded
-        });
-
-        BotMagicCodeStore.botOAuthSignInId = "";
-        magicCodeBroadcastChannel.close();
-        magicCodeResponseBroadcastChannel.close();
-      } else {
-        TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-          Event: TelemetryEvent.SuppressBotMagicCodeFailed,
-          Description: "Signin does not match"
-        });
-      }
+    const localizedTexts = {
+        ...defaultMiddlewareLocalizedTexts,
+        ...webChatContainerProps?.localizedTexts
     };
 
-    magicCodeBroadcastChannel.addEventListener(broadcastChannelMessageEvent, eventListener);
-  }, []);
+    useEffect(() => {
+        if (getDeviceType() !== "standard" && webChatContainerProps?.webChatHistoryMobileAccessibilityLabel !== undefined) {
+            const chatHistoryElement = document.querySelector(`.${HtmlClassNames.webChatHistoryContainer}`);
 
-  useEffect(() => {
-    TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
-      Event: TelemetryEvent.UXWebchatContainerCompleted,
-      ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
-    });
-  }, []);
+            if (chatHistoryElement) {
+                chatHistoryElement.setAttribute(HtmlAttributeNames.ariaLabel, webChatContainerProps.webChatHistoryMobileAccessibilityLabel);
+            }
+        }
+        dispatch({
+            type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS,
+            payload: webChatContainerProps?.renderingMiddlewareProps
+        });
+        dispatch({type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts});
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.WebChatLoaded
+        });
 
-  // Set focus to the sendbox
-  useEffect(() => {
-    if (!state.appStates.isMinimized) {
-      setFocusOnSendBox();
-    }
-  }, [state.appStates.isMinimized]);
+        if (props.webChatContainerProps?.renderingMiddlewareProps?.disableThirdPartyCookiesAlert !== true && !contextDataStore) {
+            try {
+                localStorage;
+                sessionStorage;
+            } catch (error) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                if (!(window as any).TPCWarningShown) {
+                    NotificationHandler.notifyWarning(NotificationScenarios.TPC, localizedTexts?.THIRD_PARTY_COOKIES_BLOCKED_ALERT_MESSAGE ?? "");
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (window as any).TPCWarningShown = true;
+                }
+            }
+        }
+    }, []);
 
-  return (
-    <><style>{`
+    useEffect(() => {
+        if (!props.webChatContainerProps?.botMagicCode?.disabled) {
+            return;
+        }
+
+        if (!(window as any).BroadcastChannel) { // eslint-disable-line @typescript-eslint/no-explicit-any
+            TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                Event: TelemetryEvent.SuppressBotMagicCodeFailed,
+                Description: "BroadcastChannel not supported by default on current browser"
+            });
+
+            return;
+        }
+
+        const magicCodeBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
+        const magicCodeResponseBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeResponseBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+        const eventListener = (event: { data: any; }) => { // eslint-disable-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
+            const {data} = event;
+            if (BotMagicCodeStore.botOAuthSignInId === data.signin) {
+                const {signin, code} = data;
+                const text = `${code}`;
+                const action = postActivity({
+                    text,
+                    channelData: {
+                        tags: [Constants.hiddenTag]
+                    }
+                });
+
+                WebChatStoreLoader.store.dispatch(action);
+
+                const response = createMagicCodeSuccessResponse(signin);
+                magicCodeResponseBroadcastChannel.postMessage(response);
+
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.SuppressBotMagicCodeSucceeded
+                });
+
+                BotMagicCodeStore.botOAuthSignInId = "";
+                magicCodeBroadcastChannel.close();
+                magicCodeResponseBroadcastChannel.close();
+            } else {
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.SuppressBotMagicCodeFailed,
+                    Description: "Signin does not match"
+                });
+            }
+        };
+
+        magicCodeBroadcastChannel.addEventListener(broadcastChannelMessageEvent, eventListener);
+    }, []);
+
+    useEffect(() => {
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.UXWebchatContainerCompleted,
+            ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
+        });
+    }, []);
+
+    // Set focus to the sendbox
+    useEffect(() => {
+        if (!state.appStates.isMinimized) {
+            setFocusOnSendBox();
+        }
+    }, [state.appStates.isMinimized]);
+
+    return (
+        <>
+            <style>{`
         .webchat__stacked-layout__content .ac-pushButton {
             cursor: pointer;
             border: 1px solid ${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color}  !important;
@@ -422,24 +434,24 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             outline-offset: ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorInset ?? "2px"} !important;
 
         `}</style>
-      <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-        <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
-          {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers />}
-          <BasicWebChat></BasicWebChat>
-        </div>
-      </Stack>
-      {citationPaneOpen && (
-        <CitationPaneStateful
-          id={props.citationPaneProps?.id || HtmlAttributeNames.ocwCitationPaneClassName}
-          title={props.citationPaneProps?.title || HtmlAttributeNames.ocwCitationPaneTitle}
-          contentHtml={citationPaneText}
-          onClose={() => setCitationPaneOpen(false)}
-          componentOverrides={props.citationPaneProps?.componentOverrides}
-          controlProps={props.citationPaneProps?.controlProps}
-          styleProps={props.citationPaneProps?.styleProps} />
-      )}
-    </>
-  );
+            <Stack styles={containerStyles} className="webchat__stacked-layout_container">
+                <div id="ms_lcw_webchat_root" style={{height: "100%", width: "100%"}}>
+                    {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers/>}
+                    <BasicWebChat></BasicWebChat>
+                </div>
+            </Stack>
+            {citationPaneOpen && (
+                <CitationPaneStateful
+                    id={props.citationPaneProps?.id || HtmlAttributeNames.ocwCitationPaneClassName}
+                    title={props.citationPaneProps?.title || HtmlAttributeNames.ocwCitationPaneTitle}
+                    contentHtml={citationPaneText}
+                    onClose={() => setCitationPaneOpen(false)}
+                    componentOverrides={props.citationPaneProps?.componentOverrides}
+                    controlProps={props.citationPaneProps?.controlProps}
+                    styleProps={props.citationPaneProps?.styleProps}/>
+            )}
+        </>
+    );
 };
 
 export default WebChatContainerStateful;
