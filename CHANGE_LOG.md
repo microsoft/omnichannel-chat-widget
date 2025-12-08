@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
 - Added support for AppInsightsInstrumentationKey from chat config
 - Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
+- Added support for horizontal flex display of basic/adaptive card buttons over more than 1 row
 
 ### Changed
 
