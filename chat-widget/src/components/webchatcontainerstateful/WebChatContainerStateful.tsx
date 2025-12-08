@@ -2,7 +2,7 @@ import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Cons
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer , getDeviceType, setFocusOnSendBox } from "../../common/utils";
+import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
@@ -41,7 +41,7 @@ const postActivity = (activity: any) => {
     // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
         type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY,
-        meta: {method: "keyboard"},
+        meta: { method: "keyboard" },
         payload: {
             activity: {
                 channelData: undefined,
@@ -88,9 +88,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const citationOpeningRef = useRef(false);
 
 
-    const {BasicWebChat} = Components;
-    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
-    const {webChatContainerProps, contextDataStore} = props;
+    const { BasicWebChat } = Components;
+    const [ state, dispatch ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const { webChatContainerProps, contextDataStore } = props;
 
     // Type the chatConfig properly to avoid 'any' usage
     const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
@@ -158,7 +158,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     const containerStyles: IStackStyles = {
         root: Object.assign(
             {}, defaultWebChatContainerStatefulProps.containerStyles, webChatContainerProps?.containerStyles,
-            {display: state.appStates.isMinimized ? "none" : ""}) // Use this instead of removing WebChat from the picture so that the activity observer inside the adapter is not invoked
+            { display: state.appStates.isMinimized ? "none" : "" }) // Use this instead of removing WebChat from the picture so that the activity observer inside the adapter is not invoked
     };
 
     const localizedTexts = {
@@ -216,9 +216,9 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         const magicCodeResponseBroadcastChannel = new (window as any).BroadcastChannel(Constants.magicCodeResponseBroadcastChannel); // eslint-disable-line @typescript-eslint/no-explicit-any
 
         const eventListener = (event: { data: any; }) => { // eslint-disable-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-empty-function
-            const {data} = event;
+            const { data } = event;
             if (BotMagicCodeStore.botOAuthSignInId === data.signin) {
-                const {signin, code} = data;
+                const { signin, code } = data;
                 const text = `${code}`;
                 const action = postActivity({
                     text,
