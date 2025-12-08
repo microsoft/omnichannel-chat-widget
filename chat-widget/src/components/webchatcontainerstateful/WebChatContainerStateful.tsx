@@ -3,6 +3,7 @@ import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, {Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer , getDeviceType, setFocusOnSendBox } from "../../common/utils";
+
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
@@ -26,7 +27,7 @@ import { defaultReceivedMessageAnchorStyles } from "./webchatcontroller/middlewa
 import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSentMessageAnchorStyles";
 import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
 import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
-import {defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
+import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
 import { shouldLoadPersistentChatHistory } from "../livechatwidget/common/liveChatConfigUtils";
 import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
