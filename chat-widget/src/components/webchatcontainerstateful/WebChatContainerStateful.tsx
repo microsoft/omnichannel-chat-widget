@@ -1,43 +1,34 @@
-import {Constants, HtmlAttributeNames, HtmlClassNames} from "../../common/Constants";
-import {IRawStyle, IStackStyles, Stack} from "@fluentui/react";
-import {LogLevel, TelemetryEvent} from "../../common/telemetry/TelemetryConstants";
-import React, {Dispatch, useEffect, useRef, useState} from "react";
-import {createTimer, getDeviceType, setFocusOnSendBox} from "../../common/utils";
-
-import {BotMagicCodeStore} from "./webchatcontroller/BotMagicCodeStore";
+import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
+import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
+import React, {Dispatch, useEffect, useRef, useState } from "react";
+import { createTimer , getDeviceType, setFocusOnSendBox } from "../../common/utils";
+import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
-import {Components} from "botframework-webchat";
-import {ExtendedChatConfig} from "./interfaces/IExtendedChatConffig";
-import {FacadeChatSDK} from "../../common/facades/FacadeChatSDK";
-import {ILiveChatWidgetAction} from "../../contexts/common/ILiveChatWidgetAction";
-import {ILiveChatWidgetContext} from "../../contexts/common/ILiveChatWidgetContext";
-import {ILiveChatWidgetProps} from "../livechatwidget/interfaces/ILiveChatWidgetProps";
-import {ITimer} from "../../common/interfaces/ITimer";
-import {LiveChatWidgetActionType} from "../../contexts/common/LiveChatWidgetActionType";
-import {NotificationHandler} from "./webchatcontroller/notification/NotificationHandler";
-import {NotificationScenarios} from "./webchatcontroller/enums/NotificationScenarios";
-import {TelemetryHelper} from "../../common/telemetry/TelemetryHelper";
-import {WebChatActionType} from "./webchatcontroller/enums/WebChatActionType";
+import { Components } from "botframework-webchat";
+import { ExtendedChatConfig } from "./interfaces/IExtendedChatConffig";
+import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
+import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
+import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetContext";
+import { ILiveChatWidgetProps } from "../livechatwidget/interfaces/ILiveChatWidgetProps";
+import { ITimer } from "../../common/interfaces/ITimer";
+import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
+import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
+import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
+import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
-import {WebChatStoreLoader} from "./webchatcontroller/WebChatStoreLoader";
-import {createIOSOptimizedEmojiFont} from "./common/utils/fontUtils";
-import {defaultAdaptiveCardStyles} from "./common/defaultStyles/defaultAdaptiveCardStyles";
-import {defaultMiddlewareLocalizedTexts} from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
-import {
-    defaultReceivedMessageAnchorStyles
-} from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultReceivedMessageAnchorStyles";
-import {
-    defaultSentMessageAnchorStyles
-} from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSentMessageAnchorStyles";
-import {
-    defaultSystemMessageBoxStyles
-} from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
-import {
-    defaultUserMessageBoxStyles
-} from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
-import {defaultWebChatContainerStatefulProps} from "./common/defaultProps/defaultWebChatContainerStatefulProps";
-import {shouldLoadPersistentChatHistory} from "../livechatwidget/common/liveChatConfigUtils";
-import {useChatContextStore} from "../..";
+import { WebChatStoreLoader } from "./webchatcontroller/WebChatStoreLoader";
+import { createIOSOptimizedEmojiFont } from "./common/utils/fontUtils";
+import { defaultAdaptiveCardStyles } from "./common/defaultStyles/defaultAdaptiveCardStyles";
+import { defaultMiddlewareLocalizedTexts } from "./common/defaultProps/defaultMiddlewareLocalizedTexts";
+import { defaultReceivedMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultReceivedMessageAnchorStyles";
+import { defaultSentMessageAnchorStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSentMessageAnchorStyles";
+import { defaultSystemMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultSystemMessageBoxStyles";
+import { defaultUserMessageBoxStyles } from "./webchatcontroller/middlewares/renderingmiddlewares/defaultStyles/defaultUserMessageBoxStyles";
+import {defaultWebChatContainerStatefulProps } from "./common/defaultProps/defaultWebChatContainerStatefulProps";
+import { shouldLoadPersistentChatHistory } from "../livechatwidget/common/liveChatConfigUtils";
+import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
 
