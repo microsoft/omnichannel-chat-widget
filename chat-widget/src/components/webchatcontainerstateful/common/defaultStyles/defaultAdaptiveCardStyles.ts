@@ -5,5 +5,7 @@ export const defaultAdaptiveCardStyles: IAdaptiveCardStyles = {
     color: "black",
     anchorColor: "blue",
     textWhiteSpace: "normal",
-    buttonWhiteSpace: "normal"
+    buttonWhiteSpace: "normal",
+    buttonFlexWrap: "nowrap",
+    buttonGap: "0px",
 };
