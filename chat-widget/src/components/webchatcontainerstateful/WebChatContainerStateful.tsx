@@ -307,11 +307,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             color: ${webChatContainerProps?.adaptiveCardStyles?.anchorColor ?? defaultAdaptiveCardStyles.anchorColor};
         }
 
-        .webchat__stacked-layout__content .ac-actionSet > .ac-pushButton > div {
-          white-space: ${webChatContainerProps?.adaptiveCardStyles?.buttonWhiteSpace ?? defaultAdaptiveCardStyles.buttonWhiteSpace} !important;
-          flex-wrap: ${webChatContainerProps?.adaptiveCardStyles?.buttonFlexWrap ?? defaultAdaptiveCardStyles.buttonFlexWrap} !important;
-          gap: ${webChatContainerProps?.adaptiveCardStyles?.buttonGap ?? defaultAdaptiveCardStyles.buttonGap} !important;
-        }
+        .webchat__stacked-layout__content .ac-actionSet > .ac-pushButton > div {white-space: ${webChatContainerProps?.adaptiveCardStyles?.buttonWhiteSpace ?? defaultAdaptiveCardStyles.buttonWhiteSpace} !important;}
 
         .ms_lcw_webchat_received_message img.webchat__render-markdown__external-link-icon {
             /* Fallback for browsers that don't support mask */
