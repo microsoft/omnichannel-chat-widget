@@ -1,0 +1,19 @@
+.ac-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  box-sizing: border-box;
+}
+
+.ac-adaptiveCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: 10px;
+  background-color: #f9f9f9;
+  margin: 10px;
+}
