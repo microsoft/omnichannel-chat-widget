@@ -5,4 +5,6 @@ export interface IAdaptiveCardStyles {
     buttonWhiteSpace?: string;
     textWhiteSpace?: string;
     choiceInputPadding?: string;
+    buttonFlexWrap?: string;
+    buttonGap?: string;
 }
