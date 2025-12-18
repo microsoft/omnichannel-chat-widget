@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
 - Added support for AppInsightsInstrumentationKey from chat config
 - Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
+- Added support for horizontal flex display of basic/adaptive card buttons over more than 1 row
 - Enhanced error handling in file download process
 
 ### Changed
@@ -33,6 +34,9 @@ All notable changes to this project will be documented in this file.
 - Fixed bubble text color overidding certain adaptive card element colors like title and label
 - Remove property to override CSAC flag for persistent chat history
 - Fix override of names for agent and customer in persistent chat history messages
+- Fixed logic to present post-chat survey after an MCS bot ends the conversation
+- Fixed lint configuration during build
+- Fixed issue with persistent chat history bot messages activity divider
 
 ## [1.8.3] - 2025-10-07
 

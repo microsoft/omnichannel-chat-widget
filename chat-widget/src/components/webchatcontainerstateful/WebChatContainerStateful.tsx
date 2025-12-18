@@ -68,10 +68,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // Create a font family that includes emoji support, based on the primary font or default
     const webChatStyles = props.webChatContainerProps?.webChatStyles ?? defaultWebChatContainerStatefulProps.webChatStyles;
     const primaryFont = webChatStyles?.primaryFont ?? defaultWebChatContainerStatefulProps.webChatStyles?.primaryFont;
-    
+
     // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
     const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
-    
+
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -89,17 +89,17 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
 
     const { BasicWebChat } = Components;
-    const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
+    const [ state, dispatch ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
 
     // Type the chatConfig properly to avoid 'any' usage
     const extendedChatConfig = props.chatConfig as ExtendedChatConfig | undefined;
-    
+
     // Determine if persistent chat history should be loaded based on all conditions
     const shouldLoadPersistentHistoryMessages = shouldLoadPersistentChatHistory(extendedChatConfig);
 
     if (shouldLoadPersistentHistoryMessages) {
-        
+
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.PersistentChatHistoryEnabled
         });
@@ -174,8 +174,11 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 chatHistoryElement.setAttribute(HtmlAttributeNames.ariaLabel, webChatContainerProps.webChatHistoryMobileAccessibilityLabel);
             }
         }
-        dispatch({ type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS, payload: webChatContainerProps?.renderingMiddlewareProps });
-        dispatch({ type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts });
+        dispatch({
+            type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS,
+            payload: webChatContainerProps?.renderingMiddlewareProps
+        });
+        dispatch({type: LiveChatWidgetActionType.SET_MIDDLEWARE_LOCALIZED_TEXTS, payload: localizedTexts});
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
             Event: TelemetryEvent.WebChatLoaded
         });
@@ -262,9 +265,13 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     }, [state.appStates.isMinimized]);
 
     return (
-        <><style>{`
+        <>
+            <style>{`
         .webchat__stacked-layout__content .ac-pushButton {
             cursor: pointer;
+            border: 1px solid ${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color}  !important;
+            color: ${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color}  !important;
+            background-color: ${webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background};
         }
 
         .webchat__bubble__content>div#ms_lcw_webchat_adaptive_card {
@@ -307,7 +314,14 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             color: ${webChatContainerProps?.adaptiveCardStyles?.anchorColor ?? defaultAdaptiveCardStyles.anchorColor};
         }
 
-        .webchat__stacked-layout__content .ac-actionSet > .ac-pushButton > div {white-space: ${webChatContainerProps?.adaptiveCardStyles?.buttonWhiteSpace ?? defaultAdaptiveCardStyles.buttonWhiteSpace} !important;}
+        .webchat__stacked-layout__content .ac-actionSet {
+          flex-wrap: ${webChatContainerProps?.adaptiveCardStyles?.buttonFlexWrap ?? defaultAdaptiveCardStyles.buttonFlexWrap} !important;
+          gap: ${webChatContainerProps?.adaptiveCardStyles?.buttonGap ?? defaultAdaptiveCardStyles.buttonGap} !important;
+         }
+
+        .webchat__stacked-layout__content .ac-actionSet > .ac-pushButton > div {
+          white-space: ${webChatContainerProps?.adaptiveCardStyles?.buttonWhiteSpace ?? defaultAdaptiveCardStyles.buttonWhiteSpace} !important;
+        }
 
         .ms_lcw_webchat_received_message img.webchat__render-markdown__external-link-icon {
             /* Fallback for browsers that don't support mask */
@@ -412,22 +426,22 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             outline-offset: ${webChatContainerProps?.webChatStyles?.suggestedActionKeyboardFocusIndicatorInset ?? "2px"} !important;
 
         `}</style>
-        <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-            <div id="ms_lcw_webchat_root" style={{ height: "100%", width: "100%" }}>
-                {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers />}
-                <BasicWebChat></BasicWebChat>  
-            </div>
-        </Stack>
-        {citationPaneOpen && (
-            <CitationPaneStateful 
-                id={props.citationPaneProps?.id || HtmlAttributeNames.ocwCitationPaneClassName} 
-                title={props.citationPaneProps?.title || HtmlAttributeNames.ocwCitationPaneTitle} 
-                contentHtml={citationPaneText} 
-                onClose={() => setCitationPaneOpen(false)}
-                componentOverrides={props.citationPaneProps?.componentOverrides}
-                controlProps={props.citationPaneProps?.controlProps}
-                styleProps={props.citationPaneProps?.styleProps} />
-        )}
+            <Stack styles={containerStyles} className="webchat__stacked-layout_container">
+                <div id="ms_lcw_webchat_root" style={{height: "100%", width: "100%"}}>
+                    {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers/>}
+                    <BasicWebChat></BasicWebChat>
+                </div>
+            </Stack>
+            {citationPaneOpen && (
+                <CitationPaneStateful
+                    id={props.citationPaneProps?.id || HtmlAttributeNames.ocwCitationPaneClassName}
+                    title={props.citationPaneProps?.title || HtmlAttributeNames.ocwCitationPaneTitle}
+                    contentHtml={citationPaneText}
+                    onClose={() => setCitationPaneOpen(false)}
+                    componentOverrides={props.citationPaneProps?.componentOverrides}
+                    controlProps={props.citationPaneProps?.controlProps}
+                    styleProps={props.citationPaneProps?.styleProps}/>
+            )}
         </>
     );
 };

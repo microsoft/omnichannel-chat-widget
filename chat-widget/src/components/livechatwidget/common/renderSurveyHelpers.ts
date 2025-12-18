@@ -11,7 +11,7 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { PostChatSurveyMode } from "../../postchatsurveypanestateful/enums/PostChatSurveyMode";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { addDelayInMs } from "../../../common/utils";
-import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConfigUtils";
+import { getPostChatSurveyConfig } from "./liveChatConfigUtils";
 import { executeReducer } from "../../../contexts/createReducer";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

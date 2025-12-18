@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import "@testing-library/jest-dom";
 
 import { act, cleanup, render, screen } from "@testing-library/react";
@@ -20,7 +22,7 @@ jest.mock("../../common/utils", () => ({
 
 // Mock the Header component to capture its props and simulate user interactions
 jest.mock("@microsoft/omnichannel-chat-components", () => ({
-    Header: ({ controlProps, styleProps, componentOverrides }: any) => {
+    Header: ({ controlProps }: any) => {
         return (
             <div role="banner" data-testid="header">
                 <button 
@@ -47,6 +49,7 @@ jest.mock("@microsoft/omnichannel-chat-components", () => ({
 
 // Mock the DraggableEventEmitter
 jest.mock("../draggable/DraggableEventEmitter", () => {
+    // eslint-disable-next-line react/display-name
     return ({ children }: any) => <div data-testid="draggable-wrapper">{children}</div>;
 });
 
