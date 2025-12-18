@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Added support for AppInsightsInstrumentationKey from chat config
 - Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
 - Added support for horizontal flex display of basic/adaptive card buttons over more than 1 row
+- Enhanced error handling in file download process
 
 ### Changed
 
