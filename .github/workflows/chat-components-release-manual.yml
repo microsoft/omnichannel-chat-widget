@@ -3,6 +3,10 @@ name: chat-components-release-manual
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read    # For checkout
+  actions: write    # For uploading and downloading artifacts
+
 jobs: 
   build:
     runs-on: windows-2022
