@@ -719,6 +719,156 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     }, [state.appStates.chatDisconnectEventReceived]);
 
+    // Add near other window/BroadcastService listeners:
+    useEffect(() => {
+        console.info("[LCW][LiveChatWidgetStateful] Registering LcwMidAuthTokenReceived listener");
+        
+        const sub = BroadcastService.getMessageByEventName("LcwMidAuthTokenReceived").subscribe(async (msg: ICustomEvent) => {
+            const { token, midAuth } = msg?.payload || {};
+            console.info("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] Event received", { 
+                midAuth, 
+                tokenPresent: !!token,
+                tokenLength: token?.length || 0,
+                hasFacadeChatSDK: !!facadeChatSDK,
+                hasAuthenticateChat: !!facadeChatSDK?.authenticateChat
+            });
+            
+            if (!midAuth || !token) {
+                console.info("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] Skipping - missing midAuth flag or token", {
+                    midAuth,
+                    hasToken: !!token
+                });
+                return;
+            }
+            
+            try {
+                console.info("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] Calling facadeChatSDK.authenticateChat...");
+                
+                await facadeChatSDK.authenticateChat(token, { refreshChatToken: true });
+
+                console.info("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] authenticateChat succeeded");
+                
+                // Note: FacadeChatSDK.authenticateChat() broadcasts MidConversationAuthenticationSucceeded
+                // which is handled by the listener below to persist isAuthenticatedMidConversation state
+            } catch (err) {
+                console.error("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] authenticateChat FAILED", { 
+                    error: (err as Error)?.message,
+                    errorName: (err as Error)?.name
+                });
+
+                BroadcastService.postMessage({
+                    eventName: BroadcastEvent.OnWidgetError,
+                    payload: {
+                        errorMessage: `Mid-conversation authentication failed: ${(err as Error)?.message}`
+                    }
+                });
+            }
+        });
+
+        return () => {
+            console.info("[LCW][LiveChatWidgetStateful] Unsubscribing LcwMidAuthTokenReceived listener");
+            sub.unsubscribe();
+        };
+    }, [facadeChatSDK]);
+
+    // Listen for authentication success (for reconnect support)
+    // This is broadcast by FacadeChatSDK.authenticateChat() when auth succeeds
+    useEffect(() => {
+        console.info("[LCW][LiveChatWidgetStateful] Registering MidConversationAuthenticationSucceeded listener");
+        
+        const authSucceededSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthSucceeded)
+            .subscribe((msg) => {
+                const isAuthenticated = msg?.payload?.isAuthenticated;
+                const token = msg?.payload?.token;
+                const isPreChatAuth = msg?.payload?.isPreChatAuth;
+
+                console.info("[LCW][LiveChatWidgetStateful][AuthenticationSucceeded] Event received", { 
+                    isAuthenticated,
+                    tokenPresent: !!token,
+                    isPreChatAuth
+                });
+
+                if (isAuthenticated) {
+                    // Store the auth token for potential use (e.g., reconnect scenarios)
+                    if (token) {
+                        dispatch({ type: LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN, payload: token });
+                        console.info("[LCW][LiveChatWidgetStateful][AuthenticationSucceeded] authenticatedUserToken stored");
+                    }
+                    
+                    // Set hasUserAuthenticated for BOTH pre-chat and mid-conversation auth
+                    // This flag is used after page refresh to determine if FacadeChatSDK should be created 
+                    // with isAuthenticated=true, which enables tokenRing() to fetch fresh tokens
+                    // 
+                    // For pre-chat auth: User authenticated before conversation started
+                    // For mid-auth: User authenticated during an active conversation
+                    // 
+                    // In both cases, after page refresh, we need FacadeChatSDK.isAuthenticated=true
+                    // so that tokenRing() will call handleAuthentication() to get a fresh token
+                    dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: true });
+                    console.info("[LCW][LiveChatWidgetStateful][AuthenticationSucceeded] hasUserAuthenticated set to true", {
+                        isPreChatAuth
+                    });
+                }
+            });
+
+        // Listen for authentication reset (mid-auth fallback to unauthenticated)
+        // This is broadcast by FacadeChatSDK.setMidAuthUnauthenticatedState() when token is null/empty
+        const authResetSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthReset)
+            .subscribe((msg) => {
+                const isAuthenticated = msg?.payload?.isAuthenticated;
+                const reason = msg?.payload?.reason;
+                const clearLiveChatContext = msg?.payload?.clearLiveChatContext;
+
+                console.info("[LCW][LiveChatWidgetStateful][AuthenticationReset] Event received", { 
+                    isAuthenticated,
+                    reason,
+                    clearLiveChatContext
+                });
+
+                if (isAuthenticated === false) {
+                    // Clear the auth token
+                    dispatch({ type: LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN, payload: null });
+                    console.info("[LCW][LiveChatWidgetStateful][AuthenticationReset] authenticatedUserToken cleared");
+                    
+                    // Reset hasUserAuthenticated flag so on next page refresh, FacadeChatSDK
+                    // will be created with isAuthenticated=false for unauthenticated flow
+                    dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: false });
+                    console.info("[LCW][LiveChatWidgetStateful][AuthenticationReset] hasUserAuthenticated set to false", {
+                        reason
+                    });
+
+                    // CRITICAL: Clear liveChatContext to prevent startChat from using old requestId/chatToken
+                    // Without this, the widget would pass the old context to SDK.startChat(), causing:
+                    //   this.requestId = optionalParams.liveChatContext.requestId  (old value!)
+                    //   this.chatToken = optionalParams.liveChatContext.chatToken  (old value!)
+                    // This would reconnect to the previous authenticated conversation instead of starting fresh
+                    //
+                    // NOTE: We use empty object {} instead of undefined because:
+                    // 1. isUndefinedOrEmpty({}) returns true, so setOptionalParams won't use it
+                    // 2. JSON.stringify({}) -> "{}" -> JSON.parse("{}") -> {} (survives cache roundtrip)
+                    // 3. undefined might serialize to null or be lost in cache serialization
+                    //
+                    // We do NOT change conversationState here because:
+                    // 1. This event fires during startChat() execution (from tokenRing())
+                    // 2. The startChat flow will handle state transitions naturally
+                    // 3. Clearing liveChatContext is sufficient - setOptionalParams checks:
+                    //    isUndefinedOrEmpty(liveChatContext) && conversationState === Active
+                    //    Since isUndefinedOrEmpty({}) === true, the condition fails
+                    if (clearLiveChatContext) {
+                        dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: {} });
+                        dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: "" });
+                        dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: {} });
+                        console.info("[LCW][LiveChatWidgetStateful][AuthenticationReset] liveChatContext, reconnectId, chatToken cleared");
+                    }
+                }
+            });
+
+        return () => {
+            console.info("[LCW][LiveChatWidgetStateful] Unsubscribing Authentication listeners");
+            authSucceededSub.unsubscribe();
+            authResetSub.unsubscribe();
+        };
+    }, [dispatch]);
 
     // if props state gets updates we need to update the renderingMiddlewareProps in the state
     useEffect(() => {
@@ -864,7 +1014,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
                 
             .webchat__basic-transcript__activity-markdown-body img.webchat__render-markdown__external-link-icon {
-                background-image : url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIzIDMgMTggMTgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTcuMjUwMSA0LjUwMDE3SDEwLjc0OTVDMTEuMTYzNyA0LjUwMDE3IDExLjQ5OTUgNC44MzU5NiAxMS40OTk1IDUuMjUwMTdDMTEuNDk5NSA1LjYyOTg2IDExLjIxNzMgNS45NDM2NiAxMC44NTEzIDUuOTkzMzJMMTAuNzQ5NSA2LjAwMDE3SDcuMjQ5NzRDNi4wNzA3OSA1Ljk5OTYxIDUuMTAzNDkgNi45MDY1NiA1LjAwNzg2IDguMDYxMTJMNS4wMDAyOCA4LjIyMDAzTDUuMDAzMTIgMTYuNzUwN0M1LjAwMzQzIDE3Ljk0MTUgNS45Mjg4NSAxOC45MTYxIDcuMDk5NjYgMTguOTk0OUw3LjI1MzcxIDE5LjAwMDFMMTUuNzUxOCAxOC45ODg0QzE2Ljk0MTUgMTguOTg2OCAxNy45MTQ1IDE4LjA2MiAxNy45OTM1IDE2Ljg5MjNMMTcuOTk4NyAxNi43Mzg0VjEzLjIzMjFDMTcuOTk4NyAxMi44MTc5IDE4LjMzNDUgMTIuNDgyMSAxOC43NDg3IDEyLjQ4MjFDMTkuMTI4NCAxMi40ODIxIDE5LjQ0MjIgMTIuNzY0MyAxOS40OTE4IDEzLjEzMDNMMTkuNDk4NyAxMy4yMzIxVjE2LjczODRDMTkuNDk4NyAxOC43NDA3IDE3LjkyOTMgMjAuMzc2OSAxNS45NTI4IDIwLjQ4MjlMMTUuNzUzOCAyMC40ODg0TDcuMjU4MjcgMjAuNTAwMUw3LjA1NDk1IDIwLjQ5NDlDNS4xNDIzOSAyMC4zOTU0IDMuNjA4OTUgMTguODYyNyAzLjUwODM3IDE2Ljk1MDJMMy41MDMxMiAxNi43NTExTDMuNTAwODkgOC4yNTI3TDMuNTA1MjkgOC4wNTAyQzMuNjA1MzkgNi4xMzc0OSA1LjEzODY3IDQuNjA0NDkgNy4wNTA5NiA0LjUwNTI3TDcuMjUwMSA0LjUwMDE3SDEwLjc0OTVINy4yNTAxWk0xMy43NDgxIDMuMDAxNDZMMjAuMzAxOCAzLjAwMTk3TDIwLjQwMTQgMy4wMTU3NUwyMC41MDIyIDMuMDQzOTNMMjAuNTU5IDMuMDY4MDNDMjAuNjEyMiAzLjA5MTIyIDIwLjY2MzQgMy4xMjE2MyAyMC43MTExIDMuMTU4ODVMMjAuNzgwNCAzLjIyMTU2TDIwLjg2NDEgMy4zMjAxNEwyMC45MTgzIDMuNDEwMjVMMjAuOTU3IDMuNTAwNTdMMjAuOTc2MiAzLjU2NDc2TDIwLjk4OTggMy42Mjg2MkwyMC45OTkyIDMuNzIyODJMMjAuOTk5NyAxMC4yNTU0QzIwLjk5OTcgMTAuNjY5NiAyMC42NjM5IDExLjAwNTQgMjAuMjQ5NyAxMS4wMDU0QzE5Ljg3IDExLjAwNTQgMTkuNTU2MiAxMC43MjMyIDE5LjUwNjUgMTAuMzU3MUwxOS40OTk3IDEwLjI1NTRMMTkuNDk4OSA1LjU2MTQ3TDEyLjI3OTcgMTIuNzg0N0MxMi4wMTM0IDEzLjA1MSAxMS41OTY4IDEzLjA3NTMgMTEuMzAzMSAxMi44NTc1TDExLjIxOSAxMi43ODQ5QzEwLjk1MjcgMTIuNTE4NyAxMC45Mjg0IDEyLjEwMjEgMTEuMTQ2MiAxMS44MDg0TDExLjIxODggMTEuNzI0M0wxOC40MzY5IDQuNTAxNDZIMTMuNzQ4MUMxMy4zNjg0IDQuNTAxNDYgMTMuMDU0NiA0LjIxOTMxIDEzLjAwNSAzLjg1MzI0TDEyLjk5ODEgMy43NTE0NkMxMi45OTgxIDMuMzcxNzcgMTMuMjgwMyAzLjA1Nzk3IDEzLjY0NjQgMy4wMDgzMUwxMy43NDgxIDMuMDAxNDZaIiBmaWxsPSIjMjEyMTIxIiAvPjwvc3ZnPg==) !important;
+                background-image : url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIzIDMgMTggMTgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTcuMjUwMSA0LjUwMDE3SDEwLjc0OTVDMTEuMTYzNyA0LjUwMDE3IDExLjQ5OTUgNC44MzU5NiAxMS40OTk1IDUuMjUwMTdDMTEuNDk5NSA1LjYyOTg2IDExLjIxNzMgNS45NDM2NiAxMC44NTEzIDUuOTkzMzJMMTAuNzQ5NSA2LjAwMDE3SDcuMjQ5NzRDNi4wNzA3OSA1Ljk5OTYxIDUuMTAzNDkgNi45MDY1NiA1LjAwNzg2IDguMDYxMTJMNS4wMDAyOCA4LjIyMDAzTDUuMDAzMTIgMTYuNzUwN0M1LjAwMzQzIDE3Ljk0MTUgNS45Mjg4NSAxOC45MTYxIDcuMDk5NjYgMTguOTk0OUw3LjI1MzcxIDE5LjAwMDFMMTUuNzUxOCAxOC45ODg0QzE2Ljk0MTUgMTguOTg2OCAxNy45MTQ1IDE4LjA2MiAxNy45OTM1IDE2Ljg5MjNMMTcuOTk4NyAxNi43Mzg0VjEzLjIzMjFDMTcuOTk4NyAxMi44MTc5IDE4LjMzNDUgMTIuNDgyMSAxOC43NDg3IDEyLjQ4MjFDMTkuMTI4NCAxMi40ODIxIDE5LjQ0MjIgMTIuNzY0MyAxOS40OTE4IDEzLjEzMDNMMTkuNDk4NyAxMy4yMzIxVjE2LjczODRDMTkuNDk4NyAxOC43NDA3IDE3LjkyOTMgMjAuMzc2OSAxNS45NTI4IDIwLjQ4MjlMMTUuNzUzOCAyMC40ODg0TDcuMjU4MjcgMjAuNTAwMUw3LjA1NDk1IDIwLjQ5NDlDNS4xNDIzOSAyMC4zOTU0IDMuNjA4OTUgMTguODYyNyAzLjUwODM3IDE2Ljk1MDJMMy41MDMxMiAxNi43NTExTDMuNTAwODkgOC4yNTI3TDMuNTA1MjkgOC4wNTAyQzMuNjA1MzkgNi4xMzc0OSA1LjEzODY3IDQuNjA0NDkgNy4wNTA5NiA0LjUwNTI3TDcuMjUwMSA0LjUwMDE3SDEwLjc0OTVINy4yNTAxWk0xMy43NDgxIDMuMDAxNDZMMjAuMzAxOCAzLjAwMTk3TDIwLjQwMTQgMy4wMTU3NUwyMC41MDIyIDMuMDQzOTNMMjAuNTU5IDMuMDY4MDNDMjAuNjEyMiAzLjA5MTIyIDIwLjY2MzQgMy4xMjE2MyAyMC43MTExIDMuMTU4ODVMMjAuNzgwNCAzLjIyMTU2TDIwLjg2NDEgMy4zMjAxNEwyMC45MTgzIDMuNDEwMjVMMjAuOTU3IDMuNTAwNTdMMjAuOTc2MiAzLjU2NDc2TDIwLjk4OTggMy42Mjg2MkwyMC45OTkyIDMuNzIyODhMMjAuOTk5NyAxMC4yNTU0QzIwLjk5OTcgMTAuNjY5NiAyMC42NjM5IDExLjAwNTQgMjAuMjQ5NyAxMS4wMDU0QzE5Ljg3IDExLjAwNTQgMTkuNTU2MiAxMC43MjMyIDE5LjUwNjUgMTAuMzU3MUwxOS40OTk3IDEwLjI1NFRMMTkuNDk4OSA1LjU2MTQ3TDEyLjI3OTcgMTIuNzg0N0MxMi4wMTM0IDEzLjA1MSAxMS41OTY4IDEzLjA3NTMgMTEuMzAzMSAxMi44NTc1TDExLjIxOSAxMi43ODQ5QzEwLjk1MjcgMTIuNTE4NyAxMC45Mjg4IDEyLjEwMjEgMTEuMTQ2MiAxMS44MDg0TDExLjIxODgsMTEuNzI0M0wxOC40MzY5IDQuNTAxNDZIMTMuNzQ4MUMxMy4zNjg0IDQuNTAxNDYgMTMuMDU0NiA0LjIxOTMxIDEzLjAwNSAzLjg1MzI0TDEyLjk5ODEgMy43NTE0NkMxMi45OTgxIDMuMzcxNzcgMTMuMjgwMyAzLjA1Nzk3IDEzLjY0NjQgMy4wMDgzMUwxMy43NDgxIDMuMDAxNDZaIiBmaWxsPSIjMjEyMTIxIiAvPjwvc3ZnPg==) !important;
                 height: .75em;
                 margin-left: .25em;
             }

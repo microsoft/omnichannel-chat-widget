@@ -767,6 +767,39 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                     isConversationalSurvey: action.payload as boolean
                 }
             };
+
+        case LiveChatWidgetActionType.SET_USER_AUTHENTICATED:
+            inMemory = {
+                ...inMemory,
+                appStates: {
+                    ...inMemory.appStates,
+                    hasUserAuthenticated: action.payload as boolean
+                }
+            };
+            return {
+                ...state,
+                appStates: {
+                    ...state.appStates,
+                    hasUserAuthenticated: action.payload as boolean
+                }
+            };
+
+        case LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN:
+            inMemory = {
+                ...inMemory,
+                domainStates: {
+                    ...inMemory.domainStates,
+                    authenticatedUserToken: action.payload as string | undefined
+                }
+            };
+            return {
+                ...state,
+                domainStates: {
+                    ...state.domainStates,
+                    authenticatedUserToken: action.payload as string | undefined
+                }
+            };
+
         case LiveChatWidgetActionType.GET_IN_MEMORY_STATE:
             return inMemory;
         default:

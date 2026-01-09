@@ -33,3 +33,10 @@ export const isPersistentChatEnabled = (conversationMode: string | undefined): b
 
     return conversationMode?.toString().toLowerCase() === ConversationMode.Persistent;
 };
+
+export const isMidAuthEnabled = (midauth: string | undefined): boolean => {
+    if (isNullOrUndefined(midauth)) {
+        return false;
+    }
+    return midauth?.toString().toLowerCase() === "true";
+};

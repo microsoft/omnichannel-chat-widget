@@ -20,7 +20,7 @@ import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { createTrackingForFirstMessage } from "../../../firstresponselatency/FirstMessageTrackerFromBot";
-import { isPersistentChatEnabled } from "./liveChatConfigUtils";
+import { isPersistentChatEnabled, isMidAuthEnabled } from "./liveChatConfigUtils";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
@@ -180,13 +180,66 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+
+            // Check if user has authenticated (pre-auth or mid-auth)
+            // This flag is used for logging/telemetry and to determine deferInitialAuth
+            // The actual authentication flow is handled by FacadeChatSDK.startChat() which:
+            // 1. Calls tokenRing() to check/refresh token if isAuthenticated=true
+            // 2. Sets SDK's authenticatedUserToken directly
+            // 3. Overrides deferInitialAuth to false for authenticated flow
+            const hasUserAuthenticated = state?.appStates?.hasUserAuthenticated === true ||
+                                        persistedState?.appStates?.hasUserAuthenticated === true;
+            
+            // Get deferInitialAuth setting from config (mid-auth enabled in admin)
+            // deferInitialAuth controls SDK behavior in internalStartChat:
+            // - true: SDK skips setAuthTokenProvider() - used for mid-auth flow (user authenticates later)
+            // - false: SDK calls setAuthTokenProvider() - used for normal auth flow
+            // 
+            // For authenticated users (pre-auth or mid-auth reconnect), FacadeChatSDK.startChat() 
+            // will override this to false since token is already available
+            const midAuthEnabled = isMidAuthEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional);
+            
+            // Only defer initial auth for fresh mid-auth chats where user hasn't authenticated yet
+            // For users who already authenticated (pre-auth or mid-auth reconnect), use authenticated flow
+            const deferInitialAuth = hasUserAuthenticated ? false : midAuthEnabled;
+            
+            // Pass deferInitialAuth to SDK - it needs this to decide whether to call setAuthTokenProvider
+            (startChatOptionalParams as any).deferInitialAuth = deferInitialAuth;
+
+            // eslint-disable-next-line no-console
+            console.info("[LCW][initStartChat] Auth configuration for startChat:", {
+                midAuthEnabled,
+                hasUserAuthenticated,
+                deferInitialAuth,
+                persistentChatEnabled
+            });
+
+            TelemetryHelper.logConfigDataEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.WidgetLoadStarted,
+                Description: "Auth configuration for startChat.",
+                CustomProperties: { 
+                    hasUserAuthenticated,
+                    midAuthEnabled,
+                    deferInitialAuth,
+                    persistentChatEnabled,
+                    startChatOptionalParams 
+                }
+            });
+
             // startTime is used to determine if a message is history or new, better to be set before creating the adapter to get bandwidth
             const startTime = (new Date().getTime());
             createTrackingForFirstMessage();
+            
+            // FacadeChatSDK.startChat() will:
+            // 1. Call tokenRing() which checks if authentication is needed (based on isAuthenticated flag)
+            // 2. If isAuthenticated=true and token not set/expired, tokenRing() calls handleAuthentication()
+            // 3. handleAuthentication() uses props.getAuthToken to get a fresh token
+            // 4. Sets SDK's authenticatedUserToken directly and may override deferInitialAuth
+            // 5. Passes deferInitialAuth to SDK which controls setAuthTokenProvider behavior
             await facadeChatSDK.startChat(startChatOptionalParams);
             logStartChatComplete();
             isStartChatSuccessful = true;
-
+            console.info("[LCW][LiveChatWidget] startChat successful");
             await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, props);
 
         } catch (error) {
