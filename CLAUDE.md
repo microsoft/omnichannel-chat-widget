@@ -1,5 +1,20 @@
 # omnichannel-chat-widget - Claude Code Instructions
 
+## Repository Ecosystem
+
+**This workspace may contain up to 6 related repositories.** Not all teams have all repos. Always be aware of which repository you're in when making changes.
+
+| Repository | Type | Purpose | Typical Location |
+|------------|------|---------|------------------|
+| **CRM.Omnichannel** | Monorepo (Backend) | 20+ microservices for Omnichannel platform | `<workspace-root>/CRM.Omnichannel/` |
+| **ConversationControl** | Frontend (Agent UI) | Agent experience and conversation management UI | `<workspace-root>/CRM.OmniChannel.ConversationControl/` |
+| **LiveChatWidget** | Frontend (Customer) | Customer-facing chat widget | `<workspace-root>/CRM.OmniChannel.LiveChatWidget/` |
+| **omnichannel-chat-sdk** | Public SDK | TypeScript SDK for chat integration | `<workspace-root>/omnichannel-chat-sdk/` |
+| **omnichannel-chat-widget** | Public Components | React component library | `<workspace-root>/omnichannel-chat-widget/` |
+| **omnichannel-amsclient** | Shared Library | File upload/download client | `<workspace-root>/omnichannel-amsclient/` |
+
+---
+
 ## Quick Context
 - **Purpose:** Shared React component library for building chat widgets
 - **Type:** TypeScript/React Library (npm package)
