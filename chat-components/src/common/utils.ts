@@ -97,16 +97,54 @@ export const addNoreferrerNoopenerTag = (htmlNode: any) => {
     }
 };
 
+// Escape HTML special characters to prevent XSS in string concatenation
+const escapeHTML = (str: string): string => {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#x27;");
+};
+
+// Escape only characters dangerous in href attribute context
+const escapeHrefAttribute = (url: string): string => {
+    return url
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#x27;");
+};
+
+// Validate and sanitize URL to prevent javascript: and data: protocols
+const isValidURL = (url: string): boolean => {
+    const trimmedUrl = url.trim().toLowerCase();
+    // Block dangerous protocols
+    if (trimmedUrl.startsWith("javascript:") ||
+        trimmedUrl.startsWith("data:") ||
+        trimmedUrl.startsWith("vbscript:") ||
+        trimmedUrl.startsWith("file:")) {
+        return false;
+    }
+    // Only allow http, https, and protocol-relative URLs
+    return trimmedUrl.startsWith("http://") ||
+        trimmedUrl.startsWith("https://") ||
+        trimmedUrl.startsWith("www.");
+};
+
 export const replaceURLWithAnchor = (text: string | undefined, openInNewTab: boolean | undefined) => {
     if (text) {
-        const modifiedText = text.replace(Regex.URLRegex, function(url) {
-            if (openInNewTab) {
-                // eslint-disable-next-line quotes
-                return '<a href="' + url + '" rel="noreferrer noopener" target="_blank">' + url + '</a>';
+        const modifiedText = text.replace(Regex.URLRegex, function (url) {
+            // Validate URL to prevent dangerous protocols
+            if (!isValidURL(url)) {
+                return escapeHTML(url); // Return escaped text, not a link
             }
-            // eslint-disable-next-line quotes
-            return '<a href="' + url + '">' + url + '</a>';
-        });   
+
+            const escapedUrl = escapeHrefAttribute(url);
+            const displayText = escapeHTML(url);
+            if (openInNewTab) {
+                return `<a href="${escapedUrl}" rel="noreferrer noopener" target="_blank">${displayText}</a>`;
+            }
+            return `<a href="${escapedUrl}">${displayText}</a>`;
+        });
         return modifiedText;
     }
     return text;
