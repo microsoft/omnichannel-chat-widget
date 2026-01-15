@@ -19,14 +19,16 @@ beforeAll(async () => {
     };
     setConfig({
         storybookEndpoint: "./storybook-static",
+        pageGotoOptions: {
+            timeout: 120000, // Increase timeout to 2 minutes for CI environments
+            waitUntil: 'domcontentloaded' // Don't wait for all resources, just DOM
+        },
         getPage: async (browserType, options) => {
             const page = await browser[browserType].newPage({
                 viewport: { width: 1280, height: 720 }, // Consistent viewport for local and CI
                 deviceScaleFactor: 1, // Consistent DPI scaling
                 ...options
             });
-            // Increase navigation timeout to 60 seconds to handle slow loads
-            page.setDefaultNavigationTimeout(60000);
             return page;
         },
         afterScreenshot: async (page) => {
