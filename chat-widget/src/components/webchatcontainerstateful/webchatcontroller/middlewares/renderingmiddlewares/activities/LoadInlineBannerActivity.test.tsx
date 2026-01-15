@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import "@testing-library/jest-dom";
 
 import { cleanup, render, screen } from "@testing-library/react";
@@ -11,8 +13,8 @@ jest.mock("@fluentui/merge-styles", () => ({
     mergeStyles: jest.fn((...styles) => {
         // Simulate mergeStyles by combining class names
         return styles.filter(Boolean).map((style, index) => 
-            typeof style === 'string' ? style : `merged-style-${index}`
-        ).join(' ');
+            typeof style === "string" ? style : `merged-style-${index}`
+        ).join(" ");
     })
 }));
 
@@ -70,7 +72,7 @@ describe("LoadInlineBannerActivity", () => {
                     localizedTexts: {
                         PREVIOUS_MESSAGES_LOADING: "Custom loading message..."
                     }
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             render(<LoadInlineBannerActivity {...customProps} />);
@@ -88,7 +90,7 @@ describe("LoadInlineBannerActivity", () => {
                         PREVIOUS_MESSAGES_LOADING: "Custom text",
                         SOME_OTHER_TEXT: "Other text"
                     }
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             render(<LoadInlineBannerActivity {...customProps} />);
@@ -100,7 +102,7 @@ describe("LoadInlineBannerActivity", () => {
         it("should handle empty webChatContainerProps", () => {
             const customProps = {
                 ...defaultProps,
-                webChatContainerProps: {} as ILiveChatWidgetProps['webChatContainerProps']
+                webChatContainerProps: {} as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             render(<LoadInlineBannerActivity {...customProps} />);
@@ -126,7 +128,7 @@ describe("LoadInlineBannerActivity", () => {
                 ...defaultProps,
                 webChatContainerProps: {
                     localizedTexts: undefined
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             render(<LoadInlineBannerActivity {...customProps} />);
@@ -204,7 +206,7 @@ describe("LoadInlineBannerActivity", () => {
                     localizedTexts: {
                         PREVIOUS_MESSAGES_LOADING: "Cargando mensajes anteriores..."
                     }
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             render(<LoadInlineBannerActivity {...customProps} />);
@@ -235,7 +237,7 @@ describe("LoadInlineBannerActivity", () => {
                     localizedTexts: {
                         PREVIOUS_MESSAGES_LOADING: "Loading..."
                     }
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             const { rerender } = render(<LoadInlineBannerActivity {...props1} />);
@@ -256,7 +258,7 @@ describe("LoadInlineBannerActivity", () => {
                     localizedTexts: {
                         PREVIOUS_MESSAGES_LOADING: "Different text..."
                     }
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             rerender(<LoadInlineBannerActivity {...props2} />);
@@ -287,7 +289,7 @@ describe("LoadInlineBannerActivity", () => {
                     localizedTexts: {
                         PREVIOUS_MESSAGES_LOADING: ""
                     }
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             render(<LoadInlineBannerActivity {...customProps} />);
@@ -307,7 +309,7 @@ describe("LoadInlineBannerActivity", () => {
                     localizedTexts: {
                         PREVIOUS_MESSAGES_LOADING: longText
                     }
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             render(<LoadInlineBannerActivity {...customProps} />);
@@ -326,7 +328,7 @@ describe("LoadInlineBannerActivity", () => {
                     localizedTexts: {
                         PREVIOUS_MESSAGES_LOADING: specialText
                     }
-                } as ILiveChatWidgetProps['webChatContainerProps']
+                } as ILiveChatWidgetProps["webChatContainerProps"]
             };
 
             render(<LoadInlineBannerActivity {...customProps} />);

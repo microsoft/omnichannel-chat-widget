@@ -197,6 +197,7 @@ describe("Regex unit tests", () => {
                 
                 // Performance testing should be handled in a dedicated benchmark suite.
                 expect(result).toBe(false);
+                expect(end - start).toBeLessThan(50);
             });
 
             it("should not cause performance issues with control characters", () => {

@@ -3,7 +3,7 @@ export interface ExtendedChatConfig {
     LiveChatConfigAuthSettings?: LiveChatConfigAuthSettings;
     LiveWSAndLiveChatEngJoin?: {
         msdyn_conversationmode?: string;
-        msdyn_enablepersistentchatpreviousconversations?: boolean;
+        msdyn_enablepersistentchatpreviousconversations?: string;
     };
 }
 

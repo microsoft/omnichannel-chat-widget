@@ -636,7 +636,7 @@ describe("isHistoryMessage", () => {
                 { type: Constants.message, id: undefined }
             ];
 
-            testCases.forEach((activityData, index) => {
+            testCases.forEach((activityData) => {
                 const activity: IActivity = {
                     ...activityData,
                     timestamp: new Date().toISOString(),
@@ -645,7 +645,7 @@ describe("isHistoryMessage", () => {
                 } as IActivity;
 
                 const result = isHistoryMessage(activity, mockStartTime);
-                expect(typeof result).toBe('boolean');
+                expect(typeof result).toBe("boolean");
             });
         });
     });

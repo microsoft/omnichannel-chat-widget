@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { BroadcastEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatWidgetEvents from "./ChatWidgetEvents";
@@ -253,6 +255,7 @@ describe("PersistentConversationHandler", () => {
             const secondPull = handler.pullHistory();
 
             // Resolve first call
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             resolveFirst!({
                 chatMessages: mockMessages,
                 nextPageToken: null
@@ -295,6 +298,7 @@ describe("PersistentConversationHandler", () => {
             const thirdPull = handler.pullHistory();
 
             // Resolve second pull
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             resolveSecond!({
                 chatMessages: mockMessages,
                 nextPageToken: null
@@ -621,6 +625,7 @@ describe("PersistentConversationHandler", () => {
             const secondPullPromise = handler.pullHistory();
 
             // Resolve first promise
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             resolvePromise!({
                 chatMessages: [],
                 nextPageToken: null
