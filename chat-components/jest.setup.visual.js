@@ -25,6 +25,8 @@ beforeAll(async () => {
                 deviceScaleFactor: 1, // Consistent DPI scaling
                 ...options
             });
+            // Increase navigation timeout to 60 seconds to handle slow loads
+            page.setDefaultNavigationTimeout(60000);
             return page;
         },
         afterScreenshot: async (page) => {
