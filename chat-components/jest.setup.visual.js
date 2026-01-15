@@ -19,6 +19,10 @@ beforeAll(async () => {
     };
     setConfig({
         storybookEndpoint: "./storybook-static",
+        pageGotoOptions: {
+            timeout: 120000,
+            waitUntil: 'domcontentloaded'
+        },
         getPage: async (browserType, options) => {
             const page = await browser[browserType].newPage({
                 viewport: { width: 1280, height: 720 }, // Consistent viewport for local and CI
