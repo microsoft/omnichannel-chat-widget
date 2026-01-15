@@ -21,7 +21,7 @@ beforeAll(async () => {
         storybookEndpoint: "./storybook-static",
         pageGotoOptions: {
             timeout: 120000,
-            waitUntil: 'domcontentloaded'
+            waitUntil: "domcontentloaded"
         },
         getPage: async (browserType, options) => {
             const page = await browser[browserType].newPage({
