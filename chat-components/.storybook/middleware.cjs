@@ -14,6 +14,7 @@ const playwright = require('playwright');
     storybookEndpoint: `http://localhost:6006/`,
     getPage: async (browserType, options) => {
       const page = await browser[browserType].newPage(options);
+      page.setDefaultNavigationTimeout(60000); // Increase to 60 seconds
       return page;
     },
     afterScreenshot: async (page) => {
