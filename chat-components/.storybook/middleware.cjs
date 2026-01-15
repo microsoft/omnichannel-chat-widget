@@ -12,6 +12,9 @@ const playwright = require('playwright');
   };
   setConfig({
     storybookEndpoint: `http://localhost:6006/`,
+    pageGotoOptions: {
+      waitUntil: 'domcontentloaded' // Don't wait for external iframes to load
+    },
     getPage: async (browserType, options) => {
       const page = await browser[browserType].newPage(options);
       return page;
