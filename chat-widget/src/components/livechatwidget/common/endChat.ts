@@ -268,6 +268,10 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
     });
     dispatch({ type: LiveChatWidgetActionType.SET_CITATIONS, payload: {} });
 
+    //// Clear mid-conversation authentication state to prevent it from persisting to next chat session
+    //dispatch({ type: LiveChatWidgetActionType.SET_IS_AUTHENTICATED_MID_CONVERSATION, payload: false });
+    //dispatch({ type: LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN, payload: undefined });
+
     // Clear live chat context only if chat widget is fully closed to support transcript calls after sessionclose is called
     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: undefined });
 };

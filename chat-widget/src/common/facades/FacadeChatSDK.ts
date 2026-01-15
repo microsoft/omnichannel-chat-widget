@@ -31,7 +31,6 @@ import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatCo
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../telemetry/TelemetryHelper";
 import { isNullOrEmptyString } from "../utils";
-import { uuidv4 } from "@microsoft/omnichannel-chat-sdk";
 
 export class FacadeChatSDK {
     private chatSDK: OmnichannelChatSDK;
@@ -297,21 +296,6 @@ export class FacadeChatSDK {
                 authClientFunction: getAuthClientFunction(this.chatConfig)
             });
             
-            // Mid-auth special case: if getAuthToken function is missing but mid-auth is enabled,
-            // set flag to defer state change to startChat() where we can check if it's a reconnect
-            if (this.isMidAuthEnabled()) {
-                console.info("[LCW][FacadeChatSDK][tokenRing] Mid-auth enabled but no getAuthToken function - setting pending flag");
-                this.pendingMidAuthUnauthenticatedState = true;
-
-                // Log as INFO since this is expected for mid-auth when user hasn't authenticated yet
-                TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
-                    Event: TelemetryEvent.NewTokenValidationCompleted,
-                    Description: "Mid-auth enabled: no getAuthToken function; pending unauthenticated state"
-                });
-                
-                return { result: true, message: "Mid-auth: no getAuthToken function; pending unauthenticated state" };
-            }
-            
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
                 Event: TelemetryEvent.NewTokenValidationFailed,
                 Description: "GetAuthToken function is not present",
@@ -409,8 +393,6 @@ export class FacadeChatSDK {
      * Called ONLY for new chats (not reconnects) when mid-auth is enabled but no token is available.
      * This prepares the SDK to start chat without authentication.
      * 
-     * NOTE: These are internal SDK properties. If SDK changes internal property names,
-     * this may need updates. Ideally SDK would expose a resetConversationState() method.
      */
     private setMidAuthUnauthenticatedState(): void {
         console.info("[LCW][FacadeChatSDK][setMidAuthUnauthenticatedState] Setting up unauthenticated state for mid-auth (new chat)");
@@ -421,16 +403,13 @@ export class FacadeChatSDK {
         this.isAuthenticated = false;
         
         // Clear SDK's internal state for clean unauthenticated start
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sdk = this.chatSDK as any;
         sdk.authenticatedUserToken = null;
-        sdk.requestId = uuidv4();
         sdk.chatToken = {};
         sdk.reconnectId = null;
         
-        console.info("[LCW][FacadeChatSDK][setMidAuthUnauthenticatedState] State set", {
-            isAuthenticated: this.isAuthenticated,
-            newRequestId: sdk.requestId
+        console.info("[LCW][FacadeChatSDK][setMidAuthUnauthenticatedState] State cleared for unauthenticated flow", {
+            isAuthenticated: this.isAuthenticated
         });
 
         // Broadcast to clear cached context for new unauthenticated chat
@@ -479,46 +458,30 @@ export class FacadeChatSDK {
     }
 
     public async startChat(optionalParams: StartChatOptionalParams = {}): Promise<void> {
-        const isReconnectAttempt = !!optionalParams.liveChatContext || !!(optionalParams as any)?.reconnectId;
-        
         console.info("[LCW][FacadeChatSDK][startChat] START", {
             isAuthenticated: this.isAuthenticated,
             hasToken: this.isTokenSet(),
             isMidAuthEnabled: this.isMidAuthEnabled(),
-            hasLiveChatContext: !!optionalParams.liveChatContext,
-            isReconnectAttempt
+            hasLiveChatContext: !!optionalParams.liveChatContext
         });
         
         return this.validateAndExecuteCall("startChat", async () => {
             // Check if tokenRing() set the pending mid-auth unauthenticated state flag
             if (this.pendingMidAuthUnauthenticatedState) {
-                console.info("[LCW][FacadeChatSDK][startChat] Processing pending mid-auth unauthenticated state", { isReconnectAttempt });
-                
-                // CASE 1: Reconnect attempt without valid token ? ERROR OUT
-                if (isReconnectAttempt) {
-                    this.pendingMidAuthUnauthenticatedState = false;
-                    
-                    const errorMessage = "Authentication required: Cannot reconnect to conversation without valid authentication token. Please sign in and refresh the page.";
-                    console.error("[LCW][FacadeChatSDK][startChat] Reconnect attempt without valid token - ERROR");
-                    
-                    TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
-                        Event: TelemetryEvent.StartChatFailed,
-                        Description: "Reconnect attempt failed - no valid authentication token",
-                        ExceptionDetails: { message: errorMessage, isReconnectAttempt: true }
-                    });
-                    
-                    BroadcastService.postMessage({
-                        eventName: BroadcastEvent.OnWidgetError,
-                        payload: { errorMessage }
-                    });
-                    throw new Error(errorMessage);
-                }
-                
-                // CASE 2: New chat without valid token ? apply unauthenticated state and proceed
-                console.info("[LCW][FacadeChatSDK][startChat] New chat - applying unauthenticated state");
+                // For mid-auth: if no token is available, start as unauthenticated
+                // This handles the case where user was in an authenticated chat but logged out
+                console.info("[LCW][FacadeChatSDK][startChat] New chat - applying unauthenticated state for mid-auth");
                 this.setMidAuthUnauthenticatedState();
                 this.pendingMidAuthUnauthenticatedState = false;
                 (optionalParams as any).deferInitialAuth = true;
+                
+                // CRITICAL: Clear liveChatContext to prevent reconnect attempt with old authenticated chat
+                // The broadcast in setMidAuthUnauthenticatedState() is async and won't be processed
+                // before chatSDK.startChat() is called, so we must clear it synchronously here
+                if (optionalParams.liveChatContext) {
+                    console.info("[LCW][FacadeChatSDK][startChat] Clearing liveChatContext - cannot reconnect to auth chat without token");
+                    delete (optionalParams as any).liveChatContext;
+                }
                 
             } else if (this.isAuthenticated && this.isTokenSet() && !this.isTokenExpired()) {
                 // AUTHENTICATED FLOW: We have a valid token
@@ -535,7 +498,7 @@ export class FacadeChatSDK {
             console.info("[LCW][FacadeChatSDK][startChat] Calling SDK startChat", {
                 isAuthenticated: this.isAuthenticated,
                 deferInitialAuth: (optionalParams as any)?.deferInitialAuth,
-                isReconnectAttempt
+                hasLiveChatContext: !!optionalParams.liveChatContext
             });
             
             return this.chatSDK.startChat(optionalParams);
@@ -760,7 +723,7 @@ export class FacadeChatSDK {
                 });
                 return;
             } catch (e) {
-                // Clean up partial state
+                // Clean up partial state because there is no validation happening in pre-chat auth
                 this.token = "";
                 this.expiration = 0;
                 this.isAuthenticated = false;
