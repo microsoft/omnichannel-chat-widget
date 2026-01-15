@@ -108,6 +108,7 @@ export const Ids = class {
     public static readonly DefaultPreChatSurveyPaneId = "lcw-prechat-survey-pane-default";
     public static readonly DefaultProactiveChatPaneId = "lcw-proactive-chat";
     public static readonly DefaultReconnectChatPaneId = "lcw-reconnect-chat-pane";
+    public static readonly Test = "test";
 };
 
 export const ButtonTypes = class {
