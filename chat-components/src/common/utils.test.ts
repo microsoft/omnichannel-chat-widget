@@ -197,4 +197,34 @@ describe("utils unit test", () => {
             expect(wwwUrl).toContain('<a href="www.example.com"');
         });
     });
+
+    act(() => {
+        it("replaceURLWithAnchor should allow mailto: links", () => {
+            const mailtoUrl = replaceURLWithAnchor("Email us at mailto:support@example.com", true);
+            expect(mailtoUrl).toContain('<a href="mailto:support@example.com"');
+            expect(mailtoUrl).toContain('rel="noreferrer noopener"');
+        });
+    });
+
+    act(() => {
+        it("replaceURLWithAnchor should allow tel: links", () => {
+            const telUrl = replaceURLWithAnchor("Call us at tel:+1-800-555-0123", true);
+            expect(telUrl).toContain('<a href="tel:+1-800-555-0123"');
+        });
+    });
+
+    act(() => {
+        it("replaceURLWithAnchor should allow sms: links", () => {
+            const smsUrl = replaceURLWithAnchor("Text us at sms:+1-800-555-0123", true);
+            expect(smsUrl).toContain('<a href="sms:+1-800-555-0123"');
+        });
+    });
+
+    act(() => {
+        it("replaceURLWithAnchor should handle multiple contact methods", () => {
+            const contactInfo = replaceURLWithAnchor("Email mailto:support@example.com or call tel:+1-800-555-0123", true);
+            expect(contactInfo).toContain('<a href="mailto:support@example.com"');
+            expect(contactInfo).toContain('<a href="tel:+1-800-555-0123"');
+        });
+    });
 });

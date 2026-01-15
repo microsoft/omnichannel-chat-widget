@@ -124,10 +124,13 @@ const isValidURL = (url: string): boolean => {
         trimmedUrl.startsWith("file:")) {
         return false;
     }
-    // Only allow http, https, and protocol-relative URLs
+    // Allow http, https, protocol-relative URLs, and safe contact schemes
     return trimmedUrl.startsWith("http://") ||
         trimmedUrl.startsWith("https://") ||
-        trimmedUrl.startsWith("www.");
+        trimmedUrl.startsWith("www.") ||
+        trimmedUrl.startsWith("mailto:") ||
+        trimmedUrl.startsWith("tel:") ||
+        trimmedUrl.startsWith("sms:");
 };
 
 export const replaceURLWithAnchor = (text: string | undefined, openInNewTab: boolean | undefined) => {
