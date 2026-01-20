@@ -687,6 +687,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.18] - 2026-01-20
+
 ### Added
 
 - Added XSS protection tests for URL sanitization (11 new tests)
