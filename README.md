@@ -30,6 +30,24 @@ New releases are published on a regular basis to ensure the product quality.
 ### Chat Widget
 | Version | Docs | Release Date | End of Support | Deprecated |
 | -- | -- | -- | -- | -- |
+| 1.8.4 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.8.4) | 2026-01-20 | 2027-01-20 | |
+| 1.8.3 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.8.3) | 2025-10-07 | 2026-10-07 | |
+| 1.8.2 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.8.2) | 2025-08-20 | 2026-08-20 | |
+| 1.8.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.8.0) | 2025-06-03 | 2026-06-03 | |
+| 1.7.7 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.7.7) | 2025-04-16 | 2026-04-16 | |
+| 1.7.6 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.7.6) | 2025-03-04 | 2026-03-04 | |
+| 1.7.5 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.7.5) | 2025-02-12 | 2026-02-12 | |
+| 1.7.4 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.7.4) | 2025-01-28 | 2026-01-28 | |
+| 1.7.3 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.7.3) | 2024-11-20 | 2025-11-20 | |
+| 1.7.2 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.7.2) | 2024-09-03 | 2025-09-03 | |
+| 1.7.1 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.7.1) | 2024-06-21 | 2025-06-21 | |
+| 1.7.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.7.0) | 2024-05-30 | 2025-05-30 | |
+| 1.6.5 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.6.5) | 2024-05-10 | 2025-05-10 | |
+| 1.6.4 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.6.4) | 2024-04-29 | 2025-04-29 | |
+| 1.6.3 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.6.3) | 2024-04-02 | 2025-04-02 | |
+| 1.6.2 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.6.2) | 2024-01-10 | 2025-01-10 | |
+| 1.6.1 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.6.1) | 2023-12-21 | 2024-12-21 | |
+| 1.6.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.6.0) | 2023-12-19 | 2024-12-19 | |
 | 1.5.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.5.0) | 2023-11-21 | 2024-11-21 | |
 | 1.4.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.4.0) | 2023-10-25 | 2024-10-25 | |
 | 1.3.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.3.0) | 2023-09-18 | 2024-09-18 | |
@@ -48,6 +66,18 @@ New releases are published on a regular basis to ensure the product quality.
 ### Chat Components
 | Version | Docs | Release Date | End of Support | Deprecated |
 | -- | -- | -- | -- | -- |
+| 1.1.18 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.18) | 2026-01-20 | 2027-01-20 | |
+| 1.1.16 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.16) | 2025-10-15 | 2026-10-15 | |
+| 1.1.15 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.15) | 2025-10-07 | 2026-10-07 | |
+| 1.1.14 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.14) | 2025-10-07 | 2026-10-07 | |
+| 1.1.13 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.13) | 2025-08-20 | 2026-08-20 | |
+| 1.1.12 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.12) | 2025-06-03 | 2026-06-03 | |
+| 1.1.9 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.9) | 2025-04-16 | 2026-04-16 | |
+| 1.1.8 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.8) | 2025-03-04 | 2026-03-04 | |
+| 1.1.5 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.5) | 2024-04-29 | 2025-04-29 | |
+| 1.1.4 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.4) | 2024-04-02 | 2025-04-02 | |
+| 1.1.3 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.3) | 2024-04-02 | 2025-04-02 | |
+| 1.1.1 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.1) | 2024-01-10 | 2025-01-10 | |
 | 1.1.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-12-12 | 2024-12-12 | |
 | 1.0.9 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-12-07 | 2024-12-07 | |
 | 1.0.8 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-10-31 | 2024-10-31 | |
