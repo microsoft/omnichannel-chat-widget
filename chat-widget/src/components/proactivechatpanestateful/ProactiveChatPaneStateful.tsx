@@ -104,7 +104,6 @@ export const ProactiveChatPaneStateful = (props: any) => {
     };
 
     useEffect(() => {
-        setFocusOnElement(document.getElementById(controlProps.id + "-startbutton" as string) as HTMLElement);
         TelemetryTimers.ProactiveChatScreenTimer = createTimer();
         const timeoutEvent = setTimeout(() => {
             handleProactiveChatInviteTimeout();
