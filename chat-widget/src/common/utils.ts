@@ -1,3 +1,5 @@
+import * as CustomEventType from "../contexts/common/CustomEventType";
+
 import { AriaTelemetryConstants, Constants, HtmlAttributeNames, LocaleConstants } from "./Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
 
@@ -5,13 +7,11 @@ import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ChatSDKErrorName } from "@microsoft/omnichannel-chat-sdk";
 import { DataStoreManager } from "./contextDataStore/DataStoreManager";
 import { FacadeChatSDK } from "./facades/FacadeChatSDK";
-
+import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { ITimer } from "./interfaces/ITimer";
 import { KeyCodes } from "./KeyCodes";
 import { Md5 } from "md5-typescript";
 import { TelemetryHelper } from "./telemetry/TelemetryHelper";
-import * as CustomEventType from "../contexts/common/CustomEventType";
-import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 
 const getElementBySelector = (selector: string | HTMLElement) => {
     let element: HTMLElement;
@@ -514,4 +514,15 @@ export function isEndConversationDueToOverflowActivity(activity: {
     return activity?.channelData?.tags
             && Array.isArray(activity?.channelData?.tags)
             && activity.channelData.tags.includes(Constants.EndConversationDueToOverflow);
+}
+
+/**
+ * Parses a value that can be boolean or string ("true"/"false") into a boolean.
+ * Handles null/undefined by returning false.
+ * 
+ * @param value - The value to parse (can be boolean, string, null, or undefined)
+ * @returns true if value is true or "true" (case-insensitive), false otherwise
+ */
+export function parseBooleanFromConfig(value: boolean | string | null | undefined): boolean {
+    return value === true || value?.toString().toLowerCase() === "true";
 }

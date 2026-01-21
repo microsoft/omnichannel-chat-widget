@@ -17,16 +17,31 @@ All notable changes to this project will be documented in this file.
 - Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
 - Added support for AppInsightsInstrumentationKey from chat config
 - Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
+- Added support for horizontal flex display of basic/adaptive card buttons over more than 1 row
+- Enhanced error handling in file download process
+- Added comprehensive XSS security tests (19 new tests total)
 
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.16)
 - Updated AppInsights events
+- updated AppInsights events to traces and renamed custom property fields
 
 ### Fixed
 
+- Fixed issue with persistent chat history not properly computing flags for history messages.
+- Fixed uncaught exception error in post chat survey when closing the survey
+- Fixed disconnection banner persisting when closing and reopening chat widget
+- Fixed bubble text color overidding certain adaptive card element colors like title and label
 - Remove property to override CSAC flag for persistent chat history
 - Fix override of names for agent and customer in persistent chat history messages
+- Fixed logic to present post-chat survey after an MCS bot ends the conversation
+- Fixed lint configuration during build
+- Fixed issue with persistent chat history bot messages activity divider
+- Fixed critical XSS vulnerabilities: mutation XSS (mXSS) attacks, unsafe string concatenation in URL processing, and protocol injection
+- Fixed XSS detection order: now sanitizes with DOMPurify first, then checks patterns in both original and sanitized text
+- Added URL protocol validation to block dangerous protocols (javascript:, data:, vbscript:, file:)
+- Added HTML escaping functions for safe URL processing in `replaceURLWithAnchor`
 
 ## [1.8.3] - 2025-10-07
 
@@ -671,6 +686,18 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+## [1.1.18] - 2026-01-20
+
+### Added
+
+- Added XSS protection tests for URL sanitization (11 new tests)
+
+### Fixed
+
+- Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
+- Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
+- Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
 
 ## [1.1.16] - 2025-10-14
 
