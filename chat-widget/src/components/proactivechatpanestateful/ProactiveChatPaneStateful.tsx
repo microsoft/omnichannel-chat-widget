@@ -1,6 +1,6 @@
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useState } from "react";
-import { createTimer, setFocusOnElement } from "../../common/utils";
+import { createTimer } from "../../common/utils";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../common/Constants";
