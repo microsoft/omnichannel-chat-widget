@@ -793,11 +793,11 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
 
     // Add near other window/BroadcastService listeners:
     useEffect(() => {
-        console.info("[LCW][LiveChatWidgetStateful] Registering LcwMidAuthTokenReceived listener");
+        console.info("[LCW][LiveChatWidgetStateful] Registering MidConversationAuthTokenReceived listener");
         
-        const sub = BroadcastService.getMessageByEventName("LcwMidAuthTokenReceived").subscribe(async (msg: ICustomEvent) => {
+        const sub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthTokenReceived).subscribe(async (msg: ICustomEvent) => {
             const { token, midAuth } = msg?.payload || {};
-            console.info("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] Event received", { 
+            console.info("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] Event received", { 
                 midAuth, 
                 tokenPresent: !!token,
                 tokenLength: token?.length || 0,
@@ -806,7 +806,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             });
             
             if (!midAuth || !token) {
-                console.info("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] Skipping - missing midAuth flag or token", {
+                console.info("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] Skipping - missing midAuth flag or token", {
                     midAuth,
                     hasToken: !!token
                 });
@@ -814,16 +814,16 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }
             
             try {
-                console.info("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] Calling facadeChatSDK.authenticateChat...");
+                console.info("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] Calling facadeChatSDK.authenticateChat...");
                 
                 await facadeChatSDK.authenticateChat(token, { refreshChatToken: true });
 
-                console.info("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] authenticateChat succeeded");
+                console.info("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] authenticateChat succeeded");
                 
                 // Note: FacadeChatSDK.authenticateChat() broadcasts MidConversationAuthenticationSucceeded
                 // which is handled by the listener below to persist isAuthenticatedMidConversation state
             } catch (err) {
-                console.error("[LCW][LiveChatWidgetStateful][LcwMidAuthTokenReceived] authenticateChat FAILED", { 
+                console.error("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] authenticateChat FAILED", { 
                     error: (err as Error)?.message,
                     errorName: (err as Error)?.name
                 });
@@ -838,7 +838,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         return () => {
-            console.info("[LCW][LiveChatWidgetStateful] Unsubscribing LcwMidAuthTokenReceived listener");
+            console.info("[LCW][LiveChatWidgetStateful] Unsubscribing MidConversationAuthTokenReceived listener");
             sub.unsubscribe();
         };
     }, [facadeChatSDK]);

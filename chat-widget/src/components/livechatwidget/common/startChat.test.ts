@@ -59,7 +59,8 @@ jest.mock("./endChat", () => ({
 }));
 
 jest.mock("./liveChatConfigUtils", () => ({
-    isPersistentChatEnabled: jest.fn(() => false)
+    isPersistentChatEnabled: jest.fn(() => false),
+    isMidAuthEnabled: jest.fn(() => false)
 }));
 
 jest.mock("../../../common/telemetry/TelemetryManager", () => ({
@@ -490,6 +491,159 @@ describe("startChat - startTime timing validation tests", () => {
 
             // Verify the handler is subscribed to the activity stream
             expect(mockAdapter.activity$.subscribe).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe("Mid-auth configuration tests", () => {
+        const { isMidAuthEnabled } = jest.requireMock("./liveChatConfigUtils");
+        
+        beforeEach(() => {
+            jest.clearAllMocks();
+            mockCreateAdapter.mockResolvedValue(mockAdapter);
+            mockCreateOnNewAdapterActivityHandler.mockReturnValue(jest.fn());
+        });
+
+        it("should set deferInitialAuth=true when mid-auth is enabled and user has not authenticated", async () => {
+            isMidAuthEnabled.mockReturnValue(true);
+            
+            const mockState = {
+                appStates: { 
+                    conversationState: ConversationState.Loading,
+                    chatDisconnectEventReceived: false,
+                    hasUserAuthenticated: false
+                },
+                domainStates: { 
+                    liveChatConfig: { 
+                        LiveWSAndLiveChatEngJoin: { 
+                            msdyn_conversationmode: "Standard",
+                            msdyn_authenticatedsigninoptional: "true"
+                        } 
+                    } 
+                }
+            };
+
+            await initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, mockState);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            const startChatParams = mockFacadeChatSDK.startChat.mock.calls[0][0];
+            expect(startChatParams.deferInitialAuth).toBe(true);
+        });
+
+        it("should set deferInitialAuth=false when mid-auth is enabled but user has already authenticated", async () => {
+            isMidAuthEnabled.mockReturnValue(true);
+            
+            const mockState = {
+                appStates: { 
+                    conversationState: ConversationState.Loading,
+                    chatDisconnectEventReceived: false,
+                    hasUserAuthenticated: true
+                },
+                domainStates: { 
+                    liveChatConfig: { 
+                        LiveWSAndLiveChatEngJoin: { 
+                            msdyn_conversationmode: "Standard",
+                            msdyn_authenticatedsigninoptional: "true"
+                        } 
+                    } 
+                }
+            };
+
+            await initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, mockState);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            const startChatParams = mockFacadeChatSDK.startChat.mock.calls[0][0];
+            expect(startChatParams.deferInitialAuth).toBe(false);
+        });
+
+        it("should set deferInitialAuth=false when mid-auth is disabled", async () => {
+            isMidAuthEnabled.mockReturnValue(false);
+            
+            const mockState = {
+                appStates: { 
+                    conversationState: ConversationState.Loading,
+                    chatDisconnectEventReceived: false,
+                    hasUserAuthenticated: false
+                },
+                domainStates: { 
+                    liveChatConfig: { 
+                        LiveWSAndLiveChatEngJoin: { 
+                            msdyn_conversationmode: "Standard",
+                            msdyn_authenticatedsigninoptional: "false"
+                        } 
+                    } 
+                }
+            };
+
+            await initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, mockState);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            const startChatParams = mockFacadeChatSDK.startChat.mock.calls[0][0];
+            expect(startChatParams.deferInitialAuth ?? false).toBe(false);
+        });
+
+        it("should use hasUserAuthenticated from persisted state for reconnect scenarios", async () => {
+            isMidAuthEnabled.mockReturnValue(true);
+            
+            const mockState = {
+                appStates: { 
+                    conversationState: ConversationState.Loading,
+                    chatDisconnectEventReceived: false,
+                    hasUserAuthenticated: false
+                },
+                domainStates: { 
+                    liveChatConfig: { 
+                        LiveWSAndLiveChatEngJoin: { 
+                            msdyn_conversationmode: "Standard",
+                            msdyn_authenticatedsigninoptional: "true"
+                        } 
+                    } 
+                }
+            };
+
+            const persistedState = {
+                appStates: {
+                    hasUserAuthenticated: true
+                },
+                domainStates: {
+                    liveChatContext: { chatId: "persisted-chat-id" }
+                }
+            };
+
+            await initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, mockState, {}, {}, persistedState);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            const startChatParams = mockFacadeChatSDK.startChat.mock.calls[0][0];
+            // Since persistedState.hasUserAuthenticated is true, deferInitialAuth should be false
+            expect(startChatParams.deferInitialAuth).toBe(false);
+        });
+
+        it("should include deferInitialAuth in optional params when mid-auth enabled", async () => {
+            isMidAuthEnabled.mockReturnValue(true);
+            
+            const mockState = {
+                appStates: { 
+                    conversationState: ConversationState.Loading,
+                    chatDisconnectEventReceived: false,
+                    hasUserAuthenticated: false
+                },
+                domainStates: { 
+                    liveChatConfig: { 
+                        LiveWSAndLiveChatEngJoin: { 
+                            msdyn_conversationmode: "Standard",
+                            msdyn_authenticatedsigninoptional: "true"
+                        } 
+                    } 
+                }
+            };
+
+            const inputParams = { isProactiveChat: true };
+            
+            await initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, mockState, {}, inputParams);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            const startChatParams = mockFacadeChatSDK.startChat.mock.calls[0][0];
+            expect(startChatParams.isProactiveChat).toBe(true);
+            expect(startChatParams.deferInitialAuth).toBe(true);
         });
     });
 });

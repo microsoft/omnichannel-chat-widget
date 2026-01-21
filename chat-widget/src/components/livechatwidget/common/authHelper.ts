@@ -26,19 +26,13 @@ const getAuthClientFunction = (chatConfig: ChatConfig | undefined) => {
     return authClientFunction;
 };
 
-const handleAuthentication = async (
-    chatSDK: OmnichannelChatSDK, 
-    chatConfig: ChatConfig | undefined, 
-    getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined
-) => {
+const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
     const midAuthEnabled = isMidAuthEnabled(chatConfig);
 
     const authClientFunction = getAuthClientFunction(chatConfig);
     if (getAuthToken && authClientFunction) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
         
-        // Note: getAuthToken() returns null/empty for "no token" cases (doesn't throw)
-        // So we check the return value, not catch errors
         const token = await getAuthToken(authClientFunction);
         if (!isNullOrEmptyString(token)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

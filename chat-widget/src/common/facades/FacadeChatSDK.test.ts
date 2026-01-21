@@ -2,6 +2,8 @@ import { FacadeChatSDK } from "./FacadeChatSDK";
 import { IFacadeChatSDKInput } from "./types/IFacadeChatSDKInput";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { handleAuthentication } from "../../components/livechatwidget/common/authHelper";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
+import { BroadcastEvent } from "../telemetry/TelemetryConstants";
 
 // mock BroadcastService
 jest.mock("@microsoft/omnichannel-chat-components", () =>({
@@ -224,6 +226,607 @@ describe("FacadeChatSDK", () => {
             jest.spyOn(facadeChatSDK, "tokenRing").mockResolvedValue({ result: false, message: "Token is invalid" });
             const mockFn = jest.fn();
             await expect(facadeChatSDK["validateAndExecuteCall"]("testFunction", mockFn)).rejects.toThrow("Authentication Setup Error: Token validation failed - GetAuthToken function is not present");
+        });
+    });
+
+    describe("isMidAuthEnabled", () => {
+        it("should return true when msdyn_authenticatedsigninoptional is 'true'", () => {
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {
+                    msdyn_authenticatedsigninoptional: "true"
+                }
+            } as any;
+            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(true);
+        });
+
+        it("should return true when msdyn_authenticatedsigninoptional is 'True' (case insensitive)", () => {
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {
+                    msdyn_authenticatedsigninoptional: "True"
+                }
+            } as any;
+            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(true);
+        });
+
+        it("should return false when msdyn_authenticatedsigninoptional is 'false'", () => {
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {
+                    msdyn_authenticatedsigninoptional: "false"
+                }
+            } as any;
+            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
+        });
+
+        it("should return false when msdyn_authenticatedsigninoptional is undefined", () => {
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {}
+            } as any;
+            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
+        });
+
+        it("should return false when LiveWSAndLiveChatEngJoin is undefined", () => {
+            facadeChatSDK["chatConfig"] = {} as any;
+            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
+        });
+    });
+
+    describe("isTokenExpiredByValue", () => {
+        it("should return true for empty string token", () => {
+            const result = facadeChatSDK["isTokenExpiredByValue"]("");
+            expect(result).toBe(true);
+        });
+
+        it("should return true for null token", () => {
+            const result = facadeChatSDK["isTokenExpiredByValue"](null as any);
+            expect(result).toBe(true);
+        });
+
+        it("should return false for valid non-expired token", () => {
+            const jwt = getJWTToken();
+            const result = facadeChatSDK["isTokenExpiredByValue"](jwt.token);
+            expect(result).toBe(false);
+        });
+
+        it("should return true for expired token", () => {
+            // Create an expired token
+            const expiredPayload = { exp: Math.floor(Date.now() / 1000) - 300 }; // 5 minutes ago
+            const payloadBase64 = Buffer.from(JSON.stringify(expiredPayload)).toString("base64");
+            const expiredToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${payloadBase64}.signature`;
+            const result = facadeChatSDK["isTokenExpiredByValue"](expiredToken);
+            expect(result).toBe(true);
+        });
+
+        it("should return false for token without expiration (exp=0)", () => {
+            const noExpPayload = { sub: "user123" }; // No exp field
+            const payloadBase64 = Buffer.from(JSON.stringify(noExpPayload)).toString("base64");
+            const tokenWithoutExp = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${payloadBase64}.signature`;
+            const result = facadeChatSDK["isTokenExpiredByValue"](tokenWithoutExp);
+            expect(result).toBe(false);
+        });
+
+        it("should return true for invalid/malformed token", () => {
+            const result = facadeChatSDK["isTokenExpiredByValue"]("invalid-token");
+            expect(result).toBe(true);
+        });
+    });
+
+    describe("setMidAuthUnauthenticatedState", () => {
+        it("should clear authentication state for mid-auth unauthenticated flow", () => {
+            // Set up initial authenticated state
+            facadeChatSDK["token"] = "some-token";
+            facadeChatSDK["expiration"] = 12345;
+            facadeChatSDK["isAuthenticated"] = true;
+            
+            const mockChatSDK = facadeChatSDK["chatSDK"] as any;
+            mockChatSDK.authenticatedUserToken = "some-token";
+            mockChatSDK.chatToken = { chatId: "test-chat-id" };
+            mockChatSDK.reconnectId = "reconnect-123";
+
+            facadeChatSDK["setMidAuthUnauthenticatedState"]();
+
+            expect(facadeChatSDK["token"]).toBe("");
+            expect(facadeChatSDK["expiration"]).toBe(0);
+            expect(facadeChatSDK["isAuthenticated"]).toBe(false);
+            expect(mockChatSDK.authenticatedUserToken).toBeNull();
+            expect(mockChatSDK.chatToken).toEqual({});
+            expect(mockChatSDK.reconnectId).toBeNull();
+        });
+
+        it("should broadcast MidConversationAuthReset event", () => {
+            facadeChatSDK["setMidAuthUnauthenticatedState"]();
+
+            expect(BroadcastService.postMessage).toHaveBeenCalledWith({
+                eventName: BroadcastEvent.MidConversationAuthReset,
+                payload: {
+                    isAuthenticated: false,
+                    reason: "Starting new unauthenticated chat",
+                    clearLiveChatContext: true
+                }
+            });
+        });
+    });
+
+    describe("startChat", () => {
+        let mockStartChat: jest.Mock;
+
+        beforeEach(() => {
+            // Enable mid-auth for these tests since FacadeChatSDK.startChat only
+            // mutates deferInitialAuth/authenticatedUserToken when mid-auth is enabled.
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {
+                    msdyn_authenticatedsigninoptional: "true"
+                }
+            } as any;
+
+            mockStartChat = jest.fn().mockResolvedValue(undefined);
+            facadeChatSDK["chatSDK"].startChat = mockStartChat;
+            jest.spyOn(facadeChatSDK, "tokenRing").mockResolvedValue({ result: true, message: "Token is valid" });
+        });
+
+        it("should call SDK startChat with optionalParams", async () => {
+            facadeChatSDK["isAuthenticated"] = false;
+            
+            await facadeChatSDK.startChat({ isProactiveChat: true });
+
+            expect(mockStartChat).toHaveBeenCalled();
+        });
+
+        it("should set deferInitialAuth=true when pendingMidAuthUnauthenticatedState is true", async () => {
+            facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
+            jest.spyOn(facadeChatSDK as any, "setMidAuthUnauthenticatedState").mockImplementation(() => {
+                facadeChatSDK["isAuthenticated"] = false;
+            });
+
+            await facadeChatSDK.startChat({});
+
+            expect(mockStartChat).toHaveBeenCalled();
+            const callArgs = mockStartChat.mock.calls[0][0];
+            expect(callArgs.deferInitialAuth).toBe(true);
+        });
+
+        it("should clear liveChatContext when pendingMidAuthUnauthenticatedState is true", async () => {
+            facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
+            jest.spyOn(facadeChatSDK as any, "setMidAuthUnauthenticatedState").mockImplementation(() => {
+                facadeChatSDK["isAuthenticated"] = false;
+            });
+
+            const optionalParams = { liveChatContext: { chatToken: {}, requestId: "123" } };
+            await facadeChatSDK.startChat(optionalParams);
+
+            expect(mockStartChat).toHaveBeenCalled();
+            const callArgs = mockStartChat.mock.calls[0][0];
+            expect(callArgs.liveChatContext).toBeUndefined();
+        });
+
+        it("should reset pendingMidAuthUnauthenticatedState after processing", async () => {
+            facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
+            jest.spyOn(facadeChatSDK as any, "setMidAuthUnauthenticatedState").mockImplementation(() => {
+                facadeChatSDK["isAuthenticated"] = false;
+            });
+
+            await facadeChatSDK.startChat({});
+
+            expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(false);
+        });
+
+        it("should set authenticatedUserToken on SDK when authenticated with valid token", async () => {
+            const jwt = getJWTToken();
+            facadeChatSDK["isAuthenticated"] = true;
+            facadeChatSDK["token"] = jwt.token;
+            facadeChatSDK["expiration"] = jwt.expiration;
+
+            await facadeChatSDK.startChat({});
+
+            const chatSDK = facadeChatSDK["chatSDK"] as any;
+            expect(chatSDK.authenticatedUserToken).toBe(jwt.token);
+        });
+
+        it("should set deferInitialAuth=false when authenticated with valid token and deferInitialAuth was true", async () => {
+            const jwt = getJWTToken();
+            facadeChatSDK["isAuthenticated"] = true;
+            facadeChatSDK["token"] = jwt.token;
+            facadeChatSDK["expiration"] = jwt.expiration;
+
+            await facadeChatSDK.startChat({ deferInitialAuth: true } as any);
+
+            const callArgs = mockStartChat.mock.calls[0][0];
+            expect(callArgs.deferInitialAuth).toBe(false);
+        });
+
+        it("should not modify optionalParams when not authenticated", async () => {
+            facadeChatSDK["isAuthenticated"] = false;
+            facadeChatSDK["pendingMidAuthUnauthenticatedState"] = false;
+
+            const optionalParams = { isProactiveChat: true };
+            await facadeChatSDK.startChat(optionalParams);
+
+            expect(mockStartChat).toHaveBeenCalledWith(optionalParams);
+        });
+    });
+
+    describe("authenticateChat", () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        describe("Pre-chat authentication (chat not started)", () => {
+            beforeEach(() => {
+                // Chat not started - no chatId
+                (facadeChatSDK["chatSDK"] as any).chatToken = {};
+            });
+
+            it("should set token and isAuthenticated for pre-chat auth with string token", async () => {
+                const jwt = getJWTToken();
+
+                await facadeChatSDK.authenticateChat(jwt.token);
+
+                expect(facadeChatSDK["token"]).toBe(jwt.token);
+                expect(facadeChatSDK["isAuthenticated"]).toBe(true);
+                expect((facadeChatSDK["chatSDK"] as any).authenticatedUserToken).toBe(jwt.token);
+            });
+
+            it("should set token and isAuthenticated for pre-chat auth with token provider function", async () => {
+                const jwt = getJWTToken();
+                const tokenProvider = jest.fn().mockResolvedValue(jwt.token);
+
+                await facadeChatSDK.authenticateChat(tokenProvider);
+
+                expect(tokenProvider).toHaveBeenCalled();
+                expect(facadeChatSDK["token"]).toBe(jwt.token);
+                expect(facadeChatSDK["isAuthenticated"]).toBe(true);
+            });
+
+            it("should broadcast MidConversationAuthSucceeded for pre-chat auth", async () => {
+                const jwt = getJWTToken();
+
+                await facadeChatSDK.authenticateChat(jwt.token);
+
+                expect(BroadcastService.postMessage).toHaveBeenCalledWith({
+                    eventName: BroadcastEvent.MidConversationAuthSucceeded,
+                    payload: { isAuthenticated: true, token: jwt.token, isPreChatAuth: true }
+                });
+            });
+
+            it("should throw error for empty token in pre-chat auth", async () => {
+                await expect(facadeChatSDK.authenticateChat("")).rejects.toThrow("Authentication failed: Token is empty or null");
+
+                expect(BroadcastService.postMessage).toHaveBeenCalledWith({
+                    eventName: BroadcastEvent.OnWidgetError,
+                    payload: { errorMessage: "Authentication failed: Token is empty or null" }
+                });
+            });
+
+            it("should throw error for expired token in pre-chat auth", async () => {
+                const expiredPayload = { exp: Math.floor(Date.now() / 1000) - 300 };
+                const payloadBase64 = Buffer.from(JSON.stringify(expiredPayload)).toString("base64");
+                const expiredToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.${payloadBase64}.signature`;
+
+                await expect(facadeChatSDK.authenticateChat(expiredToken)).rejects.toThrow("Authentication Setup Error: Authentication token is already expired");
+            });
+
+            it("should clean up partial state on pre-chat auth failure", async () => {
+                // Set some initial state
+                facadeChatSDK["token"] = "old-token";
+                facadeChatSDK["expiration"] = 12345;
+                facadeChatSDK["isAuthenticated"] = true;
+
+                await expect(facadeChatSDK.authenticateChat("")).rejects.toThrow();
+
+                expect(facadeChatSDK["token"]).toBe("");
+                expect(facadeChatSDK["expiration"]).toBe(0);
+                expect(facadeChatSDK["isAuthenticated"]).toBe(false);
+            });
+
+            it("should throw error when token provider throws", async () => {
+                const tokenProvider = jest.fn().mockRejectedValue(new Error("Provider error"));
+
+                await expect(facadeChatSDK.authenticateChat(tokenProvider)).rejects.toThrow("Provider error");
+            });
+        });
+
+        describe("Mid-conversation authentication (chat started)", () => {
+            let mockAuthenticateChat: jest.Mock;
+
+            beforeEach(() => {
+                // Chat started - has chatId
+                (facadeChatSDK["chatSDK"] as any).chatToken = { chatId: "test-chat-id" };
+                mockAuthenticateChat = jest.fn().mockResolvedValue(undefined);
+                facadeChatSDK["chatSDK"].authenticateChat = mockAuthenticateChat;
+            });
+
+            it("should call SDK authenticateChat for mid-conversation auth", async () => {
+                const jwt = getJWTToken();
+
+                await facadeChatSDK.authenticateChat(jwt.token);
+
+                expect(mockAuthenticateChat).toHaveBeenCalledWith(jwt.token, {});
+            });
+
+            it("should call SDK authenticateChat with optionalParams", async () => {
+                const jwt = getJWTToken();
+                const optionalParams = { refreshChatToken: true };
+
+                await facadeChatSDK.authenticateChat(jwt.token, optionalParams);
+
+                expect(mockAuthenticateChat).toHaveBeenCalledWith(jwt.token, optionalParams);
+            });
+
+            it("should set token and isAuthenticated after mid-conversation auth", async () => {
+                const jwt = getJWTToken();
+
+                await facadeChatSDK.authenticateChat(jwt.token);
+
+                expect(facadeChatSDK["token"]).toBe(jwt.token);
+                expect(facadeChatSDK["isAuthenticated"]).toBe(true);
+            });
+
+            it("should broadcast MidConversationAuthSucceeded for mid-conversation auth", async () => {
+                const jwt = getJWTToken();
+
+                await facadeChatSDK.authenticateChat(jwt.token);
+
+                expect(BroadcastService.postMessage).toHaveBeenCalledWith({
+                    eventName: BroadcastEvent.MidConversationAuthSucceeded,
+                    payload: { isAuthenticated: true, token: jwt.token, isPreChatAuth: false }
+                });
+            });
+
+            it("should throw error and broadcast OnWidgetError when SDK authenticateChat fails", async () => {
+                const jwt = getJWTToken();
+                mockAuthenticateChat.mockRejectedValue(new Error("SDK auth failed"));
+
+                await expect(facadeChatSDK.authenticateChat(jwt.token)).rejects.toThrow("SDK auth failed");
+
+                expect(BroadcastService.postMessage).toHaveBeenCalledWith({
+                    eventName: BroadcastEvent.OnWidgetError,
+                    payload: { errorMessage: "SDK auth failed" }
+                });
+            });
+
+            it("should validate token before calling SDK authenticateChat", async () => {
+                await expect(facadeChatSDK.authenticateChat("")).rejects.toThrow("Authentication failed: Token is empty or null");
+
+                expect(mockAuthenticateChat).not.toHaveBeenCalled();
+            });
+
+            it("should work with token provider function for mid-conversation auth", async () => {
+                const jwt = getJWTToken();
+                const tokenProvider = jest.fn().mockResolvedValue(jwt.token);
+
+                await facadeChatSDK.authenticateChat(tokenProvider);
+
+                expect(tokenProvider).toHaveBeenCalled();
+                expect(mockAuthenticateChat).toHaveBeenCalledWith(jwt.token, {});
+            });
+        });
+    });
+
+    describe("tokenRing with mid-auth", () => {
+        it("should set pendingMidAuthUnauthenticatedState when mid-auth enabled and no token returned", async () => {
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {
+                    msdyn_authenticatedsigninoptional: "true"
+                }
+            } as any;
+            facadeChatSDK["token"] = "";
+            facadeChatSDK["expiration"] = 0;
+            
+            (handleAuthentication as jest.Mock).mockResolvedValue({ result: true, token: "" });
+
+            const result = await facadeChatSDK["tokenRing"]();
+
+            expect(result).toEqual({ result: true, message: "Mid-auth: no token returned; pending unauthenticated state" });
+            expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(true);
+        });
+
+        it("should not set pendingMidAuthUnauthenticatedState when mid-auth disabled and no token returned", async () => {
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {
+                    msdyn_authenticatedsigninoptional: "false"
+                }
+            } as any;
+            facadeChatSDK["token"] = "";
+            facadeChatSDK["expiration"] = 0;
+            
+            (handleAuthentication as jest.Mock).mockResolvedValue({ result: false, token: "", error: { message: "Auth failed" } });
+
+            const result = await facadeChatSDK["tokenRing"]();
+
+            expect(result.result).toBe(false);
+            expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(false);
+        });
+
+        it("should reset pendingMidAuthUnauthenticatedState at the start of tokenRing", async () => {
+            facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
+            facadeChatSDK["sdkMocked"] = true; // Will return early
+
+            await facadeChatSDK["tokenRing"]();
+
+            expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(false);
+        });
+    });
+
+    describe("Mid-auth end-to-end scenarios", () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it("should handle full unauthenticated to authenticated flow", async () => {
+            // Setup: Mid-auth enabled, user starts unauthenticated
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {
+                    msdyn_authenticatedsigninoptional: "true"
+                }
+            } as any;
+            facadeChatSDK["isAuthenticated"] = false;
+            (facadeChatSDK["chatSDK"] as any).chatToken = {};
+
+            // Step 1: Start chat unauthenticated
+            const mockStartChat = jest.fn().mockResolvedValue(undefined);
+            facadeChatSDK["chatSDK"].startChat = mockStartChat;
+            jest.spyOn(facadeChatSDK, "tokenRing").mockResolvedValue({ result: true, message: "Token is valid" });
+
+            await facadeChatSDK.startChat({});
+            expect(mockStartChat).toHaveBeenCalled();
+            expect(facadeChatSDK["isAuthenticated"]).toBe(false);
+
+            // Step 2: User authenticates mid-conversation
+            const jwt = getJWTToken();
+            (facadeChatSDK["chatSDK"] as any).chatToken = { chatId: "test-chat-id" };
+            const mockAuthenticateChat = jest.fn().mockResolvedValue(undefined);
+            facadeChatSDK["chatSDK"].authenticateChat = mockAuthenticateChat;
+
+            await facadeChatSDK.authenticateChat(jwt.token);
+
+            // Verify authentication state
+            expect(facadeChatSDK["isAuthenticated"]).toBe(true);
+            expect(facadeChatSDK["token"]).toBe(jwt.token);
+            expect(mockAuthenticateChat).toHaveBeenCalledWith(jwt.token, {});
+        });
+
+        it("should handle pre-auth then startChat flow", async () => {
+            // Setup: Mid-auth enabled
+            facadeChatSDK["chatConfig"] = {
+                LiveWSAndLiveChatEngJoin: {
+                    msdyn_authenticatedsigninoptional: "true"
+                }
+            } as any;
+            facadeChatSDK["isAuthenticated"] = false;
+            (facadeChatSDK["chatSDK"] as any).chatToken = {};
+
+            // Step 1: Pre-chat authentication (before startChat)
+            const jwt = getJWTToken();
+            await facadeChatSDK.authenticateChat(jwt.token);
+
+            expect(facadeChatSDK["isAuthenticated"]).toBe(true);
+            expect(facadeChatSDK["token"]).toBe(jwt.token);
+            expect((facadeChatSDK["chatSDK"] as any).authenticatedUserToken).toBe(jwt.token);
+
+            // Step 2: Start chat with authentication
+            const mockStartChat = jest.fn().mockResolvedValue(undefined);
+            facadeChatSDK["chatSDK"].startChat = mockStartChat;
+            jest.spyOn(facadeChatSDK, "tokenRing").mockResolvedValue({ result: true, message: "Token is valid" });
+
+            await facadeChatSDK.startChat({});
+
+            expect(mockStartChat).toHaveBeenCalled();
+            const callArgs = mockStartChat.mock.calls[0][0];
+            // deferInitialAuth should be false since user already authenticated
+            expect(callArgs.deferInitialAuth ?? false).toBe(false);
+        });
+
+        it("should handle token refresh scenario", async () => {
+            // Setup: Authenticated user with expiring token
+            const oldJwt = getJWTToken();
+            facadeChatSDK["token"] = oldJwt.token;
+            facadeChatSDK["expiration"] = Math.floor(Date.now() / 1000) - 10; // Expired
+            facadeChatSDK["isAuthenticated"] = true;
+
+            // New token from handleAuthentication
+            const newJwt = getJWTToken();
+            (handleAuthentication as jest.Mock).mockResolvedValue({ result: true, token: newJwt.token });
+
+            // tokenRing should get new token
+            const result = await facadeChatSDK["tokenRing"]();
+
+            expect(result.result).toBe(true);
+            expect(facadeChatSDK["token"]).toBe(newJwt.token);
+        });
+
+        it("should handle reconnect scenario with hasUserAuthenticated", async () => {
+            // Setup: Simulating reconnect - user was authenticated before
+            const jwt = getJWTToken();
+            facadeChatSDK["isAuthenticated"] = true;
+            facadeChatSDK["token"] = jwt.token;
+            facadeChatSDK["expiration"] = jwt.expiration;
+            
+            const mockStartChat = jest.fn().mockResolvedValue(undefined);
+            facadeChatSDK["chatSDK"].startChat = mockStartChat;
+            jest.spyOn(facadeChatSDK, "tokenRing").mockResolvedValue({ result: true, message: "Token is valid" });
+
+            // Reconnect with liveChatContext
+            const liveChatContext = { chatToken: { chatId: "reconnect-chat-id" }, requestId: "reconnect-request" };
+            await facadeChatSDK.startChat({ liveChatContext } as any);
+
+            expect(mockStartChat).toHaveBeenCalled();
+            const callArgs = mockStartChat.mock.calls[0][0];
+            // Should pass liveChatContext for reconnect
+            expect(callArgs.liveChatContext).toEqual(liveChatContext);
+            // deferInitialAuth should be false for authenticated reconnect
+            expect(callArgs.deferInitialAuth ?? false).toBe(false);
+        });
+    });
+
+    describe("Error handling and edge cases", () => {
+        it("should handle concurrent authenticateChat calls gracefully", async () => {
+            const jwt1 = getJWTToken();
+            (facadeChatSDK["chatSDK"] as any).chatToken = {};
+
+            // Call authenticateChat twice concurrently
+            const promise1 = facadeChatSDK.authenticateChat(jwt1.token);
+            const promise2 = facadeChatSDK.authenticateChat(jwt1.token);
+
+            await Promise.all([promise1, promise2]);
+
+            // Should complete without errors
+            expect(facadeChatSDK["isAuthenticated"]).toBe(true);
+        });
+
+        it("should handle SDK authenticateChat timeout", async () => {
+            const jwt = getJWTToken();
+            (facadeChatSDK["chatSDK"] as any).chatToken = { chatId: "test-chat-id" };
+            
+            const timeoutError = new Error("Request timeout");
+            const mockAuthenticateChat = jest.fn().mockRejectedValue(timeoutError);
+            facadeChatSDK["chatSDK"].authenticateChat = mockAuthenticateChat;
+
+            await expect(facadeChatSDK.authenticateChat(jwt.token)).rejects.toThrow("Request timeout");
+
+            expect(BroadcastService.postMessage).toHaveBeenCalledWith({
+                eventName: BroadcastEvent.OnWidgetError,
+                payload: { errorMessage: "Request timeout" }
+            });
+        });
+
+        it("should preserve authentication state after failed startChat", async () => {
+            const jwt = getJWTToken();
+            facadeChatSDK["isAuthenticated"] = true;
+            facadeChatSDK["token"] = jwt.token;
+            facadeChatSDK["expiration"] = jwt.expiration;
+
+            const mockStartChat = jest.fn().mockRejectedValue(new Error("Network error"));
+            facadeChatSDK["chatSDK"].startChat = mockStartChat;
+            jest.spyOn(facadeChatSDK, "tokenRing").mockResolvedValue({ result: true, message: "Token is valid" });
+
+            await expect(facadeChatSDK.startChat({})).rejects.toThrow("Network error");
+
+            // Authentication state should be preserved
+            expect(facadeChatSDK["isAuthenticated"]).toBe(true);
+            expect(facadeChatSDK["token"]).toBe(jwt.token);
+        });
+
+        it("should handle destroy and cleanup authentication state", () => {
+            const jwt = getJWTToken();
+            facadeChatSDK["token"] = jwt.token;
+            facadeChatSDK["expiration"] = jwt.expiration;
+
+            facadeChatSDK.destroy();
+
+            expect(facadeChatSDK["token"]).toBeNull();
+            expect(facadeChatSDK["expiration"]).toBe(0);
+        });
+
+        it("should handle isTokenSet correctly", () => {
+            expect(facadeChatSDK.isTokenSet()).toBe(false);
+
+            facadeChatSDK["token"] = "some-token";
+            expect(facadeChatSDK.isTokenSet()).toBe(true);
+
+            facadeChatSDK["token"] = "";
+            expect(facadeChatSDK.isTokenSet()).toBe(false);
+
+            facadeChatSDK["token"] = null;
+            expect(facadeChatSDK.isTokenSet()).toBe(false);
         });
     });
     

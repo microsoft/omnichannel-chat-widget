@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "@testing-library/jest-dom";
 
-import { isPersistentChatEnabled, shouldLoadPersistentChatHistory } from "./liveChatConfigUtils";
+import { isPersistentChatEnabled, shouldLoadPersistentChatHistory, isMidAuthEnabled } from "./liveChatConfigUtils";
 
 import { ConversationMode } from "../../../common/Constants";
 import { ExtendedChatConfig } from "../../webchatcontainerstateful/interfaces/IExtendedChatConffig";
@@ -228,6 +228,46 @@ describe("liveChatConfigUtils", () => {
             // Auth function is present but NOT the determining factor
             // Result MUST be TRUE
             expect(shouldLoadPersistentChatHistory(config)).toBe(true);
+        });
+    });
+
+    describe("isMidAuthEnabled", () => {
+        it("should return true when msdyn_authenticatedsigninoptional is 'true' (string)", () => {
+            expect(isMidAuthEnabled("true")).toBe(true);
+        });
+
+        it("should return true when msdyn_authenticatedsigninoptional is 'True' (case insensitive)", () => {
+            expect(isMidAuthEnabled("True")).toBe(true);
+        });
+
+        it("should return true when msdyn_authenticatedsigninoptional is 'TRUE' (uppercase)", () => {
+            expect(isMidAuthEnabled("TRUE")).toBe(true);
+        });
+
+        it("should return false when msdyn_authenticatedsigninoptional is 'false'", () => {
+            expect(isMidAuthEnabled("false")).toBe(false);
+        });
+
+        it("should return false when msdyn_authenticatedsigninoptional is 'False'", () => {
+            expect(isMidAuthEnabled("False")).toBe(false);
+        });
+
+        it("should return false when msdyn_authenticatedsigninoptional is undefined", () => {
+            expect(isMidAuthEnabled(undefined)).toBe(false);
+        });
+
+        it("should return false when msdyn_authenticatedsigninoptional is null", () => {
+            expect(isMidAuthEnabled(null as any)).toBe(false);
+        });
+
+        it("should return false when msdyn_authenticatedsigninoptional is empty string", () => {
+            expect(isMidAuthEnabled("")).toBe(false);
+        });
+
+        it("should return false when msdyn_authenticatedsigninoptional is any other value", () => {
+            expect(isMidAuthEnabled("yes")).toBe(false);
+            expect(isMidAuthEnabled("1")).toBe(false);
+            expect(isMidAuthEnabled("enabled")).toBe(false);
         });
     });
 });

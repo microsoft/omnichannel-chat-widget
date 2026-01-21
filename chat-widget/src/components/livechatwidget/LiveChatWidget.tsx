@@ -45,31 +45,24 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     // Check if user authenticated (pre-auth or mid-auth) from cached state for reconnect scenarios
     const hasUserAuthenticated = state?.appStates?.hasUserAuthenticated === true;
 
-    //const hasLiveChatContext = !isUndefinedOrEmpty(state?.domainStates?.liveChatContext);
-    //const conversationState = state?.appStates?.conversationState;
-
-    //const isTerminalState = conversationState === ConversationState.Closed ||
-    //    conversationState === ConversationState.Postchat ||
-    //    conversationState === ConversationState.PostchatLoading ||
-    //    conversationState === ConversationState.Error;
-
-    // we can use if we want more state specific scenarios for mid-auth reconnect
-    //const isMidAuthReconnect = hasUserAuthenticated && hasLiveChatContext && !isTerminalState;
-
     // isAuthenticatedChat determines if FacadeChatSDK should require authentication:
-    // 
+    //
     // Note: Mid-auth and persistent chat are MUTUALLY EXCLUSIVE (cannot be enabled together in admin)
-    // - Persistent chat: Always requires auth from start
-    // - Mid-auth: Starts unauthenticated, can authenticate during conversation
     // 
     // Cases:
-    // 1. Persistent chat enabled -> always authenticated
-    // 2. Mid-auth disabled + auth settings exist -> authenticated from start (normal Auth)
-    // 3. Mid-auth enabled + NOT authenticated -> starts unauthenticated
-    // 4. Mid-auth enabled + HAS authenticated (pre-auth or mid-auth) -> authenticated (for reconnect)
-    const isAuthenticatedChat = persistentChatEnabled ||                    // Persistent chat always authenticated
-        (!midAuthEnabled && hasAuthClientFn) ||                             // Normal auth (mid-auth disabled)
-        hasUserAuthenticated;                                               // User authenticated (pre-auth or mid-auth reconnect)
+    // 1. Persistent chat enabled -> always authenticated (existing behavior)
+    // 2. Mid-auth DISABLED + auth settings exist -> authenticated from start (existing behavior - normal Auth)
+    // 3. Mid-auth ENABLED + NOT authenticated -> starts unauthenticated (new mid-auth behavior)
+    // 4. Mid-auth ENABLED + HAS authenticated (pre-auth or mid-auth) -> authenticated (for reconnect)
+    let isAuthenticatedChat: boolean;
+    
+    if (midAuthEnabled) {
+        // MID-AUTH SPECIFIC: Only require auth if user already authenticated or persistent chat
+        isAuthenticatedChat = persistentChatEnabled || hasUserAuthenticated;
+    } else {
+        // EXISTING BEHAVIOR (mid-auth disabled): Normal auth flow
+        isAuthenticatedChat = persistentChatEnabled || hasAuthClientFn;
+    }
 
     // Debug trace
     // eslint-disable-next-line no-console

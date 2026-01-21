@@ -62,6 +62,7 @@ export enum BroadcastEvent {
     FMLTrackingCompletedAck = "FMLTrackingCompletedAck",
     FMLTrackingCompleted = "FMLTrackingCompleted",
     PersistentConversationReset = "PersistentConversationReset",
+    MidConversationAuthTokenReceived = "MidConversationAuthTokenReceived", // Received when mid-auth token is provided via SDK
     MidConversationAuthSucceeded = "MidConversationAuthSucceeded", // Emitted when mid-conversation auth succeeds (for reconnect support)
     MidConversationAuthReset = "MidConversationAuthReset", // Emitted when mid-auth falls back to unauthenticated mode (token null/empty)
 }
