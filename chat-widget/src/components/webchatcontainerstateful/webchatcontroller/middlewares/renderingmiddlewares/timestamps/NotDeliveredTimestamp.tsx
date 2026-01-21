@@ -1,4 +1,6 @@
-﻿import React, { Dispatch, useCallback, useEffect, useRef } from "react";
+﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import React, { Dispatch, useCallback, useEffect, useRef } from "react";
 
 import { ILiveChatWidgetAction } from "../../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../../contexts/common/ILiveChatWidgetContext";

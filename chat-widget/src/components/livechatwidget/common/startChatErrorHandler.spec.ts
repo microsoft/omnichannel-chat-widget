@@ -308,7 +308,7 @@ describe("startChatErrorHandler unit test", () => {
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.InvalidConversation}`
             })
         }));
-    expect(dispatch).toHaveBeenCalledTimes(18);
+        expect(dispatch).toHaveBeenCalledTimes(18);
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE,
             payload: ConversationState.Closed
@@ -333,7 +333,7 @@ describe("startChatErrorHandler unit test", () => {
                 Exception: `Widget load complete with error: ${ChatSDKErrorName.ClosedConversation}`
             })
         }));
-    expect(dispatch).toHaveBeenCalledTimes(18);
+        expect(dispatch).toHaveBeenCalledTimes(18);
         expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({
             type: LiveChatWidgetActionType.SET_CONVERSATION_STATE,
             payload: ConversationState.Closed
