@@ -791,41 +791,27 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     }, [state.appStates.chatDisconnectEventReceived]);
 
-    // Add near other window/BroadcastService listeners:
+    // Handle mid-auth token received from external source
     useEffect(() => {
-        console.info("[LCW][LiveChatWidgetStateful] Registering MidConversationAuthTokenReceived listener");
-        
         const sub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthTokenReceived).subscribe(async (msg: ICustomEvent) => {
             const { token, midAuth } = msg?.payload || {};
-            console.info("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] Event received", { 
-                midAuth, 
-                tokenPresent: !!token,
-                tokenLength: token?.length || 0,
-                hasFacadeChatSDK: !!facadeChatSDK,
-                hasAuthenticateChat: !!facadeChatSDK?.authenticateChat
-            });
             
             if (!midAuth || !token) {
-                console.info("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] Skipping - missing midAuth flag or token", {
-                    midAuth,
-                    hasToken: !!token
-                });
                 return;
             }
+
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.MidConversationAuthTokenReceived,
+                Description: "Mid-conversation auth token received via broadcast event."
+            });
             
             try {
-                console.info("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] Calling facadeChatSDK.authenticateChat...");
-                
                 await facadeChatSDK.authenticateChat(token, { refreshChatToken: true });
-
-                console.info("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] authenticateChat succeeded");
-                
-                // Note: FacadeChatSDK.authenticateChat() broadcasts MidConversationAuthenticationSucceeded
-                // which is handled by the listener below to persist isAuthenticatedMidConversation state
             } catch (err) {
-                console.error("[LCW][LiveChatWidgetStateful][MidConversationAuthTokenReceived] authenticateChat FAILED", { 
-                    error: (err as Error)?.message,
-                    errorName: (err as Error)?.name
+                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
+                    Event: TelemetryEvent.MidConversationAuthFailed,
+                    Description: "Mid-conversation authentication failed in widget listener.",
+                    ExceptionDetails: { message: (err as Error)?.message }
                 });
 
                 BroadcastService.postMessage({
@@ -838,91 +824,46 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
 
         return () => {
-            console.info("[LCW][LiveChatWidgetStateful] Unsubscribing MidConversationAuthTokenReceived listener");
             sub.unsubscribe();
         };
     }, [facadeChatSDK]);
 
-    // Listen for authentication success (for reconnect support)
-    // This is broadcast by FacadeChatSDK.authenticateChat() when auth succeeds
+    // Handle auth success events for state persistence
     useEffect(() => {
-        console.info("[LCW][LiveChatWidgetStateful] Registering MidConversationAuthenticationSucceeded listener");
-        
         const authSucceededSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthSucceeded)
             .subscribe((msg) => {
                 const isAuthenticated = msg?.payload?.isAuthenticated;
                 const token = msg?.payload?.token;
-                const isPreChatAuth = msg?.payload?.isPreChatAuth;
-
-                console.info("[LCW][LiveChatWidgetStateful][AuthenticationSucceeded] Event received", { 
-                    isAuthenticated,
-                    tokenPresent: !!token,
-                    isPreChatAuth
-                });
 
                 if (isAuthenticated) {
-                    // Store the auth token for potential use (e.g., reconnect scenarios)
                     if (token) {
                         dispatch({ type: LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN, payload: token });
-                        console.info("[LCW][LiveChatWidgetStateful][AuthenticationSucceeded] authenticatedUserToken stored");
                     }
-                    
-                    // Set hasUserAuthenticated for BOTH pre-chat and mid-conversation auth
-                    // This flag is used after page refresh to determine if FacadeChatSDK should be created 
-                    // with isAuthenticated=true, which enables tokenRing() to fetch fresh tokens
-                    // 
-                    // For pre-chat auth: User authenticated before conversation started
-                    // For mid-auth: User authenticated during an active conversation
-                    // 
-                    // In both cases, after page refresh, we need FacadeChatSDK.isAuthenticated=true
-                    // so that tokenRing() will call handleAuthentication() to get a fresh token
+                    // Persist auth state for reconnect after page refresh
                     dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: true });
-                    console.info("[LCW][LiveChatWidgetStateful][AuthenticationSucceeded] hasUserAuthenticated set to true", {
-                        isPreChatAuth
-                    });
                 }
             });
 
-        // Listen for authentication reset (mid-auth fallback to unauthenticated)
-        // This is broadcast by FacadeChatSDK.setMidAuthUnauthenticatedState() when token is null/empty
+        // Handle auth reset (mid-auth fallback to unauthenticated)
         const authResetSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthReset)
             .subscribe((msg) => {
                 const isAuthenticated = msg?.payload?.isAuthenticated;
-                const reason = msg?.payload?.reason;
                 const clearLiveChatContext = msg?.payload?.clearLiveChatContext;
 
-                console.info("[LCW][LiveChatWidgetStateful][AuthenticationReset] Event received", { 
-                    isAuthenticated,
-                    reason,
-                    clearLiveChatContext
-                });
-
                 if (isAuthenticated === false) {
-                    // Clear the auth token
                     dispatch({ type: LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN, payload: null });
-                    console.info("[LCW][LiveChatWidgetStateful][AuthenticationReset] authenticatedUserToken cleared");
-                    
-                    // Reset hasUserAuthenticated flag so on next page refresh, FacadeChatSDK
-                    // will be created with isAuthenticated=false for unauthenticated flow
                     dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: false });
-                    console.info("[LCW][LiveChatWidgetStateful][AuthenticationReset] hasUserAuthenticated set to false", {
-                        reason
-                    });
 
-                    // CRITICAL: Clear liveChatContext to prevent startChat from using old requestId/chatToken
-                    // Without this, the widget would pass the old context to startChat(),
-                    // This would reconnect to the previous authenticated conversation instead of starting fresh
+                    // Clear context to prevent reconnecting to old auth chat
                     if (clearLiveChatContext) {
                         dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: {} });
                         dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: "" });
                         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: {} });
-                        console.info("[LCW][LiveChatWidgetStateful][AuthenticationReset] liveChatContext, reconnectId, chatToken cleared");
                     }
                 }
             });
 
         return () => {
-            console.info("[LCW][LiveChatWidgetStateful] Unsubscribing Authentication listeners");
             authSucceededSub.unsubscribe();
             authResetSub.unsubscribe();
         };

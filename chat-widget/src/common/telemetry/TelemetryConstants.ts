@@ -64,7 +64,7 @@ export enum BroadcastEvent {
     PersistentConversationReset = "PersistentConversationReset",
     MidConversationAuthTokenReceived = "MidConversationAuthTokenReceived", // Received when mid-auth token is provided via SDK
     MidConversationAuthSucceeded = "MidConversationAuthSucceeded", // Emitted when mid-conversation auth succeeds (for reconnect support)
-    MidConversationAuthReset = "MidConversationAuthReset", // Emitted when mid-auth falls back to unauthenticated mode (token null/empty)
+    MidConversationAuthReset = "MidConversationAuthReset" // Emitted when mid-auth falls back to unauthenticated mode (token null/empty)
 }
 
 // Events being logged
@@ -102,6 +102,7 @@ export enum TelemetryEvent {
     MidConversationAuthStarted = "MidConversationAuthStarted",
     MidConversationAuthSucceeded = "MidConversationAuthSucceeded",
     MidConversationAuthFailed = "MidConversationAuthFailed",
+    MidConversationAuthTokenReceived = "MidConversationAuthTokenReceived",
     GetConversationDetailsCallStarted = "GetConversationDetailsCallStarted",
     GetConversationDetailsCallFailed = "GetConversationDetailsCallFailed",
     EndChatSDKCallFailed = "EndChatSDKCallFailed",

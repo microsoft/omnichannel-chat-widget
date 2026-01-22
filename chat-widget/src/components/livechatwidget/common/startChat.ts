@@ -181,31 +181,16 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
 
-            // Check if mid-auth is enabled in admin config
+            // Configure deferInitialAuth for mid-auth flow
             const midAuthEnabled = isMidAuthEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional);
             
-            // MID-AUTH SPECIFIC: Only set deferInitialAuth when mid-auth is enabled
             if (midAuthEnabled) {
                 const hasUserAuthenticated = state?.appStates?.hasUserAuthenticated === true ||
                                             persistedState?.appStates?.hasUserAuthenticated === true;
                 
-                // deferInitialAuth controls SDK behavior in internalStartChat:
-                // - true: SDK skips setAuthTokenProvider() - used for mid-auth flow
-                // - false: SDK calls setAuthTokenProvider() - used for authenticated flow
-                // 
-                // For authenticated users (pre-auth or mid-auth reconnect), this will be overridden in FacadeChatSDK
+                // deferInitialAuth: true = skip auth provider, false = use auth provider
                 const deferInitialAuth = hasUserAuthenticated ? false : true;
-                
-                // Pass deferInitialAuth to SDK - it needs this to decide whether to call setAuthTokenProvider
                 (startChatOptionalParams as any).deferInitialAuth = deferInitialAuth;
-
-                // eslint-disable-next-line no-console
-                console.info("[LCW][initStartChat] Mid-auth enabled - Auth configuration for startChat:", {
-                    midAuthEnabled,
-                    hasUserAuthenticated,
-                    deferInitialAuth,
-                    persistentChatEnabled
-                });
 
                 TelemetryHelper.logConfigDataEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.WidgetLoadStarted,
@@ -217,27 +202,16 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                         persistentChatEnabled
                     }
                 });
-            } else {
-                console.info("[LCW][initStartChat] Mid-auth disabled - using existing setup:", {
-                    midAuthEnabled,
-                    persistentChatEnabled
-                });
             }
 
             // startTime is used to determine if a message is history or new, better to be set before creating the adapter to get bandwidth
             const startTime = (new Date().getTime());
             createTrackingForFirstMessage();
             
-            // FacadeChatSDK.startChat() will:
-            // 1. Call tokenRing() which checks if authentication is needed (based on isAuthenticated flag)
-            // 2. If isAuthenticated=true and token not set/expired, tokenRing() calls handleAuthentication()
-            // 3. handleAuthentication() uses props.getAuthToken to get a fresh token
-            // 4. Sets SDK's authenticatedUserToken directly and may override deferInitialAuth
-            // 5. For mid-auth: Passes deferInitialAuth to SDK which controls setAuthTokenProvider behavior
+            // FacadeChatSDK handles token validation and auth state management
             await facadeChatSDK.startChat(startChatOptionalParams);
             logStartChatComplete();
             isStartChatSuccessful = true;
-            console.info("[LCW][LiveChatWidget] startChat successful");
             await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, props);
 
         } catch (error) {

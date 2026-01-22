@@ -22,7 +22,6 @@ const getAuthClientFunction = (chatConfig: ChatConfig | undefined) => {
     if (chatConfig?.LiveChatConfigAuthSettings) {
         authClientFunction = (chatConfig?.LiveChatConfigAuthSettings as AuthSettings)?.msdyn_javascriptclientfunction ?? undefined;
     }
-    console.info("[LCW][AuthHelper][getAuthClientFunction] authClientFunction:", authClientFunction);
     return authClientFunction;
 };
 
@@ -41,19 +40,16 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
             });
             return {"result": true, "token": token};
         } else {
-            // For mid-auth scenarios, empty token means "user not signed in" - this is expected behavior.
-            // Return result: true with empty token so caller can decide to proceed unauthenticated.
+            // Mid-auth: empty token is expected (user not signed in)
             if (midAuthEnabled) {
-                console.info("[LCW][AuthHelper][handleAuthentication] Empty token received (mid-auth: user not signed in)");
-                // Log as INFO, not ERROR - this is expected behavior for mid-auth
                 TelemetryHelper.logActionEvent(LogLevel.INFO, { 
                     Event: TelemetryEvent.GetAuthTokenCalled, 
                     Description: "Mid-auth: token provider returned empty; user not signed in" 
                 });
                 return { "result": true, "token": null };
             }
-            
-            // For non-mid-auth scenarios, empty token is an error
+            // instead of returning false, it's more appropiate to thrown an error to force error handling on the caller side
+            // this will help to avoid the error to be ignored and the chat to be started
             TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken });
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
@@ -62,7 +58,10 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
         if (isNullOrEmptyString(token)) {
             // For mid-auth scenarios, empty token from SDK's getAuthToken is also expected
             if (midAuthEnabled) {
-                console.info("[LCW][AuthHelper][handleAuthentication] Empty token from SDK (mid-auth: user not signed in)");
+                TelemetryHelper.logActionEvent(LogLevel.INFO, { 
+                    Event: TelemetryEvent.GetAuthTokenCalled, 
+                    Description: "Mid-auth: SDK getAuthToken returned empty; user not signed in" 
+                });
                 return { "result": true, "token": null };
             }
             
