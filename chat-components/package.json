@@ -96,6 +96,7 @@
     "**/markdown-it": "12.3.2",
     "**/minimist": "1.2.6",
     "**/sanitize-html": "2.12.1",
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0"
+    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.cd77847.0",
+    "**/lodash": "4.17.23"
   }
 }
