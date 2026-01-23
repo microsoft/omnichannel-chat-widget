@@ -235,7 +235,7 @@ describe("FacadeChatSDK", () => {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "true"
                 }
-            } as any;
+            } as unknown;
             expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(true);
         });
 
@@ -244,7 +244,7 @@ describe("FacadeChatSDK", () => {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "True"
                 }
-            } as any;
+            } as unknown;
             expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(true);
         });
 
@@ -253,19 +253,19 @@ describe("FacadeChatSDK", () => {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "false"
                 }
-            } as any;
+            } as unknown;
             expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
         });
 
         it("should return false when msdyn_authenticatedsigninoptional is undefined", () => {
             facadeChatSDK["chatConfig"] = {
                 LiveWSAndLiveChatEngJoin: {}
-            } as any;
+            } as unknown;
             expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
         });
 
         it("should return false when LiveWSAndLiveChatEngJoin is undefined", () => {
-            facadeChatSDK["chatConfig"] = {} as any;
+            facadeChatSDK["chatConfig"] = {} as unknown;
             expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
         });
     });
@@ -277,7 +277,7 @@ describe("FacadeChatSDK", () => {
         });
 
         it("should return true for null token", () => {
-            const result = facadeChatSDK["isTokenExpiredByValue"](null as any);
+            const result = facadeChatSDK["isTokenExpiredByValue"](null as unknown);
             expect(result).toBe(true);
         });
 
@@ -317,7 +317,7 @@ describe("FacadeChatSDK", () => {
             facadeChatSDK["expiration"] = 12345;
             facadeChatSDK["isAuthenticated"] = true;
             
-            const mockChatSDK = facadeChatSDK["chatSDK"] as any;
+            const mockChatSDK = facadeChatSDK["chatSDK"] as unknown;
             mockChatSDK.authenticatedUserToken = "some-token";
             mockChatSDK.chatToken = { chatId: "test-chat-id" };
             mockChatSDK.reconnectId = "reconnect-123";
@@ -356,7 +356,7 @@ describe("FacadeChatSDK", () => {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "true"
                 }
-            } as any;
+            } as unknown;
 
             mockStartChat = jest.fn().mockResolvedValue(undefined);
             facadeChatSDK["chatSDK"].startChat = mockStartChat;
@@ -373,7 +373,7 @@ describe("FacadeChatSDK", () => {
 
         it("should set deferInitialAuth=true when pendingMidAuthUnauthenticatedState is true", async () => {
             facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
-            jest.spyOn(facadeChatSDK as any, "setMidAuthUnauthenticatedState").mockImplementation(() => {
+            jest.spyOn(facadeChatSDK as unknown, "setMidAuthUnauthenticatedState").mockImplementation(() => {
                 facadeChatSDK["isAuthenticated"] = false;
             });
 
@@ -386,7 +386,7 @@ describe("FacadeChatSDK", () => {
 
         it("should clear liveChatContext when pendingMidAuthUnauthenticatedState is true", async () => {
             facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
-            jest.spyOn(facadeChatSDK as any, "setMidAuthUnauthenticatedState").mockImplementation(() => {
+            jest.spyOn(facadeChatSDK as unknown, "setMidAuthUnauthenticatedState").mockImplementation(() => {
                 facadeChatSDK["isAuthenticated"] = false;
             });
 
@@ -400,7 +400,7 @@ describe("FacadeChatSDK", () => {
 
         it("should reset pendingMidAuthUnauthenticatedState after processing", async () => {
             facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
-            jest.spyOn(facadeChatSDK as any, "setMidAuthUnauthenticatedState").mockImplementation(() => {
+            jest.spyOn(facadeChatSDK as unknown, "setMidAuthUnauthenticatedState").mockImplementation(() => {
                 facadeChatSDK["isAuthenticated"] = false;
             });
 
@@ -417,7 +417,7 @@ describe("FacadeChatSDK", () => {
 
             await facadeChatSDK.startChat({});
 
-            const chatSDK = facadeChatSDK["chatSDK"] as any;
+            const chatSDK = facadeChatSDK["chatSDK"] as unknown;
             expect(chatSDK.authenticatedUserToken).toBe(jwt.token);
         });
 
@@ -427,7 +427,7 @@ describe("FacadeChatSDK", () => {
             facadeChatSDK["token"] = jwt.token;
             facadeChatSDK["expiration"] = jwt.expiration;
 
-            await facadeChatSDK.startChat({ deferInitialAuth: true } as any);
+            await facadeChatSDK.startChat({ deferInitialAuth: true } as unknown);
 
             const callArgs = mockStartChat.mock.calls[0][0];
             expect(callArgs.deferInitialAuth).toBe(false);
@@ -452,7 +452,7 @@ describe("FacadeChatSDK", () => {
         describe("Pre-chat authentication (chat not started)", () => {
             beforeEach(() => {
                 // Chat not started - no chatId
-                (facadeChatSDK["chatSDK"] as any).chatToken = {};
+                (facadeChatSDK["chatSDK"] as unknown).chatToken = {};
             });
 
             it("should set token and isAuthenticated for pre-chat auth with string token", async () => {
@@ -462,7 +462,7 @@ describe("FacadeChatSDK", () => {
 
                 expect(facadeChatSDK["token"]).toBe(jwt.token);
                 expect(facadeChatSDK["isAuthenticated"]).toBe(true);
-                expect((facadeChatSDK["chatSDK"] as any).authenticatedUserToken).toBe(jwt.token);
+                expect((facadeChatSDK["chatSDK"] as unknown).authenticatedUserToken).toBe(jwt.token);
             });
 
             it("should set token and isAuthenticated for pre-chat auth with token provider function", async () => {
@@ -529,7 +529,7 @@ describe("FacadeChatSDK", () => {
 
             beforeEach(() => {
                 // Chat started - has chatId
-                (facadeChatSDK["chatSDK"] as any).chatToken = { chatId: "test-chat-id" };
+                (facadeChatSDK["chatSDK"] as unknown).chatToken = { chatId: "test-chat-id" };
                 mockAuthenticateChat = jest.fn().mockResolvedValue(undefined);
                 facadeChatSDK["chatSDK"].authenticateChat = mockAuthenticateChat;
             });
@@ -607,7 +607,7 @@ describe("FacadeChatSDK", () => {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "true"
                 }
-            } as any;
+            } as unknown;
             facadeChatSDK["token"] = "";
             facadeChatSDK["expiration"] = 0;
             
@@ -624,7 +624,7 @@ describe("FacadeChatSDK", () => {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "false"
                 }
-            } as any;
+            } as unknown;
             facadeChatSDK["token"] = "";
             facadeChatSDK["expiration"] = 0;
             
@@ -657,9 +657,9 @@ describe("FacadeChatSDK", () => {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "true"
                 }
-            } as any;
+            } as unknown;
             facadeChatSDK["isAuthenticated"] = false;
-            (facadeChatSDK["chatSDK"] as any).chatToken = {};
+            (facadeChatSDK["chatSDK"] as unknown).chatToken = {};
 
             // Step 1: Start chat unauthenticated
             const mockStartChat = jest.fn().mockResolvedValue(undefined);
@@ -672,7 +672,7 @@ describe("FacadeChatSDK", () => {
 
             // Step 2: User authenticates mid-conversation
             const jwt = getJWTToken();
-            (facadeChatSDK["chatSDK"] as any).chatToken = { chatId: "test-chat-id" };
+            (facadeChatSDK["chatSDK"] as unknown).chatToken = { chatId: "test-chat-id" };
             const mockAuthenticateChat = jest.fn().mockResolvedValue(undefined);
             facadeChatSDK["chatSDK"].authenticateChat = mockAuthenticateChat;
 
@@ -690,9 +690,9 @@ describe("FacadeChatSDK", () => {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "true"
                 }
-            } as any;
+            } as unknown;
             facadeChatSDK["isAuthenticated"] = false;
-            (facadeChatSDK["chatSDK"] as any).chatToken = {};
+            (facadeChatSDK["chatSDK"] as unknown).chatToken = {};
 
             // Step 1: Pre-chat authentication (before startChat)
             const jwt = getJWTToken();
@@ -700,7 +700,7 @@ describe("FacadeChatSDK", () => {
 
             expect(facadeChatSDK["isAuthenticated"]).toBe(true);
             expect(facadeChatSDK["token"]).toBe(jwt.token);
-            expect((facadeChatSDK["chatSDK"] as any).authenticatedUserToken).toBe(jwt.token);
+            expect((facadeChatSDK["chatSDK"] as unknown).authenticatedUserToken).toBe(jwt.token);
 
             // Step 2: Start chat with authentication
             const mockStartChat = jest.fn().mockResolvedValue(undefined);
@@ -746,7 +746,7 @@ describe("FacadeChatSDK", () => {
 
             // Reconnect with liveChatContext
             const liveChatContext = { chatToken: { chatId: "reconnect-chat-id" }, requestId: "reconnect-request" };
-            await facadeChatSDK.startChat({ liveChatContext } as any);
+            await facadeChatSDK.startChat({ liveChatContext } as unknown);
 
             expect(mockStartChat).toHaveBeenCalled();
             const callArgs = mockStartChat.mock.calls[0][0];
@@ -760,7 +760,7 @@ describe("FacadeChatSDK", () => {
     describe("Error handling and edge cases", () => {
         it("should handle concurrent authenticateChat calls gracefully", async () => {
             const jwt1 = getJWTToken();
-            (facadeChatSDK["chatSDK"] as any).chatToken = {};
+            (facadeChatSDK["chatSDK"] as unknown).chatToken = {};
 
             // Call authenticateChat twice concurrently
             const promise1 = facadeChatSDK.authenticateChat(jwt1.token);
@@ -774,7 +774,7 @@ describe("FacadeChatSDK", () => {
 
         it("should handle SDK authenticateChat timeout", async () => {
             const jwt = getJWTToken();
-            (facadeChatSDK["chatSDK"] as any).chatToken = { chatId: "test-chat-id" };
+            (facadeChatSDK["chatSDK"] as unknown).chatToken = { chatId: "test-chat-id" };
             
             const timeoutError = new Error("Request timeout");
             const mockAuthenticateChat = jest.fn().mockRejectedValue(timeoutError);
