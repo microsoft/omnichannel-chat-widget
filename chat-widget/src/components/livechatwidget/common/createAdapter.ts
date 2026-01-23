@@ -49,7 +49,8 @@ export const createAdapter = async (facadeChatSDK: FacadeChatSDK, props?: ILiveC
 
         const botAuthActivitySubscriberOptionalParams = {
             fetchBotAuthConfigRetries: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetries || defaultBotAuthConfig.fetchBotAuthConfigRetries,
-            fetchBotAuthConfigRetryInterval: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetryInterval || defaultBotAuthConfig.fetchBotAuthConfigRetryInterval
+            fetchBotAuthConfigRetryInterval: props?.webChatContainerProps?.botAuthConfig?.fetchBotAuthConfigRetryInterval || defaultBotAuthConfig.fetchBotAuthConfigRetryInterval,
+            fallbackShowSignInCard: props?.webChatContainerProps?.botAuthConfig?.fallbackShowSignInCard
         };
 
         adapter = new ChatAdapterShim(adapter);

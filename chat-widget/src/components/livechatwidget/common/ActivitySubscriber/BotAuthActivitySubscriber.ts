@@ -42,7 +42,7 @@ const extractSasUrl = async (attachment: any) => {
     return sasUrl;
 };
 
-const fetchBotAuthConfig = async (retries: number, interval: number): Promise<any> => {
+const fetchBotAuthConfig = async (retries: number, interval: number, fallback?: boolean): Promise<any> => {
     TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
         Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
     });
@@ -58,7 +58,17 @@ const fetchBotAuthConfig = async (retries: number, interval: number): Promise<an
         });
 
     if (retries === 1) { // Base Case
-        throw new Error();
+        if (response !== undefined) {
+            return response;
+        }
+        if (fallback !== undefined) {
+            TelemetryHelper.logLoadingEvent(LogLevel.WARN, {
+                Event: TelemetryEvent.SetBotAuthProviderNotFound,
+                Description: `Failed to fetch bot auth config after maximum retries. Using fallback value: ${fallback}`
+            });
+            return fallback;
+        }
+        throw new Error("Failed to fetch bot auth config after maximum retries");
     }
     await delay(interval);
 
@@ -66,7 +76,7 @@ const fetchBotAuthConfig = async (retries: number, interval: number): Promise<an
         return response;
     }
 
-    return await fetchBotAuthConfig(--retries, interval);
+    return await fetchBotAuthConfig(--retries, interval, fallback);
 };
 
 export class BotAuthActivitySubscriber implements IActivitySubscriber {
@@ -74,6 +84,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
     private signInCardSeen: Set<string>;
     private fetchBotAuthConfigRetries;
     private fetchBotAuthConfigRetryInterval;
+    private fallbackShowSignInCard?: boolean;
 
     constructor(optionalParams: IBotAuthActivitySubscriberOptionalParams = {}) {
         this.signInCardSeen = new Set();
@@ -87,6 +98,13 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
         if (optionalParams.fetchBotAuthConfigRetryInterval) {
             this.fetchBotAuthConfigRetryInterval = optionalParams.fetchBotAuthConfigRetryInterval;
         }
+
+        this.fallbackShowSignInCard = optionalParams.fallbackShowSignInCard;
+
+        TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.SetBotAuthProviderFetchConfig,
+            Description: `BotAuthActivitySubscriber initialized with fallbackShowSignInCard: ${optionalParams.fallbackShowSignInCard}`
+        });
     }
 
     public applicable(activity: any): boolean {
@@ -125,7 +143,7 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
             BroadcastService.postMessage(event);
         }
         try {
-            const response = await fetchBotAuthConfig(this.fetchBotAuthConfigRetries, this.fetchBotAuthConfigRetryInterval);
+            const response = await fetchBotAuthConfig(this.fetchBotAuthConfigRetries, this.fetchBotAuthConfigRetryInterval, this.fallbackShowSignInCard);
             if (response === false) {
                 TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.SetBotAuthProviderHideCard,
@@ -136,9 +154,10 @@ export class BotAuthActivitySubscriber implements IActivitySubscriber {
                 });
                 return activity;
             }
-        } catch {
+        } catch(e) {
             TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
                 Event: TelemetryEvent.SetBotAuthProviderNotFound,
+                ExceptionDetails: e instanceof Error ? e.message : JSON.stringify(e)
             });
             //this is to ensure listener continues waiting for response
             if (this.signInCardSeen.has(signInId)) {
