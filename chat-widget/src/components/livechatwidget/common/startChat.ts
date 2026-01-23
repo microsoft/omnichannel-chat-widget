@@ -189,8 +189,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                                             persistedState?.appStates?.hasUserAuthenticated === true;
                 
                 // deferInitialAuth: true = skip auth provider, false = use auth provider
-                const deferInitialAuth = hasUserAuthenticated ? false : true;
-                (startChatOptionalParams as any).deferInitialAuth = deferInitialAuth;
+                startChatOptionalParams.deferInitialAuth = !hasUserAuthenticated;
 
                 TelemetryHelper.logConfigDataEvent(LogLevel.INFO, {
                     Event: TelemetryEvent.WidgetLoadStarted,
@@ -198,7 +197,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                     CustomProperties: { 
                         hasUserAuthenticated,
                         midAuthEnabled,
-                        deferInitialAuth,
+                        deferInitialAuth: startChatOptionalParams.deferInitialAuth,
                         persistentChatEnabled
                     }
                 });

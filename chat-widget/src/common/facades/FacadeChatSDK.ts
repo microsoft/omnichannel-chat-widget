@@ -41,13 +41,13 @@ export class FacadeChatSDK {
     private getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
     private sdkMocked: boolean;
     private disableReauthentication: boolean;
-    
+
     // Defers unauthenticated state change to startChat() for reconnect checking
     private pendingMidAuthUnauthenticatedState = false;
-    
+
     // Checks msdyn_authenticatedsigninoptional flag in chatConfig
     private isMidAuthEnabled(): boolean {
-        const value = (this.chatConfig as any)?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional;
+        const value = (this.chatConfig as ChatConfig)?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional;
         return value?.toString?.().toLowerCase?.() === "true";
     }
 
@@ -388,16 +388,17 @@ export class FacadeChatSDK {
                     // No token available - start as unauthenticated
                     this.setMidAuthUnauthenticatedState();
                     this.pendingMidAuthUnauthenticatedState = false;
-                    (optionalParams as any).deferInitialAuth = true;
+                    optionalParams.deferInitialAuth = true;
                     
                     // Clear old context to prevent reconnecting to previous auth chat
                     if (optionalParams.liveChatContext) {
-                        delete (optionalParams as any).liveChatContext;
+                        delete optionalParams.liveChatContext;
                     }
                 } else if (this.isAuthenticated && this.isTokenSet() && !this.isTokenExpired()) {
                     // Valid token - proceed with authenticated flow
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (this.chatSDK as any).authenticatedUserToken = this.token;
-                    (optionalParams as any).deferInitialAuth = false;
+                    optionalParams.deferInitialAuth = false;
                 }
             }
             
@@ -573,6 +574,7 @@ export class FacadeChatSDK {
                 : "Authentication Setup Error: Authentication token is already expired";
             
             // Clear stale auth state if chat hasn't started
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (!(this.chatSDK as any).chatToken?.chatId) {
                 this.clearAuthState();
             }
