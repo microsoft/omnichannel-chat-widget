@@ -7,6 +7,10 @@ on:
     types: [ edited, assigned, opened, synchronize, reopened]
     paths:
       - 'chat-components/**'
+
+permissions:
+  contents: read       # For checkout
+  actions: write       # For downloading and uploading artifacts
       
 jobs: 
   build:

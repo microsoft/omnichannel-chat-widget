@@ -7,6 +7,9 @@ on:
   issue_comment:
     types: [created, edited, deleted]
 
+permissions:
+  issues: read    # For reading issue data to sync to ADO
+
 jobs:
   alert:
     runs-on: ubuntu-latest
