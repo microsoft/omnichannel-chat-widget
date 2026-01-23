@@ -56,6 +56,8 @@
     "xml-js": "^1.6.11"
   },
   "resolutions": {
-    "**/lodash": "4.17.23"
+    "**/lodash": "4.17.23",
+    "**/@babel/core": "^7.26.10",
+    "**/@babel/runtime-corejs3": "^7.26.10"
   }
 }
