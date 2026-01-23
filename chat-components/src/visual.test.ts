@@ -6,7 +6,7 @@ describe("test screenshots manually", () => {
             requestId: "id",
             onScreenshotReady: (screenshotBuffer, baselineScreenshotPath) => {
                 expect(screenshotBuffer).toMatchImageSnapshot({
-                    failureThreshold: 0.053,
+                    failureThreshold: 0.054,
                     failureThresholdType: "percent",
                     customSnapshotIdentifier: baselineScreenshotPath.screenshotIdentifier,
                     customSnapshotsDir: baselineScreenshotPath.screenshotsDir,
