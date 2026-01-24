@@ -10,10 +10,8 @@ module.exports = {
     testEnvironment: "./configuration/CustomEnvironment.js",
     transform: {
         "^.+\\.ts$": ["ts-jest", {
-            tsconfig: {
-                baseUrl: "./",
-                paths: compilerOptions.paths
-            }
+            tsconfig: "./tsconfig.json",
+            isolatedModules: true
         }],
     },
     testResultsProcessor: "jest-junit",
