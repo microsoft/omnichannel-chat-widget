@@ -690,6 +690,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.1.19] - 2026-01-23
+
+### Changed
+
+- Updated Babel dependencies to latest versions
+- Updated Lodash to v4.17.23 to address security vulnerabilities
+
 ## [1.1.18] - 2026-01-20
 
 ### Added
