@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": "./",
-    "noEmitOnError": true,
+    "noEmitOnError": false,
     "noImplicitAny": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -19,5 +19,6 @@
       "Utility/*": ["e2e/utility/*"]
     }
   },
+  "include": ["e2e/**/*", "configuration/**/*"],
   "exclude": ["node_modules", "dist"]
 }
