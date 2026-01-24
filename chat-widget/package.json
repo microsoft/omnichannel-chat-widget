@@ -13,9 +13,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./lib/types/index.d.ts",
       "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js",
-      "types": "./lib/types/index.d.ts"
+      "require": "./lib/cjs/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -24,13 +24,16 @@
     "@babel/preset-env": "^7.26.10",
     "@babel/preset-react": "^7.26.10",
     "@babel/preset-typescript": "^7.26.10",
-    "@storybook/addon-a11y": "^6.4.8",
-    "@storybook/addon-actions": "^6.4.8",
-    "@storybook/addon-essentials": "^6.4.8",
+    "@chromatic-com/storybook": "3",
+    "@storybook/addon-a11y": "8.6.15",
+    "@storybook/addon-actions": "8.6.15",
+    "@storybook/addon-essentials": "8.6.15",
     "@storybook/addon-knobs": "^6.4.0",
-    "@storybook/addon-links": "^6.4.8",
+    "@storybook/addon-links": "8.6.15",
     "@storybook/addon-storyshots": "^6.4.8",
-    "@storybook/react": "^6.4.8",
+    "@storybook/addon-webpack5-compiler-babel": "3.0.0",
+    "@storybook/react": "8.6.15",
+    "@storybook/react-webpack5": "8.6.15",
     "@storybook/testing-react": "^1.2.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -75,6 +78,7 @@
     "react-dom": "^18.3.1",
     "react-test-renderer": "^18.3.1",
     "rimraf": "^6.0.1",
+    "storybook": "8.6.15",
     "storybook-addon-playwright": "^4.9.2",
     "swiper": "^9.0.5",
     "terser-webpack-plugin": "^4.2.3",
@@ -105,10 +109,10 @@
     "slack-markdown-it": "^1.0.5"
   },
   "scripts": {
-    "storybook": "start-storybook -p 6006",
-    "compose-storybook": "start-storybook -c stories/.storybook -p 9009",
-    "build-composite-storybook": "build-storybook -c stories/.storybook -o storybook-build",
-    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook",
+    "storybook": "storybook dev -p 6006",
+    "compose-storybook": "storybook dev -c stories/.storybook -p 9009",
+    "build-composite-storybook": "storybook build -c stories/.storybook -o storybook-build",
+    "build-storybook": "storybook build",
     "build": "yarn clean && yarn lint && yarn build:esm && yarn build:cjs && tsc",
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
     "test:e2e": "cd automation_tests && yarn test",
