@@ -25,7 +25,8 @@
     "strictNullChecks": true,
     "emitDeclarationOnly": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "types": []
   },
   "include": [
     "src",

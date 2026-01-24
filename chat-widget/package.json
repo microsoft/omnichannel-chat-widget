@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/omnichannel-chat-widget",
-  "version": "1.8.5",
+  "version": "1.8.6",
   "description": "Microsoft Omnichannel Chat Widget",
   "main": "lib/cjs/index.js",
   "types": "lib/types/index.d.ts",
@@ -40,6 +40,7 @@
     "@types/jest": "^27.0.2",
     "@types/jest-image-snapshot": "^4.3.1",
     "@types/markdown-it": "^12.2.3",
+    "@types/minimatch": "^6.0.0",
     "@types/react": "^18.3.13",
     "@types/react-dom": "^18.3.6",
     "@types/styled-components": "^5.1.15",
