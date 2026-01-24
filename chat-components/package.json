@@ -20,10 +20,12 @@
     "./package.json": "./package.json"
   },
   "devDependencies": {
+    "@babel/cli": "^7.26.10",
     "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.10",
     "@babel/preset-react": "^7.26.10",
     "@babel/preset-typescript": "^7.26.10",
+    "browserslist": "^4.24.0",
     "@storybook/addon-a11y": "^6.5.16",
     "@storybook/addon-actions": "^6.5.16",
     "@storybook/addon-essentials": "^6.5.16",
@@ -70,7 +72,7 @@
   "dependencies": {
     "@fluentui/react": "^8.46.0",
     "adaptivecards": "^2.10.0",
-    "botframework-webchat": "4.18.1-main.20250515.4c7400a",
+    "botframework-webchat": "4.18.1-main.20260122.6f2c6cb",
     "broadcast-channel": "^4.5.0",
     "jest-transform-stub": "^2.0.0",
     "rxjs": "^5.0.3",
