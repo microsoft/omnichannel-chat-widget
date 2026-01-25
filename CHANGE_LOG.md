@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Fixed storybook-release build failure by upgrading to webpack5 builder for proper package.json exports field resolution
+
 ## [1.8.6] - 2026-01-23
 
 ### Fixed
