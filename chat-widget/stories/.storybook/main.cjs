@@ -49,13 +49,14 @@ module.exports = {
 
     // Fix swiper ESM exports issue - redirect all swiper imports to the bundle
     const swiperPath = path.resolve(__dirname, '../../node_modules/swiper');
+    const swiperBundlePath = path.join(swiperPath, 'swiper-bundle.esm.js');
     config.resolve.alias = {
       ...config.resolve.alias,
-      'swiper/modules': path.join(swiperPath, 'swiper-bundle.esm.js'),
+      'swiper/modules': swiperBundlePath,
       'swiper/css': path.join(swiperPath, 'swiper.min.css'),
-      'swiper': path.join(swiperPath, 'swiper-bundle.esm.js'),
+      'swiper': swiperBundlePath,
     };
-    
+
     // Ensure proper extension resolution
     config.resolve.extensions = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.json'];
 
