@@ -9,8 +9,9 @@ import { IActivity } from "botframework-directlinejs";
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { TelemetryHelper } from "../common/telemetry/TelemetryHelper";
 import { TelemetryManager } from "../common/telemetry/TelemetryManager";
+import { FacadeChatSDK } from "../common/facades/FacadeChatSDK";
 
-export const createOnNewAdapterActivityHandler = (chatId: string, userId: string, startTime: number) => {
+export const createOnNewAdapterActivityHandler = (chatId: string, userId: string, startTime: number, facadeChatSDK: FacadeChatSDK, isPersistentChat: boolean) => {
 
     // Hooking the message tracker in the listener, a bit invasive but easier to control.
     const firstResponseLatencyTracker = new FirstResponseLatencyTracker();
@@ -124,6 +125,17 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             eventName: BroadcastEvent.NewMessageReceived,
             payload: polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId)
         };
+
+        //Send read receipt for incoming message to acs
+        if (isPersistentChat && activity?.type == "message" && activity?.id) {          
+            facadeChatSDK?.sendReadReceipt(activity.id);
+
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.PersistentChatReadReceiptSent,
+                Description: "Read receipt sent to ACS for persistent chat",
+                CustomProperties: maskPayloadText(payload)
+            });
+        }
 
         BroadcastService.postMessage(newMessageReceivedEvent);
 
