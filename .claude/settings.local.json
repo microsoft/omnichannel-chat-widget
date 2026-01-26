@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test:*)",
+      "Bash(npm run clear_jest:*)",
+      "Bash(if exist dist rd /s /q dist)",
+      "Bash(npm run compile:*)",
+      "Bash(yarn test:*)",
+      "Bash(tee:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx jest:*)",
+      "Bash(echo:*)",
+      "Bash(node -e:*)"
+    ]
+  }
+}

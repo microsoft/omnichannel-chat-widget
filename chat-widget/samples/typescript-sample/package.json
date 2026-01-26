@@ -15,12 +15,12 @@
         "stream-browserify": "^3.0.0"
       },
       "devDependencies": {
-        "@babel/core": "^7.28.0",
-        "@babel/plugin-transform-runtime": "^7.28.0",
-        "@babel/preset-env": "^7.28.0",
-        "@babel/preset-react": "^7.27.1",
-        "@babel/preset-typescript": "^7.27.1",
-        "@babel/runtime": "^7.27.1",
+        "@babel/core": "^7.26.10",
+        "@babel/plugin-transform-runtime": "^7.26.10",
+        "@babel/preset-env": "^7.26.10",
+        "@babel/preset-react": "^7.26.10",
+        "@babel/preset-typescript": "^7.26.10",
+        "@babel/runtime": "^7.26.10",
         "@types/react": "^18.3.13",
         "@types/react-dom": "^18.3.6",
         "@types/webpack": "^5.28.5",
@@ -48,5 +48,9 @@
           "last 1 firefox version",
           "last 1 safari version"
         ]
+      },
+      "overrides": {
+        "@babel/core": "^7.26.10",
+        "@babel/runtime-corejs3": "^7.26.10"
       }
     }

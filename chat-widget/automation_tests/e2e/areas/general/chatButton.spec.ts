@@ -1,8 +1,8 @@
 import { Browser, BrowserContext } from "playwright";
 import * as playwright from "playwright";
-import { TestSettings } from "../../../configuration/test-settings";
-import { BasePage } from "../../pages/base.page";
-import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
+import { TestSettings } from "configuration/test-settings";
+import { BasePage } from "pages/base.page";
+import { CustomLiveChatWidgetConstants } from "Utility/constants";
 
 describe("live chat button", () => {
     let newBrowser: Browser;

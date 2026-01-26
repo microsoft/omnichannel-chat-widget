@@ -9,5 +9,8 @@ module.exports = {
     '@storybook/addon-knobs',
     'storybook-addon-playwright/preset',
     'storybook-addon-playwright/register'
-  ]
+  ],
+  "typescript": {
+    "reactDocgen": false
+  }
 }
