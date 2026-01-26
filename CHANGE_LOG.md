@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Added support for horizontal flex display of basic/adaptive card buttons over more than 1 row
 - Enhanced error handling in file download process
 - Added comprehensive XSS security tests (19 new tests total)
+- Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
 
 ### Changed
 
