@@ -6,8 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [1.8.4] - 2026-01-20
-
 ### Added
 
 - [A11Y] Added focus on citation pane close button when citation pane is opened
