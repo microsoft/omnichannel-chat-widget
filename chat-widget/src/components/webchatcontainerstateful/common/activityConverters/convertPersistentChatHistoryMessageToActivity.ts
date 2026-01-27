@@ -1,4 +1,4 @@
-import { Constants, TranscriptConstants } from "../../../../common/Constants";
+import { Constants } from "../../../../common/Constants";
 import { SupportedAdaptiveCards } from "@microsoft/omnichannel-chat-sdk/lib/utils/printers/interfaces/SupportedAdaptiveCards";
 import botActivity from "../activities/botActivity";
 
