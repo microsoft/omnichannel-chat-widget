@@ -19,6 +19,5 @@
       "Utility/*": ["e2e/utility/*"]
     }
   },
-  "include": ["e2e/**/*", "configuration/**/*"],
   "exclude": ["node_modules", "dist"]
 }
