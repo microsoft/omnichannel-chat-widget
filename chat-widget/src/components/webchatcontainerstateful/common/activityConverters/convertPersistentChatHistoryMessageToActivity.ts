@@ -1,4 +1,5 @@
-import { Constants } from "../../../../common/Constants";
+import { Constants, TranscriptConstants } from "../../../../common/Constants";
+import { SupportedAdaptiveCards } from "@microsoft/omnichannel-chat-sdk/lib/utils/printers/interfaces/SupportedAdaptiveCards";
 import botActivity from "../activities/botActivity";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,6 +70,30 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
     }
 
     if (content) {
+        // Check if content contains adaptive card or rich card JSON using SupportedAdaptiveCards enum
+        const isAdaptiveCard = content.toLowerCase().includes(Constants.AdaptiveCardType);
+        const isSuggestedActions = content.toLowerCase().includes(Constants.SuggestedActionsType);
+        const containsSupportedCard = Object.values(SupportedAdaptiveCards).some(type => content.toLowerCase().includes(type.toLowerCase()));
+
+        if (isAdaptiveCard || isSuggestedActions || containsSupportedCard) {
+            try {
+                const partialActivity = JSON.parse(content);
+                return {
+                    ...activity,
+                    ...partialActivity,
+                    timestamp,
+                    channelData: {
+                        ...activity.channelData,
+                        "webchat:sequence-id": webchatSequenceId
+                    }
+                };
+            } catch (error) {
+                // If parsing fails, treat as plain text
+                console.error("Failed to parse adaptive card content:", error);
+            }
+        }
+        
+        // Plain text message
         return {
             ...activity,
             text: content,
