@@ -19,7 +19,6 @@ All notable changes to this project will be documented in this file.
 - Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
 - Added support for horizontal flex display of basic/adaptive card buttons over more than 1 row
 - Enhanced error handling in file download process
-- Added comprehensive XSS security tests (19 new tests total)
 
 ### Changed
 
@@ -38,10 +37,6 @@ All notable changes to this project will be documented in this file.
 - Fixed logic to present post-chat survey after an MCS bot ends the conversation
 - Fixed lint configuration during build
 - Fixed issue with persistent chat history bot messages activity divider
-- Fixed critical XSS vulnerabilities: mutation XSS (mXSS) attacks, unsafe string concatenation in URL processing, and protocol injection
-- Fixed XSS detection order: now sanitizes with DOMPurify first, then checks patterns in both original and sanitized text
-- Added URL protocol validation to block dangerous protocols (javascript:, data:, vbscript:, file:)
-- Added HTML escaping functions for safe URL processing in `replaceURLWithAnchor`
 
 ## [1.8.3] - 2025-10-07
 
@@ -686,18 +681,6 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
-
-## [1.1.18] - 2026-01-20
-
-### Added
-
-- Added XSS protection tests for URL sanitization (11 new tests)
-
-### Fixed
-
-- Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
-- Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
-- Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
 
 ## [1.1.16] - 2025-10-14
 
