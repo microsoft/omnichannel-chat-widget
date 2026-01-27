@@ -6,29 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
-
-## [1.8.6] - 2026-01-23
-
-### Fixed
-- Updated React 18 compatibility by migrating from deprecated `ReactDOM.render` to `createRoot` API in SampleWidget.js
-- Resolved TypeScript compilation error by configuring `types` array in tsconfig.json to prevent implicit type library inclusion
-- Fixed Jest test suite failures by adding module name mappings for:
-  - `@typespec/ts-http-runtime` internal paths (Azure SDK dependencies)
-  - `swiper/modules` path (Adaptive Cards carousel functionality)
-
-### Changed
-- Added `@types/minimatch` as dev dependency (though minimatch provides its own types)
-- Enhanced Jest configuration with proper module resolution for ES module packages
-- Uptake [@microsoft/omnichannel-chat-components@1.1.19](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.19)
 
 ## [1.8.5] - 2026-01-21
 
 ### Added
 
 - [A11Y] Added focus on citation pane close button when citation pane is opened
-- [A11Y] Divider hack to force screen readers to mention it 
+- [A11Y] Divider hack to force screen readers to mention it
 - [A11Y] Update of initials from agent to update DOM, for proper mention by screen readers
 - Adding new logic based on config to define when persistent chat history is enabled
 - Adding support to fetch history messages for persistent chat
@@ -42,7 +27,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Uptake [@microsoft/omnichannel-chat-components@1.1.18](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.18)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.16)
 - Updated AppInsights events
 - updated AppInsights events to traces and renamed custom property fields
 
@@ -710,17 +695,9 @@ All notable changes to this project will be documented in this file.
 ## [1.1.19] - 2026-01-23
 
 ### Changed
-- Updated `botframework-webchat` to version `4.18.1-main.20260122.6f2c6cb`
-- Updated React to version 18.3.1 for improved performance and compatibility
-- Updated `adaptivecards` to version 2.10.0 with enhanced carousel functionality using Swiper modules
+
 - Updated Babel dependencies to latest versions
 - Updated Lodash to v4.17.23 to address security vulnerabilities
-
-### Dependencies
-- `react`: ^18.3.1
-- `react-dom`: ^18.3.1
-- `botframework-webchat`: 4.18.1-main.20260122.6f2c6cb
-- `adaptivecards`: ^2.10.0
 
 ## [1.1.18] - 2026-01-20
 
