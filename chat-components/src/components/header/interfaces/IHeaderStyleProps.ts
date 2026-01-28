@@ -38,4 +38,16 @@ export interface IHeaderStyleProps {
      * header item button fucus style props
      */
     headerItemFocusStyleProps?: IStyle;
+    /**
+     * header left group container style props
+     */
+    headerLeftGroupStyleProps?: IStyle;
+    /**
+     * header left group inner container style props
+     */
+    headerLeftGroupInnerContainerStyleProps?: IStyle;
+    /**
+     * header title container (h1) style props
+     */
+    titleContainerStyleProps?: IStyle;
 }

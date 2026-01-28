@@ -58,13 +58,22 @@ function Header(props: IHeaderProps) {
     const headerItemFocusStyles = Object.assign({}, defaultHeaderProps.styleProps?.headerItemFocusStyleProps,
         props.styleProps?.headerItemFocusStyleProps);
 
+    const headerLeftGroupStyles = Object.assign({}, defaultHeaderProps.styleProps?.headerLeftGroupStyleProps,
+        props.styleProps?.headerLeftGroupStyleProps);
+
+    const headerLeftGroupInnerContainerStyles = Object.assign({}, defaultHeaderProps.styleProps?.headerLeftGroupInnerContainerStyleProps,
+        props.styleProps?.headerLeftGroupInnerContainerStyleProps);
+
+    const titleContainerStyles = Object.assign({}, defaultHeaderProps.styleProps?.titleContainerStyleProps,
+        props.styleProps?.titleContainerStyleProps);
+
     return (
 
         <Stack as="article" id={headerId} horizontal className={props.className} horizontalAlign="space-between"
             styles={stackStyles}
             dir={props.controlProps?.dir ?? "ltr"}>
-            <Stack horizontal id={Ids.HeaderLeftGroupId} verticalAlign="center">
-                <Stack horizontal verticalAlign="center">
+            <Stack horizontal id={Ids.HeaderLeftGroupId} verticalAlign="center" styles={{ root: headerLeftGroupStyles }}>
+                <Stack horizontal verticalAlign="center" styles={{ root: headerLeftGroupInnerContainerStyles }}>
                     {processCustomComponents(props.controlProps?.leftGroup?.children)}
                     {!props.controlProps?.hideIcon && (decodeComponentString(props.componentOverrides?.headerIcon) ||
                         <Image
@@ -75,7 +84,7 @@ function Header(props: IHeaderProps) {
                             styles={iconImageStyles} />)
                     }
                     {!props.controlProps?.hideTitle && (decodeComponentString(props.componentOverrides?.headerTitle) ||
-                        <h1>
+                        <h1 style={titleContainerStyles as React.CSSProperties}>
                             <Label
                                 id={titleProps.id}
                                 tabIndex={-1}
