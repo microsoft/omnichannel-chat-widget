@@ -12,12 +12,14 @@ module.exports = {
   ],
   "webpackFinal": async (config, { configType }) => {
     config.module.rules.push({
-      test: /\.(js|jsx)$/,
+      test: /\.mjs$/,
+      include: /node_modules\/valibot/,
+      type: "javascript/auto",
       use: {
         loader: 'babel-loader',
         options: {
-          presets: ['@babel/preset-env']
-        }
+          presets: ['@babel/preset-env'],
+        },
       }
     });
 
