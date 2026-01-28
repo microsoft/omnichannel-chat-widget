@@ -8,9 +8,9 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Checking out for ${{ github.ref }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22.X
       - name: Update package version
@@ -38,7 +38,7 @@ jobs:
         working-directory: chat-components
         run: yarn test:visual
       - name: Upload VRT Tests failures screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
           name: VRT Failure Screenshots
@@ -54,7 +54,7 @@ jobs:
         run: |
           mv *.tgz ../
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: npm-tarball
           path: '*.tgz'
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           name: npm-tarball
       - name: Read package.json
