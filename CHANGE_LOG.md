@@ -42,7 +42,6 @@ All notable changes to this project will be documented in this file.
 - Fixed XSS detection order: now sanitizes with DOMPurify first, then checks patterns in both original and sanitized text
 - Added URL protocol validation to block dangerous protocols (javascript:, data:, vbscript:, file:)
 - Added HTML escaping functions for safe URL processing in `replaceURLWithAnchor`
-- [A11Y] Fixed unnecessary focus steal for proactive chat pane
 
 ## [1.8.3] - 2025-10-07
 
