@@ -1403,6 +1403,11 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@babel/runtime@^7.26.10":
+  version "7.28.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.28.6.tgz#d267a43cb1836dc4d182cce93ae75ba954ef6d2b"
+  integrity sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==
+
 "@babel/template@^7.12.7", "@babel/template@^7.18.10", "@babel/template@^7.20.7", "@babel/template@^7.3.3":
   version "7.20.7"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.20.7.tgz#a15090c2839a83b02aa996c0b4994005841fd5a8"
@@ -2555,21 +2560,21 @@
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.295.tgz#d3c8d7ab186f422727ba112d6ebe5fe8e41051d9"
   integrity sha512-W+IzEBw8a6LOOfRJM02dTT7BDZijxm+Z7lhtOAz1+y9vQm1Kdz9jlAO+qCEKsfxtUOmKilW8DIRqFw2aUgKeGg==
 
-"@microsoft/ocsdk@^0.5.20-main.a3b9c5e":
-  version "0.5.20-main.a3b9c5e"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.20-main.a3b9c5e.tgz#bce9515f5d791fdb0b1ee7c8cba6c16bb633d2ea"
-  integrity sha512-HHo0z0+iJcynnDqnrwPFk1Jr5ZmJ9ZCtOKew63Smn+ftAZ4G8wJt0AYacv3iKwLxdx79nBDr7oWt+WnltqwRfg==
+"@microsoft/ocsdk@^0.5.20":
+  version "0.5.20"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.20.tgz#2c96950740634808d5d6e8e14d860dc21b7dd1ea"
+  integrity sha512-g9TWtS+BqyIyxl1s4n3lkCd2b+WNczr9nW+9VTQFJQ5Foe4LeJHwjAIAQhVIWZjJLFBUcHY8IQRgcGAYMc0rwA==
   dependencies:
-    "@babel/runtime" "^7.15.4"
+    "@babel/runtime" "^7.26.10"
     "@types/node" "^22.13.10"
     axios "^1.12.0"
     axios-retry "^3.9.1"
     crypto-js "^4.2.0"
 
-"@microsoft/omnichannel-amsclient@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.npmjs.org/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.11.tgz#f9515b3d56a1e516d7a6e48136c943eef913121f"
-  integrity sha512-e2CCDYu4ZGMU9CNM6MNQUk4OZFWjPCxvMph4qfzdFFpiSDau5J+MMnccUT/qAeUcBvZktFFKCbDiFwPQrK3E6g==
+"@microsoft/omnichannel-amsclient@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.12.tgz#b228903e62f6bc571b02172cdb423a05402021fe"
+  integrity sha512-uM8crNyVZuyO1sZY6amsncvZOTqcYkkK6fGgeNRwEp7UHrqWUZYBvWPii/U2ctDj0z7T1fDy2h8Zej+hUOno7Q==
 
 "@microsoft/omnichannel-chat-components@1.1.16":
   version "1.1.16"
@@ -2584,16 +2589,16 @@
     rxjs "^5.0.3"
     styled-components "^5.3.1"
 
-"@microsoft/omnichannel-chat-sdk@^1.11.7-main.3418dc3":
-  version "1.11.7-main.3418dc3"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.7-main.3418dc3.tgz#3dfe9fa4977481c39006af15366512cc14fbb3c5"
-  integrity sha512-71BGscKU5eDwzIV6qm0X74nPHPLzLxx/4pKcU+EH97nfmVm9X/AMuYIeEhiBCQv7o/ZXnO0u/SXgUu4off7buA==
+"@microsoft/omnichannel-chat-sdk@^1.11.7-main.f31f9b6":
+  version "1.11.7"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.7.tgz#e5aedaf735e39c57ab5163b1d1d72e4a93fbee00"
+  integrity sha512-pB9ehOW/7ayYebrMZRpd3q3HWoELu7DQ3bp8Xe4RTe6PBKDX5ZQL8i1HjTS0IAM8yHxlAIxDEYsn4o9+HgYfoQ==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
     "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.5"
-    "@microsoft/ocsdk" "^0.5.20-main.a3b9c5e"
-    "@microsoft/omnichannel-amsclient" "^0.1.11"
+    "@microsoft/ocsdk" "^0.5.20"
+    "@microsoft/omnichannel-amsclient" "^0.1.12"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
 "@microsoft/omnichannel-ic3core@^0.1.5":
