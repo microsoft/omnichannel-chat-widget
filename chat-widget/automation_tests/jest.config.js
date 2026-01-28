@@ -9,10 +9,7 @@ module.exports = {
     setupFilesAfterEnv: ["expect-playwright", "./jest.setup.js"],
     testEnvironment: "./configuration/CustomEnvironment.js",
     transform: {
-        "^.+\\.ts$": ["ts-jest", {
-            tsconfig: "./tsconfig.json",
-            isolatedModules: true
-        }],
+        "^.+\\.ts$": "ts-jest",
     },
     testResultsProcessor: "jest-junit",
     testMatch: ["**/e2e/areas/**/*.spec.ts", "**/?(*.)+(spec|test).+(ts)"],
