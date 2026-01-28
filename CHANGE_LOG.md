@@ -24,7 +24,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Uptake [@microsoft/omnichannel-chat-components@1.1.17-main.2cd45eb](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.17-main.2cd45eb)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.17-main.4139523](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.17-main.4139523)
 - Updated AppInsights events
 - updated AppInsights events to traces and renamed custom property fields
 
