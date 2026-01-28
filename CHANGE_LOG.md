@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 ### Added
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
 
+### Changed
+- Updated botframework-webchat dependency from `4.18.1-main.20260122.6f2c6cb` to `4.18.1-hotfix.20260127.b53acdf`
+
 ## [1.8.6] - 2026-01-23
 
 ### Fixed
