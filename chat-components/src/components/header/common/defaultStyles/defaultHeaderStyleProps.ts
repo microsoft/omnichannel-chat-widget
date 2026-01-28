@@ -20,7 +20,14 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
         fontWeight: "450",
         color: "white",
         padding: "3px 0",
-        overflowWrap: "anywhere"
+        width: "100%",
+        maxWidth: "100%",
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        wordBreak: "break-word"
     },
     minimizeButtonStyleProps: {
         color: "white",
@@ -48,11 +55,15 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
     },
     headerLeftGroupInnerContainerStyleProps: {
         minWidth: 0,
-        overflow: "hidden"
+        overflow: "hidden",
+        flex: 1,
+        maxWidth: "100%"
     },
     titleContainerStyleProps: {
         margin: 0,
         minWidth: 0,
-        overflow: "hidden"
+        overflow: "hidden",
+        flex: 1,
+        maxWidth: "100%"
     }
 };

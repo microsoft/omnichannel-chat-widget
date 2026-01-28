@@ -88,6 +88,7 @@ function Header(props: IHeaderProps) {
                             <Label
                                 id={titleProps.id}
                                 tabIndex={-1}
+                                title={titleProps?.text}
                                 styles={titleStyles}>
                                 {titleProps?.text}
                             </Label>
