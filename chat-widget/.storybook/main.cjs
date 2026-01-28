@@ -23,6 +23,25 @@ module.exports = {
       }
     });
 
+    // Handle .mjs files from node_modules with babel
+    config.module.rules.push({
+      test: /\.mjs$/,
+      include: /node_modules/,
+      type: 'javascript/auto',
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }
+    });
+
+    // Alias react-native to empty module for web builds
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'react-native': require.resolve('./react-native-mock.js')
+    };
+
     // config.resolve.modules = ["node_modules", path.resolve(__dirname, "../src")];
 
     // Return the altered config
