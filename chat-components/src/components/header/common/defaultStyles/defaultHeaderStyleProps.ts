@@ -19,7 +19,15 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
         fontFamily: "Segoe UI, Arial, sans-serif",
         fontWeight: "450",
         color: "white",
-        padding: "3px 0"
+        padding: "3px 0",
+        width: "100%",
+        maxWidth: "100%",
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        wordBreak: "break-word"
     },
     minimizeButtonStyleProps: {
         color: "white",
@@ -39,5 +47,23 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
     },
     headerItemFocusStyleProps: {
         border: "2px dotted #000"
+    },
+    headerLeftGroupStyleProps: {
+        flex: 1,
+        minWidth: 0,
+        overflow: "hidden"
+    },
+    headerLeftGroupInnerContainerStyleProps: {
+        minWidth: 0,
+        overflow: "hidden",
+        flex: 1,
+        maxWidth: "100%"
+    },
+    titleContainerStyleProps: {
+        margin: 0,
+        minWidth: 0,
+        overflow: "hidden",
+        flex: 1,
+        maxWidth: "100%"
     }
 };
