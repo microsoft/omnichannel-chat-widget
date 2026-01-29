@@ -23,8 +23,8 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
         width: "100%",
         maxWidth: "100%",
         display: "-webkit-box",
-        WebkitLineClamp: 2,
-        WebkitBoxOrient: "vertical",
+        "-webkit-line-clamp": 2,
+        "-webkit-box-orient": "vertical",
         overflow: "hidden",
         textOverflow: "ellipsis",
         wordBreak: "break-word"
