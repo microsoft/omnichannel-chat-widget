@@ -1,59 +1,56 @@
 import DOMPurify from "dompurify";
 
 /**
- * Detects potential Cross-Site Scripting (XSS) attacks in text input and sanitizes the content.
+ * Sanitizes text input and detects XSS attack patterns.
  * 
- * This function performs comprehensive XSS detection using pattern matching for common attack vectors
- * and then sanitizes the input using DOMPurify with strict configuration. It's designed to protect
- * against various XSS techniques including script injection, event handler injection, style-based
- * attacks, and encoded payloads.
+ * Sanitizes first with DOMPurify, then checks for malicious patterns in both
+ * the original and sanitized text to catch mutation XSS attacks.
  * 
- * Security patterns detected:
- * - JavaScript protocol URLs (javascript:)
- * - HTML event handlers (onmouseover, onclick, etc.)
- * - Script tags (<script>)
- * - CSS expression() functions
- * - CSS url() functions
- * - Position-based CSS attacks (position: fixed/absolute)
- * - VBScript protocol URLs
- * - Data URLs with HTML content
- * - Fragment identifiers with escaped quotes
- * - HTML entity-encoded angle brackets
- * 
- * @param text - The input text to be analyzed and sanitized
- * @returns An object containing:
- *   - cleanText: The sanitized version of the input text with all HTML tags and attributes removed
- *   - isXSSDetected: Boolean flag indicating whether potential XSS patterns were found in the original text
+ * @param text - Input text to sanitize
+ * @returns Object with cleanText (sanitized) and isXSSDetected flag
  */
 export const detectAndCleanXSS = (text: string): { cleanText: string; isXSSDetected: boolean } => {
-    // Comprehensive array of regular expressions to detect common XSS attack patterns
-    const xssPatterns = [
-        /javascript\s*:/gi,                                // JavaScript protocol URLs (with optional spaces)
-        /vbscript\s*:/gi,                                  // VBScript protocol URLs (with optional spaces)
-        /on\w+\s*=/gi,                                     // HTML event handlers (onmouseover, onclick, onload, etc.)
-        /<\s*script/gi,                                    // Script tag opening (with optional spaces)
-        /expression\s*\(/gi,                               // CSS expression() function (IE-specific)
-        /url\s*\(/gi,                                      // CSS url() function
-        /style\s*=.*position\s*:\s*fixed/gi,              // CSS position fixed attacks
-        /style\s*=.*position\s*:\s*absolute/gi,           // CSS position absolute attacks
-        /data\s*:\s*text\s*\/\s*html/gi,                  // Data URLs containing HTML
-        /#.*\\"/gi,                                        // Fragment identifiers with escaped quotes
-        /&gt;.*&lt;/gi,                                    // HTML entity-encoded angle brackets indicating tag structure
-    ];
-    
-    // Check if any XSS patterns are detected in the input text
-    const isXSSDetected = xssPatterns.some(pattern => pattern.test(text));
-    
-    // Clean the text using DOMPurify with strict config
+    // Sanitize first to prevent mutation XSS (e.g., "s<iframe></iframe>tyle" → "style")
     const cleanText = DOMPurify.sanitize(text, {
-        ALLOWED_TAGS: [], // No HTML tags allowed in title
+        ALLOWED_TAGS: [],
         ALLOWED_ATTR: [],
-        KEEP_CONTENT: true, // Keep text content
+        KEEP_CONTENT: true,
         ALLOW_DATA_ATTR: false,
         ALLOW_UNKNOWN_PROTOCOLS: false,
         SANITIZE_DOM: true,
         FORCE_BODY: false
     });
-    
+
+    const contentChanged = text !== cleanText;
+
+    // Non-global regex patterns to avoid stateful .test() issues
+    const xssPatterns = [
+        /javascript\s*:/i,
+        /vbscript\s*:/i,
+        /on\w+\s*=/i,                      // Event handlers
+        /<\s*script/i,
+        /<\s*iframe/i,
+        /<\s*object/i,
+        /<\s*embed/i,
+        /<\s*svg/i,
+        /expression\s*\(/i,                // IE CSS expressions
+        /style\s*=.*position\s*:\s*(fixed|absolute)/i,
+        /data\s*:\s*text\s*\/\s*html/i,
+        /#.*\\"/i,
+        /&(lt|gt|#x3c|#60|#x3e|#62);/i,   // HTML entities
+        /&#x?[0-9a-f]+;.*</i,
+        /\u003c.*\u003e/i,                 // Unicode escapes
+        /src\s*=\s*["']?\s*javascript:/i,
+        /href\s*=\s*["']?\s*javascript:/i
+    ];
+
+    const hasXSSPattern = xssPatterns.some(pattern => {
+        return pattern.test(text) || pattern.test(cleanText);
+    });
+
+    const hasHTMLStructure = /<[^>]+>/.test(text) && !/<[^>]+>/.test(cleanText);
+
+    const isXSSDetected = contentChanged || hasXSSPattern || hasHTMLStructure;
+
     return { cleanText, isXSSDetected };
 };
