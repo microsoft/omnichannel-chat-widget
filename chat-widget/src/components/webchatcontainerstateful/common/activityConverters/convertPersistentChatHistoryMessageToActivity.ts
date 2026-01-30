@@ -74,13 +74,13 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
         const isAdaptiveCard = content.toLowerCase().includes(Constants.AdaptiveCardType);
         const isSuggestedActions = content.toLowerCase().includes(Constants.SuggestedActionsType);
         const containsSupportedCard = Object.values(SupportedAdaptiveCards).some(type => content.toLowerCase().includes(type.toLowerCase()));
+        const parsedContent = JSON.parse(content);
 
         // Check if this is a customer form submission response (e.g., RichObjectMessage_Form)
         // These should be ignored as they are form submission data, not displayable content
         const isFromCustomer = from?.application?.displayName === "Customer";
         if (isFromCustomer) {
             try {
-                const parsedContent = JSON.parse(content);
                 // Ignore customer messages that contain form submission data
                 if (parsedContent?.value?.type === "RichObjectMessage_Form") {
                     return null;
@@ -94,10 +94,9 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
 
         if (isAdaptiveCard || isSuggestedActions || containsSupportedCard) {
             try {
-                const partialActivity = JSON.parse(content);
                 return {
                     ...activity,
-                    ...partialActivity,
+                    ...parsedContent,
                     timestamp,
                     channelData: {
                         ...activity.channelData,
