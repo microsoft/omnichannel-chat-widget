@@ -33,7 +33,7 @@ jobs:
           NODE_OPTIONS: --openssl-legacy-provider
         run: yarn build-composite-storybook
       - name: Deploy Storybook
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
           branch: gh-pages
           folder: ./chat-widget/storybook-build
