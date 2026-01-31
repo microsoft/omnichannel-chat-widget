@@ -1,6 +1,6 @@
 import { Page } from "playwright";
 import fs from "fs";
-import { CustomLiveChatWidgetConstants } from "Utility/constants";
+import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 
 export class BasePage {
   protected isBaseClosed = false;
