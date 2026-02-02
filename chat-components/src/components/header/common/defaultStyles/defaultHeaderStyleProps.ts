@@ -19,15 +19,7 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
         fontFamily: "Segoe UI, Arial, sans-serif",
         fontWeight: "450",
         color: "white",
-        padding: "3px 0",
-        width: "100%",
-        maxWidth: "100%",
-        display: "-webkit-box",
-        "-webkit-line-clamp": 2,
-        "-webkit-box-orient": "vertical",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        wordBreak: "break-word"
+        padding: "3px 0"
     },
     minimizeButtonStyleProps: {
         color: "white",
@@ -64,6 +56,11 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
         minWidth: 0,
         overflow: "hidden",
         flex: 1,
-        maxWidth: "100%"
+        maxWidth: "100%",
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        textOverflow: "ellipsis",
+        wordBreak: "break-word"
     }
 };
