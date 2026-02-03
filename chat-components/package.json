@@ -56,6 +56,7 @@
     "postcss": "^8.3.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "storybook": "^7.6.17",
     "storybook-addon-playwright": "^4.21.0",
     "swiper": "^12.1.0",
     "typescript": "^5.8.3"
@@ -67,8 +68,8 @@
     "rxjs": "^5.0.3"
   },
   "scripts": {
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook",
+    "storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider storybook dev -p 6006",
+    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider storybook build",
     "build": "yarn eslint . && yarn build:esm && yarn build:cjs && tsc",
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
     "test:visual": "jest -c jest.config.visual.cjs",

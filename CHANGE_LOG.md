@@ -21,12 +21,23 @@ All notable changes to this project will be documented in this file.
 - Enhanced error handling in file download process
 - Added comprehensive XSS security tests (19 new tests total)
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
+- Added `storybook` CLI package v7.6.17 as devDependency to support Storybook v7 commands
 
 ### Changed
 
 - Uptake [@microsoft/omnichannel-chat-components@1.1.17-main.4139523](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.17-main.4139523)
 - Updated AppInsights events
 - updated AppInsights events to traces and renamed custom property fields
+- Upgraded Storybook packages from v6.5.16 to v7.6.21 (@storybook/addon-a11y, @storybook/addon-actions, @storybook/addon-essentials, @storybook/addon-links, @storybook/react)
+- Upgraded @storybook/addon-knobs from v6.4.0 to v8.0.1
+- Upgraded playwright from v1.16.3 to v1.58.1
+- Upgraded storybook-addon-playwright to v4.21.0
+- Updated Storybook scripts to use v7 CLI commands (`storybook dev` and `storybook build`)
+
+### Removed
+
+- Removed 10 unused dependencies: `botframework-webchat`, `@storybook/addon-storyshots`, `@storybook/testing-react`, `react-test-renderer`, `jest-dom`, `copyfiles`, `json`, `browserslist`, `@types/core-js`, `@types/jest-image-snapshot`
+- Cleaned up package.json resolutions from 22 to 6 entries, keeping only necessary security fixes
 
 ### Fixed
 
@@ -44,6 +55,13 @@ All notable changes to this project will be documented in this file.
 - Added URL protocol validation to block dangerous protocols (javascript:, data:, vbscript:, file:)
 - Added HTML escaping functions for safe URL processing in `replaceURLWithAnchor`
 - [A11Y] Fixed unnecessary focus steal for proactive chat pane
+
+### Security
+
+- Reduced security vulnerabilities from 53 to 1 (98% reduction)
+- Updated security resolutions for @babel/runtime (7.28.4), esbuild (0.25.0), sharp (0.32.6), trim (0.0.3), ip (2.0.1), and playwright (1.58.1)
+- Fixed 4 Low, 27 Moderate, and 21 High severity vulnerabilities
+- Remaining vulnerability: 1 High severity in `ip` package (no patch available, dev dependency only)
 
 ## [1.8.3] - 2025-10-07
 
