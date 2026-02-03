@@ -74,39 +74,35 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
         const isAdaptiveCard = content.toLowerCase().includes(Constants.AdaptiveCardType);
         const isSuggestedActions = content.toLowerCase().includes(Constants.SuggestedActionsType);
         const containsSupportedCard = Object.values(SupportedAdaptiveCards).some(type => content.toLowerCase().includes(type.toLowerCase()));
-        const parsedContent = JSON.parse(content);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let parsedContent: any;
+
+        try {
+            parsedContent = JSON.parse(content);
+        } catch (error) {
+            console.error("Failed to parse content as JSON:", error);
+            parsedContent = null; // fall back to normal text handling
+        }
 
         // Check if this is a customer form submission response (e.g., RichObjectMessage_Form)
         // These should be ignored as they are form submission data, not displayable content
         const isFromCustomer = from?.application?.displayName === "Customer";
         if (isFromCustomer) {
-            try {
-                // Ignore customer messages that contain form submission data
-                if (parsedContent?.value?.type === "RichObjectMessage_Form") {
-                    return null;
-                }
-            } catch (error) {
-                // If parsing fails, continue with normal processing
-                console.error("Failed to ignore form submission content:", error);
-
+            if (parsedContent?.value?.type === "RichObjectMessage_Form") {
+                return null;
             }
         }
 
         if (isAdaptiveCard || isSuggestedActions || containsSupportedCard) {
-            try {
-                return {
-                    ...activity,
-                    ...parsedContent,
-                    timestamp,
-                    channelData: {
-                        ...activity.channelData,
-                        "webchat:sequence-id": webchatSequenceId
-                    }
-                };
-            } catch (error) {
-                // If parsing fails, treat as plain text
-                console.error("Failed to parse adaptive card content:", error);
-            }
+            return {
+                ...activity,
+                ...parsedContent,
+                timestamp,
+                channelData: {
+                    ...activity.channelData,
+                    "webchat:sequence-id": webchatSequenceId
+                }
+            };
         }
         
         // Plain text message
