@@ -39,5 +39,28 @@ export const defaultHeaderStyleProps: IHeaderStyleProps = {
     },
     headerItemFocusStyleProps: {
         border: "2px dotted #000"
+    },
+    headerLeftGroupStyleProps: {
+        flex: 1,
+        minWidth: 0,
+        overflow: "hidden"
+    },
+    headerLeftGroupInnerContainerStyleProps: {
+        minWidth: 0,
+        overflow: "hidden",
+        flex: 1,
+        maxWidth: "100%"
+    },
+    titleContainerStyleProps: {
+        margin: 0,
+        minWidth: 0,
+        overflow: "hidden",
+        flex: 1,
+        maxWidth: "100%",
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        textOverflow: "ellipsis",
+        wordBreak: "break-word"
     }
 };

@@ -703,6 +703,9 @@ All notable changes to this project will be documented in this file.
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
 - Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
 - Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
+- Fixed header text overflow issue where long titles would expand leftward and cover the icon image
+- Added 2-line text limit with ellipsis for header title to prevent layout issues
+- Added tooltip on hover to display full header text when truncated
 
 ## [1.1.16] - 2025-10-14
 
