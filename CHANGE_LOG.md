@@ -691,11 +691,14 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Uptake [botframework-webchat@4.18.1-hotfix.20260127.b53acdf](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-hotfix.20260127.b53acdf)
+- Uptake [botframework-webchat@4.18.1-main.20260129.f7a730f](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-main.20260129.f7a730f)
+- Moved `jest-transform-stub` from dependencies to devDependencies (only needed for testing)
+- Moved `swiper` from dependencies to devDependencies (only needed for testing)
 
 ### Added
 
 - Added XSS protection tests for URL sanitization (11 new tests)
+- Added `swiper` as devDependency to fix test failures caused by `adaptivecards@2.10.0` peer dependency
 
 ### Fixed
 
@@ -705,6 +708,13 @@ All notable changes to this project will be documented in this file.
 - Fixed header text overflow issue where long titles would expand leftward and cover the icon image
 - Added 2-line text limit with ellipsis for header title to prevent layout issues
 - Added tooltip on hover to display full header text when truncated
+- Fixed unit tests failing due to missing `swiper` module required by `adaptivecards`
+- Fixed build issues with TypeScript configuration
+
+### Removed
+
+- Removed unused `styled-components` dependency
+- Removed unused `@types/styled-components` devDependency
 
 ## [1.1.16] - 2025-10-14
 
