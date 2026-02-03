@@ -57,6 +57,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "storybook": "^7.6.17",
+    "storybook-addon-playwright": "^4.21.0",
     "swiper": "^12.1.0",
     "typescript": "^5.8.3"
   },
@@ -80,6 +81,10 @@
   "resolutions": {
     "**/@babel/runtime": "7.28.4",
     "**/esbuild": "0.25.0",
-    "**/tar": "7.5.7"
+    "**/tar": "7.5.7",
+    "**/trim": "0.0.3",
+    "**/sharp": "0.32.6",
+    "**/ip": "2.0.1",
+    "storybook-addon-playwright/playwright": "1.55.1"
   }
 }
