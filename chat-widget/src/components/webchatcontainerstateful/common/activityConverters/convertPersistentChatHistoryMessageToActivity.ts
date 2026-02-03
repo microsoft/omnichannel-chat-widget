@@ -87,13 +87,11 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
         // Check if this is a customer form submission response (e.g., RichObjectMessage_Form)
         // These should be ignored as they are form submission data, not displayable content
         const isFromCustomer = from?.application?.displayName === "Customer";
-        if (isFromCustomer) {
-            if (parsedContent?.value?.type === "RichObjectMessage_Form") {
-                return null;
-            }
+        if (isFromCustomer && parsedContent?.value?.type === "RichObjectMessage_Form") {
+            return null;
         }
 
-        if (isAdaptiveCard || isSuggestedActions || containsSupportedCard) {
+        if (parsedContent && (isAdaptiveCard || isSuggestedActions || containsSupportedCard)) {
             return {
                 ...activity,
                 ...parsedContent,
