@@ -21,6 +21,9 @@ jobs:
       - name: Install packages
         working-directory: chat-components
         run: yarn install
+      - name: Install Playwright browsers
+        working-directory: chat-components
+        run: npx playwright install --with-deps
       - name: Unit Tests
         working-directory: chat-components
         run: yarn test:unit

@@ -30,13 +30,16 @@ jobs:
       - name: Install packages
         working-directory: chat-components
         run: yarn install --network-timeout 100000
+      - name: Install Playwright browsers
+        working-directory: chat-components
+        run: npx playwright install --with-deps
       - name: Unit Tests
         working-directory: chat-components
         run: yarn test:unit
       - name: Build Storybook
         working-directory: chat-components
         env :
-          NODE_OPTIONS: --openssl-legacy-provider        
+          NODE_OPTIONS: --openssl-legacy-provider
         run: yarn build-storybook
       - name: VRT Tests
         working-directory: chat-components
