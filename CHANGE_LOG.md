@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - Enhanced error handling in file download process
 - Added comprehensive XSS security tests (19 new tests total)
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
+- Added botframework-webchat@4.18.1-main.20260129.f7a730f dependency
 
 ### Changed
 
