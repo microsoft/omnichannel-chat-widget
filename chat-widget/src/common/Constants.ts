@@ -87,6 +87,8 @@ export class Constants {
     public static readonly videoMediaRegex = /(\.)(avchd|avi|flv|mpe|mpeg|mpg|mpv|mp4|m4p|m4v|mov|qt|swf|webm|wmv)$/i;
     public static readonly chromeSupportedInlineMediaRegex = /(\.)(aac|mp3|wav|mp4)$/i;
     public static readonly firefoxSupportedInlineMediaRegex = /(\.)(aac|flac|mp3|wav|mp4|mov)$/i;
+    public static readonly AdaptiveCardType = "adaptivecard";
+    public static readonly SuggestedActionsType = "suggestedactions";
 
     // calling container event names
     public static readonly CallAdded = "callAdded";
