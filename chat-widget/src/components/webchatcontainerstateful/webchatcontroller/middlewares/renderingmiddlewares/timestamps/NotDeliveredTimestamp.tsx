@@ -66,6 +66,8 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
             <span style={failedTextStyles}> {state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_NOT_DELIVERED ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_NOT_DELIVERED} </span>
             <span> &nbsp;-&nbsp; </span>
             <span style={retryTextStyles}
+                role="button"
+                aria-label={state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_RETRY ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_RETRY}
                 onClick={onRetryClick} onKeyDown={onRetryKeyEnter} tabIndex={0}> {state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_RETRY ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_RETRY} </span>
         </Stack>
     );
