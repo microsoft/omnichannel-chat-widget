@@ -94,6 +94,7 @@
     "**/markdown-it": "12.3.2",
     "**/minimist": "1.2.6",
     "**/sanitize-html": "2.12.1",
-    "**/lodash": "4.17.23"
+    "**/lodash": "4.17.23",
+    "**/brace-expansion": "2.0.2"
   }
 }
