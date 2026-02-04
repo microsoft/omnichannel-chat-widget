@@ -1,16 +1,31 @@
 {
     "presets": [
-        ["@babel/preset-typescript"],
-        ["@babel/preset-env", {
-            "targets": {
-                "node": "current",
-                "chrome": 90,
-                "edge": 88,
-                "firefox": 92,
-                "safari": 14
-            },
-            "modules": "commonjs"
-        }],
-        ["@babel/preset-react"]
+        [
+            "@babel/preset-typescript"
+        ],
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "node": "current",
+                    "chrome": 90,
+                    "edge": 88,
+                    "firefox": 92,
+                    "safari": 14
+                },
+                "modules": "commonjs"
+            }
+        ],
+        [
+            "@babel/preset-react"
+        ]
+    ],
+    "plugins": [
+        [
+            "@babel/plugin-transform-class-properties",
+            {
+                "loose": true
+            }
+        ]
     ]
 }

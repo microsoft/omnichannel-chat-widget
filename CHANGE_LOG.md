@@ -692,7 +692,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Uptake [botframework-webchat@4.18.1-hotfix.20260127.b53acdf](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-hotfix.20260127.b53acdf)
+- Updated Babel dependencies to latest versions
+- Updated Lodash to v4.17.23 to address security vulnerabilities
 
 ### Added
 
