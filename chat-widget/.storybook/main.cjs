@@ -113,6 +113,7 @@ module.exports = {
       "iter-fest",                                          // private fields
       "event-as-promise",                                   // private fields
       "react-dictate-button",                               // nullish coalescing
+      "react-film",                                         // nullish coalescing
       "mime",                                               // optional chaining
       "htmlparser2",                                        // optional chaining
       "valibot",                                            // optional chaining
