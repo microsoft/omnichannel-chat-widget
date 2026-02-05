@@ -7,11 +7,14 @@ module.exports = {
         "automation_tests"
     ],
     "transformIgnorePatterns": [
-        "/!node_modules\\/lodash-es/"
+        "node_modules/(?!(lodash-es|swiper)/)"
     ],
     "transform": {
         "^.+\\.(js|jsx|ts|tsx|mjs)$": "babel-jest",
         ".+\\.(css|scss|png|jpg|svg|gif)$": "jest-transform-stub"
+    },
+    "moduleNameMapper": {
+        "^swiper/modules$": "swiper"
     },
     setupFiles: ["./jest.setup.js"]
 
