@@ -47,6 +47,8 @@ All notable changes to this project will be documented in this file.
 - Added URL protocol validation to block dangerous protocols (javascript:, data:, vbscript:, file:)
 - Added HTML escaping functions for safe URL processing in `replaceURLWithAnchor`
 - [A11Y] Fixed unnecessary focus steal for proactive chat pane
+- Fixed Storybook build failure caused by Swiper v9+ module resolution issues by adding webpack alias for `swiper/modules` to point to `swiper-bundle.esm.js`
+- Disabled Storybook telemetry to prevent error masking and improve build error visibility
 
 ## [1.8.3] - 2025-10-07
 
