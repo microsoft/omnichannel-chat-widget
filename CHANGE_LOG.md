@@ -22,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - Enhanced error handling in file download process
 - Added comprehensive XSS security tests (19 new tests total)
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
+- Added botframework-webchat@4.18.1-main.20260129.f7a730f dependency
+- Dependency resolutions for lodash, @babel/runtime-corejs3, and brace-expansion
 
 ### Changed
 
@@ -45,6 +47,8 @@ All notable changes to this project will be documented in this file.
 - Added URL protocol validation to block dangerous protocols (javascript:, data:, vbscript:, file:)
 - Added HTML escaping functions for safe URL processing in `replaceURLWithAnchor`
 - [A11Y] Fixed unnecessary focus steal for proactive chat pane
+- Fixed Storybook build failure caused by Swiper v9+ module resolution issues by adding webpack alias for `swiper/modules` to point to `swiper-bundle.esm.js`
+- Disabled Storybook telemetry to prevent error masking and improve build error visibility
 
 ## [1.8.3] - 2025-10-07
 

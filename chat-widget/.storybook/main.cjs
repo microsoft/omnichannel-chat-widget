@@ -13,6 +13,9 @@ module.exports = {
     'storybook-addon-playwright/preset',
     'storybook-addon-playwright/register'
   ],
+  "core": {
+    "disableTelemetry": true
+  },
   "webpackFinal": async (config, { configType }) => {
     // Helper to get package directory
     const getPkgDir = (pkgName) => {
@@ -55,6 +58,8 @@ module.exports = {
         "react-native-web/dist/exports/Platform",
       "react-native/Libraries/StyleSheet/StyleSheet":
         "react-native-web/dist/exports/StyleSheet",
+      // Fix for Swiper v9+ module resolution - use bundle which includes all modules
+      "swiper/modules": path.resolve(__dirname, '../node_modules/swiper/swiper-bundle.esm.js'),
     };
 
     // Add web-first extensions
@@ -113,6 +118,7 @@ module.exports = {
       "iter-fest",                                          // private fields
       "event-as-promise",                                   // private fields
       "react-dictate-button",                               // nullish coalescing
+      "react-film",                                         // nullish coalescing
       "mime",                                               // optional chaining
       "htmlparser2",                                        // optional chaining
       "valibot",                                            // optional chaining

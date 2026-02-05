@@ -6,12 +6,14 @@ module.exports = {
         "(/__tests__/.*|(\\.|/)(visual.test|visual.spec))\\.[jt]sx?$",
         "automation_tests"
     ],
-    "transformIgnorePatterns": [
-        "/!node_modules\\/lodash-es/"
-    ],
+    "transformIgnorePatterns": [],
     "transform": {
         "^.+\\.(js|jsx|ts|tsx|mjs)$": "babel-jest",
         ".+\\.(css|scss|png|jpg|svg|gif)$": "jest-transform-stub"
+    },
+    "moduleNameMapper": {
+        "^swiper/modules$": "swiper",
+        "^swiper$": "<rootDir>/node_modules/swiper/swiper.esm.js"
     },
     setupFiles: ["./jest.setup.js"]
 
