@@ -111,7 +111,7 @@
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "compose-storybook": "start-storybook -c stories/.storybook -p 9009",
-    "build-composite-storybook": "build-storybook -c stories/.storybook -o storybook-build",
+    "build-composite-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook -c stories/.storybook -o storybook-build",
     "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook",
     "build": "yarn clean && yarn lint && yarn build:esm && yarn build:cjs && tsc",
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
