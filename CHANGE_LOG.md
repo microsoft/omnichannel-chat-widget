@@ -49,6 +49,7 @@ All notable changes to this project will be documented in this file.
 - [A11Y] Fixed unnecessary focus steal for proactive chat pane
 - Fixed Storybook build failure caused by Swiper v9+ module resolution issues by adding webpack alias for `swiper/modules` to point to `swiper-bundle.esm.js`
 - Disabled Storybook telemetry to prevent error masking and improve build error visibility
+- Fixed webpack 4 build errors by adding `type: "javascript/auto"` to `.mjs` rules (fixes `html-react-parser` v5.x ESM named re-export errors), aliasing `swiper/modules` to `swiper/swiper.esm.js` (fixes `adaptivecards` missing module resolution), and adding `.mjs` to `resolve.extensions`
 
 ## [1.8.3] - 2025-10-07
 
