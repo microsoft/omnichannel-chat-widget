@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
 - [A11Y] Added focus on citation pane close button when citation pane is opened
 - [A11Y] Divider hack to force screen readers to mention it
 - [A11Y] Update of initials from agent to update DOM, for proper mention by screen readers
@@ -21,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - Enhanced error handling in file download process
 - Added comprehensive XSS security tests (19 new tests total)
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
+- Added botframework-webchat@4.18.1-main.20260129.f7a730f dependency
+- Dependency resolutions for lodash, @babel/runtime-corejs3, and brace-expansion
 
 ### Changed
 
@@ -44,6 +47,10 @@ All notable changes to this project will be documented in this file.
 - Added URL protocol validation to block dangerous protocols (javascript:, data:, vbscript:, file:)
 - Added HTML escaping functions for safe URL processing in `replaceURLWithAnchor`
 - [A11Y] Fixed unnecessary focus steal for proactive chat pane
+- Fixed Storybook build failure caused by Swiper v9+ module resolution issues by adding webpack alias for `swiper/modules` to point to `swiper-bundle.esm.js`
+- Disabled Storybook telemetry to prevent error masking and improve build error visibility
+- Fixed webpack 4 build errors by adding `type: "javascript/auto"` to `.mjs` rules (fixes `html-react-parser` v5.x ESM named re-export errors), aliasing `swiper/modules` to `swiper/swiper.esm.js` (fixes `adaptivecards` missing module resolution), and adding `.mjs` to `resolve.extensions`
+- Fixed composite storybook build by aligning `stories/.storybook/main.cjs` webpack config with the main `.storybook/main.cjs` (React Native Web aliases, modern JS transpilation, `.mjs` handling, web-first extensions, DefinePlugin), disabling telemetry, and adding `cross-env NODE_OPTIONS=--openssl-legacy-provider` to the `build-composite-storybook` script
 
 ## [1.8.3] - 2025-10-07
 
@@ -691,7 +698,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Uptake [botframework-webchat@4.18.1-hotfix.20260127.b53acdf](https://www.npmjs.com/package/botframework-webchat/v/4.18.1-hotfix.20260127.b53acdf)
+- Updated Babel dependencies to latest versions
+- Updated Lodash to v4.17.23 to address security vulnerabilities
 
 ### Added
 
