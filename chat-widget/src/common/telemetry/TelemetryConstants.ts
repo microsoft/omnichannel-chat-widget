@@ -103,6 +103,7 @@ export enum TelemetryEvent {
     MidConversationAuthSucceeded = "MidConversationAuthSucceeded",
     MidConversationAuthFailed = "MidConversationAuthFailed",
     MidConversationAuthTokenReceived = "MidConversationAuthTokenReceived",
+    MidConversationAuthReset = "MidConversationAuthReset",
     GetConversationDetailsCallStarted = "GetConversationDetailsCallStarted",
     GetConversationDetailsCallFailed = "GetConversationDetailsCallFailed",
     EndChatSDKCallFailed = "EndChatSDKCallFailed",

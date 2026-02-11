@@ -35,7 +35,6 @@ export interface ILiveChatWidgetContext {
         confirmationState: ConfirmationState;
         startChatFailureType: StartChatFailureType;
         botAvatarInitials?: string; // Current bot avatar initials (reactive)
-        authenticatedUserToken?: string; // Auth token obtained after mid-conversation authentication
     };
     appStates: {
         conversationState: ConversationState; // The state that the conversation is currently in

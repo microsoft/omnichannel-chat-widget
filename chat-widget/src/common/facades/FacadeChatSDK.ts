@@ -1,4 +1,4 @@
-import { BroadcastEvent, LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
+﻿import { BroadcastEvent, LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
 import { ChatAdapter, ChatSDKMessage, GetAgentAvailabilityResponse, GetLiveChatTranscriptResponse, GetPersistentChatHistoryResponse, GetVoiceVideoCallingResponse, IFileInfo, IRawMessage, MaskingRules, OmnichannelChatSDK, VoiceVideoCallingOptionalParams } from "@microsoft/omnichannel-chat-sdk";
 import { IFacadeChatSDKInput, PingResponse } from "./types/IFacadeChatSDKInput";
 import { getAuthClientFunction, handleAuthentication } from "../../components/livechatwidget/common/authHelper";
@@ -42,7 +42,7 @@ export class FacadeChatSDK {
     private sdkMocked: boolean;
     private disableReauthentication: boolean;
 
-    // Defers unauthenticated state change to startChat() for reconnect checking
+    // Stays true so CASE 1 re-triggers on every startChat to set deferInitialAuth
     private pendingMidAuthUnauthenticatedState = false;
 
     // Checks msdyn_authenticatedsigninoptional flag in chatConfig
@@ -62,6 +62,12 @@ export class FacadeChatSDK {
     public destroy() {
         this.token = null;
         this.expiration = 0;
+        if (this.isMidAuthEnabled()) {
+            this.pendingMidAuthUnauthenticatedState = false;
+            this.isAuthenticated = true;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (this.chatSDK as any).deferInitialAuth = false;
+        }
     }
 
     public isTokenSet() {
@@ -182,20 +188,22 @@ export class FacadeChatSDK {
         }
     }
 
-    // Returns true if token is empty, invalid, or expired
+    /**
+     * Validates if a token is expired without storing it.
+     * Returns true if token is expired or invalid, false if valid.
+     */
     private isTokenExpiredByValue(token: string): boolean {
         if (isNullOrEmptyString(token)) {
             return true;
         }
-        
+
         try {
             const tokenExpiration = this.convertExpiration(this.extractExpFromToken(token) || 0);
-            
-            // If expiration is 0, token doesn't have expiration - consider it valid
+
             if (tokenExpiration === 0) {
                 return false;
             }
-            
+
             const now = Math.floor(Date.now() / 1000);
             return now > tokenExpiration;
         } catch (e) {
@@ -212,10 +220,8 @@ export class FacadeChatSDK {
             handleAuthentication(this.chatSDK, this.chatConfig, this.getAuthToken);
         }
     }
-    private async tokenRing(): Promise<PingResponse> {
 
-        // Reset the pending flag at the start of each tokenRing call
-        this.pendingMidAuthUnauthenticatedState = false;
+    private async tokenRing(): Promise<PingResponse> {
 
         if (this.disableReauthentication === true) {
             // Since we are not validating the token anymore, we at least need to check if the token is set
@@ -238,6 +244,9 @@ export class FacadeChatSDK {
             return { result: true, message: "Token is valid" };
         }
 
+        // Token missing or expired - need to get a new one via getAuthToken
+        // For mid-auth: getAuthToken receives { isMidAuthEnabled: true } so customer implementations
+        // can check portal state and return null for logged-out users
         TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.NewTokenValidationStarted,
             Description: "Token validation started."
@@ -273,18 +282,25 @@ export class FacadeChatSDK {
                 return { result: true, message: "New Token obtained" };
             }
 
-            // Mid-auth: defer unauthenticated state to startChat() for reconnect checking
-            const isEmptyTokenWithoutError = isNullOrEmptyString(ring?.token) && 
+            // Mid-auth: no token available - set pending flag for startChat to handle
+            const isEmptyTokenWithoutError = isNullOrEmptyString(ring?.token) &&
                 (ring?.result === true || (ring?.result === false && !ring?.error));
-            
+
             if (this.isMidAuthEnabled() && isEmptyTokenWithoutError) {
+                // Clear Facade and SDK token state so API calls use unauthenticated endpoints
+                this.token = "";
+                this.expiration = 0;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (this.chatSDK as any).authenticatedUserToken = null;
+
                 this.pendingMidAuthUnauthenticatedState = true;
+
                 TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
                     Event: TelemetryEvent.NewTokenValidationCompleted,
-                    Description: "Mid-auth enabled: no token returned; pending unauthenticated state"
+                    Description: "Mid-auth enabled: no token returned; proceeding as unauthenticated"
                 });
 
-                return { result: true, message: "Mid-auth: no token returned; pending unauthenticated state" };
+                return { result: true, message: "Mid-auth: proceeding as unauthenticated" };
             }
 
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
@@ -307,28 +323,35 @@ export class FacadeChatSDK {
         }
     }
 
-    // Prepares SDK for unauthenticated mid-auth flow (new chats only, not reconnects)
+    /**
+     * Sets unauthenticated state for mid-auth flow.
+     * Clears SDK internal state to prevent reconnection to previous authenticated session.
+     */
     private setMidAuthUnauthenticatedState(): void {
-        this.clearAuthState();
-        
-        // Reset SDK internal state
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sdk = this.chatSDK as any;
+        const hadExistingChat = !!sdk.chatToken?.chatId;
+        const previousChatId = sdk.chatToken?.chatId;
+
+        this.clearAuthState();
+
+        // Clear SDK internal state for fresh unauthenticated chat
         sdk.chatToken = {};
         sdk.reconnectId = null;
+        sdk.requestId = null;
+        sdk.sessionId = null;
+        sdk.conversation = null;
 
-        // Notify listeners to clear cached context
-        BroadcastService.postMessage({
-            eventName: BroadcastEvent.MidConversationAuthReset,
-            payload: {
-                isAuthenticated: false,
-                reason: "Starting new unauthenticated chat",
-                clearLiveChatContext: true
-            }
-        });
+        if (hadExistingChat) {
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.MidConversationAuthReset,
+                Description: "Mid-auth without token: local state cleared",
+                Data: { previousChatId }
+            });
+        }
     }
 
-    // Resets auth state in FacadeChatSDK and underlying SDK
+    /** Clears authentication state in both FacadeChatSDK and underlying SDK */
     private clearAuthState(): void {
         this.token = "";
         this.expiration = 0;
@@ -337,7 +360,7 @@ export class FacadeChatSDK {
         (this.chatSDK as any).authenticatedUserToken = null;
     }
 
-    // Logs auth error to console, telemetry, and broadcasts widget error
+    /** Handles authentication errors with consistent logging and broadcasting */
     private handleAuthError(logMessage: string, description: string, error: unknown): void {
         console.error(logMessage, error);
         TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
@@ -349,6 +372,96 @@ export class FacadeChatSDK {
             eventName: BroadcastEvent.OnWidgetError,
             payload: { errorMessage: (error as Error)?.message || description }
         });
+    }
+
+    /**
+     * Migrates conversation from unauthenticated to authenticated via authenticateChat.
+     * Called after startChat() when user has a valid token but the backend conversation
+     * was started as unauthenticated.
+     */
+    private async migrateConversationToAuthenticated(): Promise<void> {
+        try {
+            await this.chatSDK.authenticateChat(this.token as string, { refreshChatToken: true });
+            this.isAuthenticated = true;
+
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.MidConversationAuthSucceeded,
+                Description: "Mid-auth: authenticateChat completed, conversation migrated to authenticated"
+            });
+        } catch (e) {
+            // Non-fatal: Chat is already active via startChat, will retry on next reconnect
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.WARN, {
+                Event: TelemetryEvent.MidConversationAuthFailed,
+                Description: "Mid-auth: authenticateChat returned error after startChat, chat still active",
+                ExceptionDetails: { message: (e as Error)?.message }
+            });
+        }
+    }
+
+    /**
+     * Configures SDK auth state before startChat.
+     * CASE 1: Pending unauthenticated (no token) - sets deferInitialAuth=true
+     * CASE 2: Authenticated with valid token - sets SDK token and deferInitialAuth based on scenario
+     */
+    private async configureMidAuthState(
+        isReconnect: boolean,
+        wasPreviousSessionAuthenticated: boolean
+    ): Promise<{ shouldClearReconnectParams: boolean }> {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sdk = this.chatSDK as any;
+
+        // CASE 1: No token available (user not logged in)
+        // pendingMidAuthUnauthenticatedState stays true until user logs in (cleared in tokenRing)
+        if (this.pendingMidAuthUnauthenticatedState) {
+            const shouldClear = this.handlePendingUnauthenticatedState(wasPreviousSessionAuthenticated);
+            sdk.deferInitialAuth = true;
+            return { shouldClearReconnectParams: shouldClear };
+        }
+
+        // CASE 2: Authenticated with valid token
+        if (this.isTokenSet() && !this.isTokenExpired()) {
+            this.handleAuthenticatedState(isReconnect, wasPreviousSessionAuthenticated);
+        }
+
+        return { shouldClearReconnectParams: false };
+    }
+
+    /**
+     * CASE 1 handler: Returns true if reconnect params should be cleared (Auth -> Unauth transition)
+     */
+    private handlePendingUnauthenticatedState(wasPreviousSessionAuthenticated: boolean): boolean {
+        if (wasPreviousSessionAuthenticated) {
+            // Auth -> Unauth: user logged out, clear state for fresh chat
+            this.setMidAuthUnauthenticatedState();
+            return true;
+        }
+
+        // Unauth -> Unauth: keep liveChatContext for reconnection
+        this.isAuthenticated = false;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (this.chatSDK as any).authenticatedUserToken = null;
+        return false;
+    }
+
+    /**
+     * CASE 2 handler: Sets deferInitialAuth only for reconnects to unauthenticated sessions (need migration).
+     * For new chats or reconnects to authenticated sessions, SDK handles auth internally.
+     */
+    private handleAuthenticatedState(
+        isReconnect: boolean,
+        wasPreviousSessionAuthenticated: boolean
+    ): void {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const sdk = this.chatSDK as any;
+
+        sdk.authenticatedUserToken = this.token;
+
+        if (isReconnect && !wasPreviousSessionAuthenticated) {
+            sdk.deferInitialAuth = true;
+        } else {
+            // Reset to prevent inheriting deferInitialAuth=true from a previous unauthenticated chat
+            sdk.deferInitialAuth = false;
+        }
     }
 
     private async validateAndExecuteCall<T>(functionName: string, fn: () => Promise<T>): Promise<T> {
@@ -380,29 +493,54 @@ export class FacadeChatSDK {
 
     public async startChat(optionalParams: StartChatOptionalParams = {}): Promise<void> {
         const midAuthEnabled = this.isMidAuthEnabled();
-        
+        const isReconnect = !!optionalParams.liveChatContext || !!optionalParams.reconnectId;
+        const wasPreviousSessionAuthenticated = optionalParams.wasAuthenticated === true;
+
         return this.validateAndExecuteCall("startChat", async () => {
-            // Mid-auth: adjust auth state based on token availability
+
             if (midAuthEnabled) {
-                if (this.pendingMidAuthUnauthenticatedState) {
-                    // No token available - start as unauthenticated
-                    this.setMidAuthUnauthenticatedState();
-                    this.pendingMidAuthUnauthenticatedState = false;
-                    optionalParams.deferInitialAuth = true;
-                    
-                    // Clear old context to prevent reconnecting to previous auth chat
-                    if (optionalParams.liveChatContext) {
-                        delete optionalParams.liveChatContext;
-                    }
-                } else if (this.isAuthenticated && this.isTokenSet() && !this.isTokenExpired()) {
-                    // Valid token - proceed with authenticated flow
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (this.chatSDK as any).authenticatedUserToken = this.token;
-                    optionalParams.deferInitialAuth = false;
+                const { shouldClearReconnectParams } = await this.configureMidAuthState(
+                    isReconnect,
+                    wasPreviousSessionAuthenticated
+                );
+
+                if (shouldClearReconnectParams) {
+                    delete optionalParams.liveChatContext;
+                    delete optionalParams.reconnectId;
                 }
             }
-            
-            return this.chatSDK.startChat(optionalParams);
+
+            await this.chatSDK.startChat(optionalParams);
+
+            // Migrate to authenticated if needed (reconnects to unauthenticated sessions only)
+            const shouldMigrateToAuth = midAuthEnabled &&
+                                        isReconnect &&
+                                        this.isTokenSet() &&
+                                        !this.isTokenExpired() &&
+                                        !wasPreviousSessionAuthenticated;
+
+            if (shouldMigrateToAuth) {
+                await this.migrateConversationToAuthenticated();
+            }
+
+            // Broadcast final auth state after startChat completes (only on state change)
+            if (midAuthEnabled) {
+                const isAuthenticatedAfterStart = this.isTokenSet() && !this.isTokenExpired();
+                const authStateChanged = !isReconnect || (isAuthenticatedAfterStart !== wasPreviousSessionAuthenticated);
+
+                if (authStateChanged) {
+                    BroadcastService.postMessage({
+                        eventName: isAuthenticatedAfterStart
+                            ? BroadcastEvent.MidConversationAuthSucceeded
+                            : BroadcastEvent.MidConversationAuthReset,
+                        payload: {
+                            isAuthenticated: isAuthenticatedAfterStart,
+                            isStartChatComplete: true,
+                            isReconnect
+                        }
+                    });
+                }
+            }
         });
     }
 
@@ -503,6 +641,7 @@ export class FacadeChatSDK {
     public async getAgentAvailability(optionalParams: GetAgentAvailabilityOptionalParams = {}): Promise<GetAgentAvailabilityResponse> {
         return this.validateAndExecuteCall("getAgentAvailability", () => this.chatSDK.getAgentAvailability(optionalParams));
     }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async getReconnectableChats(reconnectableChatsParams: any = {}): Promise<any> {
 
@@ -569,49 +708,49 @@ export class FacadeChatSDK {
         // Validate token
         if (this.isTokenExpiredByValue(token)) {
             const isEmpty = isNullOrEmptyString(token);
-            const errorMessage = isEmpty 
+            const errorMessage = isEmpty
                 ? "Authentication failed: Token is empty or null"
                 : "Authentication Setup Error: Authentication token is already expired";
-            
-            // Clear stale auth state if chat hasn't started
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            if (!(this.chatSDK as any).chatToken?.chatId) {
-                this.clearAuthState();
-            }
-            
+
+            this.token = "";
+            this.expiration = 0;
+
             this.handleAuthError("Token validation failed", isEmpty ? "Token is empty or null" : "Token is already expired", new Error(errorMessage));
             throw new Error(errorMessage);
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const hasChatStarted = !!(this.chatSDK as any).chatToken?.chatId;
+        const sdk = this.chatSDK as any;
+        const hasChatStarted = !!sdk.chatToken?.chatId;
 
         try {
             if (hasChatStarted) {
-                // MID-CONVERSATION AUTHENTICATION
+                // SDK's authenticateChat sets sdk.authenticatedUserToken internally
                 await this.chatSDK.authenticateChat(token, optionalParams);
+            } else {
+                // Pre-chat: set the token on SDK directly (authenticateChat not available yet)
+                sdk.authenticatedUserToken = token;
             }
-            
-            // Common success path for both pre-chat and mid-chat
+
             await this.setToken(token);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (this.chatSDK as any).authenticatedUserToken = token;
             this.isAuthenticated = true;
-            
+
             TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.MidConversationAuthSucceeded,
                 Description: `${hasChatStarted ? "Mid-conversation" : "Pre-chat"} authentication succeeded`
             });
+
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.MidConversationAuthSucceeded,
                 payload: { isAuthenticated: true, token, isPreChatAuth: !hasChatStarted }
             });
         } catch (e) {
-            // Clean up on failure only for pre-chat
             if (!hasChatStarted) {
-                this.clearAuthState();
+                this.token = "";
+                this.expiration = 0;
+                sdk.authenticatedUserToken = null;
             }
-            
+
             const errorMessage = (e as Error)?.message || `${hasChatStarted ? "Mid-conversation" : "Pre-chat"} authentication failed`;
             this.handleAuthError(`${hasChatStarted ? "Mid-chat" : "Pre-chat"} auth FAILED`, errorMessage, e);
             throw e;

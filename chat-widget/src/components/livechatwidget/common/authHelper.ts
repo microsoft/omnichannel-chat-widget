@@ -13,7 +13,7 @@ import { isNullOrEmptyString } from "../../../common/utils";
  */
 const isMidAuthEnabled = (chatConfig: ChatConfig | undefined): boolean => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const value = (chatConfig as any)?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional;
+    const value = chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional;
     return value?.toString?.().toLowerCase?.() === "true";
 };
 
@@ -25,14 +25,17 @@ const getAuthClientFunction = (chatConfig: ChatConfig | undefined) => {
     return authClientFunction;
 };
 
-const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string) => Promise<string | null>) | undefined) => {
+const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: ChatConfig | undefined, getAuthToken: ((authClientFunction?: string, options?: { isMidAuthEnabled: boolean }) => Promise<string | null>) | undefined) => {
     const midAuthEnabled = isMidAuthEnabled(chatConfig);
 
     const authClientFunction = getAuthClientFunction(chatConfig);
     if (getAuthToken && authClientFunction) {
         TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
-        
-        const token = await getAuthToken(authClientFunction);
+
+        // Only pass isMidAuthEnabled option when mid-auth is enabled.
+        const token = midAuthEnabled
+            ? await getAuthToken(authClientFunction, { isMidAuthEnabled: midAuthEnabled })
+            : await getAuthToken(authClientFunction);
         if (!isNullOrEmptyString(token)) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (chatSDK as any).setAuthTokenProvider(async () => {
@@ -40,16 +43,18 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
             });
             return {"result": true, "token": token};
         } else {
-            // Mid-auth: empty token is expected (user not signed in)
+            // For mid-auth scenarios, empty token means "user not signed in" - this is expected behavior.
+            // Return result: true with empty token so caller can decide to proceed unauthenticated.
             if (midAuthEnabled) {
-                TelemetryHelper.logActionEvent(LogLevel.INFO, { 
-                    Event: TelemetryEvent.GetAuthTokenCalled, 
-                    Description: "Mid-auth: token provider returned empty; user not signed in" 
+                // Expected behavior for mid-auth: user not signed in
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.GetAuthTokenCalled,
+                    Description: "Mid-auth: token provider returned empty; user not signed in"
                 });
                 return { "result": true, "token": null };
             }
-            // instead of returning false, it's more appropiate to thrown an error to force error handling on the caller side
-            // this will help to avoid the error to be ignored and the chat to be started
+            
+            // For non-mid-auth scenarios, empty token is an error
             TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken });
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }
@@ -64,7 +69,7 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
                 });
                 return { "result": true, "token": null };
             }
-            
+                
             TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken, Description: "getAuthToken in chat SDK returns empty string" });
             throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
         }

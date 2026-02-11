@@ -13,7 +13,7 @@ import { createReducer } from "../../contexts/createReducer";
 import { getLiveChatWidgetContextInitialState } from "../../contexts/common/LiveChatWidgetContextInitialState";
 import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
 import { isNullOrUndefined } from "../../common/utils";
-import { isPersistentChatEnabled, isMidAuthEnabled } from "./common/liveChatConfigUtils";
+import { isPersistentChatEnabled } from "./common/liveChatConfigUtils";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
 import { registerTelemetryLoggers } from "./common/registerTelemetryLoggers";
 
@@ -40,22 +40,12 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const hasAuthClientFn = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction);
     const persistentChatEnabled = isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
-    const midAuthEnabled = isMidAuthEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional);
 
-    // User auth state from cache (for reconnect scenarios)
-    const hasUserAuthenticated = state?.appStates?.hasUserAuthenticated === true;
-
-    // Determines if FacadeChatSDK requires authentication
-    // Note: Mid-auth and persistent chat are mutually exclusive
-    let isAuthenticatedChat: boolean;
-    
-    if (midAuthEnabled) {
-        // Mid-auth: require auth only if user already authenticated
-        isAuthenticatedChat = persistentChatEnabled || hasUserAuthenticated;
-    } else {
-        // Standard: require auth if auth settings exist
-        isAuthenticatedChat = persistentChatEnabled || hasAuthClientFn;
-    }
+    // isAuthenticatedChat determines if FacadeChatSDK should require authentication:
+    // REGULAR AUTH FLOW (config-based):
+    // - Persistent chat enabled ? always authenticated
+    // - Auth settings exist ? authenticated from start
+    const isAuthenticatedChat = persistentChatEnabled || hasAuthClientFn;
 
     if (!facadeChatSDK) {
         setFacadeChatSDK(new FacadeChatSDK(

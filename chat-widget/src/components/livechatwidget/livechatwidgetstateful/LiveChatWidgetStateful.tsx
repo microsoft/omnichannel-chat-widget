@@ -804,15 +804,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                 Event: TelemetryEvent.MidConversationAuthTokenReceived,
                 Description: "Mid-conversation auth token received via broadcast event."
             });
-            
+
             try {
                 await facadeChatSDK.authenticateChat(token, { refreshChatToken: true });
+                // FacadeChatSDK.authenticateChat() broadcasts MidConversationAuthSucceeded
+                // which is handled by the listener below to persist hasUserAuthenticated state
             } catch (err) {
                 TelemetryHelper.logActionEvent(LogLevel.ERROR, {
                     Event: TelemetryEvent.MidConversationAuthFailed,
                     Description: "Mid-conversation authentication failed in widget listener.",
                     ExceptionDetails: { message: (err as Error)?.message }
                 });
+                console.error("[LCW][LiveChatWidgetStateful] authenticateChat failed", (err as Error)?.message);
 
                 BroadcastService.postMessage({
                     eventName: BroadcastEvent.OnWidgetError,
@@ -828,38 +831,23 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         };
     }, [facadeChatSDK]);
 
-    // Handle auth success events for state persistence
+    // Auth state change listeners (broadcast by FacadeChatSDK.authenticateChat() and startChat())
     useEffect(() => {
         const authSucceededSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthSucceeded)
             .subscribe((msg) => {
-                const isAuthenticated = msg?.payload?.isAuthenticated;
-                const token = msg?.payload?.token;
-
-                if (isAuthenticated) {
-                    if (token) {
-                        dispatch({ type: LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN, payload: token });
-                    }
-                    // Persist auth state for reconnect after page refresh
+                if (msg?.payload?.isAuthenticated) {
+                    // Only store boolean flag, NOT the token - token is managed by FacadeChatSDK
                     dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: true });
                 }
             });
 
-        // Handle auth reset (mid-auth fallback to unauthenticated)
+        // Auth reset: only update the boolean flag here.
+        // We do NOT clear widget state/cache/adapter because this fires DURING startChat(),
+        // which will handle state transitions. FacadeChatSDK has already cleared SDK internals.
         const authResetSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthReset)
             .subscribe((msg) => {
-                const isAuthenticated = msg?.payload?.isAuthenticated;
-                const clearLiveChatContext = msg?.payload?.clearLiveChatContext;
-
-                if (isAuthenticated === false) {
-                    dispatch({ type: LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN, payload: null });
+                if (msg?.payload?.isAuthenticated === false) {
                     dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: false });
-
-                    // Clear context to prevent reconnecting to old auth chat
-                    if (clearLiveChatContext) {
-                        dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: {} });
-                        dispatch({ type: LiveChatWidgetActionType.SET_RECONNECT_ID, payload: "" });
-                        dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: {} });
-                    }
                 }
             });
 

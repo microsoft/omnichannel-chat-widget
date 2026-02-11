@@ -309,12 +309,6 @@ export enum LiveChatWidgetActionType {
 
     /*
         Parameters:
-        string: Auth token obtained after user authentication
-    */
-    SET_AUTHENTICATED_USER_TOKEN,
-
-    /*
-        Parameters:
         true/false: Tracks if user has authenticated (pre-auth or mid-conversation) for reconnect support
     */
     SET_USER_AUTHENTICATED,

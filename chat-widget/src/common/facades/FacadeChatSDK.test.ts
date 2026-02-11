@@ -615,7 +615,7 @@ describe("FacadeChatSDK", () => {
 
             const result = await facadeChatSDK["tokenRing"]();
 
-            expect(result).toEqual({ result: true, message: "Mid-auth: no token returned; pending unauthenticated state" });
+            expect(result).toEqual({ result: true, message: "Mid-auth: proceeding as unauthenticated" });
             expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(true);
         });
 
@@ -636,13 +636,14 @@ describe("FacadeChatSDK", () => {
             expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(false);
         });
 
-        it("should reset pendingMidAuthUnauthenticatedState at the start of tokenRing", async () => {
+        it("should keep pendingMidAuthUnauthenticatedState when sdk is mocked (returns early)", async () => {
             facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
-            facadeChatSDK["sdkMocked"] = true; // Will return early
+            facadeChatSDK["sdkMocked"] = true; // Will return early without resetting
 
             await facadeChatSDK["tokenRing"]();
 
-            expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(false);
+            // When SDK is mocked, tokenRing returns early and does not reset the flag
+            expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(true);
         });
     });
 
