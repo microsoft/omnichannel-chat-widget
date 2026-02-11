@@ -11,7 +11,10 @@ module.exports = {
         publicPath: "/chat-widget/dist/",
     },
     resolve: {
-        extensions: [".Webpack.js", ".web.js", ".ts", ".js", ".jsx", ".tsx"]
+        extensions: [".Webpack.js", ".web.js", ".ts", ".js", ".jsx", ".tsx", ".mjs"],
+        alias: {
+            "swiper/modules": require.resolve("swiper/swiper.esm.js")
+        }
     },
     devServer: {
         static: {
@@ -32,7 +35,7 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-
+                type: "javascript/auto",
                 use: [
                     "thread-loader", // the idea is to use any core possible to divide the build
                     {
