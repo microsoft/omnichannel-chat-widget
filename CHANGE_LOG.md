@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [Persistent Chat History] Fixed scroll bar jumping to top when loading persistent chat history in authenticated chat
 - Fixed issue with persistent chat history not properly computing flags for history messages.
 - Fixed uncaught exception error in post chat survey when closing the survey
 - Fixed disconnection banner persisting when closing and reopening chat widget

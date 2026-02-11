@@ -91,7 +91,7 @@ const WebChatEventSubscribers = () => {
                                     }
                                 }
                             });
-                        }, 2000);
+                        }, 200);
                     } else if (!newIsConnected && isConnected) {
                         setIsConnected(false);
                         TelemetryHelper.logActionEventToAllTelemetry(LogLevel.WARN, {

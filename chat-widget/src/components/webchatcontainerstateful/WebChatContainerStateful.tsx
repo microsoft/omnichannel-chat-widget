@@ -5,6 +5,7 @@ import React, { Dispatch, useEffect, useRef, useState } from "react";
 import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
+import ChatWidgetEvents from "../livechatwidget/common/ChatWidgetEvents";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
 import { Components } from "botframework-webchat";
 import { ExtendedChatConfig } from "./interfaces/IExtendedChatConffig";
@@ -16,6 +17,8 @@ import { ITimer } from "../../common/interfaces/ITimer";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { NotificationHandler } from "./webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "./webchatcontroller/enums/NotificationScenarios";
+import SecureEventBus from "../../common/utils/SecureEventBus";
+import Spinner from "./webchatcontroller/middlewares/renderingmiddlewares/attachments/Spinner";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "./webchatcontroller/enums/WebChatActionType";
 import WebChatEventSubscribers from "./webchatcontroller/WebChatEventSubscribers";
@@ -97,6 +100,56 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
     // Determine if persistent chat history should be loaded based on all conditions
     const shouldLoadPersistentHistoryMessages = shouldLoadPersistentChatHistory(extendedChatConfig);
+
+    // History overlay state: false = overlay visible (waiting for history), true = ready to show transcript
+    const [initialHistoryReady, setInitialHistoryReady] = useState(!shouldLoadPersistentHistoryMessages);
+
+    // Subscribe to history-loaded events to reveal transcript after first batch
+    useEffect(() => {
+        if (!shouldLoadPersistentHistoryMessages || initialHistoryReady) return;
+
+        const eventBus = SecureEventBus.getInstance();
+
+        const revealTranscript = () => {
+            // Wait for botframework-webchat to render the injected messages
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    // Scroll to bottom before revealing
+                    const scrollContainer = document.querySelector(
+                        ".webchat__basic-transcript__scrollable"
+                    ) as HTMLElement;
+                    if (scrollContainer) {
+                        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+                    }
+                    setInitialHistoryReady(true);
+                });
+            });
+        };
+
+        // Primary trigger: first history batch loaded
+        const unsub1 = eventBus.subscribe(
+            ChatWidgetEvents.INITIAL_HISTORY_BATCH_LOADED, revealTranscript
+        );
+        // Safety nets: also reveal on these events
+        const unsub2 = eventBus.subscribe(
+            ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, revealTranscript
+        );
+        const unsub3 = eventBus.subscribe(
+            ChatWidgetEvents.HISTORY_LOAD_ERROR, revealTranscript
+        );
+
+        // Timeout safety net: reveal after 8 seconds no matter what
+        const timeout = setTimeout(() => {
+            revealTranscript();
+        }, 8000);
+
+        return () => {
+            unsub1();
+            unsub2();
+            unsub3();
+            clearTimeout(timeout);
+        };
+    }, [shouldLoadPersistentHistoryMessages]);
 
     if (shouldLoadPersistentHistoryMessages) {
 
@@ -427,9 +480,37 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         `}</style>
             <Stack styles={containerStyles} className="webchat__stacked-layout_container">
-                <div id="ms_lcw_webchat_root" style={{height: "100%", width: "100%"}}>
+                <div id="ms_lcw_webchat_root" style={{height: "100%", width: "100%", position: "relative"}}>
                     {shouldLoadPersistentHistoryMessages && <WebChatEventSubscribers/>}
                     <BasicWebChat></BasicWebChat>
+                    {!initialHistoryReady && (
+                        <div style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: webChatStyles?.backgroundColor ?? "#F7F7F9",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            zIndex: 1
+                        }}
+                        role="status"
+                        aria-live="polite"
+                        aria-label={localizedTexts?.INITIAL_HISTORY_LOADING ?? "Loading previous messages..."}>
+                            <Spinner size={24} borderWidth={3} />
+                            <div style={{
+                                marginTop: 12,
+                                fontFamily: webChatStyles?.primaryFont ?? "Segoe UI, Arial, sans-serif",
+                                fontSize: 14,
+                                color: "#605E5C"
+                            }}>
+                                {localizedTexts?.INITIAL_HISTORY_LOADING ?? "Loading previous messages..."}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </Stack>
             {citationPaneOpen && (

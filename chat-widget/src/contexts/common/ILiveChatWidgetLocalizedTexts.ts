@@ -163,6 +163,11 @@ export interface ILiveChatWidgetLocalizedTexts {
     MIDDLEWARE_BANNER_FILE_IS_MALICIOUS?: string;
 
     /**
+     * Message shown on the overlay while initial persistent chat history is loading.
+     */
+    INITIAL_HISTORY_LOADING?: string;
+
+    /**
      * Success message, indicating the email address introduced has been registered to receive the transcript.
      */
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS?: string;

@@ -22,7 +22,8 @@ jest.mock("../../../common/telemetry/TelemetryHelper", () => ({
 }));
 jest.mock("../../livechatwidget/common/ChatWidgetEvents", () => ({
     FETCH_PERSISTENT_CHAT_HISTORY: "FETCH_PERSISTENT_CHAT_HISTORY",
-    ADD_ACTIVITY: "ADD_ACTIVITY"
+    ADD_ACTIVITY: "ADD_ACTIVITY",
+    INITIAL_HISTORY_BATCH_LOADED: "INITIAL_HISTORY_BATCH_LOADED"
 }));
 jest.mock("../../../common/Constants", () => ({
     Constants: {
@@ -149,7 +150,7 @@ describe("WebChatEventSubscribers", () => {
                 connectionCheckCallback();
             });
 
-            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 200);
         });
     });
 
@@ -214,12 +215,12 @@ describe("WebChatEventSubscribers", () => {
             });
 
             // Should now dispatch timeout for the new connection
-            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 200);
         });
     });
 
     describe("Timeout Behavior", () => {
-        it("should use 2000ms timeout for dispatching events when connected", () => {
+        it("should use 200ms timeout for dispatching events when connected", () => {
             mockWebChatStoreLoader.store = {
                 getState: jest.fn().mockReturnValue({
                     connectivityStatus: "connected"
@@ -234,7 +235,7 @@ describe("WebChatEventSubscribers", () => {
                 connectionCheckCallback();
             });
 
-            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 200);
 
             // Execute timeout callback manually
             const timeoutCallback = setTimeoutSpy.mock.calls[0][0];
@@ -269,7 +270,7 @@ describe("WebChatEventSubscribers", () => {
                 connectionCheckCallback();
             });
 
-            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 2000);
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 200);
 
             // Don't execute callback - events should not be dispatched
             expect(mockDispatchCustomEvent).not.toHaveBeenCalled();

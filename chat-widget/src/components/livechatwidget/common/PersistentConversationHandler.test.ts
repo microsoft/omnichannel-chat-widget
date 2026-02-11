@@ -17,7 +17,8 @@ jest.mock("./ChatWidgetEvents", () => ({
     ADD_ACTIVITY: "ADD_ACTIVITY",
     FETCH_PERSISTENT_CHAT_HISTORY: "FETCH_PERSISTENT_CHAT_HISTORY",
     NO_MORE_HISTORY_AVAILABLE: "NO_MORE_HISTORY_AVAILABLE",
-    HISTORY_LOAD_ERROR: "HISTORY_LOAD_ERROR"
+    HISTORY_LOAD_ERROR: "HISTORY_LOAD_ERROR",
+    INITIAL_HISTORY_BATCH_LOADED: "INITIAL_HISTORY_BATCH_LOADED"
 }));
 jest.mock("../../../common/telemetry/TelemetryHelper");
 jest.mock("@microsoft/omnichannel-chat-components", () => ({
@@ -183,10 +184,11 @@ describe("PersistentConversationHandler", () => {
                 pageToken: undefined
             });
             
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3); // 2 activities + 1 divider
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4); // 2 activities + 1 divider + INITIAL_HISTORY_BATCH_LOADED
             expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
             });
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.INITIAL_HISTORY_BATCH_LOADED);
         });
 
         it("should handle empty message response", async () => {
@@ -472,7 +474,8 @@ describe("PersistentConversationHandler", () => {
             // 2. ADD_ACTIVITY for activity2
             // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
             // 4. ADD_ACTIVITY for activity1 (no divider since same conversation)
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4);
+            // 5. INITIAL_HISTORY_BATCH_LOADED (first pull completed)
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(5);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
@@ -480,6 +483,7 @@ describe("PersistentConversationHandler", () => {
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(4, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
             });
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(5, ChatWidgetEvents.INITIAL_HISTORY_BATCH_LOADED);
         });
 
         it("should handle first message (no previous message)", async () => {
@@ -499,11 +503,13 @@ describe("PersistentConversationHandler", () => {
             // 1. NO_MORE_HISTORY_AVAILABLE (from fetchHistoryMessages when pageToken is null)
             // 2. ADD_ACTIVITY for activity1
             // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3);
+            // 4. INITIAL_HISTORY_BATCH_LOADED (first pull completed)
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
             });
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(4, ChatWidgetEvents.INITIAL_HISTORY_BATCH_LOADED);
         });
     });
 

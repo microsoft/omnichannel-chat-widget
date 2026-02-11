@@ -25,6 +25,7 @@ class PersistentConversationHandler {
     private pageSize = defaultPersistentChatHistoryProps.pageSize;
 
     private isCurrentlyPulling = false;
+    private isFirstPull = true;
     private pageTokenInTransitSet = new Set<string>();
 
     constructor(facadeChatSDK: FacadeChatSDK, props: IPersistentChatHistoryProps) {
@@ -59,6 +60,7 @@ class PersistentConversationHandler {
         this.lastMessage = null;
         this.count = 0;
         this.isCurrentlyPulling = false;
+        this.isFirstPull = true;
         this.pageTokenInTransitSet.clear();
     }
 
@@ -139,6 +141,12 @@ class PersistentConversationHandler {
             // Remove pageToken from transit set if it was added
             if (this.pageToken) {
                 this.pageTokenInTransitSet.delete(this.pageToken);
+            }
+
+            // Signal that the first history batch has been processed (success, empty, or error)
+            if (this.isFirstPull) {
+                this.isFirstPull = false;
+                dispatchCustomEvent(ChatWidgetEvents.INITIAL_HISTORY_BATCH_LOADED);
             }
         }
     }
