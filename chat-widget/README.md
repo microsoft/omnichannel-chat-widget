@@ -177,7 +177,7 @@ Header's and Footer's child components consist of three parts:
 1. "middleGroup" - adding child components in the middle of the Header/Footer
 1. "rightGroup" - adding child components at the right of the Header/Footer
 
-By default Header has the header icon and title on the left and minimize and close buttons on the right, and Footer has Download Transcript and Email Transcript buttons on the left and audio notification button on the right. These components can be overriden with [ComponentOverrides](#ComponentOverrides). In addition, other custom child components can be added to both Header and Footer by creating custom react nodes and adding them to attributes "leftGroup", "middleGroup" or "rightGroup" of "controlProps".
+By default Header has the header icon and title on the left and minimize and close buttons on the right, and Footer has Download Transcript and Email Transcript buttons on the left and audio notification button on the right. These components can be overriden with [ComponentOverrides](#componentoverrides). In addition, other custom child components can be added to both Header and Footer by creating custom react nodes and adding them to attributes "leftGroup", "middleGroup" or "rightGroup" of "controlProps".
 
 ```js
 const buttonStyleProps: IButtonStyles = {
@@ -224,8 +224,10 @@ const customizedFooterProp: IFooterProps = {
 > :pushpin: Note that [WebChat hooks](https://github.com/microsoft/BotFramework-WebChat/blob/main/docs/HOOKS.md) can also be used in any custom components.
 
 #### Bidirectional Custom Events
+
 - Sending events from a hosting web page to bots/agents
-    - Register a function to post event
+  - Register a function to post event
+
         ```js
         //define sendCustomEvent function
         const sendCustomEvent = (payload) => {
@@ -253,7 +255,9 @@ const customizedFooterProp: IFooterProps = {
             }
         })
         ```
-    - Receiving events from bots/agents
+
+  - Receiving events from bots/agents
+
         ```js
         //define setOnCustomEvent function
         const setOnCustomEvent = (callback) => {
@@ -269,8 +273,10 @@ const customizedFooterProp: IFooterProps = {
         ```
 
 #### Trigger initiateEndChat event
+
 Customer can trigger the initiateEndChat event via BroadcastService to end a chat session.
 When needed, the payload below could be triggered:
+
 ```js
 const endChatEvent = {
     eventName: "InitiateEndChat",
@@ -283,18 +289,21 @@ BroadcastService.postMessage(endChatEvent);
 
 The payload of the event is optional, only needed when force closing of a persistent chat session is not required.
 When chat widget receives the event without any payload, it will:
+
 1. set the widget to closed state, the widget panel will be minimized. Post chat survey will not be displayed.
 2. trigger a sessionclose service network request to OmniChannel services.
 
 If skipSessionCloseForPersistentChat is set to true. The session close network request will not be triggered, instead, if postChat survey is available, post chat survey will be displayed.
 
 After successfully processed initiateEndChat event. The CloseChat event is broadcasted.
+
 ```js
 BroadcastService.getMessageByEventName("CloseChat").subscribe(async (msg) => {
     console.log("close chat received: ", msg);
     //more actions to unmount component and resources
 })
 ```
+
 ## See Also
 
 [Customizations Dev Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md)\
