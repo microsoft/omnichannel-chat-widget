@@ -791,47 +791,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     }, [state.appStates.chatDisconnectEventReceived]);
 
-    // Handle mid-auth token received from external source
-    useEffect(() => {
-        const sub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthTokenReceived).subscribe(async (msg: ICustomEvent) => {
-            const { token, midAuth } = msg?.payload || {};
-            
-            if (!midAuth || !token) {
-                return;
-            }
-
-            TelemetryHelper.logActionEvent(LogLevel.INFO, {
-                Event: TelemetryEvent.MidConversationAuthTokenReceived,
-                Description: "Mid-conversation auth token received via broadcast event."
-            });
-
-            try {
-                await facadeChatSDK.authenticateChat(token, { refreshChatToken: true });
-                // FacadeChatSDK.authenticateChat() broadcasts MidConversationAuthSucceeded
-                // which is handled by the listener below to persist hasUserAuthenticated state
-            } catch (err) {
-                TelemetryHelper.logActionEvent(LogLevel.ERROR, {
-                    Event: TelemetryEvent.MidConversationAuthFailed,
-                    Description: "Mid-conversation authentication failed in widget listener.",
-                    ExceptionDetails: { message: (err as Error)?.message }
-                });
-                console.error("[LCW][LiveChatWidgetStateful] authenticateChat failed", (err as Error)?.message);
-
-                BroadcastService.postMessage({
-                    eventName: BroadcastEvent.OnWidgetError,
-                    payload: {
-                        errorMessage: `Mid-conversation authentication failed: ${(err as Error)?.message}`
-                    }
-                });
-            }
-        });
-
-        return () => {
-            sub.unsubscribe();
-        };
-    }, [facadeChatSDK]);
-
-    // Auth state change listeners (broadcast by FacadeChatSDK.authenticateChat() and startChat())
+    // Auth state change listeners (broadcast by FacadeChatSDK.startChat())
     useEffect(() => {
         const authSucceededSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthSucceeded)
             .subscribe((msg) => {

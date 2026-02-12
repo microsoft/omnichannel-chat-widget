@@ -188,31 +188,6 @@ export class FacadeChatSDK {
         }
     }
 
-    /**
-     * Validates if a token is expired without storing it.
-     * Returns true if token is expired or invalid, false if valid.
-     */
-    private isTokenExpiredByValue(token: string): boolean {
-        if (isNullOrEmptyString(token)) {
-            return true;
-        }
-
-        try {
-            const tokenExpiration = this.convertExpiration(this.extractExpFromToken(token) || 0);
-
-            if (tokenExpiration === 0) {
-                return false;
-            }
-
-            const now = Math.floor(Date.now() / 1000);
-            return now > tokenExpiration;
-        } catch (e) {
-            // If we can't parse the token, consider it invalid/expired
-            console.error("[LCW][FacadeChatSDK][isTokenExpiredByValue] Failed to parse token", e);
-            return true;
-        }
-    }
-
     private async corroborateTokenIsSet(chatSDK: OmnichannelChatSDK): Promise<void> {
         // if getAuthToken is not set, it's because handleAuthentication hasnt being called
         // so we need to call it 
@@ -358,20 +333,6 @@ export class FacadeChatSDK {
         this.isAuthenticated = false;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (this.chatSDK as any).authenticatedUserToken = null;
-    }
-
-    /** Handles authentication errors with consistent logging and broadcasting */
-    private handleAuthError(logMessage: string, description: string, error: unknown): void {
-        console.error(logMessage, error);
-        TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.ERROR, {
-            Event: TelemetryEvent.MidConversationAuthFailed,
-            Description: description,
-            ExceptionDetails: { message: (error as Error)?.message }
-        });
-        BroadcastService.postMessage({
-            eventName: BroadcastEvent.OnWidgetError,
-            payload: { errorMessage: (error as Error)?.message || description }
-        });
     }
 
     /**
@@ -690,70 +651,4 @@ export class FacadeChatSDK {
         return this.validateAndExecuteCall("getPersistentChatHistory", () => this.chatSDK.getPersistentChatHistory(getPersistentChatHistoryOptionalParams));
     }
 
-    public async authenticateChat(tokenOrProvider: string | (() => Promise<string>), optionalParams: { refreshChatToken?: boolean } = {}): Promise<void> {
-        TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.MidConversationAuthStarted,
-            Description: "Authentication started"
-        });
-
-        // Resolve token
-        let token: string;
-        try {
-            token = typeof tokenOrProvider === "string" ? tokenOrProvider : await tokenOrProvider();
-        } catch (e) {
-            this.handleAuthError("FAILED to resolve token", "Failed to resolve authentication token", e);
-            throw e;
-        }
-
-        // Validate token
-        if (this.isTokenExpiredByValue(token)) {
-            const isEmpty = isNullOrEmptyString(token);
-            const errorMessage = isEmpty
-                ? "Authentication failed: Token is empty or null"
-                : "Authentication Setup Error: Authentication token is already expired";
-
-            this.token = "";
-            this.expiration = 0;
-
-            this.handleAuthError("Token validation failed", isEmpty ? "Token is empty or null" : "Token is already expired", new Error(errorMessage));
-            throw new Error(errorMessage);
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const sdk = this.chatSDK as any;
-        const hasChatStarted = !!sdk.chatToken?.chatId;
-
-        try {
-            if (hasChatStarted) {
-                // SDK's authenticateChat sets sdk.authenticatedUserToken internally
-                await this.chatSDK.authenticateChat(token, optionalParams);
-            } else {
-                // Pre-chat: set the token on SDK directly (authenticateChat not available yet)
-                sdk.authenticatedUserToken = token;
-            }
-
-            await this.setToken(token);
-            this.isAuthenticated = true;
-
-            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
-                Event: TelemetryEvent.MidConversationAuthSucceeded,
-                Description: `${hasChatStarted ? "Mid-conversation" : "Pre-chat"} authentication succeeded`
-            });
-
-            BroadcastService.postMessage({
-                eventName: BroadcastEvent.MidConversationAuthSucceeded,
-                payload: { isAuthenticated: true, token, isPreChatAuth: !hasChatStarted }
-            });
-        } catch (e) {
-            if (!hasChatStarted) {
-                this.token = "";
-                this.expiration = 0;
-                sdk.authenticatedUserToken = null;
-            }
-
-            const errorMessage = (e as Error)?.message || `${hasChatStarted ? "Mid-conversation" : "Pre-chat"} authentication failed`;
-            this.handleAuthError(`${hasChatStarted ? "Mid-chat" : "Pre-chat"} auth FAILED`, errorMessage, e);
-            throw e;
-        }
-    }
 }
