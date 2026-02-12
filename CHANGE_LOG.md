@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
 - Added botframework-webchat@4.18.1-main.20260129.f7a730f dependency
 - Dependency resolutions for lodash, @babel/runtime-corejs3, and brace-expansion
+- Added [CLAUDE.md](../CLAUDE.md) project instructions file
 
 ### Changed
 
