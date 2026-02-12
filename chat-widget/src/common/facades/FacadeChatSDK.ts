@@ -317,13 +317,13 @@ export class FacadeChatSDK {
         sdk.sessionId = null;
         sdk.conversation = null;
 
-        if (hadExistingChat) {
-            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
-                Event: TelemetryEvent.MidConversationAuthReset,
-                Description: "Mid-auth without token: local state cleared",
-                Data: { previousChatId }
-            });
-        }
+        TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
+            Event: TelemetryEvent.MidConversationAuthReset,
+            Description: hadExistingChat
+                ? "Mid-auth without token: local state cleared"
+                : "Mid-auth: initialized as unauthenticated (no prior chat)",
+            Data: hadExistingChat ? { previousChatId } : undefined
+        });
     }
 
     /** Clears authentication state in both FacadeChatSDK and underlying SDK */
@@ -376,6 +376,13 @@ export class FacadeChatSDK {
         if (this.pendingMidAuthUnauthenticatedState) {
             const shouldClear = this.handlePendingUnauthenticatedState(wasPreviousSessionAuthenticated);
             sdk.deferInitialAuth = true;
+
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.MidConversationAuthReset,
+                Description: "Mid-auth configureMidAuthState: CASE 1 - unauthenticated, deferInitialAuth=true",
+                Data: { isReconnect: String(isReconnect), wasPreviousSessionAuthenticated: String(wasPreviousSessionAuthenticated), shouldClearReconnectParams: String(shouldClear) }
+            });
+
             return { shouldClearReconnectParams: shouldClear };
         }
 
@@ -419,6 +426,10 @@ export class FacadeChatSDK {
 
         if (isReconnect && !wasPreviousSessionAuthenticated) {
             sdk.deferInitialAuth = true;
+            TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.MidConversationAuthSucceeded,
+                Description: "Mid-auth handleAuthenticatedState: CASE 2 - reconnect to unauth session, deferInitialAuth=true (migration needed)"
+            });
         } else {
             // Reset to prevent inheriting deferInitialAuth=true from a previous unauthenticated chat
             sdk.deferInitialAuth = false;
@@ -481,6 +492,11 @@ export class FacadeChatSDK {
                                         !wasPreviousSessionAuthenticated;
 
             if (shouldMigrateToAuth) {
+                TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
+                    Event: TelemetryEvent.MidConversationAuthSucceeded,
+                    Description: "Mid-auth startChat: initiating migration to authenticated",
+                    Data: { isReconnect: String(isReconnect), wasPreviousSessionAuthenticated: String(wasPreviousSessionAuthenticated) }
+                });
                 await this.migrateConversationToAuthenticated();
             }
 

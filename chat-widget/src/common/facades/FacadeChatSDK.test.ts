@@ -358,15 +358,15 @@ describe("FacadeChatSDK", () => {
             expect(callArgs.liveChatContext).toBeUndefined();
         });
 
-        it("should reset pendingMidAuthUnauthenticatedState after processing", async () => {
+        it("should keep pendingMidAuthUnauthenticatedState true after startChat (not reset until token obtained in tokenRing)", async () => {
             facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
-            jest.spyOn(facadeChatSDK as unknown, "setMidAuthUnauthenticatedState").mockImplementation(() => {
-                facadeChatSDK["isAuthenticated"] = false;
-            });
+            facadeChatSDK["isAuthenticated"] = false;
 
             await facadeChatSDK.startChat({});
 
-            expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(false);
+            // pendingMidAuthUnauthenticatedState stays true so CASE 1 re-triggers on every startChat
+            // It is only cleared in tokenRing when a valid token is obtained
+            expect(facadeChatSDK["pendingMidAuthUnauthenticatedState"]).toBe(true);
         });
 
         it("should set authenticatedUserToken on SDK when authenticated with valid token", async () => {
