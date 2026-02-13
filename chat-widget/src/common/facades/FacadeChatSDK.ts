@@ -635,7 +635,6 @@ export class FacadeChatSDK {
          * Once the token is obtained , this will be added to the params to call the function.
          * 
          * This is a particular case, should not be taken as pattern.
-                    }
          *
          */
 

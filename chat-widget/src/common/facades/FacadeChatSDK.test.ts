@@ -2,8 +2,6 @@ import { FacadeChatSDK } from "./FacadeChatSDK";
 import { IFacadeChatSDKInput } from "./types/IFacadeChatSDKInput";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { handleAuthentication } from "../../components/livechatwidget/common/authHelper";
-import { BroadcastService } from "@microsoft/omnichannel-chat-components";
-import { BroadcastEvent } from "../telemetry/TelemetryConstants";
 
 // mock BroadcastService
 jest.mock("@microsoft/omnichannel-chat-components", () =>({

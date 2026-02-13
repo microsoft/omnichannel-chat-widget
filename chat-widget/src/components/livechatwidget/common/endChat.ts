@@ -281,9 +281,6 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
     });
     dispatch({ type: LiveChatWidgetActionType.SET_CITATIONS, payload: {} });
 
-    //// Clear mid-conversation authentication state to prevent it from persisting to next chat session
-    //dispatch({ type: LiveChatWidgetActionType.SET_IS_AUTHENTICATED_MID_CONVERSATION, payload: false });
-    //dispatch({ type: LiveChatWidgetActionType.SET_AUTHENTICATED_USER_TOKEN, payload: undefined });
     // Dismiss the chat disconnect notification banner if it was shown
     NotificationHandler.dismissNotification(NotificationScenarios.ChatDisconnect);
 
