@@ -292,17 +292,18 @@ describe("FacadeChatSDK", () => {
             expect(mockChatSDK.reconnectId).toBeNull();
         });
 
-        it("should broadcast MidConversationAuthReset event", () => {
+        it("should clear SDK internal state for fresh unauthenticated chat", () => {
+            const mockChatSDK = facadeChatSDK["chatSDK"] as unknown;
+            mockChatSDK.requestId = "some-request-id";
+            mockChatSDK.sessionId = "some-session-id";
+            mockChatSDK.chatToken = { chatId: "test-chat-id" };
+
             facadeChatSDK["setMidAuthUnauthenticatedState"]();
 
-            expect(BroadcastService.postMessage).toHaveBeenCalledWith({
-                eventName: BroadcastEvent.MidConversationAuthReset,
-                payload: {
-                    isAuthenticated: false,
-                    reason: "Starting new unauthenticated chat",
-                    clearLiveChatContext: true
-                }
-            });
+            expect(mockChatSDK.requestId).toBeNull();
+            expect(mockChatSDK.sessionId).toBeNull();
+            expect(mockChatSDK.conversation).toBeNull();
+            expect(mockChatSDK.chatToken).toEqual({});
         });
     });
 
@@ -340,17 +341,19 @@ describe("FacadeChatSDK", () => {
             await facadeChatSDK.startChat({});
 
             expect(mockStartChat).toHaveBeenCalled();
-            const callArgs = mockStartChat.mock.calls[0][0];
-            expect(callArgs.deferInitialAuth).toBe(true);
+            // deferInitialAuth is set directly on the SDK object by configureMidAuthState, not on optionalParams
+            expect((facadeChatSDK["chatSDK"] as unknown).deferInitialAuth).toBe(true);
         });
 
-        it("should clear liveChatContext when pendingMidAuthUnauthenticatedState is true", async () => {
+        it("should clear liveChatContext when pendingMidAuthUnauthenticatedState is true and wasAuthenticated", async () => {
             facadeChatSDK["pendingMidAuthUnauthenticatedState"] = true;
             jest.spyOn(facadeChatSDK as unknown, "setMidAuthUnauthenticatedState").mockImplementation(() => {
                 facadeChatSDK["isAuthenticated"] = false;
             });
 
-            const optionalParams = { liveChatContext: { chatToken: {}, requestId: "123" } };
+            // wasAuthenticated: true triggers Auth→Unauth transition which clears reconnect params
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const optionalParams = { liveChatContext: { chatToken: {}, requestId: "123" }, wasAuthenticated: true } as any;
             await facadeChatSDK.startChat(optionalParams);
 
             expect(mockStartChat).toHaveBeenCalled();
@@ -381,16 +384,16 @@ describe("FacadeChatSDK", () => {
             expect(chatSDK.authenticatedUserToken).toBe(jwt.token);
         });
 
-        it("should set deferInitialAuth=false when authenticated with valid token and deferInitialAuth was true", async () => {
+        it("should set deferInitialAuth=false when authenticated with valid token", async () => {
             const jwt = getJWTToken();
             facadeChatSDK["isAuthenticated"] = true;
             facadeChatSDK["token"] = jwt.token;
             facadeChatSDK["expiration"] = jwt.expiration;
 
-            await facadeChatSDK.startChat({ deferInitialAuth: true } as unknown);
+            await facadeChatSDK.startChat({});
 
-            const callArgs = mockStartChat.mock.calls[0][0];
-            expect(callArgs.deferInitialAuth).toBe(false);
+            // deferInitialAuth is set directly on the SDK object by handleAuthenticatedState
+            expect((facadeChatSDK["chatSDK"] as unknown).deferInitialAuth).toBe(false);
         });
 
         it("should not modify optionalParams when not authenticated", async () => {
@@ -492,8 +495,8 @@ describe("FacadeChatSDK", () => {
             const callArgs = mockStartChat.mock.calls[0][0];
             // Should pass liveChatContext for reconnect
             expect(callArgs.liveChatContext).toEqual(liveChatContext);
-            // deferInitialAuth should be false for authenticated reconnect
-            expect(callArgs.deferInitialAuth ?? false).toBe(false);
+            // deferInitialAuth should be false for authenticated reconnect (set on SDK object)
+            expect((facadeChatSDK["chatSDK"] as unknown).deferInitialAuth ?? false).toBe(false);
         });
     });
 
