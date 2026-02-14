@@ -72,10 +72,3 @@ export const shouldLoadPersistentChatHistory = (extendedChatConfig: ExtendedChat
 
     return isHistoryEnabledViaFCB;
 };
-
-export const isMidAuthEnabled = (midauth: string | undefined): boolean => {
-    if (isNullOrUndefined(midauth)) {
-        return false;
-    }
-    return midauth?.toString().toLowerCase() === "true";
-};

@@ -20,7 +20,8 @@ import { chatSDKStateCleanUp } from "./endChat";
 import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { createTrackingForFirstMessage } from "../../../firstresponselatency/FirstMessageTrackerFromBot";
-import { isPersistentChatEnabled, isMidAuthEnabled } from "./liveChatConfigUtils";
+import { isPersistentChatEnabled } from "./liveChatConfigUtils";
+import { isMidAuthEnabled } from "./authHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
@@ -184,7 +185,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             // MID-AUTH: Add wasAuthenticated flag for reconnect scenarios
             // Tells FacadeChatSDK whether the previous session was authenticated
             // Used to detect auth transitions (Auth->Unauth) and decide whether to call authenticateChat
-            const midAuthEnabled = isMidAuthEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional);
+            const midAuthEnabled = isMidAuthEnabled(state?.domainStates?.liveChatConfig);
             if (midAuthEnabled) {
                 const hasUserAuthenticated = state?.appStates?.hasUserAuthenticated === true ||
                                             persistedState?.appStates?.hasUserAuthenticated === true;

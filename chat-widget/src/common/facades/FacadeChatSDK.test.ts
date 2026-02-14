@@ -1,7 +1,7 @@
 import { FacadeChatSDK } from "./FacadeChatSDK";
 import { IFacadeChatSDKInput } from "./types/IFacadeChatSDKInput";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
-import { handleAuthentication } from "../../components/livechatwidget/common/authHelper";
+import { handleAuthentication, isMidAuthEnabled } from "../../components/livechatwidget/common/authHelper";
 
 // mock BroadcastService
 jest.mock("@microsoft/omnichannel-chat-components", () =>({
@@ -9,7 +9,11 @@ jest.mock("@microsoft/omnichannel-chat-components", () =>({
         postMessage: jest.fn()
     }}));
 
-jest.mock("../../components/livechatwidget/common/authHelper");
+jest.mock("../../components/livechatwidget/common/authHelper", () => ({
+    ...jest.requireActual("../../components/livechatwidget/common/authHelper"),
+    handleAuthentication: jest.fn(),
+    getAuthClientFunction: jest.fn()
+}));
 // function to mimic a jwt token with exp time from now to 5 min in the future in seconds
 function getJWTToken() {
     const now = Math.floor(Date.now() / 1000);
@@ -229,42 +233,47 @@ describe("FacadeChatSDK", () => {
 
     describe("isMidAuthEnabled", () => {
         it("should return true when msdyn_authenticatedsigninoptional is 'true'", () => {
-            facadeChatSDK["chatConfig"] = {
+            const config = {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "true"
                 }
-            } as unknown;
-            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any;
+            expect(isMidAuthEnabled(config)).toBe(true);
         });
 
         it("should return true when msdyn_authenticatedsigninoptional is 'True' (case insensitive)", () => {
-            facadeChatSDK["chatConfig"] = {
+            const config = {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "True"
                 }
-            } as unknown;
-            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(true);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any;
+            expect(isMidAuthEnabled(config)).toBe(true);
         });
 
         it("should return false when msdyn_authenticatedsigninoptional is 'false'", () => {
-            facadeChatSDK["chatConfig"] = {
+            const config = {
                 LiveWSAndLiveChatEngJoin: {
                     msdyn_authenticatedsigninoptional: "false"
                 }
-            } as unknown;
-            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any;
+            expect(isMidAuthEnabled(config)).toBe(false);
         });
 
         it("should return false when msdyn_authenticatedsigninoptional is undefined", () => {
-            facadeChatSDK["chatConfig"] = {
+            const config = {
                 LiveWSAndLiveChatEngJoin: {}
-            } as unknown;
-            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any;
+            expect(isMidAuthEnabled(config)).toBe(false);
         });
 
         it("should return false when LiveWSAndLiveChatEngJoin is undefined", () => {
-            facadeChatSDK["chatConfig"] = {} as unknown;
-            expect(facadeChatSDK["isMidAuthEnabled"]()).toBe(false);
+            const config = {// eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } as any;
+            expect(isMidAuthEnabled(config)).toBe(false);
         });
     });
 

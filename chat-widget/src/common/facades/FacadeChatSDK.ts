@@ -1,7 +1,7 @@
-﻿import { BroadcastEvent, LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../telemetry/TelemetryConstants";
 import { ChatAdapter, ChatSDKMessage, GetAgentAvailabilityResponse, GetLiveChatTranscriptResponse, GetPersistentChatHistoryResponse, GetVoiceVideoCallingResponse, IFileInfo, IRawMessage, MaskingRules, OmnichannelChatSDK, VoiceVideoCallingOptionalParams } from "@microsoft/omnichannel-chat-sdk";
 import { IFacadeChatSDKInput, PingResponse } from "./types/IFacadeChatSDKInput";
-import { getAuthClientFunction, handleAuthentication } from "../../components/livechatwidget/common/authHelper";
+import { getAuthClientFunction, handleAuthentication, isMidAuthEnabled } from "../../components/livechatwidget/common/authHelper";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import ChatAdapterOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/ChatAdapterOptionalParams";
@@ -45,12 +45,6 @@ export class FacadeChatSDK {
     // Stays true so CASE 1 re-triggers on every startChat to set deferInitialAuth
     private pendingMidAuthUnauthenticatedState = false;
 
-    // Checks msdyn_authenticatedsigninoptional flag in chatConfig
-    private isMidAuthEnabled(): boolean {
-        const value = (this.chatConfig as ChatConfig)?.LiveWSAndLiveChatEngJoin?.msdyn_authenticatedsigninoptional;
-        return value?.toString?.().toLowerCase?.() === "true";
-    }
-
     public isSDKMocked(): boolean {
         return this.sdkMocked;
     }
@@ -62,7 +56,7 @@ export class FacadeChatSDK {
     public destroy() {
         this.token = null;
         this.expiration = 0;
-        if (this.isMidAuthEnabled()) {
+        if (isMidAuthEnabled(this.chatConfig)) {
             this.pendingMidAuthUnauthenticatedState = false;
             this.isAuthenticated = true;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -261,7 +255,7 @@ export class FacadeChatSDK {
             const isEmptyTokenWithoutError = isNullOrEmptyString(ring?.token) &&
                 (ring?.result === true || (ring?.result === false && !ring?.error));
 
-            if (this.isMidAuthEnabled() && isEmptyTokenWithoutError) {
+            if (isMidAuthEnabled(this.chatConfig) && isEmptyTokenWithoutError) {
                 // Clear Facade and SDK token state so API calls use unauthenticated endpoints
                 this.token = "";
                 this.expiration = 0;
@@ -364,10 +358,10 @@ export class FacadeChatSDK {
      * CASE 1: Pending unauthenticated (no token) - sets deferInitialAuth=true
      * CASE 2: Authenticated with valid token - sets SDK token and deferInitialAuth based on scenario
      */
-    private async configureMidAuthState(
+    private configureMidAuthState(
         isReconnect: boolean,
         wasPreviousSessionAuthenticated: boolean
-    ): Promise<{ shouldClearReconnectParams: boolean }> {
+    ): { shouldClearReconnectParams: boolean } {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sdk = this.chatSDK as any;
 
@@ -464,14 +458,14 @@ export class FacadeChatSDK {
     }
 
     public async startChat(optionalParams: StartChatOptionalParams = {}): Promise<void> {
-        const midAuthEnabled = this.isMidAuthEnabled();
+        const midAuthEnabled = isMidAuthEnabled(this.chatConfig);
         const isReconnect = !!optionalParams.liveChatContext || !!optionalParams.reconnectId;
         const wasPreviousSessionAuthenticated = optionalParams.wasAuthenticated === true;
 
         return this.validateAndExecuteCall("startChat", async () => {
 
             if (midAuthEnabled) {
-                const { shouldClearReconnectParams } = await this.configureMidAuthState(
+                const { shouldClearReconnectParams } = this.configureMidAuthState(
                     isReconnect,
                     wasPreviousSessionAuthenticated
                 );

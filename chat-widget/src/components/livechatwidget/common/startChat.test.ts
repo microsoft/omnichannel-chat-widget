@@ -59,7 +59,10 @@ jest.mock("./endChat", () => ({
 }));
 
 jest.mock("./liveChatConfigUtils", () => ({
-    isPersistentChatEnabled: jest.fn(() => false),
+    isPersistentChatEnabled: jest.fn(() => false)
+}));
+
+jest.mock("./authHelper", () => ({
     isMidAuthEnabled: jest.fn(() => false)
 }));
 
@@ -495,7 +498,7 @@ describe("startChat - startTime timing validation tests", () => {
     });
 
     describe("Mid-auth configuration tests", () => {
-        const { isMidAuthEnabled } = jest.requireMock("./liveChatConfigUtils");
+        const { isMidAuthEnabled } = jest.requireMock("./authHelper");
         
         beforeEach(() => {
             jest.clearAllMocks();
