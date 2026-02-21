@@ -155,10 +155,16 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         return () => document.removeEventListener("click", clickHandler);
     }, [state]);
 
+    const minimizedStyles = state.appStates.isMinimized
+        ? (shouldLoadPersistentHistoryMessages
+            ? { visibility: "hidden", position: "absolute", width: 0, height: 0, overflow: "hidden", pointerEvents: "none" }
+            : { display: "none" })
+        : {};
+
     const containerStyles: IStackStyles = {
         root: Object.assign(
             {}, defaultWebChatContainerStatefulProps.containerStyles, webChatContainerProps?.containerStyles,
-            { display: state.appStates.isMinimized ? "none" : "" }) // Use this instead of removing WebChat from the picture so that the activity observer inside the adapter is not invoked
+            minimizedStyles) // Use visibility-based hiding instead of display:none to preserve scroll position across minimize/maximize
     };
 
     const localizedTexts = {

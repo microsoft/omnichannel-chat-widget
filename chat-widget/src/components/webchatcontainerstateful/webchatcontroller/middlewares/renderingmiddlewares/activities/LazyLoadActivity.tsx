@@ -38,18 +38,6 @@ import { createTimer } from "../../../../../../common/utils";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
 import SecureEventBus from "../../../../../../common/utils/SecureEventBus";
 
-/*
- * Interface defining the state of a scroll operation
- * Used to track and verify scroll actions for reliability
- */
-interface ScrollState {
-    container: HTMLElement | null;    // The scrollable container element
-    initialScrollTop: number;         // Starting scroll position
-    targetScrollTop: number;          // Target scroll position
-    attemptCount: number;             // Current retry attempt number
-    maxAttempts: number;              // Maximum retry attempts allowed
-}
-
 /**
  * LazyLoadHandler - Static class managing all lazy loading functionality
  * 
@@ -80,8 +68,10 @@ class LazyLoadHandler {
     public static paused = false;                          // Temporary disable flag
     public static observer: IntersectionObserver | null = null;  // The intersection observer instance
     
-    // Scroll operation state
-    private static scrollState: ScrollState | null = null;  // Current scroll operation tracking
+    // Scroll anchoring state (height-delta approach)
+    public static preLoadScrollHeight = 0;                  // scrollHeight before content loads
+    private static preLoadScrollTop = 0;                    // scrollTop before content loads
+    public static initialLoadComplete = false;              // Tracks if the first batch has loaded
     public static pendingScrollAction = false;              // Prevents concurrent scroll operations (public for event handlers)
     
     // Timeout and queue management
@@ -110,6 +100,7 @@ class LazyLoadHandler {
     private static resetEventListener = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(() => {
         LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadReset, "LazyLoad reset triggered");
         LazyLoadHandler.resetPending = true;
+        LazyLoadHandler.initialLoadComplete = false; // New session — next batch is an initial load
         LazyLoadHandler.setHasMoreHistoryAvailable(true); // Reset this immediately so activityMiddleware doesn't block rendering
         LazyLoadHandler.unmount(); // Clean up current state immediately
 
@@ -133,6 +124,7 @@ class LazyLoadHandler {
      */
     public static directReset() {
         LazyLoadHandler.resetPending = true;
+        LazyLoadHandler.initialLoadComplete = false; // New session — next batch is an initial load
         LazyLoadHandler.setHasMoreHistoryAvailable(true);
         LazyLoadHandler.unmount();
     }
@@ -417,16 +409,15 @@ class LazyLoadHandler {
 
     /**
      * Main lazy load trigger handler
-     * 
+     *
      * This is the core method that executes when the trigger element becomes visible.
      * It coordinates the entire lazy loading process:
-     * 
+     *
      * 1. Sets flags to prevent concurrent operations
-     * 2. Dispatches event to fetch more chat history
-     * 3. Waits for content to load
-     * 4. Executes scroll adjustment to maintain user position
-     * 
-     * Timing: Uses 300ms delay to allow content loading before scroll adjustment
+     * 2. Captures scroll state BEFORE content loads (for height-delta anchoring)
+     * 3. Dispatches event to fetch more chat history
+     *
+     * Scroll anchoring is triggered by HISTORY_BATCH_LOADED event (not a blind timeout).
      */
     private static handleLazyLoadTrigger() {
         // Final guard: Don't proceed if no more history is available
@@ -438,130 +429,55 @@ class LazyLoadHandler {
         LazyLoadHandler.pendingScrollAction = true;  // Block new scroll actions
         LazyLoadHandler.paused = true;               // Pause intersection observer
 
-        // Dispatch custom event to trigger chat history fetching
-        // This event is handled by other parts of the chat system
-        dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
-
-        // Wait for content to load before performing scroll adjustment
-        // 200ms provides good balance between responsiveness and content loading
-        const timeoutId = window.setTimeout(() => {
-            LazyLoadHandler.retryTimeouts.delete(timeoutId);
-            LazyLoadHandler.executeReliableScroll();
-        }, 200); // Reduced from 300ms to 200ms for faster response
-        LazyLoadHandler.retryTimeouts.add(timeoutId);
-    }
-
-    /**
-     * Executes reliable scroll with validation and retry logic
-     * 
-     * This method implements a robust scroll system that:
-     * 1. Finds and validates the scroll container
-     * 2. Calculates target scroll position (current + 35px)
-     * 3. Sets up scroll state for tracking and retries
-     * 4. Initiates the scroll attempt process
-     * 
-     * If no suitable container is found, schedules a retry.
-     */
-    private static executeReliableScroll() {
-        // Guard: Don't execute scroll if no more history is available
-        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-            LazyLoadHandler.finishScrollAction();
-            return;
-        }
-
-        // Find container using multiple fallback strategies
+        // Capture scroll geometry BEFORE new content loads — used for height-delta anchoring
         const { container, isScrollable } = LazyLoadHandler.findScrollContainer();
-        
-        if (!container || !isScrollable) {
-            LazyLoadHandler.scheduleScrollRetry();
-            return;
+        if (container && isScrollable) {
+            LazyLoadHandler.preLoadScrollHeight = container.scrollHeight;
+            LazyLoadHandler.preLoadScrollTop = container.scrollTop;
         }
 
-        // Calculate scroll positions
-        const initialScrollTop = container.scrollTop;
-        const targetScrollTop = initialScrollTop + 35; // 35px down to maintain position
+        LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadTriggerFired, "Lazy load trigger fired — fetching history");
 
-        // Set up scroll state for tracking and retries
-        LazyLoadHandler.scrollState = {
-            container,
-            initialScrollTop,
-            targetScrollTop,
-            attemptCount: 0,
-            maxAttempts: 5    // Allow up to 5 retry attempts
-        };
-
-        // Begin the scroll attempt process
-        LazyLoadHandler.attemptScroll();
+        // Dispatch custom event to trigger chat history fetching
+        dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
     }
 
     /**
-     * Attempts to perform scroll with verification and retry logic
-     * 
-     * This method implements a sophisticated scroll system:
-     * 
-     * 1. Uses requestAnimationFrame for smooth execution
-     * 2. Performs the scroll operation
-     * 3. Verifies scroll actually occurred (5px tolerance)
-     * 4. Retries with exponential backoff if failed
-     * 5. Continues operation after max attempts
-     * 
-     * The two-frame approach ensures scroll is applied and then verified
-     * after the browser has had time to process the scroll change.
+     * Applies height-delta scroll anchoring after new history content is prepended.
+     *
+     * When content is added above the viewport, the browser keeps scrollTop constant
+     * but the content shifts down — making the viewport drift upward.
+     * Fix: scrollTop = savedScrollTop + (newScrollHeight - savedScrollHeight)
+     * This keeps the user looking at the same content they had before.
      */
-    private static attemptScroll() {
-        // Guard: Don't attempt scroll if no more history is available
-        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
+    public static applyScrollAnchor() {
+        const { container, isScrollable } = LazyLoadHandler.findScrollContainer();
+        if (!container || !isScrollable) {
             LazyLoadHandler.finishScrollAction();
             return;
         }
-
-        if (!LazyLoadHandler.scrollState) {
-            LazyLoadHandler.finishScrollAction();
-            return;
+        const newScrollHeight = container.scrollHeight;
+        const heightDelta = newScrollHeight - LazyLoadHandler.preLoadScrollHeight;
+        if (heightDelta > 0) {
+            container.scrollTop = LazyLoadHandler.preLoadScrollTop + heightDelta;
         }
 
-        // Extract current scroll state
-        const { container, targetScrollTop, attemptCount, maxAttempts } = LazyLoadHandler.scrollState;
-        LazyLoadHandler.scrollState.attemptCount++;
-
-        // Perform scroll using requestAnimationFrame for smooth execution
-        // Frame 1: Apply the scroll
-        requestAnimationFrame(() => {
-            // Double-check history availability before applying scroll
-            if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                LazyLoadHandler.finishScrollAction();
-                return;
-            }
-
-            if (container) {
-                container.scrollTop = targetScrollTop;
-            }
-            
-            // Frame 2: Verify scroll occurred after browser has processed the change
-            requestAnimationFrame(() => {
-                // Triple-check history availability before verification
-                if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-                    LazyLoadHandler.finishScrollAction();
-                    return;
-                }
-
-                const actualScrollTop = container ? container.scrollTop : 0;
-                const scrollSucceeded = Math.abs(actualScrollTop - targetScrollTop) < 5; // 5px tolerance for success
-                
-                if (scrollSucceeded) {
-                    LazyLoadHandler.finishScrollAction();
-                } else if (attemptCount < maxAttempts) {
-                    // Retry with exponential backoff (100ms * attempt number)
-                    const timeoutId = window.setTimeout(() => {
-                        LazyLoadHandler.retryTimeouts.delete(timeoutId);
-                        LazyLoadHandler.attemptScroll();
-                    }, 100 * attemptCount); // Exponential backoff
-                    LazyLoadHandler.retryTimeouts.add(timeoutId);
-                } else {
-                    LazyLoadHandler.finishScrollAction();
+        try {
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.LCWLazyLoadScrollAnchorApplied,
+                Description: "Scroll anchor applied after history batch",
+                CustomProperties: {
+                    heightDelta,
+                    preLoadScrollHeight: LazyLoadHandler.preLoadScrollHeight,
+                    newScrollHeight,
+                    newScrollTop: container.scrollTop
                 }
             });
-        });
+        } catch {
+            // Silent fail — don't break scroll anchoring for telemetry issues
+        }
+
+        LazyLoadHandler.finishScrollAction();
     }
 
     /**
@@ -571,9 +487,8 @@ class LazyLoadHandler {
      * Uses delays to allow content stabilization before re-enabling
      * the intersection observer for the next lazy load cycle.
      */
-    private static finishScrollAction() {
+    public static finishScrollAction() {
         // Clean up scroll tracking state
-        LazyLoadHandler.scrollState = null;
         LazyLoadHandler.pendingScrollAction = false;
         
         // Schedule unpause and reset with delay for content stabilization
@@ -586,35 +501,12 @@ class LazyLoadHandler {
     }
 
     /**
-     * Schedules retry for failed scroll operations
-     * 
-     * Used when scroll container is not available or scrollable.
-     * Provides a longer delay to allow container to become ready.
-     */
-    private static scheduleScrollRetry() {
-        // Don't schedule retry if no more history is available
-        if (!LazyLoadHandler.hasMoreHistoryAvailable) {
-            LazyLoadHandler.finishScrollAction();
-            return;
-        }
-
-        const timeoutId = window.setTimeout(() => {
-            LazyLoadHandler.retryTimeouts.delete(timeoutId);
-            // Only retry if we're still in a pending scroll action state and have more history
-            if (LazyLoadHandler.pendingScrollAction && LazyLoadHandler.hasMoreHistoryAvailable) {
-                LazyLoadHandler.executeReliableScroll();
-            }
-        }, 1000); // 1 second delay for container readiness
-        LazyLoadHandler.retryTimeouts.add(timeoutId);
-    }
-
-    /**
      * Schedules observer reset for next lazy load cycle
-     * 
+     *
      * After a lazy load operation completes, the observer needs to be reset
      * to detect the next time the user scrolls to the top.
      */
-    private static scheduleReset() {
+    public static scheduleReset() {
         const timeoutId = window.setTimeout(() => {
             LazyLoadHandler.retryTimeouts.delete(timeoutId);
             LazyLoadHandler.reset();
@@ -715,7 +607,7 @@ class LazyLoadHandler {
      * that might call this method directly.
      */
     public static moveScrollDown() {
-        LazyLoadHandler.executeReliableScroll();
+        LazyLoadHandler.applyScrollAnchor();
     }
 
     /**
@@ -752,26 +644,26 @@ class LazyLoadHandler {
      * Also removes the trigger element from the DOM to prevent further triggering.
      */
     public static handleNoMoreHistoryAvailable() {
+        if (!LazyLoadHandler.initialLoadComplete) {
+            LazyLoadHandler.initialLoadComplete = true;
+        }
         LazyLoadHandler.setHasMoreHistoryAvailable(false);
         LazyLoadHandler.paused = true;
         LazyLoadHandler.pendingScrollAction = false; // Reset this to prevent stuck states
-        
+
         LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadNoMoreHistory, "No more history available");
-        
+
         // Clear all pending timeouts to stop any scheduled operations
         LazyLoadHandler.retryTimeouts.forEach(timeoutId => {
             clearTimeout(timeoutId);
         });
         LazyLoadHandler.retryTimeouts.clear();
-        
+
         // Disconnect observer to prevent further triggering
         if (LazyLoadHandler.observer) {
             LazyLoadHandler.observer.disconnect();
             LazyLoadHandler.observer = null;
         }
-        
-        // Clear scroll state
-        LazyLoadHandler.scrollState = null;
     }
 
     /**
@@ -791,7 +683,9 @@ class LazyLoadHandler {
         LazyLoadHandler.setHasMoreHistoryAvailable(true); // Reset history availability flag
         LazyLoadHandler.initializationQueue = [];   // Clear action queue
         LazyLoadHandler.resetPending = false;       // Clear pending reset flag
-        
+        // Note: initialLoadComplete is NOT reset here — it persists across observer cycles.
+        // It's only reset on new chat sessions (directReset / PersistentConversationReset).
+
         // Reinitialize with faster timing for better responsiveness
         const timeoutId = window.setTimeout(() => {
             
@@ -829,8 +723,9 @@ class LazyLoadHandler {
         LazyLoadHandler.initialized = false;
         LazyLoadHandler.paused = false;
         LazyLoadHandler.pendingScrollAction = false;
-        LazyLoadHandler.scrollState = null;
         LazyLoadHandler.isReady = false;
+        LazyLoadHandler.preLoadScrollHeight = 0;
+        LazyLoadHandler.preLoadScrollTop = 0;
         LazyLoadHandler.initializationQueue = [];
         // Note: Don't reset resetPending here as it needs to persist across unmount/mount cycles
     }
@@ -886,19 +781,12 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             setHasMoreHistory(false);
         };
 
-        // Event listener for HISTORY_LOAD_ERROR - hides banner temporarily without disabling future loads
+        // Event listener for HISTORY_LOAD_ERROR — dismiss banner on any error
         const handleHistoryLoadError = () => {
-            // Temporarily hide the banner by pausing, but keep hasMoreHistory true to allow retry
-            LazyLoadHandler.paused = true;
-            LazyLoadHandler.pendingScrollAction = false;
-            
-            // Re-enable after a delay to allow retry on next scroll
-            // Note: This timeout is intentionally not tracked as it's scoped to the component lifecycle
-            window.setTimeout(() => {
-                LazyLoadHandler.paused = false;
-            }, 2000); // 2 second delay before allowing retry
-            
-            LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadHistoryError, "History load error - will retry on next scroll");
+            LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadHistoryError,
+                `History load error - dismissing banner. initialLoadComplete: ${LazyLoadHandler.initialLoadComplete}`);
+            LazyLoadHandler.handleNoMoreHistoryAvailable();
+            setHasMoreHistory(false);
         };
 
         // Event listener for PersistentConversationReset to sync React state
@@ -909,13 +797,110 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             setHasMoreHistory(true);
         };
 
+        // Event listener for HISTORY_BATCH_LOADED — applies scroll anchoring after batch is processed
+        const handleBatchLoaded = () => {
+            LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadBatchReceived,
+                `Batch received — initialLoadComplete: ${LazyLoadHandler.initialLoadComplete}`);
+
+            if (!LazyLoadHandler.initialLoadComplete) {
+                // Initial load: use the same height-delta scroll anchoring as subsequent loads.
+                // This keeps the user at their current position while history is prepended above.
+                LazyLoadHandler.initialLoadComplete = true;
+                LazyLoadHandler.pendingScrollAction = false;
+
+                try {
+                    const { container } = LazyLoadHandler.findScrollContainer();
+                    if (container) {
+                        const savedScrollTop = container.scrollTop;
+                        const savedScrollHeight = container.scrollHeight;
+
+                        // Freeze viewport while React renders new content above
+                        container.style.overflow = "hidden";
+
+                        let framesRemaining = 6;
+                        const anchorScroll = () => {
+                            const newScrollHeight = container.scrollHeight;
+                            const heightDelta = newScrollHeight - savedScrollHeight;
+                            if (heightDelta > 0) {
+                                container.scrollTop = savedScrollTop + heightDelta;
+                            }
+                            framesRemaining--;
+                            if (framesRemaining > 0) {
+                                requestAnimationFrame(anchorScroll);
+                            } else {
+                                container.style.overflow = "";
+                                LazyLoadHandler.paused = false;
+                                LazyLoadHandler.scheduleReset();
+                            }
+                        };
+                        requestAnimationFrame(anchorScroll);
+                    } else {
+                        LazyLoadHandler.paused = false;
+                        LazyLoadHandler.scheduleReset();
+                    }
+                } catch {
+                    LazyLoadHandler.paused = false;
+                    LazyLoadHandler.scheduleReset();
+                }
+
+                LazyLoadHandler.logLifecycleEvent(TelemetryEvent.LCWLazyLoadInitialLoadComplete,
+                    "Initial history load complete — scroll anchored to current position");
+                return;
+            }
+            // Pagination: apply height-delta scroll anchoring repeatedly across frames.
+            //
+            // react-scroll-to-bottom uses useEffect + rAF to auto-scroll to bottom when new content
+            // arrives. This fires at unpredictable timing relative to our callbacks, so a single
+            // scrollTop assignment gets overridden intermittently.
+            //
+            // Fix: re-apply the correct scrollTop across several animation frames. After a few frames,
+            // react-scroll-to-bottom detects the user is NOT at the bottom (sticky=false) and stops
+            // auto-scrolling. We also temporarily freeze overflow to prevent visible flicker.
+            try {
+                const { container } = LazyLoadHandler.findScrollContainer();
+                if (container) {
+                    // Re-capture scrollTop — user may have scrolled during the API fetch
+                    const savedScrollTop = container.scrollTop;
+                    const savedScrollHeight = LazyLoadHandler.preLoadScrollHeight;
+
+                    // Freeze viewport to prevent visible flicker between competing scroll positions
+                    container.style.overflow = "hidden";
+
+                    let framesRemaining = 6; // ~100ms at 60fps — enough for react-scroll-to-bottom to settle
+                    const anchorScroll = () => {
+                        const newScrollHeight = container.scrollHeight;
+                        const heightDelta = newScrollHeight - savedScrollHeight;
+                        if (heightDelta > 0) {
+                            container.scrollTop = savedScrollTop + heightDelta;
+                        }
+                        framesRemaining--;
+                        if (framesRemaining > 0) {
+                            requestAnimationFrame(anchorScroll);
+                        } else {
+                            // All frames applied — restore overflow and finish
+                            container.style.overflow = "";
+                            LazyLoadHandler.finishScrollAction();
+                        }
+                    };
+                    requestAnimationFrame(anchorScroll);
+                } else {
+                    LazyLoadHandler.finishScrollAction();
+                }
+            } catch {
+                LazyLoadHandler.finishScrollAction();
+            }
+        };
+
         // Add secure event listener for no more history signal
         const eventBus = SecureEventBus.getInstance();
         const unsubscribeNoMoreHistory = eventBus.subscribe(ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE, handleNoMoreHistory);
-        
+
         // Add event listener for history load errors
         const unsubscribeHistoryError = eventBus.subscribe(ChatWidgetEvents.HISTORY_LOAD_ERROR, handleHistoryLoadError);
-        
+
+        // Add event listener for history batch loaded
+        const unsubscribeBatchLoaded = eventBus.subscribe(ChatWidgetEvents.HISTORY_BATCH_LOADED, handleBatchLoaded);
+
         // Add event listener for persistent conversation reset
         const resetSubscription = BroadcastService.getMessageByEventName(BroadcastEvent.PersistentConversationReset).subscribe(handlePersistentConversationReset);
 
@@ -933,6 +918,7 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             return () => {
                 unsubscribeNoMoreHistory();
                 unsubscribeHistoryError();
+                unsubscribeBatchLoaded();
                 resetSubscription.unsubscribe();
             };
         }
@@ -983,6 +969,7 @@ const LazyLoadActivity = (props? : Partial<ILiveChatWidgetProps>) => {
             // Remove event listeners
             unsubscribeNoMoreHistory();
             unsubscribeHistoryError();
+            unsubscribeBatchLoaded();
             resetSubscription.unsubscribe();
             if (container) {
                 container.removeEventListener("scroll", handleScroll);

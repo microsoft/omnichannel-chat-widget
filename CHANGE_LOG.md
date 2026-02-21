@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- [Persistent Chat History] Add fix for the scroll bar jumping during history load
 - [Persistent Chat History] Added fix for raw json adaptive cards in the persistent chat history messages
 - [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
 - [A11Y] Added focus on citation pane close button when citation pane is opened

@@ -136,7 +136,7 @@ export const createActivityMiddleware = (
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
             const conversationDividerLabel = localizedTexts?.CONVERSATION_DIVIDER_ARIA_LABEL || defaultMiddlewareLocalizedTexts.CONVERSATION_DIVIDER_ARIA_LABEL;
             // Pass the computed localized text to the divider component
-            return (<ConversationDividerActivity dividerActivityAriaLabel={conversationDividerLabel} />);
+            return () => (<ConversationDividerActivity dividerActivityAriaLabel={conversationDividerLabel} />);
         }
 
         if (card.activity.text

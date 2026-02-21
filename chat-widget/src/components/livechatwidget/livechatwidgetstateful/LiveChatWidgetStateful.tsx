@@ -46,6 +46,7 @@ import CallingContainerStateful from "../../callingcontainerstateful/CallingCont
 import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
+import { ExtendedChatConfig } from "../../webchatcontainerstateful/interfaces/IExtendedChatConffig";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import DraggableChatWidget from "../../draggable/DraggableChatWidget";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
@@ -87,6 +88,7 @@ import { initConfirmationPropsComposer } from "../common/initConfirmationPropsCo
 import { initWebChatComposer } from "../common/initWebChatComposer";
 import { registerBroadcastServiceForStorage } from "../../../common/storage/default/defaultCacheManager";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
+import { shouldLoadPersistentChatHistory } from "../common/liveChatConfigUtils";
 import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
@@ -657,7 +659,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state.appStates.isMinimized) {
             ActivityStreamHandler.cork();
         } else {
-            setTimeout(() => ActivityStreamHandler.uncork(), 500);
+            const extendedChatConfig = state?.domainStates?.liveChatConfig as ExtendedChatConfig | undefined;
+            if (shouldLoadPersistentChatHistory(extendedChatConfig)) {
+                requestAnimationFrame(() => {
+                    setTimeout(() => ActivityStreamHandler.uncork(), 500);
+                });
+            } else {
+                setTimeout(() => ActivityStreamHandler.uncork(), 500);
+            }
         }
 
     }, [state.appStates.isMinimized]);
