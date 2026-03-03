@@ -262,6 +262,7 @@ const customizedFooterProp: IFooterProps = {
 
 ## See Also
 
+[Releasing to npm](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/RELEASING.md)\
 [Customizations Dev Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md)\
 [Telemetry](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/Telemetry.md)\
 [Create LiveChatWidget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md)\
