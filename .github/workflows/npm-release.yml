@@ -25,6 +25,9 @@ jobs:
     if: ${{ startsWith(github.ref, 'refs/tags/w-v') || startsWith(github.ref, 'refs/heads/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-widget') }}
     runs-on: ubuntu-latest
     steps:
+      - name: Configure git line endings
+        run: git config --global core.autocrlf true
+
       - name: Checking out for ${{ github.ref }}
         uses: actions/checkout@v4
 
@@ -58,17 +61,15 @@ jobs:
 
       - name: Publish ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
         working-directory: chat-widget
-        run: |
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            npm publish --provenance --access public
-          else
-            npm publish --provenance --tag main --access public
-          fi
+        run: npm publish --provenance --access public
 
   publish-chat-components:
     if: ${{ startsWith(github.ref, 'refs/tags/c-v') || startsWith(github.ref, 'refs/heads/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-components') }}
     runs-on: ubuntu-latest
     steps:
+      - name: Configure git line endings
+        run: git config --global core.autocrlf true
+
       - name: Checking out for ${{ github.ref }}
         uses: actions/checkout@v4
 
@@ -102,9 +103,4 @@ jobs:
 
       - name: Publish ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
         working-directory: chat-components
-        run: |
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            npm publish --provenance --access public
-          else
-            npm publish --provenance --tag main --access public
-          fi
+        run: npm publish --provenance --access public
