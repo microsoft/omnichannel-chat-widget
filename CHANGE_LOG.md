@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
+- Dev versions now auto-publish on push to main
+
 ### Added
 
 - [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
