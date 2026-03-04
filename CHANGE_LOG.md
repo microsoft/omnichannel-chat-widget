@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 
 - Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
 - Dev versions now auto-publish on push to main
+- Use latest dist-tag for all npm publishes
+- Fix CRLF line ending issue for npm-release workflow on Linux runners
+- PR workflows now also trigger on workflow file changes
 
 ### Added
 
