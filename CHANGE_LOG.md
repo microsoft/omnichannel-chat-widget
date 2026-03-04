@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
+
 ### Changed
 
 - Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
