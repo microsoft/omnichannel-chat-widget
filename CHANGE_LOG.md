@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 - Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
 - Dev versions now auto-publish on push to main
+- Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf  
 - Use latest dist-tag for all npm publishes
 - Fix CRLF line ending issue for npm-release workflow on Linux runners
 - PR workflows now also trigger on workflow file changes
@@ -32,7 +33,6 @@ All notable changes to this project will be documented in this file.
 - Enhanced error handling in file download process
 - Added comprehensive XSS security tests (19 new tests total)
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
-- Added botframework-webchat@4.18.1-main.20260129.f7a730f dependency
 - Dependency resolutions for lodash, @babel/runtime-corejs3, and brace-expansion
 - Added [CLAUDE.md](../CLAUDE.md) project instructions file
 
