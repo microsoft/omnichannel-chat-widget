@@ -61,7 +61,7 @@ jobs:
 
       - name: Publish ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
         working-directory: chat-widget
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --tag latest --access public
 
   publish-chat-components:
     if: ${{ startsWith(github.ref, 'refs/tags/c-v') || startsWith(github.ref, 'refs/heads/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-components') }}
@@ -103,4 +103,4 @@ jobs:
 
       - name: Publish ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
         working-directory: chat-components
-        run: npm publish --provenance --access public
+        run: npm publish --provenance --tag latest --access public

@@ -6,12 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
+
 ### Changed
 
 - Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
 - Dev versions now auto-publish on push to main
-- Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf  
-- Use latest dist-tag for all npm publishes
+- Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf
 - Fix CRLF line ending issue for npm-release workflow on Linux runners
 - PR workflows now also trigger on workflow file changes
 
