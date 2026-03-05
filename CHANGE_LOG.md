@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Added style overrides for hover and focus on adaptive cards
+
 ### Fixed
 
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
