@@ -279,6 +279,14 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             color: ${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color}  !important;
             background-color: ${webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background};
         }
+        
+        .webchat__stacked-layout__content .ac-pushButton:hover, 
+        .ac-pushButton[aria-pressed="true"], 
+        .webchat__stacked-layout__content .ac-pushButton:active, 
+        .webchat__stacked-layout__content .ac-pushButton:focus {
+            background-color: ${webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color}  !important;
+            color: ${webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background} !important;
+        }
 
         .webchat__bubble__content>div#ms_lcw_webchat_adaptive_card {
             background: ${webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background};
