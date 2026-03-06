@@ -18,6 +18,24 @@ const convertStringValueToInt = (value: any) => {
     return isNaN(result) ? undefined : result;
 };
 
+// Normalizes aspect ratio values in attachments from legacy format ("16x9", "4x3")
+// to the format expected by current WebChat ("16:9", "4:3").
+// Old history messages may contain the "x" format which causes WebChat validation errors
+// (ValueError: Expected "4:3" | "16:9" but received "16x9") and crashes the widget.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const normalizeAttachmentAspectRatios = (attachments: any[]): any[] => {
+    const aspectRatioMap: Record<string, string> = { "16x9": "16:9", "4x3": "4:3" };
+    return attachments.map((attachment: any) => {
+        if (attachment?.content?.aspect && aspectRatioMap[attachment.content.aspect]) {
+            return {
+                ...attachment,
+                content: { ...attachment.content, aspect: aspectRatioMap[attachment.content.aspect] }
+            };
+        }
+        return attachment;
+    });
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const convertPersistentChatHistoryMessageToActivity = (message: any) => {
     const {additionalData, attachments, botContentType, content, created, from, transcriptOriginalMessageId} = message;
@@ -143,6 +161,7 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
                 return {
                     ...activity,
                     ...parsedContent,
+                    ...(hasAttachments ? { attachments: normalizeAttachmentAspectRatios(parsedContent.attachments) } : {}),
                     from: preservedFrom,
                     timestamp,
                     channelData: {
@@ -164,6 +183,7 @@ const convertPersistentChatHistoryMessageToActivity = (message: any) => {
                 return {
                     ...activity,
                     ...parsedContent,
+                    ...(Array.isArray(parsedContent.attachments) ? { attachments: normalizeAttachmentAspectRatios(parsedContent.attachments) } : {}),
                     from: preservedFrom,
                     timestamp,
                     channelData: {
