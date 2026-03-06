@@ -94,6 +94,14 @@ export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefi
             }
         }
 
+        // Normalize aspect ratio from legacy format ("16x9"/"4x3") to current format ("16:9"/"4:3")
+        // for video/animation cards. Same fix as persistent chat history (convertPersistentChatHistoryMessageToActivity).
+        // Without this, WebChat throws: ValueError: Expected "4:3" | "16:9" but received "16x9"
+        const aspectRatioMap: Record<string, string> = { "16x9": "16:9", "4x3": "4:3" };
+        if (content && typeof content === "object" && content.aspect && aspectRatioMap[content.aspect]) {
+            content.aspect = aspectRatioMap[content.aspect];
+        }
+
         const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
         const attachmentId = state.domainStates.renderingMiddlewareProps?.attachmentProps?.adaptiveCardAttachmentId ?? defaultAttachmentProps.adaptiveCardAttachmentId;
         const atttachmentAdaptiveCardStyles = {...defaultAttachmentAdaptiveCardStyles, ...state.domainStates.renderingMiddlewareProps?.attachmentAdaptiveCardStyles};
