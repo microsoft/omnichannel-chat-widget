@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Uptake botframework-webchat 4.18.1-hotfix.20260308.b15b405
 - Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
 - Dev versions now auto-publish on push to main
 - Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf

@@ -6399,10 +6399,10 @@ botframework-directlinejs@^0.15.0:
     rxjs "5.5.12"
     url-search-params-polyfill "8.1.1"
 
-botframework-directlinespeech-sdk@4.18.1-hotfix.20260127.b53acdf:
-  version "4.18.1-hotfix.20260127.b53acdf"
-  resolved "https://registry.yarnpkg.com/botframework-directlinespeech-sdk/-/botframework-directlinespeech-sdk-4.18.1-hotfix.20260127.b53acdf.tgz#457f7c481bedba2e94619e912625ad6b36662334"
-  integrity sha512-sxgDS/Nt+rfM3tHltzeYpoEDn4QVsVTT3igs+SHSQnsrGve7Xc9UGdeTDGjA5VKqLdA6ZbPkqbB9V5Jhzo71xA==
+botframework-directlinespeech-sdk@4.18.1-hotfix.20260308.b15b405:
+  version "4.18.1-hotfix.20260308.b15b405"
+  resolved "https://registry.yarnpkg.com/botframework-directlinespeech-sdk/-/botframework-directlinespeech-sdk-4.18.1-hotfix.20260308.b15b405.tgz#286628343ac009c7dc5e060fa96d79a960851618"
+  integrity sha512-GOPYPoR0sF912peuydnAbsFFR1zm4gzWmA6NRMQLw/nriirT2/gkrB0IFfygTgfBreHQVvfVLoSa4V3aIgM+UA==
   dependencies:
     "@babel/runtime" "7.19.0"
     abort-controller "3.0.0"
@@ -6435,12 +6435,12 @@ botframework-streaming@4.20.0:
     uuid "^8.3.2"
     ws "^7.1.2"
 
-botframework-webchat-api@4.18.1-hotfix.20260127.b53acdf:
-  version "4.18.1-hotfix.20260127.b53acdf"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-api/-/botframework-webchat-api-4.18.1-hotfix.20260127.b53acdf.tgz#add2721857b832c384598ced429e36e48e2ace41"
-  integrity sha512-5djw5VJLbmILHN45eqD0rueIVIiS4j00EJ5jVMvxhh9mOSV9lMU2PGwZbouq2awbguAoq1NIG6uxyyaWUbRksA==
+botframework-webchat-api@4.18.1-hotfix.20260308.b15b405:
+  version "4.18.1-hotfix.20260308.b15b405"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-api/-/botframework-webchat-api-4.18.1-hotfix.20260308.b15b405.tgz#7ea6e2ac4b3cb4245556e6b1e61eabc00e97287e"
+  integrity sha512-bRZyrf8XxZ27KgVKijaRvem4ofIK8EkVMc5SxVwUUy+hkRRBsfvYOBmzD2sEj5/etaEn6zTweGeDRpmbcJ6D0w==
   dependencies:
-    botframework-webchat-core "4.18.1-hotfix.20260127.b53acdf"
+    botframework-webchat-core "4.18.1-hotfix.20260308.b15b405"
     globalize "1.7.0"
     iter-fest "^0.2.1"
     math-random "2.0.1"
@@ -6452,15 +6452,15 @@ botframework-webchat-api@4.18.1-hotfix.20260127.b53acdf:
     use-ref-from "0.1.0"
     valibot "1.1.0"
 
-botframework-webchat-component@4.18.1-hotfix.20260127.b53acdf:
-  version "4.18.1-hotfix.20260127.b53acdf"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-component/-/botframework-webchat-component-4.18.1-hotfix.20260127.b53acdf.tgz#0c5f5970d7d6605b18e94383abd91213c3d0a599"
-  integrity sha512-4dL338p1YDAN04WTSR6RpyB3z6KSSQT0EGMGhbYnuTLPk0akkMsFkZV23KV3psSxx9Fwequ3pJAukAQhgk0Pjw==
+botframework-webchat-component@4.18.1-hotfix.20260308.b15b405:
+  version "4.18.1-hotfix.20260308.b15b405"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-component/-/botframework-webchat-component-4.18.1-hotfix.20260308.b15b405.tgz#8d8c5fc0c889d7c273b9c58cd3f0dcb58d9218d7"
+  integrity sha512-seofqiGnS6RccElt8OAHMaSNZHr1QUHIuHFcqmgYMQeFMM+f2EtHLwTmOsLek+O3zgSgds+qxaMsnjEEKl6CPQ==
   dependencies:
     "@emotion/css" "11.13.5"
     base64-js "1.5.1"
-    botframework-webchat-api "4.18.1-hotfix.20260127.b53acdf"
-    botframework-webchat-core "4.18.1-hotfix.20260127.b53acdf"
+    botframework-webchat-api "4.18.1-hotfix.20260308.b15b405"
+    botframework-webchat-core "4.18.1-hotfix.20260308.b15b405"
     classnames "2.5.1"
     compute-scroll-into-view "1.0.20"
     deep-freeze-strict "1.1.1"
@@ -6485,10 +6485,10 @@ botframework-webchat-component@4.18.1-hotfix.20260127.b53acdf:
     use-state-with-ref "0.1.0"
     valibot "1.1.0"
 
-botframework-webchat-core@4.18.1-hotfix.20260127.b53acdf:
-  version "4.18.1-hotfix.20260127.b53acdf"
-  resolved "https://registry.yarnpkg.com/botframework-webchat-core/-/botframework-webchat-core-4.18.1-hotfix.20260127.b53acdf.tgz#f977332238355adb780646f158f47889538ac1d8"
-  integrity sha512-LWGyhSso1b3PGQtFLCD/cE+EazAQ8/4rNFVqXqwJN8SOE7qGyCMhXjL0Q5vS/mrzDyxzm2ZqMnk9N724CPgQpw==
+botframework-webchat-core@4.18.1-hotfix.20260308.b15b405:
+  version "4.18.1-hotfix.20260308.b15b405"
+  resolved "https://registry.yarnpkg.com/botframework-webchat-core/-/botframework-webchat-core-4.18.1-hotfix.20260308.b15b405.tgz#e32b47054048ee512297ff49325071f1f6656f35"
+  integrity sha512-OzjmlwnYTdG8kEIXNBcLSNdJ2aca/9uQJVy9C5fuXQ8ALJzeWLTGdVmBwDxANl4zx2E0Ztb3qoc5ykyGVc+fBQ==
   dependencies:
     "@babel/runtime" "7.19.0"
     "@redux-devtools/extension" "3.3.0"
@@ -6500,18 +6500,18 @@ botframework-webchat-core@4.18.1-hotfix.20260127.b53acdf:
     simple-update-in "2.2.0"
     valibot "1.1.0"
 
-botframework-webchat@4.18.1-hotfix.20260127.b53acdf:
-  version "4.18.1-hotfix.20260127.b53acdf"
-  resolved "https://registry.yarnpkg.com/botframework-webchat/-/botframework-webchat-4.18.1-hotfix.20260127.b53acdf.tgz#82a930a262b3b43fa25a746d1f27dda907e5f806"
-  integrity sha512-uzx4xa2zhBvYgwZjXBM634ajdPIbseODIPP8p90VBASA87KnKzJcB4brR2lPTrrr6Uz9ILsD9mxv3KC4f7r05w==
+botframework-webchat@4.18.1-hotfix.20260308.b15b405:
+  version "4.18.1-hotfix.20260308.b15b405"
+  resolved "https://registry.yarnpkg.com/botframework-webchat/-/botframework-webchat-4.18.1-hotfix.20260308.b15b405.tgz#1f57119ef0f116f2852d0c7a4111e9783d01ca1d"
+  integrity sha512-R2935vnEqJO7dClvZ56Rar7B+yzpIDisbA6YUmgrn28smdriY00lA1JT0X/wK0CCcVTmvoKyPyhkZ5NIc6/IKA==
   dependencies:
     "@babel/runtime" "7.19.0"
     adaptivecards "3.0.2"
     botframework-directlinejs "0.15.5"
-    botframework-directlinespeech-sdk "4.18.1-hotfix.20260127.b53acdf"
-    botframework-webchat-api "4.18.1-hotfix.20260127.b53acdf"
-    botframework-webchat-component "4.18.1-hotfix.20260127.b53acdf"
-    botframework-webchat-core "4.18.1-hotfix.20260127.b53acdf"
+    botframework-directlinespeech-sdk "4.18.1-hotfix.20260308.b15b405"
+    botframework-webchat-api "4.18.1-hotfix.20260308.b15b405"
+    botframework-webchat-component "4.18.1-hotfix.20260308.b15b405"
+    botframework-webchat-core "4.18.1-hotfix.20260308.b15b405"
     classnames "2.5.1"
     core-js "3.40.0"
     katex "0.16.21"
