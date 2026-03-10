@@ -4,19 +4,20 @@ All notable changes to this project will be documented in this file.
 
 # Chat-Widget
 
-## [Unreleased]
+## [1.8.4-hotfix.enau.1]
+
+### Changed
+
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.7-hotfix.enau.1 (adds en-AU locale support)
+- Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
+- Add `hotfix/**` branch trigger to npm-release workflow
+- Use latest dist-tag for all npm publishes
+- Fix CRLF line ending issue for npm-release workflow on Linux runners
+- PR workflows now also trigger on workflow file changes
 
 ### Fixed
 
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
-
-### Changed
-
-- Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
-- Dev versions now auto-publish on push to main
-- Use latest dist-tag for all npm publishes
-- Fix CRLF line ending issue for npm-release workflow on Linux runners
-- PR workflows now also trigger on workflow file changes
 
 ### Added
 
