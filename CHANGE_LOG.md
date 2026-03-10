@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Uptake botframework-webchat 4.18.1-hotfix.20260308.b15b405
 - Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
 - Dev versions now auto-publish on push to main
+- Add `hotfix/**` branch trigger to npm-release workflow
 - Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf
 - Fix CRLF line ending issue for npm-release workflow on Linux runners
 - PR workflows now also trigger on workflow file changes
