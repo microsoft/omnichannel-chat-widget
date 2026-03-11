@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
+
 ### Fixed
 
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
