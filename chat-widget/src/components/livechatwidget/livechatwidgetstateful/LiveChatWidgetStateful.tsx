@@ -815,6 +815,26 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         });
     }, []);
 
+    // Reliable browser close detection via visibilitychange + sendBeacon
+    // visibilitychange fires while the page is still alive (unlike beforeunload),
+    // so telemetry calls complete reliably. False positives (tab switch, minimize)
+    // are filtered in Kusto by checking if this is the last event in the session.
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "hidden" &&
+                state.appStates.conversationState === ConversationState.Active) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.BrowserTabHidden,
+                    Description: "Browser tab hidden during active conversation"
+                });
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [state.appStates.conversationState]);
+
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.BrowserUnloadEventStarted,

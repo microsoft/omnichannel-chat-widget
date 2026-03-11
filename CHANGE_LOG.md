@@ -100,6 +100,7 @@ All notable changes to this project will be documented in this file.
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
 - Improved designer mode to take mock messages as input
 - Fixed keyboard focus issue for suggested actions previous and next button
+- Telemetry info for tracking LCW modernization feature effectiveness
 
 ### Changed
 
