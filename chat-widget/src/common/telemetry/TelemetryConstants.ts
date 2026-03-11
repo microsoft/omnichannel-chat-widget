@@ -116,7 +116,7 @@ export enum TelemetryEvent {
     LCWChatButtonActionCompleted = "LCWChatButtonActionCompleted",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
-    
+
     WidgetLoadStarted = "WidgetLoadStarted",
     WidgetLoadComplete = "WidgetLoadComplete",
     WidgetLoadFailed = "WidgetLoadFailed",
@@ -332,6 +332,11 @@ export enum TelemetryEvent {
     SecureEventBusDispatchError = "SecureEventBusDispatchError",
     StartChatComplete = "StartChatComplete",
 
+    // Queue & Agent Assignment
+    AgentJoinedConversation = "AgentJoinedConversation",
+
+    // Browser Close Detection
+    BrowserTabHidden = "BrowserTabHidden",
 }
 
 export interface TelemetryInput {
@@ -407,6 +412,8 @@ export class TelemetryConstants {
             case TelemetryEvent.SecureEventBusUnauthorizedDispatch:
             case TelemetryEvent.SecureEventBusListenerError:
             case TelemetryEvent.SecureEventBusDispatchError:
+            case TelemetryEvent.AgentJoinedConversation:
+            case TelemetryEvent.BrowserTabHidden:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
