@@ -6,10 +6,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
+
+### Fixed
+
+- Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
+
+### Changed
+
+- Uptake botframework-webchat 4.18.1-hotfix.20260308.b15b405
+- Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
+- Dev versions now auto-publish on push to main
+- Add `hotfix/**` branch trigger to npm-release workflow
+- Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf
+- Fix CRLF line ending issue for npm-release workflow on Linux runners
+- PR workflows now also trigger on workflow file changes
+
 ### Added
 
+- [Persistent Chat History] Add fix for the scroll bar jumping during history load
+- [Persistent Chat History] Added fix for raw json adaptive cards in the persistent chat history messages
+- [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
 - [A11Y] Added focus on citation pane close button when citation pane is opened
-- [A11Y] Divider hack to force screen readers to mention it 
+- [A11Y] Divider hack to force screen readers to mention it
 - [A11Y] Update of initials from agent to update DOM, for proper mention by screen readers
 - Adding new logic based on config to define when persistent chat history is enabled
 - Adding support to fetch history messages for persistent chat
@@ -17,16 +38,39 @@ All notable changes to this project will be documented in this file.
 - Add support for `typing` activity to count as first bot message for latency tracking and first response latency tracking
 - Added support for AppInsightsInstrumentationKey from chat config
 - Enhanced process handling for initiateEndChat event by introducing the force close session option for persistent chat and broadcasting a CloseChat event when process completed
+- Added support for horizontal flex display of basic/adaptive card buttons over more than 1 row
+- Enhanced error handling in file download process
+- Added comprehensive XSS security tests (19 new tests total)
+- Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
+- Dependency resolutions for lodash, @babel/runtime-corejs3, and brace-expansion
+- Added [CLAUDE.md](../CLAUDE.md) project instructions file
 
 ### Changed
 
-- Uptake [@microsoft/omnichannel-chat-components@1.1.16](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.16)
+- Uptake [@microsoft/omnichannel-chat-components@1.1.17-main.4139523](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components/v/1.1.17-main.4139523)
 - Updated AppInsights events
+- updated AppInsights events to traces and renamed custom property fields
 
 ### Fixed
 
+- Fixed issue with persistent chat history not properly computing flags for history messages.
+- Fixed uncaught exception error in post chat survey when closing the survey
+- Fixed disconnection banner persisting when closing and reopening chat widget
+- Fixed bubble text color overidding certain adaptive card element colors like title and label
 - Remove property to override CSAC flag for persistent chat history
 - Fix override of names for agent and customer in persistent chat history messages
+- Fixed logic to present post-chat survey after an MCS bot ends the conversation
+- Fixed lint configuration during build
+- Fixed issue with persistent chat history bot messages activity divider
+- Fixed critical XSS vulnerabilities: mutation XSS (mXSS) attacks, unsafe string concatenation in URL processing, and protocol injection
+- Fixed XSS detection order: now sanitizes with DOMPurify first, then checks patterns in both original and sanitized text
+- Added URL protocol validation to block dangerous protocols (javascript:, data:, vbscript:, file:)
+- Added HTML escaping functions for safe URL processing in `replaceURLWithAnchor`
+- [A11Y] Fixed unnecessary focus steal for proactive chat pane
+- Fixed Storybook build failure caused by Swiper v9+ module resolution issues by adding webpack alias for `swiper/modules` to point to `swiper-bundle.esm.js`
+- Disabled Storybook telemetry to prevent error masking and improve build error visibility
+- Fixed webpack 4 build errors by adding `type: "javascript/auto"` to `.mjs` rules (fixes `html-react-parser` v5.x ESM named re-export errors), aliasing `swiper/modules` to `swiper/swiper.esm.js` (fixes `adaptivecards` missing module resolution), and adding `.mjs` to `resolve.extensions`
+- Fixed composite storybook build by aligning `stories/.storybook/main.cjs` webpack config with the main `.storybook/main.cjs` (React Native Web aliases, modern JS transpilation, `.mjs` handling, web-first extensions, DefinePlugin), disabling telemetry, and adding `cross-env NODE_OPTIONS=--openssl-legacy-provider` to the `build-composite-storybook` script
 
 ## [1.8.3] - 2025-10-07
 
@@ -672,6 +716,24 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+### Changed
+
+- Updated Babel dependencies to latest versions
+- Updated Lodash to v4.17.23 to address security vulnerabilities
+
+### Added
+
+- Added XSS protection tests for URL sanitization (11 new tests)
+
+### Fixed
+
+- Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
+- Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
+- Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
+- Fixed header text overflow issue where long titles would expand leftward and cover the icon image
+- Added 2-line text limit with ellipsis for header title to prevent layout issues
+- Added tooltip on hover to display full header text when truncated
 
 ## [1.1.16] - 2025-10-14
 

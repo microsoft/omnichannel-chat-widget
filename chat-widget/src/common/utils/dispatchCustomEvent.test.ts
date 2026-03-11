@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import ChatWidgetEvents from "../../components/livechatwidget/common/ChatWidgetEvents";
 import SecureEventBus from "./SecureEventBus";
 import dispatchCustomEvent from "./dispatchCustomEvent";

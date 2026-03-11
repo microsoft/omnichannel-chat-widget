@@ -69,15 +69,16 @@ describe("WebChatEventSubscribers", () => {
         mockWebChatStoreLoader.store = null;
         
         // Set up mock implementations for each test
-        setIntervalSpy.mockImplementation((callback, delay) => {
+        setIntervalSpy.mockImplementation(() => {
             // Return a mock timer ID without executing the callback
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return 123 as any;
         });
-        setTimeoutSpy.mockImplementation((callback, delay) => {
+        setTimeoutSpy.mockImplementation(() => {
             // Return a mock timer ID without executing the callback
             return 456 as any;
         });
+        /* eslint-disable @typescript-eslint/no-empty-function */
         clearIntervalSpy.mockImplementation(() => {});
     });
 
@@ -244,10 +245,11 @@ describe("WebChatEventSubscribers", () => {
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: {
                     from: { role: "bot" },
-                    timestamp: 0,
+                    timestamp: new Date(1).toISOString(),
                     type: "message",
                     channelData: {
-                        tags: [Constants.persistentChatHistoryMessagePullTriggerTag]
+                        tags: [Constants.persistentChatHistoryMessagePullTriggerTag],
+                        "webchat:sequence-id": 1
                     }
                 }
             });
@@ -342,12 +344,13 @@ describe("Dependencies Array", () => {
         mockWebChatStoreLoader.store = null;
         
         // Set up mock implementations for each test
-        setIntervalSpy.mockImplementation((callback, delay) => {
+        setIntervalSpy.mockImplementation(() => {
             return 123 as any;
         });
-        setTimeoutSpy.mockImplementation((callback, delay) => {
+        setTimeoutSpy.mockImplementation(() => {
             return 456 as any;
         });
+        /* eslint-disable @typescript-eslint/no-empty-function */
         clearIntervalSpy.mockImplementation(() => {});
     });
 

@@ -9,7 +9,7 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { PostChatSurveyTelemetryMessage } from "../../../common/Constants";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { getPostChatSurveyConfig, isPostChatSurveyEnabled } from "./liveChatConfigUtils";
+import { getPostChatSurveyConfig } from "./liveChatConfigUtils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const setPostChatContextAndLoadSurvey = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, persistedChat?: boolean) => {

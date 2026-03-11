@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { createCitationsMiddleware } from "./citationsMiddleware";
 

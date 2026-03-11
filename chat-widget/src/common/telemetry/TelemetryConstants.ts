@@ -325,6 +325,10 @@ export enum TelemetryEvent {
     LCWLazyLoadNoMoreHistory = "LCWLazyLoadNoMoreHistory",
     LCWLazyLoadHistoryError = "LCWLazyLoadHistoryError",
     LCWLazyLoadDestroyed = "LCWLazyLoadDestroyed",
+    LCWLazyLoadTriggerFired = "LCWLazyLoadTriggerFired",
+    LCWLazyLoadBatchReceived = "LCWLazyLoadBatchReceived",
+    LCWLazyLoadInitialLoadComplete = "LCWLazyLoadInitialLoadComplete",
+    LCWLazyLoadScrollAnchorApplied = "LCWLazyLoadScrollAnchorApplied",
 
     // SecureEventBus events
     SecureEventBusUnauthorizedDispatch = "SecureEventBusUnauthorizedDispatch",

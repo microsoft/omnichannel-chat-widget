@@ -3,7 +3,6 @@ import React, { Dispatch, useEffect, useReducer, useState } from "react";
 import { ChatAdapterStore } from "../../contexts/ChatAdapterStore";
 import { ChatContextStore } from "../../contexts/ChatContextStore";
 import { ChatSDKStore } from "../../contexts/ChatSDKStore";
-import ErrorBoundary from "../errorboundary/ErrorBoundary";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { FacadeChatSDKStore } from "../../contexts/FacadeChatSDKStore";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -15,7 +14,6 @@ import { getLiveChatWidgetContextInitialState } from "../../contexts/common/Live
 import { getMockChatSDKIfApplicable } from "./common/getMockChatSDKIfApplicable";
 import { isNullOrUndefined } from "../../common/utils";
 import { isPersistentChatEnabled } from "./common/liveChatConfigUtils";
-import { logWidgetLoadWithUnexpectedError } from "./common/startChatErrorHandler";
 import overridePropsOnMockIfApplicable from "./common/overridePropsOnMockIfApplicable";
 import { registerTelemetryLoggers } from "./common/registerTelemetryLoggers";
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import "@testing-library/jest-dom";
 
 import { act, cleanup, render, screen } from "@testing-library/react";
@@ -21,7 +23,7 @@ jest.mock("../../common/utils", () => ({
 
 // Mock the ChatButton component to capture its props and simulate user interactions
 jest.mock("@microsoft/omnichannel-chat-components", () => ({
-    ChatButton: ({ controlProps, styleProps, componentOverrides }: any) => {
+    ChatButton: ({ controlProps }: any) => {
         return (
             <button 
                 data-testid="chat-button"

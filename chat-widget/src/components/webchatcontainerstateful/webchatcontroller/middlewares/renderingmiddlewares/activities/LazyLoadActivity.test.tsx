@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import "@testing-library/jest-dom";
 
 import LazyLoadActivity, { LazyLoadHandler } from "./LazyLoadActivity";
 import { act, cleanup, render, screen } from "@testing-library/react";
 
-import ChatWidgetEvents from "../../../../../livechatwidget/common/ChatWidgetEvents";
 import React from "react";
 import dispatchCustomEvent from "../../../../../../common/utils/dispatchCustomEvent";
 
@@ -24,20 +25,20 @@ const mockDisconnect = jest.fn();
 
 // Helper function to create scrollable elements with proper mocking
 const createMockScrollableElement = (className?: string) => {
-    const element = document.createElement('div');
+    const element = document.createElement("div");
     if (className) {
         element.className = className;
     }
-    element.style.height = '400px';
-    element.style.overflowY = 'auto';
+    element.style.height = "400px";
+    element.style.overflowY = "auto";
     element.scrollTop = 100;
     
-    Object.defineProperty(element, 'scrollHeight', {
+    Object.defineProperty(element, "scrollHeight", {
         value: 800,
         writable: true,
         configurable: true
     });
-    Object.defineProperty(element, 'clientHeight', {
+    Object.defineProperty(element, "clientHeight", {
         value: 400,
         writable: true,
         configurable: true
@@ -88,11 +89,11 @@ describe("LazyLoadActivity", () => {
         }
 
         // Create mock DOM structure
-        const root = document.createElement('div');
+        const root = document.createElement("div");
         root.id = LazyLoadHandler.rootId;
         document.body.appendChild(root);
 
-        const scrollContainer = createMockScrollableElement('webchat__basic-transcript__scrollable');
+        const scrollContainer = createMockScrollableElement("webchat__basic-transcript__scrollable");
         root.appendChild(scrollContainer);
     });
 
@@ -113,10 +114,10 @@ describe("LazyLoadActivity", () => {
         it("should render trigger element with correct attributes", () => {
             render(<LazyLoadActivity />);
             
-            const triggerElement = screen.getByRole('status');
+            const triggerElement = screen.getByRole("status");
             expect(triggerElement).toBeInTheDocument();
-            expect(triggerElement).toHaveAttribute('id', LazyLoadHandler.targetId);
-            expect(triggerElement).toHaveAttribute('aria-live', 'polite');
+            expect(triggerElement).toHaveAttribute("id", LazyLoadHandler.targetId);
+            expect(triggerElement).toHaveAttribute("aria-live", "polite");
         });
 
         it("should not render when hasMoreHistoryAvailable is false", () => {
@@ -139,7 +140,7 @@ describe("LazyLoadActivity", () => {
 
             render(<LazyLoadActivity {...customProps} />);
             
-            const triggerElement = screen.getByRole('status');
+            const triggerElement = screen.getByRole("status");
             expect(triggerElement).toBeInTheDocument();
         });
     });
@@ -173,16 +174,16 @@ describe("LazyLoadHandler", () => {
         LazyLoadHandler.hasMoreHistoryAvailable = true;
         
         // Clean up DOM
-        document.body.innerHTML = '';
+        document.body.innerHTML = "";
         
         // Create mock DOM structure
-        const root = document.createElement('div');
+        const root = document.createElement("div");
         root.id = LazyLoadHandler.rootId;
         document.body.appendChild(root);
     });
 
     afterEach(() => {
-        document.body.innerHTML = '';
+        document.body.innerHTML = "";
     });
 
     describe("Initialization", () => {
@@ -193,7 +194,7 @@ describe("LazyLoadHandler", () => {
                 expect.any(Function),
                 expect.objectContaining({
                     root: expect.any(Element),
-                    rootMargin: '20px 0px 0px 0px',
+                    rootMargin: "20px 0px 0px 0px",
                     threshold: 0.05
                 })
             );
@@ -212,7 +213,7 @@ describe("LazyLoadHandler", () => {
 
     describe("Scroll Container Detection", () => {
         it("should find primary scroll container", () => {
-            const scrollContainer = createMockScrollableElement('webchat__basic-transcript__scrollable');
+            const scrollContainer = createMockScrollableElement("webchat__basic-transcript__scrollable");
             document.body.appendChild(scrollContainer);
             
             const result = LazyLoadHandler.findScrollContainer();
@@ -232,7 +233,7 @@ describe("LazyLoadHandler", () => {
 
     describe("Lazy Load Triggering", () => {
         it("should handle intersection events", () => {
-            const target = document.createElement('div');
+            const target = document.createElement("div");
             target.id = LazyLoadHandler.targetId;
             document.body.appendChild(target);
             
@@ -261,7 +262,7 @@ describe("LazyLoadHandler", () => {
         it("should not trigger when paused", () => {
             LazyLoadHandler.paused = true;
             
-            const target = document.createElement('div');
+            const target = document.createElement("div");
             target.id = LazyLoadHandler.targetId;
             document.body.appendChild(target);
             
@@ -283,7 +284,7 @@ describe("LazyLoadHandler", () => {
 
     describe("Manual Visibility Check", () => {
         it("should handle visibility check gracefully", () => {
-            const target = document.createElement('div');
+            const target = document.createElement("div");
             target.id = LazyLoadHandler.targetId;
             document.body.appendChild(target);
             
@@ -296,7 +297,7 @@ describe("LazyLoadHandler", () => {
             });
             
             // Mock window height
-            Object.defineProperty(window, 'innerHeight', {
+            Object.defineProperty(window, "innerHeight", {
                 writable: true,
                 configurable: true,
                 value: 800
@@ -311,7 +312,7 @@ describe("LazyLoadHandler", () => {
         });
 
         it("should not trigger when element is not visible", () => {
-            const target = document.createElement('div');
+            const target = document.createElement("div");
             target.id = LazyLoadHandler.targetId;
             document.body.appendChild(target);
             
@@ -323,7 +324,7 @@ describe("LazyLoadHandler", () => {
                 right: 100
             });
             
-            Object.defineProperty(window, 'innerHeight', {
+            Object.defineProperty(window, "innerHeight", {
                 writable: true,
                 configurable: true,
                 value: 800
@@ -350,7 +351,7 @@ describe("LazyLoadHandler", () => {
 
     describe("No More History Handling", () => {
         it("should handle no more history available event", () => {
-            const target = document.createElement('div');
+            const target = document.createElement("div");
             target.id = LazyLoadHandler.targetId;
             document.body.appendChild(target);
             
@@ -373,7 +374,7 @@ describe("LazyLoadHandler", () => {
 
         it("should handle missing scroll container gracefully", () => {
             // Remove all containers
-            document.body.innerHTML = '';
+            document.body.innerHTML = "";
             
             expect(() => {
                 const result = LazyLoadHandler.findScrollContainer();
