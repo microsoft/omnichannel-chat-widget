@@ -800,6 +800,31 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     }, [state.appStates.chatDisconnectEventReceived]);
 
+    // Auth state change listeners (broadcast by FacadeChatSDK.startChat())
+    useEffect(() => {
+        const authSucceededSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthSucceeded)
+            .subscribe((msg) => {
+                if (msg?.payload?.isAuthenticated) {
+                    // Only store boolean flag, NOT the token - token is managed by FacadeChatSDK
+                    dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: true });
+                }
+            });
+
+        // Auth reset: only update the boolean flag here.
+        // We do NOT clear widget state/cache/adapter because this fires DURING startChat(),
+        // which will handle state transitions. FacadeChatSDK has already cleared SDK internals.
+        const authResetSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthReset)
+            .subscribe((msg) => {
+                if (msg?.payload?.isAuthenticated === false) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: false });
+                }
+            });
+
+        return () => {
+            authSucceededSub.unsubscribe();
+            authResetSub.unsubscribe();
+        };
+    }, [dispatch]);
 
     // if props state gets updates we need to update the renderingMiddlewareProps in the state
     useEffect(() => {

@@ -60,6 +60,7 @@ export interface ILiveChatWidgetContext {
         postChatParticipantType: undefined | ParticipantType; // participant type to render post chat survey
         isConversationalSurvey: boolean; // true if conversational survey flow is active
         isConversationalSurveyEnabled: boolean; // true if conversational survey is enabled
+        hasUserAuthenticated: boolean; // true if user has authenticated (pre-auth or mid-auth) - used for reconnect support
     };
     uiStates: {
         showConfirmationPane: boolean; // true if the confirmation pane should show

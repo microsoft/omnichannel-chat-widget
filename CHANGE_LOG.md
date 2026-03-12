@@ -6,6 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
+- [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
+- [Mid-Auth] Added `hasUserAuthenticated` state tracking with `SET_USER_AUTHENTICATED` action for reconnect support
+- [Mid-Auth] Added `isMidAuthEnabled` utility in `authHelper.ts` and `liveChatConfigUtils.ts`
+- [Mid-Auth] Added `wasAuthenticated` flag in `startChat` optional params for auth transition detection
+- [Mid-Auth] Added auth state change broadcast listeners (`MidConversationAuthSucceeded`, `MidConversationAuthReset`) in `LiveChatWidgetStateful`
+- [Mid-Auth] Added telemetry events: `MidConversationAuthSucceeded`, `MidConversationAuthFailed`, `MidConversationAuthReset`
+- [Mid-Auth] Added mid-auth empty token handling in `authHelper.handleAuthentication` (returns `result: true` with null token instead of throwing)
+- [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
+
 ### Changed
 
 - Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
@@ -26,8 +36,6 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- [Persistent Chat History] Add fix for the scroll bar jumping during history load
-- [Persistent Chat History] Added fix for raw json adaptive cards in the persistent chat history messages
 - [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
 - [A11Y] Added focus on citation pane close button when citation pane is opened
 - [A11Y] Divider hack to force screen readers to mention it
