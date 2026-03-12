@@ -79,15 +79,26 @@ const WebChatEventSubscribers = () => {
                         // Dispatch events when connection is established
                         setTimeout(() => {
                             dispatchCustomEvent(ChatWidgetEvents.FETCH_PERSISTENT_CHAT_HISTORY);
+                            // The trigger activity renders the "Loading previous messages..." banner
+                            // via LazyLoadActivity. We set webchat:sequence-id to 1 and timestamp
+                            // to epoch+1ms so WebChat sorts this activity BEFORE all history messages
+                            // (which have sequence-ids based on transcriptOriginalMessageId timestamps).
+                            // Without these, WebChat places activities without a sequence-id at the
+                            // end of the transcript, causing the banner to appear at the bottom and
+                            // breaking the IntersectionObserver pagination trigger (the observer only
+                            // fires on visibility transitions — if the element starts visible at the
+                            // bottom, the initial fire is blocked by the paused state and never
+                            // re-fires since there is no transition).
                             dispatchCustomEvent(ChatWidgetEvents.ADD_ACTIVITY, {
                                 activity: {
                                     from: {
                                         role: "bot"
                                     },
-                                    timestamp: 0,
+                                    timestamp: new Date(1).toISOString(),
                                     type: "message",
                                     channelData: {
-                                        tags: [Constants.persistentChatHistoryMessagePullTriggerTag]
+                                        tags: [Constants.persistentChatHistoryMessagePullTriggerTag],
+                                        "webchat:sequence-id": 1
                                     }
                                 }
                             });

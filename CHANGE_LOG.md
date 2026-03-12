@@ -6,8 +6,6 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Added
-
 - [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
 - [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
 - [Mid-Auth] Added `hasUserAuthenticated` state tracking with `SET_USER_AUTHENTICATED` action for reconnect support
@@ -17,6 +15,27 @@ All notable changes to this project will be documented in this file.
 - [Mid-Auth] Added telemetry events: `MidConversationAuthSucceeded`, `MidConversationAuthFailed`, `MidConversationAuthReset`
 - [Mid-Auth] Added mid-auth empty token handling in `authHelper.handleAuthentication` (returns `result: true` with null token instead of throwing)
 - [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
+
+### Changed
+
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
+
+### Fixed
+
+- Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
+
+### Changed
+
+- Uptake botframework-webchat 4.18.1-hotfix.20260308.b15b405
+- Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
+- Dev versions now auto-publish on push to main
+- Add `hotfix/**` branch trigger to npm-release workflow
+- Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf
+- Fix CRLF line ending issue for npm-release workflow on Linux runners
+- PR workflows now also trigger on workflow file changes
+
+### Added
+
 - [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
 - [A11Y] Added focus on citation pane close button when citation pane is opened
 - [A11Y] Divider hack to force screen readers to mention it
@@ -31,7 +50,6 @@ All notable changes to this project will be documented in this file.
 - Enhanced error handling in file download process
 - Added comprehensive XSS security tests (19 new tests total)
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
-- Added botframework-webchat@4.18.1-main.20260129.f7a730f dependency
 - Dependency resolutions for lodash, @babel/runtime-corejs3, and brace-expansion
 - Added [CLAUDE.md](../CLAUDE.md) project instructions file
 
@@ -90,6 +108,7 @@ All notable changes to this project will be documented in this file.
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
 - Improved designer mode to take mock messages as input
 - Fixed keyboard focus issue for suggested actions previous and next button
+- Telemetry info for tracking LCW modernization feature effectiveness
 
 ### Changed
 

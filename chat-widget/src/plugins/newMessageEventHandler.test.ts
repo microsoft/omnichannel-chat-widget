@@ -488,6 +488,99 @@ describe("createOnNewAdapterActivityHandler", () => {
         });
     });
 
+    describe("AgentJoinedConversation tracking", () => {
+        let mockLogActionEvent: jest.Mock;
+
+        beforeEach(() => {
+            mockLogActionEvent = TelemetryHelper.logActionEvent as jest.Mock;
+        });
+
+        const sendQueuePositionMessage = () => {
+            const queueActivity = createMockActivity({
+                channelData: { tags: [Constants.queuePositionMessageTag] }
+            } as any);
+            mockGetScenarioType.mockReturnValue(ScenarioType.SystemMessageStrategy);
+            mockIsHistoryMessage.mockReturnValue(false);
+            onNewAdapterActivityHandler(queueActivity);
+        };
+
+        const sendAgentMessage = () => {
+            const agentActivity = createMockActivity({ text: "Hello from agent" } as any);
+            const mockPayload = createMockPayload();
+            mockBuildMessagePayload.mockReturnValue(mockPayload);
+            mockPolyfillMessagePayloadForEvent.mockReturnValue(mockPayload);
+            mockGetScenarioType.mockReturnValue(ScenarioType.ReceivedMessageStrategy);
+            mockIsHistoryMessage.mockReturnValue(false);
+            onNewAdapterActivityHandler(agentActivity);
+        };
+
+        it("should log AgentJoinedConversation when agent message received after queue position", () => {
+            sendQueuePositionMessage();
+            sendAgentMessage();
+
+            expect(mockLogActionEvent).toHaveBeenCalledWith(LogLevel.INFO, {
+                Event: TelemetryEvent.AgentJoinedConversation,
+                Description: "First message received from agent after queue"
+            });
+        });
+
+        it("should not log AgentJoinedConversation when no queue position message received", () => {
+            sendAgentMessage();
+
+            expect(mockLogActionEvent).not.toHaveBeenCalledWith(LogLevel.INFO, {
+                Event: TelemetryEvent.AgentJoinedConversation,
+                Description: "First message received from agent after queue"
+            });
+        });
+
+        it("should log AgentJoinedConversation only once for multiple agent messages", () => {
+            sendQueuePositionMessage();
+            sendAgentMessage();
+            sendAgentMessage();
+
+            const agentJoinCalls = mockLogActionEvent.mock.calls.filter(
+                (call: any[]) => call[1]?.Event === TelemetryEvent.AgentJoinedConversation
+            );
+            expect(agentJoinCalls).toHaveLength(1);
+        });
+
+        it("should not log AgentJoinedConversation for history messages after queue", () => {
+            sendQueuePositionMessage();
+
+            // Send history received message
+            const historyActivity = createMockActivity({ text: "history agent message" } as any);
+            const mockPayload = createMockPayload();
+            mockBuildMessagePayload.mockReturnValue(mockPayload);
+            mockPolyfillMessagePayloadForEvent.mockReturnValue(mockPayload);
+            mockGetScenarioType.mockReturnValue(ScenarioType.ReceivedMessageStrategy);
+            mockIsHistoryMessage.mockReturnValue(true);
+            onNewAdapterActivityHandler(historyActivity);
+
+            expect(mockLogActionEvent).not.toHaveBeenCalledWith(LogLevel.INFO, {
+                Event: TelemetryEvent.AgentJoinedConversation,
+                Description: "First message received from agent after queue"
+            });
+        });
+
+        it("should log AgentJoinedConversation when queue position was a history message", () => {
+            // Queue position message arrives as history
+            const queueActivity = createMockActivity({
+                channelData: { tags: [Constants.queuePositionMessageTag] }
+            } as any);
+            mockGetScenarioType.mockReturnValue(ScenarioType.SystemMessageStrategy);
+            mockIsHistoryMessage.mockReturnValue(true);
+            onNewAdapterActivityHandler(queueActivity);
+
+            // Then a non-history agent message arrives
+            sendAgentMessage();
+
+            expect(mockLogActionEvent).toHaveBeenCalledWith(LogLevel.INFO, {
+                Event: TelemetryEvent.AgentJoinedConversation,
+                Description: "First message received from agent after queue"
+            });
+        });
+    });
+
     describe("Error handling", () => {
         it("should handle errors in buildMessagePayload gracefully", () => {
             mockGetScenarioType.mockReturnValue(ScenarioType.UserSendMessageStrategy);

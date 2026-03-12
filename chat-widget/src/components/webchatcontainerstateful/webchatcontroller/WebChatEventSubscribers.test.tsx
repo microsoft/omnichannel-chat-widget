@@ -245,10 +245,11 @@ describe("WebChatEventSubscribers", () => {
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: {
                     from: { role: "bot" },
-                    timestamp: 0,
+                    timestamp: new Date(1).toISOString(),
                     type: "message",
                     channelData: {
-                        tags: [Constants.persistentChatHistoryMessagePullTriggerTag]
+                        tags: [Constants.persistentChatHistoryMessagePullTriggerTag],
+                        "webchat:sequence-id": 1
                     }
                 }
             });
