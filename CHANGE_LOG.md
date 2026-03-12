@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- [A11Y] Added accessible name and group role to Cancel/Send button group in InputValidationPane and ConfirmationPane to fix TalkBack silent focus on Android
+- [A11Y] Added accessible name and group role to Cancel/Send button group in InputValidationPane and ConfirmationPane to fix TalkBack silent focus.
 - [Persistent Chat History] Added fix for raw json adaptive cards in the persistent chat history messages
 - [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
 - [A11Y] Added focus on citation pane close button when citation pane is opened
