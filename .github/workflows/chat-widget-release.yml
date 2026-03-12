@@ -11,8 +11,9 @@ on:
     paths:
       - 'chat-widget/**'
 
-jobs: 
+jobs:
   build:
+    if: github.repository == 'microsoft/omnichannel-chat-widget'
     runs-on: windows-2022
     steps:
       - name: Checking out for ${{ github.ref }}
