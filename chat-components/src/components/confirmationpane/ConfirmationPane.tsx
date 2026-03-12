@@ -118,7 +118,9 @@ function ConfirmationPane(props: IConfirmationPaneProps) {
                     <Stack horizontal
                         className={props.styleProps?.classNames?.buttonGroupClassName}
                         styles={buttonGroupStyles}
-                        id={elementId + "-buttongroup"}>
+                        id={elementId + "-buttongroup"}
+                        role="group"
+                        aria-label={props.controlProps?.buttonGroupAriaLabel || defaultConfirmationPaneControlProps.buttonGroupAriaLabel}>
                         {!props.controlProps?.hideConfirmButton && (decodeComponentString(props.componentOverrides?.confirmButton) ||
                             <PrimaryButton
                                 className={props.styleProps?.classNames?.confirmButtonClassName}

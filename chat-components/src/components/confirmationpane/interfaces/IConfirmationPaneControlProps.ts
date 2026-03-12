@@ -6,6 +6,7 @@ export interface IConfirmationPaneControlProps {
     titleText?: string;
     hideSubtitle?: boolean;
     subtitleText?: string;
+    buttonGroupAriaLabel?: string;
     hideConfirmButton?: boolean;
     confirmButtonText?: string;
     confirmButtonAriaLabel?: string;
