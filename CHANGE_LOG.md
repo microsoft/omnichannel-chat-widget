@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Added style overrides for hover and focus on adaptive cards
+- Add `github.repository` guard to all release workflows to prevent them from running on forks
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
 
 ### Fixed
 
@@ -16,8 +18,10 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Uptake botframework-webchat 4.18.1-hotfix.20260308.b15b405
 - Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
 - Dev versions now auto-publish on push to main
+- Add `hotfix/**` branch trigger to npm-release workflow
 - Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf
 - Fix CRLF line ending issue for npm-release workflow on Linux runners
 - PR workflows now also trigger on workflow file changes
@@ -98,6 +102,7 @@ All notable changes to this project will be documented in this file.
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
 - Improved designer mode to take mock messages as input
 - Fixed keyboard focus issue for suggested actions previous and next button
+- Telemetry info for tracking LCW modernization feature effectiveness
 
 ### Changed
 

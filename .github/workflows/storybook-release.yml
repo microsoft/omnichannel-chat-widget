@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   build-and-deploy:
+    if: github.repository == 'microsoft/omnichannel-chat-widget'
     runs-on: ubuntu-latest
     steps:
       - name: Checking out for ${{ github.ref }}

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 'hotfix/**'
     tags:
       - 'w-v*'
       - 'c-v*'
@@ -22,7 +23,7 @@ permissions:
 
 jobs:
   publish-chat-widget:
-    if: ${{ startsWith(github.ref, 'refs/tags/w-v') || startsWith(github.ref, 'refs/heads/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-widget') }}
+    if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && (startsWith(github.ref, 'refs/tags/w-v') || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/hotfix/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-widget')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Configure git line endings
@@ -41,7 +42,7 @@ jobs:
         run: npm install -g npm@latest
 
       - name: Update package version from git
-        if: ${{ startsWith(github.ref, 'refs/heads/') }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         working-directory: chat-widget
         run: npx version-from-git --no-git-tag-version
 
@@ -50,6 +51,15 @@ jobs:
         run: |
           echo "name=$(jq -r '.name' chat-widget/package.json)" >> "$GITHUB_OUTPUT"
           echo "version=$(jq -r '.version' chat-widget/package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Determine npm dist-tag
+        id: dist-tag
+        run: |
+          if [[ "${{ github.ref }}" == refs/heads/hotfix/* ]]; then
+            echo "tag=hotfix" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Install packages
         working-directory: chat-widget
@@ -61,10 +71,10 @@ jobs:
 
       - name: Publish ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
         working-directory: chat-widget
-        run: npm publish --provenance --tag latest --access public
+        run: npm publish --provenance --tag ${{ steps.dist-tag.outputs.tag }} --access public
 
   publish-chat-components:
-    if: ${{ startsWith(github.ref, 'refs/tags/c-v') || startsWith(github.ref, 'refs/heads/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-components') }}
+    if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && (startsWith(github.ref, 'refs/tags/c-v') || github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-components')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Configure git line endings
@@ -83,7 +93,7 @@ jobs:
         run: npm install -g npm@latest
 
       - name: Update package version from git
-        if: ${{ startsWith(github.ref, 'refs/heads/') }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         working-directory: chat-components
         run: npx version-from-git --no-git-tag-version
 
