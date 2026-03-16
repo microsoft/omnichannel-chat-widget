@@ -434,4 +434,8 @@ export class FacadeChatSDK {
     public async fetchPersistentConversationHistory(getPersistentChatHistoryOptionalParams: GetPersistentChatHistoryOptionalParams = {}): Promise<GetPersistentChatHistoryResponse> {
         return this.validateAndExecuteCall("getPersistentChatHistory", () => this.chatSDK.getPersistentChatHistory(getPersistentChatHistoryOptionalParams));
     }
+
+    public async sendReadReceipt(messageId: string): Promise<void> {
+        return this.validateAndExecuteCall("sendReadReceipt", () => this.chatSDK.sendReadReceipt(messageId));
+    }
 }

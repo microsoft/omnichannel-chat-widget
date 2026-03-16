@@ -186,8 +186,8 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             await facadeChatSDK.startChat(startChatOptionalParams);
             logStartChatComplete();
             isStartChatSuccessful = true;
-
-            await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, props);
+            const isPersistentChat = isPersistentEnabled(props?.chatConfig);
+            await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, isPersistentChat, props);
 
         } catch (error) {
             checkContactIdError(error);
@@ -247,7 +247,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, startTime: number,  props?: ILiveChatWidgetProps) => {
+const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, startTime: number, isPersistentChat: boolean, props?: ILiveChatWidgetProps) => {
     // New adapter creation
     const newAdapter = await createAdapter(facadeChatSDK, props);
     setAdapter(newAdapter);
@@ -255,7 +255,7 @@ const createAdapterAndSubscribe = async (facadeChatSDK: FacadeChatSDK, dispatch:
     const chatToken = await facadeChatSDK?.getChatToken();
     dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
     if (chatToken?.chatId && chatToken?.visitorId) {
-        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken.chatId, chatToken.visitorId, startTime));
+        newAdapter?.activity$?.subscribe(createOnNewAdapterActivityHandler(chatToken.chatId, chatToken.visitorId, startTime, facadeChatSDK, isPersistentChat));
     }
 };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

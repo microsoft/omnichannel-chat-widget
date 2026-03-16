@@ -41,6 +41,10 @@ describe("createOnNewAdapterActivityHandler", () => {
     const mockChatId = "test-chat-id";
     const mockUserId = "test-user-id";
     const mockStartTime = 1640995200000; // Fixed epoch timestamp for testing
+    const mockFacadeChatSDK = {
+        sendReadReceipt: jest.fn()
+    } as any;
+    const mockIsPersistentChat = false;
     
     let onNewAdapterActivityHandler: (activity: IActivity) => void;
     let mockStartClock: jest.Mock;
@@ -99,6 +103,10 @@ describe("createOnNewAdapterActivityHandler", () => {
         mockBroadcastServicePostMessage = BroadcastService.postMessage as jest.Mock;
         mockTelemetryHelperLog = TelemetryHelper.logActionEventToAllTelemetry as jest.Mock;
 
+        // Setup facadeChatSDK mock
+        jest.clearAllMocks();
+        (mockFacadeChatSDK.sendReadReceipt as jest.Mock).mockClear();
+
         // Setup default return values
         mockBuildMessagePayload.mockReturnValue(createMockPayload());
         mockPolyfillMessagePayloadForEvent.mockReturnValue(createMockPayload());
@@ -110,7 +118,7 @@ describe("createOnNewAdapterActivityHandler", () => {
         };
 
         // Create the handler
-        onNewAdapterActivityHandler = createOnNewAdapterActivityHandler(mockChatId, mockUserId, mockStartTime);
+        onNewAdapterActivityHandler = createOnNewAdapterActivityHandler(mockChatId, mockUserId, mockStartTime, mockFacadeChatSDK, mockIsPersistentChat);
     });
 
     describe("Activity filtering", () => {
@@ -342,6 +350,100 @@ describe("createOnNewAdapterActivityHandler", () => {
 
                 // Verify maskPayloadText was called with the correct payload
                 expect(maskPayloadText).toHaveBeenCalled();
+            });
+
+            it("should send read receipt for new messages with valid ID", () => {
+                // Create handler with persistent chat enabled for this test
+                const persistentChatHandler = createOnNewAdapterActivityHandler(
+                    mockChatId, 
+                    mockUserId, 
+                    mockStartTime, 
+                    mockFacadeChatSDK, 
+                    true  // Enable persistent chat
+                );
+                
+                // Ensure activity is valid (has text and ID)
+                const activity = createMockActivity({ 
+                    type: "message",
+                    text: "new message", 
+                    id: "message-123" 
+                } as any);
+                const mockPayload = createMockPayload();
+                mockBuildMessagePayload.mockReturnValue(mockPayload);
+                mockPolyfillMessagePayloadForEvent.mockReturnValue(mockPayload);
+                mockIsHistoryMessage.mockReturnValue(false);
+                mockGetScenarioType.mockReturnValue(ScenarioType.ReceivedMessageStrategy);
+                
+                persistentChatHandler(activity);
+                
+                expect(mockFacadeChatSDK.sendReadReceipt).toHaveBeenCalledWith("message-123");
+            });
+
+            it("should not send read receipt for messages without ID", () => {
+                // Activity without ID
+                const activity = createMockActivity({ 
+                    type: "message",
+                    text: "new message", 
+                    id: undefined 
+                } as any);
+                const mockPayload = createMockPayload();
+                mockBuildMessagePayload.mockReturnValue(mockPayload);
+                mockPolyfillMessagePayloadForEvent.mockReturnValue(mockPayload);
+                mockIsHistoryMessage.mockReturnValue(false);
+                
+                onNewAdapterActivityHandler(activity);
+                
+                expect(mockFacadeChatSDK.sendReadReceipt).not.toHaveBeenCalled();
+            });
+
+            it("should not send read receipt for non-persistent chat", () => {
+                // Test with default handler (non-persistent chat)
+                const activity = createMockActivity({ 
+                    type: "message",
+                    text: "new message", 
+                    id: "message-123" 
+                } as any);
+                const mockPayload = createMockPayload();
+                mockBuildMessagePayload.mockReturnValue(mockPayload);
+                mockPolyfillMessagePayloadForEvent.mockReturnValue(mockPayload);
+                mockIsHistoryMessage.mockReturnValue(false);
+                
+                onNewAdapterActivityHandler(activity);
+                
+                // Should NOT send read receipt for non-persistent chat
+                expect(mockFacadeChatSDK.sendReadReceipt).not.toHaveBeenCalled();
+            });
+
+            it("should send read receipt for persistent chat messages", () => {
+                // Create handler with persistent chat enabled
+                const persistentChatHandler = createOnNewAdapterActivityHandler(
+                    mockChatId, 
+                    mockUserId, 
+                    mockStartTime, 
+                    mockFacadeChatSDK, 
+                    true
+                );
+
+                const activity = createMockActivity({ 
+                    type: "message",
+                    text: "persistent chat message", 
+                    id: "persistent-message-123" 
+                } as any);
+                const mockPayload = createMockPayload();
+                mockBuildMessagePayload.mockReturnValue(mockPayload);
+                mockPolyfillMessagePayloadForEvent.mockReturnValue(mockPayload);
+                mockIsHistoryMessage.mockReturnValue(false);
+                mockGetScenarioType.mockReturnValue(ScenarioType.ReceivedMessageStrategy);
+                
+                persistentChatHandler(activity);
+                
+                expect(mockFacadeChatSDK.sendReadReceipt).toHaveBeenCalledWith("persistent-message-123");
+                
+                // Verify that telemetry is logged for read receipt
+                expect(mockTelemetryHelperLog).toHaveBeenCalledWith(LogLevel.INFO, expect.objectContaining({
+                    Event: TelemetryEvent.PersistentChatReadReceiptSent,
+                    Description: "Read receipt sent to ACS for persistent chat"
+                }));
             });
         });
     });
