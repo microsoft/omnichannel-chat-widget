@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   publish-chat-widget:
-    if: ${{ startsWith(github.ref, 'refs/tags/w-v') || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/hotfix/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-widget') }}
+    if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && (startsWith(github.ref, 'refs/tags/w-v') || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/hotfix/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-widget')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Configure git line endings
@@ -74,7 +74,7 @@ jobs:
         run: npm publish --provenance --tag ${{ steps.dist-tag.outputs.tag }} --access public
 
   publish-chat-components:
-    if: ${{ startsWith(github.ref, 'refs/tags/c-v') || github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-components') }}
+    if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && (startsWith(github.ref, 'refs/tags/c-v') || github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-components')) }}
     runs-on: ubuntu-latest
     steps:
       - name: Configure git line endings
