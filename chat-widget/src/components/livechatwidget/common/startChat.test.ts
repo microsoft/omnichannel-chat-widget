@@ -513,7 +513,7 @@ describe("startChat - startTime timing validation tests", () => {
                 appStates: {
                     conversationState: ConversationState.Loading,
                     chatDisconnectEventReceived: false,
-                    hasUserAuthenticated: false
+                    isUserAuthenticated: false
                 },
                 domainStates: {
                     liveChatConfig: {
@@ -540,7 +540,7 @@ describe("startChat - startTime timing validation tests", () => {
                 appStates: {
                     conversationState: ConversationState.Loading,
                     chatDisconnectEventReceived: false,
-                    hasUserAuthenticated: true
+                    isUserAuthenticated: true
                 },
                 domainStates: {
                     liveChatConfig: {
@@ -566,7 +566,7 @@ describe("startChat - startTime timing validation tests", () => {
                 appStates: {
                     conversationState: ConversationState.Loading,
                     chatDisconnectEventReceived: false,
-                    hasUserAuthenticated: false
+                    isUserAuthenticated: false
                 },
                 domainStates: {
                     liveChatConfig: {
@@ -586,14 +586,14 @@ describe("startChat - startTime timing validation tests", () => {
             expect(startChatParams.wasAuthenticated).toBeUndefined();
         });
 
-        it("should use hasUserAuthenticated from persisted state for reconnect scenarios", async () => {
+        it("should use isUserAuthenticated from persisted state for reconnect scenarios", async () => {
             isMidAuthEnabled.mockReturnValue(true);
             
             const mockState = {
                 appStates: { 
                     conversationState: ConversationState.Loading,
                     chatDisconnectEventReceived: false,
-                    hasUserAuthenticated: false
+                    isUserAuthenticated: false
                 },
                 domainStates: { 
                     liveChatConfig: { 
@@ -607,7 +607,7 @@ describe("startChat - startTime timing validation tests", () => {
 
             const persistedState = {
                 appStates: {
-                    hasUserAuthenticated: true
+                    isUserAuthenticated: true
                 },
                 domainStates: {
                     liveChatContext: { chatId: "persisted-chat-id" }
@@ -618,7 +618,7 @@ describe("startChat - startTime timing validation tests", () => {
 
             expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
             const startChatParams = mockFacadeChatSDK.startChat.mock.calls[0][0];
-            // persistedState.hasUserAuthenticated is true, so wasAuthenticated should be true
+            // persistedState.isUserAuthenticated is true, so wasAuthenticated should be true
             expect(startChatParams.wasAuthenticated).toBe(true);
         });
 
@@ -629,7 +629,7 @@ describe("startChat - startTime timing validation tests", () => {
                 appStates: {
                     conversationState: ConversationState.Loading,
                     chatDisconnectEventReceived: false,
-                    hasUserAuthenticated: false
+                    isUserAuthenticated: false
                 },
                 domainStates: {
                     liveChatConfig: {
@@ -648,7 +648,7 @@ describe("startChat - startTime timing validation tests", () => {
             expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
             const startChatParams = mockFacadeChatSDK.startChat.mock.calls[0][0];
             expect(startChatParams.isProactiveChat).toBe(true);
-            // wasAuthenticated=false since hasUserAuthenticated is false
+            // wasAuthenticated=false since isUserAuthenticated is false
             expect(startChatParams.wasAuthenticated).toBe(false);
         });
     });

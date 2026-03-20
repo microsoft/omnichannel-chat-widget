@@ -773,14 +773,14 @@ const reducer = (state: ILiveChatWidgetContext, action: ILiveChatWidgetAction): 
                 ...inMemory,
                 appStates: {
                     ...inMemory.appStates,
-                    hasUserAuthenticated: action.payload as boolean
+                    isUserAuthenticated: action.payload as boolean
                 }
             };
             return {
                 ...state,
                 appStates: {
                     ...state.appStates,
-                    hasUserAuthenticated: action.payload as boolean
+                    isUserAuthenticated: action.payload as boolean
                 }
             };
 

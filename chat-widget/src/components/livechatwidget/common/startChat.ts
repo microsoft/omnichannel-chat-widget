@@ -187,9 +187,9 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             // Used to detect auth transitions (Auth->Unauth) and decide whether to call authenticateChat
             const midAuthEnabled = isMidAuthEnabled(state?.domainStates?.liveChatConfig);
             if (midAuthEnabled) {
-                const hasUserAuthenticated = state?.appStates?.hasUserAuthenticated === true ||
-                                            persistedState?.appStates?.hasUserAuthenticated === true;
-                startChatOptionalParams.wasAuthenticated = hasUserAuthenticated;
+                const isUserAuthenticated = state?.appStates?.isUserAuthenticated === true ||
+                                            persistedState?.appStates?.isUserAuthenticated === true;
+                startChatOptionalParams.wasAuthenticated = isUserAuthenticated;
             }
 
             // startTime is used to determine if a message is history or new, better to be set before creating the adapter to get bandwidth

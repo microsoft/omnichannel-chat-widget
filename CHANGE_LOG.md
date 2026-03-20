@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
 - [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
-- [Mid-Auth] Added `hasUserAuthenticated` state tracking with `SET_USER_AUTHENTICATED` action for reconnect support
+- [Mid-Auth] Added `isUserAuthenticated` state tracking with `SET_USER_AUTHENTICATED` action for reconnect support
 - [Mid-Auth] Added `isMidAuthEnabled` utility in `authHelper.ts` and `liveChatConfigUtils.ts`
 - [Mid-Auth] Added `wasAuthenticated` flag in `startChat` optional params for auth transition detection
 - [Mid-Auth] Added auth state change broadcast listeners (`MidConversationAuthSucceeded`, `MidConversationAuthReset`) in `LiveChatWidgetStateful`

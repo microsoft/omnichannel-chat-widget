@@ -483,7 +483,7 @@ describe("FacadeChatSDK", () => {
             expect(facadeChatSDK["token"]).toBe(newJwt.token);
         });
 
-        it("should handle reconnect scenario with hasUserAuthenticated", async () => {
+        it("should handle reconnect scenario with isUserAuthenticated", async () => {
             // Setup: Simulating reconnect - user was authenticated before
             const jwt = getJWTToken();
             facadeChatSDK["isAuthenticated"] = true;

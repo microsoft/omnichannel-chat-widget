@@ -46,9 +46,9 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         if (!initialStateFromCache.domainStates.botAvatarInitials) {
             initialStateFromCache.domainStates.botAvatarInitials = defaultWebChatStyles.botAvatarInitials as string;
         }
-        // Default hasUserAuthenticated to false if not present in cache
-        if (initialStateFromCache.appStates.hasUserAuthenticated === undefined) {
-            initialStateFromCache.appStates.hasUserAuthenticated = false;
+        // Default isUserAuthenticated to false if not present in cache
+        if (initialStateFromCache.appStates.isUserAuthenticated === undefined) {
+            initialStateFromCache.appStates.isUserAuthenticated = false;
         }
         return initialStateFromCache;
     }
@@ -101,7 +101,7 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
             postChatParticipantType: undefined,
             isConversationalSurvey: false,
             isConversationalSurveyEnabled: false,
-            hasUserAuthenticated: false
+            isUserAuthenticated: false
         },
         uiStates: {
             showConfirmationPane: false,

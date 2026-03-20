@@ -479,19 +479,20 @@ export class FacadeChatSDK {
             await this.chatSDK.startChat(optionalParams);
 
             // Migrate to authenticated if needed (reconnects to unauthenticated sessions only)
-            const shouldMigrateToAuth = midAuthEnabled &&
-                                        isReconnect &&
-                                        this.isTokenSet() &&
-                                        !this.isTokenExpired() &&
-                                        !wasPreviousSessionAuthenticated;
+            if (midAuthEnabled) {
+                const shouldMigrateToAuth = isReconnect &&
+                                            this.isTokenSet() &&
+                                            !this.isTokenExpired() &&
+                                            !wasPreviousSessionAuthenticated;
 
-            if (shouldMigrateToAuth) {
-                TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
-                    Event: TelemetryEvent.MidConversationAuthSucceeded,
-                    Description: "Mid-auth startChat: initiating migration to authenticated",
-                    Data: { isReconnect: String(isReconnect), wasPreviousSessionAuthenticated: String(wasPreviousSessionAuthenticated) }
-                });
-                await this.migrateConversationToAuthenticated();
+                if (shouldMigrateToAuth) {
+                    TelemetryHelper.logFacadeChatSDKEventToAllTelemetry(LogLevel.INFO, {
+                        Event: TelemetryEvent.MidConversationAuthSucceeded,
+                        Description: "Mid-auth startChat: initiating migration to authenticated",
+                        Data: { isReconnect: String(isReconnect), wasPreviousSessionAuthenticated: String(wasPreviousSessionAuthenticated) }
+                    });
+                    await this.migrateConversationToAuthenticated();
+                }
             }
 
             // Broadcast final auth state after startChat completes (only on state change)
