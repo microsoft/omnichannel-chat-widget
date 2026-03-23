@@ -230,4 +230,5 @@ describe("liveChatConfigUtils", () => {
             expect(shouldLoadPersistentChatHistory(config)).toBe(true);
         });
     });
+
 });
