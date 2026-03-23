@@ -2953,10 +2953,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.295.tgz#d3c8d7ab186f422727ba112d6ebe5fe8e41051d9"
   integrity sha512-W+IzEBw8a6LOOfRJM02dTT7BDZijxm+Z7lhtOAz1+y9vQm1Kdz9jlAO+qCEKsfxtUOmKilW8DIRqFw2aUgKeGg==
 
-"@microsoft/ocsdk@^0.5.21":
-  version "0.5.21"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.21.tgz#bc535cd2e979683f5e2ed01939d8f01583edb37a"
-  integrity sha512-zgnl8ksWPLmtRoN6dpTucygaNgrY3i9V5tjuYJZKBI1Ft/8nVnBOvEOIjDkWY7AGqxzd4Nf/7CWtemd8x4v1Hg==
+"@microsoft/ocsdk@0.5.22-main.27b39ce":
+  version "0.5.22-main.27b39ce"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.5.22-main.27b39ce.tgz#68954f6990bdbd19cdf7ee3eaaad196de19e95aa"
+  integrity sha512-MwXzPu7BPweguN/n1jKRbQr3L9b/nDGM8hBHvh6bv9izri3Lb9+F9YOWRPHP+Wv3BH5SeVs8ypNU0o2mucGSZw==
   dependencies:
     "@babel/runtime" "^7.26.10"
     "@types/node" "^22.13.10"
@@ -2979,15 +2979,15 @@
     broadcast-channel "^4.5.0"
     rxjs "^5.0.3"
 
-"@microsoft/omnichannel-chat-sdk@^1.11.8":
-  version "1.11.8"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.8.tgz#8bd3c2a413787405f347a7f9cb898ae7ba0dd6f0"
-  integrity sha512-Va29LTg8sIXuX3qbLI+cLKqMzDW4glpJs6Pw4pbgCjqOhU1+ZN0xuKiyqKZuMaWRL2Bopr/NPE6c677FRCTZ1A==
+"@microsoft/omnichannel-chat-sdk@1.11.9-main.39f9d5b":
+  version "1.11.9-main.39f9d5b"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-main.39f9d5b.tgz#5f46348ea5f97dfa13892aff7a3c35deb0f9eba7"
+  integrity sha512-Hq0fZ9RuMtfa116dYIrtxHw707a1p65tZ1hpNrpNWrBqZO2jGG0BbpqlOgDllJeHsl/aTenD0Gd+vbVYSu20tA==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
     "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.5"
-    "@microsoft/ocsdk" "^0.5.21"
+    "@microsoft/ocsdk" "0.5.22-main.27b39ce"
     "@microsoft/omnichannel-amsclient" "^0.1.12"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
