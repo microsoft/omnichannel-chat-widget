@@ -2964,10 +2964,10 @@
     axios-retry "^3.9.1"
     crypto-js "^4.2.0"
 
-"@microsoft/omnichannel-amsclient@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.12.tgz#b228903e62f6bc571b02172cdb423a05402021fe"
-  integrity sha512-uM8crNyVZuyO1sZY6amsncvZOTqcYkkK6fGgeNRwEp7UHrqWUZYBvWPii/U2ctDj0z7T1fDy2h8Zej+hUOno7Q==
+"@microsoft/omnichannel-amsclient@0.1.14-hotfix.safari-iframe.1":
+  version "0.1.14-hotfix.safari-iframe.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.14-hotfix.safari-iframe.1.tgz#e180682f7e304672aa45611c143a7e013e0618bb"
+  integrity sha512-I7jeO8YYrAidm5P00tRCq1y5EZ8s3f76GbtGbADGe5/xhpOlogEb3cZDS9pYmA5tZo8P36Zdrw/aE3uy4eyJag==
 
 "@microsoft/omnichannel-chat-components@1.1.17-main.940d996":
   version "1.1.17-main.940d996"
@@ -2979,16 +2979,16 @@
     broadcast-channel "^4.5.0"
     rxjs "^5.0.3"
 
-"@microsoft/omnichannel-chat-sdk@1.11.9-main.39f9d5b":
-  version "1.11.9-main.39f9d5b"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-main.39f9d5b.tgz#5f46348ea5f97dfa13892aff7a3c35deb0f9eba7"
-  integrity sha512-Hq0fZ9RuMtfa116dYIrtxHw707a1p65tZ1hpNrpNWrBqZO2jGG0BbpqlOgDllJeHsl/aTenD0Gd+vbVYSu20tA==
+"@microsoft/omnichannel-chat-sdk@1.11.9-hotfix.safari-iframe.1":
+  version "1.11.9-hotfix.safari-iframe.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-hotfix.safari-iframe.1.tgz#cd03d6b92fb48e9a3c58995215b2d082bd41c33e"
+  integrity sha512-VFAn4HCQbyt1owjdKxzq2eI7aWBMitjaG6qTExhha6j/hx42IDSrWS2Rqn3hVhnhxOkUmlmq4y++Hxv3A9Kq0Q==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
     "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.5"
     "@microsoft/ocsdk" "0.5.22-main.27b39ce"
-    "@microsoft/omnichannel-amsclient" "^0.1.12"
+    "@microsoft/omnichannel-amsclient" "0.1.14-hotfix.safari-iframe.1"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
 "@microsoft/omnichannel-ic3core@^0.1.5":
