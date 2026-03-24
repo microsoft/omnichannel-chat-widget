@@ -2979,10 +2979,10 @@
     broadcast-channel "^4.5.0"
     rxjs "^5.0.3"
 
-"@microsoft/omnichannel-chat-sdk@1.11.9-hotfix.safari-iframe.1":
-  version "1.11.9-hotfix.safari-iframe.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-hotfix.safari-iframe.1.tgz#cd03d6b92fb48e9a3c58995215b2d082bd41c33e"
-  integrity sha512-VFAn4HCQbyt1owjdKxzq2eI7aWBMitjaG6qTExhha6j/hx42IDSrWS2Rqn3hVhnhxOkUmlmq4y++Hxv3A9Kq0Q==
+"@microsoft/omnichannel-chat-sdk@1.11.9-hotfix.safari-iframe.2":
+  version "1.11.9-hotfix.safari-iframe.2"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-hotfix.safari-iframe.2.tgz#2ac2eaa119e61e0a66c4cfce130e5f850b70a722"
+  integrity sha512-MWyuJQW4Y2IK2YA2VWsg772e4Mjcz5G1VP3hTbeNljxICLU+0HBEr5vvq7QtFLuNqqcJQMycrGuwAmNyFC774Q==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
