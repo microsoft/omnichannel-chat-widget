@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Added style overrides for hover and focus on adaptive cards
 - Add `github.repository` guard to all release workflows to prevent them from running on forks
 - Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
 - Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.941a049 (fixes Safari/iOS AMS iframe hang during initialize)
