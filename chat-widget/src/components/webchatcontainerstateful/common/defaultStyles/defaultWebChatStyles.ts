@@ -29,7 +29,7 @@ export const defaultWebChatStyles: StyleOptions = {
     showAvatarInGroup: true,
     suggestedActionsStackedHeight: 125,
     suggestedActionsStackedOverflow: "scroll" as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    typingAnimationDuration: 3500,
+    typingAnimationDuration: 4500,
     emojiSet: {
         ":)": "😊",
         ":-)": "😊",
