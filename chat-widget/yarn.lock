@@ -2964,10 +2964,10 @@
     axios-retry "^3.9.1"
     crypto-js "^4.2.0"
 
-"@microsoft/omnichannel-amsclient@0.1.14-main.70ab67c":
-  version "0.1.14-main.70ab67c"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.14-main.70ab67c.tgz#71eda48903ee652bc05e34832d383fe0f3bce310"
-  integrity sha512-i0nzyRffxhUO8fi7JCBGWHQZmSB/+CfW0/uphsUjuGAahI2REzYs1SjhgLKJCdcQJPGIMdaSPcRJsBhIgseBbg==
+"@microsoft/omnichannel-amsclient@0.1.14-main.9951e38":
+  version "0.1.14-main.9951e38"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.14-main.9951e38.tgz#199903715de20373dbddbbf18b5d4ee9fc1b5a08"
+  integrity sha512-bbgMmYmCKBzOrs/VGd/yPCn7bOoU0f2kTwAlX8Fl3MdfMgXL2DVGBJo5EsF4M3bFQDJITavTAbyii07aro4Mtw==
 
 "@microsoft/omnichannel-chat-components@1.1.17-main.940d996":
   version "1.1.17-main.940d996"
@@ -2979,16 +2979,16 @@
     broadcast-channel "^4.5.0"
     rxjs "^5.0.3"
 
-"@microsoft/omnichannel-chat-sdk@1.11.9-main.941a049":
-  version "1.11.9-main.941a049"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-main.941a049.tgz#1fd41dc7a49acbffd58af912ddb8b5baa8b962ad"
-  integrity sha512-X9E3IhycvG3C2rlfafqpTGwrGN+NwYU5pZO4DuNpI88L60s0uKDXBEJlFwstJuwYzRYj4MN9KYS57pAaySt6nw==
+"@microsoft/omnichannel-chat-sdk@1.11.9-main.169d422":
+  version "1.11.9-main.169d422"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-main.169d422.tgz#78e86e332bff9ba08908f519970eefdf8f34345c"
+  integrity sha512-PrEVD2Xee1uW0sWH+dZ3ZVvb+HVrFtxR03dpq+a6/3DZVZQbnt5L5n6k0xfieRexdorFrJYyXfOmXJEJm5grZA==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
     "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.5"
     "@microsoft/ocsdk" "0.5.22-main.27b39ce"
-    "@microsoft/omnichannel-amsclient" "0.1.14-main.70ab67c"
+    "@microsoft/omnichannel-amsclient" "0.1.14-main.9951e38"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
 "@microsoft/omnichannel-ic3core@^0.1.5":
