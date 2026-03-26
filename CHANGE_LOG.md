@@ -17,6 +17,9 @@ All notable changes to this project will be documented in this file.
 - [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
 
 ### Changed
+- Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
+
+### Changed
 
 - Increased typing animation duration from 3500ms to 4500ms in default WebChat styles
 - Add `github.repository` guard to all release workflows to prevent them from running on forks
