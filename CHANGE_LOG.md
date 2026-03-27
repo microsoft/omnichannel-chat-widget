@@ -27,6 +27,10 @@ All notable changes to this project will be documented in this file.
 
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
 
+### Security
+
+- Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
+
 ### Changed
 
 - Uptake botframework-webchat 4.18.1-hotfix.20260308.b15b405
@@ -740,6 +744,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
+
+### Security
+
+- Upgrade `yaml` 1.10.2 → 1.10.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
 - Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
 - Fixed header text overflow issue where long titles would expand leftward and cover the icon image
