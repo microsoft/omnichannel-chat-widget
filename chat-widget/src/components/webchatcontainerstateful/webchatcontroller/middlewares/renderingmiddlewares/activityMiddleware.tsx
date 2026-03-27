@@ -169,3 +169,10 @@ export const createActivityMiddleware = (
     }
     return next(...args);
 };
+
+/** Clear module-level caches. Call on conversation end / chat close. */
+export const resetActivityMiddlewareCache = () => {
+    loggedSystemMessages.length = 0;
+    lastRenderedAt = 0;
+    originalSystemMessageTexts.clear();
+};
