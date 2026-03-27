@@ -45,6 +45,7 @@
     "@types/styled-components": "^5.1.15",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.2.0",
+    "@typespec/ts-http-runtime": "^0.3.4",
     "babel-jest": "^27.3.1",
     "babel-loader": "^8.2.3",
     "babel-plugin-react-native-web": "^0.21.2",
