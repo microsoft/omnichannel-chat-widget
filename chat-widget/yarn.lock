@@ -47,14 +47,14 @@
     tslib "^2.2.0"
     uuid "^8.3.0"
 
-"@azure/communication-chat@1.6.0-beta.5":
-  version "1.6.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@azure/communication-chat/-/communication-chat-1.6.0-beta.5.tgz#962db5f0de5b6c60095221520b0b3da10b8c7081"
-  integrity sha512-8R+s998qshBKnbSomlhnofljuwd/DNg8hhQvKQWOHqtCUvoWsyDGjCem5bcqq6wBXnVSBsg+GjOU4m05B/6PuA==
+"@azure/communication-chat@^1.5.4":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@azure/communication-chat/-/communication-chat-1.6.0.tgz#6cbb787584e0ed3e395342dddf9436e97443c13d"
+  integrity sha512-VnWa6krGE3tVkjlsW8gvg7orsJyFe0P5BAJvV03/QeOKfPTI2hZiOquvlPbk5ukSlMke9aj2mSO/sszHC2j81w==
   dependencies:
     "@azure/abort-controller" "^2.1.2"
     "@azure/communication-common" "^2.3.1"
-    "@azure/communication-signaling" "1.0.0-beta.32"
+    "@azure/communication-signaling" "1.0.0-beta.34"
     "@azure/core-auth" "^1.9.0"
     "@azure/core-client" "^1.9.2"
     "@azure/core-paging" "^1.1.1"
@@ -94,10 +94,10 @@
     tslib "^2.2.0"
     uuid "^8.3.0"
 
-"@azure/communication-signaling@1.0.0-beta.32":
-  version "1.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@azure/communication-signaling/-/communication-signaling-1.0.0-beta.32.tgz#7cb1252600a63b9c09bb649c67886d593a1ea782"
-  integrity sha512-ChhJXblgILpnuZd6cQlf1EDBNSTJ5cGUtvMQkxNjdlMa0qYKOXUN0Ugz6clw6jcrcMorXJlbda6tI7iGmgDPuQ==
+"@azure/communication-signaling@1.0.0-beta.34":
+  version "1.0.0-beta.34"
+  resolved "https://registry.yarnpkg.com/@azure/communication-signaling/-/communication-signaling-1.0.0-beta.34.tgz#4b52a84609cf7107c4f7ddd9d727a2210b616e51"
+  integrity sha512-nlbkQzD2Jrkwwj01tGETQEj4HV28WXdqIt45DkHtamVeoFFNem/uJIri4dUymzAwgK7c1czGoVobuft8UH5Eig==
   dependencies:
     "@azure/abort-controller" "^1.0.0"
     "@azure/core-auth" "^1.3.0"
@@ -2928,15 +2928,14 @@
     "@nevware21/ts-async" ">= 0.5.4 < 2.x"
     "@nevware21/ts-utils" ">= 0.11.8 < 2.x"
 
-"@microsoft/botframework-webchat-adapter-azure-communication-chat@^0.0.1-beta.5":
-  version "0.0.1-beta.5"
-  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta.5.tgz#0795960203db464c184714e2327cbd89bb3c3fa0"
-  integrity sha512-mnRuRqxUIQAEjL1319glhC9uCJYzEZGdxEDRrDbMYwGpu6OPHOu59FSTQCNHY/jmEXWBwEWIHh5U7y8/tuaeQw==
+"@microsoft/botframework-webchat-adapter-azure-communication-chat@^0.0.1-beta.6":
+  version "0.0.1-beta-1"
+  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta-1.tgz#9aae9cb7c34a59eb2ee69d809330e82ded58b4d8"
+  integrity sha512-vcpoztqbko6R2qlzlw8zCbtrNasSEKtu1JtrJguW5dG6Sddvxs+/3oC8oZMIOa5FrmZ+knVPfVJ+guUPu7NM/A==
   dependencies:
-    "@azure/communication-chat" "1.6.0-beta.5"
+    "@azure/communication-chat" "^1.5.4"
     "@azure/communication-common" "^2.3.1"
     core-js "^3.6.5"
-    event-target-shim "^6.0.2"
     http-status-codes "^2.1.4"
     redux "^4.0.5"
     regenerator-runtime "^0.13.7"
@@ -2964,10 +2963,10 @@
     axios-retry "^3.9.1"
     crypto-js "^4.2.0"
 
-"@microsoft/omnichannel-amsclient@0.1.14-main.70ab67c":
-  version "0.1.14-main.70ab67c"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.14-main.70ab67c.tgz#71eda48903ee652bc05e34832d383fe0f3bce310"
-  integrity sha512-i0nzyRffxhUO8fi7JCBGWHQZmSB/+CfW0/uphsUjuGAahI2REzYs1SjhgLKJCdcQJPGIMdaSPcRJsBhIgseBbg==
+"@microsoft/omnichannel-amsclient@0.1.14-main.9951e38":
+  version "0.1.14-main.9951e38"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.14-main.9951e38.tgz#199903715de20373dbddbbf18b5d4ee9fc1b5a08"
+  integrity sha512-bbgMmYmCKBzOrs/VGd/yPCn7bOoU0f2kTwAlX8Fl3MdfMgXL2DVGBJo5EsF4M3bFQDJITavTAbyii07aro4Mtw==
 
 "@microsoft/omnichannel-chat-components@1.1.17-main.940d996":
   version "1.1.17-main.940d996"
@@ -2979,16 +2978,16 @@
     broadcast-channel "^4.5.0"
     rxjs "^5.0.3"
 
-"@microsoft/omnichannel-chat-sdk@1.11.9-main.941a049":
-  version "1.11.9-main.941a049"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-main.941a049.tgz#1fd41dc7a49acbffd58af912ddb8b5baa8b962ad"
-  integrity sha512-X9E3IhycvG3C2rlfafqpTGwrGN+NwYU5pZO4DuNpI88L60s0uKDXBEJlFwstJuwYzRYj4MN9KYS57pAaySt6nw==
+"@microsoft/omnichannel-chat-sdk@1.11.9-main.da8219b":
+  version "1.11.9-main.da8219b"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-main.da8219b.tgz#c18900b3ed534a5f23828415e69582bdb1a09658"
+  integrity sha512-OFhtRi2Ra1No0pOIiKejI4xDuFgm6NxHBtyoi8Jn0HTAjf+/sb9HAESApYhgVwH84Y0DLfg0DqukoCHwDK+/Bg==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
-    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.5"
+    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "^0.0.1-beta.6"
     "@microsoft/ocsdk" "0.5.22-main.27b39ce"
-    "@microsoft/omnichannel-amsclient" "0.1.14-main.70ab67c"
+    "@microsoft/omnichannel-amsclient" "0.1.14-main.9951e38"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
 "@microsoft/omnichannel-ic3core@^0.1.5":

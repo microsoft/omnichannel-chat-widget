@@ -17,14 +17,20 @@ All notable changes to this project will be documented in this file.
 - [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
 
 ### Changed
+- Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
+
+### Changed
 
 - Increased typing animation duration from 3500ms to 4500ms in default WebChat styles
 - Add `github.repository` guard to all release workflows to prevent them from running on forks
 - Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
 - Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.941a049 (fixes Safari/iOS AMS iframe hang during initialize)
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.169d422 (amsclient CDN fallback for file attachments)
 
 ### Fixed
 
+- Fix Safari/iOS word spacing in system messages, chat bubbles, and avatar text by reverting emoji font additions from default styles (IcM 717304411)
+- Fix file attachments broken for npm consumers and Safari/iOS WebView by updating chat-sdk with amsclient CDN fallback
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
 
 ### Security
