@@ -10,7 +10,9 @@ export const AudioNotificationStateful = (props: IAudioNotificationStatefulParam
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
         BroadcastService.getMessageByEventName("NewMessageNotification").subscribe((msg: any) => {
-            audioRef.current.play();
+            audioRef.current.play().catch(() => {
+                // iOS Safari blocks audio playback without user gesture — silently ignore
+            });
         });
     }, []);
 

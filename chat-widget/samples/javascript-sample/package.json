@@ -1,0 +1,8 @@
+{
+  "name": "javascript-sample",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@microsoft/omnichannel-chat-widget": "^1.8.4-main.3fbc719"
+  }
+}
