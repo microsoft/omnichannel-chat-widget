@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Resolved underscores in a system message renders the text weirdly in iOS
 - Fix Safari/iOS word spacing in system messages, chat bubbles, and avatar text by reverting emoji font additions from default styles (IcM 717304411)
 - Fix file attachments broken for npm consumers and Safari/iOS WebView by updating chat-sdk with amsclient CDN fallback
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
