@@ -2968,10 +2968,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.1.14-main.9951e38.tgz#199903715de20373dbddbbf18b5d4ee9fc1b5a08"
   integrity sha512-bbgMmYmCKBzOrs/VGd/yPCn7bOoU0f2kTwAlX8Fl3MdfMgXL2DVGBJo5EsF4M3bFQDJITavTAbyii07aro4Mtw==
 
-"@microsoft/omnichannel-chat-components@1.1.17-main.940d996":
-  version "1.1.17-main.940d996"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-1.1.17-main.940d996.tgz#d7515ee624fe240aa8d38d12f8bfcc1bd9655aeb"
-  integrity sha512-eD4mIAqe8E0neXYQNaU2+BObGZ8KBfihECMIX7g9b7agk1d9b9Y1dJSPG75EeSVm++Iqnryj5RC1yHMUXxUz+g==
+"@microsoft/omnichannel-chat-components@1.1.17-main.d4c4cb2":
+  version "1.1.17-main.d4c4cb2"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-components/-/omnichannel-chat-components-1.1.17-main.d4c4cb2.tgz#fe371e54bc1a502a05d6a92f5bd70c41472c1036"
+  integrity sha512-J3CJh3ER7aAHymxSGOxtGyJHTaTRf8qOj+3asN9BQuZgUMOikgtar8CSvV4nelTK49gNcx5B0F4cgQcuiIc/SQ==
   dependencies:
     "@fluentui/react" "^8.46.0"
     adaptivecards "^2.10.0"
@@ -6553,10 +6553,10 @@ bplist-parser@^0.1.0:
   dependencies:
     big-integer "^1.6.7"
 
-brace-expansion@2.0.2, brace-expansion@^1.1.7, brace-expansion@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-2.0.2.tgz#54fc53237a613d854c7bd37463aad17df87214e7"
-  integrity sha512-Jt0vHyM+jmUBqojB7E1NIYadt0vI0Qxjxd2TErW94wDz+E2LAm5vKMXXwg6ZZBTHPuUlDgQHKXvjGBdfcF1ZDQ==
+brace-expansion@2.0.3, brace-expansion@^1.1.7, brace-expansion@^2.0.1:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-2.0.3.tgz#0493338bdd58e319b1039c67cf7ee439892c01d9"
+  integrity sha512-MCV/fYJEbqx68aE58kv2cA/kiky1G8vux3OR6/jbS+jIMe/6fJWa0DTzJU7dqijOWYwHi1t29FlfYI9uytqlpA==
   dependencies:
     balanced-match "^1.0.0"
 

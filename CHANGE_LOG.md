@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Uptake @microsoft/omnichannel-chat-components@1.1.17-main.d4c4cb2
 - Increased typing animation duration from 3500ms to 4500ms in default WebChat styles
 - Add `github.repository` guard to all release workflows to prevent them from running on forks
 - Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
@@ -37,6 +38,7 @@ All notable changes to this project will be documented in this file.
 ### Security
 
 - Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
+- Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
 
 ### Changed
 
