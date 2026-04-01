@@ -23,6 +23,7 @@ export const defaultInputValidationPaneControlProps: IInputValidationPaneControl
     invalidInputErrorMessageText: Texts.InvalidInputErrorMessageText,
 
     isButtonGroupHorizontal: true,
+    buttonGroupAriaLabel: AriaLabels.InputValidationPaneButtonGroup,
 
     hideSendButton: false,
     enableSendButton: false,
