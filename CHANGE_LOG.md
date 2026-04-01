@@ -6,6 +6,50 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
+- [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
+- [Mid-Auth] Added `isUserAuthenticated` state tracking with `SET_USER_AUTHENTICATED` action for reconnect support
+- [Mid-Auth] Added `isMidAuthEnabled` utility in `authHelper.ts` and `liveChatConfigUtils.ts`
+- [Mid-Auth] Added `wasAuthenticated` flag in `startChat` optional params for auth transition detection
+- [Mid-Auth] Added auth state change broadcast listeners (`MidConversationAuthSucceeded`, `MidConversationAuthReset`) in `LiveChatWidgetStateful`
+- [Mid-Auth] Added telemetry events: `MidConversationAuthSucceeded`, `MidConversationAuthFailed`, `MidConversationAuthReset`
+- [Mid-Auth] Added mid-auth empty token handling in `authHelper.handleAuthentication` (returns `result: true` with null token instead of throwing)
+- [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
+
+### Changed
+- Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
+
+### Changed
+
+- Uptake @microsoft/omnichannel-chat-components@1.1.17-main.d4c4cb2
+- Increased typing animation duration from 3500ms to 4500ms in default WebChat styles
+- Add `github.repository` guard to all release workflows to prevent them from running on forks
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.941a049 (fixes Safari/iOS AMS iframe hang during initialize)
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.169d422 (amsclient CDN fallback for file attachments)
+
+### Fixed
+
+- Resolved underscores in a system message renders the text weirdly in iOS
+- Fix Safari/iOS word spacing in system messages, chat bubbles, and avatar text by reverting emoji font additions from default styles (IcM 717304411)
+- Fix file attachments broken for npm consumers and Safari/iOS WebView by updating chat-sdk with amsclient CDN fallback
+- Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
+
+### Security
+
+- Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
+- Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
+
+### Changed
+
+- Uptake botframework-webchat 4.18.1-hotfix.20260308.b15b405
+- Switch npm publishing to GitHub Actions OIDC trusted publishing (no NPM_TOKEN needed)
+- Dev versions now auto-publish on push to main
+- Add `hotfix/**` branch trigger to npm-release workflow
+- Revert back to botframework-webchat 4.18.1-hotfix.20260127.b53acdf
+- Fix CRLF line ending issue for npm-release workflow on Linux runners
+- PR workflows now also trigger on workflow file changes
+
 ### Added
 
 - [A11Y] Added accessible name and group role to Cancel/Send button group in InputValidationPane and ConfirmationPane to fix TalkBack silent focus.
@@ -24,7 +68,6 @@ All notable changes to this project will be documented in this file.
 - Enhanced error handling in file download process
 - Added comprehensive XSS security tests (19 new tests total)
 - Added `fallbackShowSignInCard` prop to `botAuthConfig` to provide a default value for showing the sign-in card when the `SetBotAuthProviderNotFound` delegate cannot be loaded
-- Added botframework-webchat@4.18.1-main.20260129.f7a730f dependency
 - Dependency resolutions for lodash, @babel/runtime-corejs3, and brace-expansion
 - Added [CLAUDE.md](../CLAUDE.md) project instructions file
 
@@ -83,6 +126,7 @@ All notable changes to this project will be documented in this file.
 - Fixed scrollbar thumb visibility in Windows High Contrast mode
 - Improved designer mode to take mock messages as input
 - Fixed keyboard focus issue for suggested actions previous and next button
+- Telemetry info for tracking LCW modernization feature effectiveness
 
 ### Changed
 
@@ -711,6 +755,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
+
+### Security
+
+- Upgrade `yaml` 1.10.2 → 1.10.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
 - Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
 - Fixed header text overflow issue where long titles would expand leftward and cover the icon image

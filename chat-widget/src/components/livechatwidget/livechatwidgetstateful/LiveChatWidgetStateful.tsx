@@ -46,6 +46,7 @@ import CallingContainerStateful from "../../callingcontainerstateful/CallingCont
 import ChatButtonStateful from "../../chatbuttonstateful/ChatButtonStateful";
 import ConfirmationPaneStateful from "../../confirmationpanestateful/ConfirmationPaneStateful";
 import { ConversationState } from "../../../contexts/common/ConversationState";
+import { ExtendedChatConfig } from "../../webchatcontainerstateful/interfaces/IExtendedChatConffig";
 import { DataStoreManager } from "../../../common/contextDataStore/DataStoreManager";
 import DraggableChatWidget from "../../draggable/DraggableChatWidget";
 import { ElementType } from "@microsoft/omnichannel-chat-components";
@@ -87,6 +88,7 @@ import { initConfirmationPropsComposer } from "../common/initConfirmationPropsCo
 import { initWebChatComposer } from "../common/initWebChatComposer";
 import { registerBroadcastServiceForStorage } from "../../../common/storage/default/defaultCacheManager";
 import { setPostChatContextAndLoadSurvey } from "../common/setPostChatContextAndLoadSurvey";
+import { shouldLoadPersistentChatHistory } from "../common/liveChatConfigUtils";
 import { startProactiveChat } from "../common/startProactiveChat";
 import useChatAdapterStore from "../../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../../hooks/useChatContextStore";
@@ -657,7 +659,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (state.appStates.isMinimized) {
             ActivityStreamHandler.cork();
         } else {
-            setTimeout(() => ActivityStreamHandler.uncork(), 500);
+            const extendedChatConfig = state?.domainStates?.liveChatConfig as ExtendedChatConfig | undefined;
+            if (shouldLoadPersistentChatHistory(extendedChatConfig)) {
+                requestAnimationFrame(() => {
+                    setTimeout(() => ActivityStreamHandler.uncork(), 500);
+                });
+            } else {
+                setTimeout(() => ActivityStreamHandler.uncork(), 500);
+            }
         }
 
     }, [state.appStates.isMinimized]);
@@ -791,6 +800,31 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     }, [state.appStates.chatDisconnectEventReceived]);
 
+    // Auth state change listeners (broadcast by FacadeChatSDK.startChat())
+    useEffect(() => {
+        const authSucceededSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthSucceeded)
+            .subscribe((msg) => {
+                if (msg?.payload?.isAuthenticated) {
+                    // Only store boolean flag, NOT the token - token is managed by FacadeChatSDK
+                    dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: true });
+                }
+            });
+
+        // Auth reset: only update the boolean flag here.
+        // We do NOT clear widget state/cache/adapter because this fires DURING startChat(),
+        // which will handle state transitions. FacadeChatSDK has already cleared SDK internals.
+        const authResetSub = BroadcastService.getMessageByEventName(BroadcastEvent.MidConversationAuthReset)
+            .subscribe((msg) => {
+                if (msg?.payload?.isAuthenticated === false) {
+                    dispatch({ type: LiveChatWidgetActionType.SET_USER_AUTHENTICATED, payload: false });
+                }
+            });
+
+        return () => {
+            authSucceededSub.unsubscribe();
+            authResetSub.unsubscribe();
+        };
+    }, [dispatch]);
 
     // if props state gets updates we need to update the renderingMiddlewareProps in the state
     useEffect(() => {
@@ -805,6 +839,26 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
     }, []);
+
+    // Reliable browser close detection via visibilitychange + sendBeacon
+    // visibilitychange fires while the page is still alive (unlike beforeunload),
+    // so telemetry calls complete reliably. False positives (tab switch, minimize)
+    // are filtered in Kusto by checking if this is the last event in the session.
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "hidden" &&
+                state.appStates.conversationState === ConversationState.Active) {
+                TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                    Event: TelemetryEvent.BrowserTabHidden,
+                    Description: "Browser tab hidden during active conversation"
+                });
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [state.appStates.conversationState]);
 
     const initiateEndChatOnBrowserUnload = () => {
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
@@ -931,15 +985,62 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             .webchat__basic-transcript__activity-markdown-body > :last-child {
                 margin-bottom: 0px;
             }
-           
+
             .webchat__basic-transcript__activity-markdown-body > :first-child {
                 margin-top: 0px;
+            }
+
+            /* Remove browser-default <p> margins inside system messages.
+               Without this, each markdown paragraph adds ~1em top+bottom gap
+               which causes the oversized line spacing visible on iOS Safari.
+               Also disable iOS Safari's auto font-size scaling (-webkit-text-size-adjust)
+               which inflates font sizes and causes line-height to grow over time
+               when the layout is viewed in a narrow viewport. */
+            .webchat__basic-transcript__activity-markdown-body {
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+            }
+
+            .webchat__basic-transcript__activity-markdown-body p {
+                margin-top: 0;
+                margin-bottom: 4px;
+                line-height: 1.4;
+            }
+
+            .webchat__basic-transcript__activity-markdown-body p:last-child {
+                margin-bottom: 0;
             }
                 
             .webchat__basic-transcript__activity-markdown-body img.webchat__render-markdown__external-link-icon {
                 background-image : url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIzIDMgMTggMTgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTcuMjUwMSA0LjUwMDE3SDEwLjc0OTVDMTEuMTYzNyA0LjUwMDE3IDExLjQ5OTUgNC44MzU5NiAxMS40OTk1IDUuMjUwMTdDMTEuNDk5NSA1LjYyOTg2IDExLjIxNzMgNS45NDM2NiAxMC44NTEzIDUuOTkzMzJMMTAuNzQ5NSA2LjAwMDE3SDcuMjQ5NzRDNi4wNzA3OSA1Ljk5OTYxIDUuMTAzNDkgNi45MDY1NiA1LjAwNzg2IDguMDYxMTJMNS4wMDAyOCA4LjIyMDAzTDUuMDAzMTIgMTYuNzUwN0M1LjAwMzQzIDE3Ljk0MTUgNS45Mjg4NSAxOC45MTYxIDcuMDk5NjYgMTguOTk0OUw3LjI1MzcxIDE5LjAwMDFMMTUuNzUxOCAxOC45ODg0QzE2Ljk0MTUgMTguOTg2OCAxNy45MTQ1IDE4LjA2MiAxNy45OTM1IDE2Ljg5MjNMMTcuOTk4NyAxNi43Mzg0VjEzLjIzMjFDMTcuOTk4NyAxMi44MTc5IDE4LjMzNDUgMTIuNDgyMSAxOC43NDg3IDEyLjQ4MjFDMTkuMTI4NCAxMi40ODIxIDE5LjQ0MjIgMTIuNzY0MyAxOS40OTE4IDEzLjEzMDNMMTkuNDk4NyAxMy4yMzIxVjE2LjczODRDMTkuNDk4NyAxOC43NDA3IDE3LjkyOTMgMjAuMzc2OSAxNS45NTI4IDIwLjQ4MjlMMTUuNzUzOCAyMC40ODg0TDcuMjU4MjcgMjAuNTAwMUw3LjA1NDk1IDIwLjQ5NDlDNS4xNDIzOSAyMC4zOTU0IDMuNjA4OTUgMTguODYyNyAzLjUwODM3IDE2Ljk1MDJMMy41MDMxMiAxNi43NTExTDMuNTAwODkgOC4yNTI3TDMuNTA1MjkgOC4wNTAyQzMuNjA1MzkgNi4xMzc0OSA1LjEzODY3IDQuNjA0NDkgNy4wNTA5NiA0LjUwNTI3TDcuMjUwMSA0LjUwMDE3SDEwLjc0OTVINy4yNTAxWk0xMy43NDgxIDMuMDAxNDZMMjAuMzAxOCAzLjAwMTk3TDIwLjQwMTQgMy4wMTU3NUwyMC41MDIyIDMuMDQzOTNMMjAuNTU5IDMuMDY4MDNDMjAuNjEyMiAzLjA5MTIyIDIwLjY2MzQgMy4xMjE2MyAyMC43MTExIDMuMTU4ODVMMjAuNzgwNCAzLjIyMTU2TDIwLjg2NDEgMy4zMjAxNEwyMC45MTgzIDMuNDEwMjVMMjAuOTU3IDMuNTAwNTdMMjAuOTc2MiAzLjU2NDc2TDIwLjk4OTggMy42Mjg2MkwyMC45OTkyIDMuNzIyODJMMjAuOTk5NyAxMC4yNTU0QzIwLjk5OTcgMTAuNjY5NiAyMC42NjM5IDExLjAwNTQgMjAuMjQ5NyAxMS4wMDU0QzE5Ljg3IDExLjAwNTQgMTkuNTU2MiAxMC43MjMyIDE5LjUwNjUgMTAuMzU3MUwxOS40OTk3IDEwLjI1NTRMMTkuNDk4OSA1LjU2MTQ3TDEyLjI3OTcgMTIuNzg0N0MxMi4wMTM0IDEzLjA1MSAxMS41OTY4IDEzLjA3NTMgMTEuMzAzMSAxMi44NTc1TDExLjIxOSAxMi43ODQ5QzEwLjk1MjcgMTIuNTE4NyAxMC45Mjg0IDEyLjEwMjEgMTEuMTQ2MiAxMS44MDg0TDExLjIxODggMTEuNzI0M0wxOC40MzY5IDQuNTAxNDZIMTMuNzQ4MUMxMy4zNjg0IDQuNTAxNDYgMTMuMDU0NiA0LjIxOTMxIDEzLjAwNSAzLjg1MzI0TDEyLjk5ODEgMy43NTE0NkMxMi45OTgxIDMuMzcxNzcgMTMuMjgwMyAzLjA1Nzk3IDEzLjY0NjQgMy4wMDgzMUwxMy43NDgxIDMuMDAxNDZaIiBmaWxsPSIjMjEyMTIxIiAvPjwvc3ZnPg==) !important;
                 height: .75em;
                 margin-left: .25em;
+            }
+
+            /* ── iOS Safari: underline + number alignment fixes ────────────────
+               1. Position underlines below all glyphs (not at alphabetic baseline)
+                  so they never intersect numbers in links or auto-detected tel: hrefs.
+               2. Use a solid underline (skip-ink: none) so numbers aren't split by
+                  gaps the browser renders around descenders.
+               3. Prevent ::marker pseudo-element from inheriting text-decoration,
+                  which Safari applies to ol/ul counters causing them to appear
+                  underlined and misaligned.
+               4. Normalise ordered-list indentation across Safari/WebKit. */
+            .webchat__basic-transcript__activity-markdown-body a {
+                -webkit-text-underline-position: under;
+                text-underline-position: under;
+                text-decoration-skip-ink: none;
+                -webkit-text-decoration-skip: none;
+            }
+
+            .webchat__basic-transcript__activity-markdown-body ol li::marker,
+            .webchat__basic-transcript__activity-markdown-body ul li::marker {
+                text-decoration: none;
+            }
+
+            .webchat__basic-transcript__activity-markdown-body ol {
+                -webkit-padding-start: 1.5em;
+                padding-inline-start: 1.5em;
             }
 
             .webchat__link-definitions__header-text {

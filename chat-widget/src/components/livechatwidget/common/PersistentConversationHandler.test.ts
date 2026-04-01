@@ -17,7 +17,8 @@ jest.mock("./ChatWidgetEvents", () => ({
     ADD_ACTIVITY: "ADD_ACTIVITY",
     FETCH_PERSISTENT_CHAT_HISTORY: "FETCH_PERSISTENT_CHAT_HISTORY",
     NO_MORE_HISTORY_AVAILABLE: "NO_MORE_HISTORY_AVAILABLE",
-    HISTORY_LOAD_ERROR: "HISTORY_LOAD_ERROR"
+    HISTORY_LOAD_ERROR: "HISTORY_LOAD_ERROR",
+    HISTORY_BATCH_LOADED: "HISTORY_BATCH_LOADED"
 }));
 jest.mock("../../../common/telemetry/TelemetryHelper");
 jest.mock("@microsoft/omnichannel-chat-components", () => ({
@@ -183,9 +184,12 @@ describe("PersistentConversationHandler", () => {
                 pageToken: undefined
             });
             
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3); // 2 activities + 1 divider
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4); // 2 activities + 1 divider + 1 HISTORY_BATCH_LOADED
             expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
+            });
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(ChatWidgetEvents.HISTORY_BATCH_LOADED, {
+                messageCount: 2
             });
         });
 
@@ -472,13 +476,17 @@ describe("PersistentConversationHandler", () => {
             // 2. ADD_ACTIVITY for activity2
             // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
             // 4. ADD_ACTIVITY for activity1 (no divider since same conversation)
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4);
+            // 5. HISTORY_BATCH_LOADED
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(5);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity2" })
             });
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(4, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
+            });
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(5, ChatWidgetEvents.HISTORY_BATCH_LOADED, {
+                messageCount: 2
             });
         });
 
@@ -499,10 +507,14 @@ describe("PersistentConversationHandler", () => {
             // 1. NO_MORE_HISTORY_AVAILABLE (from fetchHistoryMessages when pageToken is null)
             // 2. ADD_ACTIVITY for activity1
             // 3. ADD_ACTIVITY for divider (since lastMessage is initially null)
-            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(3);
+            // 4. HISTORY_BATCH_LOADED
+            expect(mockDispatchCustomEvent).toHaveBeenCalledTimes(4);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(1, ChatWidgetEvents.NO_MORE_HISTORY_AVAILABLE);
             expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(2, ChatWidgetEvents.ADD_ACTIVITY, {
                 activity: expect.objectContaining({ id: "activity1" })
+            });
+            expect(mockDispatchCustomEvent).toHaveBeenNthCalledWith(4, ChatWidgetEvents.HISTORY_BATCH_LOADED, {
+                messageCount: 1
             });
         });
     });
@@ -658,6 +670,152 @@ describe("PersistentConversationHandler", () => {
 
             // Should be able to call again with the same logic
             expect(mockFacadeChatSDK.fetchPersistentConversationHistory).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    describe("HISTORY_BATCH_LOADED Event", () => {
+        it("should dispatch HISTORY_BATCH_LOADED after processing messages", async () => {
+            const mockMessages = [createMockMessage("msg1"), createMockMessage("msg2")];
+
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: mockMessages,
+                nextPageToken: "token123"
+            });
+
+            mockConvertMessage
+                .mockReturnValueOnce(createMockActivity("activity2"))
+                .mockReturnValueOnce(createMockActivity("activity1"));
+
+            await handler.pullHistory();
+
+            // HISTORY_BATCH_LOADED should be dispatched with the message count
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(
+                ChatWidgetEvents.HISTORY_BATCH_LOADED,
+                { messageCount: 2 }
+            );
+        });
+
+        it("should dispatch HISTORY_BATCH_LOADED after ADD_ACTIVITY events", async () => {
+            const mockMessages = [createMockMessage("msg1")];
+
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: mockMessages,
+                nextPageToken: "token123"
+            });
+
+            mockConvertMessage.mockReturnValue(createMockActivity("activity1"));
+
+            await handler.pullHistory();
+
+            // Get all dispatch calls to verify order
+            const calls = mockDispatchCustomEvent.mock.calls;
+            const addActivityCalls = calls.filter((c: any[]) => c[0] === ChatWidgetEvents.ADD_ACTIVITY);
+            const batchLoadedCalls = calls.filter((c: any[]) => c[0] === ChatWidgetEvents.HISTORY_BATCH_LOADED);
+
+            expect(addActivityCalls.length).toBeGreaterThan(0);
+            expect(batchLoadedCalls.length).toBe(1);
+
+            // HISTORY_BATCH_LOADED should come after all ADD_ACTIVITY calls
+            const lastAddActivityIndex = calls.findIndex(
+                (c: any[], i: number) => c[0] === ChatWidgetEvents.ADD_ACTIVITY &&
+                    !calls.slice(i + 1).some((later: any[]) => later[0] === ChatWidgetEvents.ADD_ACTIVITY)
+            );
+            const batchLoadedIndex = calls.findIndex((c: any[]) => c[0] === ChatWidgetEvents.HISTORY_BATCH_LOADED);
+            expect(batchLoadedIndex).toBeGreaterThan(lastAddActivityIndex);
+        });
+
+        it("should NOT dispatch HISTORY_BATCH_LOADED on empty responses", async () => {
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: [],
+                nextPageToken: null
+            });
+
+            await handler.pullHistory();
+
+            expect(mockDispatchCustomEvent).not.toHaveBeenCalledWith(
+                ChatWidgetEvents.HISTORY_BATCH_LOADED,
+                expect.any(Object)
+            );
+        });
+
+        it("should NOT dispatch HISTORY_BATCH_LOADED on error responses", async () => {
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockRejectedValue(new Error("Network error"));
+
+            await handler.pullHistory();
+
+            expect(mockDispatchCustomEvent).not.toHaveBeenCalledWith(
+                ChatWidgetEvents.HISTORY_BATCH_LOADED,
+                expect.any(Object)
+            );
+        });
+
+        it("should dispatch HISTORY_BATCH_LOADED even when some messages fail conversion", async () => {
+            const mockMessages = [createMockMessage("msg1"), createMockMessage("msg2")];
+
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: mockMessages,
+                nextPageToken: "token123"
+            });
+
+            // First message conversion throws, second succeeds
+            mockConvertMessage
+                .mockImplementationOnce(() => { throw new Error("Conversion failed"); })
+                .mockReturnValueOnce(createMockActivity("activity2"));
+
+            await handler.pullHistory();
+
+            // HISTORY_BATCH_LOADED should still be dispatched
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(
+                ChatWidgetEvents.HISTORY_BATCH_LOADED,
+                { messageCount: 2 }
+            );
+        });
+    });
+
+    describe("Null Activity Handling", () => {
+        it("should skip null activities without crashing", async () => {
+            const mockMessages = [createMockMessage("msg1"), createMockMessage("msg2")];
+
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: mockMessages,
+                nextPageToken: "token123"
+            });
+
+            // First returns null, second returns valid activity
+            mockConvertMessage
+                .mockReturnValueOnce(null)
+                .mockReturnValueOnce(createMockActivity("activity2"));
+
+            await handler.pullHistory();
+
+            // Only the valid activity should be dispatched (+ its divider + HISTORY_BATCH_LOADED)
+            const addActivityCalls = mockDispatchCustomEvent.mock.calls.filter(
+                (c: any[]) => c[0] === ChatWidgetEvents.ADD_ACTIVITY
+            );
+            expect(addActivityCalls.length).toBe(2); // activity2 + divider (since lastMessage is null)
+        });
+
+        it("should handle all-null activities gracefully", async () => {
+            const mockMessages = [createMockMessage("msg1")];
+
+            mockFacadeChatSDK.fetchPersistentConversationHistory.mockResolvedValue({
+                chatMessages: mockMessages,
+                nextPageToken: "token123"
+            });
+
+            mockConvertMessage.mockReturnValue(null);
+
+            await handler.pullHistory();
+
+            // No ADD_ACTIVITY should be dispatched, but HISTORY_BATCH_LOADED should still fire
+            const addActivityCalls = mockDispatchCustomEvent.mock.calls.filter(
+                (c: any[]) => c[0] === ChatWidgetEvents.ADD_ACTIVITY
+            );
+            expect(addActivityCalls.length).toBe(0);
+            expect(mockDispatchCustomEvent).toHaveBeenCalledWith(
+                ChatWidgetEvents.HISTORY_BATCH_LOADED,
+                { messageCount: 1 }
+            );
         });
     });
 });

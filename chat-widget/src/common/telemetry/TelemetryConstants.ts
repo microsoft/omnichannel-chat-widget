@@ -61,7 +61,9 @@ export enum BroadcastEvent {
     OnWidgetError = "OnWidgetError",
     FMLTrackingCompletedAck = "FMLTrackingCompletedAck",
     FMLTrackingCompleted = "FMLTrackingCompleted",
-    PersistentConversationReset = "PersistentConversationReset"
+    PersistentConversationReset = "PersistentConversationReset",
+    MidConversationAuthSucceeded = "MidConversationAuthSucceeded", // Emitted when mid-conversation auth succeeds (for reconnect support)
+    MidConversationAuthReset = "MidConversationAuthReset" // Emitted when mid-auth falls back to unauthenticated mode (token null/empty)
 }
 
 // Events being logged
@@ -96,6 +98,9 @@ export enum TelemetryEvent {
     CallingSDKInitFailed = "CallingSDKInitFailed",
     CallingSDKLoadSuccess = "CallingSDKLoadSuccess",
     CallingSDKLoadFailed = "CallingSDKLoadFailed",
+    MidConversationAuthSucceeded = "MidConversationAuthSucceeded",
+    MidConversationAuthFailed = "MidConversationAuthFailed",
+    MidConversationAuthReset = "MidConversationAuthReset",
     GetConversationDetailsCallStarted = "GetConversationDetailsCallStarted",
     GetConversationDetailsCallFailed = "GetConversationDetailsCallFailed",
     EndChatSDKCallFailed = "EndChatSDKCallFailed",
@@ -116,7 +121,7 @@ export enum TelemetryEvent {
     LCWChatButtonActionCompleted = "LCWChatButtonActionCompleted",
     LCWChatButtonClicked = "LCWChatButtonClicked",
     LCWChatButtonShow = "LCWChatButtonShow",
-    
+
     WidgetLoadStarted = "WidgetLoadStarted",
     WidgetLoadComplete = "WidgetLoadComplete",
     WidgetLoadFailed = "WidgetLoadFailed",
@@ -325,6 +330,10 @@ export enum TelemetryEvent {
     LCWLazyLoadNoMoreHistory = "LCWLazyLoadNoMoreHistory",
     LCWLazyLoadHistoryError = "LCWLazyLoadHistoryError",
     LCWLazyLoadDestroyed = "LCWLazyLoadDestroyed",
+    LCWLazyLoadTriggerFired = "LCWLazyLoadTriggerFired",
+    LCWLazyLoadBatchReceived = "LCWLazyLoadBatchReceived",
+    LCWLazyLoadInitialLoadComplete = "LCWLazyLoadInitialLoadComplete",
+    LCWLazyLoadScrollAnchorApplied = "LCWLazyLoadScrollAnchorApplied",
 
     // SecureEventBus events
     SecureEventBusUnauthorizedDispatch = "SecureEventBusUnauthorizedDispatch",
@@ -332,6 +341,11 @@ export enum TelemetryEvent {
     SecureEventBusDispatchError = "SecureEventBusDispatchError",
     StartChatComplete = "StartChatComplete",
 
+    // Queue & Agent Assignment
+    AgentJoinedConversation = "AgentJoinedConversation",
+
+    // Browser Close Detection
+    BrowserTabHidden = "BrowserTabHidden",
 }
 
 export interface TelemetryInput {
@@ -407,6 +421,8 @@ export class TelemetryConstants {
             case TelemetryEvent.SecureEventBusUnauthorizedDispatch:
             case TelemetryEvent.SecureEventBusListenerError:
             case TelemetryEvent.SecureEventBusDispatchError:
+            case TelemetryEvent.AgentJoinedConversation:
+            case TelemetryEvent.BrowserTabHidden:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
