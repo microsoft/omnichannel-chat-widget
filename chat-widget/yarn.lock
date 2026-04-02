@@ -2978,10 +2978,10 @@
     broadcast-channel "^4.5.0"
     rxjs "^5.0.3"
 
-"@microsoft/omnichannel-chat-sdk@1.11.9-main.da8219b":
-  version "1.11.9-main.da8219b"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-main.da8219b.tgz#c18900b3ed534a5f23828415e69582bdb1a09658"
-  integrity sha512-OFhtRi2Ra1No0pOIiKejI4xDuFgm6NxHBtyoi8Jn0HTAjf+/sb9HAESApYhgVwH84Y0DLfg0DqukoCHwDK+/Bg==
+"@microsoft/omnichannel-chat-sdk@1.11.9-main.e47a43c":
+  version "1.11.9-main.e47a43c"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-1.11.9-main.e47a43c.tgz#d62b8ec0159ee573806abbaf347a36193e7d19aa"
+  integrity sha512-+Z+aSsq2XNhj5cGi2TgG62yc9Vg6lPMfBZQLaGtwJTVzIE6zfRG8kIo+TwiFQdP3S26TY46ZrsVrl59orRJr7g==
   dependencies:
     "@azure/communication-chat" "1.5.4"
     "@azure/communication-common" "2.3.1"
