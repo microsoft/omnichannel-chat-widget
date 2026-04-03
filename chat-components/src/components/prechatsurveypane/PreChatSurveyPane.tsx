@@ -68,6 +68,22 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     const renderedCard = adaptiveCard.render();
     addNoreferrerNoopenerTag(renderedCard);
 
+    // Fix iOS Safari blank space in <select> dropdowns
+    if (renderedCard) {
+        const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
+        selectElements.forEach((select) => {
+            // Remove hidden placeholder option that causes blank space on iOS
+            const firstOption = select.options[0];
+            if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
+                select.removeChild(firstOption);
+            }
+            // Override iOS native select rendering
+            select.style.webkitAppearance = "none";
+            select.style.height = "auto";
+            select.style.minHeight = "31px";
+        });
+    }
+
     return (
         <>
             <style>{`
@@ -104,6 +120,19 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 padding: 3px;
                 padding-top: 7px;
                 padding-bottom: 7px;
+                box-sizing: border-box;
+            }
+            .ac-input.ac-multichoiceInput.ac-choiceSetInput-compact {
+                height: auto;
+                min-height: 31px;
+                max-height: 45px;
+                -webkit-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 8px center;
+                background-size: 16px;
+                padding-right: 30px;
             }
             .ac-input.ac-toggleInput {
                 align-items: ${props.styleProps?.customToggleInputStyleProps?.alignItems ?? defaultPreChatSurveyPaneStyles.customToggleInputStyleProps?.alignItems} !important;
