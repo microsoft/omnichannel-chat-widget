@@ -114,6 +114,113 @@ VRT failure artifacts upload diff screenshots from `__diff_output__/`.
 | omnichannel-chat-sdk | TypeScript SDK for chat operations |
 | omnichannel-amsclient | File upload/download client |
 
-## Breaking Changes
+## Accessibility Requirements
 
-This is a **public npm package** — API changes affect external customers. Use semantic versioning. Deprecate props for 2 release cycles before removal. Coordinate with LiveChatWidget team.
+**All components MUST be accessible:**
+
+1. **Semantic HTML:** Use appropriate elements (`<button>`, `<input>`, etc.)
+2. **ARIA attributes:** Add `role`, `aria-label`, `aria-describedby` where needed
+3. **Keyboard navigation:** All interactive elements keyboard accessible
+4. **Focus management:** Logical tab order, visible focus indicators
+5. **Screen reader support:** Test with NVDA/JAWS/VoiceOver
+
+**Accessibility checklist:**
+- [ ] Component uses semantic HTML
+- [ ] All interactive elements keyboard accessible (Tab, Enter, Space)
+- [ ] ARIA roles and labels present
+- [ ] Color contrast meets WCAG AA standards (4.5:1 for text)
+- [ ] Focus indicators visible
+- [ ] Tested with screen reader
+
+---
+
+## Integration with Other Repos
+
+**This library integrates with:**
+- **omnichannel-chat-sdk** (peer dependency) - For chat operations (send message, etc.)
+- **React** (peer dependency) - UI framework
+
+**Consumed by:**
+- **CRM.OmniChannel.LiveChatWidget** (npm dependency) - Customer chat widget
+- **External customers** (public npm) - Custom widget implementations
+
+**When changing component APIs:**
+- This is a **public contract** - breaking changes affect external customers
+- Use semantic versioning: major version for breaking changes
+- Coordinate with LiveChatWidget team
+- Update Storybook stories to reflect API changes
+- Provide migration guide in CHANGELOG.md
+
+---
+
+## Pull Request Guidelines
+
+1. **Code standards:** Follow TypeScript best practices, React conventions
+2. **Commit messages:** Conventional commit format (feat:, fix:, chore:, etc.)
+3. **Testing:** All tests must pass, add tests for new components
+4. **Storybook:** Add stories for new components
+5. **Accessibility:** Verify all accessibility requirements met
+6. **Documentation:** Update README.md if component APIs change
+7. **CHANGELOG:** Update CHANGELOG.md under [Unreleased] section
+
+---
+
+## Common Issues & Troubleshooting
+
+**Build Issues:**
+- Clear node_modules: `rm -rf node_modules && npm install`
+- Check Node version: `node --version`
+- Ensure both packages build: `npm run build`
+
+**Storybook Issues:**
+- Clear Storybook cache: `npm run storybook -- --no-manager-cache`
+- Check for circular dependencies
+- Verify all stories have valid meta exports
+
+**Peer Dependency Warnings:**
+- Ensure React version compatibility (17+ recommended)
+- Check chat-sdk peer dependency version in package.json
+
+**Accessibility Issues:**
+- Use axe-core for automated testing: `npm run test:a11y` (if configured)
+- Manually test with keyboard navigation (Tab, Enter, Space)
+- Test with screen reader (NVDA, JAWS, VoiceOver)
+
+---
+
+## Documentation
+
+- **[README.md](README.md)** - Component library usage, examples
+- **[CHANGE_LOG.md](CHANGE_LOG.md)** - Release history
+- **[docs/](docs/)** - Additional documentation
+- **Storybook:** Run `npm run storybook` for interactive component docs
+
+---
+
+## Breaking Change Protocol
+
+**Before making breaking changes to component APIs:**
+
+1. **Identify impact:**
+   - LiveChatWidget dependency (check package.json version)
+   - External customers (check npm download stats)
+
+2. **Coordination:**
+   - Notify LiveChatWidget team
+   - Create tracking work item
+   - Plan migration timeline (minimum 2 release cycles)
+
+3. **Implementation:**
+   - Add new prop/API (backwards-compatible)
+   - Mark old prop as deprecated in JSDoc: `@deprecated Use newProp instead`
+   - Update Storybook stories with new API examples
+   - After 2 releases, remove old prop (major version bump)
+
+4. **Documentation:**
+   - Update README.md with new component examples
+   - Add migration guide to CHANGE_LOG.md
+   - Update TypeScript type definitions
+
+---
+
+**Summary:** This is a public React component library with shared components for chat UIs. Focus on accessibility, theme customization, and Storybook documentation. Coordinate breaking changes with consumers (LiveChatWidget, external customers).
