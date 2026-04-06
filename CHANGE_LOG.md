@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [A11Y] Replace `<span role="button">` with native `<button>` for Retry element in failed message timestamp so screen readers announce "Retry, button" (AB#5376198)
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
 
 ### Changed
