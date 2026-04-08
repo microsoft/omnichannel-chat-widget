@@ -2,7 +2,8 @@ module.exports = {
     //Adding jasmine testRunner for issue with fail method in unit tests: https://github.com/facebook/jest/issues/11698
     testRunner: "jest-jasmine2",
     testPathIgnorePatterns: [
-        "(/__tests__/.*|(\\.|/)(visual.test|visual.spec))\\.[jt]sx?$"
+        "(/__tests__/.*|(\\.|/)(visual\\.test|visual\\.spec))\\.[jt]sx?$",
+        "/visual\\.test\\.[jt]sx?$"
     ],
     "transformIgnorePatterns": [
         "/!node_modules\\/lodash-es/"
