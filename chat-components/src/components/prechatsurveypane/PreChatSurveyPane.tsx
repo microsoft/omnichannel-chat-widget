@@ -103,19 +103,19 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 margin-bottom: 6px;
             }
             .ac-input.ac-textInput {
-                font-size: ${props.styleProps?.customTextInputStyleProps?.fontSize};
+                font-size: ${props.styleProps?.customTextInputStyleProps?.fontSize ?? defaultPreChatSurveyPaneStyles.customTextInputStyleProps?.fontSize};
                 font-family: ${props.styleProps?.customTextInputStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customTextInputStyleProps?.fontFamily};
                 height: ${props.styleProps?.customTextInputStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customTextInputStyleProps?.height};
                 padding: 8px;
             }
             .ac-input.ac-textInput.ac-multiline {
-                font-size: ${props.styleProps?.customMultilineTextInputStyleProps?.fontSize};
+                font-size: ${props.styleProps?.customMultilineTextInputStyleProps?.fontSize ?? defaultPreChatSurveyPaneStyles.customMultilineTextInputStyleProps?.fontSize};
                 font-family: ${props.styleProps?.customMultilineTextInputStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customMultilineTextInputStyleProps?.fontFamily};
                 height: ${props.styleProps?.customMultilineTextInputStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customMultilineTextInputStyleProps?.height};
                 resize: none;
             }
             .ac-input.ac-multichoiceInput {
-                font-size: ${props.styleProps?.customMultichoiceInputStyleProps?.fontSize};
+                font-size: ${props.styleProps?.customMultichoiceInputStyleProps?.fontSize ?? defaultPreChatSurveyPaneStyles.customMultichoiceInputStyleProps?.fontSize};
                 font-family: ${props.styleProps?.customMultichoiceInputStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customMultichoiceInputStyleProps?.fontFamily};
                 padding: 3px;
                 padding-top: 7px;

@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fix iOS Safari auto-zoom on prechat survey input fields by setting default font-size to 16px for text input, multiline text input, and multichoice input elements
 - Fix iOS Safari blank space in prechat survey dropdown caused by hidden placeholder `<option>` in adaptive card `<select>` elements
 - Resolved underscores in a system message renders the text weirdly in iOS
 - Fix Safari/iOS word spacing in system messages, chat bubbles, and avatar text by reverting emoji font additions from default styles (IcM 717304411)
