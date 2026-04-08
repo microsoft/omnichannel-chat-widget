@@ -13,9 +13,9 @@ import { defaultProps } from "../src/common/defaultProps";
 const getOmnichannelChatConfig = () => {
     const params = new URLSearchParams(window.location.search);
     const omnichannelConfig = {
-        orgId: params.get("orgId") || "ce4db5f6-1c20-ee11-a66d-000d3a0a02f3",
-        orgUrl: params.get("orgUrl") || "https://m-ce4db5f6-1c20-ee11-a66d-000d3a0a02f3.ca.omnichannelengagementhub.com",
-        widgetId: params.get("widgetId") || "5f04e7b3-de8d-41f2-a7a0-4f0e3c3aa4f2",
+        orgId: params.get("orgId") || "<org-id>",
+        orgUrl: params.get("orgUrl") || "<org-url>",
+        widgetId: params.get("widgetId") || "<widget-id>",
     };
     return omnichannelConfig;
 };
