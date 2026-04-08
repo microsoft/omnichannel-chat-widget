@@ -32,7 +32,6 @@ const App = () => {
 
     useEffect(() => {
         const init = async () => {
-            try {
             const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
             await chatSDK.initialize();
             const chatConfig = await chatSDK.getLiveChatConfig();
@@ -57,48 +56,45 @@ const App = () => {
                         }
                     },
                 },
-                // headerProps: { // example: default header is being overriden with a new background color style
-                //     styleProps: {
-                //         generalStyleProps: {
-                //             background: "#c5ecc5"
-                //         }
-                //     }
-                // },
-                // loadingPaneProps: { // example: loading pane customization overrides
-                //     styleProps: {
-                //         generalStyleProps: {
-                //             backgroundColor: "#c5ecc5"
-                //         }
-                //     },
-                //     titleStyleProps: {
-                //         fontFamily: "Garamond"
-                //     },
-                //     subtitleStyleProps: {
-                //         fontFamily: "Garamond"
-                //     },
-                //     spinnerTextStyleProps: {
-                //         fontFamily: "Garamond"
-                //     }
-                // },
-                // webChatContainerProps: { // example: web chat customization overrides
-                //     webChatStyles: {
-                //         bubbleBackground: "white",
-                //         bubbleFromUserBackground: "#c5ecc5",
-                //         bubbleFromUserTextColor: "#051005",
-                //         bubbleTextColor: "#051005",
-                //         primaryFont: "Garamond"
-                //     },
-                //     disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
-                // },
-                styleProps: {
+                headerProps: { // example: default header is being overriden with a new background color style
+                    styleProps: {
+                        generalStyleProps: {
+                            background: "#c5ecc5"
+                        }
+                    }
+                },
+                loadingPaneProps: { // example: loading pane customization overrides
+                    styleProps: {
+                        generalStyleProps: {
+                            backgroundColor: "#c5ecc5"
+                        }
+                    },
+                    titleStyleProps: {
+                        fontFamily: "Garamond"
+                    },
+                    subtitleStyleProps: {
+                        fontFamily: "Garamond"
+                    },
+                    spinnerTextStyleProps: {
+                        fontFamily: "Garamond"
+                    }
+                },
+                webChatContainerProps: { // example: web chat customization overrides
+                    webChatStyles: {
+                        bubbleBackground: "white",
+                        bubbleFromUserBackground: "#c5ecc5",
+                        bubbleFromUserTextColor: "#051005",
+                        bubbleTextColor: "#051005",
+                        primaryFont: "Garamond"
+                    },
+                    disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
+                },
+                styleProps: { // example: adjusting sizing and placement of the chat widget
                     generalStyles: {
-                        width: "100%",
-                        height: "100%",
-                        bottom: "0",
-                        right: "0",
-                        top: "0",
-                        left: "0",
-                        borderRadius: "0"
+                        width: "50%",
+                        height: "600px",
+                        bottom: "30px",
+                        right: "30px"
                     }
                 },
                 chatSDK, // mandatory
@@ -111,10 +107,6 @@ const App = () => {
             };
 
             setLiveChatWidgetProps(liveChatWidgetProps);
-            } catch (e) {
-                console.error("SDK init failed:", e);
-                document.body.innerHTML = `<pre style="color:red;padding:20px">SDK Error: ${e}</pre>`;
-            }
         };
 
         init();
