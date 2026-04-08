@@ -13,9 +13,9 @@ import { defaultProps } from "../src/common/defaultProps";
 const getOmnichannelChatConfig = () => {
     const params = new URLSearchParams(window.location.search);
     const omnichannelConfig = {
-        orgId: params.get("orgId") || "<org-id>",
-        orgUrl: params.get("orgUrl") || "<org-url>",
-        widgetId: params.get("widgetId") || "<widget-id>",
+        orgId: params.get("orgId") || "ce4db5f6-1c20-ee11-a66d-000d3a0a02f3",
+        orgUrl: params.get("orgUrl") || "https://m-ce4db5f6-1c20-ee11-a66d-000d3a0a02f3.ca.omnichannelengagementhub.com",
+        widgetId: params.get("widgetId") || "5f04e7b3-de8d-41f2-a7a0-4f0e3c3aa4f2",
     };
     return omnichannelConfig;
 };
@@ -32,6 +32,7 @@ const App = () => {
 
     useEffect(() => {
         const init = async () => {
+            try {
             const chatSDK = new OmnichannelChatSDK(omnichannelConfig);
             await chatSDK.initialize();
             const chatConfig = await chatSDK.getLiveChatConfig();
@@ -56,45 +57,48 @@ const App = () => {
                         }
                     },
                 },
-                headerProps: { // example: default header is being overriden with a new background color style
-                    styleProps: {
-                        generalStyleProps: {
-                            background: "#c5ecc5"
-                        }
-                    }
-                },
-                loadingPaneProps: { // example: loading pane customization overrides
-                    styleProps: {
-                        generalStyleProps: {
-                            backgroundColor: "#c5ecc5"
-                        }
-                    },
-                    titleStyleProps: {
-                        fontFamily: "Garamond"
-                    },
-                    subtitleStyleProps: {
-                        fontFamily: "Garamond"
-                    },
-                    spinnerTextStyleProps: {
-                        fontFamily: "Garamond"
-                    }
-                },
-                webChatContainerProps: { // example: web chat customization overrides
-                    webChatStyles: {
-                        bubbleBackground: "white",
-                        bubbleFromUserBackground: "#c5ecc5",
-                        bubbleFromUserTextColor: "#051005",
-                        bubbleTextColor: "#051005",
-                        primaryFont: "Garamond"
-                    },
-                    disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
-                },
-                styleProps: { // example: adjusting sizing and placement of the chat widget
+                // headerProps: { // example: default header is being overriden with a new background color style
+                //     styleProps: {
+                //         generalStyleProps: {
+                //             background: "#c5ecc5"
+                //         }
+                //     }
+                // },
+                // loadingPaneProps: { // example: loading pane customization overrides
+                //     styleProps: {
+                //         generalStyleProps: {
+                //             backgroundColor: "#c5ecc5"
+                //         }
+                //     },
+                //     titleStyleProps: {
+                //         fontFamily: "Garamond"
+                //     },
+                //     subtitleStyleProps: {
+                //         fontFamily: "Garamond"
+                //     },
+                //     spinnerTextStyleProps: {
+                //         fontFamily: "Garamond"
+                //     }
+                // },
+                // webChatContainerProps: { // example: web chat customization overrides
+                //     webChatStyles: {
+                //         bubbleBackground: "white",
+                //         bubbleFromUserBackground: "#c5ecc5",
+                //         bubbleFromUserTextColor: "#051005",
+                //         bubbleTextColor: "#051005",
+                //         primaryFont: "Garamond"
+                //     },
+                //     disableMarkdownMessageFormatting: true, // setting the default to true for a known issue with markdown
+                // },
+                styleProps: {
                     generalStyles: {
-                        width: "50%",
-                        height: "600px",
-                        bottom: "30px",
-                        right: "30px"
+                        width: "100%",
+                        height: "100%",
+                        bottom: "0",
+                        right: "0",
+                        top: "0",
+                        left: "0",
+                        borderRadius: "0"
                     }
                 },
                 chatSDK, // mandatory
@@ -107,6 +111,10 @@ const App = () => {
             };
 
             setLiveChatWidgetProps(liveChatWidgetProps);
+            } catch (e) {
+                console.error("SDK init failed:", e);
+                document.body.innerHTML = `<pre style="color:red;padding:20px">SDK Error: ${e}</pre>`;
+            }
         };
 
         init();
