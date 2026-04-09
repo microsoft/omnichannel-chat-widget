@@ -38,6 +38,9 @@ jobs:
           node-version: 22.x
           registry-url: https://registry.npmjs.org
 
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@11.12.1
+
       - name: Update package version from git
         if: ${{ github.ref == 'refs/heads/main' }}
         working-directory: chat-widget
@@ -85,6 +88,9 @@ jobs:
         with:
           node-version: 22.x
           registry-url: https://registry.npmjs.org
+
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@11.12.1
 
       - name: Update package version from git
         if: ${{ github.ref == 'refs/heads/main' }}
