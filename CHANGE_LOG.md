@@ -20,7 +20,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
 - Update GitHub Actions (checkout, setup-node) from v2/v3 to v4 and Node.js from 20.x to 22.x across chat-widget workflows to address Node.js 20 deprecation in GitHub Actions
-- Pin npm upgrade to `npm@11.12.1` in npm-release workflow to fix OIDC trusted publishing (unpinned `npm@latest` caused self-upgrade crash and E404 on publish)
+- Use `npx npm@11.12.1` for publish step to fix OIDC trusted publishing (npm 10.9.7 can't do OIDC, and `npm install -g` crashes during self-upgrade)
 
 ### Changed
 
