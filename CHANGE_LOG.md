@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [iOS] Added `inputFontSize` property to `IAdaptiveCardStyles` (default `16px`) to prevent iOS Safari auto-zoom on input focus. Applies to adaptive card inputs and the send box textarea. Clients can override via `adaptiveCardStyles.inputFontSize` (minimum 16px enforced).
 - [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
 - [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
 - [Mid-Auth] Added `isUserAuthenticated` state tracking with `SET_USER_AUTHENTICATED` action for reconnect support

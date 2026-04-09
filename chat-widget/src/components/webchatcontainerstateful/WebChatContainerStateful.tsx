@@ -72,6 +72,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
     const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
 
+    // Enforce minimum input font-size to prevent iOS Safari auto-zoom on focus
+    const configuredInputFontSize = props.webChatContainerProps?.adaptiveCardStyles?.inputFontSize ?? defaultAdaptiveCardStyles.inputFontSize;
+    const inputFontSize = parseFloat(configuredInputFontSize ?? String(Constants.minInputFontSizePx)) < Constants.minInputFontSizePx ? Constants.minInputFontSize : configuredInputFontSize;
+
     useEffect(() => {
         uiTimer = createTimer();
         TelemetryHelper.logLoadingEvent(LogLevel.INFO, {
@@ -308,6 +312,12 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             ${webChatContainerProps?.adaptiveCardStyles?.choiceInputPadding ? `padding: ${webChatContainerProps.adaptiveCardStyles.choiceInputPadding} !important;` : ""}
         }
 
+        div[class="ac-input-container"] input,
+        div[class="ac-input-container"] textarea,
+        div[class="ac-input-container"] select {
+            font-size: ${inputFontSize} !important;
+        }
+
         .ms_lcw_webchat_received_message>div.webchat__stacked-layout>div.webchat__stacked-layout__main>div.webchat__stacked-layout__content>div.webchat__stacked-layout__message-row>[class^=webchat]:not(.webchat__bubble--from-user)>.webchat__bubble__content {
             background-color: ${props.webChatContainerProps?.webChatStyles?.bubbleBackground ?? defaultWebChatContainerStatefulProps.webChatStyles?.bubbleBackground};
             color:${props.webChatContainerProps?.webChatStyles?.bubbleTextColor ?? defaultWebChatContainerStatefulProps.webChatStyles?.bubbleTextColor};
@@ -424,6 +434,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         .webchat__auto-resize-textarea__textarea.webchat__send-box-text-box__html-text-area {
             font-family: ${fontFamilyWithEmojis} !important;
+            font-size: ${inputFontSize} !important;
         }
 
         /* Suggested actions carousel previous/next navigation focus */
