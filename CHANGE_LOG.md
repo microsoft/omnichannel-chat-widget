@@ -18,6 +18,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
+- Update GitHub Actions (checkout, setup-node) from v2/v3 to v4 and Node.js from 20.x to 22.x across chat-widget workflows to address Node.js 20 deprecation in GitHub Actions
+- Remove broken `npm install -g npm@latest` step from npm-release workflow to fix publish failure (missing `promise-retry` module under Node 22)
 
 ### Changed
 
