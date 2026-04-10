@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [A11Y] Replace `<span role="button">` with native `<button>` for Retry element in failed message timestamp so screen readers announce "Retry, button" (AB#5376198)
 - Fix iOS Safari auto-zoom on prechat survey input fields by setting default font-size to 16px for text input, multiline text input, and multichoice input elements
 - Fix iOS Safari blank space in prechat survey dropdown caused by hidden placeholder `<option>` in adaptive card `<select>` elements
 - Resolved underscores in a system message renders the text weirdly in iOS
