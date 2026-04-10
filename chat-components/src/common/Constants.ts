@@ -163,6 +163,8 @@ export const AriaLabels = class {
     public static readonly ReconnectChatPaneIcon = "Reconnect Chat Pane Icon";
     public static readonly ContinueConversation = "Continue conversation";
     public static readonly StartNewConversation = "Start new conversation";
+    public static readonly InputValidationPaneButtonGroup = "Actions";
+    public static readonly ConfirmationPaneButtonGroup = "Actions";
 };
 
 export const EventNames = class {

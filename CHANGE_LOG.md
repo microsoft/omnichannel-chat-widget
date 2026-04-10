@@ -6,15 +6,45 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- [iOS] Added `inputFontSize` property to `IAdaptiveCardStyles` (default `16px`) to prevent iOS Safari auto-zoom on input focus. Applies to adaptive card inputs and the send box textarea. Clients can override via `adaptiveCardStyles.inputFontSize` (minimum 16px enforced).
+- [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
+- [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
+- [Mid-Auth] Added `isUserAuthenticated` state tracking with `SET_USER_AUTHENTICATED` action for reconnect support
+- [Mid-Auth] Added `isMidAuthEnabled` utility in `authHelper.ts` and `liveChatConfigUtils.ts`
+- [Mid-Auth] Added `wasAuthenticated` flag in `startChat` optional params for auth transition detection
+- [Mid-Auth] Added auth state change broadcast listeners (`MidConversationAuthSucceeded`, `MidConversationAuthReset`) in `LiveChatWidgetStateful`
+- [Mid-Auth] Added telemetry events: `MidConversationAuthSucceeded`, `MidConversationAuthFailed`, `MidConversationAuthReset`
+- [Mid-Auth] Added mid-auth empty token handling in `authHelper.handleAuthentication` (returns `result: true` with null token instead of throwing)
+- [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
+
+### Changed
+- Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
+- Update GitHub Actions (checkout, setup-node) from v2/v3 to v4 and Node.js from 20.x to 22.x across chat-widget workflows to address Node.js 20 deprecation in GitHub Actions
+- Use `npx npm@11.12.1` for publish step to fix OIDC trusted publishing (npm 10.9.7 can't do OIDC, and `npm install -g` crashes during self-upgrade)
+
 ### Changed
 
+- Uptake @microsoft/omnichannel-chat-components@1.1.17-main.d4c4cb2
+- Increased typing animation duration from 3500ms to 4500ms in default WebChat styles
 - Add `github.repository` guard to all release workflows to prevent them from running on forks
 - Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.941a049 (fixes Safari/iOS AMS iframe hang during initialize)
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.169d422 (amsclient CDN fallback for file attachments)
 
 ### Fixed
 
 - [A11Y] Replace `<span role="button">` with native `<button>` for Retry element in failed message timestamp so screen readers announce "Retry, button" (AB#5376198)
+- Fix iOS Safari auto-zoom on prechat survey input fields by setting default font-size to 16px for text input, multiline text input, and multichoice input elements
+- Fix iOS Safari blank space in prechat survey dropdown caused by hidden placeholder `<option>` in adaptive card `<select>` elements
+- Resolved underscores in a system message renders the text weirdly in iOS
+- Fix Safari/iOS word spacing in system messages, chat bubbles, and avatar text by reverting emoji font additions from default styles (IcM 717304411)
+- Fix file attachments broken for npm consumers and Safari/iOS WebView by updating chat-sdk with amsclient CDN fallback
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
+
+### Security
+
+- Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
+- Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
 
 ### Changed
 
@@ -28,7 +58,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- [Persistent Chat History] Add fix for the scroll bar jumping during history load
+- [A11Y] Added accessible name and group role to Cancel/Send button group in InputValidationPane and ConfirmationPane to fix TalkBack silent focus.
 - [Persistent Chat History] Added fix for raw json adaptive cards in the persistent chat history messages
 - [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
 - [A11Y] Added focus on citation pane close button when citation pane is opened
@@ -731,6 +761,10 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
+
+### Security
+
+- Upgrade `yaml` 1.10.2 → 1.10.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
 - Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
 - Fixed header text overflow issue where long titles would expand leftward and cover the icon image

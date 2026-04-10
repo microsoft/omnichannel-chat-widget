@@ -68,6 +68,22 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     const renderedCard = adaptiveCard.render();
     addNoreferrerNoopenerTag(renderedCard);
 
+    // Fix iOS Safari blank space in <select> dropdowns
+    if (renderedCard) {
+        const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
+        selectElements.forEach((select) => {
+            // Remove hidden placeholder option that causes blank space on iOS
+            const firstOption = select.options[0];
+            if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
+                select.removeChild(firstOption);
+            }
+            // Override iOS native select rendering
+            select.style.webkitAppearance = "none";
+            select.style.height = "auto";
+            select.style.minHeight = "31px";
+        });
+    }
+
     return (
         <>
             <style>{`
@@ -87,23 +103,36 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 margin-bottom: 6px;
             }
             .ac-input.ac-textInput {
-                font-size: ${props.styleProps?.customTextInputStyleProps?.fontSize};
+                font-size: ${props.styleProps?.customTextInputStyleProps?.fontSize ?? defaultPreChatSurveyPaneStyles.customTextInputStyleProps?.fontSize};
                 font-family: ${props.styleProps?.customTextInputStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customTextInputStyleProps?.fontFamily};
                 height: ${props.styleProps?.customTextInputStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customTextInputStyleProps?.height};
                 padding: 8px;
             }
             .ac-input.ac-textInput.ac-multiline {
-                font-size: ${props.styleProps?.customMultilineTextInputStyleProps?.fontSize};
+                font-size: ${props.styleProps?.customMultilineTextInputStyleProps?.fontSize ?? defaultPreChatSurveyPaneStyles.customMultilineTextInputStyleProps?.fontSize};
                 font-family: ${props.styleProps?.customMultilineTextInputStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customMultilineTextInputStyleProps?.fontFamily};
                 height: ${props.styleProps?.customMultilineTextInputStyleProps?.height ?? defaultPreChatSurveyPaneStyles.customMultilineTextInputStyleProps?.height};
                 resize: none;
             }
             .ac-input.ac-multichoiceInput {
-                font-size: ${props.styleProps?.customMultichoiceInputStyleProps?.fontSize};
+                font-size: ${props.styleProps?.customMultichoiceInputStyleProps?.fontSize ?? defaultPreChatSurveyPaneStyles.customMultichoiceInputStyleProps?.fontSize};
                 font-family: ${props.styleProps?.customMultichoiceInputStyleProps?.fontFamily ?? defaultPreChatSurveyPaneStyles.customMultichoiceInputStyleProps?.fontFamily};
                 padding: 3px;
                 padding-top: 7px;
                 padding-bottom: 7px;
+                box-sizing: border-box;
+            }
+            .ac-input.ac-multichoiceInput.ac-choiceSetInput-compact {
+                height: auto;
+                min-height: 31px;
+                max-height: 45px;
+                -webkit-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 8px center;
+                background-size: 16px;
+                padding-right: 30px;
             }
             .ac-input.ac-toggleInput {
                 align-items: ${props.styleProps?.customToggleInputStyleProps?.alignItems ?? defaultPreChatSurveyPaneStyles.customToggleInputStyleProps?.alignItems} !important;
