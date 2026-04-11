@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - [A11y] E2E Playwright tests for 5 accessibility defects: focus trap, bot initials alt text, adaptive card radio count, attachment upload announcement, email notification aria-live regions
-
+- [Security] Added monitor-only HTML sanitization to gather telemetry before enforcing stricter allowlist rules (Phase 1). Tracks OrganizationId, ConversationId, RemovedTags, RemovedAttributes, and ExecutionTimeMs when content would be blocked by strict allowlist. Runs asynchronously to avoid message latency. Includes 27 unit tests.
 - [iOS] Added `inputFontSize` property to `IAdaptiveCardStyles` (default `16px`) to prevent iOS Safari auto-zoom on input focus. Applies to adaptive card inputs and the send box textarea. Clients can override via `adaptiveCardStyles.inputFontSize` (minimum 16px enforced).
 - [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
 - [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
