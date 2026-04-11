@@ -164,13 +164,173 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             text = renderer.render(text);
         });
 
+        // EXISTING sanitization (continues to work as before)
         const config = {
             FORBID_TAGS: ["form", "button", "script", "div", "input"],
             FORBID_ATTR: ["action"],
             ADD_ATTR: ["target"]
         };
         text = DOMPurify.sanitize(text, config);
+
+        // MONITOR-ONLY: Test what the stricter allowlist would remove (Phase 1)
+        // This does NOT modify the text, only logs telemetry
+        // Run asynchronously to avoid blocking message flow and adding latency
+        const textToMonitor = text; // Capture current text value
+        setTimeout(() => {
+            try {
+                monitorStrictSanitization(textToMonitor, state);
+            } catch (error) {
+                // Silently catch errors to prevent blocking message flow
+                if (process.env.NODE_ENV === "development") {
+                    console.error("[Monitor] HTML sanitization monitoring failed:", error);
+                }
+            }
+        }, 0);
+
         return text;
+    };
+
+    /**
+     * Monitor-only sanitization (Phase 1: Gather telemetry)
+     * Tests what a stricter allowlist-based sanitization would remove
+     * WITHOUT actually removing it. Logs telemetry for analysis.
+     *
+     * IMPORTANT: This function is wrapped in try-catch and runs asynchronously
+     * to ensure failures don't block message flow or add latency.
+     *
+     * @param html - The HTML text that was already sanitized with existing config
+     * @param state - Widget state containing orgId and chatId
+     */
+    const monitorStrictSanitization = (html: string, state: ILiveChatWidgetContext): void => {
+        // Early exit for empty content
+        if (!html) return;
+
+        // Track execution time for performance monitoring
+        const startTime = performance.now();
+
+        try {
+            // Strict allowlist configuration (proposed new rules)
+            const strictConfig = {
+                ALLOWED_TAGS: [
+                    "b", "strong",      // Bold text
+                    "i", "em", "u",     // Italic, emphasis, underline
+                    "br", "p",          // Line breaks and paragraphs
+                    "ul", "ol", "li",   // Lists
+                    "a"                 // Links (with restricted attributes)
+                ],
+                ALLOWED_ATTR: [
+                    "href",    // For links (will be restricted to http/https)
+                    "target",  // For link behavior
+                    "rel"      // For security (noopener, noreferrer)
+                ],
+                FORBID_TAGS: [
+                    "img", "video", "audio",                    // Media (tracking beacons)
+                    "iframe", "object", "embed",                // Embedded content
+                    "script", "style",                          // Script and styling
+                    "form", "input", "textarea", "button",      // Form elements
+                    "link", "meta", "base",                     // Document metadata
+                    "div", "span"                               // Layout elements
+                ],
+                FORBID_ATTR: [
+                    "style",        // Inline CSS
+                    /^on/i          // Event handlers (onclick, onerror, etc.)
+                ],
+                ALLOWED_URI_REGEXP: /^https?:/i,
+                ALLOW_DATA_ATTR: false,
+                ALLOW_UNKNOWN_PROTOCOLS: false
+            };
+
+            // Track what would be removed
+            const removedTags: string[] = [];
+            const removedAttributes: string[] = [];
+
+            try {
+                // Temporarily add hooks for tracking
+                DOMPurify.addHook("uponSanitizeElement", (node, data) => {
+                    try {
+                        const tagName = data.tagName.toLowerCase();
+                        // Filter out "body" tag which is DOMPurify's internal wrapper
+                        if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
+                            removedTags.push(tagName);
+                        }
+                    } catch (hookError) {
+                        // Silently ignore hook errors
+                    }
+                });
+
+                DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+                    try {
+                        const attrName = data.attrName.toLowerCase();
+                        if (!strictConfig.ALLOWED_ATTR.includes(attrName) && attrName !== "class" && attrName !== "id") {
+                            removedAttributes.push(attrName);
+                        }
+                    } catch (hookError) {
+                        // Silently ignore hook errors
+                    }
+                });
+
+                // Run sanitization to see what would be removed (we discard the result)
+                DOMPurify.sanitize(html, strictConfig);
+
+            } finally {
+                // Always clean up hooks, even if sanitization fails
+                try {
+                    DOMPurify.removeHook("uponSanitizeElement");
+                    DOMPurify.removeHook("uponSanitizeAttribute");
+                } catch (cleanupError) {
+                    // Silently ignore cleanup errors
+                }
+            }
+
+            // Log telemetry if content would be affected by strict rules
+            if (removedTags.length > 0 || removedAttributes.length > 0) {
+                try {
+                    const uniqueTags = [...new Set(removedTags)];
+                    const uniqueAttrs = [...new Set(removedAttributes)];
+
+                    // Calculate execution time
+                    const endTime = performance.now();
+                    const executionTimeMs = Math.round((endTime - startTime) * 100) / 100; // Round to 2 decimal places
+
+                    // Get context for telemetry (with safe fallbacks)
+                    const orgId = state?.domainStates?.telemetryInternalData?.orgId || "unknown";
+                    const conversationId = state?.domainStates?.chatToken?.chatId || "unknown";
+
+                    TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                        Event: TelemetryEvent.HTMLSanitized,
+                        Description: "HTML content would be sanitized by stricter allowlist (monitor-only)",
+                        OrganizationId: orgId,
+                        ConversationId: conversationId,
+                        RemovedTags: uniqueTags.join(", "),
+                        RemovedAttributes: uniqueAttrs.join(", "),
+                        Phase: "Monitor",
+                        ExecutionTimeMs: executionTimeMs.toString()
+                    });
+
+                    // Log to console in development for debugging
+                    if (process.env.NODE_ENV === "development") {
+                        console.warn("[Monitor] Stricter HTML sanitization would remove:", {
+                            orgId,
+                            conversationId,
+                            removedTags: uniqueTags,
+                            removedAttributes: uniqueAttrs,
+                            executionTimeMs
+                        });
+                    }
+                } catch (telemetryError) {
+                    // Silently ignore telemetry errors to prevent blocking
+                    if (process.env.NODE_ENV === "development") {
+                        console.error("[Monitor] Telemetry logging failed:", telemetryError);
+                    }
+                }
+            }
+        } catch (error) {
+            // Catch-all for any unexpected errors
+            // Silently fail to ensure monitoring never blocks message flow
+            if (process.env.NODE_ENV === "development") {
+                console.error("[Monitor] Monitoring failed:", error);
+            }
+        }
     };
 
     function postDomPurifyActivities() {
