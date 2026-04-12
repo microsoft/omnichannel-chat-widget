@@ -8,6 +8,7 @@ import { defaultWebChatStyles } from "../../../common/defaultStyles/defaultWebCh
 import { getIconText } from "../../../../../common/utils";
 
 let currentAgentInitials = defaultWebChatStyles.botAvatarInitials;
+let currentAgentName = defaultWebChatStyles.botAvatarInitials;
 
 // Optional external updater (React context dispatch wrapper) set at runtime
 let externalInitialsUpdater: ((initials: string) => void) | undefined;
@@ -29,7 +30,12 @@ export const localizedStringsBotInitialsMiddleware = (onInitialsChange?: (initia
 
             if (!isSystemMessage && agentName) {
                 const newInitials = getIconText(agentName) || currentAgentInitials;
-                if (newInitials !== currentAgentInitials) {
+                const hasInitialsChanged = newInitials !== currentAgentInitials;
+                const hasNameChanged = agentName !== currentAgentName;
+
+                currentAgentName = agentName;
+
+                if (hasInitialsChanged) {
                     currentAgentInitials = newInitials;
                     // Notify external React context if provided
                     externalInitialsUpdater?.(currentAgentInitials || "");
@@ -38,6 +44,9 @@ export const localizedStringsBotInitialsMiddleware = (onInitialsChange?: (initia
                         eventName: "BotAvatarInitialsUpdated",
                         payload: { initials: currentAgentInitials }
                     });
+                }
+
+                if (hasInitialsChanged || hasNameChanged) {
                     // Also dispatch a no-op action into WebChat store to encourage re-render (cheap)
                     dispatch({ type: "__BOT_INITIALS_UPDATED__" });
                 }
@@ -56,11 +65,11 @@ export const getOverriddenLocalizedStrings = (existingOverrides?: any) => {
         };
         // Apply dynamic bot initials to alt text if not already overridden through props
         if (!existingOverrides?.ACTIVITY_BOT_SAID_ALT) {
-            result.ACTIVITY_BOT_SAID_ALT = `${currentAgentInitials} said:`;
+            result.ACTIVITY_BOT_SAID_ALT = `${currentAgentName} said:`;
         }
         
         if (!existingOverrides?.ACTIVITY_BOT_ATTACHED_ALT) {
-            result.ACTIVITY_BOT_ATTACHED_ALT = `${currentAgentInitials} attached:`;
+            result.ACTIVITY_BOT_ATTACHED_ALT = `${currentAgentName} attached:`;
         }
         
         return result;

@@ -95,6 +95,16 @@ export const preventFocusToMoveOutOfElement = (elementId: string) => {
     const firstFocusableElement: HTMLElement = focusableElements[0];
     const lastFocusableElement: HTMLElement = focusableElements[focusableElements.length - 1];
 
+    if (firstFocusableElement === lastFocusableElement) {
+        firstFocusableElement.onkeydown = (e: KeyboardEvent) => {
+            if (e.key === KeyCodes.TAB) {
+                e.preventDefault();
+                firstFocusableElement.focus();
+            }
+        };
+        return;
+    }
+
     firstFocusableElement.onkeydown = (e: KeyboardEvent) => {
         if (e.shiftKey && e.key === KeyCodes.TAB) {
             e.preventDefault();
