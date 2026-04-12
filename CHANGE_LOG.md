@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
 - [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers
+- [A11y] Screen reader now announces "File sent" when an attachment upload completes via an aria-live region
+- [A11y] Adaptive card radio button groups now include aria-setsize and aria-posinset attributes for correct option count announcement
 
 ### Added
 - [A11y] E2E Playwright tests for 5 accessibility defects: focus trap, bot initials alt text, adaptive card radio count, attachment upload announcement, email notification aria-live regions

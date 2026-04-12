@@ -19,6 +19,7 @@ import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidge
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { WebChatStoreLoader } from "../../webchatcontainerstateful/webchatcontroller/WebChatStoreLoader";
 import attachmentProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentProcessingMiddleware";
+import attachmentSentAnnouncementMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentSentAnnouncementMiddleware";
 import channelDataMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/channelDataMiddleware";
 import { createActivityMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware";
 import { createActivityStatusMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware";
@@ -123,6 +124,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 state.domainStates.liveChatConfig?.maxUploadFileSize as string,
                 localizedTexts
             ),
+            attachmentSentAnnouncementMiddleware,
             createCustomEventMiddleware(BroadcastService),
             createQueueOverflowMiddleware(state, dispatch),
             channelDataMiddleware(addConversationalSurveyTagsCallback),
