@@ -104,10 +104,13 @@ describeIfBuilt("bot initials accessibility", () => {
 
         // The alt text should not use bare initials — it should contain the
         // full bot name. In designer mode the default bot name is "Bot".
+        expect(altTexts.length).toBeGreaterThan(0);
         for (const alt of altTexts) {
             // Should NOT match patterns like "JO said:" or "WC said:" (bare initials)
             expect(alt).not.toMatch(/^[A-Z]{1,3} said:/);
             expect(alt).not.toMatch(/^[A-Z]{1,3} attached:/);
+            // Should contain the full bot name from mock data
+            expect(alt).toContain("Bot");
         }
     });
 

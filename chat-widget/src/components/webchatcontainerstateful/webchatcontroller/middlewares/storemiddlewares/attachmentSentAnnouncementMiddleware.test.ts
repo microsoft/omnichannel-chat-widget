@@ -117,6 +117,31 @@ describe("attachmentSentAnnouncementMiddleware", () => {
         expect(container.contains(region)).toBe(true);
     });
 
+    test("announces 'File sent' with correct aria attributes on DIRECT_LINE_POST_ACTIVITY_FULFILLED with attachments", () => {
+        const action = {
+            type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED,
+            payload: {
+                activity: {
+                    attachments: [{ name: "report.xlsx", contentType: "application/vnd.ms-excel" }]
+                }
+            }
+        };
+
+        middleware(action);
+
+        // Before timer fires, region should exist but be cleared
+        const region = document.getElementById("oc-lcw-attachment-announcement");
+        expect(region).not.toBeNull();
+        expect(region?.textContent).toBe("");
+
+        // After delay, announce message should be set
+        jest.advanceTimersByTime(150);
+        expect(region?.textContent).toBe("File sent");
+        expect(region?.getAttribute("aria-live")).toBe("polite");
+        expect(region?.getAttribute("role")).toBe("status");
+        expect(region?.getAttribute("aria-atomic")).toBe("true");
+    });
+
     test("reuses existing aria-live region on subsequent announcements", () => {
         const action = {
             type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED,
