@@ -83,25 +83,11 @@ describe("utils unit test", () => {
         preventFocusToMoveOutOfElement("widget");
 
         firstFocusableElement.focus();
-        const reverseTabEvent = {
-            shiftKey: true,
-            key: "Tab",
-            preventDefault: jest.fn()
-        } as unknown as KeyboardEvent;
-        firstFocusableElement.onkeydown?.(reverseTabEvent);
-
-        expect(reverseTabEvent.preventDefault).toHaveBeenCalled();
+        firstFocusableElement.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true }));
         expect(document.activeElement).toBe(lastFocusableElement);
 
         lastFocusableElement.focus();
-        const forwardTabEvent = {
-            shiftKey: false,
-            key: "Tab",
-            preventDefault: jest.fn()
-        } as unknown as KeyboardEvent;
-        lastFocusableElement.onkeydown?.(forwardTabEvent);
-
-        expect(forwardTabEvent.preventDefault).toHaveBeenCalled();
+        lastFocusableElement.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: false, bubbles: true, cancelable: true }));
         expect(document.activeElement).toBe(firstFocusableElement);
     });
 
@@ -116,25 +102,27 @@ describe("utils unit test", () => {
         preventFocusToMoveOutOfElement("widget");
 
         chatButton.focus();
-        const reverseTabEvent = {
-            shiftKey: true,
-            key: "Tab",
-            preventDefault: jest.fn()
-        } as unknown as KeyboardEvent;
-        chatButton.onkeydown?.(reverseTabEvent);
-
-        expect(reverseTabEvent.preventDefault).toHaveBeenCalled();
+        chatButton.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true }));
         expect(document.activeElement).toBe(chatButton);
 
-        const forwardTabEvent = {
-            shiftKey: false,
-            key: "Tab",
-            preventDefault: jest.fn()
-        } as unknown as KeyboardEvent;
-        chatButton.onkeydown?.(forwardTabEvent);
-
-        expect(forwardTabEvent.preventDefault).toHaveBeenCalled();
+        chatButton.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: false, bubbles: true, cancelable: true }));
         expect(document.activeElement).toBe(chatButton);
+    });
+
+    it("cleans up event listeners when cleanup function is called", () => {
+        document.body.innerHTML =
+            "<div id=\"widget\">" +
+            "  <button id=\"only\">Only</button>" +
+            "</div>";
+
+        const onlyButton = document.getElementById("only") as HTMLElement;
+        const cleanup = preventFocusToMoveOutOfElement("widget");
+        const spy = jest.spyOn(onlyButton, "removeEventListener");
+
+        cleanup();
+
+        expect(spy).toHaveBeenCalledWith("keydown", expect.any(Function));
+        spy.mockRestore();
     });
 
     it("Test getIconText", () => {
