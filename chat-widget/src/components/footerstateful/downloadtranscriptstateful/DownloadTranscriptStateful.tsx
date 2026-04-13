@@ -1,6 +1,6 @@
 import { Constants, TranscriptConstants } from "../../../common/Constants";
 import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
-import { createFileAndDownload, isNullOrUndefined } from "../../../common/utils";
+import { createFileAndDownload, escapeHtml, isNullOrUndefined } from "../../../common/utils";
 
 import DOMPurify from "dompurify";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
@@ -58,7 +58,7 @@ const processCreatedDateTime = (createdDateTime: string, chatCount: number): str
     return finalizedTimeString;
 };
 
-const processContent = (transcriptContent: string, isAgentChat: boolean, renderMarkDown?: (transcriptContent: string) => string): string => {
+export const processContent = (transcriptContent: string, isAgentChat: boolean, renderMarkDown?: (transcriptContent: string) => string): string => {
     if (transcriptContent.toString().toLowerCase().indexOf(TranscriptConstants.TranscriptMessageEmojiMessageType) >= 0) {
         // eslint-disable-next-line no-useless-escape
         const emojiRegex = "<img src=\"http.*:\/\/.+\/objects\/.+\/views.+\">";
@@ -73,12 +73,15 @@ const processContent = (transcriptContent: string, isAgentChat: boolean, renderM
     if (renderMarkDown) {
         transcriptContent = renderMarkDown(transcriptContent);
     } else {
-        transcriptContent = DOMPurify.sanitize(transcriptContent);
+        transcriptContent = DOMPurify.sanitize(transcriptContent, {
+            ALLOWED_TAGS: ["a", "b", "i", "em", "strong", "u", "s", "p", "br", "ul", "ol", "li", "span", "pre", "code", "blockquote", "hr"],
+            ALLOW_ATTR: ["href", "target", "rel", "class", "title"]
+        });
     }
     return transcriptContent;
 };
 
-const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (transcriptContent: string) => string, attachmentMessage?: string): string => {
+export const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (transcriptContent: string) => string, attachmentMessage?: string): string => {
     const chats = JSON.parse(chatTranscripts).reverse();
     const docTypeTag = "<!DOCTYPE html>";
     const docStartTag = "<html>";
@@ -131,7 +134,7 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
             iconName = constructIconName(displayName);
 
             if (value.attachments && value.attachments.length > 0 && value.attachments[0].name) {
-                fileAttachmentName = value.attachments[0].name;
+                fileAttachmentName = escapeHtml(value.attachments[0].name);
                 value.content = attachmentMessage
                     ? attachmentMessage + " " + fileAttachmentName
                     : "The following attachment was uploaded during the conversation: " + fileAttachmentName;
@@ -139,12 +142,14 @@ const beautifyChatTranscripts = (chatTranscripts: string, renderMarkDown?: (tran
         }
         let displayNamePlaceholder = processCreatedDateTime(value.createdDateTime, chatCount);
         let iconPara = "";
+        const safeDisplayName = escapeHtml(displayName);
+        const safeIconName = escapeHtml(iconName);
         if (displayName !== previousDisplayName) {
             dialogboxMarginleft = "0px";
-            displayNamePlaceholder = "<b>" + displayName + " </b> " + processCreatedDateTime(value.createdDateTime, chatCount);
+            displayNamePlaceholder = "<b>" + safeDisplayName + " </b> " + processCreatedDateTime(value.createdDateTime, chatCount);
             iconPara = "<div class='circle' style='display:inline-block;float:left;margin-right:5px;width:35px;height:35px;border-radius:20px;color:black;line-height:35px;text-align:center;background:" + dialogColor + ";'>\
                             <font tabindex ='" + tabIndex + "' color =" + fontColor + " style='font-family:Segoe UI,SegoeUI,Helvetica Neue,Helvetica,Arial,sans-serif;'>\
-                                " + iconName + "\
+                                " + safeIconName + "\
                             </font>\
                             </div>";
             tabIndex++;

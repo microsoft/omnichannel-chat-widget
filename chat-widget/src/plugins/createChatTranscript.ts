@@ -610,7 +610,7 @@ class TranscriptHTMLBuilder {
                             markdown = new window.markdownit(
                                 "default",
                                 {
-                                    html: true,
+                                    html: false,
                                     linkify: true,
                                     breaks: (!disableNewLineMarkdownSupport)
                                 }
@@ -619,7 +619,7 @@ class TranscriptHTMLBuilder {
                             markdown = new window.markdownit(
                                 "zero",
                                 {
-                                    html: true,
+                                    html: false,
                                     linkify: true,
                                     breaks: (!disableNewLineMarkdownSupport)
                                 }
@@ -628,8 +628,6 @@ class TranscriptHTMLBuilder {
                             markdown.enable([
                                 "entity",
                                 "linkify",
-                                "html_block",
-                                "html_inline",
                                 "newline"
                             ]);
                         }
@@ -711,7 +709,10 @@ const createChatTranscript = async (transcript: string, facadeChatSDK: FacadeCha
     DOMPurify.addHook("afterSanitizeAttributes", hook);
 
     let messages = transcriptMessages.filter((message: { content: string; }) => {
-        message.content = DOMPurify.sanitize(message.content);
+        message.content = DOMPurify.sanitize(message.content, {
+            ALLOWED_TAGS: ["a", "b", "i", "em", "strong", "u", "s", "p", "br", "ul", "ol", "li", "span", "pre", "code", "blockquote", "hr"],
+            ALLOW_ATTR: ["href", "target", "rel", "class", "title"]
+        });
         return message;
     });
 

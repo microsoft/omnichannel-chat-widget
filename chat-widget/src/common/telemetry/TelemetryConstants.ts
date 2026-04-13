@@ -193,6 +193,7 @@ export enum TelemetryEvent {
     //WebChat Middleware Events
     ProcessingHTMLTextMiddlewareFailed = "ProcessingHTMLTextMiddlewareFailed",
     ProcessingSanitizationMiddlewareFailed = "ProcessingSanitizationMiddlewareFailed",
+    HtmlContentDetectedInIncomingMessage = "HtmlContentDetectedInIncomingMessage",
     FormatTagsMiddlewareJSONStringifyFailed = "FormatTagsMiddlewareJSONStringifyFailed",
     AttachmentUploadValidatorMiddlewareFailed = "AttachmentUploadValidatorMiddlewareFailed",
     CitationMiddlewareFailed = "CitationMiddlewareFailed",
@@ -387,6 +388,7 @@ export class TelemetryConstants {
             case TelemetryEvent.ProactiveChatRejected:
             case TelemetryEvent.ProactiveChatClosed:
             case TelemetryEvent.ProcessingHTMLTextMiddlewareFailed:
+            case TelemetryEvent.HtmlContentDetectedInIncomingMessage:
             case TelemetryEvent.DataMaskingRuleApplied:
             case TelemetryEvent.ConversationEndedThreadEventReceived:
             case TelemetryEvent.InvalidConfiguration:
