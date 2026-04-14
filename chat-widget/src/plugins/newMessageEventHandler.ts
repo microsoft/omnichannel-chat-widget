@@ -19,6 +19,8 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
     // this is a workaround for the fact that we dont have a way to identify if a message is history or new, and it will provide consistency across different scenarios
 
     let isHistoryMessageReceivedEventRaised = false;
+    let isInQueue = false;
+    let agentJoinLogged = false;
 
     const onNewAdapterActivityHandler = (activity: IActivity) => {
         raiseMessageEvent(activity);
@@ -50,6 +52,11 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
         const payload = buildMessagePayload(activity, userId);
 
         payload.messageType = Constants.systemMessageTag;
+
+        // Track queue entry for agent-join detection
+        if (activity?.channelData?.tags?.includes(Constants.queuePositionMessageTag)) {
+            isInQueue = true;
+        }
 
         if (isHistoryMessage(activity, startTime)){
             historyMessageStrategy(polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId));
@@ -118,6 +125,17 @@ export const createOnNewAdapterActivityHandler = (chatId: string, userId: string
             historyMessageStrategy(polyfillMessagePayloadForEvent(activity, payload, TelemetryManager.InternalTelemetryData?.conversationId));
             return;
         }
+
+        // Log agent joining when first non-history message is received after queue
+        if (isInQueue && !agentJoinLogged) {
+            agentJoinLogged = true;
+            isInQueue = false;
+            TelemetryHelper.logActionEvent(LogLevel.INFO, {
+                Event: TelemetryEvent.AgentJoinedConversation,
+                Description: "First message received from agent after queue"
+            });
+        }
+
         firstResponseLatencyTracker.stopClock(payload);
 
         const newMessageReceivedEvent: ICustomEvent = {

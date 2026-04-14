@@ -26,6 +26,10 @@ import { escapeHtml } from "../../../../../common/utils";
 
 const loggedSystemMessages = new Array<string>();
 let lastRenderedAt = 0; // Track last rendered receivedAt timestamp for deduplication
+// Cache original (pre-render) text per activity ID to prevent exponential <br> growth.
+// BotFramework WebChat can mutate card.activity.text between renders (e.g. on minimize/open),
+// so we always render from the original markdown source, not the possibly-HTML-mutated text.
+const originalSystemMessageTexts = new Map<string, string>();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: (text: string) => string, systemMessageStyleProps?: React.CSSProperties) => {
     const systemMessageStyles = { ...defaultSystemMessageStyles, ...systemMessageStyleProps };
@@ -51,10 +55,15 @@ const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: 
         return () => false;
     }
 
-    card.activity.text = renderMarkdown(card.activity.text);
+    const activityKey = card.activity.id || card.activity?.channelData?.clientmessageid;
+    if (activityKey && !originalSystemMessageTexts.has(activityKey)) {
+        originalSystemMessageTexts.set(activityKey, card.activity.text);
+    }
+    const sourceText = (activityKey && originalSystemMessageTexts.get(activityKey)) ?? card.activity.text;
+    const renderedHtml = renderMarkdown(sourceText);
     // eslint-disable-next-line react/display-name
     return () => (
-        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" className={Constants.markDownSystemMessageClass} dangerouslySetInnerHTML={{ __html: card.activity.text }} />
+        <div key={card.activity.id} style={systemMessageStyles} aria-hidden="false" className={Constants.markDownSystemMessageClass} dangerouslySetInnerHTML={{ __html: renderedHtml }} />
     );
 };
 
@@ -136,7 +145,7 @@ export const createActivityMiddleware = (
         if (isTagIncluded(card, Constants.conversationDividerTag)) {
             const conversationDividerLabel = localizedTexts?.CONVERSATION_DIVIDER_ARIA_LABEL || defaultMiddlewareLocalizedTexts.CONVERSATION_DIVIDER_ARIA_LABEL;
             // Pass the computed localized text to the divider component
-            return (<ConversationDividerActivity dividerActivityAriaLabel={conversationDividerLabel} />);
+            return () => (<ConversationDividerActivity dividerActivityAriaLabel={conversationDividerLabel} />);
         }
 
         if (card.activity.text
@@ -159,4 +168,11 @@ export const createActivityMiddleware = (
         }
     }
     return next(...args);
+};
+
+/** Clear module-level caches. Call on conversation end / chat close. */
+export const resetActivityMiddlewareCache = () => {
+    loggedSystemMessages.length = 0;
+    lastRenderedAt = 0;
+    originalSystemMessageTexts.clear();
 };

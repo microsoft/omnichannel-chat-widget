@@ -1,319 +1,118 @@
-# omnichannel-chat-widget - Claude Code Instructions
+# CLAUDE.md
 
-## Repository Ecosystem
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**This workspace may contain up to 6 related repositories.** Not all teams have all repos. Always be aware of which repository you're in when making changes.
+## Repository Overview
 
-| Repository | Type | Purpose | Typical Location |
-|------------|------|---------|------------------|
-| **CRM.Omnichannel** | Monorepo (Backend) | 20+ microservices for Omnichannel platform | `<workspace-root>/CRM.Omnichannel/` |
-| **ConversationControl** | Frontend (Agent UI) | Agent experience and conversation management UI | `<workspace-root>/CRM.OmniChannel.ConversationControl/` |
-| **LiveChatWidget** | Frontend (Customer) | Customer-facing chat widget | `<workspace-root>/CRM.OmniChannel.LiveChatWidget/` |
-| **omnichannel-chat-sdk** | Public SDK | TypeScript SDK for chat integration | `<workspace-root>/omnichannel-chat-sdk/` |
-| **omnichannel-chat-widget** | Public Components | React component library | `<workspace-root>/omnichannel-chat-widget/` |
-| **omnichannel-amsclient** | Shared Library | File upload/download client | `<workspace-root>/omnichannel-amsclient/` |
+Public React component library (`@microsoft/omnichannel-chat-widget`) for building Omnichannel chat UIs. Published to npm and consumed by CRM.OmniChannel.LiveChatWidget and external customers.
 
----
+**Two independent packages (no Lerna/Nx):**
+- **chat-components** (`@microsoft/omnichannel-chat-components`) — Stateless UI primitives (buttons, panes, header, footer)
+- **chat-widget** (`@microsoft/omnichannel-chat-widget`) — Stateful chat widget components integrating chat-components + omnichannel-chat-sdk
 
-## Quick Context
-- **Purpose:** Shared React component library for building chat widgets
-- **Type:** TypeScript/React Library (npm package)
-- **Tech Stack:** TypeScript, React 17+, Rollup, Jest, Storybook
-- **Distribution:** npm registry (@microsoft/omnichannel-chat-widget)
-- **Consumers:** CRM.OmniChannel.LiveChatWidget, external customers
+## Build & Test Commands
 
-## Architecture Overview
+All commands use **yarn**. Run from within the respective package directory (`chat-components/` or `chat-widget/`).
 
-**What is omnichannel-chat-widget?**
+### chat-components
 
-This is a React component library providing pre-built, customizable UI components for chat experiences. It includes message bubbles, input boxes, file attachments, typing indicators, and more. Components are theme-able and accessible (ARIA support).
-
-**Key Features:**
-- Pre-built React chat components
-- Theme customization support
-- Accessibility (ARIA attributes, keyboard navigation)
-- TypeScript type definitions
-- Storybook for component preview
-
-**Monorepo Structure:**
-
-This repo contains **2 npm packages**:
-- **chat-components** - Base components (buttons, icons, primitives)
-- **chat-widget** - Higher-level chat-specific components
-
-**Integration:**
-- **Peer dependency:** `omnichannel-chat-sdk` (for chat operations)
-- **Peer dependency:** `react` and `react-dom` (17+ recommended)
-- **Consumed by:** LiveChatWidget, external customers building custom widgets
-
----
-
-## Build & Test Workflow
-
-### Prerequisites
-- Node.js (version in package.json engines)
-- npm package manager
-
-### Setup
 ```bash
-cd omnichannel-chat-widget
-
-# Install dependencies (both packages)
-npm install
+cd chat-components
+yarn install
+yarn build              # lint + ESM + CJS + types
+yarn test:unit          # Jest unit tests (jsdom)
+yarn test:visual        # Playwright visual regression tests
+yarn test:all           # unit + visual
+yarn storybook          # localhost:6006
+yarn build-storybook    # static storybook build
 ```
 
-### Common Commands
+### chat-widget
 
-**Build:**
-- **Build all packages:** `npm run build` - Build both chat-components and chat-widget
-- **Build specific package:**
-  - `npm run build:chat-components`
-  - `npm run build:chat-widget`
-- **Watch mode:** `npm run watch` - Incremental development
-
-**Test:**
-- **Unit tests:** `npm test` - Jest tests for all packages
-- **Test specific package:**
-  - `npm run test:chat-components`
-  - `npm run test:chat-widget`
-- **Coverage:** `npm run coverage` - Test coverage report
-- **Lint:** `npm run lint` - ESLint validation
-
-**Storybook:**
-- **Start Storybook:** `npm run storybook` - Component preview at localhost:6006
-- **Build Storybook:** `npm run build-storybook` - Static site for deployment
-
-**Release:**
-- **Publish:** `npm run publish:packages` - Publish both packages to npm
-- **Version bump:** Use lerna or npm workspaces for versioning
-
----
-
-## Coding Standards
-
-### TypeScript Best Practices
-
-- **Avoid `any` type** - Use proper React prop types
-- **Explicit prop types** - Use interfaces for component props
-- **React Hooks** - Prefer functional components with hooks
-- **Accessibility** - Always include ARIA attributes
-
-**Example Component:**
-```typescript
-// ✅ CORRECT - Explicit prop types, accessibility
-import React from 'react';
-
-export interface MessageBubbleProps {
-    message: string;
-    sender: 'agent' | 'customer';
-    timestamp: Date;
-    onRetry?: () => void;
-    className?: string;
-}
-
-export const MessageBubble: React.FC<MessageBubbleProps> = ({
-    message,
-    sender,
-    timestamp,
-    onRetry,
-    className
-}) => {
-    return (
-        <div
-            className={`message-bubble ${sender} ${className || ''}`}
-            role="article"
-            aria-label={`Message from ${sender} at ${timestamp.toLocaleTimeString()}`}
-        >
-            <div className="message-content">{message}</div>
-            <div className="message-timestamp" aria-hidden="true">
-                {timestamp.toLocaleTimeString()}
-            </div>
-            {onRetry && (
-                <button
-                    onClick={onRetry}
-                    aria-label="Retry sending message"
-                >
-                    Retry
-                </button>
-            )}
-        </div>
-    );
-};
+```bash
+cd chat-widget
+yarn install
+yarn build              # clean + lint + ESM + CJS + types
+yarn lint               # ESLint (--max-warnings=0)
+yarn test:unit          # Jest unit tests (jsdom)
+yarn test:visual        # Playwright visual regression tests
+yarn test:all           # unit + visual
+yarn test:e2e           # Playwright E2E (from automation_tests/)
+yarn storybook          # localhost:6006
+yarn build-sample       # build widget + webpack sample app (dist/out.js)
+yarn dev                # watch mode (ESM + webpack)
 ```
 
-### Component Structure
+### Running a single test
 
-**File organization:**
-```
-chat-widget/src/
-├── components/
-│   ├── MessageBubble/
-│   │   ├── MessageBubble.tsx       # Component implementation
-│   │   ├── MessageBubble.test.tsx  # Jest tests
-│   │   ├── MessageBubble.stories.tsx # Storybook stories
-│   │   └── index.ts                # Exports
-│   └── ...
-├── hooks/                          # Custom React hooks
-├── utils/                          # Utility functions
-└── index.ts                        # Package exports
+```bash
+# Run one test file
+yarn jest -c jest.config.unit.cjs --env=jsdom --runInBand path/to/Component.test.tsx
+
+# Run tests matching a pattern
+yarn jest -c jest.config.unit.cjs --env=jsdom --runInBand -t "test name pattern"
 ```
 
-**Naming conventions:**
-- **Components:** PascalCase (e.g., `MessageBubble`, `InputBox`)
-- **Props interfaces:** `ComponentNameProps` (e.g., `MessageBubbleProps`)
-- **Files:** Match component name (e.g., `MessageBubble.tsx`)
-- **Hooks:** camelCase with `use` prefix (e.g., `useTypingIndicator`)
+## Architecture
 
----
+### Build Pipeline
+- **Babel** compiles TypeScript/React to dual output: ESM (`lib/esm/`) and CJS (`lib/cjs/`)
+- **TypeScript** (`tsc`) generates declaration files only (`lib/types/`)
+- **Webpack** bundles sample apps and UMD builds
+- Separate babel configs: `babel.config.json` (CJS) and `babel.esm.config.json` (ESM)
+- Some webpack/storybook commands require `NODE_OPTIONS=--openssl-legacy-provider`
 
-## Testing Strategy
+### Styling
+All styling uses **Fluent UI** (`@fluentui/react`) inline style objects (`IStyle`, `IStackStyles`, etc.) — no CSS files, no CSS modules, no styled-components.
 
-**Unit Tests (Jest + React Testing Library):**
-- **Location:** `<ComponentName>.test.tsx` files
-- **Run:** `npm test`
-- **Coverage target:** >80% for components
+### Component Pattern (chat-components)
+Each component directory contains:
+- `ComponentName.tsx` — Implementation
+- `ComponentName.test.tsx` — Unit tests
+- `ComponentName.stories.tsx` — Storybook stories
+- `interfaces/IComponentNameProps.ts` — Prop types (+ control props, style props)
+- `common/defaultProps/` — Default prop values
+- `common/defaultStyles/` — Default Fluent UI style objects
+- `__screenshots__/` — Visual regression baselines
 
-**Test Best Practices:**
-```typescript
-import { render, screen, fireEvent } from '@testing-library/react';
-import { MessageBubble } from './MessageBubble';
+### chat-widget Stateful Layer
+`chat-widget/src/components/` wraps chat-components with state management:
+- `livechatwidget/` — Main orchestrator component
+- Stateful wrappers for each pane (prechat, postchat, loading, etc.)
+- `contexts/` — React context providers
+- `common/` — Telemetry, storage, facades, utilities
+- `plugins/` — BotFramework WebChat integration
 
-describe('MessageBubble', () => {
-    it('should render message content', () => {
-        render(
-            <MessageBubble
-                message="Hello world"
-                sender="customer"
-                timestamp={new Date('2024-01-01T12:00:00')}
-            />
-        );
+### Key Dependencies
+- `@fluentui/react` — UI framework and styling
+- `@microsoft/omnichannel-chat-sdk` — Chat operations (peer dep of chat-widget)
+- `botframework-webchat` — Message rendering
+- `markdown-it` + `dompurify` + `sanitize-html` — Message sanitization
 
-        expect(screen.getByText('Hello world')).toBeInTheDocument();
-    });
+## Code Style
 
-    it('should call onRetry when retry button clicked', () => {
-        const onRetry = jest.fn();
-        render(
-            <MessageBubble
-                message="Failed message"
-                sender="customer"
-                timestamp={new Date()}
-                onRetry={onRetry}
-            />
-        );
+- 4-space indentation, double quotes, semicolons required
+- Windows line endings (`\r\n`)
+- `husky` + `lint-staged` runs ESLint on commit
+- chat-components uses ESLint flat config (`eslint.config.js`); chat-widget uses legacy config (`.eslintrc.json`)
 
-        fireEvent.click(screen.getByLabelText('Retry sending message'));
-        expect(onRetry).toHaveBeenCalledTimes(1);
-    });
+## CI (GitHub Actions)
 
-    it('should have correct ARIA attributes', () => {
-        render(
-            <MessageBubble
-                message="Test"
-                sender="agent"
-                timestamp={new Date()}
-            />
-        );
+PR checks run on `windows-2022`:
+- **chat-components-pr.yml** (Node 22): unit tests, storybook build, VRT, package build
+- **chat-widget-pr.yml** (Node 20): danger JS, unit tests, E2E tests, storybook build, VRT, package build
 
-        const bubble = screen.getByRole('article');
-        expect(bubble).toHaveAttribute('aria-label');
-    });
-});
-```
+VRT failure artifacts upload diff screenshots from `__diff_output__/`.
 
-**Storybook Stories:**
-- **Location:** `<ComponentName>.stories.tsx` files
-- **Purpose:** Visual testing, component documentation, design review
+## Related Repositories
 
-```typescript
-import type { Meta, StoryObj } from '@storybook/react';
-import { MessageBubble } from './MessageBubble';
-
-const meta: Meta<typeof MessageBubble> = {
-    title: 'Components/MessageBubble',
-    component: MessageBubble,
-    tags: ['autodocs'],
-};
-
-export default meta;
-type Story = StoryObj<typeof MessageBubble>;
-
-export const CustomerMessage: Story = {
-    args: {
-        message: 'Hello, I need help with my order',
-        sender: 'customer',
-        timestamp: new Date(),
-    },
-};
-
-export const AgentMessage: Story = {
-    args: {
-        message: 'Sure, I can help you with that!',
-        sender: 'agent',
-        timestamp: new Date(),
-    },
-};
-
-export const WithRetry: Story = {
-    args: {
-        message: 'Failed to send',
-        sender: 'customer',
-        timestamp: new Date(),
-        onRetry: () => console.log('Retry clicked'),
-    },
-};
-```
-
----
-
-## Theme Customization
-
-**Components should support theme customization:**
-
-```typescript
-// Theme interface
-export interface ChatWidgetTheme {
-    primaryColor: string;
-    secondaryColor: string;
-    textColor: string;
-    backgroundColor: string;
-    fontFamily: string;
-    borderRadius: string;
-}
-
-// Theme context
-import React, { createContext, useContext } from 'react';
-
-const ThemeContext = createContext<ChatWidgetTheme | undefined>(undefined);
-
-export const useTheme = () => {
-    const theme = useContext(ThemeContext);
-    if (!theme) {
-        throw new Error('useTheme must be used within ThemeProvider');
-    }
-    return theme;
-};
-
-// Component using theme
-export const ThemedButton: React.FC<ButtonProps> = ({ children, ...props }) => {
-    const theme = useTheme();
-    return (
-        <button
-            style={{
-                backgroundColor: theme.primaryColor,
-                color: theme.textColor,
-                borderRadius: theme.borderRadius,
-                fontFamily: theme.fontFamily,
-            }}
-            {...props}
-        >
-            {children}
-        </button>
-    );
-};
-```
-
----
+| Repo | Purpose |
+|------|---------|
+| CRM.Omnichannel | Backend microservices |
+| CRM.OmniChannel.ConversationControl | Agent UI |
+| CRM.OmniChannel.LiveChatWidget | Customer-facing widget (consumes this library) |
+| omnichannel-chat-sdk | TypeScript SDK for chat operations |
+| omnichannel-amsclient | File upload/download client |
 
 ## Accessibility Requirements
 

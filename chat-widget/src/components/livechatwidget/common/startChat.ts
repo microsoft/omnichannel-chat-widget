@@ -21,6 +21,7 @@ import { createAdapter } from "./createAdapter";
 import { createOnNewAdapterActivityHandler } from "../../../plugins/newMessageEventHandler";
 import { createTrackingForFirstMessage } from "../../../firstresponselatency/FirstMessageTrackerFromBot";
 import { isPersistentChatEnabled } from "./liveChatConfigUtils";
+import { isMidAuthEnabled } from "./authHelper";
 import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurvey";
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
@@ -68,7 +69,7 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Faca
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, isProactiveChat?: boolean | false, proactiveChatEnablePrechatState?: boolean | false, state?: ILiveChatWidgetContext, props?: ILiveChatWidgetProps) => {
 
-    // This reset needs to be done before to load prechat, because the conversation state changes from close to prechat
+    // Reset before loading prechat to avoid starting chat with previous requestId
     if (state?.appStates.conversationState === ConversationState.Closed) {
         // Preventive reset to avoid starting chat with previous requestId which could potentially cause problems
         chatSDKStateCleanUp(facadeChatSDK.getChatSDK());
@@ -180,13 +181,28 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
             const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+
+            // MID-AUTH: Add wasAuthenticated flag for reconnect scenarios
+            // Tells FacadeChatSDK whether the previous session was authenticated
+            // Used to detect auth transitions (Auth->Unauth) and decide whether to call authenticateChat
+            const midAuthEnabled = isMidAuthEnabled(state?.domainStates?.liveChatConfig);
+            if (midAuthEnabled) {
+                const isUserAuthenticated = state?.appStates?.isUserAuthenticated === true ||
+                                            persistedState?.appStates?.isUserAuthenticated === true;
+                startChatOptionalParams.wasAuthenticated = isUserAuthenticated;
+            }
+
             // startTime is used to determine if a message is history or new, better to be set before creating the adapter to get bandwidth
             const startTime = (new Date().getTime());
             createTrackingForFirstMessage();
+
+            // FacadeChatSDK.startChat() handles:
+            // 1. tokenRing() - checks authentication, calls handleAuthentication() if needed
+            // 2. Mid-auth: If no token, sets deferInitialAuth=true for unauthenticated flow
+            // 3. Mid-auth: On reconnect with valid token, calls authenticateChat to upgrade conversation
             await facadeChatSDK.startChat(startChatOptionalParams);
             logStartChatComplete();
             isStartChatSuccessful = true;
-
             await createAdapterAndSubscribe(facadeChatSDK, dispatch, setAdapter, startTime, props);
 
         } catch (error) {
@@ -216,7 +232,7 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             dispatch({ type: LiveChatWidgetActionType.SET_START_CHAT_FAILING, payload: false });
             dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active });
         }
-        
+
         if (persistedState) {
             dispatch({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState });
             logWidgetLoadComplete(WidgetLoadTelemetryMessage.PersistedStateRetrievedMessage);

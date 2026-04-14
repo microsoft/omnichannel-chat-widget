@@ -164,6 +164,10 @@ export class Constants {
     public static readonly EndConversationDueToOverflow = "endconversationduetooverflow";
 
     public static readonly SkipSessionCloseForPersistentChatFlag = "skipSessionCloseForPersistentChat";
+
+    // Minimum font-size for input fields to prevent iOS Safari auto-zoom on focus
+    public static readonly minInputFontSizePx = 16;
+    public static readonly minInputFontSize = "16px";
 }
 
 export const Regex = class {

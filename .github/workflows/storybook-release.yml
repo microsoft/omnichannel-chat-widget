@@ -16,14 +16,15 @@ permissions:
 
 jobs:
   build-and-deploy:
+    if: github.repository == 'microsoft/omnichannel-chat-widget'
     runs-on: ubuntu-latest
     steps:
       - name: Checking out for ${{ github.ref }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20.X
+          node-version: 22.x
       - name: Install Chat Widget packages
         working-directory: chat-widget
         run: yarn install
