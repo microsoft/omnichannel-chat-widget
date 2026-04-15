@@ -7,6 +7,7 @@ import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../../common/Constants";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import DOMPurify from "dompurify";
+import createDOMPurify from "dompurify";
 import { Dispatch } from "react";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
@@ -174,9 +175,11 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
         // MONITOR-ONLY: Test what the stricter allowlist would remove (Phase 1)
         // This does NOT modify the text, only logs telemetry
-        // Run asynchronously to avoid blocking message flow and adding latency
+        // Run during browser idle time to avoid blocking message flow and adding latency
         const textToMonitor = text; // Capture current text value
-        setTimeout(() => {
+
+        // Schedule monitoring to run during browser idle time
+        const scheduleMonitoring = () => {
             try {
                 monitorStrictSanitization(textToMonitor, state);
             } catch (error) {
@@ -185,7 +188,14 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                     console.error("[Monitor] HTML sanitization monitoring failed:", error);
                 }
             }
-        }, 0);
+        };
+
+        // Use requestIdleCallback for truly idle execution, fallback to setTimeout for older browsers
+        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+            window.requestIdleCallback(scheduleMonitoring);
+        } else {
+            setTimeout(scheduleMonitoring, 0);
+        }
 
         return text;
     };
@@ -198,6 +208,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
      * IMPORTANT: This function is wrapped in try-catch and runs asynchronously
      * to ensure failures don't block message flow or add latency.
      *
+     * ISOLATION: Uses a separate DOMPurify instance to completely isolate
+     * monitoring hooks from other sanitization paths (e.g., postDomPurifyActivities).
+     * The instance is garbage collected after use, no cleanup needed.
+     *
      * @param html - The HTML text that was already sanitized with existing config
      * @param state - Widget state containing orgId and chatId
      */
@@ -209,6 +223,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         const startTime = performance.now();
 
         try {
+            // Create a separate DOMPurify instance for monitoring
+            // This completely isolates monitoring from other sanitization paths
+            const monitorDOMPurify = createDOMPurify(window);
+
             // Strict allowlist configuration (proposed new rules)
             const strictConfig = {
                 ALLOWED_TAGS: [
@@ -244,43 +262,33 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             const removedTags: string[] = [];
             const removedAttributes: string[] = [];
 
-            try {
-                // Temporarily add hooks for tracking
-                DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                    try {
-                        const tagName = data.tagName.toLowerCase();
-                        // Filter out "body" tag which is DOMPurify's internal wrapper
-                        if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                            removedTags.push(tagName);
-                        }
-                    } catch (hookError) {
-                        // Silently ignore hook errors
-                    }
-                });
-
-                DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
-                    try {
-                        const attrName = data.attrName.toLowerCase();
-                        if (!strictConfig.ALLOWED_ATTR.includes(attrName) && attrName !== "class" && attrName !== "id") {
-                            removedAttributes.push(attrName);
-                        }
-                    } catch (hookError) {
-                        // Silently ignore hook errors
-                    }
-                });
-
-                // Run sanitization to see what would be removed (we discard the result)
-                DOMPurify.sanitize(html, strictConfig);
-
-            } finally {
-                // Always clean up hooks, even if sanitization fails
+            // Add hooks to the isolated monitoring instance
+            monitorDOMPurify.addHook("uponSanitizeElement", (node, data) => {
                 try {
-                    DOMPurify.removeHook("uponSanitizeElement");
-                    DOMPurify.removeHook("uponSanitizeAttribute");
-                } catch (cleanupError) {
-                    // Silently ignore cleanup errors
+                    const tagName = data.tagName.toLowerCase();
+                    // Filter out "body" tag which is DOMPurify's internal wrapper
+                    if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
+                        removedTags.push(tagName);
+                    }
+                } catch (hookError) {
+                    // Silently ignore hook errors
                 }
-            }
+            });
+
+            monitorDOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
+                try {
+                    const attrName = data.attrName.toLowerCase();
+                    if (!strictConfig.ALLOWED_ATTR.includes(attrName) && attrName !== "class" && attrName !== "id") {
+                        removedAttributes.push(attrName);
+                    }
+                } catch (hookError) {
+                    // Silently ignore hook errors
+                }
+            });
+
+            // Run sanitization on the isolated instance (we discard the result)
+            // No cleanup needed - the instance will be garbage collected with its hooks
+            monitorDOMPurify.sanitize(html, strictConfig);
 
             // Log telemetry if content would be affected by strict rules
             if (removedTags.length > 0 || removedAttributes.length > 0) {
