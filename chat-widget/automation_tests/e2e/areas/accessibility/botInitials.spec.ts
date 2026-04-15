@@ -85,30 +85,33 @@ describeIfBuilt("bot initials accessibility", () => {
             5000
         );
 
-        // Poll until aria-label elements with "said"/"attached" appear
-        // rather than relying on a fixed timeout (CI can be slower)
+        // WebChat renders "Bot said:" / "Bot attached:" as visually-hidden
+        // ScreenReaderText divs inside role="group" elements (not aria-label).
+        // Poll until these screen reader text nodes appear in the transcript.
         await page.Page.waitForFunction(() => {
-            const elements = document.querySelectorAll("[aria-label]");
-            return Array.from(elements).some(el => {
-                const label = (el.getAttribute("aria-label") || "").toLowerCase();
-                return label.includes("said") || label.includes("attached");
+            const groups = document.querySelectorAll("[role='group']");
+            return Array.from(groups).some(g => {
+                const text = (g.textContent || "").toLowerCase();
+                return text.includes("said") || text.includes("attached");
             });
-        }, undefined, { timeout: 10000 });
+        }, undefined, { timeout: 15000 });
 
         const altTexts = await page.Page.evaluate(() => {
-            const elements = document.querySelectorAll("[aria-label]");
+            const groups = document.querySelectorAll("[role='group']");
             const texts: string[] = [];
-            elements.forEach(el => {
-                const label = el.getAttribute("aria-label") || "";
-                if (label.toLowerCase().includes("said") || label.toLowerCase().includes("attached")) {
-                    texts.push(label);
+            groups.forEach(g => {
+                const text = (g.textContent || "").trim();
+                if (text.toLowerCase().includes("said") || text.toLowerCase().includes("attached")) {
+                    // The first child of the group is the ScreenReaderText
+                    const srText = g.firstElementChild?.textContent?.trim() || text;
+                    texts.push(srText);
                 }
             });
             return texts;
         });
 
-        // The alt text should not use bare initials — it should contain the
-        // full bot name. In designer mode the default bot name is "Bot".
+        // The screen reader alt text should not use bare initials — it should
+        // contain the full bot name. In designer mode the bot name is "Bot".
         expect(altTexts.length).toBeGreaterThan(0);
         for (const alt of altTexts) {
             // Should NOT match patterns like "JO said:" or "WC said:" (bare initials)
