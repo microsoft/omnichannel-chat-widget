@@ -12,7 +12,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         markdown = new MarkdownIt(
             Constants.Default,
             {
-                html: true,
+                html: false,
                 linkify: true,
                 breaks: (!disableNewLineMarkdownSupport)
             }
@@ -22,7 +22,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         markdown = new MarkdownIt(
             Constants.Zero,
             {
-                html: true,
+                html: false,
                 linkify: true,
                 breaks: (!disableNewLineMarkdownSupport)
             }
@@ -30,8 +30,6 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         markdown.enable([
             "entity", // Rule to process html entity - &#123;, &#xAF;, &quot;
             "linkify", // Rule to replace link-like texts with link nodes
-            "html_block", // Rule to process html blocks and paragraphs
-            "html_inline", // Rule to process html tags
             "newline", // Rule to proceess '\n'
             "list" // Enable list parsing rule
         ]);

@@ -1,5 +1,133 @@
 import { createMarkdown } from "./createMarkdown";
 
+describe("createMarkdown - XSS Prevention (html: false)", () => {
+    describe("when markdown formatting is enabled", () => {
+        const markdown = createMarkdown(false, false);
+
+        it("should entity-encode img tags to prevent image injection", () => {
+            const input = "<img src=\"https://attacker.site\">";
+            const result = markdown.render(input);
+            // The raw <img> tag must be entity-encoded; the linkify plugin may add its
+            // own icon <img> for the URL inside, but the injected tag itself is neutralized.
+            expect(result).toContain("&lt;img src=");
+        });
+
+        it("should entity-encode script tags to prevent script execution", () => {
+            const input = "<script>alert(1)</script>";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<script/i);
+            expect(result).toContain("&lt;script&gt;");
+        });
+
+        it("should entity-encode svg tags to prevent event handler injection", () => {
+            const input = "<svg onload=alert(1)>";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<svg/i);
+            expect(result).toContain("&lt;svg");
+        });
+
+        it("should entity-encode iframe tags to prevent frame injection", () => {
+            const input = "<iframe src=\"evil.com\">";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<iframe/i);
+            expect(result).toContain("&lt;iframe");
+        });
+
+        it("should entity-encode nested HTML tags", () => {
+            const input = "<div style=\"background:red\"><a href=\"evil.com\">click</a></div>";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<div\s/);
+            expect(result).toContain("&lt;div");
+            expect(result).toContain("&lt;/div&gt;");
+        });
+
+        it("should entity-encode html_block level elements", () => {
+            // html_block is a markdown-it rule for block-level HTML; ensure it is disabled
+            const input = "<table><tr><td>cell</td></tr></table>";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<table/i);
+            expect(result).toContain("&lt;table&gt;");
+        });
+
+        it("should entity-encode inline HTML within markdown text", () => {
+            const input = "Hello <b>bold</b> world";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<b>/);
+            expect(result).toContain("&lt;b&gt;");
+        });
+    });
+
+    describe("when markdown formatting is disabled (disableMarkdownMessageFormatting=true)", () => {
+        const markdown = createMarkdown(true, false);
+
+        it("should still entity-encode script tags", () => {
+            const input = "<script>alert(1)</script>";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<script/i);
+            expect(result).toContain("&lt;script&gt;");
+        });
+
+        it("should still entity-encode img tags", () => {
+            const input = "<img src=\"https://attacker.site\">";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<img\s/);
+            expect(result).toContain("&lt;img");
+        });
+
+        it("should still entity-encode iframe tags", () => {
+            const input = "<iframe src=\"evil.com\">";
+            const result = markdown.render(input);
+            expect(result).not.toMatch(/<iframe/i);
+            expect(result).toContain("&lt;iframe");
+        });
+
+        it("should still render linkified URLs", () => {
+            const input = "Visit https://example.com for details";
+            const result = markdown.render(input);
+            expect(result).toContain("<a href=\"https://example.com\"");
+        });
+    });
+});
+
+describe("createMarkdown - Markdown Rendering", () => {
+    const markdown = createMarkdown(false, false);
+
+    it("should render bold text with strong tags", () => {
+        const input = "**bold**";
+        const result = markdown.render(input);
+        expect(result).toContain("<strong>bold</strong>");
+    });
+
+    it("should render italic text with em tags", () => {
+        // slack-markdown-it remaps *text* to bold; use _text_ for italic
+        const input = "_italic_";
+        const result = markdown.render(input);
+        expect(result).toContain("<em>italic</em>");
+    });
+
+    it("should render links as anchor tags", () => {
+        const input = "[link text](https://example.com)";
+        const result = markdown.render(input);
+        expect(result).toContain("<a href=\"https://example.com\"");
+        expect(result).toContain("link text");
+    });
+
+    it("should render unordered lists", () => {
+        const input = "- item1\n- item2";
+        const result = markdown.render(input);
+        expect(result).toContain("<ul>");
+        expect(result).toContain("<li>");
+        expect(result).toContain("item1");
+        expect(result).toContain("item2");
+    });
+
+    it("should render inline code with code tags", () => {
+        const input = "`code`";
+        const result = markdown.render(input);
+        expect(result).toContain("<code>code</code>");
+    });
+});
+
 describe("createMarkdown - Numbered List Continuity", () => {
     it("should handle single line break numbered lists", () => {
         const markdown = createMarkdown(false, false);

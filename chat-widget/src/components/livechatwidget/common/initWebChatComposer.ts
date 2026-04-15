@@ -165,9 +165,10 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         });
 
         const config = {
-            FORBID_TAGS: ["form", "button", "script", "div", "input"],
+            ALLOWED_TAGS: ["a", "b", "i", "em", "strong", "u", "s", "p", "br", "ul", "ol", "li", "span", "h1", "h2", "h3", "h4", "h5", "h6", "pre", "code", "blockquote", "hr", "sup", "sub"],
             FORBID_ATTR: ["action"],
-            ADD_ATTR: ["target"]
+            ADD_ATTR: ["target"],
+            ALLOW_ATTR: ["href", "target", "rel", "class", "title"]
         };
         text = DOMPurify.sanitize(text, config);
         return text;
