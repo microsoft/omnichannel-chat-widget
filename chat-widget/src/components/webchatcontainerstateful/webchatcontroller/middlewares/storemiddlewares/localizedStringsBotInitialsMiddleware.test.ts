@@ -36,6 +36,7 @@ jest.mock("../../../common/defaultStyles/defaultWebChatStyles", () => ({
 
 describe("localizedStringsBotInitialsMiddleware", () => {
     let nextMock: jest.Mock;
+    let dispatchMock: jest.Mock;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let middleware: any;
 
@@ -44,12 +45,13 @@ describe("localizedStringsBotInitialsMiddleware", () => {
         mockGetIconText.mockReset();
         
         nextMock = jest.fn((action) => action);
+        dispatchMock = jest.fn();
         const botInitialsMiddleware = localizedStringsBotInitialsMiddleware();
-        middleware = botInitialsMiddleware({ dispatch: jest.fn() })(nextMock);
+        middleware = botInitialsMiddleware({ dispatch: dispatchMock })(nextMock);
     });
 
     describe("core functionality", () => {
-        it("should update agent initials when valid bot message is received", () => {
+        it("should use the full bot name for accessibility announcements when a valid bot message is received", () => {
             // Arrange
             mockGetIconText.mockReturnValue("JD");
             const mockAction: IWebChatAction = {
@@ -73,7 +75,8 @@ describe("localizedStringsBotInitialsMiddleware", () => {
             
             // Verify initials are updated in localized strings
             const overriddenStrings = getOverriddenLocalizedStrings()({});
-            expect(overriddenStrings.ACTIVITY_BOT_SAID_ALT).toBe("JD said:");
+            expect(overriddenStrings.ACTIVITY_BOT_SAID_ALT).toBe("John Doe said:");
+            expect(overriddenStrings.ACTIVITY_BOT_ATTACHED_ALT).toBe("John Doe attached:");
         });
 
         it("should ignore user messages", () => {
@@ -144,7 +147,7 @@ describe("localizedStringsBotInitialsMiddleware", () => {
             expect(mockGetIconText).not.toHaveBeenCalled();
         });
 
-        it("should fallback to current initials when getIconText returns empty", () => {
+        it("should keep the full bot name in accessibility announcements when initials cannot be derived", () => {
             // Arrange - first set some initials
             mockGetIconText.mockReturnValueOnce("AB");
             const setupAction: IWebChatAction = {
@@ -174,9 +177,41 @@ describe("localizedStringsBotInitialsMiddleware", () => {
             // Act
             middleware(testAction);
 
-            // Assert - should keep previous initials
+            // Assert - should keep the descriptive agent name even if initials do not change
             const overriddenStrings = getOverriddenLocalizedStrings()({});
-            expect(overriddenStrings.ACTIVITY_BOT_SAID_ALT).toBe("AB said:");
+            expect(overriddenStrings.ACTIVITY_BOT_SAID_ALT).toBe("Special Agent said:");
+        });
+
+        it("should refresh accessibility announcements when the bot name changes but the initials stay the same", () => {
+            mockGetIconText.mockReturnValue("JD");
+
+            middleware({
+                type: WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY,
+                payload: {
+                    activity: {
+                        from: {
+                            name: "John Doe",
+                            role: "bot"
+                        }
+                    }
+                }
+            });
+
+            middleware({
+                type: WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY,
+                payload: {
+                    activity: {
+                        from: {
+                            name: "Jane Dorian",
+                            role: "bot"
+                        }
+                    }
+                }
+            });
+
+            const overriddenStrings = getOverriddenLocalizedStrings()({});
+            expect(overriddenStrings.ACTIVITY_BOT_SAID_ALT).toBe("Jane Dorian said:");
+            expect(dispatchMock).toHaveBeenCalledWith({ type: "__BOT_INITIALS_UPDATED__" });
         });
 
         it("should invoke external callback when initials change", () => {

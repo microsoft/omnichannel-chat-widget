@@ -42,7 +42,7 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
 
     // Initial focus pattern (mirrors ConfirmationPaneStateful): focus first focusable element (will re-attempt after visibility becomes true)
     useEffect(() => {
-        preventFocusToMoveOutOfElement(controlId as string);
+        const cleanup = preventFocusToMoveOutOfElement(controlId as string);
         const focusableElements: HTMLElement[] | null = findAllFocusableElement(`#${controlId}`);
         requestAnimationFrame(() => {
             if (focusableElements && focusableElements.length > 0 && focusableElements[0]) {
@@ -57,6 +57,7 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
             Event: TelemetryEvent.UXCitationPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
+        return cleanup;
     }, []);
 
     // Retry focus once pane is actually visible (isReady) in case initial attempt occurred while wrapper was visibility:hidden

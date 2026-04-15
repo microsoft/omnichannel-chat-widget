@@ -31,8 +31,9 @@ export class BasePage {
       );
   }
 
-  public async openLiveChatWidget() {
-      const path = fs.realpathSync(CustomLiveChatWidgetConstants.CustomLiveChatWidgetFilePath);
+  public async openLiveChatWidget(fixturePath?: string) {
+      const filePath = fixturePath ?? CustomLiveChatWidgetConstants.CustomLiveChatWidgetFilePath;
+      const path = fs.realpathSync(filePath);
       await this.Page.goto("file://" + path, { waitUntil: "domcontentloaded" });
   }
 

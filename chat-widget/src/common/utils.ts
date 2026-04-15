@@ -81,33 +81,54 @@ export const findAllFocusableElement = (parent: string | HTMLElement) => {
     return null;
 };
 
-export const preventFocusToMoveOutOfElement = (elementId: string) => {
+export const preventFocusToMoveOutOfElement = (elementId: string): (() => void) => {
     const container: HTMLElement | null = document.getElementById(elementId);
     if (!container) {
-        return;
+        return () => { /* no-op */ };
     }
 
     const focusableElements: HTMLElement[] | null = findAllFocusableElement(container);
     if (!focusableElements) {
-        return;
+        return () => { /* no-op */ };
     }
 
     const firstFocusableElement: HTMLElement = focusableElements[0];
     const lastFocusableElement: HTMLElement = focusableElements[focusableElements.length - 1];
+    const cleanups: (() => void)[] = [];
 
-    firstFocusableElement.onkeydown = (e: KeyboardEvent) => {
-        if (e.shiftKey && e.key === KeyCodes.TAB) {
-            e.preventDefault();
-            lastFocusableElement?.focus();
-        }
-    };
+    if (firstFocusableElement === lastFocusableElement) {
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === KeyCodes.TAB && !e.shiftKey) {
+                e.preventDefault();
+                firstFocusableElement.focus();
+            } else if (e.key === KeyCodes.TAB && e.shiftKey) {
+                e.preventDefault();
+                firstFocusableElement.focus();
+            }
+        };
+        firstFocusableElement.addEventListener("keydown", handler);
+        cleanups.push(() => firstFocusableElement.removeEventListener("keydown", handler));
+    } else {
+        const firstHandler = (e: KeyboardEvent) => {
+            if (e.shiftKey && e.key === KeyCodes.TAB) {
+                e.preventDefault();
+                lastFocusableElement?.focus();
+            }
+        };
+        firstFocusableElement.addEventListener("keydown", firstHandler);
+        cleanups.push(() => firstFocusableElement.removeEventListener("keydown", firstHandler));
 
-    lastFocusableElement.onkeydown = (e: KeyboardEvent) => {
-        if (!e.shiftKey && e.key === KeyCodes.TAB) {
-            e.preventDefault();
-            firstFocusableElement?.focus();
-        }
-    };
+        const lastHandler = (e: KeyboardEvent) => {
+            if (!e.shiftKey && e.key === KeyCodes.TAB) {
+                e.preventDefault();
+                firstFocusableElement?.focus();
+            }
+        };
+        lastFocusableElement.addEventListener("keydown", lastHandler);
+        cleanups.push(() => lastFocusableElement.removeEventListener("keydown", lastHandler));
+    }
+
+    return () => cleanups.forEach(fn => fn());
 };
 
 export const setFocusOnSendBox = () => {
