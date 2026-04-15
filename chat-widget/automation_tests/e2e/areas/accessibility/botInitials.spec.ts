@@ -85,11 +85,16 @@ describeIfBuilt("bot initials accessibility", () => {
             5000
         );
 
-        // Wait for messages to be injected (1s initial delay + stagger)
-        await page.Page.waitForTimeout(3000);
+        // Poll until aria-label elements with "said"/"attached" appear
+        // rather than relying on a fixed timeout (CI can be slower)
+        await page.Page.waitForFunction(() => {
+            const elements = document.querySelectorAll("[aria-label]");
+            return Array.from(elements).some(el => {
+                const label = (el.getAttribute("aria-label") || "").toLowerCase();
+                return label.includes("said") || label.includes("attached");
+            });
+        }, undefined, { timeout: 10000 });
 
-        // Check for accessibility attributes — the alt text should use a
-        // descriptive name (not just initials like "B" or "Bo")
         const altTexts = await page.Page.evaluate(() => {
             const elements = document.querySelectorAll("[aria-label]");
             const texts: string[] = [];
