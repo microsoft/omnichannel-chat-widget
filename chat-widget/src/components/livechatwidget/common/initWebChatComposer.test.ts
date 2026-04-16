@@ -2,12 +2,7 @@
 
 import "@testing-library/jest-dom";
 
-import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
-import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import DOMPurify from "dompurify";
-
-// Mock TelemetryHelper
-jest.mock("../../../common/telemetry/TelemetryHelper");
 
 // Mock console.warn to suppress development logs in tests
 const originalWarn = console.warn;
@@ -20,35 +15,17 @@ afterAll(() => {
 });
 
 describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
-    let mockState: any;
-    let logActionEventSpy: jest.SpyInstance;
-
     beforeEach(() => {
         // Reset mocks
         jest.clearAllMocks();
-
-        // Mock state with orgId and chatId
-        mockState = {
-            domainStates: {
-                telemetryInternalData: {
-                    orgId: "test-org-123"
-                },
-                chatToken: {
-                    chatId: "test-chat-456"
-                }
-            }
-        };
-
-        // Spy on TelemetryHelper.logActionEvent
-        logActionEventSpy = jest.spyOn(TelemetryHelper, "logActionEvent");
     });
 
     describe("Content that would be blocked by strict allowlist", () => {
         it("should log telemetry when img tag would be removed", () => {
-            const htmlWithImage = '<p>Hello <img src="test.jpg" /> world</p>';
+            const htmlWithImage = "<p>Hello <img src=\"test.jpg\" /> world</p>";
 
             // Sanitize with current config (allows img through existing config)
-            const result = DOMPurify.sanitize(htmlWithImage, {
+            DOMPurify.sanitize(htmlWithImage, {
                 FORBID_TAGS: ["form", "button", "script", "div", "input"],
                 FORBID_ATTR: ["action"],
                 ADD_ATTR: ["target"]
@@ -82,7 +59,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should log telemetry when span tag would be removed", () => {
-            const htmlWithSpan = '<p>Hello <span style="color: red;">world</span></p>';
+            const htmlWithSpan = "<p>Hello <span style=\"color: red;\">world</span></p>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"],
@@ -106,7 +83,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should log telemetry when div tag would be removed", () => {
-            const htmlWithDiv = '<div><p>Hello world</p></div>';
+            const htmlWithDiv = "<div><p>Hello world</p></div>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"],
@@ -129,7 +106,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should log telemetry when style attribute would be removed", () => {
-            const htmlWithStyle = '<p style="color: red;">Hello world</p>';
+            const htmlWithStyle = "<p style=\"color: red;\">Hello world</p>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["p"],
@@ -153,7 +130,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should log telemetry when onclick attribute would be removed", () => {
-            const htmlWithOnClick = '<p onclick="alert(\'xss\')">Hello world</p>';
+            const htmlWithOnClick = "<p onclick=\"alert('xss')\">Hello world</p>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["p"],
@@ -177,7 +154,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should track multiple removed tags in one pass", () => {
-            const htmlComplex = '<div><p>Hello <img src="test.jpg" /> <span>world</span></p></div>';
+            const htmlComplex = "<div><p>Hello <img src=\"test.jpg\" /> <span>world</span></p></div>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["p"],
@@ -202,7 +179,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should deduplicate removed tags", () => {
-            const htmlMultipleDivs = '<div><p>Test1</p></div><div><p>Test2</p></div>';
+            const htmlMultipleDivs = "<div><p>Test1</p></div><div><p>Test2</p></div>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["p"],
@@ -232,7 +209,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
 
     describe("Content that passes strict allowlist", () => {
         it("should not log telemetry for allowed tags", () => {
-            const cleanHtml = '<p>Hello <b>world</b></p>';
+            const cleanHtml = "<p>Hello <b>world</b></p>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"],
@@ -255,7 +232,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should not log telemetry for allowed formatting tags", () => {
-            const formattedHtml = '<p><b>Bold</b> <i>Italic</i> <u>Underline</u> <em>Emphasis</em> <strong>Strong</strong></p>';
+            const formattedHtml = "<p><b>Bold</b> <i>Italic</i> <u>Underline</u> <em>Emphasis</em> <strong>Strong</strong></p>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"]
@@ -277,7 +254,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should not log telemetry for allowed lists", () => {
-            const listHtml = '<ul><li>Item 1</li><li>Item 2</li></ul><ol><li>First</li></ol>';
+            const listHtml = "<ul><li>Item 1</li><li>Item 2</li></ul><ol><li>First</li></ol>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"]
@@ -299,7 +276,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should not log telemetry for allowed links with safe attributes", () => {
-            const linkHtml = '<a href="https://example.com" target="_blank" rel="noopener noreferrer">Link</a>';
+            const linkHtml = "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Link</a>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["a"],
@@ -381,7 +358,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should handle malformed HTML", () => {
-            const malformedHtml = '<p>Unclosed paragraph<div>Nested without closing';
+            const malformedHtml = "<p>Unclosed paragraph<div>Nested without closing";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["p"],
@@ -404,7 +381,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should handle nested allowed tags", () => {
-            const nestedHtml = '<p><b><i>Bold italic</i></b></p>';
+            const nestedHtml = "<p><b><i>Bold italic</i></b></p>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["p", "b", "i"]
@@ -426,7 +403,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should handle XSS attempts - script tags", () => {
-            const xss = '<script>alert("xss")</script>';
+            const xss = "<script>alert(\"xss\")</script>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["a", "p"],
@@ -441,7 +418,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should handle XSS attempts - img with onerror", () => {
-            const xss = '<img src=x onerror="alert(\'xss\')">';
+            const xss = "<img src=x onerror=\"alert('xss')\">";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["a", "p"],
@@ -464,7 +441,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should handle XSS attempts - javascript URL", () => {
-            const xss = '<a href="javascript:alert(\'xss\')">Click</a>';
+            const xss = "<a href=\"javascript:alert('xss')\">Click</a>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["a"],
@@ -479,7 +456,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should handle XSS attempts - iframe", () => {
-            const xss = '<iframe src="http://evil.com"></iframe>';
+            const xss = "<iframe src=\"http://evil.com\"></iframe>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["a", "p"],
@@ -504,7 +481,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
 
     describe("Existing sanitization preservation", () => {
         it("should continue blocking script tags with existing config", () => {
-            const htmlWithScript = '<p>Hello <script>alert("xss")</script> world</p>';
+            const htmlWithScript = "<p>Hello <script>alert(\"xss\")</script> world</p>";
 
             const existingConfig = {
                 FORBID_TAGS: ["form", "button", "script", "div", "input"],
@@ -521,7 +498,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should continue blocking form tags with existing config", () => {
-            const htmlWithForm = '<p>Test</p><form><input type="text" /></form>';
+            const htmlWithForm = "<p>Test</p><form><input type=\"text\" /></form>";
 
             const existingConfig = {
                 FORBID_TAGS: ["form", "button", "script", "div", "input"],
@@ -536,7 +513,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should continue blocking div tags with existing config", () => {
-            const htmlWithDiv = '<div><p>Hello world</p></div>';
+            const htmlWithDiv = "<div><p>Hello world</p></div>";
 
             const existingConfig = {
                 FORBID_TAGS: ["form", "button", "script", "div", "input"]
@@ -550,7 +527,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should continue allowing img tags with existing config (but monitor would flag it)", () => {
-            const htmlWithImg = '<p>Hello <img src="test.jpg" /> world</p>';
+            const htmlWithImg = "<p>Hello <img src=\"test.jpg\" /> world</p>";
 
             const existingConfig = {
                 FORBID_TAGS: ["form", "button", "script", "div", "input"]
@@ -574,17 +551,15 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
 
     describe("Hook management", () => {
         it("should remove hooks after monitoring", () => {
-            const html = '<p>Test</p>';
-
-            // Add a hook
-            DOMPurify.addHook("uponSanitizeElement", () => {});
+            // Add a hook with empty implementation
+            DOMPurify.addHook("uponSanitizeElement", () => { /* empty hook for testing */ });
 
             // Simulate monitor adding and removing hooks
             DOMPurify.removeHook("uponSanitizeElement");
 
             // Verify hooks can be added again (no conflicts)
             const hookAdded = () => {
-                DOMPurify.addHook("uponSanitizeElement", () => {});
+                DOMPurify.addHook("uponSanitizeElement", () => { /* empty hook for testing */ });
             };
 
             expect(hookAdded).not.toThrow();
@@ -594,7 +569,6 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should not interfere with other hooks", () => {
-            const html = '<p>Test</p>';
             let otherHookCalled = false;
 
             // Add a different hook (simulating postDomPurifyActivities)
@@ -602,12 +576,12 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
                 otherHookCalled = true;
             });
 
-            // Add and remove monitor hooks
-            DOMPurify.addHook("uponSanitizeElement", () => {});
+            // Add and remove monitor hooks with empty implementation
+            DOMPurify.addHook("uponSanitizeElement", () => { /* empty hook for testing */ });
             DOMPurify.removeHook("uponSanitizeElement");
 
             // Run sanitization
-            DOMPurify.sanitize(html, {});
+            DOMPurify.sanitize("<p>Test</p>", {});
 
             // Other hook should still work
             expect(otherHookCalled).toBe(true);
@@ -619,16 +593,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
 
     describe("Performance monitoring", () => {
         it("should track execution time in telemetry", (done) => {
-            const htmlWithUnsafeTags = '<p>Hello <img src="test.jpg" /> <div>world</div></p>';
-            const mockState = {
-                domainStates: {
-                    telemetryInternalData: { orgId: "test-org" },
-                    chatToken: { chatId: "test-chat" }
-                }
-            };
-
-            // Mock TelemetryHelper to capture the call
-            const logSpy = jest.spyOn(TelemetryHelper, "logActionEvent");
+            const htmlWithUnsafeTags = "<p>Hello <img src=\"test.jpg\" /> <div>world</div></p>";
 
             // Simulate the monitor function call (inline to verify timing)
             const startTime = performance.now();
@@ -661,7 +626,7 @@ describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
         });
 
         it("should include execution time in telemetry when unsafe content is detected", () => {
-            const htmlWithImg = '<p>Test <img src="test.jpg" /></p>';
+            const htmlWithImg = "<p>Test <img src=\"test.jpg\" /></p>";
 
             const strictConfig = {
                 ALLOWED_TAGS: ["p"],
