@@ -191,7 +191,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         };
 
         // Use requestIdleCallback for truly idle execution, fallback to setTimeout for older browsers
-        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        if (typeof window !== "undefined" && "requestIdleCallback" in window) {
             window.requestIdleCallback(scheduleMonitoring);
         } else {
             setTimeout(scheduleMonitoring, 0);
@@ -228,6 +228,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             const monitorDOMPurify = createDOMPurify(window);
 
             // Strict allowlist configuration (proposed new rules)
+            // Note: DOMPurify blocks event handlers (onclick, onerror, etc.) by default
             const strictConfig = {
                 ALLOWED_TAGS: [
                     "b", "strong",      // Bold text
@@ -250,8 +251,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                     "div", "span"                               // Layout elements
                 ],
                 FORBID_ATTR: [
-                    "style",        // Inline CSS
-                    /^on/i          // Event handlers (onclick, onerror, etc.)
+                    "style"         // Inline CSS (event handlers blocked by default)
                 ],
                 ALLOWED_URI_REGEXP: /^https?:/i,
                 ALLOW_DATA_ATTR: false,
@@ -307,12 +307,14 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.HTMLSanitized,
                         Description: "HTML content would be sanitized by stricter allowlist (monitor-only)",
-                        OrganizationId: orgId,
-                        ConversationId: conversationId,
-                        RemovedTags: uniqueTags.join(", "),
-                        RemovedAttributes: uniqueAttrs.join(", "),
-                        Phase: "Monitor",
-                        ExecutionTimeMs: executionTimeMs.toString()
+                        ElapsedTimeInMilliseconds: executionTimeMs,
+                        CustomProperties: {
+                            OrganizationId: orgId,
+                            ConversationId: conversationId,
+                            RemovedTags: uniqueTags.join(", "),
+                            RemovedAttributes: uniqueAttrs.join(", "),
+                            Phase: "Monitor"
+                        }
                     });
 
                     // Log to console in development for debugging
