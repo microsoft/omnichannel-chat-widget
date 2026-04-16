@@ -251,7 +251,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                     "div", "span"                               // Layout elements
                 ],
                 FORBID_ATTR: [
-                    "style"         // Inline CSS (event handlers blocked by default)
+                    "style",        // Inline CSS
+                    "action"        // Form action attribute (event handlers blocked by default)
                 ],
                 ALLOWED_URI_REGEXP: /^https?:/i,
                 ALLOW_DATA_ATTR: false,
