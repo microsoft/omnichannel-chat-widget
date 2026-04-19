@@ -7,7 +7,6 @@ import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../../common/Constants";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import DOMPurify from "dompurify";
-import createDOMPurify from "dompurify";
 import { Dispatch } from "react";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
 import HyperlinkTextOverrideRenderer from "../../webchatcontainerstateful/webchatcontroller/markdownrenderers/HyperlinkTextOverrideRenderer";
@@ -225,7 +224,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         try {
             // Create a separate DOMPurify instance for monitoring
             // This completely isolates monitoring from other sanitization paths
-            const monitorDOMPurify = createDOMPurify(window);
+            const monitorDOMPurify = DOMPurify(window);
 
             // Strict allowlist configuration (proposed new rules)
             // Note: DOMPurify blocks event handlers (onclick, onerror, etc.) by default
