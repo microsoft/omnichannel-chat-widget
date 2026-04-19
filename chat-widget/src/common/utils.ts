@@ -110,6 +110,31 @@ export const preventFocusToMoveOutOfElement = (elementId: string) => {
     };
 };
 
+export const setAriaHiddenForSiblings = (
+    elementId: string,
+    shouldHide: boolean,
+    stateMap: Map<Element, string | null>
+): void => {
+    const element = document.getElementById(elementId);
+    if (!element?.parentElement) return;
+    Array.from(element.parentElement.children).forEach((sibling) => {
+        if (sibling !== element) {
+            if (shouldHide) {
+                stateMap.set(sibling, sibling.getAttribute("aria-hidden"));
+                (sibling as HTMLElement).setAttribute("aria-hidden", "true");
+            } else if (stateMap.has(sibling)) {
+                const original = stateMap.get(sibling);
+                if (original === null) {
+                    (sibling as HTMLElement).removeAttribute("aria-hidden");
+                } else {
+                    (sibling as HTMLElement).setAttribute("aria-hidden", original as string);
+                }
+                stateMap.delete(sibling);
+            }
+        }
+    });
+};
+
 export const setFocusOnSendBox = () => {
     const sendBoxSelector = "textarea[data-id=\"webchat-sendbox-input\"]";
     setFocusOnElement(sendBoxSelector);

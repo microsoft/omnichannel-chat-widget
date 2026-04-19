@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setAriaHiddenForSiblings, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { Md5 } from "md5-typescript";
@@ -365,5 +365,53 @@ describe("utils unit test", () => {
     it("should parse false boolean value to lower case string", () => {
         const property = false;
         expect(parseLowerCaseString(property)).toEqual("false");
+    });
+
+    it("Test setAriaHiddenForSiblings - should hide siblings and restore them", () => {
+        document.body.innerHTML = `
+            <div id="page-root">
+                <div id="sibling-before">Background content before</div>
+                <div id="oc-lcw"><button>Chat</button></div>
+                <div id="sibling-after">Background content after</div>
+            </div>
+        `;
+        const stateMap: Map<Element, string | null> = new Map();
+
+        setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+        expect(document.getElementById("sibling-before")).toHaveAttribute("aria-hidden", "true");
+        expect(document.getElementById("sibling-after")).toHaveAttribute("aria-hidden", "true");
+        expect(document.getElementById("oc-lcw")).not.toHaveAttribute("aria-hidden");
+
+        setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+        expect(document.getElementById("sibling-before")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("sibling-after")).not.toHaveAttribute("aria-hidden");
+        expect(stateMap.size).toBe(0);
+    });
+
+    it("Test setAriaHiddenForSiblings - should preserve pre-existing aria-hidden on restore", () => {
+        document.body.innerHTML = `
+            <div id="page-root">
+                <div id="intentionally-hidden" aria-hidden="true">Already hidden</div>
+                <div id="oc-lcw"><button>Chat</button></div>
+                <div id="visible-sibling">Visible</div>
+            </div>
+        `;
+        const stateMap: Map<Element, string | null> = new Map();
+
+        setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+        expect(document.getElementById("intentionally-hidden")).toHaveAttribute("aria-hidden", "true");
+        expect(document.getElementById("visible-sibling")).toHaveAttribute("aria-hidden", "true");
+
+        setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+        // pre-existing aria-hidden="true" must be preserved
+        expect(document.getElementById("intentionally-hidden")).toHaveAttribute("aria-hidden", "true");
+        // element with no original aria-hidden must have it removed
+        expect(document.getElementById("visible-sibling")).not.toHaveAttribute("aria-hidden");
+    });
+
+    it("Test setAriaHiddenForSiblings - should do nothing when element not found", () => {
+        document.body.innerHTML = `<div id="other">content</div>`;
+        const stateMap: Map<Element, string | null> = new Map();
+        expect(() => setAriaHiddenForSiblings("nonexistent-id", true, stateMap)).not.toThrow();
     });
 });

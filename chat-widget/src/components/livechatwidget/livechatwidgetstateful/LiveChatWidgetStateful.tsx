@@ -19,6 +19,7 @@ import {
     isNullOrUndefined,
     isThisSessionPopout,
     isUndefinedOrEmpty,
+    setAriaHiddenForSiblings,
     setOcUserAgent
 } from "../../../common/utils";
 import { customEventCallback, subscribeToSendCustomEvent } from "../common/customEventHandler";
@@ -884,6 +885,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         }
     }, [state.domainStates.botAvatarInitials]);
 
+    const isWidgetOpen = !state.appStates.isMinimized && state.appStates.conversationState !== ConversationState.Closed;
+
+    const siblingAriaHiddenMapRef = useRef<Map<Element, string | null>>(new Map());
+
+    useEffect(() => {
+        const map = siblingAriaHiddenMapRef.current;
+        setAriaHiddenForSiblings(widgetElementId, isWidgetOpen, map);
+        return () => {
+            setAriaHiddenForSiblings(widgetElementId, false, map);
+        };
+    }, [isWidgetOpen]);
+
     // WebChat's Composer can only be rendered if a directLine object is defined
     return directLine && (
         <>
@@ -964,7 +977,10 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                     <Stack
                         id={widgetElementId}
                         styles={generalStyles}
-                        className={livechatProps.styleProps?.className}>
+                        className={livechatProps.styleProps?.className}
+                        role={isWidgetOpen ? "dialog" : undefined}
+                        aria-modal={isWidgetOpen ? true : undefined}
+                        aria-label={isWidgetOpen ? (props.headerProps?.controlProps?.headerTitleProps?.text ?? "Live Chat") : undefined}>
 
                         {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
 

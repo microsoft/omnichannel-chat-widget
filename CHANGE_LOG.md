@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [A11Y] Fixed TalkBack focus escaping the chat widget on Android when the widget panel is open
 - Fixed issue with persistent chat history not properly computing flags for history messages.
 - Fixed uncaught exception error in post chat survey when closing the survey
 - Fixed disconnection banner persisting when closing and reopening chat widget
