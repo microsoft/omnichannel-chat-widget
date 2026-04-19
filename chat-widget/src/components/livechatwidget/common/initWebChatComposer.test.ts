@@ -2,656 +2,356 @@
 
 import "@testing-library/jest-dom";
 
-import DOMPurify from "dompurify";
+import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { initWebChatComposer } from "./initWebChatComposer";
+
+// Mock TelemetryHelper
+jest.mock("../../../common/telemetry/TelemetryHelper");
+
+// Mock other dependencies
+jest.mock("../../../common/utils", () => ({
+    changeLanguageCodeFormatForWebChat: jest.fn((locale) => locale),
+    getConversationDetailsCall: jest.fn(),
+    getLocaleStringFromId: jest.fn(() => "en-US"),
+    createTimer: jest.fn(() => ({
+        milliSecondsElapsed: 0
+    }))
+}));
+
+jest.mock("@microsoft/omnichannel-chat-components", () => ({
+    BroadcastService: {
+        postMessage: jest.fn(),
+        getMessageByEventName: jest.fn(() => ({
+            subscribe: jest.fn()
+        }))
+    },
+    BroadcastEvent: {
+        PersistentConversationReset: "PersistentConversationReset"
+    }
+}));
 
 // Mock console.warn to suppress development logs in tests
 const originalWarn = console.warn;
+const originalError = console.error;
 beforeAll(() => {
     console.warn = jest.fn();
+    console.error = jest.fn();
 });
 
 afterAll(() => {
     console.warn = originalWarn;
+    console.error = originalError;
 });
 
-describe("initWebChatComposer - Monitor-Only HTML Sanitization", () => {
+describe("initWebChatComposer - HTML Sanitization Monitoring", () => {
+    let mockProps: any;
+    let mockState: any;
+    let mockDispatch: any;
+    let mockFacadeChatSDK: any;
+    let mockEndChat: any;
+    let logActionEventSpy: jest.SpyInstance;
+
+    // Mock requestIdleCallback for tests
+    let requestIdleCallbackSpy: jest.SpyInstance;
+    let setTimeoutSpy: jest.SpyInstance;
+
     beforeEach(() => {
         // Reset mocks
         jest.clearAllMocks();
+
+        // Mock requestIdleCallback (doesn't exist in jsdom)
+        (window as any).requestIdleCallback = jest.fn((callback: any) => {
+            callback(); // Execute immediately in tests
+            return 1;
+        });
+        requestIdleCallbackSpy = window.requestIdleCallback as any;
+
+        setTimeoutSpy = jest.spyOn(window, "setTimeout");
+
+        // Mock state with orgId and chatId
+        mockState = {
+            domainStates: {
+                telemetryInternalData: {
+                    orgId: "test-org-123"
+                },
+                chatToken: {
+                    chatId: "test-chat-456"
+                },
+                liveChatConfig: {
+                    ChatWidgetLanguage: {
+                        msdyn_localeid: 1033
+                    }
+                }
+            }
+        };
+
+        mockProps = {
+            webChatContainerProps: {}
+        };
+
+        mockDispatch = jest.fn();
+        mockFacadeChatSDK = {};
+        mockEndChat = jest.fn();
+
+        // Spy on TelemetryHelper.logActionEvent
+        logActionEventSpy = jest.spyOn(TelemetryHelper, "logActionEvent");
     });
 
-    describe("Content that would be blocked by strict allowlist", () => {
-        it("should log telemetry when img tag would be removed", () => {
-            const htmlWithImage = "<p>Hello <img src=\"test.jpg\" /> world</p>";
-
-            // Sanitize with current config (allows img through existing config)
-            DOMPurify.sanitize(htmlWithImage, {
-                FORBID_TAGS: ["form", "button", "script", "div", "input"],
-                FORBID_ATTR: ["action"],
-                ADD_ATTR: ["target"]
-            });
-
-            // Simulate monitor function behavior
-            const strictConfig = {
-                ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"],
-                ALLOWED_ATTR: ["href", "target", "rel"],
-                FORBID_TAGS: ["img", "video", "audio", "iframe", "object", "embed", "script", "style", "form", "input", "textarea", "button", "link", "meta", "base", "div", "span"],
-                FORBID_ATTR: ["style", /^on/i],
-                ALLOWED_URI_REGEXP: /^https?:/i,
-                ALLOW_DATA_ATTR: false,
-                ALLOW_UNKNOWN_PROTOCOLS: false
-            };
-
-            const removedTags: string[] = [];
-
-            // Add hook to track removed tags (filter out body tag which is DOMPurify wrapper)
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(htmlWithImage, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toContain("img");
-        });
-
-        it("should log telemetry when span tag would be removed", () => {
-            const htmlWithSpan = "<p>Hello <span style=\"color: red;\">world</span></p>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"],
-                ALLOWED_ATTR: ["href", "target", "rel"],
-                FORBID_TAGS: ["img", "video", "audio", "iframe", "object", "embed", "script", "style", "form", "input", "textarea", "button", "link", "meta", "base", "div", "span"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(htmlWithSpan, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toContain("span");
-        });
-
-        it("should log telemetry when div tag would be removed", () => {
-            const htmlWithDiv = "<div><p>Hello world</p></div>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"],
-                FORBID_TAGS: ["div", "span"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(htmlWithDiv, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toContain("div");
-        });
-
-        it("should log telemetry when style attribute would be removed", () => {
-            const htmlWithStyle = "<p style=\"color: red;\">Hello world</p>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"],
-                ALLOWED_ATTR: ["href", "target", "rel"],
-                FORBID_ATTR: ["style"]
-            };
-
-            const removedAttrs: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
-                const attrName = data.attrName.toLowerCase();
-                if (!strictConfig.ALLOWED_ATTR.includes(attrName) && attrName !== "class" && attrName !== "id") {
-                    removedAttrs.push(attrName);
-                }
-            });
-
-            DOMPurify.sanitize(htmlWithStyle, strictConfig);
-            DOMPurify.removeHook("uponSanitizeAttribute");
-
-            expect(removedAttrs).toContain("style");
-        });
-
-        it("should log telemetry when onclick attribute would be removed", () => {
-            const htmlWithOnClick = "<p onclick=\"alert('xss')\">Hello world</p>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"],
-                ALLOWED_ATTR: ["href", "target", "rel"],
-                FORBID_ATTR: [/^on/i]
-            };
-
-            const removedAttrs: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
-                const attrName = data.attrName.toLowerCase();
-                if (!strictConfig.ALLOWED_ATTR.includes(attrName) && attrName !== "class" && attrName !== "id") {
-                    removedAttrs.push(attrName);
-                }
-            });
-
-            DOMPurify.sanitize(htmlWithOnClick, strictConfig);
-            DOMPurify.removeHook("uponSanitizeAttribute");
-
-            expect(removedAttrs.length).toBeGreaterThan(0);
-        });
-
-        it("should track multiple removed tags in one pass", () => {
-            const htmlComplex = "<div><p>Hello <img src=\"test.jpg\" /> <span>world</span></p></div>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"],
-                FORBID_TAGS: ["div", "span", "img"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(htmlComplex, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toContain("div");
-            expect(removedTags).toContain("span");
-            expect(removedTags).toContain("img");
-        });
-
-        it("should deduplicate removed tags", () => {
-            const htmlMultipleDivs = "<div><p>Test1</p></div><div><p>Test2</p></div>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"],
-                FORBID_TAGS: ["div"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(htmlMultipleDivs, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            // Should have multiple div entries before deduplication
-            expect(removedTags.filter(tag => tag === "div").length).toBeGreaterThan(1);
-
-            // After deduplication
-            const uniqueTags = [...new Set(removedTags)];
-            expect(uniqueTags).toEqual(["div"]);
-        });
+    afterEach(() => {
+        if (setTimeoutSpy && setTimeoutSpy.mockRestore) {
+            setTimeoutSpy.mockRestore();
+        }
+        // Clean up requestIdleCallback mock
+        delete (window as any).requestIdleCallback;
     });
 
-    describe("Content that passes strict allowlist", () => {
-        it("should not log telemetry for allowed tags", () => {
-            const cleanHtml = "<p>Hello <b>world</b></p>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"],
-                ALLOWED_ATTR: ["href", "target", "rel"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(cleanHtml, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toEqual([]);
-        });
-
-        it("should not log telemetry for allowed formatting tags", () => {
-            const formattedHtml = "<p><b>Bold</b> <i>Italic</i> <u>Underline</u> <em>Emphasis</em> <strong>Strong</strong></p>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(formattedHtml, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toEqual([]);
-        });
-
-        it("should not log telemetry for allowed lists", () => {
-            const listHtml = "<ul><li>Item 1</li><li>Item 2</li></ul><ol><li>First</li></ol>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(listHtml, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toEqual([]);
-        });
-
-        it("should not log telemetry for allowed links with safe attributes", () => {
-            const linkHtml = "<a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Link</a>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["a"],
-                ALLOWED_ATTR: ["href", "target", "rel"],
-                ALLOWED_URI_REGEXP: /^https?:/i
-            };
-
-            const removedTags: string[] = [];
-            const removedAttrs: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
-                const attrName = data.attrName.toLowerCase();
-                if (!strictConfig.ALLOWED_ATTR.includes(attrName) && attrName !== "class" && attrName !== "id") {
-                    removedAttrs.push(attrName);
-                }
-            });
-
-            DOMPurify.sanitize(linkHtml, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-            DOMPurify.removeHook("uponSanitizeAttribute");
-
-            expect(removedTags).toEqual([]);
-            expect(removedAttrs).toEqual([]);
-        });
-    });
-
-    describe("Edge cases", () => {
-        it("should handle empty string", () => {
-            const emptyHtml = "";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            const result = DOMPurify.sanitize(emptyHtml, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(result).toBe("");
-            expect(removedTags).toEqual([]);
-        });
-
-        it("should handle plain text without HTML tags", () => {
-            const plainText = "Hello world";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            const result = DOMPurify.sanitize(plainText, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(result).toBe("Hello world");
-            expect(removedTags).toEqual([]);
-        });
-
-        it("should handle malformed HTML", () => {
-            const malformedHtml = "<p>Unclosed paragraph<div>Nested without closing";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"],
-                FORBID_TAGS: ["div"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(malformedHtml, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toContain("div");
-        });
-
-        it("should handle nested allowed tags", () => {
-            const nestedHtml = "<p><b><i>Bold italic</i></b></p>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["p", "b", "i"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(nestedHtml, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toEqual([]);
-        });
-
-        it("should handle XSS attempts - script tags", () => {
-            const xss = "<script>alert(\"xss\")</script>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["a", "p"],
-                FORBID_TAGS: ["script"]
-            };
-
-            const result = DOMPurify.sanitize(xss, strictConfig);
-
-            // DOMPurify removes script tags completely
-            expect(result).not.toContain("<script>");
-            expect(result).not.toContain("alert");
-        });
-
-        it("should handle XSS attempts - img with onerror", () => {
-            const xss = "<img src=x onerror=\"alert('xss')\">";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["a", "p"],
-                FORBID_TAGS: ["img"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(xss, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toContain("img");
-        });
-
-        it("should handle XSS attempts - javascript URL", () => {
-            const xss = "<a href=\"javascript:alert('xss')\">Click</a>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["a"],
-                ALLOWED_ATTR: ["href"],
-                ALLOWED_URI_REGEXP: /^https?:/i
-            };
-
-            const result = DOMPurify.sanitize(xss, strictConfig);
-
-            // DOMPurify removes javascript: URLs
-            expect(result).not.toContain("javascript:");
-        });
-
-        it("should handle XSS attempts - iframe", () => {
-            const xss = "<iframe src=\"http://evil.com\"></iframe>";
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["a", "p"],
-                FORBID_TAGS: ["iframe"]
-            };
-
-            const removedTags: string[] = [];
-
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
-
-            DOMPurify.sanitize(xss, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
-
-            expect(removedTags).toContain("iframe");
-        });
-    });
-
-    describe("Existing sanitization preservation", () => {
-        it("should continue blocking script tags with existing config", () => {
-            const htmlWithScript = "<p>Hello <script>alert(\"xss\")</script> world</p>";
-
-            const existingConfig = {
-                FORBID_TAGS: ["form", "button", "script", "div", "input"],
-                FORBID_ATTR: ["action"],
-                ADD_ATTR: ["target"]
-            };
-
-            const result = DOMPurify.sanitize(htmlWithScript, existingConfig);
-
+    describe("renderMarkdown function", () => {
+        it("should sanitize HTML and return sanitized text", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            const htmlWithScript = "Hello <script>alert('xss')</script> world";
+            const result = renderMarkdown(htmlWithScript);
+
+            // Existing sanitization should block script tags
             expect(result).not.toContain("<script>");
             expect(result).not.toContain("alert");
             expect(result).toContain("Hello");
             expect(result).toContain("world");
         });
 
-        it("should continue blocking form tags with existing config", () => {
-            const htmlWithForm = "<p>Test</p><form><input type=\"text\" /></form>";
+        it("should sanitize forbidden tags from existing config", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            const existingConfig = {
-                FORBID_TAGS: ["form", "button", "script", "div", "input"],
-                FORBID_ATTR: ["action"]
-            };
+            const htmlWithDiv = "Hello <div>test</div> world";
+            const result = renderMarkdown(htmlWithDiv);
 
-            const result = DOMPurify.sanitize(htmlWithForm, existingConfig);
-
-            expect(result).not.toContain("<form>");
-            expect(result).not.toContain("<input>");
-            expect(result).toContain("Test");
-        });
-
-        it("should continue blocking div tags with existing config", () => {
-            const htmlWithDiv = "<div><p>Hello world</p></div>";
-
-            const existingConfig = {
-                FORBID_TAGS: ["form", "button", "script", "div", "input"]
-            };
-
-            const result = DOMPurify.sanitize(htmlWithDiv, existingConfig);
-
+            // Existing config forbids div tags
             expect(result).not.toContain("<div>");
-            expect(result).toContain("<p>");
-            expect(result).toContain("Hello world");
         });
 
-        it("should continue allowing img tags with existing config (but monitor would flag it)", () => {
-            const htmlWithImg = "<p>Hello <img src=\"test.jpg\" /> world</p>";
+        it("should allow safe HTML tags through existing sanitization", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            const existingConfig = {
-                FORBID_TAGS: ["form", "button", "script", "div", "input"]
-            };
+            const htmlWithAllowed = "Hello <p><b>bold</b> <i>italic</i></p>";
+            const result = renderMarkdown(htmlWithAllowed);
 
-            const result = DOMPurify.sanitize(htmlWithImg, existingConfig);
+            // These tags are allowed by existing config
+            // Note: target="_blank" is added by ADD_ATTR config
+            expect(result).toContain("bold");
+            expect(result).toContain("italic");
+            expect(result).toContain("<b");
+            expect(result).toContain("<i");
+        });
 
-            // Existing config allows img (not in FORBID_TAGS)
+        it("should schedule monitoring via requestIdleCallback", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            renderMarkdown("Hello <img src='test.jpg' /> world");
+
+            // Should call requestIdleCallback to schedule monitoring
+            expect(requestIdleCallbackSpy).toHaveBeenCalled();
+        });
+
+        it("should fallback to setTimeout when requestIdleCallback is not available", () => {
+            // Remove requestIdleCallback
+            requestIdleCallbackSpy.mockRestore();
+            delete (window as any).requestIdleCallback;
+
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            renderMarkdown("Hello world");
+
+            // Should fallback to setTimeout
+            expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), 0);
+        });
+
+        it("should not modify the returned text (monitor-only)", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            // HTML with img tag (allowed by existing config, but monitored by strict config)
+            const htmlWithImg = "<p>Hello <img src='test.jpg' /> world</p>";
+            const result = renderMarkdown(htmlWithImg);
+
+            // Existing config allows img through
             expect(result).toContain("<img");
-
-            // But strict config would remove it
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"],
-                FORBID_TAGS: ["img"]
-            };
-
-            const strictResult = DOMPurify.sanitize(htmlWithImg, strictConfig);
-            expect(strictResult).not.toContain("<img");
         });
     });
 
-    describe("Hook management", () => {
-        it("should remove hooks after monitoring", () => {
-            // Add a hook with empty implementation
-            DOMPurify.addHook("uponSanitizeElement", () => { /* empty hook for testing */ });
+    describe("Telemetry logging for strict monitoring", () => {
+        it("should log telemetry when img tag would be removed by strict allowlist", (done) => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            // Simulate monitor adding and removing hooks
-            DOMPurify.removeHook("uponSanitizeElement");
+            renderMarkdown("<p>Hello <img src='test.jpg' /> world</p>");
 
-            // Verify hooks can be added again (no conflicts)
-            const hookAdded = () => {
-                DOMPurify.addHook("uponSanitizeElement", () => { /* empty hook for testing */ });
-            };
-
-            expect(hookAdded).not.toThrow();
-
-            // Cleanup
-            DOMPurify.removeHook("uponSanitizeElement");
+            // Wait for async monitoring to complete
+            setTimeout(() => {
+                expect(logActionEventSpy).toHaveBeenCalledWith(
+                    LogLevel.INFO,
+                    expect.objectContaining({
+                        Event: TelemetryEvent.HTMLSanitized,
+                        Description: "HTML content would be sanitized by stricter allowlist (monitor-only)",
+                        CustomProperties: expect.objectContaining({
+                            OrganizationId: "test-org-123",
+                            ConversationId: "test-chat-456",
+                            RemovedTags: expect.stringContaining("img"),
+                            Phase: "Monitor"
+                        })
+                    })
+                );
+                done();
+            }, 100);
         });
 
-        it("should not interfere with other hooks", () => {
-            let otherHookCalled = false;
+        it("should log telemetry when div and span tags would be removed", (done) => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            // Add a different hook (simulating postDomPurifyActivities)
-            DOMPurify.addHook("afterSanitizeAttributes", () => {
-                otherHookCalled = true;
-            });
+            // div is blocked by existing config, but span is allowed
+            renderMarkdown("<p>Hello <span style='color:red'>test</span></p>");
 
-            // Add and remove monitor hooks with empty implementation
-            DOMPurify.addHook("uponSanitizeElement", () => { /* empty hook for testing */ });
-            DOMPurify.removeHook("uponSanitizeElement");
+            setTimeout(() => {
+                expect(logActionEventSpy).toHaveBeenCalled();
+                const call = logActionEventSpy.mock.calls[0];
+                expect(call[1].CustomProperties.RemovedTags).toContain("span");
+                expect(call[1].CustomProperties.RemovedAttributes).toContain("style");
+                done();
+            }, 100);
+        });
 
-            // Run sanitization
-            DOMPurify.sanitize("<p>Test</p>", {});
+        it("should NOT log telemetry for allowed tags", (done) => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            // Other hook should still work
-            expect(otherHookCalled).toBe(true);
+            renderMarkdown("<p>Hello <b>bold</b> <i>italic</i></p>");
 
-            // Cleanup
-            DOMPurify.removeHook("afterSanitizeAttributes");
+            setTimeout(() => {
+                // Should not log telemetry for safe HTML
+                expect(logActionEventSpy).not.toHaveBeenCalled();
+                done();
+            }, 100);
+        });
+
+        it("should include execution time in telemetry", (done) => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            renderMarkdown("<p><img src='test.jpg' /></p>");
+
+            setTimeout(() => {
+                expect(logActionEventSpy).toHaveBeenCalled();
+                const call = logActionEventSpy.mock.calls[0];
+                expect(call[1].ElapsedTimeInMilliseconds).toBeGreaterThanOrEqual(0);
+                expect(typeof call[1].ElapsedTimeInMilliseconds).toBe("number");
+                done();
+            }, 100);
+        });
+
+        it("should use 'unknown' fallback for missing orgId", (done) => {
+            // State without orgId
+            const stateWithoutOrgId = {
+                domainStates: {
+                    chatToken: {
+                        chatId: "test-chat-456"
+                    },
+                    liveChatConfig: {
+                        ChatWidgetLanguage: {
+                            msdyn_localeid: 1033
+                        }
+                    }
+                }
+            };
+
+            const webChatProps = initWebChatComposer(mockProps, stateWithoutOrgId, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            renderMarkdown("<p><img src='test.jpg' /></p>");
+
+            setTimeout(() => {
+                expect(logActionEventSpy).toHaveBeenCalled();
+                const call = logActionEventSpy.mock.calls[0];
+                expect(call[1].CustomProperties.OrganizationId).toBe("unknown");
+                done();
+            }, 100);
         });
     });
 
-    describe("Performance monitoring", () => {
-        it("should track execution time in telemetry", (done) => {
-            const htmlWithUnsafeTags = "<p>Hello <img src=\"test.jpg\" /> <div>world</div></p>";
-
-            // Simulate the monitor function call (inline to verify timing)
-            const startTime = performance.now();
-
-            const strictConfig = {
-                ALLOWED_TAGS: ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "a"],
-                FORBID_TAGS: ["img", "div"]
-            };
-
-            const removedTags: string[] = [];
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
+    describe("Error handling", () => {
+        it("should not break message flow if monitoring throws an error", () => {
+            // Force monitoring to throw an error
+            logActionEventSpy.mockImplementation(() => {
+                throw new Error("Telemetry error");
             });
 
-            DOMPurify.sanitize(htmlWithUnsafeTags, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            const endTime = performance.now();
-            const executionTimeMs = Math.round((endTime - startTime) * 100) / 100;
-
-            // Verify execution time is a positive number
-            expect(executionTimeMs).toBeGreaterThanOrEqual(0);
-            expect(typeof executionTimeMs).toBe("number");
-            expect(isNaN(executionTimeMs)).toBe(false);
-
-            done();
+            // Should not throw - error should be caught
+            expect(() => {
+                const result = renderMarkdown("<p>Hello <img src='test.jpg' /></p>");
+                expect(result).toBeDefined();
+                expect(result).toContain("Hello");
+            }).not.toThrow();
         });
 
-        it("should include execution time in telemetry when unsafe content is detected", () => {
-            const htmlWithImg = "<p>Test <img src=\"test.jpg\" /></p>";
+        it("should handle empty HTML gracefully", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            const strictConfig = {
-                ALLOWED_TAGS: ["p"],
-                FORBID_TAGS: ["img"]
-            };
+            const result = renderMarkdown("");
+            expect(result).toBeDefined();
+        });
 
-            const startTime = performance.now();
-            const removedTags: string[] = [];
+        it("should handle plain text without HTML", (done) => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            DOMPurify.addHook("uponSanitizeElement", (node, data) => {
-                const tagName = data.tagName.toLowerCase();
-                if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
-                    removedTags.push(tagName);
-                }
-            });
+            renderMarkdown("Plain text message");
 
-            DOMPurify.sanitize(htmlWithImg, strictConfig);
-            DOMPurify.removeHook("uponSanitizeElement");
+            setTimeout(() => {
+                // Should not log telemetry for plain text
+                expect(logActionEventSpy).not.toHaveBeenCalled();
+                done();
+            }, 100);
+        });
+    });
 
-            const endTime = performance.now();
-            const executionTimeMs = Math.round((endTime - startTime) * 100) / 100;
+    describe("XSS Prevention", () => {
+        it("should block javascript: URLs", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
 
-            // Verify timing is captured
-            expect(removedTags.length).toBeGreaterThan(0);
-            expect(executionTimeMs).toBeGreaterThanOrEqual(0);
+            const xss = "<a href=\"javascript:alert('xss')\">Click</a>";
+            const result = renderMarkdown(xss);
+
+            expect(result).not.toContain("javascript:");
+        });
+
+        it("should block event handlers", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            const xss = "<p onclick=\"alert('xss')\">Click me</p>";
+            const result = renderMarkdown(xss);
+
+            expect(result).not.toContain("onclick");
+        });
+
+        it("should block iframe tags", () => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            const xss = "<iframe src=\"http://evil.com\"></iframe>";
+            const result = renderMarkdown(xss);
+
+            expect(result).not.toContain("<iframe");
         });
     });
 });
