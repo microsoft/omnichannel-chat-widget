@@ -60,6 +60,8 @@ const handleSystemMessage = (next: any, args: any[], card: any, renderMarkdown: 
         originalSystemMessageTexts.set(activityKey, card.activity.text);
     }
     const sourceText = (activityKey && originalSystemMessageTexts.get(activityKey)) ?? card.activity.text;
+    // renderMarkdown sanitizes the HTML using DOMPurify with allowlist-based configuration
+    // See initWebChatComposer.ts for sanitization details
     const renderedHtml = renderMarkdown(sourceText);
     // eslint-disable-next-line react/display-name
     return () => (
