@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Fixed email transcript dialog persisting across conversations by resetting `showEmailTranscriptPane` state during chat close cleanup
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
 
 ### Changed
