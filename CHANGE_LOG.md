@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers
 - [A11y] Screen reader now announces "File sent" when an attachment upload completes via an aria-live region
 - [A11y] Adaptive card radio button groups now include aria-setsize and aria-posinset attributes for correct option count announcement
+- [A11y] Merged adjacent markdown anchors that share the same `href` into a single focusable link in `createMarkdown`, so bot content like `[1.](url) [View details](url)` is announced as one link (e.g. "1. View details") instead of two separate focusable links (ADO 6039010)
 
 ### Added
 - [A11y] E2E Playwright tests for 5 accessibility defects: focus trap, bot initials alt text, adaptive card radio count, attachment upload announcement, email notification aria-live regions
