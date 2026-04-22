@@ -280,6 +280,7 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
         }
     });
     dispatch({ type: LiveChatWidgetActionType.SET_CITATIONS, payload: {} });
+    dispatch({ type: LiveChatWidgetActionType.SET_SHOW_EMAIL_TRANSCRIPT_PANE, payload: false });
 
     // Dismiss the chat disconnect notification banner if it was shown
     NotificationHandler.dismissNotification(NotificationScenarios.ChatDisconnect);
