@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { createMarkdown } from "./createMarkdown";
 
 describe("createMarkdown - Numbered List Continuity", () => {
@@ -147,5 +150,72 @@ Check browser details Go to the additional details area of the customer summary 
         // Should properly indent multi-paragraph content
         expect(result).toContain("Check device details You can check");
         expect(result).toContain("Check browser details Go to");
+    });
+});
+
+describe("createMarkdown - Adjacent anchor merging (a11y)", () => {
+    const stripImgs = (html: string) => html.replace(/<img[^>]*>/g, "");
+    const countAnchors = (html: string) => (html.match(/<a\b[^>]*>/g) || []).length;
+
+    it("merges two adjacent anchors sharing the same href into a single focusable link", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1.](https://example.com) [View details](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        const text = stripImgs(result);
+        expect(text).toContain("1.");
+        expect(text).toContain("View details");
+        expect(result).toContain("href=\"https://example.com\"");
+    });
+
+    it("merges three adjacent anchors sharing the same href", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1.](https://example.com) [View](https://example.com) [details](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        const text = stripImgs(result);
+        expect(text).toContain("1.");
+        expect(text).toContain("View");
+        expect(text).toContain("details");
+    });
+
+    it("does not merge adjacent anchors with different hrefs", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[One](https://example.com/a) [Two](https://example.com/b)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(2);
+        expect(result).toContain("href=\"https://example.com/a\"");
+        expect(result).toContain("href=\"https://example.com/b\"");
+    });
+
+    it("merges same-href anchors inside a numbered list item", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "- [1.](https://example.com) [View details](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        expect(result).toContain("<ul>");
+    });
+
+    it("preserves whitespace between merged anchors so screen readers announce them separately", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1.](https://example.com) [View details](https://example.com)";
+        const result = markdown.render(input);
+
+        // Ensure merged content contains a space separator between "1." and "View details".
+        const merged = stripImgs(result).replace(/<[^>]+>/g, "");
+        expect(merged).toMatch(/1\.\s+View details/);
+    });
+
+    it("leaves a solitary anchor untouched", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[Only](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        expect(result).toContain("href=\"https://example.com\"");
     });
 });
