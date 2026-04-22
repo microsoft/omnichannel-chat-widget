@@ -9,6 +9,7 @@ export const defaultConfirmationPaneControlProps: IConfirmationPaneControlProps 
     titleText: Texts.ConfirmationPaneTitle,
     hideSubtitle: false,
     subtitleText: Texts.ConfirmationPaneSubtitle,
+    buttonGroupAriaLabel: AriaLabels.ConfirmationPaneButtonGroup,
     hideConfirmButton: false,
     confirmButtonText: Texts.ConfirmButtonText,
     confirmButtonAriaLabel: AriaLabels.ConfirmationPaneConfirm,

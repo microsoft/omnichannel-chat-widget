@@ -7,4 +7,5 @@ export interface IAdaptiveCardStyles {
     choiceInputPadding?: string;
     buttonFlexWrap?: string;
     buttonGap?: string;
+    inputFontSize?: string;
 }
