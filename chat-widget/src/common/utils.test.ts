@@ -464,7 +464,7 @@ describe("utils unit test", () => {
     });
 
     it("Test setAriaHiddenForSiblings - should do nothing when element not found", () => {
-        document.body.innerHTML = `<div id="other">content</div>`;
+        document.body.innerHTML = "<div id=\"other\">content</div>";
         const stateMap: Map<Element, string | null> = new Map();
         expect(() => setAriaHiddenForSiblings("nonexistent-id", true, stateMap)).not.toThrow();
     });
