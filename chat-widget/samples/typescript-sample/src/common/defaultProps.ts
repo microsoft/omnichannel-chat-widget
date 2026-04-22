@@ -1172,7 +1172,7 @@ export const defaultProps: ILiveChatWidgetProps = {
             adaptiveCardContainerStyleProps: {
                 border: "1px solid #ECECEC",
                 borderRadius: "4px",
-                margin: "3%"
+                margin: "0"
             },
             customTextInputStyleProps: {
                 height: "20px"

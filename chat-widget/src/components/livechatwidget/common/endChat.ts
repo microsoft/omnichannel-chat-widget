@@ -12,6 +12,7 @@ import { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetA
 import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidgetContext";
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { LazyLoadHandler } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activities/LazyLoadActivity";
+import { resetActivityMiddlewareCache } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
@@ -229,6 +230,7 @@ const endChat = async (props: ILiveChatWidgetProps, facadeChatSDK: any, state: I
 
             // Call direct reset to ensure LazyLoadHandler gets reset regardless of broadcast timing
             LazyLoadHandler.directReset();
+            resetActivityMiddlewareCache();
             
             BroadcastService.postMessage({
                 eventName: BroadcastEvent.PersistentConversationReset

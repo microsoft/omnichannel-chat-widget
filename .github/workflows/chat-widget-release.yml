@@ -11,16 +11,17 @@ on:
     paths:
       - 'chat-widget/**'
 
-jobs: 
+jobs:
   build:
+    if: github.repository == 'microsoft/omnichannel-chat-widget'
     runs-on: windows-2022
     steps:
       - name: Checking out for ${{ github.ref }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20.X
+          node-version: 22.x
       - name: Update package version
         working-directory: chat-widget
         run: npx version-from-git --no-git-tag-version
@@ -67,23 +68,3 @@ jobs:
           name: npm-tarball
           path: '*.tgz'
 
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/heads/') || startsWith(github.ref, 'refs/tags/') }}
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: npm-tarball
-      - name: Read package.json
-        id: read-package-json
-        run: |
-          echo "::set-output name=name::$(tar xOf *.tgz package/package.json | jq -r '.name')"
-          echo "::set-output name=version::$(tar xOf *.tgz package/package.json | jq -r '.version')"
-          echo "::set-output name=tarball::$(ls *.tgz)"
-          echo "::set-output name=date::$(date +%Y-%m-%d)"
-      - name: Run npm publish ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
-        run: |
-          npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
-          npm publish *.tgz --tag main --access public
-          npm dist-tag add ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }} latest

@@ -36,8 +36,16 @@ export const LiveChatWidget = (props: ILiveChatWidgetProps) => {
         throw new Error("chatConfig is required");
     }
 
+    // Check configuration flags
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const isAuthenticatedChat = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction) || isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+    const hasAuthClientFn = !!((props.chatConfig?.LiveChatConfigAuthSettings as any)?.msdyn_javascriptclientfunction);
+    const persistentChatEnabled = isPersistentChatEnabled(props.chatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
+
+    // isAuthenticatedChat determines if FacadeChatSDK should require authentication:
+    // REGULAR AUTH FLOW (config-based):
+    // - Persistent chat enabled ? always authenticated
+    // - Auth settings exist ? authenticated from start
+    const isAuthenticatedChat = persistentChatEnabled || hasAuthClientFn;
 
     if (!facadeChatSDK) {
         setFacadeChatSDK(new FacadeChatSDK(

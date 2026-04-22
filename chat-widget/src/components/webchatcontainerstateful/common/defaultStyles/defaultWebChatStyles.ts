@@ -19,7 +19,7 @@ export const defaultWebChatStyles: StyleOptions = {
     bubbleTextColor: "White",
     hideSendBox: false,
     hideUploadButton: true,
-    primaryFont: "Segoe UI, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Noto Color Emoji\"",
+    primaryFont: "Segoe UI, Arial, sans-serif",
     rootHeight: "100%",
     rootWidth: "100%",
     sendBoxTextWrap: true,
@@ -29,7 +29,7 @@ export const defaultWebChatStyles: StyleOptions = {
     showAvatarInGroup: true,
     suggestedActionsStackedHeight: 125,
     suggestedActionsStackedOverflow: "scroll" as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-    typingAnimationDuration: 3500,
+    typingAnimationDuration: 4500,
     emojiSet: {
         ":)": "😊",
         ":-)": "😊",

@@ -1,5 +1,7 @@
 import { ConversationState } from "../contexts/common/ConversationState";
+import { ExtendedChatConfig } from "../components/webchatcontainerstateful/interfaces/IExtendedChatConffig";
 import { ILiveChatWidgetContext } from "../contexts/common/ILiveChatWidgetContext";
+import { shouldLoadPersistentChatHistory } from "../components/livechatwidget/common/liveChatConfigUtils";
 
 export const shouldShowChatButton = (state: ILiveChatWidgetContext) => {
     return (state.appStates.isMinimized ||
@@ -30,9 +32,21 @@ export const shouldShowEmailTranscriptPane = (state: ILiveChatWidgetContext) => 
 };
 
 export const shouldShowWebChatContainer = (state: ILiveChatWidgetContext) => {
-    return ((!state.appStates.isMinimized) && state.appStates.conversationState === ConversationState.Active ||
-        state.appStates.conversationState === ConversationState.InActive ||
-        (state.appStates.conversationState === ConversationState.Postchat && state.appStates.isConversationalSurveyEnabled && state.appStates.isConversationalSurvey));
+    const extendedChatConfig = state?.domainStates?.liveChatConfig as ExtendedChatConfig | undefined;
+    const persistentHistoryEnabled = shouldLoadPersistentChatHistory(extendedChatConfig);
+
+    const isActiveOrInactive = state.appStates.conversationState === ConversationState.Active ||
+        state.appStates.conversationState === ConversationState.InActive;
+    const isPostchatSurvey = state.appStates.conversationState === ConversationState.Postchat &&
+        state.appStates.isConversationalSurveyEnabled && state.appStates.isConversationalSurvey;
+
+    if (persistentHistoryEnabled) {
+        // Keep WebChat in DOM even when minimized (CSS hides it via visibility)
+        // This preserves scroll position across minimize/maximize cycles
+        return isActiveOrInactive || isPostchatSurvey;
+    }
+    // Original behavior - hide WebChat when minimized
+    return (!state.appStates.isMinimized) && (isActiveOrInactive || isPostchatSurvey);
 };
 
 export const shouldShowLoadingPane = (state: ILiveChatWidgetContext) => {
