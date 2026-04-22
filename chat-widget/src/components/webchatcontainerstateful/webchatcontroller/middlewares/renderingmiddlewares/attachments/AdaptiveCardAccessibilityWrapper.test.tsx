@@ -27,7 +27,7 @@ beforeEach(() => {
     (global as any).MutationObserver = class extends MutationObserverMock {
         constructor(cb: MutationCallback) {
             super(cb);
-            observerInstance = this;
+            observerInstance = this; // eslint-disable-line @typescript-eslint/no-this-alias
         }
     };
 });
