@@ -44,9 +44,17 @@ jobs:
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
         run: yarn install --network-timeout 1000000
+      - name: Install Playwright browsers
+        working-directory: chat-widget/automation_tests
+        run: yarn playwright install --with-deps chromium
       - name: Unit Tests
         working-directory: chat-widget
         run: yarn test:unit
+      - name: Build sample for E2E
+        working-directory: chat-widget
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+        run: yarn build-sample
       - name: E2E Tests
         working-directory: chat-widget/automation_tests
         run: yarn test
@@ -64,11 +72,11 @@ jobs:
       - name: List failed test artifacts
         if: failure()
         working-directory: chat-widget
-        run: |
-          echo "::group::Failed Test Artifacts"
-          Get-ChildItem -Path "." -Recurse -Include "*__diff_output__*", "*__received__*", "*test-results*" -ErrorAction SilentlyContinue | ForEach-Object { Write-Output "📁 $($_.FullName)" }
-          echo "::endgroup::"
         shell: powershell
+        run: |
+          Write-Host "::group::Failed Test Artifacts"
+          Get-ChildItem -Path "." -Recurse -Include "*__diff_output__*", "*__received__*", "*test-results*" -ErrorAction SilentlyContinue | ForEach-Object { Write-Output "📁 $($_.FullName)" }
+          Write-Host "::endgroup::"
       - name: Upload VRT Tests failures screenshots
         uses: actions/upload-artifact@v4
         if: failure()

@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, preventFocusToMoveOutOfElement, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { Md5 } from "md5-typescript";
@@ -68,6 +68,61 @@ describe("utils unit test", () => {
         const result3 = findParentFocusableElementsWithoutChildContainer(elementId3);
         expect(result3?.length).toBe(1);
 
+    });
+
+    it("keeps focus contained when tabbing between the first and last focusable elements", () => {
+        document.body.innerHTML =
+            "<div id=\"widget\">" +
+            "  <button id=\"first\">First</button>" +
+            "  <button id=\"last\">Last</button>" +
+            "</div>";
+
+        const firstFocusableElement = document.getElementById("first") as HTMLElement;
+        const lastFocusableElement = document.getElementById("last") as HTMLElement;
+
+        preventFocusToMoveOutOfElement("widget");
+
+        firstFocusableElement.focus();
+        firstFocusableElement.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true }));
+        expect(document.activeElement).toBe(lastFocusableElement);
+
+        lastFocusableElement.focus();
+        lastFocusableElement.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: false, bubbles: true, cancelable: true }));
+        expect(document.activeElement).toBe(firstFocusableElement);
+    });
+
+    it("keeps focus on a single focusable widget element when tabbing in either direction", () => {
+        document.body.innerHTML =
+            "<div id=\"widget\">" +
+            "  <button id=\"chat-button\">Let's chat</button>" +
+            "</div>";
+
+        const chatButton = document.getElementById("chat-button") as HTMLElement;
+
+        preventFocusToMoveOutOfElement("widget");
+
+        chatButton.focus();
+        chatButton.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true }));
+        expect(document.activeElement).toBe(chatButton);
+
+        chatButton.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: false, bubbles: true, cancelable: true }));
+        expect(document.activeElement).toBe(chatButton);
+    });
+
+    it("cleans up event listeners when cleanup function is called", () => {
+        document.body.innerHTML =
+            "<div id=\"widget\">" +
+            "  <button id=\"only\">Only</button>" +
+            "</div>";
+
+        const onlyButton = document.getElementById("only") as HTMLElement;
+        const cleanup = preventFocusToMoveOutOfElement("widget");
+        const spy = jest.spyOn(onlyButton, "removeEventListener");
+
+        cleanup();
+
+        expect(spy).toHaveBeenCalledWith("keydown", expect.any(Function));
+        spy.mockRestore();
     });
 
     it("Test getIconText", () => {

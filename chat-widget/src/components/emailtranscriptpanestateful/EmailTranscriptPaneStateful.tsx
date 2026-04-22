@@ -95,7 +95,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
 
     // Move focus to the first button
     useEffect(() => {
-        preventFocusToMoveOutOfElement(controlProps.id as string);
+        const cleanup = preventFocusToMoveOutOfElement(controlProps.id as string);
         const focusableElements: HTMLElement[] | null = findAllFocusableElement(`#${controlProps.id}`);
         if (focusableElements) {
             focusableElements[0].focus();
@@ -110,6 +110,7 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
 
+        return cleanup;
     }, [initialEmail]);
 
     return (

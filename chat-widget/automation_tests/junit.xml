@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="1" failures="0" time="16.168">
-  <testsuite name="live chat button" errors="0" failures="0" skipped="0" timestamp="2022-05-25T23:26:02" time="14.745" tests="1">
-    <testcase classname="live chat button chat button visible" name="live chat button chat button visible" time="7.942">
+<testsuites name="jest tests" tests="15" failures="0" time="98.679">
+  <testsuite name="focus trap - single focusable element" errors="0" failures="0" skipped="0" timestamp="2026-04-12T18:42:11" time="70.954" tests="3">
+    <testcase classname="focus trap - single focusable element chat button is visible and focusable" name="focus trap - single focusable element chat button is visible and focusable" time="13.431">
+    </testcase>
+    <testcase classname="focus trap - single focusable element Tab on the chat button keeps focus within the widget" name="focus trap - single focusable element Tab on the chat button keeps focus within the widget" time="13.505">
+    </testcase>
+    <testcase classname="focus trap - single focusable element Shift+Tab on the chat button keeps focus within the widget" name="focus trap - single focusable element Shift+Tab on the chat button keeps focus within the widget" time="9.027">
+    </testcase>
+  </testsuite>
+  <testsuite name="email transcript notification" errors="0" failures="0" skipped="0" timestamp="2026-04-12T18:42:11" time="79.404" tests="3">
+    <testcase classname="email transcript notification widget opens in designer mode with mock messages" name="email transcript notification widget opens in designer mode with mock messages" time="13.461">
+    </testcase>
+    <testcase classname="email transcript notification aria-live regions exist for immediate notification delivery" name="email transcript notification aria-live regions exist for immediate notification delivery" time="15.656">
+    </testcase>
+    <testcase classname="email transcript notification transcript container does not use assertive aria-live" name="email transcript notification transcript container does not use assertive aria-live" time="15.296">
+    </testcase>
+  </testsuite>
+  <testsuite name="bot initials accessibility" errors="0" failures="0" skipped="0" timestamp="2026-04-12T18:42:11" time="83.565" tests="3">
+    <testcase classname="bot initials accessibility widget loads with mock messages in designer mode" name="bot initials accessibility widget loads with mock messages in designer mode" time="17.047">
+    </testcase>
+    <testcase classname="bot initials accessibility bot messages use descriptive alt text instead of initials" name="bot initials accessibility bot messages use descriptive alt text instead of initials" time="19.56">
+    </testcase>
+    <testcase classname="bot initials accessibility transcript renders bot messages with accessible content" name="bot initials accessibility transcript renders bot messages with accessible content" time="11.965">
+    </testcase>
+  </testsuite>
+  <testsuite name="adaptive card radio button count" errors="0" failures="0" skipped="0" timestamp="2026-04-12T18:42:11" time="84.446" tests="3">
+    <testcase classname="adaptive card radio button count adaptive card renders with the correct number of radio options" name="adaptive card radio button count adaptive card renders with the correct number of radio options" time="20.232">
+    </testcase>
+    <testcase classname="adaptive card radio button count radio buttons have correct accessible labels" name="adaptive card radio button count radio buttons have correct accessible labels" time="15.73">
+    </testcase>
+    <testcase classname="adaptive card radio button count radio group conveys correct option count to accessibility tree" name="adaptive card radio button count radio group conveys correct option count to accessibility tree" time="13.496">
+    </testcase>
+  </testsuite>
+  <testsuite name="attachment upload announcement" errors="0" failures="0" skipped="0" timestamp="2026-04-12T18:42:11" time="85.853" tests="3">
+    <testcase classname="attachment upload announcement widget opens and shows upload button in designer mode" name="attachment upload announcement widget opens and shows upload button in designer mode" time="21.877">
+    </testcase>
+    <testcase classname="attachment upload announcement file upload control is accessible" name="attachment upload announcement file upload control is accessible" time="19.238">
+    </testcase>
+    <testcase classname="attachment upload announcement live region exists for status announcements" name="attachment upload announcement live region exists for status announcements" time="9.752">
     </testcase>
   </testsuite>
 </testsuites>

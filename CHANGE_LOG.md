@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
+- [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers
+- [A11y] Screen reader now announces "File sent" when an attachment upload completes via an aria-live region
+- [A11y] Adaptive card radio button groups now include aria-setsize and aria-posinset attributes for correct option count announcement
+
+### Added
+- [A11y] E2E Playwright tests for 5 accessibility defects: focus trap, bot initials alt text, adaptive card radio count, attachment upload announcement, email notification aria-live regions
+- [Security] Added monitor-only HTML sanitization to gather telemetry before enforcing stricter allowlist rules (Phase 1). Tracks OrganizationId, ConversationId, RemovedTags, RemovedAttributes, and ExecutionTimeMs when content would be blocked by strict allowlist. Runs asynchronously to avoid message latency. Includes 27 unit tests.
 - [iOS] Added `inputFontSize` property to `IAdaptiveCardStyles` (default `16px`) to prevent iOS Safari auto-zoom on input focus. Applies to adaptive card inputs and the send box textarea. Clients can override via `adaptiveCardStyles.inputFontSize` (minimum 16px enforced).
 - [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
 - [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
