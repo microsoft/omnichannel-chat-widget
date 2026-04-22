@@ -41,11 +41,35 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         "strikethrough"
     ]);
 
-    // Custom plugin to fix numbered list continuity
+    // Custom plugin to fix numbered list continuity and merge adjacent anchors with the same href.
     markdown.use(function(md) {
         const originalRender = md.render.bind(md);
         const originalRenderInline = md.renderInline.bind(md);
-        
+
+        // Accessibility fix: when a bot emits content like "[1.](url) [View details](url)",
+        // markdown-it renders two sibling <a> tags that screen readers announce as two
+        // separate focusable links. Merge consecutive anchors with identical href into a
+        // single <a> so the number and label form one combined, focusable link.
+        function mergeAdjacentAnchors(html: string): string {
+            // Matches: <a ... href="X" ...>inner1</a>[optional whitespace]<a ... href="X" ...>inner2</a>
+            // - backref \2 enforces identical href
+            // - [\s\S]*? keeps inner content minimal; markdown-it does not nest anchors
+            const anchorPairRegex =
+                /(<a\b[^>]*?\shref="([^"]*)"[^>]*>)([\s\S]*?)<\/a>(\s*)<a\b[^>]*?\shref="\2"[^>]*>([\s\S]*?)<\/a>/gi;
+
+            let prev = "";
+            let curr = html;
+            // Loop to collapse runs of 3+ adjacent anchors (each pass merges pairs).
+            while (prev !== curr) {
+                prev = curr;
+                curr = curr.replace(anchorPairRegex, (_m, open1: string, _href: string, inner1: string, between: string, inner2: string) => {
+                    const separator = between && between.length > 0 ? between : " ";
+                    return `${open1}${inner1}${separator}${inner2}</a>`;
+                });
+            }
+            return curr;
+        }
+
         function preprocessText(text: string): string {
             // Handle numbered lists that come with double line breaks (knowledge article format)
             // This ensures proper continuous numbering instead of separate lists
@@ -88,13 +112,13 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         md.render = function(text: string, env?: any): string {
             const processedText = preprocessText(text);
-            return originalRender(processedText, env);
+            return mergeAdjacentAnchors(originalRender(processedText, env));
         };
-        
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         md.renderInline = function(text: string, env?: any): string {
             const processedText = preprocessText(text);
-            return originalRenderInline(processedText, env);
+            return mergeAdjacentAnchors(originalRenderInline(processedText, env));
         };
     });
 
