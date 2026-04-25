@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added `enterToNewLine` prop to `sendBoxTextBox` in `webChatContainerProps`. When `true`, pressing **Enter** inserts a new line and **Shift+Enter** sends the message (inverts the default WebChat behavior). Requires `sendBoxTextWrap: true` in `webChatStyles`. Opt-in; default behavior unchanged.
+
 ### Fixed
 - [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
 - [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers

@@ -31,6 +31,7 @@ import { defaultWebChatContainerStatefulProps } from "./common/defaultProps/defa
 import { shouldLoadPersistentChatHistory } from "../livechatwidget/common/liveChatConfigUtils";
 import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
+import useEnterToNewLine from "./hooks/useEnterToNewLine";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
 
 let uiTimer: ITimer;
@@ -266,6 +267,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
     }, []);
+
+    useEnterToNewLine(props.webChatContainerProps?.sendBoxTextBox?.enterToNewLine);
 
     // Set focus to the sendbox
     useEffect(() => {
