@@ -180,6 +180,7 @@ export const Regex = class {
 
 export class HtmlIdNames {
     public static readonly MSLiveChatWidget = "MSLiveChatWidget";
+    public static readonly fileSentAnnouncementRegionId = "ms_lcw_file_sent_announcement";
 }
 
 export class HtmlClassNames {

@@ -163,6 +163,12 @@ export interface ILiveChatWidgetLocalizedTexts {
     MIDDLEWARE_BANNER_FILE_IS_MALICIOUS?: string;
 
     /**
+     * Success message announced by screen readers when a file is successfully sent.
+     * e.g. "File sent successfully."
+     */
+    MIDDLEWARE_BANNER_FILE_SENT?: string;
+
+    /**
      * Success message, indicating the email address introduced has been registered to receive the transcript.
      */
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS?: string;
