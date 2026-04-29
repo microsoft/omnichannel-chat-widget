@@ -141,20 +141,36 @@ export const patchCitationAnchorsForA11y = (root: ParentNode): void => {
         // Nuclear a11y lockdown of EVERY descendant of the anchor (not just
         // known class names, because WebChat can render additional nodes).
         // iOS VoiceOver is known to split focus on block-level descendants
-        // inside an <a>. Applying all four of the following guarantees only
-        // the outer <a> is a selectable a11y / focus target:
+        // inside an <a>. Applying all of the following guarantees only the
+        // outer <a> is a selectable a11y / focus target:
         //   - aria-hidden="true"      removes element from the a11y tree
         //   - role="presentation"     strips any implicit semantic role
         //   - inert                   removes element from focus + interaction
         //   - tabindex="-1"           defensive (covers browsers without inert)
+        //   - title removed           iOS VoiceOver in WKWebView still surfaces
+        //                             elements with a `title` attribute as a
+        //                             separately swipeable item even when
+        //                             aria-hidden=true. WebChat's ItemBody sets
+        //                             title={text} on the inner link-text div,
+        //                             which is the root cause of the "two
+        //                             separate links" announcement on iOS.
+        //                             We move the title to a data-* attribute
+        //                             so any tooltip-like tooling can still
+        //                             read it, but iOS VO ignores it.
         anchor.querySelectorAll("*").forEach((el) => {
             const inner = el as HTMLElement;
             inner.setAttribute("aria-hidden", "true");
             inner.setAttribute("role", "presentation");
             inner.setAttribute("tabindex", "-1");
-            // "inert" is a boolean attribute — presence alone is enough.
             if (!inner.hasAttribute("inert")) {
                 inner.setAttribute("inert", "");
+            }
+            const innerTitle = inner.getAttribute("title");
+            if (innerTitle !== null) {
+                inner.removeAttribute("title");
+                if (!inner.dataset.ocwOriginalTitle) {
+                    inner.dataset.ocwOriginalTitle = innerTitle;
+                }
             }
             // pointer-events: none forwards clicks/taps/hover directly to the
             // outer <a>, so the entire card behaves as one selectable area

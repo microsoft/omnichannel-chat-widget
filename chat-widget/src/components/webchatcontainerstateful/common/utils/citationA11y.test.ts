@@ -233,6 +233,21 @@ describe("patchCitationAnchorsForA11y", () => {
         expect(anchor.getAttribute("aria-label")).toBe("3, Title");
     });
 
+    // iOS VoiceOver in WKWebView surfaces elements with a `title` attribute
+    // as separately swipeable items even when aria-hidden="true" is set, so
+    // the patch removes title from descendants and stashes the original on
+    // a data-* attribute for non-a11y consumers.
+    it("strips title attribute from descendants and preserves it on a data-* attribute", () => {
+        const anchor = buildCitationAnchor("1", "Manage a ticket | Transport for West Midlands");
+        document.body.appendChild(anchor);
+
+        patchCitationAnchorsForA11y(document);
+
+        const textEl = anchor.querySelector(".webchat__link-definitions__list-item-text") as HTMLElement;
+        expect(textEl.hasAttribute("title")).toBe(false);
+        expect(textEl.dataset.ocwOriginalTitle).toBe("Manage a ticket | Transport for West Midlands");
+    });
+
     // Repeated patching must not append additional overlay spans.
     it("does not append duplicate overlays on repeated calls", () => {
         const anchor = buildCitationAnchor("1", "Citation text");
