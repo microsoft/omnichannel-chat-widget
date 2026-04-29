@@ -32,6 +32,7 @@ import { shouldLoadPersistentChatHistory } from "../livechatwidget/common/liveCh
 import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
+import { patchCitationAnchorsForA11y } from "./common/utils/citationA11y";
 
 let uiTimer: ITimer;
 
@@ -158,6 +159,56 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         document.addEventListener("click", clickHandler);
         return () => document.removeEventListener("click", clickHandler);
     }, [state]);
+
+    // Accessibility: Merge citation card's number badge and link text into a single
+    // focusable element. WebChat's LinkDefinitionItem renders an <a> containing a
+    // badge <div> (the number, e.g. "1") and a text <div> (the title). On iOS
+    // VoiceOver and Android TalkBack, those block-level descendants are otherwise
+    // announced as two separate focusable links. The patch sets a combined
+    // aria-label on the anchor and hides every descendant from the a11y tree so
+    // the whole card is announced as one link.
+    useEffect(() => {
+        patchCitationAnchorsForA11y(document);
+
+        const observer = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if (m.type === "childList") {
+                    m.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            patchCitationAnchorsForA11y(node as ParentNode);
+                            // A child added inside an existing anchor (e.g. React
+                            // mounting OpenInNewWindowIcon after the anchor) means
+                            // the parent anchor needs to re-walk its descendants.
+                            const ancestor = (node as Element).parentElement?.closest?.(
+                                "a.webchat__link-definitions__list-item-box, a[href^=\"cite:\"]"
+                            );
+                            if (ancestor) {
+                                patchCitationAnchorsForA11y(ancestor);
+                            }
+                        }
+                    });
+                } else if (m.type === "attributes" && m.target.nodeType === Node.ELEMENT_NODE) {
+                    // React may strip our aria-hidden during a re-render; reapply
+                    // by re-patching the closest matching anchor ancestor.
+                    const target = m.target as Element;
+                    const ancestor = target.closest?.(
+                        "a.webchat__link-definitions__list-item-box, a[href^=\"cite:\"]"
+                    );
+                    if (ancestor) {
+                        patchCitationAnchorsForA11y(ancestor);
+                    }
+                }
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["aria-hidden", "role", "tabindex", "inert"]
+        });
+        return () => observer.disconnect();
+    }, []);
 
     const minimizedStyles = state.appStates.isMinimized
         ? (shouldLoadPersistentHistoryMessages
