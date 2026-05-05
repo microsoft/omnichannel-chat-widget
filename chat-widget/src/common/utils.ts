@@ -166,6 +166,43 @@ export const setFocusOnElement = (selector: string | HTMLElement) => {
     element?.focus();
 };
 
+const IMMEDIATE_ANNOUNCEMENT_REGION_ID = "oc-lcw-immediate-announcement";
+
+// Announces a message to screen readers via an aria-live="assertive" region
+// attached to document.body — outside the chat widget's DOM subtree — so the
+// screen reader does not have to traverse chat content to reach it.
+export const announceMessageImmediately = (message: string) => {
+    if (!message || typeof document === "undefined") {
+        return;
+    }
+
+    let region = document.getElementById(IMMEDIATE_ANNOUNCEMENT_REGION_ID);
+    if (!region) {
+        region = document.createElement("div");
+        region.id = IMMEDIATE_ANNOUNCEMENT_REGION_ID;
+        region.setAttribute("aria-live", "assertive");
+        region.setAttribute("role", "alert");
+        region.setAttribute("aria-atomic", "true");
+        region.style.position = "absolute";
+        region.style.width = "1px";
+        region.style.height = "1px";
+        region.style.overflow = "hidden";
+        region.style.clip = "rect(0 0 0 0)";
+        region.style.clipPath = "inset(50%)";
+        region.style.whiteSpace = "nowrap";
+        document.body.appendChild(region);
+    }
+
+    region.textContent = "";
+    // Re-set on the next tick so screen readers detect the change even when
+    // the same message is announced twice in a row.
+    setTimeout(() => {
+        if (region) {
+            region.textContent = message;
+        }
+    }, 50);
+};
+
 export const escapeHtml = (inputString: string) => {
     const entityMap: {
         [key: string]: string,
