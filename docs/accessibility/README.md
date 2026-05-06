@@ -29,7 +29,9 @@ The accessibility tooling reuses the existing per-package install flow. Nothing 
    yarn playwright install
    ```
 
-3. **`test:a11y` is currently a no-op** in both packages. The Jest config and `jest-axe` matchers are wired up, but there are no `*.a11y.spec.*` / `*.a11y.test.*` files yet, so Jest will report "No tests found" until accessibility specs are added. This is expected for the tooling-foundation pass — see "Next step after this tooling pass" below.
+3. **`test:a11y` status differs by package.** Both jest configs use `passWithNoTests: true`, so the command is always safe to run.
+   - `chat-components` currently ships **no** `*.a11y.spec.*` / `*.a11y.test.*` files, so `yarn test:a11y` reports "No tests found, exiting with code 0". This is expected for the tooling-foundation pass — see "Next step after this tooling pass" below.
+   - `chat-widget` already ships at least one a11y spec (`EmailTranscriptPaneStateful.a11y.spec.tsx`), so `yarn test:a11y` runs and passes.
 
 ## Commands
 
