@@ -12,6 +12,25 @@ This repo now includes a first-pass accessibility tooling foundation for LCW pac
 | Screen-reader repro docs | `docs\accessibility\NVDA_SETUP.md`, `docs\accessibility\NARRATOR_SETUP.md` | Public-safe local setup and evidence capture guidance. |
 | Real-mobile validation matrix | `docs\accessibility\REAL_MOBILE_VALIDATION.md` | Covers the device-backed scenarios the repo alone cannot fully automate. |
 
+## Prerequisites
+
+The accessibility tooling reuses the existing per-package install flow. Nothing extra needs to be installed globally.
+
+1. **Install package dependencies** in the package you intend to test. This pulls in `jest-axe` (used by the a11y harness) and `playwright` (used by the visual profiles).
+
+   ```powershell
+   cd chat-widget        # or: cd chat-components
+   yarn install
+   ```
+
+2. **Install Playwright browsers** before running any `test:visual:*` command. `chat-widget` does this automatically via its `pretest:visual` hook; `chat-components` does the same. If you ever need to run it explicitly:
+
+   ```powershell
+   yarn playwright install
+   ```
+
+3. **`test:a11y` is currently a no-op** in both packages. The Jest config and `jest-axe` matchers are wired up, but there are no `*.a11y.spec.*` / `*.a11y.test.*` files yet, so Jest will report "No tests found" until accessibility specs are added. This is expected for the tooling-foundation pass — see "Next step after this tooling pass" below.
+
 ## Commands
 
 ### `chat-widget`

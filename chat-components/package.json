@@ -82,6 +82,7 @@
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
     "test:a11y": "jest -c jest.config.a11y.cjs --runInBand --force-exit",
     "test:visual": "jest -c jest.config.visual.cjs",
+    "pretest:visual": "yarn playwright install",
     "test:visual:mobile:ios": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=mobile-iphone yarn test:visual",
     "test:visual:mobile:android": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=mobile-android yarn test:visual",
     "test:visual:reflow": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=reflow-320 yarn test:visual",
