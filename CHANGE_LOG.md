@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 - [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers
 - [A11y] Screen reader now announces "File sent successfully." when an attachment upload completes; uses append-and-remove assertive aria-live pattern for reliable announcement on Android TalkBack/WebView. Announcement text is customizable via `MIDDLEWARE_BANNER_FILE_SENT`.
 - [A11y] Adaptive card radio button groups now include aria-setsize and aria-posinset attributes for correct option count announcement
+- [A11y] Email transcript SR announcement prefixed with localized "Success." / "Error." via new `MIDDLEWARE_SR_PREFIX_SUCCESS` / `MIDDLEWARE_SR_PREFIX_ERROR` keys so screen readers announce the outcome immediately
+- [A11y] Email transcript focus on submit goes directly to the notification banner; skips the chat-widget shell detour
 
 ### Added
 - [A11y] E2E Playwright tests for 5 accessibility defects: focus trap, bot initials alt text, adaptive card radio count, attachment upload announcement, email notification aria-live regions

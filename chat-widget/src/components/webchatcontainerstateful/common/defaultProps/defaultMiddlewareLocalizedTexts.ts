@@ -32,6 +32,8 @@ export const defaultMiddlewareLocalizedTexts: ILiveChatWidgetLocalizedTexts = {
     MIDDLEWARE_BANNER_FILE_SENT: "File sent successfully.",
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS: "Email will be sent after chat ends!",
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR: "Email {0} could not be saved, try again later.",
+    MIDDLEWARE_SR_PREFIX_SUCCESS: "Success. ",
+    MIDDLEWARE_SR_PREFIX_ERROR: "Error. ",
     PREVIOUS_MESSAGES_LOADING: "Loading previous messages...",
     CONVERSATION_DIVIDER_ARIA_LABEL: "Conversation history divider"
 };
