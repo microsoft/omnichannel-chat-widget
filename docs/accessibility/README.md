@@ -6,32 +6,57 @@ This repo now includes a first-pass accessibility tooling foundation for LCW pac
 
 | Capability | Location | Notes |
 |---|---|---|
-| Mobile/reflow/zoom Storybook screenshot profiles | `tools\accessibility\storybookProfiles.cjs` | Shared by `chat-widget` and `chat-components`; keeps the default visual flow unchanged unless a profile script or env var is used. |
+| Mobile/reflow/zoom/forced-colors Storybook screenshot profiles | `tools\accessibility\storybookProfiles.cjs` | Shared by `chat-widget` and `chat-components`; keeps the default visual flow unchanged unless a profile script or env var is used. |
+| Per-story axe-core scan harness | `tools\accessibility\axeScan.cjs` | Serves the built Storybook locally and runs `@axe-core/playwright` against every story. Adding a story automatically expands coverage. |
+| Microsoft Accessibility Insights scan harness | `tools\accessibility\insightsScan.cjs` | Wraps the `accessibility-insights-scan` CLI against the built Storybook. Same engine as axe (see overlap note below) but emits the MS-curated HTML report. |
+| `@axe-core/react` dev opt-in | `chat-*\.storybook\preview.js` | Gated on `STORYBOOK_AXE_DEV=true`; logs violations to the browser console while running `yarn storybook`. No effect on production builds. |
 | Package a11y Jest harness | `chat-widget\jest.config.a11y.cjs`, `chat-components\jest.config.a11y.cjs` | Ready for `*.a11y.spec.*` / `*.a11y.test.*` files; safe when no tests exist yet. |
 | `jest-axe` setup | `chat-widget\jest.setup.a11y.js`, `chat-components\jest.setup.a11y.js` | Adds `jest-axe` matchers for future component/state accessibility tests. |
+| Non-gating PR scan workflow | `.github\workflows\accessibility-scan.yml` | Runs both axe and Accessibility Insights against built Storybook for both packages and uploads the reports as PR artifacts. Does not fail the PR. |
 | Screen-reader repro docs | `docs\accessibility\NVDA_SETUP.md`, `docs\accessibility\NARRATOR_SETUP.md` | Public-safe local setup and evidence capture guidance. |
 | Real-mobile validation matrix | `docs\accessibility\REAL_MOBILE_VALIDATION.md` | Covers the device-backed scenarios the repo alone cannot fully automate. |
+
+## Two scan engines, one rule set: read this first
+
+`@axe-core/playwright` and `accessibility-insights-scan` **both run axe-core internally**. They are not additive in raw rule count. Pick a single primary engine and treat the other as a complementary surface:
+
+- **Use the axe scan** for fast feedback and CI artifacts. It's lightweight, scriptable, and produces compact JSON.
+- **Use Accessibility Insights** when you need the MS-curated HTML report, results mapped to MAS rule IDs, or the manual *Assessment* workflow in the browser extension (which the CLI does not cover).
+
+Neither engine automatically covers these dimensions; they need the dedicated profiles or future per-component specs:
+
+| Dimension | How it's covered |
+|---|---|
+| 1.4.4 Resize text 200% | `test:visual:zoom` profile |
+| 1.4.10 Reflow at 320px | `test:visual:reflow` profile |
+| Mobile rendering / orientation | `test:visual:mobile:ios`, `test:visual:mobile:android` |
+| Forced Colors (Windows High Contrast) | `test:visual:forced-colors` profile |
+| `prefers-contrast: more` | `test:visual:contrast-more` profile |
+| 2.1.1 Keyboard / 2.4.3 Focus order | Not yet wired — planned as a separate Playwright traversal task |
+| 2.4.7 Focus visible | Combination of visual profiles + future per-component focus specs |
 
 ## Prerequisites
 
 The accessibility tooling reuses the existing per-package install flow. Nothing extra needs to be installed globally.
 
-1. **Install package dependencies** in the package you intend to test. This pulls in `jest-axe` (used by the a11y harness) and `playwright` (used by the visual profiles).
+1. **Install package dependencies** in the package you intend to test. This pulls in `jest-axe`, `playwright`, `@axe-core/playwright`, `@axe-core/react`, and `accessibility-insights-scan`.
 
    ```powershell
    cd chat-widget        # or: cd chat-components
    yarn install
    ```
 
-2. **Install Playwright browsers** before running any `test:visual:*` command. `chat-widget` does this automatically via its `pretest:visual` hook; `chat-components` does the same. If you ever need to run it explicitly:
+2. **Install Playwright browsers** before running any `test:visual:*` or `scan:a11y:*` command. Both packages auto-install via the `pretest:visual` hook; if you ever need to run it explicitly:
 
    ```powershell
-   yarn playwright install
+   yarn playwright install chromium
    ```
 
 3. **`test:a11y` status differs by package.** Both jest configs use `passWithNoTests: true`, so the command is always safe to run.
-   - `chat-components` currently ships **no** `*.a11y.spec.*` / `*.a11y.test.*` files, so `yarn test:a11y` reports "No tests found, exiting with code 0". This is expected for the tooling-foundation pass — see "Next step after this tooling pass" below.
+   - `chat-components` currently ships **no** `*.a11y.spec.*` / `*.a11y.test.*` files, so `yarn test:a11y` reports "No tests found, exiting with code 0". This is expected for the tooling-foundation pass.
    - `chat-widget` already ships at least one a11y spec (`EmailTranscriptPaneStateful.a11y.spec.tsx`), so `yarn test:a11y` runs and passes.
+
+4. **`scan:a11y:*` requires a built Storybook.** Use the `*:build` variants (e.g. `scan:a11y:axe:build`) if `storybook-static/` does not yet exist; they run `yarn build-storybook` first.
 
 ## Commands
 
@@ -39,40 +64,66 @@ The accessibility tooling reuses the existing per-package install flow. Nothing 
 
 ```powershell
 cd chat-widget
+
+# Component-level (jest + jest-axe)
 yarn test:a11y
+
+# Visual screenshot profiles
 yarn test:visual:mobile:ios
 yarn test:visual:mobile:android
 yarn test:visual:reflow
 yarn test:visual:zoom
+yarn test:visual:forced-colors
+yarn test:visual:contrast-more
+
+# Per-story axe-core scan
+yarn scan:a11y:axe:build       # builds storybook then scans
+yarn scan:a11y:axe             # assumes storybook-static/ exists
+
+# Microsoft Accessibility Insights scan
+yarn scan:a11y:insights:build
+yarn scan:a11y:insights
+
+# Run both scans (after a fresh build)
+yarn scan:a11y
+
+# Dev: open `yarn storybook` with @axe-core/react reporting violations to the browser console
+$env:STORYBOOK_AXE_DEV = "true"; yarn storybook
 ```
 
-### `chat-components`
-
-```powershell
-cd chat-components
-yarn test:a11y
-yarn test:visual:mobile:ios
-yarn test:visual:mobile:android
-yarn test:visual:reflow
-yarn test:visual:zoom
-```
+`chat-components` exposes the same script names; substitute the `cd` target.
 
 ## Environment variables
 
-The visual-profile scripts are thin wrappers over two environment variables:
-
 | Variable | Purpose | Example |
 |---|---|---|
-| `STORYBOOK_SCREENSHOT_PROFILE` | Selects the named screenshot profile from `tools\accessibility\storybookProfiles.cjs` | `mobile-iphone` |
+| `STORYBOOK_SCREENSHOT_PROFILE` | Selects the named screenshot profile from `tools\accessibility\storybookProfiles.cjs` | `forced-colors` |
 | `STORYBOOK_BROWSERS` | Limits Playwright browser launches for the run | `chromium` or `["chromium","firefox"]` |
+| `STORYBOOK_AXE_DEV` | Enables `@axe-core/react` runtime reporter inside `yarn storybook` | `true` |
+| `A11Y_SCAN_SKIP_STORIES` | Comma-separated story IDs to skip during `scan:a11y:axe` | `welcome--default,demo--broken` |
+
+## `axeScan.cjs` flags
+
+| Flag | Default | Purpose |
+|---|---|---|
+| `--storybook-dir` | `./storybook-static` | Path to the built Storybook |
+| `--report-dir` | `./accessibility-reports` | Where the JSON report is written |
+| `--port` | `0` (random) | Port for the local static server |
+| `--tags` | `wcag2a,wcag2aa,wcag21aa,best-practice` | axe `runOnly` tag list |
+| `--fail-on` | `none` | One of `none\|minor\|moderate\|serious\|critical\|any`; the foundation default never fails |
+| `--story-timeout` | `15000` | Per-story render timeout in ms |
+| `--include` | _(unset)_ | Regex applied to story IDs (allow-list) |
+| `--exclude` | _(unset)_ | Regex applied to story IDs (deny-list) |
 
 ## Public repo note
 
-This repo intentionally does **not** include MAS rule mapping or internal-only compliance references. Those need to stay outside the public source tree.
+This repo intentionally does **not** include MAS rule mapping or internal-only compliance references. Those need to stay outside the public source tree. The Accessibility Insights HTML report it generates is safe to publish as a PR artifact; it cites public WCAG / Section 508 references only.
 
 ## Next step after this tooling pass
 
 Use these harnesses to add targeted accessibility tests incrementally:
 1. component/state axe scans in package test suites
-2. mobile/reflow/zoom screenshot coverage for affected stories
-3. manual/device-backed validation for scenarios that emulation cannot reproduce
+2. mobile/reflow/zoom/forced-colors screenshot coverage for affected stories
+3. a real keyboard-traversal Playwright spec for the live widget shell
+4. manual/device-backed validation for scenarios that emulation cannot reproduce
+

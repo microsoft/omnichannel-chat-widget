@@ -74,6 +74,32 @@ const SCREENSHOT_PROFILES = Object.freeze({
             reducedMotion: "no-preference"
         },
         zoomPercent: 200
+    },
+    "forced-colors": {
+        description: "Chromium desktop profile emulating Windows High Contrast / forced-colors:active",
+        defaultBrowsers: CHROMIUM_ONLY_BROWSERS,
+        pageOptions: {
+            viewport: { width: 1280, height: 720 },
+            deviceScaleFactor: 1
+        },
+        emulateMedia: {
+            colorScheme: "light",
+            reducedMotion: "no-preference",
+            forcedColors: "active"
+        }
+    },
+    "contrast-more": {
+        description: "Chromium desktop profile emulating prefers-contrast: more",
+        defaultBrowsers: CHROMIUM_ONLY_BROWSERS,
+        pageOptions: {
+            viewport: { width: 1280, height: 720 },
+            deviceScaleFactor: 1
+        },
+        emulateMedia: {
+            colorScheme: "light",
+            reducedMotion: "no-preference",
+            contrast: "more"
+        }
     }
 });
 

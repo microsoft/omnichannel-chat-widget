@@ -1,0 +1,85 @@
+name: accessibility-scan
+
+# Foundation accessibility scan workflow.
+#
+# Runs both axe-core (via @axe-core/playwright) and Microsoft Accessibility
+# Insights against the built Storybook for each package. Both engines share
+# axe-core under the hood, but Accessibility Insights adds MS-curated
+# reporting that maps results to MAS rule IDs.
+#
+# This workflow is intentionally NON-GATING: it always uploads its reports
+# as artifacts but does not fail PR checks on findings. Treat the artifacts
+# as feedback for the foundation pass; per-component test wiring comes later.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - '**'
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'chat-components/**'
+      - 'chat-widget/**'
+      - 'tools/accessibility/**'
+      - 'docs/accessibility/**'
+      - '.github/workflows/accessibility-scan.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: write
+
+jobs:
+  scan:
+    name: scan-${{ matrix.package }}
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - package: chat-components
+            node: 22.x
+          - package: chat-widget
+            node: 20.x
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install package
+        working-directory: ${{ matrix.package }}
+        run: yarn install --network-timeout 1000000
+
+      - name: Install Playwright Chromium
+        working-directory: ${{ matrix.package }}
+        run: yarn playwright install --with-deps chromium
+
+      - name: Build Storybook
+        working-directory: ${{ matrix.package }}
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+        run: yarn build-storybook
+
+      - name: axe-core scan
+        working-directory: ${{ matrix.package }}
+        # --fail-on=none: foundation pass is informational, never gates the PR.
+        run: yarn scan:a11y:axe --fail-on none
+        continue-on-error: true
+
+      - name: Accessibility Insights scan
+        working-directory: ${{ matrix.package }}
+        run: yarn scan:a11y:insights
+        continue-on-error: true
+
+      - name: Upload accessibility reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-reports-${{ matrix.package }}
+          path: |
+            ${{ matrix.package }}/accessibility-reports/**/*
+          if-no-files-found: warn
