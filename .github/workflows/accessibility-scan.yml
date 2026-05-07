@@ -83,3 +83,52 @@ jobs:
           path: |
             ${{ matrix.package }}/accessibility-reports/**/*
           if-no-files-found: warn
+
+  e2e-a11y:
+    # Phase 2 L2.C.1: a tagged "a11y" job runs only the
+    # automation_tests/e2e/areas/accessibility/ specs. They live in the
+    # broader E2E suite as well, but pulling them out makes a11y regressions
+    # visible without scrolling through the full E2E log.
+    name: chat-widget E2E a11y specs
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install chat-widget
+        working-directory: chat-widget
+        run: yarn install --network-timeout 1000000
+
+      - name: Install automation_tests
+        working-directory: chat-widget/automation_tests
+        run: yarn install --network-timeout 1000000
+
+      - name: Install Playwright (msedge channel)
+        working-directory: chat-widget
+        run: yarn playwright install --with-deps msedge chromium
+
+      - name: Build widget bundle (dist/out.js)
+        working-directory: chat-widget
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+        run: yarn build-sample
+
+      - name: Run a11y E2E specs only
+        working-directory: chat-widget/automation_tests
+        run: yarn jest --detectOpenHandles --runInBand --testPathPattern "e2e/areas/accessibility" --passWithNoTests
+
+      - name: Upload a11y E2E artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-e2e-artifacts
+          path: |
+            chat-widget/automation_tests/test-results/**/*
+            chat-widget/automation_tests/playwright-report/**/*
+          if-no-files-found: warn

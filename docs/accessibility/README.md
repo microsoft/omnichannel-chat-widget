@@ -32,8 +32,13 @@ Neither engine automatically covers these dimensions; they need the dedicated pr
 | Mobile rendering / orientation | `test:visual:mobile:ios`, `test:visual:mobile:android` |
 | Forced Colors (Windows High Contrast) | `test:visual:forced-colors` profile |
 | `prefers-contrast: more` | `test:visual:contrast-more` profile |
-| 2.1.1 Keyboard / 2.4.3 Focus order | Not yet wired — planned as a separate Playwright traversal task |
-| 2.4.7 Focus visible | Combination of visual profiles + future per-component focus specs |
+| 2.1.1 Keyboard / 2.4.3 Focus order | `chat-widget/automation_tests/e2e/utility/keyboardLoop.ts` + `expectTabOrder.ts`; per-flow specs under `e2e/areas/accessibility/keyboard/` |
+| 2.4.7 Focus visible | `focus-ring` + `focus-ring-forced-colors` screenshot profiles, plus future per-component focus specs |
+| 4.1.3 Status messages (aria-live) | `chat-widget/automation_tests/e2e/utility/liveRegionObserver.ts` |
+| Accessibility-tree shape (link/role/name) | `chat-widget/automation_tests/e2e/utility/a11yTree.ts` (`page.accessibility.snapshot`) |
+| Live (post-mount) widget axe scan | `chat-widget/automation_tests/e2e/utility/axeOnPage.ts` |
+| Desktop NVDA (Windows) | `tools/accessibility/setupNvda.ps1` + `srAssert.ts`; specs under `e2e/areas/accessibility/sr-nvda/` (Guidepup-driven; soak-only CI job until stable) |
+| iOS VoiceOver / Android TalkBack / macOS VoiceOver / JAWS | Not automated — see `REAL_MOBILE_VALIDATION.md`, `NVDA_SETUP.md`, `NARRATOR_SETUP.md` |
 
 ## Prerequisites
 
@@ -126,4 +131,46 @@ Use these harnesses to add targeted accessibility tests incrementally:
 2. mobile/reflow/zoom/forced-colors screenshot coverage for affected stories
 3. a real keyboard-traversal Playwright spec for the live widget shell
 4. manual/device-backed validation for scenarios that emulation cannot reproduce
+
+## Current scan baselines
+
+| Package | Stories | Violations | Critical | Serious | Moderate |
+|---|---:|---:|---:|---:|---:|
+| `chat-components` | 73 | 135 | 7 | 12 | 116 |
+| `chat-widget`     | 10 | 19  | 0 | 1  | 18  |
+
+`chat-widget` violations (10 stories): 9× `landmark-one-main`, 9× `page-has-heading-one`, 1× `aria-command-name` (real, in `live-chat-widget-custom-2`). The two `landmark-*` rules are story-isolation artifacts (no `<main>` on a Storybook canvas) and are good candidates to suppress on a per-story basis once L1.2 triage lands.
+
+`chat-components` violations (73 stories) are dominated by structural story-isolation artifacts; see `accessibility-reports/axe-report.json` after a fresh `yarn scan:a11y:axe:build` for the per-story breakdown.
+
+## Reading the Insights HTML report locally
+
+After `yarn scan:a11y:insights:build`, open `accessibility-reports/insights/index.html` in a browser. The summary header lists violation counts by impact and by rule ID. Each finding links to the specific WCAG SC and to a remediation reference. The HTML is safe to share publicly — it cites only public WCAG/Section 508 references and does not include Microsoft-internal rule mappings.
+
+## Screen-reader (NVDA) specs
+
+Phase 3 adds a Guidepup-driven NVDA harness for desktop screen-reader assertions:
+
+- `tools/accessibility/setupNvda.ps1` — silent NVDA install at a pinned version. Idempotent; safe to run repeatedly.
+- `tools/accessibility/nvda-phrases.json` — single source of truth mapping abstract events (e.g. `chatButtonFocused`) to expected NVDA phrases. Bumped when NVDA cadence changes.
+- `chat-widget/automation_tests/e2e/utility/srAssert.ts` — `expectAnnounced(sr, "...")` / `expectAnnouncedEvent(sr, "messageReceived")`.
+- `.github/workflows/accessibility-sr.yml` — soak-only PR workflow; concurrency-limited to 1 because NVDA is single-instance per host. Runtime: ~10s per spec due to real speech synthesis.
+
+To run NVDA specs locally on Windows:
+
+```powershell
+pwsh -File tools/accessibility/setupNvda.ps1
+cd chat-widget
+yarn build-sample
+yarn jest -c automation_tests/jest.config.js --runInBand --testPathPattern "automation_tests/e2e/areas/accessibility/sr-nvda"
+```
+
+NVDA must already be installable via the public NV Access download URL; corporate proxies should allow `https://www.nvaccess.org/download/`.
+
+## Out of scope (still)
+
+- macOS VoiceOver — would require adding a macOS runner; defer.
+- iOS VoiceOver — Apple does not expose announcement capture; manual sweep before release.
+- Android TalkBack — accessibility-service capture is fragile; manual sweep before release.
+- JAWS — commercial; NVDA already covers the desktop SR layer.
 

@@ -100,6 +100,37 @@ const SCREENSHOT_PROFILES = Object.freeze({
             reducedMotion: "no-preference",
             contrast: "more"
         }
+    },
+    "focus-ring": {
+        description: "Chromium desktop profile that walks the tab order before snapshotting so each focusable element shows its focus indicator",
+        defaultBrowsers: CHROMIUM_ONLY_BROWSERS,
+        pageOptions: {
+            viewport: { width: 1280, height: 720 },
+            deviceScaleFactor: 1
+        },
+        emulateMedia: {
+            colorScheme: "light",
+            reducedMotion: "no-preference"
+        },
+        // Marker consumed by the screenshot harness: when true, the harness
+        // is expected to Tab through interactive elements and capture each
+        // focused state. Catches "focus indicator invisible against
+        // background" issues that no DOM scanner sees.
+        walkFocusRings: true
+    },
+    "focus-ring-forced-colors": {
+        description: "focus-ring profile composed with Windows High Contrast forced-colors emulation",
+        defaultBrowsers: CHROMIUM_ONLY_BROWSERS,
+        pageOptions: {
+            viewport: { width: 1280, height: 720 },
+            deviceScaleFactor: 1
+        },
+        emulateMedia: {
+            colorScheme: "light",
+            reducedMotion: "no-preference",
+            forcedColors: "active"
+        },
+        walkFocusRings: true
     }
 });
 
