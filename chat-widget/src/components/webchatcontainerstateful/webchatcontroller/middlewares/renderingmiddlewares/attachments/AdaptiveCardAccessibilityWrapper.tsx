@@ -28,6 +28,24 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
             const container = containerRef.current;
             if (!container) return;
 
+            // dropdown-double-label: compact Input.ChoiceSet renders as a native
+            // <select> AND emits BOTH `aria-labelledby` (pointing at the
+            // adaptive-card label element) AND a sibling visible
+            // <label for="..."> targeting the same select. Screen readers
+            // announce the same label twice. When a visible <label for>
+            // already associates with the select, drop the redundant
+            // aria-labelledby so only the native label association is
+            // announced.
+            const compactSelects = container.querySelectorAll<HTMLSelectElement>("select[aria-labelledby]");
+            compactSelects.forEach((select) => {
+                const id = select.id;
+                if (!id) return;
+                const visibleLabel = container.querySelector<HTMLLabelElement>(`label[for="${CSS.escape(id)}"]`);
+                if (visibleLabel) {
+                    select.removeAttribute("aria-labelledby");
+                }
+            });
+
             // Find all radio inputs inside the adaptive card
             const radios = container.querySelectorAll("input[type='radio']");
             if (radios.length === 0) return;

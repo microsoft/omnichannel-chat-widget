@@ -156,7 +156,7 @@ describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-butto
     });
 });
 
-describe.skip("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-double-label)", () => {
+describe("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-double-label)", () => {
     it("dropdown-double-label: compact Input.ChoiceSet must not have BOTH aria-labelledby and a visible <label for> announce", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
