@@ -107,7 +107,7 @@ const buildCompactChoiceSet = (
     return wrapper;
 };
 
-describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-button-toggle / login-button-toggle)", () => {
+describe("AdaptiveCardAccessibilityWrapper — action buttons (action-button-toggle / login-button-toggle)", () => {
     it("action-button-toggle: Action.Submit-style button must NOT be left with aria-pressed (causes Narrator 'toggle button' announcement)", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
