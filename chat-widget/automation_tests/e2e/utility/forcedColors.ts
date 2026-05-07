@@ -3,7 +3,7 @@ import { Page } from "playwright";
 /**
  * Helper for emulating Windows High Contrast / forced-colors mode in Chromium.
  *
- * Used by accessibility regression catchers (AB#3322581) to assert that UI
+ * Used by accessibility regression catchers (forced-colors-scrollbar) to assert that UI
  * affordances which depend on colour (e.g. the chat transcript scrollbar
  * thumb) remain visible when the browser exposes a forced-colors palette.
  *

@@ -9,7 +9,7 @@ import { PostChatLoadingPaneStateful } from "./PostChatLoadingPaneStateful";
 import React from "react";
 
 /**
- * Repro catcher for AB#6304121 — "Please take a moment..." text is not
+ * Repro catcher for loading-pane-status — "Please take a moment..." text is not
  * announced by screen readers while the post-chat feedback pane is loading.
  *
  * Root cause (repro): PostChatLoadingPaneStateful builds `controlProps` for
@@ -74,14 +74,14 @@ describe("PostChatLoadingPaneStateful — accessibility behavior", () => {
         cleanup();
     });
 
-    it("AB#6304121: subtitle is rendered (sanity)", () => {
+    it("loading-pane-status: subtitle is rendered (sanity)", () => {
         const { container } = render(<PostChatLoadingPaneStateful />);
         const subtitle = container.querySelector("#oc-lcw-postchatloading-pane-subtitle");
         expect(subtitle).not.toBeNull();
         expect(subtitle?.textContent || "").toMatch(/please take a moment/i);
     });
 
-    it.skip("AB#6304121: LoadingPane controlProps MUST carry live-region semantics (role/aria-live) so subtitle is announced", () => {
+    it.skip("loading-pane-status: LoadingPane controlProps MUST carry live-region semantics (role/aria-live) so subtitle is announced", () => {
         render(<PostChatLoadingPaneStateful />);
 
         const cp = mockCapturedControlProps.current;

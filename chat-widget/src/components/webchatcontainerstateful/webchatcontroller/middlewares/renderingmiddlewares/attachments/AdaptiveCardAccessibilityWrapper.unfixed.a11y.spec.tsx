@@ -11,14 +11,14 @@ import React from "react";
  * Repro catchers for adaptive-card BUTTON & COMPACT-DROPDOWN bugs that the
  * existing `AdaptiveCardAccessibilityWrapper` does NOT yet handle:
  *
- *   AB#5905479 — Adaptive-card action buttons are announced as "toggle button"
+ *   action-button-toggle — Adaptive-card action buttons are announced as "toggle button"
  *                because the rendered <button role="button" aria-pressed=...>
  *                still carries the toggle/pressed semantics that the
  *                AdaptiveCards renderer leaves on Action.Submit / Action.OpenUrl
  *                buttons.
- *   AB#6304117 — Login button on a sign-in adaptive card has the same wrong
+ *   login-button-toggle — Login button on a sign-in adaptive card has the same wrong
  *                role announcement (likely the same renderer pathway as 5905479).
- *   AB#6304100 — In the prechat country dropdown (compact Input.ChoiceSet),
+ *   dropdown-double-label — In the prechat country dropdown (compact Input.ChoiceSet),
  *                Narrator announces the selected value twice: once from
  *                aria-labelledby on the <select> and once from the visible
  *                <label for="...">. The wrapper never strips one of the two
@@ -107,8 +107,8 @@ const buildCompactChoiceSet = (
     return wrapper;
 };
 
-describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (AB#5905479 / AB#6304117)", () => {
-    it("AB#5905479: Action.Submit-style button must NOT be left with aria-pressed (causes Narrator 'toggle button' announcement)", async () => {
+describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-button-toggle / login-button-toggle)", () => {
+    it("action-button-toggle: Action.Submit-style button must NOT be left with aria-pressed (causes Narrator 'toggle button' announcement)", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
                 <div className="ac-adaptiveCard" />
@@ -130,7 +130,7 @@ describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (AB#5905479 /
         expect(button.getAttribute("role")).not.toBe("checkbox");
     });
 
-    it("AB#6304117: Login button on a sign-in adaptive card must announce as a plain 'button'", async () => {
+    it("login-button-toggle: Login button on a sign-in adaptive card must announce as a plain 'button'", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
                 <div className="ac-adaptiveCard" />
@@ -156,8 +156,8 @@ describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (AB#5905479 /
     });
 });
 
-describe.skip("AdaptiveCardAccessibilityWrapper — compact dropdowns (AB#6304100)", () => {
-    it("AB#6304100: compact Input.ChoiceSet must not have BOTH aria-labelledby and a visible <label for> announce", async () => {
+describe.skip("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-double-label)", () => {
+    it("dropdown-double-label: compact Input.ChoiceSet must not have BOTH aria-labelledby and a visible <label for> announce", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
                 <div className="ac-adaptiveCard" />
@@ -201,8 +201,8 @@ describe.skip("AdaptiveCardAccessibilityWrapper — compact dropdowns (AB#630410
     });
 });
 
-describe.skip("AdaptiveCardAccessibilityWrapper — TalkBack labels on non-radio elements (AB#5929337 regression guard)", () => {
-    it("AB#5929337: Input.Text fields inside an adaptive card must not have BOTH visible <label> and aria-label that duplicate (TalkBack reads twice)", async () => {
+describe.skip("AdaptiveCardAccessibilityWrapper — TalkBack labels on non-radio elements (talkback-duplicate-label regression guard)", () => {
+    it("talkback-duplicate-label: Input.Text fields inside an adaptive card must not have BOTH visible <label> and aria-label that duplicate (TalkBack reads twice)", async () => {
         // Best-effort regression catcher: TalkBack double-reads when both an
         // associated <label> AND aria-label resolve to the same string. This
         // catcher is a DOM proxy — true verification requires a TalkBack pass.

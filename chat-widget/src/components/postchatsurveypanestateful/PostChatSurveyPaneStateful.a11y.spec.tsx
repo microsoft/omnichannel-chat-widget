@@ -9,7 +9,7 @@ import { PostChatSurveyPaneStateful } from "./PostChatSurveyPaneStateful";
 import React from "react";
 
 /**
- * Repro catcher for AB#3111921 — Postchat survey textbox accessible name
+ * Repro catcher for postchat-iframe-title — Postchat survey textbox accessible name
  * is wrong: NVDA announces "Please give feedback * Required..." (the raw
  * Customer Voice question + required marker concatenated) instead of just
  * the question text. The textbox lives inside an iframe (Customer Voice),
@@ -77,7 +77,7 @@ const buildState = () => ({
     }
 });
 
-describe.skip("PostChatSurveyPaneStateful — accessibility behavior (AB#3111921)", () => {
+describe.skip("PostChatSurveyPaneStateful — accessibility behavior (postchat-iframe-title)", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockCapturedControlProps.current = undefined;
@@ -90,7 +90,7 @@ describe.skip("PostChatSurveyPaneStateful — accessibility behavior (AB#3111921
         cleanup();
     });
 
-    it("AB#3111921: post-chat survey iframe MUST carry a stable `title` so screen readers announce a meaningful frame name", () => {
+    it("postchat-iframe-title: post-chat survey iframe MUST carry a stable `title` so screen readers announce a meaningful frame name", () => {
         const { container } = render(
             <PostChatSurveyPaneStateful
                 customerVoiceSurveyCorrelationId="abc"

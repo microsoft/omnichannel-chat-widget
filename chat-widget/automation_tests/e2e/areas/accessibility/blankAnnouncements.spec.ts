@@ -11,7 +11,7 @@ const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
 const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.skip;
 
 /**
- * Repro catcher for AB#6003259 — Screen reader announces blank / hidden
+ * Repro catcher for blank-announcements — Screen reader announces blank / hidden
  * irrelevant text (e.g. NVDA reads "blank" as it walks past empty live
  * regions, empty buttons, or unlabeled landmarks).
  *
@@ -23,7 +23,7 @@ const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.sk
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-describeIfBuilt("blank announcements - empty accessible names (AB#6003259)", () => {
+describeIfBuilt("blank announcements - empty accessible names (blank-announcements)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

@@ -12,7 +12,7 @@ const widgetBundleExists = fs.existsSync(widgetBundlePath);
 const describeIfBuilt = widgetBundleExists ? describe.skip : describe.skip; // SKIP on foundation: catcher fails until source fix lands; fix branch reverts to `widgetBundleExists ? describe : describe.skip`.
 
 /**
- * Repro catcher for AB#3412046 — In NVDA / JAWS browse mode (or Edge's
+ * Repro catcher for chat-button-browse-mode — In NVDA / JAWS browse mode (or Edge's
  * built-in scan/caret browse), the collapsed "Let's chat, We're Online"
  * chat button is exposed multiple times in the accessibility tree. The
  * virtual cursor stops on it more than once because both the wrapping
@@ -25,7 +25,7 @@ const describeIfBuilt = widgetBundleExists ? describe.skip : describe.skip; // S
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-describeIfBuilt("chat button browse-mode duplicate (AB#3412046)", () => {
+describeIfBuilt("chat button browse-mode duplicate (chat-button-browse-mode)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

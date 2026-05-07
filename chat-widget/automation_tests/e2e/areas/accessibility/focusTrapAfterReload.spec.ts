@@ -10,7 +10,7 @@ const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
 const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.skip;
 
 /**
- * Repro catcher for AB#6093367 — After the user activates an external link
+ * Repro catcher for focus-trap-after-reload — After the user activates an external link
  * inside an open chat and the page reloads (persistent storage rehydrates
  * the widget into the open state), focus is "trapped" inside the widget
  * with no visible focus indicator AND Tab cannot move out. The widget
@@ -32,7 +32,7 @@ const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.sk
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-describeIfBuilt("focus trap after page reload (AB#6093367)", () => {
+describeIfBuilt("focus trap after page reload (focus-trap-after-reload)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

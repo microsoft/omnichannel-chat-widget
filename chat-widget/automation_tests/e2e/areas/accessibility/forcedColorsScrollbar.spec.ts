@@ -11,7 +11,7 @@ const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
 const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.skip;
 
 /**
- * Regression catcher for AB#3322581 — In Windows High Contrast (forced-colors)
+ * Regression catcher for forced-colors-scrollbar — In Windows High Contrast (forced-colors)
  * mode, the chat transcript scrollbar is invisible: the thumb has no painted
  * background-color so it disappears against the system background.
  *
@@ -22,7 +22,7 @@ const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.sk
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-describeIfBuilt("forced-colors scrollbar visibility (AB#3322581 regression guard)", () => {
+describeIfBuilt("forced-colors scrollbar visibility (forced-colors-scrollbar regression guard)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

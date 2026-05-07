@@ -9,7 +9,7 @@ import { PreChatSurveyPaneStateful } from "./PreChatSurveyPaneStateful";
 import React from "react";
 
 /**
- * Repro catcher for AB#6304106 — When focus moves onto a checkbox in the
+ * Repro catcher for prechat-stale-live-region — When focus moves onto a checkbox in the
  * prechat survey, Narrator announces the *previous* element's information
  * (e.g. the previously-typed text in the email field) before the checkbox
  * label. Symptom is consistent with a stale aria-live region (or polite
@@ -61,7 +61,7 @@ const buildState = () => ({
     }
 });
 
-describe.skip("PreChatSurveyPaneStateful — accessibility behavior (AB#6304106)", () => {
+describe.skip("PreChatSurveyPaneStateful — accessibility behavior (prechat-stale-live-region)", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockState.current = buildState();
@@ -78,7 +78,7 @@ describe.skip("PreChatSurveyPaneStateful — accessibility behavior (AB#6304106)
         cleanup();
     });
 
-    it("AB#6304106: prechat pane MUST own a managed polite live region (status / aria-live=polite) so previous focus text does not linger", () => {
+    it("prechat-stale-live-region: prechat pane MUST own a managed polite live region (status / aria-live=polite) so previous focus text does not linger", () => {
         const { container } = render(
             <PreChatSurveyPaneStateful surveyProps={{}} initStartChat={jest.fn()} />
         );

@@ -3,7 +3,7 @@
 import "@testing-library/jest-dom";
 
 /**
- * Repro catcher for AB#5994346 — after transfer from a bot/agent to a new
+ * Repro catcher for transfer-stale-bot-name — after transfer from a bot/agent to a new
  * live agent, the new agent's first message is announced to the screen
  * reader using the OLD agent's name (e.g. "Bot JO said: hi" when the new
  * agent is "Sara Smith").
@@ -48,7 +48,7 @@ const loadFreshMiddleware = () => {
     return mod;
 };
 
-describe.skip("localizedStringsBotInitialsMiddleware — transfer reset (AB#5994346)", () => {
+describe.skip("localizedStringsBotInitialsMiddleware — transfer reset (transfer-stale-bot-name)", () => {
     beforeEach(() => {
         mockGetIconText.mockReset();
     });
@@ -58,7 +58,7 @@ describe.skip("localizedStringsBotInitialsMiddleware — transfer reset (AB#5994
     const sendActivity = (mw: any, activity: any) =>
         mw({ type: "DIRECT_LINE/INCOMING_ACTIVITY", payload: { activity } });
 
-    it("AB#5994346: a transfer system message must reset currentAgentName so the next non-system activity does NOT inherit the prior agent's name", () => {
+    it("transfer-stale-bot-name: a transfer system message must reset currentAgentName so the next non-system activity does NOT inherit the prior agent's name", () => {
         const mod = loadFreshMiddleware();
         const middleware = mod.localizedStringsBotInitialsMiddleware()({ dispatch: jest.fn() })((a: any) => a);
 
@@ -87,7 +87,7 @@ describe.skip("localizedStringsBotInitialsMiddleware — transfer reset (AB#5994
         expect(strings.ACTIVITY_BOT_SAID_ALT).not.toMatch(/Bot JO/i);
     });
 
-    it("AB#5994346: a transfer system message that names the new agent must not freeze the OLD name on subsequent activities", () => {
+    it("transfer-stale-bot-name: a transfer system message that names the new agent must not freeze the OLD name on subsequent activities", () => {
         const mod = loadFreshMiddleware();
         const middleware = mod.localizedStringsBotInitialsMiddleware()({ dispatch: jest.fn() })((a: any) => a);
 
