@@ -8,7 +8,8 @@ import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 import { findAll, getA11yTree } from "../../utility/a11yTree";
 
 const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
-const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.skip;
+const widgetBundleExists = fs.existsSync(widgetBundlePath);
+const describeIfBuilt = widgetBundleExists ? describe.skip : describe.skip; // SKIP on foundation: catcher fails until source fix lands; fix branch reverts to `widgetBundleExists ? describe : describe.skip`.
 
 /**
  * Repro catcher for AB#3412046 — In NVDA / JAWS browse mode (or Edge's
@@ -24,7 +25,7 @@ const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.sk
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-describe.skip("chat button browse-mode duplicate (AB#3412046)", () => {
+describeIfBuilt("chat button browse-mode duplicate (AB#3412046)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

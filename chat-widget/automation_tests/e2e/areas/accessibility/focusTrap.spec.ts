@@ -10,7 +10,7 @@ import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 // They are skipped on CI where the bundle is not available.
 const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
 const widgetBundleExists = fs.existsSync(widgetBundlePath);
-const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
+const describeIfBuilt = widgetBundleExists ? describe.skip : describe.skip; // SKIP on foundation: catcher fails until source fix lands; fix branch reverts to `widgetBundleExists ? describe : describe.skip`.
 
 /**
  * Focus escapes live chat widget when only one element is focusable.
@@ -20,7 +20,7 @@ const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
  * the widget boundary.
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describe.skip("focus trap - single focusable element", () => {
+describeIfBuilt("focus trap - single focusable element", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

@@ -9,7 +9,7 @@ import { getFocusedInfo, countTabStops } from "../../../utility/keyboardLoop";
 
 const widgetBundlePath = path.resolve(__dirname, "../../../../../dist/out.js");
 const widgetBundleExists = fs.existsSync(widgetBundlePath);
-const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
+const describeIfBuilt = widgetBundleExists ? describe.skip : describe.skip; // SKIP on foundation: catcher fails until source fix lands; fix branch reverts to `widgetBundleExists ? describe : describe.skip`.
 
 async function isFocusInWidget(page: PWPage): Promise<boolean> {
     return page.evaluate(() => {
@@ -26,7 +26,7 @@ async function isFocusInWidget(page: PWPage): Promise<boolean> {
  * the UI. Specs auto-skip without dist/out.js.
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describe.skip("Layer 4 keyboard flows", () => {
+describeIfBuilt("Layer 4 keyboard flows", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

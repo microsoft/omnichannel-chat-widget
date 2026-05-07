@@ -8,7 +8,7 @@ import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 
 const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
 const widgetBundleExists = fs.existsSync(widgetBundlePath);
-const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
+const describeIfBuilt = widgetBundleExists ? describe.skip : describe.skip; // SKIP on foundation: catcher fails until source fix lands; fix branch reverts to `widgetBundleExists ? describe : describe.skip`.
 
 /**
  * Citation cards / inline markdown citations should not expose `title`
@@ -23,7 +23,7 @@ const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
  *   - Citation card single-link expectation
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describe.skip("citation card accessibility", () => {
+describeIfBuilt("citation card accessibility", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

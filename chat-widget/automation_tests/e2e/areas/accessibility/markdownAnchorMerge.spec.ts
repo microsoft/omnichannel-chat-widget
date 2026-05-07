@@ -10,7 +10,7 @@ import { getA11yTree, findByRole } from "../../utility/a11yTree";
 
 const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
 const widgetBundleExists = fs.existsSync(widgetBundlePath);
-const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
+const describeIfBuilt = widgetBundleExists ? describe.skip : describe.skip; // SKIP on foundation: catcher fails until source fix lands; fix branch reverts to `widgetBundleExists ? describe : describe.skip`.
 
 /**
  * Adjacent markdown anchors that point to the same href should be merged into
@@ -25,7 +25,7 @@ const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
  *   - Markdown adjacent-anchor merge
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describe.skip("markdown adjacent anchor merge", () => {
+describeIfBuilt("markdown adjacent anchor merge", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;
