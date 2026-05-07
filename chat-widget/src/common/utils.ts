@@ -88,44 +88,65 @@ export const preventFocusToMoveOutOfElement = (elementId: string): (() => void) 
     }
 
     const focusableElements: HTMLElement[] | null = findAllFocusableElement(container);
-    if (!focusableElements) {
-        return () => { /* no-op */ };
+
+    // Two viable scenarios:
+    //   1. Container has descendant focusable elements (modal panes) — wrap
+    //      first/last with the existing two-handler trap.
+    //   2. Container itself is the only focusable element (e.g. a collapsed
+    //      chat button) and has no focusable descendants — treat the
+    //      container as the single focusable target.
+    let firstFocusableElement: HTMLElement | undefined;
+    let lastFocusableElement: HTMLElement | undefined;
+
+    if (focusableElements && focusableElements.length > 0) {
+        firstFocusableElement = focusableElements[0];
+        lastFocusableElement = focusableElements[focusableElements.length - 1];
+    } else {
+        // Container has no descendant focusables. If the container itself
+        // matches a focusable selector (button, link, [tabindex="0"], etc.),
+        // pin focus on it. Otherwise nothing to trap.
+        const containerIsFocusable = container.matches(
+            "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex=\"0\"]"
+        );
+        if (!containerIsFocusable) {
+            return () => { /* no-op */ };
+        }
+        firstFocusableElement = container;
+        lastFocusableElement = container;
     }
 
-    const firstFocusableElement: HTMLElement = focusableElements[0];
-    const lastFocusableElement: HTMLElement = focusableElements[focusableElements.length - 1];
     const cleanups: (() => void)[] = [];
 
     if (firstFocusableElement === lastFocusableElement) {
+        const target = firstFocusableElement;
         const handler = (e: KeyboardEvent) => {
-            if (e.key === KeyCodes.TAB && !e.shiftKey) {
+            if (e.key === KeyCodes.TAB) {
                 e.preventDefault();
-                firstFocusableElement.focus();
-            } else if (e.key === KeyCodes.TAB && e.shiftKey) {
-                e.preventDefault();
-                firstFocusableElement.focus();
+                target.focus();
             }
         };
-        firstFocusableElement.addEventListener("keydown", handler);
-        cleanups.push(() => firstFocusableElement.removeEventListener("keydown", handler));
+        target.addEventListener("keydown", handler);
+        cleanups.push(() => target.removeEventListener("keydown", handler));
     } else {
+        const first = firstFocusableElement as HTMLElement;
+        const last = lastFocusableElement as HTMLElement;
         const firstHandler = (e: KeyboardEvent) => {
             if (e.shiftKey && e.key === KeyCodes.TAB) {
                 e.preventDefault();
-                lastFocusableElement?.focus();
+                last.focus();
             }
         };
-        firstFocusableElement.addEventListener("keydown", firstHandler);
-        cleanups.push(() => firstFocusableElement.removeEventListener("keydown", firstHandler));
+        first.addEventListener("keydown", firstHandler);
+        cleanups.push(() => first.removeEventListener("keydown", firstHandler));
 
         const lastHandler = (e: KeyboardEvent) => {
             if (!e.shiftKey && e.key === KeyCodes.TAB) {
                 e.preventDefault();
-                firstFocusableElement?.focus();
+                first.focus();
             }
         };
-        lastFocusableElement.addEventListener("keydown", lastHandler);
-        cleanups.push(() => lastFocusableElement.removeEventListener("keydown", lastHandler));
+        last.addEventListener("keydown", lastHandler);
+        cleanups.push(() => last.removeEventListener("keydown", lastHandler));
     }
 
     return () => cleanups.forEach(fn => fn());

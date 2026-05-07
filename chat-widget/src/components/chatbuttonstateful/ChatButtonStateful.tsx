@@ -1,6 +1,6 @@
 import { ConversationStage, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, setFocusOnElement } from "../../common/utils";
+import { createTimer, preventFocusToMoveOutOfElement, setFocusOnElement } from "../../common/utils";
 
 import { ChatButton } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../common/Constants";
@@ -112,12 +112,22 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
             dispatch({ type: LiveChatWidgetActionType.SET_FOCUS_CHAT_BUTTON, payload: true });
         }
 
+        // Pin focus on the chat button while the widget is collapsed so Tab /
+        // Shift+Tab cannot escape the widget. The chat button is the only
+        // focusable element in the collapsed state; without this, AT users
+        // who Tab past it land on the host page (regression class also
+        // observed under Android TalkBack on mobile viewports).
+        const buttonId = controlProps?.id ?? "oc-lcw-chat-button";
+        const cleanup = preventFocusToMoveOutOfElement(buttonId);
+
         TelemetryHelper.logLoadingEventToAllTelemetry(LogLevel.INFO, {
             Event: TelemetryEvent.UXLCWChatButtonLoadingCompleted,
             Description: "Chat button loading completed",
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed,
             CustomProperties: { ConversationStage: ConversationStage.Initialization }
         });
+
+        return cleanup;
     }, []);
 
     useEffect(() => {
