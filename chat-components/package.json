@@ -93,6 +93,7 @@
     "test:visual:forced-colors": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=forced-colors yarn test:visual",
     "test:visual:contrast-more": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=contrast-more yarn test:visual",
     "scan:a11y:axe": "node ../tools/accessibility/axeScan.cjs",
+    "scan:a11y:axe:gated": "node ../tools/accessibility/axeScan.cjs --gate-rules image-alt,button-name",
     "scan:a11y:axe:build": "yarn build-storybook && yarn scan:a11y:axe",
     "scan:a11y:insights": "node ../tools/accessibility/insightsScan.cjs",
     "scan:a11y:insights:build": "yarn build-storybook && yarn scan:a11y:insights",

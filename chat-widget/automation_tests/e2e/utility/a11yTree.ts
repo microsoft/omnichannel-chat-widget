@@ -15,6 +15,7 @@ export async function getA11yTree(page: Page, root?: string): Promise<AxNode> {
         const handle = await page.$(root);
         if (handle) rootHandle = handle;
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return page.accessibility.snapshot({ interestingOnly: false, root: rootHandle as any });
 }
 

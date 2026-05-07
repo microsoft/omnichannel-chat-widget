@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "_comment": "Axe rule IDs to disable globally during Storybook scans. These are KNOWN story-isolation artifacts: a Storybook canvas does not have a <main> landmark, an <h1>, or a <head><title>, so axe rules that depend on document structure flag every story. They are not regressions in the components themselves. L1.2 triage classified these and committed them here. Real component issues are filed as work items, not added to this list.",
+  "rules": [
+    "landmark-one-main",
+    "page-has-heading-one",
+    "region",
+    "html-has-lang",
+    "html-lang-valid",
+    "document-title",
+    "bypass"
+  ]
+}

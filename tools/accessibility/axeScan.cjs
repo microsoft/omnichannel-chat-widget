@@ -19,9 +19,19 @@
  *   --story-timeout <ms>     Per-story timeout (default: 15000)
  *   --include <regex>        Only scan stories whose id matches the pattern
  *   --exclude <regex>        Skip stories whose id matches the pattern
+ *   --disable-rules <csv>    Axe rule IDs to disable globally for this run.
+ *                            Composes with `accessibility-disable-rules.json` if present.
+ *   --gate-rules <csv>       Axe rule IDs that MUST stay clean. Any violation of
+ *                            a listed rule fails the run regardless of --fail-on.
  *
  * Env:
  *   A11Y_SCAN_SKIP_STORIES   Comma-separated story IDs to skip.
+ *   A11Y_SCAN_DISABLE_RULES  Comma-separated axe rule IDs to disable.
+ *
+ * Per-package config:
+ *   accessibility-disable-rules.json — committed config that lists axe rule IDs
+ *   that are known story-isolation artifacts (no `<main>`, no `<h1>`, etc.).
+ *   Triaged in L1.2; rules listed here are not regressions.
  */
 
 const fs = require("fs");
@@ -40,7 +50,9 @@ function parseArgs(argv) {
         failOn: "none",
         storyTimeout: 15000,
         include: null,
-        exclude: null
+        exclude: null,
+        disableRules: null,
+        gateRules: null
     };
     for (let i = 0; i < argv.length; i++) {
         const a = argv[i];
@@ -54,6 +66,8 @@ function parseArgs(argv) {
             case "--story-timeout": args.storyTimeout = parseInt(next(), 10) || 15000; break;
             case "--include": args.include = new RegExp(next()); break;
             case "--exclude": args.exclude = new RegExp(next()); break;
+            case "--disable-rules": args.disableRules = next(); break;
+            case "--gate-rules": args.gateRules = next(); break;
             case "--help":
             case "-h":
                 console.log(fs.readFileSync(__filename, "utf8").split("\n").slice(1, 30).join("\n"));
@@ -66,6 +80,23 @@ function parseArgs(argv) {
         }
     }
     return args;
+}
+
+function loadDisableRulesFromFile(cwd) {
+    const cfgPath = path.join(cwd, "accessibility-disable-rules.json");
+    if (!fs.existsSync(cfgPath)) return [];
+    try {
+        const raw = JSON.parse(fs.readFileSync(cfgPath, "utf8"));
+        if (Array.isArray(raw.rules)) return raw.rules.filter((s) => typeof s === "string");
+        return [];
+    } catch (e) {
+        console.warn(`Could not parse accessibility-disable-rules.json: ${e.message}`);
+        return [];
+    }
+}
+
+function csvList(s) {
+    return (s || "").split(",").map((t) => t.trim()).filter(Boolean);
 }
 
 const MIME = {
@@ -147,7 +178,7 @@ function loadStoryIndex(storybookDir) {
     return { stories, source };
 }
 
-async function scanStory(page, baseUrl, story, axeTags, timeoutMs) {
+async function scanStory(page, baseUrl, story, axeTags, timeoutMs, disabledRules) {
     const target = `${baseUrl}/iframe.html?id=${encodeURIComponent(story.id)}&viewMode=story`;
     await page.goto(target, { waitUntil: "load", timeout: timeoutMs });
     // Wait for storybook root to have content. Tolerate either id.
@@ -180,6 +211,9 @@ async function scanStory(page, baseUrl, story, axeTags, timeoutMs) {
     const builder = new AxeBuilder({ page });
     if (axeTags && axeTags.length) {
         builder.withTags(axeTags);
+    }
+    if (disabledRules && disabledRules.length) {
+        builder.disableRules(disabledRules);
     }
     const results = await builder.analyze();
     return { story, results };
@@ -241,7 +275,19 @@ function highestImpact(counts) {
         return true;
     });
 
+    const fileDisabled = loadDisableRulesFromFile(cwd);
+    const flagDisabled = csvList(args.disableRules);
+    const envDisabled = csvList(process.env.A11Y_SCAN_DISABLE_RULES);
+    const disabledRules = Array.from(new Set([...fileDisabled, ...flagDisabled, ...envDisabled]));
+    const gateRules = csvList(args.gateRules);
+
     console.log(`📚 Found ${stories.length} stories in ${source}; scanning ${filtered.length} after filters.`);
+    if (disabledRules.length) {
+        console.log(`🚫 Disabled axe rules (${disabledRules.length}): ${disabledRules.join(", ")}`);
+    }
+    if (gateRules.length) {
+        console.log(`🛡️  Gating axe rules (${gateRules.length}): ${gateRules.join(", ")}`);
+    }
 
     const server = await startStaticServer(storybookDir, args.port);
     const address = server.address();
@@ -262,7 +308,7 @@ function highestImpact(counts) {
         i++;
         process.stdout.write(`  [${i}/${filtered.length}] ${story.id} ... `);
         try {
-            const result = await scanStory(page, baseUrl, story, axeTags, args.storyTimeout);
+            const result = await scanStory(page, baseUrl, story, axeTags, args.storyTimeout, disabledRules);
             perStory.push(result);
             if (result.error) {
                 process.stdout.write(`SKIP (${result.error})\n`);
