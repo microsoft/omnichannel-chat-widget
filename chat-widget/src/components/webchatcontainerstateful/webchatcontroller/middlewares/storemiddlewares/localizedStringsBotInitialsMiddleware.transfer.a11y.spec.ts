@@ -48,7 +48,7 @@ const loadFreshMiddleware = () => {
     return mod;
 };
 
-describe.skip("localizedStringsBotInitialsMiddleware — transfer reset (transfer-stale-bot-name)", () => {
+describe("localizedStringsBotInitialsMiddleware — transfer reset (transfer-stale-bot-name)", () => {
     beforeEach(() => {
         mockGetIconText.mockReset();
     });
