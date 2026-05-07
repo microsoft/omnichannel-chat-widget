@@ -53,7 +53,7 @@ describeIfBuilt("focus trap - single focusable element", () => {
         expect(visible).toBe(true);
     });
 
-    test("Tab on the chat button keeps focus within the widget", async () => {
+    test("Tab on the chat button keeps focus on the chat button (single-focusable trap)", async () => {
         page = new BasePage(await context.newPage());
         await page.openLiveChatWidget("customlivechatwidgets/FocusTrapWidget.html");
         await page.waitUntilLiveChatSelectorIsVisible(
@@ -62,42 +62,49 @@ describeIfBuilt("focus trap - single focusable element", () => {
 
         const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
         expect(chatButton).not.toBeNull();
-
-        // Focus the chat button
-        await chatButton!.focus(); // eslint-disable-line @typescript-eslint/no-non-null-assertion
-
-        // Press Tab — focus should stay on the chat button (trapped)
-        await page.Page.keyboard.press("Tab");
-
-        // Focus should not have escaped to the <body> or outside the widget
-        const isFocusInWidget = await page.Page.evaluate(() => {
-            const container = document.getElementById("oc-lcw-container");
-            return container ? container.contains(document.activeElement) : false;
-        });
-
-        expect(isFocusInWidget).toBe(true);
-    });
-
-    test("Shift+Tab on the chat button keeps focus within the widget", async () => {
-        page = new BasePage(await context.newPage());
-        await page.openLiveChatWidget("customlivechatwidgets/FocusTrapWidget.html");
-        await page.waitUntilLiveChatSelectorIsVisible(
-            CustomLiveChatWidgetConstants.LiveChatButtonId
-        );
-
-        const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
-        expect(chatButton).not.toBeNull();
-
         await chatButton!.focus();
 
-        // Press Shift+Tab — focus should stay trapped
+        // Sanity: chat button is the only tabbable element inside the widget
+        // container in collapsed state. The fix in utils.ts attaches a keydown
+        // handler so Tab calls preventDefault + re-focuses the same element.
+        const focusableCount = await page.Page.evaluate(() => {
+            const container = document.getElementById("oc-lcw-container");
+            if (!container) return -1;
+            const sel = "a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex='0']";
+            return container.querySelectorAll(sel).length;
+        });
+        expect(focusableCount).toBe(1);
+
+        await page.Page.keyboard.press("Tab");
+
+        // Without the fix, default browser behaviour moves focus to the next
+        // tabbable element on the page (or to <body> if none exists). The fix
+        // pins focus on the same single-focusable element. Assert that the
+        // chat button is *still* the active element.
+        const activeId = await page.Page.evaluate(() => {
+            const a = document.activeElement as HTMLElement | null;
+            return a ? a.id : null;
+        });
+        expect(activeId).toBe(CustomLiveChatWidgetConstants.LiveChatButtonId.replace(/^#/, ""));
+    });
+
+    test("Shift+Tab on the chat button keeps focus on the chat button (single-focusable trap)", async () => {
+        page = new BasePage(await context.newPage());
+        await page.openLiveChatWidget("customlivechatwidgets/FocusTrapWidget.html");
+        await page.waitUntilLiveChatSelectorIsVisible(
+            CustomLiveChatWidgetConstants.LiveChatButtonId
+        );
+
+        const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
+        expect(chatButton).not.toBeNull();
+        await chatButton!.focus();
+
         await page.Page.keyboard.press("Shift+Tab");
 
-        const isFocusInWidget = await page.Page.evaluate(() => {
-            const container = document.getElementById("oc-lcw-container");
-            return container ? container.contains(document.activeElement) : false;
+        const activeId = await page.Page.evaluate(() => {
+            const a = document.activeElement as HTMLElement | null;
+            return a ? a.id : null;
         });
-
-        expect(isFocusInWidget).toBe(true);
+        expect(activeId).toBe(CustomLiveChatWidgetConstants.LiveChatButtonId.replace(/^#/, ""));
     });
 });

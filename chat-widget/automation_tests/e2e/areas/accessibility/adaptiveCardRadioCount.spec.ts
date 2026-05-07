@@ -153,4 +153,43 @@ describeIfBuilt("adaptive card radio button count", () => {
         const radios = snapshot ? findRadios(snapshot) : [];
         expect(radios.length).toBe(3);
     });
+
+    test("each radio carries aria-setsize and aria-posinset (AdaptiveCardAccessibilityWrapper artifact)", async () => {
+        // Fix artifact: AdaptiveCardAccessibilityWrapper.tsx wraps the rendered
+        // adaptive card and patches each radio input with aria-setsize and
+        // aria-posinset matching the ChoiceSet group size. The adaptivecards
+        // renderer itself does NOT emit these attributes — without the wrapper
+        // the radios have no aria-setsize / aria-posinset.
+        page = new BasePage(await context.newPage());
+        await page.openLiveChatWidget("customlivechatwidgets/AdaptiveCardChoiceSetWidget.html");
+        await page.waitUntilLiveChatSelectorIsVisible(
+            CustomLiveChatWidgetConstants.LiveChatButtonId
+        );
+
+        const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
+        await chatButton!.click();
+
+        await page.waitUntilLiveChatSelectorIsVisible(
+            ".webchat__basic-transcript",
+            5,
+            undefined,
+            5000
+        );
+
+        await page.Page.waitForTimeout(4000);
+
+        const radioAttrs = await page.Page.evaluate(() => {
+            const radios = document.querySelectorAll("input[type='radio']");
+            return Array.from(radios).map(r => ({
+                ariaSetSize: r.getAttribute("aria-setsize"),
+                ariaPosInSet: r.getAttribute("aria-posinset"),
+            }));
+        });
+
+        expect(radioAttrs.length).toBe(3);
+        const setSizes = radioAttrs.map(a => a.ariaSetSize);
+        const positions = radioAttrs.map(a => a.ariaPosInSet).sort();
+        expect(setSizes).toEqual(["3", "3", "3"]);
+        expect(positions).toEqual(["1", "2", "3"]);
+    });
 });

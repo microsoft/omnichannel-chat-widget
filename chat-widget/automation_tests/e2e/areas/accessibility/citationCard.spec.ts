@@ -108,4 +108,88 @@ describeIfBuilt("citation card accessibility", () => {
             expect({ href, count }).toEqual({ href, count: 1 });
         }
     });
+
+    // Tightened catcher: injects a citation-card-shaped anchor (the structure
+    // WebChat's LinkDefinitionItem renders) into the transcript and verifies
+    // the runtime a11y patch (`patchCitationAnchorsForA11y` / MutationObserver
+    // wired in WebChatContainerStateful) applied the fix-artifacts:
+    //   - combined aria-label on the anchor ("1, <title>")
+    //   - all descendants aria-hidden=true, tabindex=-1, role=presentation
+    //   - any descendant title attribute moved to data-ocw-original-title
+    // On unfixed source the patch never runs, so the artifacts are absent.
+    test("injected citation-card anchor is patched into a single accessible link", async () => {
+        page = new BasePage(await context.newPage());
+        await page.openLiveChatWidget("customlivechatwidgets/CitationCardWidget.html");
+        await page.waitUntilLiveChatSelectorIsVisible(CustomLiveChatWidgetConstants.LiveChatButtonId);
+
+        const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
+        await chatButton!.click();
+
+        await page.waitUntilLiveChatSelectorIsVisible(".webchat__basic-transcript", 5, undefined, 5000);
+        await page.Page.waitForFunction(() => {
+            return !!document.querySelector(".webchat__basic-transcript");
+        }, undefined, { timeout: 15000 });
+
+        // Inject a citation-card-shaped anchor mirroring WebChat's
+        // LinkDefinitionItem output. Both class hooks the patch listens for
+        // are exercised so this test fails consistently regardless of which
+        // selector branch the fix uses.
+        await page.Page.evaluate(() => {
+            const transcript = document.querySelector(".webchat__basic-transcript");
+            if (!transcript) {
+                return;
+            }
+            const wrapper = document.createElement("div");
+            wrapper.setAttribute("data-test-injected-citation", "true");
+            wrapper.innerHTML = `
+                <a class="webchat__link-definitions__list-item-box" href="https://example.com/citation"
+                   data-test-citation="1">
+                    <div class="webchat__link-definitions__list-item-badge">1</div>
+                    <div class="webchat__link-definitions__list-item-text" title="Example Citation Title">Example Citation Title</div>
+                </a>
+                <a href="cite:second-citation" data-test-citation="2">
+                    <div>2</div>
+                    <div title="Second Citation">Second Citation</div>
+                </a>
+            `;
+            transcript.appendChild(wrapper);
+        });
+
+        // Give the MutationObserver a tick to apply the patch.
+        await page.Page.waitForTimeout(500);
+
+        const result = await page.Page.evaluate(() => {
+            const out: Array<{
+                idx: string;
+                ariaLabel: string | null;
+                descendantsHidden: boolean;
+                descendantsHaveTitle: boolean;
+            }> = [];
+            document.querySelectorAll("a[data-test-citation]").forEach(anchor => {
+                const a = anchor as HTMLAnchorElement;
+                const descendants = Array.from(a.querySelectorAll("*"));
+                out.push({
+                    idx: a.getAttribute("data-test-citation") || "",
+                    ariaLabel: a.getAttribute("aria-label"),
+                    descendantsHidden: descendants.length > 0
+                        && descendants.every(d => d.getAttribute("aria-hidden") === "true"),
+                    descendantsHaveTitle: descendants.some(d => d.hasAttribute("title")),
+                });
+            });
+            return out;
+        });
+
+        expect(result.length).toBeGreaterThanOrEqual(2);
+        for (const entry of result) {
+            // Fix-artifact 1: anchor carries a combined aria-label.
+            expect({ idx: entry.idx, hasAriaLabel: entry.ariaLabel != null && entry.ariaLabel.length > 0 })
+                .toEqual({ idx: entry.idx, hasAriaLabel: true });
+            // Fix-artifact 2: every descendant is hidden from the a11y tree.
+            expect({ idx: entry.idx, descendantsHidden: entry.descendantsHidden })
+                .toEqual({ idx: entry.idx, descendantsHidden: true });
+            // Fix-artifact 3: title attributes are stripped from descendants.
+            expect({ idx: entry.idx, descendantsHaveTitle: entry.descendantsHaveTitle })
+                .toEqual({ idx: entry.idx, descendantsHaveTitle: false });
+        }
+    });
 });
