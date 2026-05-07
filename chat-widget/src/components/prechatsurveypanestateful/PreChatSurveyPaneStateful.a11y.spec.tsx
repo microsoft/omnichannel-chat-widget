@@ -61,7 +61,7 @@ const buildState = () => ({
     }
 });
 
-describe.skip("PreChatSurveyPaneStateful — accessibility behavior (prechat-stale-live-region)", () => {
+describe("PreChatSurveyPaneStateful — accessibility behavior (prechat-stale-live-region)", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockState.current = buildState();

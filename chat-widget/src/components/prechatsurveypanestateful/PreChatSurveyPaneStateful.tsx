@@ -181,9 +181,33 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
     }, [state.appStates.isMinimized]);
     
     return (
-        <PreChatSurveyPane
-            controlProps={controlProps}
-            styleProps={styleProps} />
+        <>
+            {/* prechat-stale-live-region: prechat pane owns a managed polite live region
+                so that focus changes inside the survey don't carry the
+                previous focus's announcement (Narrator was reading
+                stale text before the newly-focused checkbox label).
+                Kept empty by default; consumers / focus handlers can
+                update its content to announce focus context cleanly. */}
+            <div
+                id="oc-lcw-prechatsurvey-announce"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                style={{
+                    position: "absolute",
+                    width: 1,
+                    height: 1,
+                    margin: -1,
+                    padding: 0,
+                    border: 0,
+                    clip: "rect(0 0 0 0)",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                }} />
+            <PreChatSurveyPane
+                controlProps={controlProps}
+                styleProps={styleProps} />
+        </>
     );
 };
 
