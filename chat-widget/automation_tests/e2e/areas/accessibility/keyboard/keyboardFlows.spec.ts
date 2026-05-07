@@ -5,7 +5,7 @@ import * as path from "path";
 import { TestSettings } from "../../../../configuration/test-settings";
 import { BasePage } from "../../../pages/base.page";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
-import { getFocusedInfo, walkTab, countTabStops } from "../../../utility/keyboardLoop";
+import { getFocusedInfo, countTabStops } from "../../../utility/keyboardLoop";
 
 const widgetBundlePath = path.resolve(__dirname, "../../../../../dist/out.js");
 const widgetBundleExists = fs.existsSync(widgetBundlePath);
