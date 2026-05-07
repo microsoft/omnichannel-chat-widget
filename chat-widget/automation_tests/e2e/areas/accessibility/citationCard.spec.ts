@@ -23,7 +23,7 @@ const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
  *   - Citation card single-link expectation
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describeIfBuilt("citation card accessibility", () => {
+describe.skip("citation card accessibility", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

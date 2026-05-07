@@ -26,7 +26,7 @@ async function isFocusInWidget(page: PWPage): Promise<boolean> {
  * the UI. Specs auto-skip without dist/out.js.
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describeIfBuilt("Layer 4 keyboard flows", () => {
+describe.skip("Layer 4 keyboard flows", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

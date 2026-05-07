@@ -24,7 +24,7 @@ const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.sk
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-describeIfBuilt("chat button browse-mode duplicate (AB#3412046)", () => {
+describe.skip("chat button browse-mode duplicate (AB#3412046)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

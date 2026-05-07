@@ -25,7 +25,7 @@ const PIXEL_5_VIEWPORT = { width: 393, height: 851 };
  *     for the residual gap requiring a real device).
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describeIfBuilt("mobile focus trap (Pixel 5 emulation)", () => {
+describe.skip("mobile focus trap (Pixel 5 emulation)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

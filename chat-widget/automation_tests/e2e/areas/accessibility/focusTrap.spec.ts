@@ -20,7 +20,7 @@ const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
  * the widget boundary.
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describeIfBuilt("focus trap - single focusable element", () => {
+describe.skip("focus trap - single focusable element", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

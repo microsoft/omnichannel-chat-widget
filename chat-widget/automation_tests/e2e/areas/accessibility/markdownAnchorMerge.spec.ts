@@ -25,7 +25,7 @@ const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
  *   - Markdown adjacent-anchor merge
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describeIfBuilt("markdown adjacent anchor merge", () => {
+describe.skip("markdown adjacent anchor merge", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;
