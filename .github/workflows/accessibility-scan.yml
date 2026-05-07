@@ -7,22 +7,16 @@ name: accessibility-scan
 # axe-core under the hood, but Accessibility Insights adds MS-curated
 # reporting that maps results to MAS rule IDs.
 #
-# This workflow is intentionally NON-GATING: it always uploads its reports
-# as artifacts but does not fail PR checks on findings. Treat the artifacts
-# as feedback for the foundation pass; per-component test wiring comes later.
+# This workflow is intentionally NON-GATING and runs off the PR path.
+# A11y is an offline test activity here: scans run on demand or on a
+# nightly schedule and surface their findings as artifacts. They do not
+# add to per-PR gate scope.
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - '**'
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'chat-components/**'
-      - 'chat-widget/**'
-      - 'tools/accessibility/**'
-      - 'docs/accessibility/**'
-      - '.github/workflows/accessibility-scan.yml'
+  schedule:
+    # Nightly at 09:00 UTC (~02:00 PT). Soak run; results land as artifacts.
+    - cron: '0 9 * * *'
 
 permissions:
   contents: read
