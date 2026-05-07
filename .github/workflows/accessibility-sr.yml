@@ -10,20 +10,17 @@ name: accessibility-sr
 #   3. SR specs are the newest layer; we want them visible as their own
 #      check so failures don't hide inside a broader E2E run.
 #
-# Status: "soak" — runs on PR but is not yet a required check. Promote to
-# required after a green run-rate baseline (see plan.md Phase 3 L3.B.5).
+# Status: "soak" — manual + nightly only. NVDA is single-instance per host,
+# adds ~10s/test from real speech synthesis, and depends on a pinned NVDA
+# install + @guidepup/guidepup; it is not appropriate as a per-PR gate.
+# Promote to PR / required after a green run-rate baseline.
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - '**'
-    types: [opened, synchronize, reopened]
-    paths:
-      - 'chat-widget/**'
-      - 'tools/accessibility/setupNvda.ps1'
-      - 'tools/accessibility/nvda-phrases.json'
-      - '.github/workflows/accessibility-sr.yml'
+  schedule:
+    # Nightly at 09:00 UTC (~02:00 PT). Soak run that surfaces regressions
+    # without blocking PRs.
+    - cron: '0 9 * * *'
 
 permissions:
   contents: read
