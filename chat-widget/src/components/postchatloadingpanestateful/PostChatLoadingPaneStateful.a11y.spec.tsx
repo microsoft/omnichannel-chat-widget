@@ -81,7 +81,7 @@ describe("PostChatLoadingPaneStateful — accessibility behavior", () => {
         expect(subtitle?.textContent || "").toMatch(/please take a moment/i);
     });
 
-    it.skip("loading-pane-status: LoadingPane controlProps MUST carry live-region semantics (role/aria-live) so subtitle is announced", () => {
+    it("loading-pane-status: LoadingPane controlProps MUST carry live-region semantics (role/aria-live) so subtitle is announced", () => {
         render(<PostChatLoadingPaneStateful />);
 
         const cp = mockCapturedControlProps.current;

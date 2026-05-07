@@ -35,6 +35,7 @@ export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
 
     const controlProps: ILoadingPaneControlProps = {
         id: "oc-lcw-postchatloading-pane",
+        role: "status",
         dir: state.domainStates.globalDir,
         hideIcon: true,
         hideTitle: true,
