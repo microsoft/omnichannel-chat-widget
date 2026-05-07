@@ -159,9 +159,15 @@ export const patchCitationAnchorsForA11y = (root: ParentNode): void => {
         //                             read it, but iOS VO ignores it.
         anchor.querySelectorAll("*").forEach((el) => {
             const inner = el as HTMLElement;
-            inner.setAttribute("aria-hidden", "true");
-            inner.setAttribute("role", "presentation");
-            inner.setAttribute("tabindex", "-1");
+            if (inner.getAttribute("aria-hidden") !== "true") {
+                inner.setAttribute("aria-hidden", "true");
+            }
+            if (inner.getAttribute("role") !== "presentation") {
+                inner.setAttribute("role", "presentation");
+            }
+            if (inner.getAttribute("tabindex") !== "-1") {
+                inner.setAttribute("tabindex", "-1");
+            }
             if (!inner.hasAttribute("inert")) {
                 inner.setAttribute("inert", "");
             }
@@ -172,11 +178,9 @@ export const patchCitationAnchorsForA11y = (root: ParentNode): void => {
                     inner.dataset.ocwOriginalTitle = innerTitle;
                 }
             }
-            // pointer-events: none forwards clicks/taps/hover directly to the
-            // outer <a>, so the entire card behaves as one selectable area
-            // with a single focus/hover state (instead of "1" and the link
-            // text highlighting independently).
-            inner.style.pointerEvents = "none";
+            if (inner.style.pointerEvents !== "none") {
+                inner.style.pointerEvents = "none";
+            }
         });
 
         // DOM-level full-bleed overlay. Inline styles are used so this works
