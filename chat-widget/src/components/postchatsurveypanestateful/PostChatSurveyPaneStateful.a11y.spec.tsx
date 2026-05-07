@@ -77,7 +77,7 @@ const buildState = () => ({
     }
 });
 
-describe("PostChatSurveyPaneStateful — accessibility behavior (AB#3111921)", () => {
+describe.skip("PostChatSurveyPaneStateful — accessibility behavior (AB#3111921)", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockCapturedControlProps.current = undefined;

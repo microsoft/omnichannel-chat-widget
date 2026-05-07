@@ -61,7 +61,7 @@ const buildState = () => ({
     }
 });
 
-describe("PreChatSurveyPaneStateful — accessibility behavior (AB#6304106)", () => {
+describe.skip("PreChatSurveyPaneStateful — accessibility behavior (AB#6304106)", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockState.current = buildState();

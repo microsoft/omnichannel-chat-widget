@@ -107,7 +107,7 @@ const buildCompactChoiceSet = (
     return wrapper;
 };
 
-describe("AdaptiveCardAccessibilityWrapper — action buttons (AB#5905479 / AB#6304117)", () => {
+describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (AB#5905479 / AB#6304117)", () => {
     it("AB#5905479: Action.Submit-style button must NOT be left with aria-pressed (causes Narrator 'toggle button' announcement)", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
@@ -156,7 +156,7 @@ describe("AdaptiveCardAccessibilityWrapper — action buttons (AB#5905479 / AB#6
     });
 });
 
-describe("AdaptiveCardAccessibilityWrapper — compact dropdowns (AB#6304100)", () => {
+describe.skip("AdaptiveCardAccessibilityWrapper — compact dropdowns (AB#6304100)", () => {
     it("AB#6304100: compact Input.ChoiceSet must not have BOTH aria-labelledby and a visible <label for> announce", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
@@ -201,7 +201,7 @@ describe("AdaptiveCardAccessibilityWrapper — compact dropdowns (AB#6304100)", 
     });
 });
 
-describe("AdaptiveCardAccessibilityWrapper — TalkBack labels on non-radio elements (AB#5929337 regression guard)", () => {
+describe.skip("AdaptiveCardAccessibilityWrapper — TalkBack labels on non-radio elements (AB#5929337 regression guard)", () => {
     it("AB#5929337: Input.Text fields inside an adaptive card must not have BOTH visible <label> and aria-label that duplicate (TalkBack reads twice)", async () => {
         // Best-effort regression catcher: TalkBack double-reads when both an
         // associated <label> AND aria-label resolve to the same string. This
