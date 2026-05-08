@@ -8,11 +8,14 @@ const SCREENSHOT_PROFILES = Object.freeze({
         pageOptions: {
             viewport: { width: 1280, height: 720 },
             deviceScaleFactor: 1
-        },
-        emulateMedia: {
-            colorScheme: "light",
-            reducedMotion: "no-preference"
         }
+        // No emulateMedia for the default profile: the chromium defaults
+        // are already colorScheme:"light"/reducedMotion:"no-preference",
+        // so calling emulateMedia is functionally a no-op but its side
+        // effect (perturbing frame state immediately before navigation)
+        // creates iframe-load races for stories embedding cross-origin
+        // iframes (e.g. PostChatSurveyPane). Keeping default a pure
+        // viewport-only profile matches the pre-foundation baseline.
     },
     "mobile-iphone": {
         description: "Chromium mobile emulation approximating iPhone 12 portrait",
