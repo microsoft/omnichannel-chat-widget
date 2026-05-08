@@ -1,0 +1,21 @@
+{
+    "$schema": "./nvda-phrases.schema.json",
+    "_comment": "Single source of truth mapping abstract widget events to expected NVDA spoken phrases. Phrases are matched case-insensitively as substrings of the most recent NVDA spoken-phrase log entries. Update this file whenever NVDA cadence or component markup changes; specs reading from srAssert.expectAnnouncedEvent() will pick up the new value automatically.",
+    "_versioning": "Bump _meta.nvdaVersion when these phrases were last validated against a specific NVDA build. Older NVDA versions may produce different cadence; CI pins to _meta.nvdaVersion via tools/accessibility/setupNvda.ps1.",
+    "_meta": {
+        "nvdaVersion": "2024.4",
+        "verbosity": "default"
+    },
+    "events": {
+        "chatButtonFocused": "chat, button",
+        "startChatPaneOpened": "start chat",
+        "messageSent": "message sent",
+        "messageReceived": "said",
+        "agentTyping": "is typing",
+        "attachmentSent": "attachment sent",
+        "transcriptSuccess": "email sent",
+        "transcriptError": "could not send email",
+        "endChatConfirm": "end chat",
+        "reconnectPrompt": "reconnect"
+    }
+}

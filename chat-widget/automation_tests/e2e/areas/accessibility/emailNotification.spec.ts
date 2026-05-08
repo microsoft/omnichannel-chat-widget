@@ -134,4 +134,18 @@ describeIfBuilt("email transcript notification", () => {
             expect(transcriptAriaLive).not.toBe("assertive");
         }
     });
+
+    test("widget bundle ships SR prefix localized texts (NotificationHandler artifact)", async () => {
+        // Fix artifact (bedd2581): defaultMiddlewareLocalizedTexts adds
+        //   MIDDLEWARE_SR_PREFIX_SUCCESS: "Success. "
+        //   MIDDLEWARE_SR_PREFIX_ERROR:   "Error. "
+        // and NotificationHandler.announceToScreenReader prepends them onto
+        // the email transcript banner announcement. Without the fix these
+        // strings + token don't ship in the bundle.
+        const bundleText = fs.readFileSync(widgetBundlePath, "utf8");
+        expect(bundleText).toContain("MIDDLEWARE_SR_PREFIX_SUCCESS");
+        expect(bundleText).toContain("MIDDLEWARE_SR_PREFIX_ERROR");
+        expect(bundleText).toContain("Success. ");
+        expect(bundleText).toContain("Error. ");
+    });
 });

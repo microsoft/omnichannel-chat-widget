@@ -33,3 +33,19 @@ The whole process for adding visual regression tests is code free, as all the ne
 2. Run `yarn test:visual` to run all VRTs.
 3. You may need to increase the timeout in `visual.test.ts` or use `jest.setTimeout()` if there are many more screenshots to be tested and it exceeds the already-set timeout.
 4. If there are any failed tests, the difference image will be saved to a `diff` folder. Currently the failure threshold is 0.05%.
+
+### Accessibility-focused visual profiles
+
+The repo also exposes additional Storybook Playwright profiles for accessibility-oriented validation. These reuse the same visual harness and are opt-in:
+
+- `yarn test:visual:mobile:ios`
+- `yarn test:visual:mobile:android`
+- `yarn test:visual:reflow`
+- `yarn test:visual:zoom`
+
+These scripts are powered by:
+
+- `STORYBOOK_SCREENSHOT_PROFILE` — selects a named profile
+- `STORYBOOK_BROWSERS` — limits browser launches for that run
+
+The profile registry lives in `tools\accessibility\storybookProfiles.cjs`.

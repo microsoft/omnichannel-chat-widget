@@ -150,4 +150,43 @@ describeIfBuilt("attachment upload announcement", () => {
         );
         expect(statusRegions.length).toBeGreaterThanOrEqual(1);
     });
+
+    test("dedicated file-sent announcement region is rendered with role=alert and aria-live=assertive", async () => {
+        // Fix artifact: WebChatContainerStateful.tsx renders a static
+        // <div id="ms_lcw_file_sent_announcement" role="alert"
+        //      aria-live="assertive" aria-atomic="true"> for screen readers.
+        // Without the fix this element is absent from the DOM.
+        page = new BasePage(await context.newPage());
+        await page.openLiveChatWidget("customlivechatwidgets/AttachmentAnnouncementWidget.html");
+        await page.waitUntilLiveChatSelectorIsVisible(
+            CustomLiveChatWidgetConstants.LiveChatButtonId
+        );
+
+        const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
+        await chatButton!.click();
+
+        await page.waitUntilLiveChatSelectorIsVisible(
+            ".webchat__basic-transcript",
+            5,
+            undefined,
+            5000
+        );
+
+        await page.Page.waitForTimeout(2000);
+
+        const announcementRegion = await page.Page.evaluate(() => {
+            const el = document.getElementById("ms_lcw_file_sent_announcement");
+            if (!el) return null;
+            return {
+                role: el.getAttribute("role"),
+                ariaLive: el.getAttribute("aria-live"),
+                ariaAtomic: el.getAttribute("aria-atomic"),
+            };
+        });
+
+        expect(announcementRegion).not.toBeNull();
+        expect(announcementRegion!.role).toBe("alert");
+        expect(announcementRegion!.ariaLive).toBe("assertive");
+        expect(announcementRegion!.ariaAtomic).toBe("true");
+    });
 });

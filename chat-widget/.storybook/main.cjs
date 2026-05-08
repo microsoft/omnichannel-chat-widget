@@ -16,6 +16,9 @@ module.exports = {
   "core": {
     "disableTelemetry": true
   },
+  "features": {
+    "buildStoriesJson": true
+  },
   "webpackFinal": async (config, { configType }) => {
     // Helper to get package directory
     const getPkgDir = (pkgName) => {

@@ -2,3 +2,6 @@
 storybook-static
 storybook-build
 *.bat
+
+# A11y scan output
+accessibility-reports/

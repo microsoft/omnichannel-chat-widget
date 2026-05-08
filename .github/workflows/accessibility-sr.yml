@@ -1,0 +1,97 @@
+name: accessibility-sr
+
+# Screen-reader (NVDA) spec workflow for chat-widget. Runs the
+# e2e/areas/accessibility/sr-nvda/*.spec.ts suite under @guidepup/guidepup
+# against a pinned NVDA install on the existing windows-2022 runner.
+#
+# This workflow is intentionally separated from the main PR build because:
+#   1. NVDA is single-instance per machine; we serialize SR specs.
+#   2. Real speech synthesis adds ~10s/test runtime.
+#   3. SR specs are the newest layer; we want them visible as their own
+#      check so failures don't hide inside a broader E2E run.
+#
+# Status: "soak" — manual + nightly only. NVDA is single-instance per host,
+# adds ~10s/test from real speech synthesis, and depends on a pinned NVDA
+# install + @guidepup/guidepup; it is not appropriate as a per-PR gate.
+# Promote to PR / required after a green run-rate baseline.
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Nightly at 09:00 UTC (~02:00 PT). Soak run that surfaces regressions
+    # without blocking PRs.
+    - cron: '0 9 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  # NVDA is single-instance per host; serialize per ref so two PR pushes
+  # don't fight each other on a runner.
+  group: a11y-sr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sr-nvda:
+    name: NVDA screen-reader specs
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          # Aligned with chat-widget-pr / accessibility-scan (both 22.x).
+          node-version: 22.x
+
+      - name: Install chat-widget
+        working-directory: chat-widget
+        run: yarn install --network-timeout 1000000
+
+      - name: Install Playwright (Edge channel)
+        working-directory: chat-widget
+        run: yarn playwright install --with-deps msedge chromium
+
+      - name: Install NVDA (pinned version)
+        run: pwsh -File tools/accessibility/setupNvda.ps1
+
+      - name: Build widget bundle (required by E2E specs)
+        working-directory: chat-widget
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+        run: yarn build-sample
+
+      - name: Run NVDA SR specs
+        working-directory: chat-widget
+        # Restrict to the sr-nvda suite. Retries: 1 — speech synthesis is
+        # mildly stochastic; one retry absorbs ordinary jitter without
+        # papering over real regressions.
+        run: yarn jest -c automation_tests/jest.config.js --runInBand --testPathPattern "automation_tests/e2e/areas/accessibility/sr-nvda" --testTimeout 60000
+
+      - name: Stage NVDA log for upload
+        if: always()
+        shell: pwsh
+        # `actions/upload-artifact` does not expand runtime env vars (APPDATA
+        # is not exposed via the GH `env` context), so copy the log to a
+        # path we can reference with `runner.temp`.
+        run: |
+          $src = Join-Path $env:APPDATA 'nvda\nvda.log'
+          $dst = Join-Path $env:RUNNER_TEMP 'nvda.log'
+          if (Test-Path $src) {
+              Copy-Item $src $dst -Force
+              Write-Host "Copied $src -> $dst"
+          } else {
+              Write-Host "NVDA log not found at $src; skipping copy."
+          }
+
+      - name: Upload NVDA logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nvda-logs
+          path: |
+            chat-widget/automation_tests/sr-logs/**/*
+            ${{ runner.temp }}/nvda.log
+          if-no-files-found: warn
