@@ -139,7 +139,7 @@ Use these harnesses to add targeted accessibility tests incrementally:
 | `chat-components` | 73 | 135 | 7 | 12 | 116 |
 | `chat-widget`     | 10 | 19  | 0 | 1  | 18  |
 
-`chat-widget` violations (10 stories): 9× `landmark-one-main`, 9× `page-has-heading-one`, 1× `aria-command-name` (real, in `live-chat-widget-custom-2`). The two `landmark-*` rules are story-isolation artifacts (no `<main>` on a Storybook canvas) and are good candidates to suppress on a per-story basis once L1.2 triage lands.
+`chat-widget` violations (10 stories): 9× `landmark-one-main`, 9× `page-has-heading-one`, 1× `aria-command-name` (real, in `live-chat-widget-custom-2`; tracked in [#920](https://github.com/microsoft/omnichannel-chat-widget/issues/920)). The two `landmark-*` rules are story-isolation artifacts (no `<main>` on a Storybook canvas) and are good candidates to suppress on a per-story basis once L1.2 triage lands.
 
 `chat-components` violations (73 stories) are dominated by structural story-isolation artifacts; see `accessibility-reports/axe-report.json` after a fresh `yarn scan:a11y:axe:build` for the per-story breakdown.
 

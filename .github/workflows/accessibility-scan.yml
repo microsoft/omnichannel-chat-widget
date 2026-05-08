@@ -20,8 +20,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
-  actions: write
 
 jobs:
   scan:
@@ -30,6 +28,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # Node 22.x for both packages — the chat-components PR check uses 22.x
+        # and we keep the scan job aligned so the storybook build is identical.
         include:
           - package: chat-components
             node: 22.x
@@ -60,14 +60,15 @@ jobs:
 
       - name: axe-core scan
         working-directory: ${{ matrix.package }}
-        # --fail-on=none: foundation pass is informational, never gates the PR.
+        # --fail-on=none: foundation pass is informational; this workflow is
+        # already off the PR gate (workflow_dispatch + nightly), so we let
+        # the step fail visibly inside the non-gating workflow rather than
+        # double-suppressing with continue-on-error.
         run: yarn scan:a11y:axe --fail-on none
-        continue-on-error: true
 
       - name: Accessibility Insights scan
         working-directory: ${{ matrix.package }}
         run: yarn scan:a11y:insights
-        continue-on-error: true
 
       - name: Upload accessibility reports
         if: always()

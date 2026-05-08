@@ -13,6 +13,12 @@
 param(
     [string]$Version = "2024.4",
     [string]$DownloadUrl = "https://www.nvaccess.org/download/nvda/releases/2024.4/nvda_2024.4.exe",
+    # SHA-256 of the pinned installer. When non-empty, the download is hashed
+    # post-fetch and the script aborts on mismatch (supply-chain mitigation:
+    # protects against compromised CDN, vendor-account, or in-flight tampering).
+    # Leave empty to skip verification; a warning will be emitted and the
+    # observed hash logged so maintainers can pin it in a follow-up commit.
+    [string]$ExpectedSha256 = "",
     [switch]$Force
 )
 
@@ -42,6 +48,19 @@ if ($PSVersionTable.PSVersion.Major -lt 6) {
     Invoke-WebRequest -Uri $DownloadUrl -OutFile $installerPath -UseBasicParsing
 } else {
     Invoke-WebRequest -Uri $DownloadUrl -OutFile $installerPath
+}
+
+$observedHash = (Get-FileHash -Path $installerPath -Algorithm SHA256).Hash.ToUpperInvariant()
+Write-Host "Installer SHA-256: $observedHash"
+if ($ExpectedSha256 -ne "") {
+    $expected = $ExpectedSha256.ToUpperInvariant()
+    if ($observedHash -ne $expected) {
+        Remove-Item -Path $installerPath -Force -ErrorAction SilentlyContinue
+        throw "NVDA installer hash mismatch. Expected $expected, got $observedHash. Aborting before any code is executed."
+    }
+    Write-Host "Installer SHA-256 matches the pinned value."
+} else {
+    Write-Warning "No -ExpectedSha256 supplied; skipping integrity verification. Pin the value above to enforce on subsequent runs."
 }
 
 Write-Host "Installing NVDA silently ..."

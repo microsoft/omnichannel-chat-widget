@@ -4,7 +4,6 @@
     "_versioning": "Bump _meta.nvdaVersion when these phrases were last validated against a specific NVDA build. Older NVDA versions may produce different cadence; CI pins to _meta.nvdaVersion via tools/accessibility/setupNvda.ps1.",
     "_meta": {
         "nvdaVersion": "2024.4",
-        "validatedOn": "TBD-first-green-CI-run",
         "verbosity": "default"
     },
     "events": {
