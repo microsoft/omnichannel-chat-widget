@@ -12,7 +12,7 @@ This repo now includes a first-pass accessibility tooling foundation for LCW pac
 | `@axe-core/react` dev opt-in | `chat-*\.storybook\preview.js` | Gated on `STORYBOOK_AXE_DEV=true`; logs violations to the browser console while running `yarn storybook`. No effect on production builds. |
 | Package a11y Jest harness | `chat-widget\jest.config.a11y.cjs`, `chat-components\jest.config.a11y.cjs` | Ready for `*.a11y.spec.*` / `*.a11y.test.*` files; safe when no tests exist yet. |
 | `jest-axe` setup | `chat-widget\jest.setup.a11y.js`, `chat-components\jest.setup.a11y.js` | Adds `jest-axe` matchers for future component/state accessibility tests. |
-| Non-gating PR scan workflow | `.github\workflows\accessibility-scan.yml` | Runs both axe and Accessibility Insights against built Storybook for both packages and uploads the reports as PR artifacts. Does not fail the PR. |
+| Non-gating manual / nightly scan workflow | `.github\workflows\accessibility-scan.yml` | Runs both axe and Accessibility Insights against built Storybook for both packages on `workflow_dispatch` and a nightly schedule, uploading reports as artifacts. Does not run on PR and does not fail the build. |
 | Screen-reader repro docs | `docs\accessibility\NVDA_SETUP.md`, `docs\accessibility\NARRATOR_SETUP.md` | Public-safe local setup and evidence capture guidance. |
 | Real-mobile validation matrix | `docs\accessibility\REAL_MOBILE_VALIDATION.md` | Covers the device-backed scenarios the repo alone cannot fully automate. |
 

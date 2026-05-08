@@ -71,6 +71,22 @@ jobs:
         # papering over real regressions.
         run: yarn jest -c automation_tests/jest.config.js --runInBand --testPathPattern "automation_tests/e2e/areas/accessibility/sr-nvda" --testTimeout 60000
 
+      - name: Stage NVDA log for upload
+        if: always()
+        shell: pwsh
+        # `actions/upload-artifact` does not expand runtime env vars (APPDATA
+        # is not exposed via the GH `env` context), so copy the log to a
+        # path we can reference with `runner.temp`.
+        run: |
+          $src = Join-Path $env:APPDATA 'nvda\nvda.log'
+          $dst = Join-Path $env:RUNNER_TEMP 'nvda.log'
+          if (Test-Path $src) {
+              Copy-Item $src $dst -Force
+              Write-Host "Copied $src -> $dst"
+          } else {
+              Write-Host "NVDA log not found at $src; skipping copy."
+          }
+
       - name: Upload NVDA logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -78,5 +94,5 @@ jobs:
           name: nvda-logs
           path: |
             chat-widget/automation_tests/sr-logs/**/*
-            ${{ env.APPDATA }}/nvda/nvda.log
+            ${{ runner.temp }}/nvda.log
           if-no-files-found: warn

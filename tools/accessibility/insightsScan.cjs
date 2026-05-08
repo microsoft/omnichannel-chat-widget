@@ -81,7 +81,8 @@ function startStaticServer(rootDir, port) {
                 if (pathname.endsWith("/")) pathname += "index.html";
                 const filePath = path.join(rootDir, pathname);
                 const resolved = path.resolve(filePath);
-                if (!resolved.startsWith(path.resolve(rootDir))) {
+                const rel = path.relative(path.resolve(rootDir), resolved);
+                if (rel.startsWith("..") || path.isAbsolute(rel)) {
                     res.writeHead(403); res.end("Forbidden"); return;
                 }
                 fs.stat(resolved, (err, stat) => {

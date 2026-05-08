@@ -125,7 +125,8 @@ function startStaticServer(rootDir, port) {
                 if (pathname.endsWith("/")) pathname += "index.html";
                 const filePath = path.join(rootDir, pathname);
                 const resolved = path.resolve(filePath);
-                if (!resolved.startsWith(path.resolve(rootDir))) {
+                const rel = path.relative(path.resolve(rootDir), resolved);
+                if (rel.startsWith("..") || path.isAbsolute(rel)) {
                     res.writeHead(403); res.end("Forbidden"); return;
                 }
                 fs.stat(resolved, (err, stat) => {
@@ -371,6 +372,28 @@ function highestImpact(counts) {
     if (failOn !== "none" && summary.errors.length > 0 && failOn === "any") {
         console.error(`✗ Failing because ${summary.errors.length} story load error(s) occurred.`);
         process.exit(1);
+    }
+    if (gateRules.length > 0) {
+        const gateSet = new Set(gateRules);
+        const gatedHits = [];
+        for (const p of perStory) {
+            if (!p.results) continue;
+            for (const v of p.results.violations) {
+                if (gateSet.has(v.id)) {
+                    gatedHits.push({ story: p.story.id, ruleId: v.id, impact: v.impact });
+                }
+            }
+        }
+        if (gatedHits.length > 0) {
+            console.error(`✗ Failing because ${gatedHits.length} violation(s) match --gate-rules:`);
+            for (const h of gatedHits.slice(0, 25)) {
+                console.error(`    ${h.story}  ${h.ruleId}  (${h.impact || "n/a"})`);
+            }
+            if (gatedHits.length > 25) {
+                console.error(`    ... and ${gatedHits.length - 25} more (see ${reportPath}).`);
+            }
+            process.exit(1);
+        }
     }
     process.exit(0);
 })().catch((e) => {

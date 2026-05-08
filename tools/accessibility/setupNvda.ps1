@@ -35,7 +35,14 @@ if (-not (Test-Path $installerDir)) {
 }
 
 Write-Host "Downloading NVDA $Version from $DownloadUrl ..."
-Invoke-WebRequest -Uri $DownloadUrl -OutFile $installerPath -UseBasicParsing
+# -UseBasicParsing is unsupported in PowerShell 6+ (the only behavior in pwsh).
+# Apply it only on Windows PowerShell 5.x so we keep working on hosted Windows
+# runners that invoke this script via `pwsh -File ...`.
+if ($PSVersionTable.PSVersion.Major -lt 6) {
+    Invoke-WebRequest -Uri $DownloadUrl -OutFile $installerPath -UseBasicParsing
+} else {
+    Invoke-WebRequest -Uri $DownloadUrl -OutFile $installerPath
+}
 
 Write-Host "Installing NVDA silently ..."
 # NVDA's silent install switches: --install --silent.

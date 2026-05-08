@@ -64,13 +64,10 @@ describeIfBuilt("forced-colors scrollbar visibility (forced-colors-scrollbar reg
         // ideal, but for a regression guard we just measure current state.
         const scrollbarWidth = await measureScrollbarWidth(page.Page, ".webchat__basic-transcript");
 
-        // If the scrollbar is themed away to zero width in forced-colors,
-        // it's invisible to users navigating with high-contrast themes.
-        // Catcher: width > 0 means a scrollbar is rendered (it may still
-        // need styling but at least it claims space).
-        expect(scrollbarWidth).toBeGreaterThanOrEqual(0);
-        // Stronger assertion (regression guard against future style
-        // changes that hide the scrollbar entirely):
-        // expect(scrollbarWidth).toBeGreaterThan(0);
+        // Regression guard: if the scrollbar is themed away to zero width in
+        // forced-colors, it's invisible to users navigating with high-contrast
+        // themes. We assert > 0 (not >= 0) so the test actually catches a
+        // regression where the scrollbar collapses.
+        expect(scrollbarWidth).toBeGreaterThan(0);
     });
 });
