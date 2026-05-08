@@ -40,14 +40,11 @@ beforeAll(async () => {
             }
 
             const page = await browser[browserType].newPage(mergePageOptions(screenshotProfile, options));
+            await preparePageForProfile(page, screenshotProfile);
             return page;
         },
         afterScreenshot: async (page) => {
             await page.close();
-        },
-        beforeScreenshot: async (page) => {
-            await page.waitForLoadState("load", { timeout: 10000 });
-            await preparePageForProfile(page, screenshotProfile);
         },
         screenshotOptions: {
             // Target ONLY the Firefox custom-components screenshot (ID: kF8sVvQpcm8X)
