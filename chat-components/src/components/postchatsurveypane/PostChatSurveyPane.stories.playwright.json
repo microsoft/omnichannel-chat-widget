@@ -10,7 +10,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 5000
+                    "timeout": 1000
                   }
                 }
               ],
@@ -29,7 +29,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 5000
+                    "timeout": 1000
                   }
                 }
               ],
@@ -48,7 +48,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 5000
+                    "timeout": 1000
                   }
                 }
               ],
@@ -71,7 +71,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 5000
+                    "timeout": 1000
                   }
                 }
               ],
@@ -90,7 +90,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 5000
+                    "timeout": 1000
                   }
                 }
               ],
@@ -109,7 +109,7 @@
                 {
                   "name": "waitForTimeout",
                   "args": {
-                    "timeout": 5000
+                    "timeout": 1000
                   }
                 }
               ],
