@@ -16,6 +16,13 @@
         "transcriptSuccess": "email sent",
         "transcriptError": "could not send email",
         "endChatConfirm": "end chat",
-        "reconnectPrompt": "reconnect"
+        "reconnectPrompt": "reconnect",
+        "errorAnnounced": "error",
+        "fileUploadProgress": "uploading",
+        "fileUploadComplete": "upload complete",
+        "fileUploadFailed": "upload failed",
+        "sessionTimeoutWarning": "session will end",
+        "agentDisconnected": "agent disconnected",
+        "queuePositionUpdate": "position in queue"
     }
 }
