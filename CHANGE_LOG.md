@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- [Compliance] Post-chat survey URL allow-list no longer includes the China-cloud Power Virtual Agents host by default. The China host is added at runtime only when the host org URL is detected to be in the China sovereign cloud (Mooncake), so non-China bundles (GCC High, public, etc.) ship without the cross-cloud literal that compliance/security scanners flag.
 - [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
 - [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers
 - [A11y] Screen reader now announces "File sent successfully." when an attachment upload completes; uses append-and-remove assertive aria-live pattern for reliable announcement on Android TalkBack/WebView. Announcement text is customizable via `MIDDLEWARE_BANNER_FILE_SENT`.

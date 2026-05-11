@@ -83,7 +83,10 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
     };
 
     if (controlProps.surveyURL) {
-        if (!isValidSurveyUrl(controlProps.surveyURL)) {
+        const hostOrgUrl = (props as IPostChatSurveyPaneStatefulProps & {
+            omnichannelConfig?: { orgUrl?: string };
+        }).omnichannelConfig?.orgUrl;
+        if (!isValidSurveyUrl(controlProps.surveyURL, hostOrgUrl)) {
             TelemetryHelper.logLoadingEvent(LogLevel.ERROR, {
                 Event: TelemetryEvent.PostChatSurveyUrlValidationFailed,
                 Description: `${controlProps.surveyURL} is not a valid Survey URL`
