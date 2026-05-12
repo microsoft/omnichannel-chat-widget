@@ -1,21 +1,10 @@
 import { Constants } from "../../../common/Constants";
 import MarkdownIt from "markdown-it";
 import MarkdownItForInline from "markdown-it-for-inline";
+import StateCore from "markdown-it/lib/rules_core/state_core";
+import Token from "markdown-it/lib/token";
 import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMarkdownLocalizedTexts";
 import { addSlackMarkdownIt } from "./helpers/markdownHelper";
-
-interface MarkdownToken {
-    attrGet?: (name: string) => string | null;
-    attrs?: string[][];
-    children?: MarkdownToken[];
-    content?: string;
-    type: string;
-}
-
-interface MarkdownState {
-    Token: new (type: string, tag: string, nesting: number) => MarkdownToken;
-    tokens: MarkdownToken[];
-}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean, opensMarkdownLinksInSameTab?: boolean) => {
@@ -99,25 +88,25 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         // markdown-it renders two sibling links that screen readers announce as two separate
         // focusable links. Merge consecutive markdown link tokens with identical attributes so
         // the number and label form one combined focusable link without discarding metadata.
-        md.core.ruler.after("inline", "merge_adjacent_same_href_links", function(state: MarkdownState) {
+        md.core.ruler.after("inline", "merge_adjacent_same_href_links", function(state: StateCore) {
             const createSpaceToken = () => {
                 const token = new state.Token("text", "", 0);
                 token.content = " ";
                 return token;
             };
 
-            const sortedAttrs = (token: MarkdownToken) => (token.attrs || [])
+            const sortedAttrs = (token: Token) => (token.attrs || [])
                 .map((attr: string[]) => `${attr[0]}=${attr[1]}`)
                 .sort();
 
-            const hasSameAttributes = (first: MarkdownToken, second: MarkdownToken): boolean => {
+            const hasSameAttributes = (first: Token, second: Token): boolean => {
                 const firstAttrs = sortedAttrs(first);
                 const secondAttrs = sortedAttrs(second);
                 return firstAttrs.length === secondAttrs.length
                     && firstAttrs.every((attr: string, index: number) => attr === secondAttrs[index]);
             };
 
-            const collectLink = (children: MarkdownToken[], index: number) => {
+            const collectLink = (children: Token[], index: number) => {
                 const open = children[index];
                 if (!open || open.type !== "link_open") {
                     return undefined;
@@ -147,7 +136,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                 return undefined;
             };
 
-            const getNextAdjacentLink = (children: MarkdownToken[], startIndex: number) => {
+            const getNextAdjacentLink = (children: Token[], startIndex: number) => {
                 const separatorTokens = [];
                 let index = startIndex;
                 while (index < children.length && children[index].type === "text" && /^\s*$/.test(children[index].content || "")) {
@@ -167,7 +156,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                 };
             };
 
-            state.tokens.forEach((blockToken: MarkdownToken) => {
+            state.tokens.forEach((blockToken: Token) => {
                 if (blockToken.type !== "inline" || !blockToken.children) {
                     return;
                 }
