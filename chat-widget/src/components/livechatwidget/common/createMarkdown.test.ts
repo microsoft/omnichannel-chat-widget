@@ -220,6 +220,17 @@ describe("createMarkdown - Adjacent anchor merging (a11y)", () => {
         expect(merged).toMatch(/1\.\s+View details/);
     });
 
+    it("does not insert whitespace when adjacent links had no separator", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[A](https://example.com)[B](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        const merged = stripImgs(result).replace(/<[^>]+>/g, "");
+        expect(merged).toContain("AB");
+        expect(merged).not.toContain("A B");
+    });
+
     it("adds only one open-in-new-window icon after merging same-href links", () => {
         const markdown = createMarkdown(false, false);
         const input = "[1.](https://example.com) [View details](https://example.com)";

@@ -89,12 +89,6 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         // focusable links. Merge consecutive markdown link tokens with identical attributes so
         // the number and label form one combined focusable link without discarding metadata.
         md.core.ruler.after("inline", "merge_adjacent_same_href_links", function(state: StateCore) {
-            const createSpaceToken = () => {
-                const token = new state.Token("text", "", 0);
-                token.content = " ";
-                return token;
-            };
-
             const sortedAttrs = (token: Token) => (token.attrs || [])
                 .map((attr: string[]) => `${attr[0]}=${attr[1]}`)
                 .sort();
@@ -183,7 +177,7 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
                     while (nextLink
                         && nextLink.href === firstLink.href
                         && hasSameAttributes(firstLink.open, nextLink.open)) {
-                        linkTokens.push(...(nextLink.separatorTokens.length > 0 ? nextLink.separatorTokens : [createSpaceToken()]));
+                        linkTokens.push(...nextLink.separatorTokens);
                         linkTokens.push(...children.slice(nextLink.openIndex + 1, nextLink.closeIndex));
                         nextIndex = nextLink.closeIndex + 1;
                         mergedAnyLink = true;
