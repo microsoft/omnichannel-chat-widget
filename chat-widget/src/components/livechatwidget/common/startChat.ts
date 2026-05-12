@@ -241,13 +241,10 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
             return;
         }
 
-        // Persistent Chat relies on the `reconnectId` retrieved from reconnectablechats API to reconnect upon start chat and not `liveChatContext`
-        if (!persistentChatEnabled) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const liveChatContext: any = await facadeChatSDK?.getCurrentLiveChatContext();
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
-        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const liveChatContext: any = await facadeChatSDK?.getCurrentLiveChatContext();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
 
         logWidgetLoadComplete();
         // Set post chat context in state, load in background to do not block the load
