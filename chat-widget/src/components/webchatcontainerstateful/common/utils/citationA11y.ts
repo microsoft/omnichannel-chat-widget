@@ -25,19 +25,17 @@ const STYLE_TAG_ID = "ocw-citation-a11y-styles";
 //    iOS Safari hit-tests that overlay as a SINGLE region, so the tap
 //    highlight / selection rectangle always covers the whole card instead
 //    of just the "1" badge or just the link text.
-//  - Make every descendant fully transparent to pointer / selection / focus,
-//    so they can never become a standalone tap target.
+//  - Make every descendant transparent to pointer / focus, so they can never
+//    become a standalone tap target.
 const STYLE_RULES = `
 a.webchat__link-definitions__list-item-box,
 a[href^="cite:"] {
-    position: relative !important;
-    display: block !important;
-    isolation: isolate !important;
-    -webkit-tap-highlight-color: rgba(0, 120, 212, 0.15) !important;
-    -webkit-touch-callout: none !important;
-    -webkit-user-select: none !important;
-    user-select: none !important;
-    cursor: pointer !important;
+    position: relative;
+    display: block;
+    isolation: isolate;
+    -webkit-tap-highlight-color: rgba(0, 120, 212, 0.15);
+    -webkit-touch-callout: none;
+    cursor: pointer;
 }
 a.webchat__link-definitions__list-item-box::after,
 a[href^="cite:"]::after {
@@ -51,14 +49,12 @@ a[href^="cite:"]::after {
 }
 a.webchat__link-definitions__list-item-box *,
 a[href^="cite:"] * {
-    pointer-events: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-    -webkit-touch-callout: none !important;
-    -webkit-user-select: none !important;
-    user-select: none !important;
-    outline: none !important;
-    text-decoration: inherit !important;
-    cursor: inherit !important;
+    pointer-events: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    outline: none;
+    text-decoration: inherit;
+    cursor: inherit;
 }
 `;
 

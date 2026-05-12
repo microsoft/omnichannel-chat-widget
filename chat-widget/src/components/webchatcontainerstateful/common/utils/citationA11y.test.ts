@@ -95,7 +95,8 @@ describe("patchCitationAnchorsForA11y", () => {
         expect(style).not.toBeNull();
         expect(style?.textContent).toContain("pointer-events: none");
         expect(style?.textContent).toContain("-webkit-tap-highlight-color: transparent");
-        expect(style?.textContent).toContain("user-select: none");
+        expect(style?.textContent).not.toContain("!important");
+        expect(style?.textContent).not.toContain("user-select");
 
         // Re-running should not add a second <style> tag.
         patchCitationAnchorsForA11y(document);
