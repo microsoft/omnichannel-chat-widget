@@ -247,6 +247,31 @@ describe("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-doubl
         const select = container.querySelector("select#custom-select") as HTMLElement;
         expect(select).toHaveAttribute("aria-labelledby", "custom-label");
     });
+
+    it("dropdown-double-label: hidden labels do not cause aria-labelledby removal", async () => {
+        const { container } = render(
+            <AdaptiveCardAccessibilityWrapper>
+                <div className="ac-adaptiveCard" />
+            </AdaptiveCardAccessibilityWrapper>
+        );
+        const card = container.querySelector(".ac-adaptiveCard") as HTMLElement;
+
+        await act(async () => {
+            const choiceSet = buildCompactChoiceSet(
+                "Country",
+                "country-select",
+                "country-label",
+                ["United States", "Canada", "Mexico"]
+            );
+            const label = choiceSet.querySelector("label") as HTMLLabelElement;
+            label.setAttribute("aria-hidden", "true");
+            card.appendChild(choiceSet);
+            observerInstance.trigger();
+        });
+
+        const select = container.querySelector("select#country-select") as HTMLElement;
+        expect(select).toHaveAttribute("aria-labelledby", "country-label");
+    });
 });
 
 describe.skip("AdaptiveCardAccessibilityWrapper — TalkBack labels on non-radio elements (talkback-duplicate-label regression guard)", () => {

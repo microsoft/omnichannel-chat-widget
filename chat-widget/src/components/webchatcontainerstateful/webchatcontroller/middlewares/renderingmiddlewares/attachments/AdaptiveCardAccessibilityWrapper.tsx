@@ -38,7 +38,7 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
             compactSelects.forEach((select) => {
                 const id = select.id;
                 if (!id) return;
-                const visibleLabel = container.querySelector<HTMLLabelElement>(`label[for="${CSS.escape(id)}"]`);
+                const visibleLabel = container.querySelector<HTMLLabelElement>(`label[for="${CSS.escape(id)}"]:not([aria-hidden='true'])`);
                 const labelledBy = (select.getAttribute("aria-labelledby") || "").trim().split(/\s+/);
                 if (visibleLabel?.id && labelledBy.length === 1 && labelledBy[0] === visibleLabel.id) {
                     select.removeAttribute("aria-labelledby");

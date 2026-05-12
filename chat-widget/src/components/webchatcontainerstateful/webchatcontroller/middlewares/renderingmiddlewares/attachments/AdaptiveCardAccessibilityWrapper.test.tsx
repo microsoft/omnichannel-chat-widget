@@ -334,6 +334,23 @@ describe("AdaptiveCardAccessibilityWrapper", () => {
             expect(container.querySelector("select")).toHaveAttribute("aria-labelledby", "country-label country-required");
         });
 
+        it("should preserve aria-labelledby when the matching compact ChoiceSet label is aria-hidden", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-input-container">
+                        <label id="country-label" htmlFor="country-select" aria-hidden="true">Country</label>
+                        <select id="country-select" className="ac-input ac-multichoiceInput" aria-labelledby="country-label" />
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            expect(container.querySelector("select")).toHaveAttribute("aria-labelledby", "country-label");
+        });
+
         it("should not remove aria-labelledby from non-ChoiceSet selects", async () => {
             const { container } = render(
                 <AdaptiveCardAccessibilityWrapper>
