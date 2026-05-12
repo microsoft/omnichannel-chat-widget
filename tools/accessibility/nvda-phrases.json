@@ -17,7 +17,7 @@
         "transcriptError": "could not send email",
         "endChatConfirm": "end chat",
         "reconnectPrompt": "reconnect",
-        "errorAnnounced": "error",
+        "errorAnnounced": "error message",
         "fileUploadProgress": "uploading",
         "fileUploadComplete": "upload complete",
         "fileUploadFailed": "upload failed",
