@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 
 import * as utils from "../../common/utils";
 
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, render, waitFor } from "@testing-library/react";
 
 import { PostChatLoadingPaneStateful } from "./PostChatLoadingPaneStateful";
 import React from "react";
@@ -39,6 +39,7 @@ jest.mock("@microsoft/omnichannel-chat-components", () => ({
                 id={props.controlProps?.id}
                 role={props.controlProps?.role}
                 aria-live={props.controlProps?.["aria-live"]}
+                aria-atomic={props.controlProps?.["aria-atomic"]}
             >
                 <span id={`${props.controlProps?.id}-subtitle`}>
                     {props.controlProps?.subtitleText}
@@ -74,11 +75,12 @@ describe("PostChatLoadingPaneStateful — accessibility behavior", () => {
         cleanup();
     });
 
-    it("loading-pane-status: subtitle is rendered (sanity)", () => {
+    it("loading-pane-status: subtitle is rendered after mount so the live region announces the update", async () => {
         const { container } = render(<PostChatLoadingPaneStateful />);
         const subtitle = container.querySelector("#oc-lcw-postchatloading-pane-subtitle");
         expect(subtitle).not.toBeNull();
-        expect(subtitle?.textContent || "").toMatch(/please take a moment/i);
+        expect(subtitle).toHaveTextContent("");
+        await waitFor(() => expect(subtitle?.textContent || "").toMatch(/please take a moment/i));
     });
 
     it("loading-pane-status: LoadingPane controlProps MUST carry live-region semantics (role/aria-live) so subtitle is announced", () => {
@@ -89,13 +91,22 @@ describe("PostChatLoadingPaneStateful — accessibility behavior", () => {
 
         const role = cp?.role;
         const ariaLive = cp?.["aria-live"];
+        const ariaAtomic = cp?.["aria-atomic"];
         const hasLiveRegion =
             role === "status" ||
             role === "alert" ||
             ariaLive === "polite" ||
             ariaLive === "assertive";
 
-        // Reproduces the bug: no live-region wiring is set today, so this fails.
         expect(hasLiveRegion).toBe(true);
+        expect(ariaAtomic).toBe("true");
+    });
+
+    it("loading-pane-status: consumer controlProps cannot remove required live-region semantics", () => {
+        render(<PostChatLoadingPaneStateful controlProps={{ role: undefined } as any} />);
+
+        const cp = mockCapturedControlProps.current;
+        expect(cp?.role).toBe("status");
+        expect(cp?.["aria-live"]).toBe("polite");
     });
 });
