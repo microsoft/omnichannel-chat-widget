@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 
 import * as utils from "../../common/utils";
 
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 
 import { PreChatSurveyPaneStateful } from "./PreChatSurveyPaneStateful";
 import React from "react";
@@ -16,16 +16,10 @@ import React from "react";
  * status node) inside the prechat pane that retains the previous focus
  * event's label and gets re-read on the next focus change.
  *
- * `PreChatSurveyPaneStateful.tsx` does not currently declare any aria-live
- * cleanup hook — `useEffect` only sets aria-label on inputs once and never
- * touches a status / live region.
- *
- * Fix path (proposed): the stateful pane should manage a polite
- * aria-live region (or call `announceMessageImmediately("")`) on
- * focus changes so previous text never carries forward.
- *
- * NOTE: This is a best-effort DOM-level catcher. Real verification needs
- * Narrator against a live prechat — see BUG_STATUS.md.
+ * The stateful pane should manage a polite aria-live region on focus changes
+ * so previous text never carries forward. This DOM-level integration test
+ * verifies the behavior by moving focus between options and asserting that the
+ * live-region text is replaced with the focused option's label.
  */
 
 const mockState: { current: any } = { current: undefined };
@@ -38,9 +32,9 @@ jest.mock("@microsoft/omnichannel-chat-components", () => ({
     },
     PreChatSurveyPane: (props: any) => (
         <div id={props.controlProps?.id} data-testid="prechat-pane">
-            {/* Simulated rendered checkbox to exercise the live-region cleanup */}
-            <input type="checkbox" id="prechat-consent" aria-label="I consent" />
-            {/* Component is expected (after fix) to render a managed polite live region */}
+            <input type="checkbox" id="prechat-email" aria-label="Email updates" />
+            <input type="checkbox" id="prechat-sms" />
+            <label htmlFor="prechat-sms">SMS updates</label>
         </div>
     )
 }));
@@ -78,19 +72,22 @@ describe("PreChatSurveyPaneStateful — accessibility behavior (prechat-stale-li
         cleanup();
     });
 
-    it("prechat-stale-live-region: prechat pane MUST own a managed polite live region (status / aria-live=polite) so previous focus text does not linger", () => {
+    it("prechat-stale-live-region: focused option label is written to the polite live region and replaces stale text", async () => {
         const { container } = render(
             <PreChatSurveyPaneStateful surveyProps={{}} initStartChat={jest.fn()} />
         );
 
-        // Look anywhere inside the rendered pane for an aria-live cleanup
-        // affordance: either an explicit role="status", an aria-live region,
-        // or a hidden announcement node owned by the pane.
-        const liveNodes = container.querySelectorAll(
-            "[role='status'], [role='alert'], [aria-live='polite'], [aria-live='assertive']"
-        );
+        const liveRegion = container.querySelector("[role='status'][aria-live='polite']");
+        const emailOption = container.querySelector("#prechat-email") as HTMLElement;
+        const smsOption = container.querySelector("#prechat-sms") as HTMLElement;
 
-        // Today the pane renders no managed live region — this assertion fails.
-        expect(liveNodes.length).toBeGreaterThan(0);
+        expect(liveRegion).not.toBeNull();
+
+        fireEvent.focus(emailOption);
+        await waitFor(() => expect(liveRegion).toHaveTextContent("Email updates"));
+
+        fireEvent.focus(smsOption);
+        await waitFor(() => expect(liveRegion).toHaveTextContent("SMS updates"));
+        expect(liveRegion).not.toHaveTextContent("Email updates");
     });
 });
