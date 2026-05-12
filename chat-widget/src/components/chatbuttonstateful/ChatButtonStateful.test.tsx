@@ -18,6 +18,7 @@ jest.mock("../../common/telemetry/TelemetryHelper");
 jest.mock("../../common/telemetry/TelemetryManager");
 jest.mock("../../common/utils", () => ({
     createTimer: () => ({ milliSecondsElapsed: 100 }),
+    preventFocusToMoveOutOfElement: jest.fn(() => jest.fn()),
     setFocusOnElement: jest.fn()
 }));
 
