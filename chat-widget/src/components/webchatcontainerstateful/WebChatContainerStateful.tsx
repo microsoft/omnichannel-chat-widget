@@ -168,7 +168,12 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
     // aria-label on the anchor and hides every descendant from the a11y tree so
     // the whole card is announced as one link.
     useEffect(() => {
-        patchCitationAnchorsForA11y(document);
+        const webChatRoot = document.getElementById("ms_lcw_webchat_root");
+        if (!webChatRoot) {
+            return;
+        }
+
+        patchCitationAnchorsForA11y(webChatRoot);
 
         const observer = new MutationObserver((mutations) => {
             for (const m of mutations) {
@@ -180,7 +185,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                             // mounting OpenInNewWindowIcon after the anchor) means
                             // the parent anchor needs to re-walk its descendants.
                             const ancestor = (node as Element).parentElement?.closest?.(
-                                "a.webchat__link-definitions__list-item-box, a[href^=\"cite:\"]"
+                                "a.webchat__link-definitions__list-item-box"
                             );
                             if (ancestor) {
                                 patchCitationAnchorsForA11y(ancestor);
@@ -192,7 +197,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                     // by re-patching the closest matching anchor ancestor.
                     const target = m.target as Element;
                     const ancestor = target.closest?.(
-                        "a.webchat__link-definitions__list-item-box, a[href^=\"cite:\"]"
+                        "a.webchat__link-definitions__list-item-box"
                     );
                     if (ancestor) {
                         patchCitationAnchorsForA11y(ancestor);
@@ -201,7 +206,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             }
         });
 
-        observer.observe(document.body, {
+        observer.observe(webChatRoot, {
             childList: true,
             subtree: true,
             attributes: true,

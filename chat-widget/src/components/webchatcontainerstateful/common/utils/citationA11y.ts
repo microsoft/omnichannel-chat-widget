@@ -9,7 +9,7 @@
 // whole card is announced as one link.
 
 const CITATION_ANCHOR_SELECTOR =
-    "a.webchat__link-definitions__list-item-box, a[href^=\"cite:\"]";
+    "a.webchat__link-definitions__list-item-box";
 
 const PATCHED_MARKER = "ocwCitationA11yPatched";
 
@@ -28,8 +28,7 @@ const STYLE_TAG_ID = "ocw-citation-a11y-styles";
 //  - Make every descendant transparent to pointer / focus, so they can never
 //    become a standalone tap target.
 const STYLE_RULES = `
-a.webchat__link-definitions__list-item-box,
-a[href^="cite:"] {
+a.webchat__link-definitions__list-item-box {
     position: relative;
     display: block;
     isolation: isolate;
@@ -37,8 +36,7 @@ a[href^="cite:"] {
     -webkit-touch-callout: none;
     cursor: pointer;
 }
-a.webchat__link-definitions__list-item-box::after,
-a[href^="cite:"]::after {
+a.webchat__link-definitions__list-item-box::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -47,8 +45,7 @@ a[href^="cite:"]::after {
     pointer-events: auto;
     -webkit-tap-highlight-color: rgba(0, 120, 212, 0.15);
 }
-a.webchat__link-definitions__list-item-box *,
-a[href^="cite:"] * {
+a.webchat__link-definitions__list-item-box * {
     pointer-events: none;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;

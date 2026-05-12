@@ -131,7 +131,7 @@ describe("patchCitationAnchorsForA11y", () => {
         expect(anchor.getAttribute("aria-label")).toBe("Manually overridden");
     });
 
-    it("handles bare cite: anchors without badge/text structure", () => {
+    it("does not patch bare cite: anchors outside citation cards", () => {
         const anchor = document.createElement("a");
         anchor.setAttribute("href", "cite:abc");
         anchor.setAttribute("title", "Fallback title");
@@ -140,9 +140,8 @@ describe("patchCitationAnchorsForA11y", () => {
 
         patchCitationAnchorsForA11y(document);
 
-        // Prefers title over textContent for plain cite: anchors
-        expect(anchor.getAttribute("aria-label")).toBe("Fallback title");
-        expect(anchor.dataset.ocwCitationA11yPatched).toBe("true");
+        expect(anchor.getAttribute("aria-label")).toBeNull();
+        expect(anchor.dataset.ocwCitationA11yPatched).toBeUndefined();
     });
 
     it("uses just the identifier when no text is present", () => {
