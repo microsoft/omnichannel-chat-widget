@@ -28,22 +28,19 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
             const container = containerRef.current;
             if (!container) return;
 
-            // action-button-toggle / login-button-toggle: adaptive-card action buttons (e.g.
-            // Action.Submit, Action.OpenUrl, sign-in/login buttons) are
-            // rendered as <button class="ac-pushButton"> with attributes
-            // such as `aria-pressed="false"` and `role="switch"` that cause
-            // screen readers (Narrator, NVDA) to announce them as toggle /
-            // switch buttons instead of plain push buttons. Strip the
-            // toggle-only ARIA so they announce as ordinary buttons.
+            // action-button-toggle / login-button-toggle: submit/login action buttons can be
+            // rendered with toggle-only ARIA that causes screen readers to announce them as
+            // switches instead of plain push buttons. Preserve Action.ToggleVisibility buttons,
+            // which own aria-controls and legitimately expose a pressed state.
             const actionButtons = container.querySelectorAll<HTMLElement>(
-                "button.ac-pushButton, .ac-actionSet button"
+                "button.ac-pushButton:not([aria-controls]), .ac-actionSet button:not([aria-controls])"
             );
             actionButtons.forEach((btn) => {
                 if (btn.hasAttribute("aria-pressed")) {
                     btn.removeAttribute("aria-pressed");
                 }
                 const role = btn.getAttribute("role");
-                if (role === "switch" || role === "checkbox") {
+                if (role === "switch") {
                     btn.removeAttribute("role");
                 }
             });
