@@ -12,8 +12,8 @@ module.exports = {
         ".+\\.(css|scss|png|jpg|svg|gif)$": "jest-transform-stub"
     },
     "moduleNameMapper": {
-        "^swiper/modules$": "swiper",
-        "^swiper$": "<rootDir>/node_modules/swiper/swiper.esm.js"
+        "^swiper/modules$": "<rootDir>/node_modules/swiper/modules/index.mjs",
+        "^swiper$": "<rootDir>/node_modules/swiper/swiper.mjs"
     },
     setupFiles: ["./jest.setup.js"]
 
