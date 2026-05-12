@@ -28,7 +28,7 @@ const getFocusedElementAnnouncement = (element: HTMLElement): string => {
         return ariaLabel.trim();
     }
 
-    const ariaLabelledBy = element.getAttribute("aria-labelledby");
+    const ariaLabelledBy = element.getAttribute(HtmlAttributeNames.ariaLabelledby);
     if (ariaLabelledBy) {
         const labelledByText = ariaLabelledBy
             .split(/\s+/)
@@ -41,7 +41,8 @@ const getFocusedElementAnnouncement = (element: HTMLElement): string => {
     }
 
     if (element.id) {
-        const label = document.querySelector(`label[for="${CSS.escape(element.id)}"]`);
+        const label = Array.from(document.querySelectorAll("label"))
+            .find((candidate) => candidate.htmlFor === element.id || candidate.getAttribute("for") === element.id);
         if (label?.textContent) {
             return label.textContent.trim();
         }
@@ -242,18 +243,17 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
                 Focus updates clear and replace this text so stale labels
                 are not re-announced. */}
             <div
-                id="oc-lcw-prechatsurvey-announce"
                 role="status"
                 aria-live="polite"
                 aria-atomic="true"
                 style={{
                     position: "absolute",
-                    width: 1,
-                    height: 1,
-                    margin: -1,
+                    width: "1px",
+                    height: "1px",
+                    margin: "-1px",
                     padding: 0,
                     border: 0,
-                    clip: "rect(0 0 0 0)",
+                    clip: "rect(0, 0, 0, 0)",
                     overflow: "hidden",
                     whiteSpace: "nowrap"
                 }}>

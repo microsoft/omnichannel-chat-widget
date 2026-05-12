@@ -35,6 +35,8 @@ jest.mock("@microsoft/omnichannel-chat-components", () => ({
             <input type="checkbox" id="prechat-email" aria-label="Email updates" />
             <input type="checkbox" id="prechat-sms" />
             <label htmlFor="prechat-sms">SMS updates</label>
+            <input type="checkbox" id="prechat-labelledby" aria-labelledby="prechat-labelledby-label" />
+            <span id="prechat-labelledby-label">Labelled by updates</span>
         </div>
     )
 }));
@@ -89,5 +91,45 @@ describe("PreChatSurveyPaneStateful — accessibility behavior (prechat-stale-li
         fireEvent.focus(smsOption);
         await waitFor(() => expect(liveRegion).toHaveTextContent("SMS updates"));
         expect(liveRegion).not.toHaveTextContent("Email updates");
+    });
+
+    it("prechat-stale-live-region: focused option label lookup does not require CSS.escape", async () => {
+        const originalCSS = (global as any).CSS;
+        (global as any).CSS = undefined;
+
+        try {
+            const { container } = render(
+                <PreChatSurveyPaneStateful surveyProps={{}} initStartChat={jest.fn()} />
+            );
+
+            const liveRegion = container.querySelector("[role='status'][aria-live='polite']");
+            const smsOption = container.querySelector("#prechat-sms") as HTMLElement;
+
+            fireEvent.focus(smsOption);
+            await waitFor(() => expect(liveRegion).toHaveTextContent("SMS updates"));
+        } finally {
+            (global as any).CSS = originalCSS;
+        }
+    });
+
+    it("prechat-stale-live-region: aria-labelledby labels are announced using shared attribute constants", async () => {
+        const { container } = render(
+            <PreChatSurveyPaneStateful surveyProps={{}} initStartChat={jest.fn()} />
+        );
+
+        const liveRegion = container.querySelector("[role='status'][aria-live='polite']");
+        const labelledByOption = container.querySelector("#prechat-labelledby") as HTMLElement;
+
+        fireEvent.focus(labelledByOption);
+        await waitFor(() => expect(liveRegion).toHaveTextContent("Labelled by updates"));
+    });
+
+    it("prechat-stale-live-region: live region does not use a global id", () => {
+        const { container } = render(
+            <PreChatSurveyPaneStateful surveyProps={{}} initStartChat={jest.fn()} />
+        );
+
+        const liveRegion = container.querySelector("[role='status'][aria-live='polite']");
+        expect(liveRegion).not.toHaveAttribute("id");
     });
 });
