@@ -4,6 +4,19 @@ import MarkdownItForInline from "markdown-it-for-inline";
 import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMarkdownLocalizedTexts";
 import { addSlackMarkdownIt } from "./helpers/markdownHelper";
 
+interface MarkdownToken {
+    attrGet?: (name: string) => string | null;
+    attrs?: string[][];
+    children?: MarkdownToken[];
+    content?: string;
+    type: string;
+}
+
+interface MarkdownState {
+    Token: new (type: string, tag: string, nesting: number) => MarkdownToken;
+    tokens: MarkdownToken[];
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disableNewLineMarkdownSupport: boolean, opensMarkdownLinksInSameTab?: boolean) => {
     let markdown: MarkdownIt;
@@ -41,35 +54,8 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
         "strikethrough"
     ]);
 
-    // Custom plugin to fix numbered list continuity and merge adjacent anchors with the same href.
+    // Custom plugin to fix numbered list continuity and merge adjacent markdown links with the same href.
     markdown.use(function(md) {
-        const originalRender = md.render.bind(md);
-        const originalRenderInline = md.renderInline.bind(md);
-
-        // Accessibility fix: when a bot emits content like "[1.](url) [View details](url)",
-        // markdown-it renders two sibling <a> tags that screen readers announce as two
-        // separate focusable links. Merge consecutive anchors with identical href into a
-        // single <a> so the number and label form one combined, focusable link.
-        function mergeAdjacentAnchors(html: string): string {
-            // Matches: <a ... href="X" ...>inner1</a>[optional whitespace]<a ... href="X" ...>inner2</a>
-            // - backref \2 enforces identical href
-            // - [\s\S]*? keeps inner content minimal; markdown-it does not nest anchors
-            const anchorPairRegex =
-                /(<a\b[^>]*?\shref="([^"]*)"[^>]*>)([\s\S]*?)<\/a>(\s*)<a\b[^>]*?\shref="\2"[^>]*>([\s\S]*?)<\/a>/gi;
-
-            let prev = "";
-            let curr = html;
-            // Loop to collapse runs of 3+ adjacent anchors (each pass merges pairs).
-            while (prev !== curr) {
-                prev = curr;
-                curr = curr.replace(anchorPairRegex, (_m, open1: string, _href: string, inner1: string, between: string, inner2: string) => {
-                    const separator = between && between.length > 0 ? between : " ";
-                    return `${open1}${inner1}${separator}${inner2}</a>`;
-                });
-            }
-            return curr;
-        }
-
         function preprocessText(text: string): string {
             // Handle numbered lists that come with double line breaks (knowledge article format)
             // This ensures proper continuous numbering instead of separate lists
@@ -108,17 +94,136 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
             
             return result;
         }
-        
+
+        // Accessibility fix: when a bot emits content like "[1.](url) [View details](url)",
+        // markdown-it renders two sibling links that screen readers announce as two separate
+        // focusable links. Merge consecutive markdown link tokens with identical attributes so
+        // the number and label form one combined focusable link without discarding metadata.
+        md.core.ruler.after("inline", "merge_adjacent_same_href_links", function(state: MarkdownState) {
+            const createSpaceToken = () => {
+                const token = new state.Token("text", "", 0);
+                token.content = " ";
+                return token;
+            };
+
+            const sortedAttrs = (token: MarkdownToken) => (token.attrs || [])
+                .map((attr: string[]) => `${attr[0]}=${attr[1]}`)
+                .sort();
+
+            const hasSameAttributes = (first: MarkdownToken, second: MarkdownToken): boolean => {
+                const firstAttrs = sortedAttrs(first);
+                const secondAttrs = sortedAttrs(second);
+                return firstAttrs.length === secondAttrs.length
+                    && firstAttrs.every((attr: string, index: number) => attr === secondAttrs[index]);
+            };
+
+            const collectLink = (children: MarkdownToken[], index: number) => {
+                const open = children[index];
+                if (!open || open.type !== "link_open") {
+                    return undefined;
+                }
+                const href = open.attrGet?.("href");
+                if (!href) {
+                    return undefined;
+                }
+
+                let depth = 0;
+                for (let currentIndex = index; currentIndex < children.length; currentIndex++) {
+                    const token = children[currentIndex];
+                    if (token.type === "link_open") {
+                        depth++;
+                    } else if (token.type === "link_close") {
+                        depth--;
+                        if (depth === 0) {
+                            return {
+                                closeIndex: currentIndex,
+                                href,
+                                open
+                            };
+                        }
+                    }
+                }
+
+                return undefined;
+            };
+
+            const getNextAdjacentLink = (children: MarkdownToken[], startIndex: number) => {
+                const separatorTokens = [];
+                let index = startIndex;
+                while (index < children.length && children[index].type === "text" && /^\s*$/.test(children[index].content || "")) {
+                    separatorTokens.push(children[index]);
+                    index++;
+                }
+
+                const link = collectLink(children, index);
+                if (!link) {
+                    return undefined;
+                }
+
+                return {
+                    ...link,
+                    openIndex: index,
+                    separatorTokens
+                };
+            };
+
+            state.tokens.forEach((blockToken: MarkdownToken) => {
+                if (blockToken.type !== "inline" || !blockToken.children) {
+                    return;
+                }
+                const mergedChildren = [];
+                const children = blockToken.children;
+                let index = 0;
+
+                while (index < children.length) {
+                    const firstLink = collectLink(children, index);
+                    if (!firstLink) {
+                        mergedChildren.push(children[index]);
+                        index++;
+                        continue;
+                    }
+
+                    const linkTokens = [
+                        firstLink.open,
+                        ...children.slice(index + 1, firstLink.closeIndex)
+                    ];
+                    let nextIndex = firstLink.closeIndex + 1;
+                    let mergedAnyLink = false;
+
+                    let nextLink = getNextAdjacentLink(children, nextIndex);
+                    while (nextLink
+                        && nextLink.href === firstLink.href
+                        && hasSameAttributes(firstLink.open, nextLink.open)) {
+                        linkTokens.push(...(nextLink.separatorTokens.length > 0 ? nextLink.separatorTokens : [createSpaceToken()]));
+                        linkTokens.push(...children.slice(nextLink.openIndex + 1, nextLink.closeIndex));
+                        nextIndex = nextLink.closeIndex + 1;
+                        mergedAnyLink = true;
+                        nextLink = getNextAdjacentLink(children, nextIndex);
+                    }
+
+                    if (mergedAnyLink) {
+                        mergedChildren.push(...linkTokens, children[firstLink.closeIndex]);
+                        index = nextIndex;
+                    } else {
+                        mergedChildren.push(children[index]);
+                        index++;
+                    }
+                }
+
+                blockToken.children = mergedChildren;
+            });
+        });
+         
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         md.render = function(text: string, env?: any): string {
             const processedText = preprocessText(text);
-            return mergeAdjacentAnchors(originalRender(processedText, env));
+            return md.renderer.render(md.parse(processedText, env), md.options, env);
         };
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         md.renderInline = function(text: string, env?: any): string {
             const processedText = preprocessText(text);
-            return mergeAdjacentAnchors(originalRenderInline(processedText, env));
+            return md.renderer.render(md.parseInline(processedText, env), md.options, env);
         };
     });
 

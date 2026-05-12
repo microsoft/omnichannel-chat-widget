@@ -191,6 +191,16 @@ describe("createMarkdown - Adjacent anchor merging (a11y)", () => {
         expect(result).toContain("href=\"https://example.com/b\"");
     });
 
+    it("does not merge raw HTML anchors because their attributes cannot be safely reconciled", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "<a href='https://example.com' aria-label='First'>1.</a> <a href=\"https://example.com\" aria-label=\"Second\">View details</a>";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(2);
+        expect(result).toContain("aria-label='First'");
+        expect(result).toContain("aria-label=\"Second\"");
+    });
+
     it("merges same-href anchors inside a numbered list item", () => {
         const markdown = createMarkdown(false, false);
         const input = "- [1.](https://example.com) [View details](https://example.com)";
@@ -208,6 +218,15 @@ describe("createMarkdown - Adjacent anchor merging (a11y)", () => {
         // Ensure merged content contains a space separator between "1." and "View details".
         const merged = stripImgs(result).replace(/<[^>]+>/g, "");
         expect(merged).toMatch(/1\.\s+View details/);
+    });
+
+    it("adds only one open-in-new-window icon after merging same-href links", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1.](https://example.com) [View details](https://example.com)";
+        const result = markdown.render(input);
+
+        const openLinkIcons = result.match(/webchat__render-markdown__external-link-icon/g) || [];
+        expect(openLinkIcons.length).toBe(1);
     });
 
     it("leaves a solitary anchor untouched", () => {
