@@ -18,7 +18,6 @@ jest.mock("../../common/telemetry/TelemetryHelper");
 jest.mock("../../common/telemetry/TelemetryManager");
 jest.mock("../../common/utils", () => ({
     createTimer: () => ({ milliSecondsElapsed: 100 }),
-    preventFocusToMoveOutOfElement: jest.fn(() => jest.fn()),
     setFocusOnElement: jest.fn()
 }));
 
@@ -430,6 +429,32 @@ describe("ChatButtonStateful Component", () => {
     });
 
     describe("Props spreading and click handler precedence", () => {
+        it("should not trap keyboard focus on the collapsed chat button", () => {
+            const mockState = createMockState({
+                appStates: {
+                    conversationState: ConversationState.Closed,
+                    outsideOperatingHours: false,
+                    isMinimized: false,
+                    unreadMessageCount: 0,
+                    startChatFailed: false
+                }
+            });
+
+            mockUseChatContextStore.mockReturnValue([mockState, mockDispatch]);
+
+            render(<ChatButtonStateful startChat={mockStartChat} />);
+
+            const button = screen.getByRole("button");
+
+            const tabEvent = new KeyboardEvent("keydown", { key: "Tab", bubbles: true, cancelable: true });
+            button.dispatchEvent(tabEvent);
+            expect(tabEvent.defaultPrevented).toBe(false);
+
+            const shiftTabEvent = new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true });
+            button.dispatchEvent(shiftTabEvent);
+            expect(shiftTabEvent.defaultPrevented).toBe(false);
+        });
+
         it("should not override external onClick with internal onClick handler due to props spreading order", async () => {
             const mockState = createMockState({
                 appStates: {
