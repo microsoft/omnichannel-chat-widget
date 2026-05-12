@@ -10,7 +10,7 @@ import { defaultTimestampContentStyles } from "../defaultStyles/defaultTimestamp
 import { defaultTimestampFailedStyles } from "../defaultStyles/defaultTimestampFailedStyles";
 import { defaultTimestampRetryStyles } from "../defaultStyles/defaultTimestampRetryStyles";
 import { getTimestampHourMinute } from "../../../../../../common/utils";
-import { hooks } from "botframework-webchat";
+import { hooks } from "botframework-webchat-component";
 import useChatContextStore from "../../../../../../hooks/useChatContextStore";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

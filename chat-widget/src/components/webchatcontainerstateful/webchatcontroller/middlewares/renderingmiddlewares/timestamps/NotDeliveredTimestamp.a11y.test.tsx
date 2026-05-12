@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 
 import React from "react";
 
-jest.mock("botframework-webchat", () => ({
+jest.mock("botframework-webchat-component", () => ({
     hooks: {
         useFocus: () => () => undefined,
         usePostActivity: () => () => undefined,

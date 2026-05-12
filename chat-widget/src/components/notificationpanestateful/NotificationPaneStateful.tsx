@@ -14,7 +14,7 @@ import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
 import { createTimer } from "../../common/utils";
 import { defaultChatDisconnectControlProps } from "./defaultProps/defaultChatDisconnectControlProps";
 import { defaultChatDisconnectStyleProps } from "./defaultProps/defaultChatDisconnectStyleProps";
-import { hooks } from "botframework-webchat";
+import { hooks } from "botframework-webchat-component";
 import { useCallback } from "react";
 import useChatAdapterStore from "../../hooks/useChatAdapterStore";
 import useChatContextStore from "../../hooks/useChatContextStore";
