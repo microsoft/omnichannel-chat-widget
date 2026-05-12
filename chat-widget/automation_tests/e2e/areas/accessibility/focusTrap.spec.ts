@@ -13,14 +13,14 @@ const widgetBundleExists = fs.existsSync(widgetBundlePath);
 const describeIfBuilt = widgetBundleExists ? describe.skip : describe.skip; // SKIP on foundation: catcher fails until source fix lands; fix branch reverts to `widgetBundleExists ? describe : describe.skip`.
 
 /**
- * Focus escapes live chat widget when only one element is focusable.
+ * Focus leaves the collapsed live chat widget without a keyboard trap.
  *
  * When only a single focusable element exists (the chat button in collapsed
- * state), Tab should keep focus trapped on that element instead of escaping
- * the widget boundary.
+ * state), Tab and Shift+Tab should move to adjacent host-page controls instead
+ * of trapping keyboard users on the chat button.
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describeIfBuilt("focus trap - single focusable element", () => {
+describeIfBuilt("collapsed chat button keyboard navigation", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;
@@ -53,7 +53,7 @@ describeIfBuilt("focus trap - single focusable element", () => {
         expect(visible).toBe(true);
     });
 
-    test("Tab on the chat button keeps focus on the chat button (single-focusable trap)", async () => {
+    test("Tab on the chat button moves focus to the next host-page control", async () => {
         page = new BasePage(await context.newPage());
         await page.openLiveChatWidget("customlivechatwidgets/FocusTrapWidget.html");
         await page.waitUntilLiveChatSelectorIsVisible(
@@ -65,8 +65,8 @@ describeIfBuilt("focus trap - single focusable element", () => {
         await chatButton!.focus();
 
         // Sanity: chat button is the only tabbable element inside the widget
-        // container in collapsed state. The fix in utils.ts attaches a keydown
-        // handler so Tab calls preventDefault + re-focuses the same element.
+        // container in collapsed state. It should still allow Tab to leave the
+        // widget boundary rather than trapping on itself.
         const focusableCount = await page.Page.evaluate(() => {
             const container = document.getElementById("oc-lcw-container");
             if (!container) return -1;
@@ -77,18 +77,14 @@ describeIfBuilt("focus trap - single focusable element", () => {
 
         await page.Page.keyboard.press("Tab");
 
-        // Without the fix, default browser behaviour moves focus to the next
-        // tabbable element on the page (or to <body> if none exists). The fix
-        // pins focus on the same single-focusable element. Assert that the
-        // chat button is *still* the active element.
         const activeId = await page.Page.evaluate(() => {
             const a = document.activeElement as HTMLElement | null;
             return a ? a.id : null;
         });
-        expect(activeId).toBe(CustomLiveChatWidgetConstants.LiveChatButtonId.replace(/^#/, ""));
+        expect(activeId).toBe("host-after-chat");
     });
 
-    test("Shift+Tab on the chat button keeps focus on the chat button (single-focusable trap)", async () => {
+    test("Shift+Tab on the chat button moves focus to the previous host-page control", async () => {
         page = new BasePage(await context.newPage());
         await page.openLiveChatWidget("customlivechatwidgets/FocusTrapWidget.html");
         await page.waitUntilLiveChatSelectorIsVisible(
@@ -105,6 +101,6 @@ describeIfBuilt("focus trap - single focusable element", () => {
             const a = document.activeElement as HTMLElement | null;
             return a ? a.id : null;
         });
-        expect(activeId).toBe(CustomLiveChatWidgetConstants.LiveChatButtonId.replace(/^#/, ""));
+        expect(activeId).toBe("host-before-chat");
     });
 });
