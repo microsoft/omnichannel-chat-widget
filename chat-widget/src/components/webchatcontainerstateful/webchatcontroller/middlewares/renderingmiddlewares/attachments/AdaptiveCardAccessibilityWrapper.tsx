@@ -29,19 +29,18 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
             if (!container) return;
 
             // dropdown-double-label: compact Input.ChoiceSet renders as a native
-            // <select> AND emits BOTH `aria-labelledby` (pointing at the
-            // adaptive-card label element) AND a sibling visible
-            // <label for="..."> targeting the same select. Screen readers
-            // announce the same label twice. When a visible <label for>
-            // already associates with the select, drop the redundant
-            // aria-labelledby so only the native label association is
-            // announced.
-            const compactSelects = container.querySelectorAll<HTMLSelectElement>("select[aria-labelledby]");
+            // <select> with both aria-labelledby and a sibling visible <label for>.
+            // Only remove aria-labelledby when it points solely at that same visible
+            // label; preserve composite labels that include required/error/context text.
+            const compactSelects = container.querySelectorAll<HTMLSelectElement>(
+                ".ac-input-container select.ac-input.ac-multichoiceInput[aria-labelledby]"
+            );
             compactSelects.forEach((select) => {
                 const id = select.id;
                 if (!id) return;
                 const visibleLabel = container.querySelector<HTMLLabelElement>(`label[for="${CSS.escape(id)}"]`);
-                if (visibleLabel) {
+                const labelledBy = (select.getAttribute("aria-labelledby") || "").trim().split(/\s+/);
+                if (visibleLabel?.id && labelledBy.length === 1 && labelledBy[0] === visibleLabel.id) {
                     select.removeAttribute("aria-labelledby");
                 }
             });
