@@ -172,7 +172,7 @@
     "**/lodash": "4.17.23",
     "**/@babel/runtime-corejs3": "^7.29.0",
     "**/brace-expansion": "2.0.3",
-    "**/swiper": "9.4.1"
+    "**/swiper": "12.1.2"
   },
   "jest": {
     "verbose": true,
