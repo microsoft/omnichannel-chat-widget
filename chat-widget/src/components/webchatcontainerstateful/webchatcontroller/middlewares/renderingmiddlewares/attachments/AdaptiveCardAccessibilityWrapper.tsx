@@ -33,7 +33,7 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
             // switches instead of plain push buttons. Preserve Action.ToggleVisibility buttons,
             // which own aria-controls and legitimately expose a pressed state.
             const actionButtons = container.querySelectorAll<HTMLElement>(
-                "button.ac-pushButton:not([aria-controls]), .ac-actionSet button:not([aria-controls])"
+                ".ac-actionSet button.ac-pushButton:not([aria-controls])"
             );
             actionButtons.forEach((btn) => {
                 if (btn.hasAttribute("aria-pressed")) {
