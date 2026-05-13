@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- [A11y] Citation cards now expose a single stable accessible link label and avoid duplicate title announcements
 - [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
 - [A11y] Collapsed chat button remains reachable without trapping keyboard users; Tab and Shift+Tab can move focus back to the host page
 - [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers
