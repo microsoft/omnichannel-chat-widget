@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 - [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
 - [A11y] Post-chat survey iframe now has a default accessible title for meaningful screen-reader frame announcements
 - [A11y] Post-chat loading pane subtitle is now announced through polite status live-region semantics
-- [A11y] Compact Adaptive Card ChoiceSet selects no longer carry redundant labels that screen readers announce twice
+- [A11y] Compact Adaptive Card ChoiceSet selects no longer carry redundant labels that screen readers announce twice while preserving composite required/error labels
 - [A11y] Adaptive Card submit and sign-in buttons now announce as plain buttons instead of toggle controls
 - [A11y] Citation cards now expose a single stable accessible link label and avoid duplicate title announcements
 - [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
