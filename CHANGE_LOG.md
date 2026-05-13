@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
 - [A11y] Post-chat survey iframe now has a default accessible title for meaningful screen-reader frame announcements
 - [A11y] Post-chat loading pane subtitle is now announced through polite status live-region semantics
 - [A11y] Compact Adaptive Card ChoiceSet selects no longer carry redundant labels that screen readers announce twice
