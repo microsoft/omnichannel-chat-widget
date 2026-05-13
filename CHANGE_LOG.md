@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
+- [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
+- [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
+- [A11y] Post-chat survey iframe now has a default accessible title for meaningful screen-reader frame announcements
+- [A11y] Post-chat loading pane subtitle is now announced through polite status live-region semantics
 - [A11y] Compact Adaptive Card ChoiceSet selects no longer carry redundant labels that screen readers announce twice
 - [A11y] Adaptive Card submit and sign-in buttons now announce as plain buttons instead of toggle controls
 - [A11y] Citation cards now expose a single stable accessible link label and avoid duplicate title announcements
@@ -42,6 +47,7 @@ All notable changes to this project will be documented in this file.
 - [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
 
 ### Changed
+- Updated outdated npm dependencies across packages.
 - Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
 - Update GitHub Actions (checkout, setup-node) from v2/v3 to v4 and Node.js from 20.x to 22.x across chat-widget workflows to address Node.js 20 deprecation in GitHub Actions
 - Use `npx npm@11.12.1` for publish step to fix OIDC trusted publishing (npm 10.9.7 can't do OIDC, and `npm install -g` crashes during self-upgrade)

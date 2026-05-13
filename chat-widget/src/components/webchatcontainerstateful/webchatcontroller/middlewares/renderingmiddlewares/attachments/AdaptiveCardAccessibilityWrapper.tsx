@@ -45,6 +45,23 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
                 }
             });
 
+            // action-button-toggle / login-button-toggle: submit/login action buttons can be
+            // rendered with toggle-only ARIA that causes screen readers to announce them as
+            // switches instead of plain push buttons. Preserve Action.ToggleVisibility buttons,
+            // which own aria-controls and legitimately expose a pressed state.
+            const actionButtons = container.querySelectorAll<HTMLElement>(
+                ".ac-actionSet button.ac-pushButton:not([aria-controls])"
+            );
+            actionButtons.forEach((btn) => {
+                if (btn.hasAttribute("aria-pressed")) {
+                    btn.removeAttribute("aria-pressed");
+                }
+                const role = btn.getAttribute("role");
+                if (role === "switch") {
+                    btn.removeAttribute("role");
+                }
+            });
+
             // Find all radio inputs inside the adaptive card
             const radios = container.querySelectorAll("input[type='radio']");
             if (radios.length === 0) return;
