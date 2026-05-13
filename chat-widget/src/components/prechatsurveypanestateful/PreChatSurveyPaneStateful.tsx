@@ -1,6 +1,6 @@
 import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { ConversationStage, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, FocusEvent, useEffect, useRef, useState } from "react";
 import { createTimer, extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
@@ -22,6 +22,40 @@ import useChatContextStore from "../../hooks/useChatContextStore";
 
 let uiTimer : ITimer;
 
+const getFocusedElementAnnouncement = (element: HTMLElement): string => {
+    const ariaLabel = element.getAttribute(HtmlAttributeNames.ariaLabel);
+    if (ariaLabel) {
+        return ariaLabel.trim();
+    }
+
+    const ariaLabelledBy = element.getAttribute(HtmlAttributeNames.ariaLabelledby);
+    if (ariaLabelledBy) {
+        const labelledByText = ariaLabelledBy
+            .split(/\s+/)
+            .map((id) => document.getElementById(id)?.textContent?.trim())
+            .filter(Boolean)
+            .join(" ");
+        if (labelledByText) {
+            return labelledByText;
+        }
+    }
+
+    if (element.id) {
+        const label = Array.from(document.querySelectorAll("label"))
+            .find((candidate) => candidate.htmlFor === element.id || candidate.getAttribute("for") === element.id);
+        if (label?.textContent) {
+            return label.textContent.trim();
+        }
+    }
+
+    const parentLabel = element.closest("label");
+    if (parentLabel?.textContent) {
+        return parentLabel.textContent.trim();
+    }
+
+    return element.textContent?.trim() ?? "";
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParams) => {
 
@@ -41,6 +75,8 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { surveyProps, initStartChat } = props;
+    const [preChatFocusAnnouncement, setPreChatFocusAnnouncement] = useState("");
+    const liveRegionUpdateTimeout = useRef<number | undefined>();
     const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPreChatSurveyPaneStyleProps, surveyProps?.styleProps?.generalStyleProps,
         { display: state.appStates.isMinimized ? "none" : "" });
 
@@ -130,6 +166,18 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
         generalStyleProps: generalStyleProps
     };
 
+    const announceFocusedElement = (event: FocusEvent<HTMLDivElement>) => {
+        if (liveRegionUpdateTimeout.current) {
+            window.clearTimeout(liveRegionUpdateTimeout.current);
+        }
+
+        const announcement = getFocusedElementAnnouncement(event.target as HTMLElement);
+        setPreChatFocusAnnouncement("");
+        liveRegionUpdateTimeout.current = window.setTimeout(() => {
+            setPreChatFocusAnnouncement(announcement);
+        }, 0);
+    };
+
     useEffect(() => {
         // Set Aria-Label Attribute for Inputs
         const adaptiveCardElements = document.getElementsByClassName(HtmlAttributeNames.adaptiveCardClassName);
@@ -179,11 +227,42 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
             }
         }
     }, [state.appStates.isMinimized]);
+
+    useEffect(() => () => {
+        if (liveRegionUpdateTimeout.current) {
+            window.clearTimeout(liveRegionUpdateTimeout.current);
+        }
+    }, []);
     
     return (
-        <PreChatSurveyPane
-            controlProps={controlProps}
-            styleProps={styleProps} />
+        <div onFocusCapture={announceFocusedElement}>
+            {/* prechat-stale-live-region: prechat pane owns a managed polite live region
+                so that focus changes inside the survey don't carry the
+                previous focus's announcement (Narrator was reading
+                stale text before the newly-focused checkbox label).
+                Focus updates clear and replace this text so stale labels
+                are not re-announced. */}
+            <div
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                style={{
+                    position: "absolute",
+                    width: "1px",
+                    height: "1px",
+                    margin: "-1px",
+                    padding: 0,
+                    border: 0,
+                    clip: "rect(0, 0, 0, 0)",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap"
+                }}>
+                {preChatFocusAnnouncement}
+            </div>
+            <PreChatSurveyPane
+                controlProps={controlProps}
+                styleProps={styleProps} />
+        </div>
     );
 };
 
