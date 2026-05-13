@@ -59,8 +59,7 @@ module.exports = {
         "react-native-web/dist/exports/Platform",
       "react-native/Libraries/StyleSheet/StyleSheet":
         "react-native-web/dist/exports/StyleSheet",
-      // Fix for Swiper v9+ module resolution - use bundle which includes all modules
-      "swiper/modules": path.resolve(__dirname, '../../node_modules/swiper/swiper-bundle.esm.js'),
+      "swiper/modules": path.resolve(__dirname, "../../node_modules/swiper/modules/index.mjs"),
     };
 
     // Add web-first extensions

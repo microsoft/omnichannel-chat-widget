@@ -46,11 +46,6 @@ beforeAll(async () => {
             // live URLs so manual `yarn storybook` still exercises the real survey,
             // but visual snapshots see a deterministic local fixture.
             // See: https://github.com/microsoft/omnichannel-chat-widget/issues/921
-            const surveyFixtureHosts = new Set([
-                "ncv.microsoft.com",
-                "customervoice.microsoft.com",
-                "tip.customervoice.microsoft.com"
-            ]);
             const surveyFixtureHtml = "<!DOCTYPE html>"
                 + "<html lang=\"en\"><head><meta charset=\"utf-8\"><title>Survey fixture</title>"
                 + "<style>body{font-family:Segoe UI,Arial,sans-serif;background:#fff;color:#000;margin:0;padding:24px}"
@@ -65,22 +60,14 @@ beforeAll(async () => {
                 + "<div class=\"q\"><label>Comments</label><textarea rows=\"3\" readonly></textarea></div>"
                 + "<button type=\"button\">Submit</button>"
                 + "</body></html>";
-            await page.route("**/*", async (route) => {
-                try {
-                    const reqUrl = new URL(route.request().url());
-                    if (surveyFixtureHosts.has(reqUrl.hostname)) {
-                        await route.fulfill({
-                            status: 200,
-                            contentType: "text/html; charset=utf-8",
-                            body: surveyFixtureHtml
-                        });
-                        return;
-                    }
-                } catch (_e) {
-                    // fall through to continue
-                }
-                await route.continue();
-            });
+            await page.route(
+                /^https?:\/\/(ncv\.microsoft\.com|([a-z]+\.)?customervoice\.microsoft\.com)\//,
+                (route) => route.fulfill({
+                    status: 200,
+                    contentType: "text/html; charset=utf-8",
+                    body: surveyFixtureHtml
+                })
+            );
             return page;
         },
         afterScreenshot: async (page) => {
