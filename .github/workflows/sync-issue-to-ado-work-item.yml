@@ -7,6 +7,9 @@ on:
   issue_comment:
     types: [created, edited, deleted]
 
+permissions:
+  contents: read       # workflow uses GH_PERSONAL_ACCESS_TOKEN secret, not GITHUB_TOKEN, for the ADO sync
+
 jobs:
   alert:
     runs-on: ubuntu-latest
