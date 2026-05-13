@@ -25,7 +25,7 @@ module.exports = {
             "react": path.resolve(__dirname, "node_modules/react"),
             "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
             "react-native$": "react-native-web",
-            "swiper/modules": require.resolve("swiper/swiper.esm.js"),
+            "swiper/modules": require.resolve("swiper/modules"),
             // botframework-webchat-component needs @emotion/css@11 (with create-instance subpath),
             // but the project root has @emotion/css@10. Pin to webchat's nested copy.
             "@emotion/css": path.resolve(__dirname, "node_modules/botframework-webchat-component/node_modules/@emotion/css"),
