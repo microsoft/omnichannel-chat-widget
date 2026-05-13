@@ -48,7 +48,7 @@ const loadFreshMiddleware = () => {
     return mod;
 };
 
-describe.skip("localizedStringsBotInitialsMiddleware — transfer reset (transfer-stale-bot-name)", () => {
+describe("localizedStringsBotInitialsMiddleware — transfer reset (transfer-stale-bot-name)", () => {
     beforeEach(() => {
         mockGetIconText.mockReset();
     });
@@ -111,6 +111,51 @@ describe.skip("localizedStringsBotInitialsMiddleware — transfer reset (transfe
         //  between transfer and first new activity that's broken — but we
         //  guard it here so the fix doesn't accidentally regress.)
         expect(strings.ACTIVITY_BOT_SAID_ALT).toBe("Sara Smith said:");
+        expect(strings.ACTIVITY_BOT_SAID_ALT).not.toMatch(/Bot JO/i);
+    });
+
+    it("transfer-stale-bot-name: transfer system messages can be detected from transfer tags without English text", () => {
+        const mod = loadFreshMiddleware();
+        const middleware = mod.localizedStringsBotInitialsMiddleware()({ dispatch: jest.fn() })((a: any) => a);
+
+        mockGetIconText.mockReturnValue("BJ");
+        sendActivity(middleware, { from: { name: "Bot JO", role: "bot" } });
+
+        sendActivity(middleware, {
+            from: { name: "System", role: "bot" },
+            text: "weitergeleitet",
+            channelData: { tags: ["system", "agentTransfer"] }
+        });
+
+        const strings = mod.getOverriddenLocalizedStrings()({});
+        expect(strings.ACTIVITY_BOT_SAID_ALT).not.toMatch(/Bot JO/i);
+    });
+
+    it("transfer-stale-bot-name: transfer system messages cover transfer and transferring wording", () => {
+        const mod = loadFreshMiddleware();
+        const middleware = mod.localizedStringsBotInitialsMiddleware()({ dispatch: jest.fn() })((a: any) => a);
+
+        mockGetIconText.mockReturnValue("BJ");
+        sendActivity(middleware, { from: { name: "Bot JO", role: "bot" } });
+
+        sendActivity(middleware, {
+            from: { name: "System", role: "bot" },
+            text: "Conversation transfer is in progress.",
+            channelData: { tags: ["system"] }
+        });
+
+        let strings = mod.getOverriddenLocalizedStrings()({});
+        expect(strings.ACTIVITY_BOT_SAID_ALT).not.toMatch(/Bot JO/i);
+
+        mockGetIconText.mockReturnValue("BJ");
+        sendActivity(middleware, { from: { name: "Bot JO", role: "bot" } });
+        sendActivity(middleware, {
+            from: { name: "System", role: "bot" },
+            text: "Conversation is transferring to another agent.",
+            channelData: { tags: ["system"] }
+        });
+
+        strings = mod.getOverriddenLocalizedStrings()({});
         expect(strings.ACTIVITY_BOT_SAID_ALT).not.toMatch(/Bot JO/i);
     });
 });
