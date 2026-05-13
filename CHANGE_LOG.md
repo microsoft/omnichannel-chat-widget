@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - [A11y] Email transcript focus on submit goes directly to the notification banner; skips the chat-widget shell detour
 
 ### Added
+- [A11y] Documented accessibility catcher confidence tiers and NVDA setup guidance for foundation follow-ups
 - [A11y] E2E Playwright tests for 5 accessibility defects: focus trap, bot initials alt text, adaptive card radio count, attachment upload announcement, email notification aria-live regions
 - [A11y] Added shared accessibility tooling scaffolding: Storybook mobile/reflow/zoom profiles, package-level a11y Jest harnesses, and public accessibility setup/validation docs
 - [A11y] Phase 1 foundation: axe-core (`@axe-core/playwright`) + Microsoft Accessibility Insights story-by-story scanners, `forced-colors` and `contrast-more` Storybook profiles, opt-in `@axe-core/react` dev hook, non-gating PR workflow uploading reports as artifacts

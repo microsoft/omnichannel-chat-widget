@@ -23,6 +23,8 @@ This repo now includes a first-pass accessibility tooling foundation for LCW pac
 - **Use the axe scan** for fast feedback and CI artifacts. It's lightweight, scriptable, and produces compact JSON.
 - **Use Accessibility Insights** when you need the MS-curated HTML report, results mapped to MAS rule IDs, or the manual *Assessment* workflow in the browser extension (which the CLI does not cover).
 
+> **Cost vs. benefit of running both.** `accessibility-insights-scan` adds roughly **3 MB** of `node_modules` (Puppeteer-flavored Chromium fetcher + report renderer) and roughly **doubles** scan wall-clock time vs. axe-only because it re-walks every story under its own browser. Keep it in the nightly / on-demand workflow for the MS-curated report and Assessment hand-off, but don't add it to the per-PR gate — axe alone covers the rule set.
+
 Neither engine automatically covers these dimensions; they need the dedicated profiles or future per-component specs:
 
 | Dimension | How it's covered |
@@ -39,6 +41,47 @@ Neither engine automatically covers these dimensions; they need the dedicated pr
 | Live (post-mount) widget axe scan | `chat-widget/automation_tests/e2e/utility/axeOnPage.ts` |
 | Desktop NVDA (Windows) | `tools/accessibility/setupNvda.ps1` + `srAssert.ts`; specs under `e2e/areas/accessibility/sr-nvda/` (Guidepup-driven; soak-only CI job until stable) |
 | iOS VoiceOver / Android TalkBack / macOS VoiceOver / JAWS | Not automated — see `REAL_MOBILE_VALIDATION.md`, `NVDA_SETUP.md`, `NARRATOR_SETUP.md` |
+
+### WCAG 2.2 success criteria
+
+The axe / Accessibility Insights rule set defaults to `wcag2a, wcag2aa, wcag21aa, best-practice` (see `axeScan.cjs --tags`). The new WCAG 2.2 success criteria below are **not yet covered** by either automated engine here and are tracked as gaps:
+
+| WCAG 2.2 SC | Title | Status in this repo |
+|---|---|---|
+| 2.4.11 | Focus Not Obscured (Minimum) — AA | Not asserted; manual review during the focus-pass triage |
+| 2.4.13 | Focus Appearance — AAA | Partially covered by `focus-ring` + `focus-ring-forced-colors` screenshot profiles; no per-pixel contrast/area assertion |
+| 2.5.7 | Dragging Movements — AA | Not asserted; the widget surfaces no drag-only interactions today, but new features should add a non-drag path before AA claim |
+| 2.5.8 | Target Size (Minimum) — AA | Not asserted; candidate for an axe `runOnly` extension or a focused per-story spec |
+| 3.2.6 | Consistent Help — A | Doc-level only |
+| 3.3.7 | Redundant Entry — A | Doc-level only |
+| 3.3.8 | Accessible Authentication (Minimum) — AA | Out of scope for the widget itself |
+
+Adding 2.2 enforcement to the axe runs is tracked under `tools/accessibility/axeScan.cjs --tags`; the default value can be expanded to `wcag22aa` once the existing 2.1 backlog burns down.
+
+### Catcher confidence tiers
+
+a11y "catcher" specs in this repo fall into two distinct confidence tiers. A reader (or PR reviewer) needs to know which tier a spec belongs to in order to judge whether a green run actually rules out a regression.
+
+| Tier | What it asserts | Trust level | Examples |
+|---|---|---|---|
+| **Direct DOM** | A specific DOM contract that maps 1:1 to the user-visible accessibility behavior the bug is about — role, accessible name, `aria-*`, focus order, programmatic announcement region. | **High.** A green run is strong evidence the bug is fixed. A regression flips the spec red. | `PostChatLoadingPaneStateful.a11y.spec.tsx` asserting `role="status"` on the loading region; keyboard-traversal specs asserting an explicit tab order. |
+| **Proxy / state** | An indirect signal that *correlates* with the accessibility behavior but does not prove it — `document.activeElement` after a reload, internal state flags, render counts, `data-*` attributes added for test-only observability. | **Best-effort.** A green run is necessary but not sufficient; the bug class still needs a manual screen-reader pass to confirm. A red run is still actionable (the proxy is broken), but a green run does not close the bug. | Focus-trap-after-reload specs that check `document.activeElement` rather than the AT focus; specs that watch a `data-state="loaded"` attribute as a stand-in for an aria-live announcement. |
+
+**How to tell which tier a spec belongs to.** Read the spec's outermost `expect(...)`:
+
+- If it walks the *accessibility tree* (`page.accessibility.snapshot`, axe rules, role/name lookups, `getByRole(...)`), or asserts that a specific `aria-*`/`role`/announcement region exists, it's **Direct DOM**.
+- If it walks the *DOM* in a way the screen reader does not directly observe (`document.activeElement` after a reload, internal `data-state` markers, render-count or store-state assertions), or relies on a `wait` to "let the announcement fire" without inspecting the announcement region, it's **Proxy / state**.
+
+**Naming convention (deferred).** A future sweep will rename best-effort proxies to `*.a11y.proxy.spec.ts` (or `.tsx`) so the tier is visible at a glance in test output, and keep direct DOM catchers as plain `*.a11y.spec.ts`. The rename is intentionally **not** part of this doc pass because there are several in-flight per-bug fix PRs that would all conflict on rebase. Once the foundation PR and its dependent fix PRs land, the rename will be a single mechanical sweep that also stamps each spec with the bug it guards. Track this under issue [#919](https://github.com/microsoft/omnichannel-chat-widget/issues/919).
+
+### RTL / locale coverage
+
+Today every catcher spec, screenshot profile, and NVDA phrase catalog assumes **left-to-right, English (en-US)**. Two real gaps:
+
+- **No `dir="rtl"` story variants.** Mirrored layouts are exercised manually only. Bidi-related focus order and label-association regressions would not be caught by any of the existing automation. Adding an RTL screenshot profile (similar to `forced-colors`) is the cheapest first step.
+- **No non-English NVDA phrase catalog.** `tools/accessibility/nvda-phrases.json` ships English phrases against NVDA `2024.4`. NVDA cadence and verb forms vary per locale, so adding a Japanese (`ja-JP`) or Arabic (`ar`) profile means adding a parallel phrase file (e.g. `nvda-phrases.ja.json`) and a small accessor change in `srAssert.ts`. Until that lands, locale-specific announcement bugs need a manual sweep.
+
+Both items are tracked under issue [#920](https://github.com/microsoft/omnichannel-chat-widget/issues/920).
 
 ## Prerequisites
 
@@ -139,7 +182,7 @@ Use these harnesses to add targeted accessibility tests incrementally:
 | `chat-components` | 73 | 135 | 7 | 12 | 116 |
 | `chat-widget`     | 10 | 19  | 0 | 1  | 18  |
 
-`chat-widget` violations (10 stories): 9× `landmark-one-main`, 9× `page-has-heading-one`, 1× `aria-command-name` (real, in `live-chat-widget-custom-2`; tracked in [#920](https://github.com/microsoft/omnichannel-chat-widget/issues/920)). The two `landmark-*` rules are story-isolation artifacts (no `<main>` on a Storybook canvas) and are good candidates to suppress on a per-story basis once L1.2 triage lands.
+`chat-widget` violations (10 stories): 9× `landmark-one-main`, 9× `page-has-heading-one`, 1× `aria-command-name` (real, in `live-chat-widget-custom-2`; tracked in [#920](https://github.com/microsoft/omnichannel-chat-widget/issues/920) — see the inline `TODO` next to `LiveChatWidgetCustom2` in `chat-widget/src/components/livechatwidget/LiveChatWidget.stories.tsx` for the source location). The two `landmark-*` rules are story-isolation artifacts (no `<main>` on a Storybook canvas) and are good candidates to suppress on a per-story basis once L1.2 triage lands.
 
 `chat-components` violations (73 stories) are dominated by structural story-isolation artifacts; see `accessibility-reports/axe-report.json` after a fresh `yarn scan:a11y:axe:build` for the per-story breakdown.
 
