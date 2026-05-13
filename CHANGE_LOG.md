@@ -7,11 +7,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
-<<<<<<< fix/a11y-loading-pane-status
 - [A11y] Post-chat loading pane subtitle is now announced through polite status live-region semantics
 - [A11y] Compact Adaptive Card ChoiceSet selects no longer carry redundant labels that screen readers announce twice
-=======
->>>>>>> main
 - [A11y] Adaptive Card submit and sign-in buttons now announce as plain buttons instead of toggle controls
 - [A11y] Citation cards now expose a single stable accessible link label and avoid duplicate title announcements
 - [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
