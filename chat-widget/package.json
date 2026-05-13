@@ -95,7 +95,7 @@
   "dependencies": {
     "@azure/core-tracing": "^1.2.0",
     "@microsoft/applicationinsights-web": "^3.3.6",
-    "@microsoft/omnichannel-chat-components": "1.1.17-main.d4c4cb2",
+    "@microsoft/omnichannel-chat-components": "1.1.17-main.f21df63",
     "@microsoft/omnichannel-chat-sdk": "1.11.9-main.da8219b",
     "@opentelemetry/api": "^1.9.0",
     "abort-controller": "^3",
