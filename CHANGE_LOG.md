@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
 - [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
 - [A11y] Post-chat survey iframe now has a default accessible title for meaningful screen-reader frame announcements
