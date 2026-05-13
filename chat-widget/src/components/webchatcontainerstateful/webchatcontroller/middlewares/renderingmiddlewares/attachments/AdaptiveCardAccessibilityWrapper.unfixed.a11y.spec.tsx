@@ -107,7 +107,7 @@ const buildCompactChoiceSet = (
     return wrapper;
 };
 
-describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-button-toggle / login-button-toggle)", () => {
+describe("AdaptiveCardAccessibilityWrapper — action buttons (action-button-toggle / login-button-toggle)", () => {
     it("action-button-toggle: Action.Submit-style button must NOT be left with aria-pressed (causes Narrator 'toggle button' announcement)", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
@@ -123,11 +123,10 @@ describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-butto
 
         const button = container.querySelector("button.ac-pushButton") as HTMLElement;
         expect(button).not.toBeNull();
-        // After fix: wrapper strips aria-pressed (and any role="switch"/"checkbox")
-        // from action-set buttons so they announce as plain "button".
+        // After fix: wrapper strips aria-pressed and role="switch" from plain
+        // action-set buttons so they announce as plain "button".
         expect(button.hasAttribute("aria-pressed")).toBe(false);
         expect(button.getAttribute("role")).not.toBe("switch");
-        expect(button.getAttribute("role")).not.toBe("checkbox");
     });
 
     it("login-button-toggle: Login button on a sign-in adaptive card must announce as a plain 'button'", async () => {
@@ -153,6 +152,46 @@ describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-butto
         // would re-introduce the toggle announcement. Assert it stays clean.
         const role = lb.getAttribute("role");
         expect(role === null || role === "button").toBe(true);
+    });
+
+    it("Action.ToggleVisibility-style buttons keep aria-pressed semantics", async () => {
+        const { container } = render(
+            <AdaptiveCardAccessibilityWrapper>
+                <div className="ac-actionSet">
+                    <button className="ac-pushButton" role="switch" aria-pressed="true" aria-controls="details">
+                        Show details
+                    </button>
+                </div>
+            </AdaptiveCardAccessibilityWrapper>
+        );
+
+        await act(async () => {
+            observerInstance.trigger();
+        });
+
+        const toggleButton = container.querySelector("button.ac-pushButton") as HTMLElement;
+        expect(toggleButton).toHaveAttribute("aria-pressed", "true");
+        expect(toggleButton).toHaveAttribute("role", "switch");
+    });
+
+    it("does not strip role=checkbox without a dedicated scenario", async () => {
+        const { container } = render(
+            <AdaptiveCardAccessibilityWrapper>
+                <div className="ac-actionSet">
+                    <button className="ac-pushButton" role="checkbox" aria-checked="false">
+                        Subscribe
+                    </button>
+                </div>
+            </AdaptiveCardAccessibilityWrapper>
+        );
+
+        await act(async () => {
+            observerInstance.trigger();
+        });
+
+        const checkboxButton = container.querySelector("button.ac-pushButton") as HTMLElement;
+        expect(checkboxButton).toHaveAttribute("role", "checkbox");
+        expect(checkboxButton).toHaveAttribute("aria-checked", "false");
     });
 });
 
