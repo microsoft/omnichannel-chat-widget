@@ -49,33 +49,63 @@ describeIfBuilt("focus trap after page reload (focus-trap-after-reload)", () => 
         if (newBrowser) await newBrowser.close();
     });
 
-    test("after page reload, focus should land on a focusable element (not <body>) and Tab should respect the widget's focus trap", async () => {
+    test("after link activation + page reload, Tab from page should still reach controls outside the widget", async () => {
         page = new BasePage(await context.newPage());
-        await page.openLiveChatWidget("customlivechatwidgets/FocusTrapWidget.html");
+        // Use a widget mock that renders a real message containing a link AND
+        // exposes host-page buttons before/after the widget so we can walk
+        // the Tab order to prove focus isn't trapped inside the rehydrated
+        // widget.
+        await page.openLiveChatWidget("customlivechatwidgets/FocusTrapAfterLinkWidget.html");
         await page.waitUntilLiveChatSelectorIsVisible(
             CustomLiveChatWidgetConstants.LiveChatButtonId
         );
 
-        // Open the widget first so a non-trivial DOM is persisted.
+        // Open the widget and wait for the transcript to render.
         const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
         await chatButton!.click();
-        await page.Page.waitForTimeout(1500);
+        await page.Page.waitForTimeout(3000);
+
+        // Intercept the link click so it doesn't navigate. The bug
+        // surfaces from the *activation* + reload sequence, not from
+        // actual navigation.
+        await page.Page.evaluate(() => {
+            document.querySelectorAll<HTMLAnchorElement>("a[href]").forEach(a => {
+                a.addEventListener("click", e => e.preventDefault(), true);
+            });
+        });
+
+        const links = await page.Page.$$("#oc-lcw-container a[href]");
+        if (links.length > 0) {
+            await links[0].click();
+            await page.Page.waitForTimeout(500);
+        }
 
         // Reload — persistent storage should rehydrate widget state.
         await page.Page.reload({ waitUntil: "domcontentloaded" });
-        await page.Page.waitForTimeout(1500);
+        await page.Page.waitForTimeout(2500);
 
-        // After reload: focused element must NOT be <body>. A trapped focus
-        // would leave activeElement === body when no element claims focus.
-        const activeTag = await page.Page.evaluate(() => {
-            const a = document.activeElement as HTMLElement | null;
-            return a ? a.tagName.toLowerCase() : null;
+        // Precondition: widget rehydrated to the open state.
+        const widgetOpen = await page.Page.evaluate(() => {
+            return !!document.querySelector("#oc-lcw-container [role='log']")
+                || !!document.querySelector("#oc-lcw-container .webchat__basic-transcript");
         });
 
-        // Catcher assertion: today, after reload, activeElement is <body>
-        // and no focus ring is visible. After fix it should be the chat
-        // button (or another widget-owned focusable).
-        expect(activeTag).not.toBe("body");
-        expect(activeTag).not.toBeNull();
+        // Drive focus to the page's host-before-chat button, then Tab
+        // forward through the widget. If focus is trapped inside the
+        // rehydrated widget, Tab will NEVER land on host-after-chat.
+        await page.Page.focus("#host-before-chat");
+        let landedOnAfter = false;
+        for (let i = 0; i < 60; i++) {
+            await page.Page.keyboard.press("Tab");
+            const id = await page.Page.evaluate(() =>
+                (document.activeElement as HTMLElement | null)?.id || "");
+            if (id === "host-after-chat") { landedOnAfter = true; break; }
+        }
+
+        if (!landedOnAfter) {
+            // eslint-disable-next-line no-console
+            console.log("Focus never reached host-after-chat after reload; widgetOpen =", widgetOpen);
+        }
+        expect(landedOnAfter).toBe(true);
     });
 });
