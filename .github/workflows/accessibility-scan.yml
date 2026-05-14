@@ -24,6 +24,13 @@ permissions:
 jobs:
   scan:
     name: scan-${{ matrix.package }}
+    # Pinned to windows-2022 deliberately to match the chat-components and
+    # chat-widget PR-check matrix (windows-2022 in *-pr.yml). Bumping the
+    # runner image here without bumping it in the PR matrix would mean the
+    # nightly scan exercises a different OS than the per-PR build, which
+    # has historically masked Windows-specific Storybook build regressions.
+    # Tracked migration to windows-2025 ahead of windows-2022 deprecation
+    # in #920.
     runs-on: windows-2022
     strategy:
       fail-fast: false

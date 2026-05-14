@@ -413,6 +413,13 @@ LiveChatWidgetCustom1.args = liveChatWidgetCustom1Props;
     Live Chat Widget Custom 2
 */
 
+// TODO(https://github.com/microsoft/omnichannel-chat-widget/issues/920):
+// the nightly axe scan reports a real `aria-command-name` violation against
+// this story. The button(s) inside this customization path need an
+// accessible name (visible label, `aria-label`, or `aria-labelledby`).
+// See `docs/accessibility/README.md` -> "Current scan baselines" for the
+// running tally; remove this TODO when the violation drops to 0 in a
+// fresh `yarn scan:a11y:axe:build` run.
 export const LiveChatWidgetCustom2 = LiveChatWidgetTemplate.bind({});
 
 const liveChatWidgetCustom2Props: ILiveChatWidgetProps = {

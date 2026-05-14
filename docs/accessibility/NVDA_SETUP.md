@@ -18,6 +18,18 @@ Use this setup when reproducing or validating Windows screen-reader behavior aga
 3. Keep the default keyboard layout unless a bug explicitly depends on laptop layout.
 4. Use a normal browser profile with extensions disabled when possible.
 
+### Custom NVDA install location (`NVDA_PATH`)
+
+The Guidepup-driven NVDA specs (`chat-widget/automation_tests/e2e/areas/accessibility/sr-nvda/`) probe for `nvda.exe` at `C:\Program Files (x86)\NVDA\nvda.exe` by default and skip the suite if it is not present. If you have NVDA installed somewhere else (portable build, custom prefix, or a side-by-side version), set the `NVDA_PATH` environment variable to the absolute path of `nvda.exe` before running the specs:
+
+```powershell
+$env:NVDA_PATH = "D:\Tools\NVDA\nvda.exe"
+cd chat-widget
+yarn jest -c automation_tests/jest.config.js --runInBand --testPathPattern "automation_tests/e2e/areas/accessibility/sr-nvda"
+```
+
+The variable is also honored in CI; `setupNvda.ps1` installs to the default path and unset `NVDA_PATH` falls through to that location.
+
 ## Repro checklist
 
 Before each run, capture:

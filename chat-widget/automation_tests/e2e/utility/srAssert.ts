@@ -25,7 +25,14 @@ export type SrEvent =
     | "transcriptSuccess"
     | "transcriptError"
     | "endChatConfirm"
-    | "reconnectPrompt";
+    | "reconnectPrompt"
+    | "errorAnnounced"
+    | "fileUploadProgress"
+    | "fileUploadComplete"
+    | "fileUploadFailed"
+    | "sessionTimeoutWarning"
+    | "agentDisconnected"
+    | "queuePositionUpdate";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 let phrases: Record<SrEvent, string> | null = null;
