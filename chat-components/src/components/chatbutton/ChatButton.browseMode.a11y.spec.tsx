@@ -1,0 +1,110 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import "@testing-library/jest-dom/extend-expect";
+
+import { cleanup, render } from "@testing-library/react";
+
+import { BroadcastServiceInitialize } from "../../services/BroadcastService";
+import ChatButton from "./ChatButton";
+import React from "react";
+import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonProps";
+
+/**
+ * Repro / catcher for AB#3412046 — NVDA / JAWS in browse mode (virtual cursor)
+ * land on "Let's Chat, We're Online" multiple times when navigating with the
+ * down-arrow key.
+ *
+ * Root cause in code: `ChatButton` renders a Fluent UI `<Stack role="button">`
+ * with `tabIndex={0}` whose accessible name is computed from its visible
+ * children — a `<Label>` for the title (e.g. "Let's Chat!") and a `<Label>`
+ * for the subtitle (e.g. "We're online."). In browse mode, NVDA / JAWS treat
+ * the button itself AND each inner text node as separate virtual-cursor stops,
+ * each carrying the same announceable name fragments. There is no
+ * `aria-label` set by default, and the inner labels are not marked
+ * `aria-hidden="true"` (which is what would collapse them into a single
+ * announcement under the button container).
+ *
+ * Catcher contract: in the rendered chat-button subtree, at most ONE element
+ * may expose each of the title / subtitle strings as an announceable name
+ * source. An "announceable name source" here is:
+ *   - an `aria-label` attribute on a focusable / role-bearing element, OR
+ *   - a visible `<Label>` (or other text-bearing element) that is NOT
+ *     `aria-hidden="true"` and is not nested inside an element that is
+ *     `aria-hidden="true"`.
+ *
+ * Expected to FAIL today: the rendered DOM contains BOTH the title text node
+ * AND the subtitle text node as bare visible text, and the parent Stack has
+ * no `aria-label` to consolidate them. Browse-mode therefore sees three
+ * stops (button, title, subtitle) all carrying the same combined name.
+ */
+
+beforeAll(() => {
+    BroadcastServiceInitialize("testChannel");
+});
+
+afterEach(() => {
+    cleanup();
+});
+
+const isInsideAriaHidden = (el: Element | null): boolean => {
+    let cursor: Element | null = el;
+    while (cursor) {
+        if (cursor.getAttribute("aria-hidden") === "true") return true;
+        cursor = cursor.parentElement;
+    }
+    return false;
+};
+
+const visibleTextElementsMatching = (root: HTMLElement, text: string): Element[] => {
+    return Array.from(root.querySelectorAll("*")).filter((el) => {
+        if (isInsideAriaHidden(el)) return false;
+        // Only count leaf-ish text-bearing elements (don't double-count
+        // ancestors whose textContent obviously aggregates children).
+        const ownText = Array.from(el.childNodes)
+            .filter((n) => n.nodeType === Node.TEXT_NODE)
+            .map((n) => (n.textContent || "").trim())
+            .join(" ")
+            .trim();
+        return ownText === text;
+    });
+};
+
+describe("ChatButton — browse-mode duplicate stops (AB#3412046)", () => {
+    it("title text 'Let's Chat!' must appear as an announceable name source AT MOST ONCE in the chat-button subtree", () => {
+        const { container } = render(<ChatButton {...defaultChatButtonProps} />);
+        const button = container.firstElementChild as HTMLElement;
+        expect(button).not.toBeNull();
+
+        const titleStops = visibleTextElementsMatching(button, "Let's Chat!");
+        // Today: the <Label id="...-title"> carries the text AND its parent
+        // Stack has no aria-label, so screen readers see at least two stops
+        // (the button container + the inner label). The catcher allows ZERO
+        // visible duplicates because the consolidated name should come from
+        // a single aria-label on the button.
+        expect(titleStops.length).toBeLessThanOrEqual(0);
+    });
+
+    it("subtitle text 'We're online.' must appear as an announceable name source AT MOST ONCE in the chat-button subtree", () => {
+        const { container } = render(<ChatButton {...defaultChatButtonProps} />);
+        const button = container.firstElementChild as HTMLElement;
+        expect(button).not.toBeNull();
+
+        const subtitleStops = visibleTextElementsMatching(button, "We're online.");
+        expect(subtitleStops.length).toBeLessThanOrEqual(0);
+    });
+
+    it("the chat-button container must own a single consolidated aria-label so browse mode lands on it once", () => {
+        const { container } = render(<ChatButton {...defaultChatButtonProps} />);
+        const button = container.firstElementChild as HTMLElement;
+        expect(button).not.toBeNull();
+        // Either the container has a non-empty aria-label, OR every inner
+        // text-bearing descendant is aria-hidden so the computed name comes
+        // from the inner text exactly once with no extra browse-mode stops.
+        const hasAriaLabel = !!(button.getAttribute("aria-label") || "").trim();
+        const innerVisibleText = visibleTextElementsMatching(button, "Let's Chat!").length
+            + visibleTextElementsMatching(button, "We're online.").length;
+        // Today: hasAriaLabel === false (default ariaLabel is undefined) AND
+        // innerVisibleText > 0. The catcher requires at least one of these
+        // to flip.
+        expect(hasAriaLabel || innerVisibleText === 0).toBe(true);
+    });
+});
