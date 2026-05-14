@@ -117,6 +117,60 @@ describe("AdaptiveCardAccessibilityWrapper", () => {
     });
 
     describe("Radio group patching", () => {
+        it("should strip toggle semantics from action buttons that are plain push buttons", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-actionSet">
+                        <button className="ac-pushButton" role="switch" aria-pressed="false">Submit</button>
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            const button = container.querySelector("button.ac-pushButton") as HTMLElement;
+            expect(button).not.toHaveAttribute("aria-pressed");
+            expect(button).not.toHaveAttribute("role");
+        });
+
+        it("should preserve pressed state semantics for toggle visibility buttons", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-actionSet">
+                        <button className="ac-pushButton" role="switch" aria-pressed="true" aria-controls="details">Show details</button>
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            const button = container.querySelector("button.ac-pushButton") as HTMLElement;
+            expect(button).toHaveAttribute("aria-pressed", "true");
+            expect(button).toHaveAttribute("role", "switch");
+        });
+
+        it("should preserve checkbox role semantics", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-actionSet">
+                        <button className="ac-pushButton" role="checkbox" aria-checked="false">Subscribe</button>
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            const button = container.querySelector("button.ac-pushButton") as HTMLElement;
+            expect(button).toHaveAttribute("role", "checkbox");
+            expect(button).toHaveAttribute("aria-checked", "false");
+        });
+
         it("should set aria-setsize and aria-posinset on each radio in a group", async () => {
             const { container } = render(
                 <AdaptiveCardAccessibilityWrapper>
@@ -297,6 +351,75 @@ describe("AdaptiveCardAccessibilityWrapper", () => {
 
             // No errors, no radio patches
             expect(container.querySelectorAll("input[aria-setsize]")).toHaveLength(0);
+        });
+
+        it("should remove duplicate aria-labelledby from compact ChoiceSet selects only when it references the visible label", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-input-container">
+                        <label id="country-label" htmlFor="country-select">Country</label>
+                        <select id="country-select" className="ac-input ac-multichoiceInput" aria-labelledby="country-label" />
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            expect(container.querySelector("select")).not.toHaveAttribute("aria-labelledby");
+        });
+
+        it("should preserve composite aria-labelledby values on compact ChoiceSet selects", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-input-container">
+                        <label id="country-label" htmlFor="country-select">Country</label>
+                        <span id="country-required">required</span>
+                        <select id="country-select" className="ac-input ac-multichoiceInput" aria-labelledby="country-label country-required" />
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            expect(container.querySelector("select")).toHaveAttribute("aria-labelledby", "country-label country-required");
+        });
+
+        it("should preserve aria-labelledby when the matching compact ChoiceSet label is aria-hidden", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-input-container">
+                        <label id="country-label" htmlFor="country-select" aria-hidden="true">Country</label>
+                        <select id="country-select" className="ac-input ac-multichoiceInput" aria-labelledby="country-label" />
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            expect(container.querySelector("select")).toHaveAttribute("aria-labelledby", "country-label");
+        });
+
+        it("should not remove aria-labelledby from non-ChoiceSet selects", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div>
+                        <label id="custom-label" htmlFor="custom-select">Custom select</label>
+                        <select id="custom-select" aria-labelledby="custom-label" />
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            expect(container.querySelector("select")).toHaveAttribute("aria-labelledby", "custom-label");
         });
     });
 });

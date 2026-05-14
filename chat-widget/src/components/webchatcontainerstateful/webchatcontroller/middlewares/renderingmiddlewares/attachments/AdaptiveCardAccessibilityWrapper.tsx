@@ -28,6 +28,40 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
             const container = containerRef.current;
             if (!container) return;
 
+            // dropdown-double-label: compact Input.ChoiceSet renders as a native
+            // <select> with both aria-labelledby and a sibling visible <label for>.
+            // Only remove aria-labelledby when it points solely at that same visible
+            // label; preserve composite labels that include required/error/context text.
+            const compactSelects = container.querySelectorAll<HTMLSelectElement>(
+                ".ac-input-container select.ac-input.ac-multichoiceInput[aria-labelledby]"
+            );
+            compactSelects.forEach((select) => {
+                const id = select.id;
+                if (!id) return;
+                const visibleLabel = container.querySelector<HTMLLabelElement>(`label[for="${CSS.escape(id)}"]:not([aria-hidden='true'])`);
+                const labelledBy = (select.getAttribute("aria-labelledby") || "").trim().split(/\s+/);
+                if (visibleLabel?.id && labelledBy.length === 1 && labelledBy[0] === visibleLabel.id) {
+                    select.removeAttribute("aria-labelledby");
+                }
+            });
+
+            // action-button-toggle / login-button-toggle: submit/login action buttons can be
+            // rendered with toggle-only ARIA that causes screen readers to announce them as
+            // switches instead of plain push buttons. Preserve Action.ToggleVisibility buttons,
+            // which own aria-controls and legitimately expose a pressed state.
+            const actionButtons = container.querySelectorAll<HTMLElement>(
+                ".ac-actionSet button.ac-pushButton:not([aria-controls])"
+            );
+            actionButtons.forEach((btn) => {
+                if (btn.hasAttribute("aria-pressed")) {
+                    btn.removeAttribute("aria-pressed");
+                }
+                const role = btn.getAttribute("role");
+                if (role === "switch") {
+                    btn.removeAttribute("role");
+                }
+            });
+
             // Find all radio inputs inside the adaptive card
             const radios = container.querySelectorAll("input[type='radio']");
             if (radios.length === 0) return;

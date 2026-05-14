@@ -11,7 +11,7 @@ module.exports = {
     resolve: {
         extensions: [".Webpack.js", ".web.js", ".ts", ".js", ".jsx", ".tsx", ".mjs"],
         alias: {
-            "swiper/modules": require.resolve("swiper/swiper.esm.js")
+            "swiper/modules": require.resolve("swiper/modules")
         }
     },
     devServer: {

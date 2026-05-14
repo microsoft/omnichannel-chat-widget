@@ -78,6 +78,7 @@ export const PostChatSurveyPaneStateful = (props: IPostChatSurveyPaneStatefulPro
 
     const controlProps: IPostChatSurveyPaneControlProps = {
         id: "oc-lcw-postchatsurvey-pane",
+        title: "Post-chat survey",
         surveyURL: props.controlProps?.surveyURL ?? surveyInviteLink,
         ...props.controlProps
     };

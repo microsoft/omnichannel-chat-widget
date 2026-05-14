@@ -9,14 +9,25 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - [Compliance] Post-chat survey URL allow-list no longer includes the China-cloud Power Virtual Agents host by default. The China host is added at runtime only when the host org URL is detected to be in the China sovereign cloud (Mooncake), so non-China bundles (GCC High, public, etc.) ship without the cross-cloud literal that compliance/security scanners flag.
 - [Compliance] Imports from the `botframework-webchat` umbrella package (`Components`, `hooks`, `createStore`, `StyleOptions`) switched to the constituent `botframework-webchat-component`, `botframework-webchat-core`, and `botframework-webchat-api` packages. The umbrella entry bundles `microsoft-cognitiveservices-speech-sdk`, which embeds an `.azure.cn` region-suffix literal that compliance scanners flag in GCC High bundles. The chat widget does not use Speech functionality (only types `WebSpeechPonyfillFactory`), so the constituent packages provide an equivalent surface without pulling the Speech SDK transitively.
+- [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
+- [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
+- [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
+- [A11y] Post-chat survey iframe now has a default accessible title for meaningful screen-reader frame announcements
+- [A11y] Post-chat loading pane subtitle is now announced through polite status live-region semantics
+- [A11y] Compact Adaptive Card ChoiceSet selects no longer carry redundant labels that screen readers announce twice while preserving composite required/error labels
+- [A11y] Adaptive Card submit and sign-in buttons now announce as plain buttons instead of toggle controls
+- [A11y] Citation cards now expose a single stable accessible link label and avoid duplicate title announcements
 - [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
+- [A11y] Collapsed chat button remains reachable without trapping keyboard users; Tab and Shift+Tab can move focus back to the host page
 - [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers
 - [A11y] Screen reader now announces "File sent successfully." when an attachment upload completes; uses append-and-remove assertive aria-live pattern for reliable announcement on Android TalkBack/WebView. Announcement text is customizable via `MIDDLEWARE_BANNER_FILE_SENT`.
 - [A11y] Adaptive card radio button groups now include aria-setsize and aria-posinset attributes for correct option count announcement
 - [A11y] Email transcript SR announcement prefixed with localized "Success." / "Error." via new `MIDDLEWARE_SR_PREFIX_SUCCESS` / `MIDDLEWARE_SR_PREFIX_ERROR` keys so screen readers announce the outcome immediately
+- [A11y] Adjacent markdown links with the same target are merged into one focusable link to avoid duplicate tab stops
 - [A11y] Email transcript focus on submit goes directly to the notification banner; skips the chat-widget shell detour
 
 ### Added
+- [A11y] Documented accessibility catcher confidence tiers and NVDA setup guidance for foundation follow-ups
 - [A11y] E2E Playwright tests for 5 accessibility defects: focus trap, bot initials alt text, adaptive card radio count, attachment upload announcement, email notification aria-live regions
 - [A11y] Added shared accessibility tooling scaffolding: Storybook mobile/reflow/zoom profiles, package-level a11y Jest harnesses, and public accessibility setup/validation docs
 - [A11y] Phase 1 foundation: axe-core (`@axe-core/playwright`) + Microsoft Accessibility Insights story-by-story scanners, `forced-colors` and `contrast-more` Storybook profiles, opt-in `@axe-core/react` dev hook, non-gating PR workflow uploading reports as artifacts
@@ -39,6 +50,8 @@ All notable changes to this project will be documented in this file.
 - [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
 
 ### Changed
+- Uptake `@microsoft/omnichannel-chat-components@1.1.17-main.f21df63` so consumers receive the iOS Safari prechat dropdown blank-option fix from #899
+- Updated outdated npm dependencies across packages.
 - Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
 - Update GitHub Actions (checkout, setup-node) from v2/v3 to v4 and Node.js from 20.x to 22.x across chat-widget workflows to address Node.js 20 deprecation in GitHub Actions
 - Use `npx npm@11.12.1` for publish step to fix OIDC trusted publishing (npm 10.9.7 can't do OIDC, and `npm install -g` crashes during self-upgrade)

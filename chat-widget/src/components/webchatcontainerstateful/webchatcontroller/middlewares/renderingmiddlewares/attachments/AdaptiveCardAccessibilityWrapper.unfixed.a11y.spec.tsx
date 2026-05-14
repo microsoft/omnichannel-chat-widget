@@ -94,6 +94,7 @@ const buildCompactChoiceSet = (
 
     const select = document.createElement("select");
     select.id = selectId;
+    select.className = "ac-input ac-multichoiceInput";
     select.setAttribute("aria-labelledby", labelId);
     options.forEach((opt) => {
         const o = document.createElement("option");
@@ -107,7 +108,7 @@ const buildCompactChoiceSet = (
     return wrapper;
 };
 
-describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-button-toggle / login-button-toggle)", () => {
+describe("AdaptiveCardAccessibilityWrapper — action buttons (action-button-toggle / login-button-toggle)", () => {
     it("action-button-toggle: Action.Submit-style button must NOT be left with aria-pressed (causes Narrator 'toggle button' announcement)", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
@@ -123,11 +124,10 @@ describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-butto
 
         const button = container.querySelector("button.ac-pushButton") as HTMLElement;
         expect(button).not.toBeNull();
-        // After fix: wrapper strips aria-pressed (and any role="switch"/"checkbox")
-        // from action-set buttons so they announce as plain "button".
+        // After fix: wrapper strips aria-pressed and role="switch" from plain
+        // action-set buttons so they announce as plain "button".
         expect(button.hasAttribute("aria-pressed")).toBe(false);
         expect(button.getAttribute("role")).not.toBe("switch");
-        expect(button.getAttribute("role")).not.toBe("checkbox");
     });
 
     it("login-button-toggle: Login button on a sign-in adaptive card must announce as a plain 'button'", async () => {
@@ -154,9 +154,49 @@ describe.skip("AdaptiveCardAccessibilityWrapper — action buttons (action-butto
         const role = lb.getAttribute("role");
         expect(role === null || role === "button").toBe(true);
     });
+
+    it("Action.ToggleVisibility-style buttons keep aria-pressed semantics", async () => {
+        const { container } = render(
+            <AdaptiveCardAccessibilityWrapper>
+                <div className="ac-actionSet">
+                    <button className="ac-pushButton" role="switch" aria-pressed="true" aria-controls="details">
+                        Show details
+                    </button>
+                </div>
+            </AdaptiveCardAccessibilityWrapper>
+        );
+
+        await act(async () => {
+            observerInstance.trigger();
+        });
+
+        const toggleButton = container.querySelector("button.ac-pushButton") as HTMLElement;
+        expect(toggleButton).toHaveAttribute("aria-pressed", "true");
+        expect(toggleButton).toHaveAttribute("role", "switch");
+    });
+
+    it("does not strip role=checkbox without a dedicated scenario", async () => {
+        const { container } = render(
+            <AdaptiveCardAccessibilityWrapper>
+                <div className="ac-actionSet">
+                    <button className="ac-pushButton" role="checkbox" aria-checked="false">
+                        Subscribe
+                    </button>
+                </div>
+            </AdaptiveCardAccessibilityWrapper>
+        );
+
+        await act(async () => {
+            observerInstance.trigger();
+        });
+
+        const checkboxButton = container.querySelector("button.ac-pushButton") as HTMLElement;
+        expect(checkboxButton).toHaveAttribute("role", "checkbox");
+        expect(checkboxButton).toHaveAttribute("aria-checked", "false");
+    });
 });
 
-describe.skip("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-double-label)", () => {
+describe("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-double-label)", () => {
     it("dropdown-double-label: compact Input.ChoiceSet must not have BOTH aria-labelledby and a visible <label for> announce", async () => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
@@ -198,6 +238,78 @@ describe.skip("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-
             select.hasAttribute("aria-labelledby") ||
             !!container.querySelector("label[for='country-select']:not([aria-hidden='true'])");
         expect(hasName).toBe(true);
+    });
+
+    it("dropdown-double-label: composite aria-labelledby values are preserved", async () => {
+        const { container } = render(
+            <AdaptiveCardAccessibilityWrapper>
+                <div className="ac-adaptiveCard" />
+            </AdaptiveCardAccessibilityWrapper>
+        );
+        const card = container.querySelector(".ac-adaptiveCard") as HTMLElement;
+
+        await act(async () => {
+            const choiceSet = buildCompactChoiceSet(
+                "Country",
+                "country-select",
+                "country-label",
+                ["United States", "Canada", "Mexico"]
+            );
+            const required = document.createElement("span");
+            required.id = "country-required";
+            required.textContent = "required";
+            choiceSet.appendChild(required);
+            const select = choiceSet.querySelector("select") as HTMLSelectElement;
+            select.setAttribute("aria-labelledby", "country-label country-required");
+            card.appendChild(choiceSet);
+            observerInstance.trigger();
+        });
+
+        const select = container.querySelector("select#country-select") as HTMLElement;
+        expect(select).toHaveAttribute("aria-labelledby", "country-label country-required");
+    });
+
+    it("dropdown-double-label: non-ChoiceSet selects keep aria-labelledby", async () => {
+        const { container } = render(
+            <AdaptiveCardAccessibilityWrapper>
+                <div className="ac-adaptiveCard">
+                    <label id="custom-label" htmlFor="custom-select">Custom select</label>
+                    <select id="custom-select" aria-labelledby="custom-label" />
+                </div>
+            </AdaptiveCardAccessibilityWrapper>
+        );
+
+        await act(async () => {
+            observerInstance.trigger();
+        });
+
+        const select = container.querySelector("select#custom-select") as HTMLElement;
+        expect(select).toHaveAttribute("aria-labelledby", "custom-label");
+    });
+
+    it("dropdown-double-label: hidden labels do not cause aria-labelledby removal", async () => {
+        const { container } = render(
+            <AdaptiveCardAccessibilityWrapper>
+                <div className="ac-adaptiveCard" />
+            </AdaptiveCardAccessibilityWrapper>
+        );
+        const card = container.querySelector(".ac-adaptiveCard") as HTMLElement;
+
+        await act(async () => {
+            const choiceSet = buildCompactChoiceSet(
+                "Country",
+                "country-select",
+                "country-label",
+                ["United States", "Canada", "Mexico"]
+            );
+            const label = choiceSet.querySelector("label") as HTMLLabelElement;
+            label.setAttribute("aria-hidden", "true");
+            card.appendChild(choiceSet);
+            observerInstance.trigger();
+        });
+
+        const select = container.querySelector("select#country-select") as HTMLElement;
+        expect(select).toHaveAttribute("aria-labelledby", "country-label");
     });
 });
 
