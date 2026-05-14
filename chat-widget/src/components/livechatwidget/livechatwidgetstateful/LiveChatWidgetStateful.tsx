@@ -1,6 +1,7 @@
 import { BroadcastEvent, ConversationStage, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService, BroadcastServiceInitialize, decodeComponentString } from "@microsoft/omnichannel-chat-components";
-import { Components, StyleOptions } from "botframework-webchat";
+import { Components } from "botframework-webchat-component";
+import { StyleOptions } from "botframework-webchat-api";
 import { ConfirmationState, Constants, ConversationEndEntity, E2VVOptions, LiveWorkItemState, PrepareEndChatDescriptionConstants, StorageType, WidgetLoadCustomErrorString } from "../../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";
 import React, { Dispatch, useEffect, useRef, useState } from "react";

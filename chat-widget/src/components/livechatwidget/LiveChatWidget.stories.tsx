@@ -10,7 +10,7 @@ import { Meta } from "@storybook/react/types-6-0";
 import { MockChatSDK } from "../webchatcontainerstateful/common/mockchatsdk";
 import { ParticipantType } from "../../common/Constants";
 import { Story } from "@storybook/react";
-import { hooks } from "botframework-webchat";
+import { hooks } from "botframework-webchat-component";
 
 export default {
     title: "Stateful Components/Live Chat Widget",

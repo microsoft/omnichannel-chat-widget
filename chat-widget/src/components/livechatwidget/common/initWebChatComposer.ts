@@ -37,7 +37,7 @@ import createMaxMessageSizeValidator from "../../webchatcontainerstateful/webcha
 import { createMessageSequenceIdOverrideMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageSequenceIdOverrideMiddleware";
 import { createMessageTimeStampMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/messageTimestampMiddleware";
 import { createQueueOverflowMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/queueOverflowHandlerMiddleware";
-import { createStore } from "botframework-webchat";
+import { createStore } from "botframework-webchat-core";
 import { createToastMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/toastMiddleware";
 import { createWebChatTelemetry } from "../../webchatcontainerstateful/webchatcontroller/webchattelemetry/WebChatLogger";
 import { defaultAttachmentProps } from "../../webchatcontainerstateful/common/defaultProps/defaultAttachmentProps";

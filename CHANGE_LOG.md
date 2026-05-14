@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- [Compliance] Post-chat survey URL allow-list no longer includes the China-cloud Power Virtual Agents host by default. The China host is added at runtime only when the host org URL is detected to be in the China sovereign cloud (Mooncake), so non-China bundles (GCC High, public, etc.) ship without the cross-cloud literal that compliance/security scanners flag.
+- [Compliance] Imports from the `botframework-webchat` umbrella package (`Components`, `hooks`, `createStore`, `StyleOptions`) switched to the constituent `botframework-webchat-component`, `botframework-webchat-core`, and `botframework-webchat-api` packages. The umbrella entry bundles `microsoft-cognitiveservices-speech-sdk`, which embeds an `.azure.cn` region-suffix literal that compliance scanners flag in GCC High bundles. The chat widget does not use Speech functionality (only types `WebSpeechPonyfillFactory`), so the constituent packages provide an equivalent surface without pulling the Speech SDK transitively.
 - [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
 - [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced

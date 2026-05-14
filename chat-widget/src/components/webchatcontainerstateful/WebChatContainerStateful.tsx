@@ -6,7 +6,7 @@ import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/util
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
-import { Components } from "botframework-webchat";
+import { Components } from "botframework-webchat-component";
 import { ExtendedChatConfig } from "./interfaces/IExtendedChatConffig";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";

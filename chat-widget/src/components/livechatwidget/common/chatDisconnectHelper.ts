@@ -4,7 +4,7 @@ import { ILiveChatWidgetContext } from "../../../contexts/common/ILiveChatWidget
 import { ILiveChatWidgetProps } from "../interfaces/ILiveChatWidgetProps";
 import { NotificationHandler } from "../../webchatcontainerstateful/webchatcontroller/notification/NotificationHandler";
 import { NotificationScenarios } from "../../webchatcontainerstateful/webchatcontroller/enums/NotificationScenarios";
-import { StyleOptions } from "botframework-webchat";
+import { StyleOptions } from "botframework-webchat-api";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { defaultMiddlewareLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMiddlewareLocalizedTexts";
 
