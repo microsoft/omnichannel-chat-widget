@@ -1,4 +1,4 @@
-import { Constants, HtmlAttributeNames, HtmlClassNames, HtmlIdNames } from "../../common/Constants";
+import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
@@ -239,6 +239,36 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             if (chatHistoryElement) {
                 chatHistoryElement.setAttribute(HtmlAttributeNames.ariaLabel, webChatContainerProps.webChatHistoryMobileAccessibilityLabel);
             }
+        }
+
+        // internal tracking: WebChats BasicToaster renders a `role="log"` container
+        // with no accessible name. When the toaster is empty (typical idle
+        // state) screen readers traversing the page announce it as "blank".
+        // Inject an aria-label so the region has a meaningful name; the
+        // consumer can override via the new
+        // `webChatNotificationRegionAccessibilityLabel` prop. The toaster
+        // may not be rendered yet when this effect first runs, so poll a
+        // few times after mount.
+        const toasterLabel =
+            webChatContainerProps?.webChatNotificationRegionAccessibilityLabel
+            ?? defaultWebChatContainerStatefulProps.webChatNotificationRegionAccessibilityLabel
+            ?? "Chat notifications";
+        const labelToaster = () => {
+            const toaster = document.querySelector(".webchat__toaster[role='log']");
+            if (toaster && !toaster.getAttribute(HtmlAttributeNames.ariaLabel)) {
+                toaster.setAttribute(HtmlAttributeNames.ariaLabel, toasterLabel);
+                return true;
+            }
+            return false;
+        };
+        if (!labelToaster()) {
+            let attempts = 0;
+            const toasterInterval = window.setInterval(() => {
+                attempts++;
+                if (labelToaster() || attempts >= 20) {
+                    window.clearInterval(toasterInterval);
+                }
+            }, 250);
         }
         dispatch({
             type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS,
@@ -505,26 +535,6 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                     <BasicWebChat></BasicWebChat>
                 </div>
             </Stack>
-            {/* Visually hidden alert region for screen reader announcements (e.g. file sent).
-                role="alert" + aria-live="assertive" guarantees TalkBack announces even when
-                focus shifts to the send box immediately after the file is sent. */}
-            <div
-                id={HtmlIdNames.fileSentAnnouncementRegionId}
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-                style={{
-                    position: "absolute",
-                    width: "1px",
-                    height: "1px",
-                    padding: "0",
-                    margin: "-1px",
-                    overflow: "hidden",
-                    clip: "rect(0, 0, 0, 0)",
-                    whiteSpace: "nowrap",
-                    border: "0"
-                }}
-            />
             {citationPaneOpen && (
                 <CitationPaneStateful
                     id={props.citationPaneProps?.id || HtmlAttributeNames.ocwCitationPaneClassName}
