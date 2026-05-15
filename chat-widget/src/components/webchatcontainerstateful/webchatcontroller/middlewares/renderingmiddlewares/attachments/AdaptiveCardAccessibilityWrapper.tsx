@@ -45,6 +45,44 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
                 }
             });
 
+            // internal tracking: non-radio inputs (Input.Text, Input.Date, Input.Number,
+            // Input.Toggle, Input.ChoiceSet multi-select checkbox) rendered by
+            // adaptivecards can have THREE accessible-name sources resolving to
+            // the same string: a visible <label for>, aria-label, AND
+            // aria-labelledby. TalkBack walks each accessibility node
+            // independently and reads the duplicated name. When a visible
+            // <label for> exists and names the control, strip the redundant
+            // aria-label / aria-labelledby on the input so only one announceable
+            // source remains.
+            const labelledInputs = container.querySelectorAll<HTMLInputElement>(
+                ".ac-input-container input.ac-input[id]:not([type='radio'])"
+            );
+            labelledInputs.forEach((input) => {
+                const id = input.id;
+                if (!id) return;
+                const visibleLabel = container.querySelector<HTMLLabelElement>(
+                    `label[for="${CSS.escape(id)}"]:not([aria-hidden='true'])`
+                );
+                if (!visibleLabel) return;
+                const labelText = (visibleLabel.textContent || "").trim();
+                if (!labelText) return;
+                const ariaLabel = input.getAttribute("aria-label");
+                if (ariaLabel && ariaLabel.trim() === labelText) {
+                    input.removeAttribute("aria-label");
+                }
+                const labelledBy = (input.getAttribute("aria-labelledby") || "").trim();
+                if (labelledBy) {
+                    const ids = labelledBy.split(/\s+/);
+                    const resolved = ids
+                        .map((rid) => (document.getElementById(rid)?.textContent || "").trim())
+                        .filter(Boolean)
+                        .join(" ");
+                    if (resolved === labelText) {
+                        input.removeAttribute("aria-labelledby");
+                    }
+                }
+            });
+
             // action-button-toggle / login-button-toggle: submit/login action buttons can be
             // rendered with toggle-only ARIA that causes screen readers to announce them as
             // switches instead of plain push buttons. Preserve Action.ToggleVisibility buttons,
