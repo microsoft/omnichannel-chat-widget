@@ -31,10 +31,13 @@ import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonP
  *     `aria-hidden="true"` and is not nested inside an element that is
  *     `aria-hidden="true"`.
  *
- * Expected to FAIL today: the rendered DOM contains BOTH the title text node
- * AND the subtitle text node as bare visible text, and the parent Stack has
- * no `aria-label` to consolidate them. Browse-mode therefore sees three
- * stops (button, title, subtitle) all carrying the same combined name.
+ * Regression guard: in the rendered DOM, the parent role=button Stack owns a
+ * single consolidated aria-label (synthesized from title + subtitle, plus
+ * unread-count fragment when applicable) and the inner Labels live inside an
+ * aria-hidden text container so browse-mode lands on the button exactly once.
+ * Override paths (componentOverrides.title/subtitle/textContainer or a
+ * consumer-supplied controlProps.ariaLabel) are preserved unchanged so
+ * customers who manage their own accessible names are not affected.
  */
 
 beforeAll(() => {
@@ -112,5 +115,79 @@ describe("ChatButton — browse-mode duplicate stops (internal tracking)", () =>
         // innerVisibleText > 0. The catcher requires at least one of these
         // to flip.
         expect(hasAriaLabel || innerVisibleText === 0).toBe(true);
+    });
+
+    it("the synthesized aria-label includes the unread-count fragment when hideNotificationBubble=false and unreadMessageCount > 0", () => {
+        const props = {
+            ...defaultChatButtonProps,
+            controlProps: {
+                ...defaultChatButtonProps.controlProps,
+                hideNotificationBubble: false,
+                unreadMessageCount: "3",
+                ariaLabelUnreadMessageString: "you have new messages",
+                titleText: "Let's Chat!",
+                subtitleText: "We're online."
+            }
+        };
+        const { container } = render(<ChatButton {...props} />);
+        const button = container.firstElementChild as HTMLElement;
+        const ariaLabel = button.getAttribute("aria-label") || "";
+        expect(ariaLabel).toContain("3");
+        expect(ariaLabel).toContain("you have new messages");
+        expect(ariaLabel).toContain("Let's Chat!");
+        expect(ariaLabel).toContain("We're online.");
+    });
+
+    it("a consumer-supplied controlProps.ariaLabel wins over the synthesized label", () => {
+        const props = {
+            ...defaultChatButtonProps,
+            controlProps: {
+                ...defaultChatButtonProps.controlProps,
+                ariaLabel: "Talk to a live agent"
+            }
+        };
+        const { container } = render(<ChatButton {...props} />);
+        const button = container.firstElementChild as HTMLElement;
+        expect(button.getAttribute("aria-label")).toBe("Talk to a live agent");
+    });
+
+    it("componentOverrides.textContainer preserves consumer-rendered visible text (synthesis is skipped)", () => {
+        const customText = "My custom chat text";
+        const props = {
+            ...defaultChatButtonProps,
+            componentOverrides: {
+                textContainer: (
+                    <div id="my-custom-text">{customText}</div>
+                ) as unknown as string
+            }
+        };
+        const { container } = render(<ChatButton {...props} />);
+        const button = container.firstElementChild as HTMLElement;
+        // The custom text MUST remain visible in the a11y tree so consumers
+        // who replace the text container keep their announced text.
+        const customStops = visibleTextElementsMatching(button, customText);
+        expect(customStops.length).toBeGreaterThan(0);
+        // And the button must NOT carry a synthesized aria-label that would
+        // override the consumer's content.
+        const ariaLabel = (button.getAttribute("aria-label") || "").trim();
+        expect(ariaLabel).toBe("");
+    });
+
+    it("componentOverrides.title preserves consumer-rendered visible title (synthesis is skipped)", () => {
+        const customTitle = "Custom override title";
+        const props = {
+            ...defaultChatButtonProps,
+            componentOverrides: {
+                title: (
+                    <span id="my-custom-title">{customTitle}</span>
+                ) as unknown as string
+            }
+        };
+        const { container } = render(<ChatButton {...props} />);
+        const button = container.firstElementChild as HTMLElement;
+        const customStops = visibleTextElementsMatching(button, customTitle);
+        expect(customStops.length).toBeGreaterThan(0);
+        const ariaLabel = (button.getAttribute("aria-label") || "").trim();
+        expect(ariaLabel).toBe("");
     });
 });
