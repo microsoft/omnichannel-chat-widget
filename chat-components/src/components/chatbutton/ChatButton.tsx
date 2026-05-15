@@ -69,12 +69,22 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
     const titleText = props.controlProps?.titleText ?? defaultChatButtonControlProps?.titleText;
     const subtitleDir = props.controlProps?.dir ?? defaultChatButtonControlProps?.dir;
     const subtitleText = props.controlProps?.subtitleText ?? defaultChatButtonControlProps?.subtitleText;
-        
-    return (decodeComponentString(props.componentOverrides?.textContainer) ||         
+
+    // internal tracking: when the default title / subtitle Labels are used, hide the
+    // text container subtree from the accessibility tree. The button container
+    // owns a consolidated aria-label that already announces the same text, so
+    // exposing the inner Labels causes NVDA / JAWS browse-mode to land on the
+    // same announcement multiple times. Customer overrides for title /
+    // subtitle keep their default a11y behavior so they can manage their own
+    // accessible names.
+    const hideTextFromA11yTree = !props.componentOverrides?.title && !props.componentOverrides?.subtitle;
+
+    return (decodeComponentString(props.componentOverrides?.textContainer) ||
         <Stack
             styles={textContainerStyles}
             className={props.styleProps?.classNames?.textContainerClassName}
             id={parentId + "-text-container"}
+            aria-hidden={hideTextFromA11yTree || undefined}
         >
                 
             {!hideChatTitle && (decodeComponentString(props.componentOverrides?.title) || 
@@ -100,13 +110,41 @@ function TextContainer(props: IChatButtonProps, parentId: string) {
 
 function ChatButton(props: IChatButtonProps) {
     const elementId = props.controlProps?.id ?? Ids.DefaultChatButtonId;
-    const defaultAriaLabel = props.controlProps?.ariaLabel ?? defaultChatButtonControlProps.ariaLabel;
     const defaultRole = props.controlProps?.role ?? defaultChatButtonControlProps?.role;
     const containersDir = props.controlProps?.dir ?? defaultChatButtonControlProps?.dir;
     const hideChatButton = props.controlProps?.hideChatButton ?? defaultChatButtonControlProps?.hideChatButton;
     const hideChatIcon = props.controlProps?.hideChatIcon ?? defaultChatButtonControlProps?.hideChatIcon;
     const hideChatTextContainer = props.controlProps?.hideChatTextContainer ?? defaultChatButtonControlProps?.hideChatTextContainer;
     const hideNotificationBubble = props.controlProps?.hideNotificationBubble ?? defaultChatButtonControlProps?.hideNotificationBubble;
+
+    // internal tracking: when the consumer has not supplied a custom aria-label and
+    // the default title / subtitle Labels are in play, synthesize a single
+    // consolidated aria-label from the visible text so NVDA / JAWS browse
+    // mode lands on the role=button container exactly once. The text
+    // container is also marked aria-hidden in TextContainer so the inner
+    // labels do not produce additional virtual-cursor stops.
+    const titleText = props.controlProps?.titleText ?? defaultChatButtonControlProps?.titleText;
+    const subtitleText = props.controlProps?.subtitleText ?? defaultChatButtonControlProps?.subtitleText;
+    const hideChatTitle = props.controlProps?.hideChatTitle ?? defaultChatButtonControlProps?.hideChatTitle;
+    const hideChatSubtitle = props.controlProps?.hideChatSubtitle ?? defaultChatButtonControlProps?.hideChatSubtitle;
+    const unreadMessageCount = props.controlProps?.unreadMessageCount ?? defaultChatButtonControlProps?.unreadMessageCount;
+    const ariaLabelUnreadMessageString = props.controlProps?.ariaLabelUnreadMessageString ?? defaultChatButtonControlProps?.ariaLabelUnreadMessageString;
+    const canSynthesizeAriaLabel = !hideChatTextContainer
+        && !props.componentOverrides?.textContainer
+        && !props.componentOverrides?.title
+        && !props.componentOverrides?.subtitle;
+    const synthesizedAriaLabel = canSynthesizeAriaLabel
+        ? [
+            !hideNotificationBubble && unreadMessageCount && unreadMessageCount !== "0"
+                ? `${unreadMessageCount} ${ariaLabelUnreadMessageString ?? ""}`.trim()
+                : "",
+            !hideChatTitle ? titleText : "",
+            !hideChatSubtitle ? subtitleText : ""
+        ].filter(Boolean).join(" ").trim()
+        : "";
+    const defaultAriaLabel = props.controlProps?.ariaLabel
+        ?? defaultChatButtonControlProps.ariaLabel
+        ?? (synthesizedAriaLabel || undefined);
 
     const chatButtonGroupStyles: IStackStyles = {
         root: Object.assign({}, defaultChatButtonGeneralStyles, props.styleProps?.generalStyleProps)
