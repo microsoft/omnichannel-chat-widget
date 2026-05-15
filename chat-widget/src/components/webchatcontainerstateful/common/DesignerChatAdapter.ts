@@ -36,6 +36,21 @@ export class DesignerChatAdapter extends MockAdapter {
         if (msg.text) {
             if (msg.suggestedActions) {
                 postAgentSuggestedActionsActivity(this.activityObserver, msg.text, msg.suggestedActions, index * 100);
+            } else if (msg.from && (msg.from as { role?: string }).role) {
+                // Honor caller-supplied `from` on the mock message so designer-mode
+                // E2E catchers can exercise downstream middleware that reads
+                // activity.from.name / from.role (e.g. localizedStringsBotInitialsMiddleware).
+                const fromValue = msg.from;
+                setTimeout(() => {
+                    this.activityObserver?.next({
+                        id: `${Date.now()}-${index}`,
+                        from: fromValue,
+                        text: msg.text,
+                        type: "message",
+                        channelData: { tags: "" },
+                        timestamp: new Date().toISOString()
+                    } as unknown as Message);
+                }, index * 100);
             } else {
                 postBotMessageActivity(this.activityObserver, msg.text, undefined, index * 100);
             }
