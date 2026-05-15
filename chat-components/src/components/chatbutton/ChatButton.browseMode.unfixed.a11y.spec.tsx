@@ -9,7 +9,7 @@ import React from "react";
 import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonProps";
 
 /**
- * Repro / catcher for AB#3412046 — NVDA / JAWS in browse mode (virtual cursor)
+ * Repro / catcher for internal tracking — NVDA / JAWS in browse mode (virtual cursor)
  * land on "Let's Chat, We're Online" multiple times when navigating with the
  * down-arrow key.
  *
@@ -70,10 +70,10 @@ const visibleTextElementsMatching = (root: HTMLElement, text: string): Element[]
 
 /**
  * SKIPPED until the source fix lands. Un-skip the describe below to validate
- * the fix to AB#3412046; the suite is expected to FAIL today against unfixed
+ * the fix to internal tracking; the suite is expected to FAIL today against unfixed
  * source. Mirrors the chat-widget `*.unfixed.a11y.spec.tsx` convention.
  */
-describe.skip("ChatButton — browse-mode duplicate stops (AB#3412046)", () => {
+describe.skip("ChatButton — browse-mode duplicate stops (internal tracking)", () => {
     it("title text 'Let's Chat!' must NOT appear as a visible (non-aria-hidden) name source in the chat-button subtree", () => {
         const { container } = render(<ChatButton {...defaultChatButtonProps} />);
         const button = container.firstElementChild as HTMLElement;
@@ -84,7 +84,7 @@ describe.skip("ChatButton — browse-mode duplicate stops (AB#3412046)", () => {
         // (e.g. via aria-hidden on the text container) so the announced name
         // comes solely from the consolidated aria-label on the button. Any
         // exposed text-bearing element with this exact text creates an
-        // additional browse-mode stop and reproduces AB#3412046.
+        // additional browse-mode stop and reproduces internal tracking.
         expect(titleStops.length).toBe(0);
     });
 

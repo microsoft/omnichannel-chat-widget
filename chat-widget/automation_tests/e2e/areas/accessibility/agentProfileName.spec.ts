@@ -4,11 +4,11 @@ import { TestSettings } from "../../../configuration/test-settings";
 import { BasePage } from "../../pages/base.page";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 
-// SKIPPED until the source fix lands. Un-skip to validate fix to AB#3012996.
+// SKIPPED until the source fix lands. Un-skip to validate fix to internal tracking.
 const describeIfBuilt = describe.skip;
 
 /**
- * Repro / catcher for AB#3012996 — NVDA does NOT read the agent's profile
+ * Repro / catcher for internal tracking — NVDA does NOT read the agent's profile
  * name when navigating to messages sent by the agent.
  *
  * The bot-initials middleware (PR #907) updates ACTIVITY_BOT_SAID_ALT from the
@@ -27,7 +27,7 @@ const describeIfBuilt = describe.skip;
  *      (e.g. "SS said:") that the original bug reported as the offender.
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describeIfBuilt("agent profile name accessibility (AB#3012996)", () => {
+describeIfBuilt("agent profile name accessibility (internal tracking)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;

@@ -4,12 +4,12 @@ import { TestSettings } from "../../../configuration/test-settings";
 import { BasePage } from "../../pages/base.page";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 
-// SKIPPED until the source fix lands. Un-skip to validate fix to AB#6093367.
+// SKIPPED until the source fix lands. Un-skip to validate fix to internal tracking.
 // (Repro upgraded from the previous passing assertion to a deterministic catcher.)
 const describeIfBuilt = describe.skip;
 
 /**
- * Repro catcher for focus-trap-after-reload (AB#6093367) — After the user
+ * Repro catcher for focus-trap-after-reload (internal tracking) — After the user
  * activates a link inside an open chat and the page reloads (persistent
  * storage rehydrates the widget into the open state), focus is "trapped"
  * inside the widget with no escape via Tab.

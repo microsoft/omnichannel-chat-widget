@@ -313,7 +313,7 @@ describe("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-doubl
     });
 });
 
-// AB#5929337 — TalkBack reads adaptive-card element labels TWICE.
+// internal tracking — TalkBack reads adaptive-card element labels TWICE.
 // PR #911 patched the radio case via `aria-hidden` on label/spacer siblings,
 // but every other Input.* type (Text, Date, Number, Toggle, ChoiceSet expanded
 // non-radio) is still rendered with BOTH an associated <label for> AND an
@@ -324,7 +324,7 @@ describe("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-doubl
 // post-mutation output must expose at most one announce-able name source per
 // input. They are expected to FAIL today because the wrapper only handles
 // `input[type=radio]`.
-describe.skip("AdaptiveCardAccessibilityWrapper — TalkBack duplicate labels on non-radio elements (AB#5929337)", () => {
+describe.skip("AdaptiveCardAccessibilityWrapper — TalkBack duplicate labels on non-radio elements (internal tracking)", () => {
     const buildLabelledInput = (
         type: "text" | "date" | "number" | "checkbox",
         id: string,

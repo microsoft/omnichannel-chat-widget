@@ -12,7 +12,7 @@ import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonP
 import { defaultLoadingPaneProps } from "../loadingpane/common/defaultProps/defaultLoadingPaneProps";
 
 /**
- * Repro / catcher for AB#6003259 — screen reader announces hidden / irrelevant
+ * Repro / catcher for internal tracking — screen reader announces hidden / irrelevant
  * text such as "blank" while navigating the chat surface. NVDA / JAWS announce
  * "blank" when they encounter:
  *   - an element with an announceable role (button, link, textbox, listitem,
@@ -155,7 +155,7 @@ const summarize = (offenders: Element[]) =>
         classes: el.className
     }));
 
-describe("ChatButton — 'blank' / empty-name announcements (AB#6003259 regression guard)", () => {
+describe("ChatButton — 'blank' / empty-name announcements (internal tracking regression guard)", () => {
     it("no announceable role/tag in the chat-button subtree may have an empty accessible name", () => {
         const { container } = render(<ChatButton {...defaultChatButtonProps} />);
         const button = container.firstElementChild as HTMLElement;
@@ -179,7 +179,7 @@ describe("ChatButton — 'blank' / empty-name announcements (AB#6003259 regressi
     });
 });
 
-describe("LoadingPane — 'blank' / empty-name announcements (AB#6003259 regression guard)", () => {
+describe("LoadingPane — 'blank' / empty-name announcements (internal tracking regression guard)", () => {
     it("no announceable role/tag in the loading-pane subtree may have an empty accessible name", () => {
         const { container } = render(<LoadingPane {...defaultLoadingPaneProps} />);
         const pane = container.firstElementChild as HTMLElement;

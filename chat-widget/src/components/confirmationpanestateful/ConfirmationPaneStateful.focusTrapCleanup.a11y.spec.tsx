@@ -11,7 +11,7 @@ import { EmailTranscriptPaneStateful } from "../emailtranscriptpanestateful/Emai
 import React from "react";
 
 /**
- * Regression-guard catcher for AB#6093367 (focus trap after page reload).
+ * Regression-guard catcher for internal tracking (focus trap after page reload).
  *
  * The production repro path requires a modal pane (Confirmation, Citation,
  * EmailTranscript) to be open across a page reload — the persistent-storage
@@ -88,7 +88,7 @@ interface PaneCase {
     render: () => { unmount: () => void };
 }
 
-describe("Modal-pane focus traps must release on unmount (AB#6093367 regression guard)", () => {
+describe("Modal-pane focus traps must release on unmount (internal tracking regression guard)", () => {
     let preventSpy: jest.SpyInstance;
     let trapCleanups: jest.Mock[];
 

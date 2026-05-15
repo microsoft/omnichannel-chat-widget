@@ -7,7 +7,7 @@ import { BasePage } from "../../pages/base.page";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 import { findAll, getA11yTree } from "../../utility/a11yTree";
 
-// SKIPPED until the source fix lands. Un-skip to validate fix to AB#6003259.
+// SKIPPED until the source fix lands. Un-skip to validate fix to internal tracking.
 // (Repro upgraded from the previous passing assertion to a deterministic catcher.)
 const describeIfBuilt = describe.skip;
 
