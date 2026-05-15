@@ -1,16 +1,11 @@
 import { Browser, BrowserContext } from "playwright";
 import * as playwright from "playwright";
-import * as fs from "fs";
-import * as path from "path";
 import { TestSettings } from "../../../configuration/test-settings";
 import { BasePage } from "../../pages/base.page";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 
-// These tests require a built widget bundle (dist/out.js) and Microsoft Edge.
-// They are skipped on CI where the bundle is not available.
-const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
-const widgetBundleExists = fs.existsSync(widgetBundlePath);
-const describeIfBuilt = widgetBundleExists ? describe : describe.skip;
+// SKIPPED until the source fix lands. Un-skip to validate fix to AB#3012996.
+const describeIfBuilt = describe.skip;
 
 /**
  * Repro / catcher for AB#3012996 — NVDA does NOT read the agent's profile

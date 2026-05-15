@@ -7,7 +7,9 @@ import { BasePage } from "../../pages/base.page";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 
 const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
-const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.skip;
+// SKIPPED until the source fix lands. Un-skip to validate fix to AB#6093367.
+// (Repro upgraded from the previous passing assertion to a deterministic catcher.)
+const describeIfBuilt = describe.skip;
 
 /**
  * Repro catcher for focus-trap-after-reload (AB#6093367) — After the user

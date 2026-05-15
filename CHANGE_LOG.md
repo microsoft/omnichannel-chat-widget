@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Tests
+- [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for AB#5929337 (AdaptiveCard TalkBack non-radio duplicate labels), AB#3412046 (ChatButton browse-mode duplicate stops), AB#3012996 (agent profile name not announced), AB#6003259 (blank announcement live regions), AB#6093367 (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
+
 ### Fixed
 - [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents

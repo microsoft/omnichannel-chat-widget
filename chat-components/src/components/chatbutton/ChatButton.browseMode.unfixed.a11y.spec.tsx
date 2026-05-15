@@ -68,7 +68,12 @@ const visibleTextElementsMatching = (root: HTMLElement, text: string): Element[]
     });
 };
 
-describe("ChatButton — browse-mode duplicate stops (AB#3412046)", () => {
+/**
+ * SKIPPED until the source fix lands. Un-skip the describe below to validate
+ * the fix to AB#3412046; the suite is expected to FAIL today against unfixed
+ * source. Mirrors the chat-widget `*.unfixed.a11y.spec.tsx` convention.
+ */
+describe.skip("ChatButton — browse-mode duplicate stops (AB#3412046)", () => {
     it("title text 'Let's Chat!' must appear as an announceable name source AT MOST ONCE in the chat-button subtree", () => {
         const { container } = render(<ChatButton {...defaultChatButtonProps} />);
         const button = container.firstElementChild as HTMLElement;

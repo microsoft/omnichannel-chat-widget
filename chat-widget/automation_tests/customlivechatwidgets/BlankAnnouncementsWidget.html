@@ -74,7 +74,7 @@
     }
 
     function getData(key, type) {
-      if (type == "localStorage") {
+      if (type === "localStorage") {
         return localStorage.getItem(key);
       } else {
         return sessionStorage.getItem(key);

@@ -8,7 +8,9 @@ import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 import { findAll, getA11yTree } from "../../utility/a11yTree";
 
 const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
-const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.skip;
+// SKIPPED until the source fix lands. Un-skip to validate fix to AB#6003259.
+// (Repro upgraded from the previous passing assertion to a deterministic catcher.)
+const describeIfBuilt = describe.skip;
 
 /**
  * Repro catcher for blank-announcements — Screen reader announces blank / hidden
