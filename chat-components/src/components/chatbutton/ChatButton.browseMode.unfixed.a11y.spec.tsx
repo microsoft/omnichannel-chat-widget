@@ -6,7 +6,11 @@ import { cleanup, render } from "@testing-library/react";
 import { BroadcastServiceInitialize } from "../../services/BroadcastService";
 import ChatButton from "./ChatButton";
 import React from "react";
+import { defaultChatButtonControlProps } from "./common/defaultProps/defaultChatButtonControlProps";
 import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonProps";
+
+const expectedTitle = defaultChatButtonControlProps.titleText as string;
+const expectedSubtitle = defaultChatButtonControlProps.subtitleText as string;
 
 /**
  * Repro / catcher for internal tracking — NVDA / JAWS in browse mode (virtual cursor)
@@ -23,9 +27,10 @@ import { defaultChatButtonProps } from "./common/defaultProps/defaultChatButtonP
  * `aria-hidden="true"` (which is what would collapse them into a single
  * announcement under the button container).
  *
- * Catcher contract: in the rendered chat-button subtree, at most ONE element
- * may expose each of the title / subtitle strings as an announceable name
- * source. An "announceable name source" here is:
+ * Catcher contract: the title / subtitle strings must NOT appear as
+ * additional announceable name sources in the chat-button subtree (only the
+ * single consolidated aria-label on the role=button container should name the
+ * button). An "announceable name source" here is:
  *   - an `aria-label` attribute on a focusable / role-bearing element, OR
  *   - a visible `<Label>` (or other text-bearing element) that is NOT
  *     `aria-hidden="true"` and is not nested inside an element that is
@@ -74,12 +79,12 @@ const visibleTextElementsMatching = (root: HTMLElement, text: string): Element[]
  * source. Mirrors the chat-widget `*.unfixed.a11y.spec.tsx` convention.
  */
 describe.skip("ChatButton — browse-mode duplicate stops (internal tracking)", () => {
-    it("title text 'Let's Chat!' must NOT appear as a visible (non-aria-hidden) name source in the chat-button subtree", () => {
+    it(`title text '${expectedTitle}' must NOT appear as a visible (non-aria-hidden) name source in the chat-button subtree`, () => {
         const { container } = render(<ChatButton {...defaultChatButtonProps} />);
         const button = container.firstElementChild as HTMLElement;
         expect(button).not.toBeNull();
 
-        const titleStops = visibleTextElementsMatching(button, "Let's Chat!");
+        const titleStops = visibleTextElementsMatching(button, expectedTitle);
         // The visible title should be excluded from the accessibility tree
         // (e.g. via aria-hidden on the text container) so the announced name
         // comes solely from the consolidated aria-label on the button. Any
@@ -88,12 +93,12 @@ describe.skip("ChatButton — browse-mode duplicate stops (internal tracking)", 
         expect(titleStops.length).toBe(0);
     });
 
-    it("subtitle text 'We're online.' must NOT appear as a visible (non-aria-hidden) name source in the chat-button subtree", () => {
+    it(`subtitle text '${expectedSubtitle}' must NOT appear as a visible (non-aria-hidden) name source in the chat-button subtree`, () => {
         const { container } = render(<ChatButton {...defaultChatButtonProps} />);
         const button = container.firstElementChild as HTMLElement;
         expect(button).not.toBeNull();
 
-        const subtitleStops = visibleTextElementsMatching(button, "We're online.");
+        const subtitleStops = visibleTextElementsMatching(button, expectedSubtitle);
         expect(subtitleStops.length).toBe(0);
     });
 
@@ -105,8 +110,8 @@ describe.skip("ChatButton — browse-mode duplicate stops (internal tracking)", 
         // text-bearing descendant is aria-hidden so the computed name comes
         // from the inner text exactly once with no extra browse-mode stops.
         const hasAriaLabel = !!(button.getAttribute("aria-label") || "").trim();
-        const innerVisibleText = visibleTextElementsMatching(button, "Let's Chat!").length
-            + visibleTextElementsMatching(button, "We're online.").length;
+        const innerVisibleText = visibleTextElementsMatching(button, expectedTitle).length
+            + visibleTextElementsMatching(button, expectedSubtitle).length;
         // Today: hasAriaLabel === false (default ariaLabel is undefined) AND
         // innerVisibleText > 0. The catcher requires at least one of these
         // to flip.

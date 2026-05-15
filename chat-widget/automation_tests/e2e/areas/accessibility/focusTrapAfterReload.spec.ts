@@ -31,8 +31,8 @@ const describeIfBuilt = describe.skip;
  *      press Tab up to 60 times. Assert focus reaches the host-page
  *      button AFTER the widget.
  *
- * Today the catcher FAILS deterministically: Tab never reaches the
- * post-widget button — focus is trapped inside the rehydrated widget.
+ * The source fix lands in a stacked PR. When un-skipped, this catcher should
+ * pass against the fix and fail against unfixed code.
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -89,11 +89,22 @@ describeIfBuilt("focus trap after page reload (focus-trap-after-reload)", () => 
         // designer-mode mock could not otherwise reproduce: a modal pane
         // open at reload time forces the rehydrate path to re-install
         // its `preventFocusToMoveOutOfElement` trap.
+        // Hard-assert the close button was found. A missed selector here would
+        // mean no confirmation pane opens, the widget rehydrates as the regular
+        // chat surface, the Tab walk traverses an open chat with no trap
+        // installed, and the catcher would go green for the wrong reason.
         const closeBtn = await page.Page.$("#lcw-header-close-button");
-        if (closeBtn) {
-            await closeBtn.click();
-            await page.Page.waitForTimeout(800);
-        }
+        expect(closeBtn).not.toBeNull();
+        await closeBtn!.click();
+        await page.Page.waitForTimeout(800);
+
+        // Verify the confirmation pane actually opened — this is the modal
+        // surface whose focus trap must survive the reload.
+        const paneOpened = await page.Page.evaluate(() => {
+            return !!document.querySelector("[id*='confirmation' i],[id*='ConfirmationPane' i]")
+                || !!document.querySelector("[role='dialog']");
+        });
+        expect(paneOpened).toBe(true);
 
         // Reload — persistent storage should rehydrate widget state.
         await page.Page.reload({ waitUntil: "domcontentloaded" });
