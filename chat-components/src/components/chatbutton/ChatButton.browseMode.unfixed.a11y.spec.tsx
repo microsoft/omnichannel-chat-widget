@@ -74,27 +74,27 @@ const visibleTextElementsMatching = (root: HTMLElement, text: string): Element[]
  * source. Mirrors the chat-widget `*.unfixed.a11y.spec.tsx` convention.
  */
 describe.skip("ChatButton — browse-mode duplicate stops (AB#3412046)", () => {
-    it("title text 'Let's Chat!' must appear as an announceable name source AT MOST ONCE in the chat-button subtree", () => {
+    it("title text 'Let's Chat!' must NOT appear as a visible (non-aria-hidden) name source in the chat-button subtree", () => {
         const { container } = render(<ChatButton {...defaultChatButtonProps} />);
         const button = container.firstElementChild as HTMLElement;
         expect(button).not.toBeNull();
 
         const titleStops = visibleTextElementsMatching(button, "Let's Chat!");
-        // Today: the <Label id="...-title"> carries the text AND its parent
-        // Stack has no aria-label, so screen readers see at least two stops
-        // (the button container + the inner label). The catcher allows ZERO
-        // visible duplicates because the consolidated name should come from
-        // a single aria-label on the button.
-        expect(titleStops.length).toBeLessThanOrEqual(0);
+        // The visible title should be excluded from the accessibility tree
+        // (e.g. via aria-hidden on the text container) so the announced name
+        // comes solely from the consolidated aria-label on the button. Any
+        // exposed text-bearing element with this exact text creates an
+        // additional browse-mode stop and reproduces AB#3412046.
+        expect(titleStops.length).toBe(0);
     });
 
-    it("subtitle text 'We're online.' must appear as an announceable name source AT MOST ONCE in the chat-button subtree", () => {
+    it("subtitle text 'We're online.' must NOT appear as a visible (non-aria-hidden) name source in the chat-button subtree", () => {
         const { container } = render(<ChatButton {...defaultChatButtonProps} />);
         const button = container.firstElementChild as HTMLElement;
         expect(button).not.toBeNull();
 
         const subtitleStops = visibleTextElementsMatching(button, "We're online.");
-        expect(subtitleStops.length).toBeLessThanOrEqual(0);
+        expect(subtitleStops.length).toBe(0);
     });
 
     it("the chat-button container must own a single consolidated aria-label so browse mode lands on it once", () => {

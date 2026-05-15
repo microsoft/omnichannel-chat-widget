@@ -99,11 +99,15 @@ describeIfBuilt("focus trap after page reload (focus-trap-after-reload)", () => 
         await page.Page.reload({ waitUntil: "domcontentloaded" });
         await page.Page.waitForTimeout(2500);
 
-        // Precondition: widget rehydrated to the open state.
+        // Precondition: widget rehydrated to the open state. If this fails,
+        // the catcher cannot exercise the bug scenario (no modal pane = no
+        // focus trap to leak). Hard-fail here so a missed rehydration cannot
+        // produce a false green.
         const widgetOpen = await page.Page.evaluate(() => {
             return !!document.querySelector("#oc-lcw-container [role='log']")
                 || !!document.querySelector("#oc-lcw-container .webchat__basic-transcript");
         });
+        expect(widgetOpen).toBe(true);
 
         // Drive focus to the page's host-before-chat button, then Tab
         // forward through the widget. If focus is trapped inside the
@@ -119,7 +123,7 @@ describeIfBuilt("focus trap after page reload (focus-trap-after-reload)", () => 
 
         if (!landedOnAfter) {
             // eslint-disable-next-line no-console
-            console.log("Focus never reached host-after-chat after reload; widgetOpen =", widgetOpen);
+            console.log("Focus never reached host-after-chat after reload (widget rehydrated open).");
         }
         expect(landedOnAfter).toBe(true);
     });
