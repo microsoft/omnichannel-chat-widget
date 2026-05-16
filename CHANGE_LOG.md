@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added `enterToNewLine` prop to `sendBoxTextBox` in `webChatContainerProps`. When `true`, pressing **Enter** inserts a new line and **Shift+Enter** sends the message (inverts the default WebChat behavior). Requires `sendBoxTextWrap: true` in `webChatStyles`. Opt-in; default behavior unchanged.
+
 ### Fixed
 - [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
