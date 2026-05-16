@@ -247,8 +247,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         // Inject an aria-label so the region has a meaningful name; the
         // consumer can override via the new
         // `webChatNotificationRegionAccessibilityLabel` prop. The toaster
-        // may not be rendered yet when this effect first runs, so poll a
-        // few times after mount.
+        // may not be rendered yet when this effect first runs, so observe
+        // for it via a MutationObserver and apply the label once it appears.
         const toasterLabel =
             webChatContainerProps?.webChatNotificationRegionAccessibilityLabel
             ?? defaultWebChatContainerStatefulProps.webChatNotificationRegionAccessibilityLabel
@@ -261,14 +261,15 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             }
             return false;
         };
+        let toasterObserver: MutationObserver | undefined;
         if (!labelToaster()) {
-            let attempts = 0;
-            const toasterInterval = window.setInterval(() => {
-                attempts++;
-                if (labelToaster() || attempts >= 20) {
-                    window.clearInterval(toasterInterval);
+            toasterObserver = new MutationObserver(() => {
+                if (labelToaster()) {
+                    toasterObserver?.disconnect();
+                    toasterObserver = undefined;
                 }
-            }, 250);
+            });
+            toasterObserver.observe(document.body, { childList: true, subtree: true });
         }
         dispatch({
             type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS,
@@ -292,6 +293,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 }
             }
         }
+
+        return () => {
+            toasterObserver?.disconnect();
+        };
     }, []);
 
     useEffect(() => {
