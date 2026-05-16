@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
-- [A11y] Added end-to-end regression guard verifying NVDA reads the full agent profile name (e.g. "Sara Smith said:") instead of bare avatar initials when navigating agent messages (internal tracking)
+- [A11y] Added end-to-end regression scaffold (designer-mode mock + Playwright spec, currently skipped pending an integration harness that re-resolves WebChat's overrideLocalizedStrings after the first agent activity) to verify NVDA reads the full agent profile name (e.g. "Sara Smith said:") instead of bare avatar initials when navigating agent messages (internal tracking). The middleware contract is already covered by the unit catcher `localizedStringsBotInitialsMiddleware.agentName.a11y.spec.ts`.
 - [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
 - [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
