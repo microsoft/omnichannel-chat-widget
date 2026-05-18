@@ -248,28 +248,38 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         // consumer can override via the new
         // `webChatNotificationRegionAccessibilityLabel` prop. The toaster
         // may not be rendered yet when this effect first runs, so observe
-        // for it via a MutationObserver and apply the label once it appears.
+        // for it via a MutationObserver scoped to the widget root (or, if
+        // not yet mounted, the widget container's parent) so we never fire
+        // on host-page mutations outside the widget subtree.
         const toasterLabel =
             webChatContainerProps?.webChatNotificationRegionAccessibilityLabel
             ?? defaultWebChatContainerStatefulProps.webChatNotificationRegionAccessibilityLabel
             ?? "Chat notifications";
-        const labelToaster = () => {
-            const toaster = document.querySelector(".webchat__toaster[role='log']");
+        const labelToaster = (root: ParentNode) => {
+            const toaster = root.querySelector(".webchat__toaster[role='log']");
             if (toaster && !toaster.getAttribute(HtmlAttributeNames.ariaLabel)) {
                 toaster.setAttribute(HtmlAttributeNames.ariaLabel, toasterLabel);
                 return true;
             }
             return false;
         };
+        // Prefer the widget root; if it is not yet in the DOM, fall back to
+        // `document` for the *initial* lookup only, then observe the most
+        // specific available scope (widget root if present, otherwise the
+        // widget's parent / document.body as a last resort). The observer
+        // re-resolves the widget root on every callback so we tighten scope
+        // as soon as it mounts.
         let toasterObserver: MutationObserver | undefined;
-        if (!labelToaster()) {
+        const resolveScope = (): ParentNode => document.getElementById("ms_lcw_webchat_root") ?? document.body;
+        if (!labelToaster(resolveScope())) {
             toasterObserver = new MutationObserver(() => {
-                if (labelToaster()) {
+                const scope = resolveScope();
+                if (labelToaster(scope)) {
                     toasterObserver?.disconnect();
                     toasterObserver = undefined;
                 }
             });
-            toasterObserver.observe(document.body, { childList: true, subtree: true });
+            toasterObserver.observe(resolveScope(), { childList: true, subtree: true });
         }
         dispatch({
             type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS,
