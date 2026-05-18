@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for internal tracking (AdaptiveCard TalkBack non-radio duplicate labels), internal tracking (ChatButton browse-mode duplicate stops), internal tracking (agent profile name not announced), internal tracking (blank announcement live regions), internal tracking (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
 
 ### Fixed
+- [A11y] WebChat notification toaster (`role="log"`) now carries an `aria-label` so screen readers don't announce the empty live region as "blank"; removed the dead static `role="alert"` file-sent region that was being announced empty (internal tracking)
 - [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
 - [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
