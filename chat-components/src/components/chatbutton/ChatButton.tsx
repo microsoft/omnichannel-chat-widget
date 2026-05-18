@@ -14,13 +14,25 @@ import { defaultChatButtonSubTitleStyles } from "./common/defaultStyles/defaultC
 import { defaultChatButtonTextContainerStyles } from "./common/defaultStyles/defaultChatButtonTextContainerStyles";
 import { defaultChatButtonTitleStyles } from "./common/defaultStyles/defaultChatButtonTitleStyles";
 
+// Returns true when the unread-message count represents a positive number.
+// Defensive against non-strict callers that may pass " 0 ", "0.0", "" or a
+// stringified numeric 0; only a finite count strictly greater than zero counts
+// as "unread" for both the notification bubble and the synthesized aria-label.
+function hasUnreadMessages(unreadMessageCount: string | undefined): boolean {
+    if (unreadMessageCount === undefined || unreadMessageCount === null) {
+        return false;
+    }
+    const parsed = Number(unreadMessageCount);
+    return Number.isFinite(parsed) && parsed > 0;
+}
+
 function NotificationBubble(props: IChatButtonProps, parentId: string) {
     const notificationBubbleStyles: ILabelStyles = {
         root: Object.assign({}, defaultChatButtonNotificationBubbleStyles, props.styleProps?.notificationBubbleStyleProps)
     };
 
     const unreadMessageCount = props.controlProps?.unreadMessageCount ?? defaultChatButtonControlProps?.unreadMessageCount  ;
-    if (unreadMessageCount !== "0") {
+    if (hasUnreadMessages(unreadMessageCount)) {
         return (decodeComponentString(props.componentOverrides?.notificationBubble) || 
             <Stack
                 aria-live="polite" 
@@ -135,7 +147,7 @@ function ChatButton(props: IChatButtonProps) {
         && !props.componentOverrides?.subtitle;
     const synthesizedAriaLabel = canSynthesizeAriaLabel
         ? [
-            !hideNotificationBubble && unreadMessageCount && unreadMessageCount !== "0"
+            !hideNotificationBubble && hasUnreadMessages(unreadMessageCount)
                 ? `${unreadMessageCount} ${ariaLabelUnreadMessageString ?? ""}`.trim()
                 : "",
             !hideChatTitle ? titleText : "",

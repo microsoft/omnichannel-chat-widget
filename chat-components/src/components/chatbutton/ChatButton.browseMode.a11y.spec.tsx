@@ -190,4 +190,50 @@ describe("ChatButton — browse-mode duplicate stops (internal tracking)", () =>
         const ariaLabel = (button.getAttribute("aria-label") || "").trim();
         expect(ariaLabel).toBe("");
     });
+
+    // Regression guard for the strict string-equality slip-throughs that
+    // brittle `unreadMessageCount !== "0"` allowed: values that coerce to
+    // numeric 0 (or non-numeric noise) must NOT render the bubble nor pollute
+    // the synthesized aria-label with a "0 you have new messages" fragment.
+    describe.each([
+        ["padded zero (' 0 ')", " 0 "],
+        ["decimal zero ('0.0')", "0.0"],
+        ["empty string ('')", ""],
+        ["non-numeric ('abc')", "abc"]
+    ])("zero-equivalent unreadMessageCount: %s", (_label, value) => {
+        it("does NOT render the notification bubble", () => {
+            const props = {
+                ...defaultChatButtonProps,
+                controlProps: {
+                    ...defaultChatButtonProps.controlProps,
+                    hideNotificationBubble: false,
+                    unreadMessageCount: value,
+                    ariaLabelUnreadMessageString: "you have new messages"
+                }
+            };
+            const { container } = render(<ChatButton {...props} />);
+            const bubble = container.querySelector("[id$='-notification-bubble']");
+            expect(bubble).toBeNull();
+        });
+
+        it("does NOT inject the unread-count fragment into the synthesized aria-label", () => {
+            const props = {
+                ...defaultChatButtonProps,
+                controlProps: {
+                    ...defaultChatButtonProps.controlProps,
+                    hideNotificationBubble: false,
+                    unreadMessageCount: value,
+                    ariaLabelUnreadMessageString: "you have new messages"
+                }
+            };
+            const { container } = render(<ChatButton {...props} />);
+            const button = container.firstElementChild as HTMLElement;
+            const ariaLabel = button.getAttribute("aria-label") || "";
+            expect(ariaLabel).not.toContain("you have new messages");
+            // and the raw zero-equivalent must not leak into the label
+            if (value.trim().length > 0) {
+                expect(ariaLabel).not.toContain(value.trim());
+            }
+        });
+    });
 });
