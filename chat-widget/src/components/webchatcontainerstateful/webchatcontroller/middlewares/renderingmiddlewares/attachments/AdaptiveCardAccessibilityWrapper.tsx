@@ -45,17 +45,18 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
                 }
             });
 
-            // internal tracking: non-radio inputs (Input.Text, Input.Date, Input.Number,
-            // Input.Toggle, Input.ChoiceSet multi-select checkbox) rendered by
-            // adaptivecards can have THREE accessible-name sources resolving to
-            // the same string: a visible <label for>, aria-label, AND
-            // aria-labelledby. TalkBack walks each accessibility node
-            // independently and reads the duplicated name. When a visible
-            // <label for> exists and names the control, strip the redundant
-            // aria-label / aria-labelledby on the input so only one announceable
-            // source remains.
-            const labelledInputs = container.querySelectorAll<HTMLInputElement>(
-                ".ac-input-container input.ac-input[id]:not([type='radio'])"
+            // internal tracking: non-radio inputs (Input.Text including
+            // isMultiline=true which renders as <textarea>, Input.Date,
+            // Input.Number, Input.Toggle, Input.ChoiceSet multi-select
+            // checkbox) rendered by adaptivecards can have THREE accessible-
+            // name sources resolving to the same string: a visible
+            // <label for>, aria-label, AND aria-labelledby. TalkBack walks
+            // each accessibility node independently and reads the duplicated
+            // name. When a visible <label for> exists and names the control,
+            // strip the redundant aria-label / aria-labelledby on the input
+            // so only one announceable source remains.
+            const labelledInputs = container.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+                ".ac-input-container input.ac-input[id]:not([type='radio']), .ac-input-container textarea.ac-input[id]"
             );
             labelledInputs.forEach((input) => {
                 const id = input.id;

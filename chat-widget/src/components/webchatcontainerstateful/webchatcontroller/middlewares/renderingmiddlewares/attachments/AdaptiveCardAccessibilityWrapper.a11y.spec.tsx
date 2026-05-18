@@ -417,4 +417,28 @@ describe("AdaptiveCardAccessibilityWrapper — TalkBack duplicate labels on non-
         );
         expect(countAnnouncedSources(container, "topics-1", "Updates")).toBeLessThanOrEqual(1);
     });
+
+    it("Input.Text (isMultiline=true): textarea.ac-input must not expose duplicate label sources", async () => {
+        // Input.Text with isMultiline: true renders as <textarea class="ac-input ac-textInput ac-multichoiceInput">
+        // with the same visible <label for> + aria-label + aria-labelledby triple
+        // as the single-line case. The selector must include textarea or TalkBack
+        // will still double-read.
+        const container = await renderCardWith(() => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "ac-input-container";
+            const label = document.createElement("label");
+            label.id = "comments-input-lbl";
+            label.setAttribute("for", "comments-input");
+            label.textContent = "Comments";
+            const textarea = document.createElement("textarea");
+            textarea.id = "comments-input";
+            textarea.className = "ac-input ac-textInput ac-multichoiceInput";
+            textarea.setAttribute("aria-label", "Comments");
+            textarea.setAttribute("aria-labelledby", "comments-input-lbl");
+            wrapper.appendChild(label);
+            wrapper.appendChild(textarea);
+            return wrapper;
+        });
+        expect(countAnnouncedSources(container, "comments-input", "Comments")).toBeLessThanOrEqual(1);
+    });
 });
