@@ -84,7 +84,17 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             Event: TelemetryEvent.UXConfirmationPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
-        return cleanup;
+        return () => {
+            // internal tracking: when the confirmation pane unmounts (page reload,
+            // parent state change, or any path that bypasses onConfirm /
+            // onCancel) the tab indices that were forced to -1 on sibling
+            // focusable elements must be restored, otherwise Tab order
+            // remains broken and focus can be trapped inside the widget.
+            // setTabIndices is a no-op when initialTabIndexMap is already
+            // empty (onConfirm / onCancel already restored).
+            setTabIndices(elements, initialTabIndexMap, true);
+            cleanup();
+        };
     }, []);
 
     return (
