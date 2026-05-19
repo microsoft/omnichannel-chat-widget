@@ -6,8 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Tests
+- [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for internal tracking (AdaptiveCard TalkBack non-radio duplicate labels), internal tracking (ChatButton browse-mode duplicate stops), internal tracking (agent profile name not announced), internal tracking (blank announcement live regions), internal tracking (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
+
 ### Fixed
 - [A11y] Added end-to-end regression scaffold (designer-mode mock + Playwright spec, currently skipped pending an integration harness that re-resolves WebChat's overrideLocalizedStrings after the first agent activity) to verify NVDA reads the full agent profile name (e.g. "Sara Smith said:") instead of bare avatar initials when navigating agent messages (internal tracking). The middleware contract is already covered by the unit catcher `localizedStringsBotInitialsMiddleware.agentName.a11y.spec.ts`.
+- [A11y] WebChat notification toaster (`role="log"`) now carries an `aria-label` so screen readers don't announce the empty live region as "blank"; removed the dead static `role="alert"` file-sent region that was being announced empty (internal tracking)
 - [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
 - [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
@@ -796,6 +800,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [A11y] `ChatButton` no longer produces duplicate NVDA / JAWS browse-mode stops on the title / subtitle Labels — the text container is excluded from the accessibility tree and the button owns a consolidated `aria-label` (internal tracking)
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
 
 ### Security

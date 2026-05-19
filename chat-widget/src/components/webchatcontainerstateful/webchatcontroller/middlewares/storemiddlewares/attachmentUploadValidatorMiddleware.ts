@@ -6,7 +6,7 @@
 
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 
-import { AMSConstants, HtmlIdNames } from "../../../../../common/Constants";
+import { AMSConstants } from "../../../../../common/Constants";
 import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
 import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { NotificationHandler } from "../../notification/NotificationHandler";
@@ -17,14 +17,10 @@ import { WebChatActionType } from "../../enums/WebChatActionType";
 const MBtoBRatio = 1000000;
 
 const announceFileSent = (message: string) => {
-    // TalkBack on Android WebView reliably announces newly *appended* role="alert"
-    // nodes but often misses text-content updates on existing nodes.
-    // Strategy: clear the static region, wait 500ms for the send-box focus shift
-    // to settle, then inject a fresh alert element and remove it after 3s.
-    const region = document.getElementById(HtmlIdNames.fileSentAnnouncementRegionId);
-    if (region) {
-        region.textContent = "";
-    }
+    // TalkBack on Android WebView reliably announces newly *appended*
+    // role="alert" nodes but often misses text-content updates on existing
+    // nodes. Wait 500ms for the send-box focus shift to settle, then inject
+    // a fresh alert element appended to document.body and remove it after 3s.
     setTimeout(() => {
         const el = document.createElement("div");
         el.setAttribute("role", "alert");
