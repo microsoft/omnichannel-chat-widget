@@ -151,11 +151,14 @@ describeIfBuilt("attachment upload announcement", () => {
         expect(statusRegions.length).toBeGreaterThanOrEqual(1);
     });
 
-    test("dedicated file-sent announcement region is rendered with role=alert and aria-live=assertive", async () => {
-        // Fix artifact: WebChatContainerStateful.tsx renders a static
-        // <div id="ms_lcw_file_sent_announcement" role="alert"
-        //      aria-live="assertive" aria-atomic="true"> for screen readers.
-        // Without the fix this element is absent from the DOM.
+    test("no empty role=alert region pollutes the idle page", async () => {
+        // Regression guard: previously WebChatContainerStateful rendered a static
+        // <div id="ms_lcw_file_sent_announcement" role="alert" aria-live="assertive">
+        // intended for file-sent announcements. The element was always empty at
+        // idle, and screen readers traversing the page announced it as "blank".
+        // The actual announceFileSent flow appends a fresh role=alert element to
+        // document.body on demand, so the static region was dead code. The fix
+        // removes the static region; this test guards against its reintroduction.
         page = new BasePage(await context.newPage());
         await page.openLiveChatWidget("customlivechatwidgets/AttachmentAnnouncementWidget.html");
         await page.waitUntilLiveChatSelectorIsVisible(
@@ -174,19 +177,13 @@ describeIfBuilt("attachment upload announcement", () => {
 
         await page.Page.waitForTimeout(2000);
 
-        const announcementRegion = await page.Page.evaluate(() => {
-            const el = document.getElementById("ms_lcw_file_sent_announcement");
-            if (!el) return null;
-            return {
-                role: el.getAttribute("role"),
-                ariaLive: el.getAttribute("aria-live"),
-                ariaAtomic: el.getAttribute("aria-atomic"),
-            };
+        const idleAlertRegions = await page.Page.evaluate(() => {
+            const all = Array.from(document.querySelectorAll("[role=alert]"));
+            return all
+                .filter(el => !el.textContent || !el.textContent.trim())
+                .map(el => ({ id: el.id, ariaLive: el.getAttribute("aria-live") }));
         });
 
-        expect(announcementRegion).not.toBeNull();
-        expect(announcementRegion!.role).toBe("alert");
-        expect(announcementRegion!.ariaLive).toBe("assertive");
-        expect(announcementRegion!.ariaAtomic).toBe("true");
+        expect(idleAlertRegions).toEqual([]);
     });
 });
