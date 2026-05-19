@@ -15,5 +15,6 @@ export const defaultWebChatContainerStatefulProps: IWebChatContainerStatefulProp
     honorsTargetInHTMLLinks: false,
     hyperlinkTextOverride: false,
     directLine: new MockAdapter(),
-    adaptiveCardStyles: defaultAdaptiveCardStyles
+    adaptiveCardStyles: defaultAdaptiveCardStyles,
+    webChatNotificationRegionAccessibilityLabel: "Chat notifications"
 };
