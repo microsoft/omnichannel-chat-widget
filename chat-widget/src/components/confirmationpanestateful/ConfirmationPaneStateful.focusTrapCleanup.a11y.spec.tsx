@@ -90,6 +90,7 @@ interface PaneCase {
 
 describe("Modal-pane focus traps must release on unmount (internal tracking regression guard)", () => {
     let preventSpy: jest.SpyInstance;
+    let setTabIndicesSpy: jest.SpyInstance;
     let trapCleanups: jest.Mock[];
 
     beforeEach(() => {
@@ -106,7 +107,11 @@ describe("Modal-pane focus traps must release on unmount (internal tracking regr
             });
         jest.spyOn(utils, "findAllFocusableElement").mockReturnValue(null as any);
         jest.spyOn(utils, "findParentFocusableElementsWithoutChildContainer").mockReturnValue([] as any);
-        jest.spyOn(utils, "setTabIndices").mockImplementation(() => undefined);
+        // Spy (not no-op) on setTabIndices so we can assert each pane restores
+        // the sibling tab indices (shouldBeFocusable=true) on unmount. The
+        // real implementation is a no-op when elements/tabIndexMap are empty
+        // (our mocks above guarantee that), so calling through is safe.
+        setTabIndicesSpy = jest.spyOn(utils, "setTabIndices");
         jest.spyOn(utils, "createTimer").mockReturnValue({ milliSecondsElapsed: 0 } as any);
         jest.spyOn(utils, "setFocusOnElement").mockImplementation(() => undefined);
         jest.spyOn(utils, "setFocusOnSendBox").mockImplementation(() => undefined);
@@ -156,6 +161,26 @@ describe("Modal-pane focus traps must release on unmount (internal tracking regr
                 //    handlers outlive the pane and trap focus in stale DOM.
                 unmount();
                 expect(installedCleanup).toHaveBeenCalledTimes(1);
+            });
+
+            it("restores sibling tab indices on unmount by calling setTabIndices(..., true)", () => {
+                // Headline behavior the PR is adding: on mount the pane
+                // forces sibling focusables to tabindex=-1
+                // (setTabIndices(..., false)) and on unmount it must
+                // restore them (setTabIndices(..., true)). Asserting the
+                // restore call so anyone removing the cleanup line breaks
+                // this catcher.
+                const { unmount } = c.render();
+
+                const mountCalls = setTabIndicesSpy.mock.calls.filter((args) => args[2] === false);
+                expect(mountCalls.length).toBeGreaterThanOrEqual(1);
+
+                const restoreCallsBeforeUnmount = setTabIndicesSpy.mock.calls.filter((args) => args[2] === true).length;
+
+                unmount();
+
+                const restoreCallsAfterUnmount = setTabIndicesSpy.mock.calls.filter((args) => args[2] === true).length;
+                expect(restoreCallsAfterUnmount).toBeGreaterThan(restoreCallsBeforeUnmount);
             });
         });
     }

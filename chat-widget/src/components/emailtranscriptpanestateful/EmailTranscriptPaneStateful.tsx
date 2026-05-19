@@ -127,7 +127,11 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
 
-        return cleanup;
+        return () => {
+            // internal tracking: restore parent tab indices on unmount.
+            setTabIndices(elements, initialTabIndexMap, true);
+            cleanup();
+        };
     }, [initialEmail]);
 
     return (

@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - [A11y] AdaptiveCard wrapper now strips redundant `aria-label` / `aria-labelledby` from non-radio inputs (Input.Text including isMultiline=true, Input.Date, Input.Number, Input.Toggle, multi-select ChoiceSet checkbox) when a visible `<label for>` already names the control, eliminating TalkBack duplicate-label announcements (internal tracking)
+- [A11y] Modal pane visibility (`showConfirmationPane`, `showEmailTranscriptPane`) no longer survives a page reload, and Confirmation/Citation/EmailTranscript panes now restore sibling tab indices on unmount — fixes Tab focus being trapped inside the rehydrated widget after a link activation + reload (internal tracking)
+- [A11y] Added end-to-end regression scaffold (designer-mode mock + Playwright spec, currently skipped pending an integration harness that re-resolves WebChat's overrideLocalizedStrings after the first agent activity) to verify NVDA reads the full agent profile name (e.g. "Sara Smith said:") instead of bare avatar initials when navigating agent messages (internal tracking). The middleware contract is already covered by the unit catcher `localizedStringsBotInitialsMiddleware.agentName.a11y.spec.ts`.
 - [A11y] WebChat notification toaster (`role="log"`) now carries an `aria-label` so screen readers don't announce the empty live region as "blank"; removed the dead static `role="alert"` file-sent region that was being announced empty (internal tracking)
 - [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
