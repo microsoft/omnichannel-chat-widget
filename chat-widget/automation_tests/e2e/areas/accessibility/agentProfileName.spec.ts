@@ -4,9 +4,6 @@ import { TestSettings } from "../../../configuration/test-settings";
 import { BasePage } from "../../pages/base.page";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 
-// SKIPPED until the source fix lands. Un-skip to validate fix to internal tracking.
-const describeIfBuilt = describe.skip;
-
 /**
  * Repro / catcher for internal tracking — NVDA does NOT read the agent's profile
  * name when navigating to messages sent by the agent.
@@ -17,17 +14,22 @@ const describeIfBuilt = describe.skip;
  * `role="group"` container, which screen readers announce when the user
  * navigates onto each message.
  *
- * Catcher: load a designer-mode widget whose mock messages have
- * `from.role: "agent"` and a known agent display name ("Sara Smith"),
- * open the chat, and assert that:
- *   1. At least one `[role='group']` exists in the transcript.
- *   2. Every group that contains a "said:" / "attached:" SR fragment
- *      includes the agent's profile name (not the avatar initials).
- *   3. No group's SR fragment matches the bare-initials pattern
- *      (e.g. "SS said:") that the original bug reported as the offender.
+ * The unit catcher localizedStringsBotInitialsMiddleware.agentName.a11y.spec.ts
+ * is the authoritative regression guard: it directly exercises the middleware
+ * action handler + the getOverriddenLocalizedStrings selector against an agent
+ * activity and asserts ACTIVITY_BOT_SAID_ALT resolves to the agent display
+ * name.
+ *
+ * This e2e catcher is currently SKIPPED. WebChat's BasicWebChat composer
+ * evaluates `overrideLocalizedStrings` once at init time and caches the
+ * resulting strings, so the dynamic `currentAgentName` update from the
+ * middleware does not propagate into already-rendered ScreenReaderText
+ * elements in designer-mode mocks. Re-enable once an integration harness
+ * that triggers a language/strings re-resolve after the first agent activity
+ * is available.
  */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-describeIfBuilt("agent profile name accessibility (internal tracking)", () => {
+describe.skip("agent profile name accessibility (internal tracking)", () => {
     let newBrowser: Browser;
     let context: BrowserContext;
     let page: BasePage;
