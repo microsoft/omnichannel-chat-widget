@@ -197,15 +197,19 @@ describe("initWebChatComposer - HTML Sanitization Monitoring", () => {
                     LogLevel.INFO,
                     expect.objectContaining({
                         Event: TelemetryEvent.HTMLSanitized,
-                        Description: "HTML content would be sanitized by stricter allowlist (monitor-only)",
-                        CustomProperties: expect.objectContaining({
-                            OrganizationId: "test-org-123",
-                            ConversationId: "test-chat-456",
-                            RemovedTags: expect.stringContaining("img"),
-                            Phase: "Monitor"
-                        })
+                        Description: expect.any(String),
+                        OrganizationId: "test-org-123",
+                        ConversationId: "test-chat-456",
+                        ElapsedTimeInMilliseconds: expect.any(Number)
                     })
                 );
+
+                // Verify Description contains JSON with expected structure
+                const call = logActionEventSpy.mock.calls[0];
+                const parsedDescription = JSON.parse(call[1].Description);
+                expect(parsedDescription.message).toBe("HTML content would be sanitized by stricter allowlist (monitor-only)");
+                expect(parsedDescription.removedTags).toContain("img");
+                expect(parsedDescription.phase).toBe("Monitor");
                 done();
             }, 100);
         });
@@ -220,8 +224,9 @@ describe("initWebChatComposer - HTML Sanitization Monitoring", () => {
             setTimeout(() => {
                 expect(logActionEventSpy).toHaveBeenCalled();
                 const call = logActionEventSpy.mock.calls[0];
-                expect(call[1].CustomProperties.RemovedTags).toContain("span");
-                expect(call[1].CustomProperties.RemovedAttributes).toContain("style");
+                const parsedDescription = JSON.parse(call[1].Description);
+                expect(parsedDescription.removedTags).toContain("span");
+                expect(parsedDescription.removedAttributes).toContain("style");
                 done();
             }, 100);
         });
@@ -277,7 +282,74 @@ describe("initWebChatComposer - HTML Sanitization Monitoring", () => {
             setTimeout(() => {
                 expect(logActionEventSpy).toHaveBeenCalled();
                 const call = logActionEventSpy.mock.calls[0];
-                expect(call[1].CustomProperties.OrganizationId).toBe("unknown");
+                expect(call[1].OrganizationId).toBe("unknown");
+                expect(call[1].ConversationId).toBe("test-chat-456");
+                done();
+            }, 100);
+        });
+
+        it("should format Description as valid JSON with correct structure", (done) => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            renderMarkdown("<p>Test <img src='test.jpg' /> <span>text</span></p>");
+
+            setTimeout(() => {
+                expect(logActionEventSpy).toHaveBeenCalled();
+                const call = logActionEventSpy.mock.calls[0];
+
+                // Description should be valid JSON string
+                expect(typeof call[1].Description).toBe("string");
+                expect(() => JSON.parse(call[1].Description)).not.toThrow();
+
+                const parsedDescription = JSON.parse(call[1].Description);
+
+                // Verify required fields
+                expect(parsedDescription).toHaveProperty("message");
+                expect(parsedDescription).toHaveProperty("removedTags");
+                expect(parsedDescription).toHaveProperty("removedAttributes");
+                expect(parsedDescription).toHaveProperty("phase");
+
+                // Verify field types
+                expect(typeof parsedDescription.message).toBe("string");
+                expect(Array.isArray(parsedDescription.removedTags)).toBe(true);
+                expect(Array.isArray(parsedDescription.removedAttributes)).toBe(true);
+                expect(parsedDescription.phase).toBe("Monitor");
+
+                // Verify tags were captured (both img and span are allowed by current config but blocked by strict)
+                expect(parsedDescription.removedTags).toContain("img");
+                expect(parsedDescription.removedTags).toContain("span");
+
+                done();
+            }, 100);
+        });
+
+        it("should preserve array structure in Description JSON for Kusto parsing", (done) => {
+            const webChatProps = initWebChatComposer(mockProps, mockState, mockDispatch, mockFacadeChatSDK, mockEndChat);
+            const renderMarkdown = webChatProps.renderMarkdown;
+
+            renderMarkdown("<p><img src='test.jpg' alt='image' /> <span style='color:red' class='highlight'>test</span></p>");
+
+            setTimeout(() => {
+                expect(logActionEventSpy).toHaveBeenCalled();
+                const call = logActionEventSpy.mock.calls[0];
+                const parsedDescription = JSON.parse(call[1].Description);
+
+                // Arrays should be preserved (not comma-delimited strings)
+                expect(Array.isArray(parsedDescription.removedTags)).toBe(true);
+                expect(Array.isArray(parsedDescription.removedAttributes)).toBe(true);
+
+                // Multiple tags should be in array
+                expect(parsedDescription.removedTags.length).toBeGreaterThan(0);
+                expect(parsedDescription.removedTags).toContain("img");
+                expect(parsedDescription.removedTags).toContain("span");
+
+                // Verify attributes were captured (src, style, class, alt are allowed by current config)
+                expect(parsedDescription.removedAttributes.length).toBeGreaterThan(0);
+                // src is allowed on img by current config but would be removed by strict allowlist
+                expect(parsedDescription.removedAttributes).toContain("src");
+                expect(parsedDescription.removedAttributes).toContain("style");
+
                 done();
             }, 100);
         });
