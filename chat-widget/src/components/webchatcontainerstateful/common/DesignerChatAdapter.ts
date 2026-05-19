@@ -36,6 +36,16 @@ export class DesignerChatAdapter extends MockAdapter {
         if (msg.text) {
             if (msg.suggestedActions) {
                 postAgentSuggestedActionsActivity(this.activityObserver, msg.text, msg.suggestedActions, index * 100);
+            } else if (msg.from && (msg.from as { role?: string }).role) {
+                // Route caller-supplied `from` through the shared
+                // postBotMessageActivity helper so the activity shape
+                // (id, channelData.tags, timestamp, type) matches every
+                // other designer-mode path and downstream middleware
+                // (localizedStringsBotInitialsMiddleware, telemetry,
+                // attachment plumbing) behaves identically. The override
+                // narrows only the fields the caller cares about (e.g.
+                // from.name / from.role) — base botUser fields remain.
+                postBotMessageActivity(this.activityObserver, msg.text, undefined, index * 100, msg.from);
             } else {
                 postBotMessageActivity(this.activityObserver, msg.text, undefined, index * 100);
             }

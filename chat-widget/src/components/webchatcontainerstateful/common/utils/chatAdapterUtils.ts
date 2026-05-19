@@ -38,12 +38,19 @@ export const postEchoActivity = (activityObserver: Subscriber<Activity> | undefi
     }, delay);
 };
 
-export const postBotMessageActivity = (activityObserver: Subscriber<Activity> | undefined, text: string, tags = "", delay = 1000): void => {
+export const postBotMessageActivity = (
+    activityObserver: Subscriber<Activity> | undefined,
+    text: string,
+    tags = "",
+    delay = 1000,
+    fromOverride?: Partial<User>
+): void => {
     setTimeout(() => {
         activityObserver?.next({
             id: uuidv4(),
             from: {
-                ...botUser
+                ...botUser,
+                ...(fromOverride ?? {})
             },
             text,
             type: "message",
