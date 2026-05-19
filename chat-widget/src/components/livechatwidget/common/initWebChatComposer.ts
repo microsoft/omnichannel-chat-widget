@@ -310,11 +310,11 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                             message: "HTML content would be sanitized by stricter allowlist (monitor-only)",
                             removedTags: uniqueTags,
                             removedAttributes: uniqueAttrs,
-                            phase: "Monitor"
+                            phase: "Monitor",
+                            organizationId: orgId,
+                            conversationId: conversationId
                         }),
-                        ElapsedTimeInMilliseconds: executionTimeMs,
-                        OrganizationId: orgId,
-                        ConversationId: conversationId
+                        ElapsedTimeInMilliseconds: executionTimeMs
                     });
 
                     // Log to console in development for debugging

@@ -198,8 +198,6 @@ describe("initWebChatComposer - HTML Sanitization Monitoring", () => {
                     expect.objectContaining({
                         Event: TelemetryEvent.HTMLSanitized,
                         Description: expect.any(String),
-                        OrganizationId: "test-org-123",
-                        ConversationId: "test-chat-456",
                         ElapsedTimeInMilliseconds: expect.any(Number)
                     })
                 );
@@ -210,6 +208,8 @@ describe("initWebChatComposer - HTML Sanitization Monitoring", () => {
                 expect(parsedDescription.message).toBe("HTML content would be sanitized by stricter allowlist (monitor-only)");
                 expect(parsedDescription.removedTags).toContain("img");
                 expect(parsedDescription.phase).toBe("Monitor");
+                expect(parsedDescription.organizationId).toBe("test-org-123");
+                expect(parsedDescription.conversationId).toBe("test-chat-456");
                 done();
             }, 100);
         });
@@ -282,8 +282,9 @@ describe("initWebChatComposer - HTML Sanitization Monitoring", () => {
             setTimeout(() => {
                 expect(logActionEventSpy).toHaveBeenCalled();
                 const call = logActionEventSpy.mock.calls[0];
-                expect(call[1].OrganizationId).toBe("unknown");
-                expect(call[1].ConversationId).toBe("test-chat-456");
+                const parsedDescription = JSON.parse(call[1].Description);
+                expect(parsedDescription.organizationId).toBe("unknown");
+                expect(parsedDescription.conversationId).toBe("test-chat-456");
                 done();
             }, 100);
         });
