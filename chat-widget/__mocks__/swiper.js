@@ -1,6 +1,7 @@
 // Mock swiper module for Jest tests
 // This module is imported by @microsoft/omnichannel-chat-components but not used in tests
 
+/* eslint-disable @typescript-eslint/no-empty-function */
 module.exports = {
     Swiper: class Swiper {
         constructor() {}

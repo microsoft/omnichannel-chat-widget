@@ -11,6 +11,10 @@ module.exports = {
         "^.+\\.(js|jsx|ts|tsx|mjs)$": "babel-jest",
         ".+\\.(css|scss|png|jpg|svg|gif)$": "jest-transform-stub"
     },
+    "moduleNameMapper": {
+        "^swiper/modules$": "<rootDir>/node_modules/swiper/modules/index.mjs",
+        "^swiper$": "<rootDir>/node_modules/swiper/swiper.mjs"
+    },
     setupFiles: ["./jest.setup.js"]
 
 };
