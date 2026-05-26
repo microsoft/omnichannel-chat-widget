@@ -19,7 +19,7 @@ ReactDOM.render(
 
 ### Pre-Chat Survey
 
-The Pre-Chat Survey can be enabled from the admin portal under the Surveys tab and the survey questions and PreChat Survey can be set from there. Pre-Chat Survey Pane integration is included in this widget component by defualt. See below example:
+The Pre-Chat Survey can be enabled from the admin portal under the Surveys tab and the survey questions and PreChat Survey can be set from there. Pre-Chat Survey Pane integration is included in this widget component by default. See below example:
 
 #### Setting in Admin Portal:
 ![](https://i.imgur.com/q6zbPfN.png)
@@ -34,7 +34,7 @@ The Post-Chat Survey can be enabled from the admin portal under the Surveys tab 
 ![](https://i.imgur.com/WQC37X6.png)
 
 **PS:** In the ==How should we send the survey?== question there are options to choose from:
-* `Insert survey in conversation` - Choosing this option would trigger a separate Post Chat Survey window after conversation end. This will render the Post-Chat Survey Pane. Its integration is also included in this widget component by defualt.
+* `Insert survey in conversation` - Choosing this option would trigger a separate Post Chat Survey window after conversation end. This will render the Post-Chat Survey Pane. Its integration is also included in this widget component by default.
 
 ![](https://i.imgur.com/TDHdjjk.png)
 
@@ -63,7 +63,7 @@ After implementing and initializing startProactiveChat() method, the customer ca
 2. "enablePreChat": a boolean value, whether to enable the preChat survey after starting proactive chat,
 3. "options": an object that contains a boolean value, whether to start the proactive chat in popout mode. If this value is set to true, then the customer also needs to subscribe to a broadcast event "StartPopoutChat", as this is what will be released if they accept the invitation and start proactive chat.
 
-After the "StartProactiveChat" event gets released by the customer, the proactive chat pane pops up that has a default timeout of 1 minute. This can be overriden by setting "ProactiveChatInviteTimeoutInMs" as part of props interface. After the timeout expires, the proactive chat pane will disappear and be replaced by the chat button.
+After the "StartProactiveChat" event gets released by the customer, the proactive chat pane pops up that has a default timeout of 1 minute. This can be overridden by setting "ProactiveChatInviteTimeoutInMs" as part of props interface. After the timeout expires, the proactive chat pane will disappear and be replaced by the chat button.
 
 ### Authenticated Chat and Persistent Chat
 The widget itself is agnostic of whether the chat is authenticated or not. The only thing needed to turn on auth feature is to pass the `getAuthToken` callback in `chatSDKConfig` inside Chat SDK's constructor. For more details, see [Chat SDK documentation](https://github.com/microsoft/omnichannel-chat-sdk#:~:text=messages%20to%20UI-,Authenticated%20Chat,-//%20add%20if%20using). Same with Persistent Chat feature.
@@ -99,7 +99,7 @@ BroadcastService.postMessage(setCustomContextEvent);
 
 ### Disable Bot Magic Code
 
-Configuration to disable the default behaviour of having to type the magic code in the conversation to complete the sign-in proccess with a bot. Instead, the magic code will be sent to the bot behind the scenes.
+Configuration to disable the default behaviour of having to type the magic code in the conversation to complete the sign-in process with a bot. Instead, the magic code will be sent to the bot behind the scenes.
 
 1. Add [MagicCodeForwarder.html](sample/MagicCodeForwarder.html) in the same location as the chat widget
 
