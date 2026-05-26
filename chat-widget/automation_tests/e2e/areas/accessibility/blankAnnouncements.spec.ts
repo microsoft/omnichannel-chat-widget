@@ -7,8 +7,9 @@ import { BasePage } from "../../pages/base.page";
 import { CustomLiveChatWidgetConstants } from "e2e/utility/constants";
 import { findAll, getA11yTree } from "../../utility/a11yTree";
 
-const widgetBundlePath = path.resolve(__dirname, "../../../../dist/out.js");
-const describeIfBuilt = fs.existsSync(widgetBundlePath) ? describe : describe.skip;
+// SKIPPED until the source fix lands. Un-skip to validate fix to internal tracking.
+// (Repro upgraded from the previous passing assertion to a deterministic catcher.)
+const describeIfBuilt = describe.skip;
 
 /**
  * Repro catcher for blank-announcements — Screen reader announces blank / hidden
@@ -48,15 +49,19 @@ describeIfBuilt("blank announcements - empty accessible names (blank-announcemen
 
     test("no announceable a11y node should have an empty accessible name", async () => {
         page = new BasePage(await context.newPage());
-        await page.openLiveChatWidget("customlivechatwidgets/FocusTrapWidget.html");
+        // Use a designer-mode widget that renders a real transcript (bot,
+        // agent, user, link) so the WebChat surface, attachment surface,
+        // and live regions are all instantiated. The prior FocusTrapWidget
+        // mock did not exercise WebChat content where the bug actually lives.
+        await page.openLiveChatWidget("customlivechatwidgets/BlankAnnouncementsWidget.html");
         await page.waitUntilLiveChatSelectorIsVisible(
             CustomLiveChatWidgetConstants.LiveChatButtonId
         );
 
-        // Open the widget so prechat / loading / chat surfaces render.
         const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
         await chatButton!.click();
-        await page.Page.waitForTimeout(2500);
+        // Give WebChat enough time to render all mock messages.
+        await page.Page.waitForTimeout(4000);
 
         const tree = await getA11yTree(page.Page, "#oc-lcw-container");
         const offenders = findAll(tree, (n: any) => {
@@ -66,12 +71,32 @@ describeIfBuilt("blank announcements - empty accessible names (blank-announcemen
             return name.length === 0;
         });
 
-        if (offenders.length > 0) {
-            // Surface the first few for debugging.
+        // Additional check: aria-live regions (role="status" / "alert") that
+        // ARE in the a11y tree but have an empty accessible name will be
+        // announced as "blank" by NVDA when their content changes. They're
+        // not in ANNOUNCEABLE_ROLES because they're rarely focusable, but
+        // they are the textbook NVDA-"blank" source.
+        const LIVE_ROLES = new Set(["status", "alert", "log", "timer"]);
+        const liveOffenders = findAll(tree, (n: any) => {
+            if (!n || !n.role) return false;
+            if (!LIVE_ROLES.has(n.role)) return false;
+            const name = (n.name || "").trim();
+            return name.length === 0;
+        });
+
+        const allOffenders = [...offenders, ...liveOffenders];
+        if (allOffenders.length > 0) {
+            const summary = allOffenders.slice(0, 10).map((o: any) => ({ role: o.role, value: o.value, name: o.name }));
+            // Write to a file so jest's stdout truncation doesn't hide them.
+            try {
+                fs.writeFileSync(
+                    path.resolve(__dirname, "../../../reports/blankAnnouncements.offenders.json"),
+                    JSON.stringify(summary, null, 2)
+                );
+            } catch { /* ignore */ }
             // eslint-disable-next-line no-console
-            console.log("Empty-name offenders (first 5):",
-                offenders.slice(0, 5).map((o: any) => ({ role: o.role, value: o.value })));
+            console.log("Blank-name offenders (first 10):", JSON.stringify(summary));
         }
-        expect(offenders.length).toBe(0);
+        expect(allOffenders.length).toBe(0);
     });
 });

@@ -6,7 +6,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Bumped `@microsoft/omnichannel-chat-sdk` to `1.11.9-main.a5570e5`. This pulls in the upstream fix that pins the ACS WebChat adapter to exact `0.0.1-beta.8` (instead of `^0.0.1-beta.6` which resolved to the rogue `0.0.1-beta-1` per semver §11), restoring the fast-poll path for the first bot reply.
+
+### Tests
+- [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for internal tracking (AdaptiveCard TalkBack non-radio duplicate labels), internal tracking (ChatButton browse-mode duplicate stops), internal tracking (agent profile name not announced), internal tracking (blank announcement live regions), internal tracking (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
+
 ### Fixed
+- [Telemetry] Fixed HTML sanitization monitoring telemetry to log RemovedTags and RemovedAttributes data in Description field as JSON, working around TelemetryHelper.logActionEvent bypassing CustomProperties serialization (internal tracking)
+- [A11y] AdaptiveCard wrapper now strips redundant `aria-label` / `aria-labelledby` from non-radio inputs (Input.Text including isMultiline=true, Input.Date, Input.Number, Input.Toggle, multi-select ChoiceSet checkbox) when a visible `<label for>` already names the control, eliminating TalkBack duplicate-label announcements (internal tracking)
+- [A11y] Modal pane visibility (`showConfirmationPane`, `showEmailTranscriptPane`) no longer survives a page reload, and Confirmation/Citation/EmailTranscript panes now restore sibling tab indices on unmount — fixes Tab focus being trapped inside the rehydrated widget after a link activation + reload (internal tracking)
+- [A11y] Added end-to-end regression scaffold (designer-mode mock + Playwright spec, currently skipped pending an integration harness that re-resolves WebChat's overrideLocalizedStrings after the first agent activity) to verify NVDA reads the full agent profile name (e.g. "Sara Smith said:") instead of bare avatar initials when navigating agent messages (internal tracking). The middleware contract is already covered by the unit catcher `localizedStringsBotInitialsMiddleware.agentName.a11y.spec.ts`.
+- [A11y] WebChat notification toaster (`role="log"`) now carries an `aria-label` so screen readers don't announce the empty live region as "blank"; removed the dead static `role="alert"` file-sent region that was being announced empty (internal tracking)
 - [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
 - [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
 - [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
@@ -32,7 +43,7 @@ All notable changes to this project will be documented in this file.
 - [A11y] Phase 2 utilities (`chat-widget/automation_tests/e2e/utility/`): `liveRegionObserver` (aria-live mutation observer), `keyboardLoop` (Tab/Shift+Tab traversal helpers), `a11yTree` (accessibility-tree shape assertions), `axeOnPage` (live-page axe runs)
 - [A11y] Phase 2 specs (`chat-widget/automation_tests/e2e/areas/accessibility/`): `citationCard` (link `title` attribute + single-link guarantee), `markdownAnchorMerge` (adjacent same-href anchors collapse to one tab stop), `mobileFocusTrap` (Pixel 5 emulation of the focus-trap regression class)
 - [A11y] Phase 3 utilities + scaffolding for screen-reader and keyboard layers: `expectTabOrder` (named tab-order assertion), `srAssert` (Guidepup-backed NVDA assertion + `phraseFor` lookup), `tools/accessibility/nvda-phrases.json` (event→phrase catalog with NVDA version pin), `tools/accessibility/setupNvda.ps1` (silent NVDA install for Windows runners), `focus-ring` and `focus-ring-forced-colors` Storybook screenshot profiles, `.github/workflows/accessibility-sr.yml` (soak-only, concurrency-limited NVDA spec workflow)
-- [A11y] Phase 3 specs: `keyboard/keyboardFlows.spec.ts` (6 critical-flow keyboard tests: open chat, send, attachment cycle, header reachability, Esc/close, re-open), `keyboard/skipLink.spec.ts` (`test.todo` placeholders documenting the skip-link / landmark gap), `sr-nvda/nvdaCriticalFlows.spec.ts` (10 NVDA spec sweep — auto-skips off-Windows / no-NVDA / no-`@guidepup/guidepup`), and `NotDeliveredTimestamp.a11y.test.tsx` RTL unit test asserting the retry control is a native `<button>` (regression catcher for AB#5376198)
+- [A11y] Phase 3 specs: `keyboard/keyboardFlows.spec.ts` (6 critical-flow keyboard tests: open chat, send, attachment cycle, header reachability, Esc/close, re-open), `keyboard/skipLink.spec.ts` (`test.todo` placeholders documenting the skip-link / landmark gap), `sr-nvda/nvdaCriticalFlows.spec.ts` (10 NVDA spec sweep — auto-skips off-Windows / no-NVDA / no-`@guidepup/guidepup`), and `NotDeliveredTimestamp.a11y.test.tsx` RTL unit test asserting the retry control is a native `<button>` (regression catcher for internal tracking)
 - [A11y] Per-package axe rule disable list (`accessibility-disable-rules.json`) covering 7 story-isolation rules (`landmark-one-main`, `page-has-heading-one`, `region`, `html-has-lang`, `html-lang-valid`, `document-title`, `bypass`) so axe results highlight real component issues instead of canvas artifacts. Drives chat-widget Storybook violations from 19 → 1 (the lone real `aria-command-name` finding remains as a tracked work item).
 - [A11y] `axeScan.cjs` extended with `--disable-rules`, `--gate-rules`, and `A11Y_SCAN_DISABLE_RULES` env support; new `yarn scan:a11y:axe:gated` script gates `image-alt` and `button-name` (currently 0 violations across both packages).
 - [Security] Added monitor-only HTML sanitization to gather telemetry before enforcing stricter allowlist rules (Phase 1). Tracks OrganizationId, ConversationId, RemovedTags, RemovedAttributes, and ExecutionTimeMs when content would be blocked by strict allowlist. Runs asynchronously to avoid message latency. Includes 27 unit tests.
@@ -66,7 +77,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Fixed email transcript dialog persisting across conversations by resetting `showEmailTranscriptPane` state during chat close cleanup
-- [A11Y] Replace `<span role="button">` with native `<button>` for Retry element in failed message timestamp so screen readers announce "Retry, button" (AB#5376198)
+- [A11Y] Replace `<span role="button">` with native `<button>` for Retry element in failed message timestamp so screen readers announce "Retry, button" (internal tracking)
 - Fix iOS Safari auto-zoom on prechat survey input fields by setting default font-size to 16px for text input, multiline text input, and multichoice input elements
 - Fix iOS Safari blank space in prechat survey dropdown caused by hidden placeholder `<option>` in adaptive card `<select>` elements
 - Resolved underscores in a system message renders the text weirdly in iOS
@@ -795,6 +806,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [A11y] `ChatButton` no longer produces duplicate NVDA / JAWS browse-mode stops on the title / subtitle Labels — the text container is excluded from the accessibility tree and the button owns a consolidated `aria-label` (internal tracking)
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
 
 ### Security

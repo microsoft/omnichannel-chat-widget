@@ -1,4 +1,4 @@
-import { Constants, HtmlAttributeNames, HtmlClassNames, HtmlIdNames } from "../../common/Constants";
+import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
@@ -240,6 +240,47 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 chatHistoryElement.setAttribute(HtmlAttributeNames.ariaLabel, webChatContainerProps.webChatHistoryMobileAccessibilityLabel);
             }
         }
+
+        // internal tracking: WebChats BasicToaster renders a `role="log"` container
+        // with no accessible name. When the toaster is empty (typical idle
+        // state) screen readers traversing the page announce it as "blank".
+        // Inject an aria-label so the region has a meaningful name; the
+        // consumer can override via the new
+        // `webChatNotificationRegionAccessibilityLabel` prop. The toaster
+        // may not be rendered yet when this effect first runs, so observe
+        // for it via a MutationObserver scoped to the widget root (or, if
+        // not yet mounted, the widget container's parent) so we never fire
+        // on host-page mutations outside the widget subtree.
+        const toasterLabel =
+            webChatContainerProps?.webChatNotificationRegionAccessibilityLabel
+            ?? defaultWebChatContainerStatefulProps.webChatNotificationRegionAccessibilityLabel
+            ?? "Chat notifications";
+        const labelToaster = (root: ParentNode) => {
+            const toaster = root.querySelector(".webchat__toaster[role='log']");
+            if (toaster && !toaster.getAttribute(HtmlAttributeNames.ariaLabel)) {
+                toaster.setAttribute(HtmlAttributeNames.ariaLabel, toasterLabel);
+                return true;
+            }
+            return false;
+        };
+        // Prefer the widget root; if it is not yet in the DOM, fall back to
+        // `document` for the *initial* lookup only, then observe the most
+        // specific available scope (widget root if present, otherwise the
+        // widget's parent / document.body as a last resort). The observer
+        // re-resolves the widget root on every callback so we tighten scope
+        // as soon as it mounts.
+        let toasterObserver: MutationObserver | undefined;
+        const resolveScope = (): ParentNode => document.getElementById("ms_lcw_webchat_root") ?? document.body;
+        if (!labelToaster(resolveScope())) {
+            toasterObserver = new MutationObserver(() => {
+                const scope = resolveScope();
+                if (labelToaster(scope)) {
+                    toasterObserver?.disconnect();
+                    toasterObserver = undefined;
+                }
+            });
+            toasterObserver.observe(resolveScope(), { childList: true, subtree: true });
+        }
         dispatch({
             type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS,
             payload: webChatContainerProps?.renderingMiddlewareProps
@@ -262,6 +303,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 }
             }
         }
+
+        return () => {
+            toasterObserver?.disconnect();
+        };
     }, []);
 
     useEffect(() => {
@@ -505,26 +550,6 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                     <BasicWebChat></BasicWebChat>
                 </div>
             </Stack>
-            {/* Visually hidden alert region for screen reader announcements (e.g. file sent).
-                role="alert" + aria-live="assertive" guarantees TalkBack announces even when
-                focus shifts to the send box immediately after the file is sent. */}
-            <div
-                id={HtmlIdNames.fileSentAnnouncementRegionId}
-                role="alert"
-                aria-live="assertive"
-                aria-atomic="true"
-                style={{
-                    position: "absolute",
-                    width: "1px",
-                    height: "1px",
-                    padding: "0",
-                    margin: "-1px",
-                    overflow: "hidden",
-                    clip: "rect(0, 0, 0, 0)",
-                    whiteSpace: "nowrap",
-                    border: "0"
-                }}
-            />
             {citationPaneOpen && (
                 <CitationPaneStateful
                     id={props.citationPaneProps?.id || HtmlAttributeNames.ocwCitationPaneClassName}
