@@ -57,7 +57,13 @@ export const CitationPaneStateful = (props: ICitationPaneStatefulProps) => {
             Event: TelemetryEvent.UXCitationPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
-        return cleanup;
+        return () => {
+            // internal tracking: restore parent tab indices on unmount so focus
+            // can escape the widget even if the pane is dismissed by an
+            // external state change rather than a user button click.
+            setTabIndices(elements, initialTabIndexMap, true);
+            cleanup();
+        };
     }, []);
 
     // Retry focus once pane is actually visible (isReady) in case initial attempt occurred while wrapper was visibility:hidden

@@ -50,6 +50,17 @@ export const getLiveChatWidgetContextInitialState = (props: ILiveChatWidgetProps
         if (initialStateFromCache.appStates.isUserAuthenticated === undefined) {
             initialStateFromCache.appStates.isUserAuthenticated = false;
         }
+        // internal tracking: transient modal pane visibility must NOT survive a page
+        // reload. If `showConfirmationPane` / `showEmailTranscriptPane` are
+        // restored as `true`, the corresponding pane re-mounts and installs
+        // its focus trap (and sets sibling tabindex=-1). The user has no
+        // context for why the modal appeared and Tab from the host page can
+        // no longer traverse out of the widget. Always start cold for these
+        // ephemeral UI flags.
+        if (initialStateFromCache.uiStates) {
+            initialStateFromCache.uiStates.showConfirmationPane = false;
+            initialStateFromCache.uiStates.showEmailTranscriptPane = false;
+        }
         return initialStateFromCache;
     }
 

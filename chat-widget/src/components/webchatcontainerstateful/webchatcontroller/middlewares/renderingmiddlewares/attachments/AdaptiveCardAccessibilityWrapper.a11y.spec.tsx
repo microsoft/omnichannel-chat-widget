@@ -313,50 +313,132 @@ describe("AdaptiveCardAccessibilityWrapper — compact dropdowns (dropdown-doubl
     });
 });
 
-describe.skip("AdaptiveCardAccessibilityWrapper — TalkBack labels on non-radio elements (talkback-duplicate-label regression guard)", () => {
-    it("talkback-duplicate-label: Input.Text fields inside an adaptive card must not have BOTH visible <label> and aria-label that duplicate (TalkBack reads twice)", async () => {
-        // Best-effort regression catcher: TalkBack double-reads when both an
-        // associated <label> AND aria-label resolve to the same string. This
-        // catcher is a DOM proxy — true verification requires a TalkBack pass.
+// internal tracking — TalkBack reads adaptive-card element labels TWICE.
+// PR #911 patched the radio case via `aria-hidden` on label/spacer siblings,
+// but every other Input.* type (Text, Date, Number, Toggle, ChoiceSet expanded
+// non-radio) is still rendered with BOTH an associated <label for> AND an
+// aria-label / aria-labelledby resolving to the same string. TalkBack walks
+// each accessibility node independently and reads the duplicated name.
+//
+// These cases are deterministic DOM-contract assertions: the wrapper's
+// post-mutation output must expose at most one announce-able name source per
+// input. They are expected to FAIL today because the wrapper only handles
+// `input[type=radio]`.
+describe("AdaptiveCardAccessibilityWrapper — TalkBack duplicate labels on non-radio elements (internal tracking)", () => {
+    const buildLabelledInput = (
+        type: "text" | "date" | "number" | "checkbox",
+        id: string,
+        labelText: string
+    ): HTMLElement => {
+        // Mirrors what the AdaptiveCards renderer produces for Input.Text /
+        // Input.Date / Input.Number / Input.Toggle: a visible <label for="...">
+        // AND aria-label/aria-labelledby on the input that resolve to the same
+        // string.
+        const wrapper = document.createElement("div");
+        wrapper.className = "ac-input-container";
+        const label = document.createElement("label");
+        label.id = `${id}-lbl`;
+        label.setAttribute("for", id);
+        label.textContent = labelText;
+        const input = document.createElement("input");
+        input.type = type;
+        input.id = id;
+        input.className = "ac-input";
+        input.setAttribute("aria-label", labelText);
+        input.setAttribute("aria-labelledby", `${id}-lbl`);
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        return wrapper;
+    };
+
+    const countAnnouncedSources = (
+        container: HTMLElement,
+        inputId: string,
+        expectedName: string
+    ): number => {
+        const input = container.querySelector(`#${CSS.escape(inputId)}`) as HTMLElement | null;
+        if (!input) return 0;
+        const ariaLabel = input.getAttribute("aria-label");
+        const ariaLabelledBy = input.getAttribute("aria-labelledby");
+        const visibleLabel = container.querySelector(
+            `label[for="${CSS.escape(inputId)}"]:not([aria-hidden='true'])`
+        );
+        const sources: (string | undefined | null)[] = [
+            ariaLabel,
+            ariaLabelledBy
+                ? (document.getElementById(ariaLabelledBy)?.textContent || "").trim()
+                : undefined,
+            visibleLabel?.textContent?.trim()
+        ];
+        return sources.filter((s) => s === expectedName).length;
+    };
+
+    const renderCardWith = async (factory: () => HTMLElement) => {
         const { container } = render(
             <AdaptiveCardAccessibilityWrapper>
                 <div className="ac-adaptiveCard" />
             </AdaptiveCardAccessibilityWrapper>
         );
         const card = container.querySelector(".ac-adaptiveCard") as HTMLElement;
-
         await act(async () => {
+            card.appendChild(factory());
+            observerInstance.trigger();
+        });
+        return container;
+    };
+
+    it("Input.Text: visible <label for> AND aria-label/aria-labelledby must not all resolve to the same name", async () => {
+        const container = await renderCardWith(() => buildLabelledInput("text", "name-input", "Name"));
+        expect(countAnnouncedSources(container, "name-input", "Name")).toBeLessThanOrEqual(1);
+    });
+
+    it("Input.Date: visible <label for> AND aria-label/aria-labelledby must not all resolve to the same name", async () => {
+        const container = await renderCardWith(() => buildLabelledInput("date", "dob-input", "Date of birth"));
+        expect(countAnnouncedSources(container, "dob-input", "Date of birth")).toBeLessThanOrEqual(1);
+    });
+
+    it("Input.Number: visible <label for> AND aria-label/aria-labelledby must not all resolve to the same name", async () => {
+        const container = await renderCardWith(() => buildLabelledInput("number", "qty-input", "Quantity"));
+        expect(countAnnouncedSources(container, "qty-input", "Quantity")).toBeLessThanOrEqual(1);
+    });
+
+    it("Input.Toggle: visible <label for> AND aria-label/aria-labelledby must not all resolve to the same name", async () => {
+        const container = await renderCardWith(() => buildLabelledInput("checkbox", "subscribe-input", "Subscribe"));
+        expect(countAnnouncedSources(container, "subscribe-input", "Subscribe")).toBeLessThanOrEqual(1);
+    });
+
+    it("Input.ChoiceSet (expanded, non-radio checkbox style): visible <label for> AND aria-labelledby must not duplicate", async () => {
+        // isMultiSelect: true on Input.ChoiceSet renders as <input type="checkbox">
+        // wrapped exactly like the radio case the wrapper already handles, but
+        // the wrapper's selector is scoped to input[type='radio'] so checkboxes
+        // are not patched.
+        const container = await renderCardWith(() =>
+            buildLabelledInput("checkbox", "topics-1", "Updates")
+        );
+        expect(countAnnouncedSources(container, "topics-1", "Updates")).toBeLessThanOrEqual(1);
+    });
+
+    it("Input.Text (isMultiline=true): textarea.ac-input must not expose duplicate label sources", async () => {
+        // Input.Text with isMultiline: true renders as <textarea class="ac-input ac-textInput ac-multichoiceInput">
+        // with the same visible <label for> + aria-label + aria-labelledby triple
+        // as the single-line case. The selector must include textarea or TalkBack
+        // will still double-read.
+        const container = await renderCardWith(() => {
             const wrapper = document.createElement("div");
             wrapper.className = "ac-input-container";
             const label = document.createElement("label");
-            label.id = "name-lbl";
-            label.setAttribute("for", "name-input");
-            label.textContent = "Name";
-            const input = document.createElement("input");
-            input.type = "text";
-            input.id = "name-input";
-            input.setAttribute("aria-label", "Name");
-            input.setAttribute("aria-labelledby", "name-lbl");
+            label.id = "comments-input-lbl";
+            label.setAttribute("for", "comments-input");
+            label.textContent = "Comments";
+            const textarea = document.createElement("textarea");
+            textarea.id = "comments-input";
+            textarea.className = "ac-input ac-textInput ac-multichoiceInput";
+            textarea.setAttribute("aria-label", "Comments");
+            textarea.setAttribute("aria-labelledby", "comments-input-lbl");
             wrapper.appendChild(label);
-            wrapper.appendChild(input);
-            card.appendChild(wrapper);
-            observerInstance.trigger();
+            wrapper.appendChild(textarea);
+            return wrapper;
         });
-
-        const input = container.querySelector("input#name-input") as HTMLElement;
-        // After fix: at most ONE of {aria-label, aria-labelledby pointing to
-        // a visible <label for=...>} resolves to "Name".
-        const ariaLabel = input.getAttribute("aria-label");
-        const ariaLabelledBy = input.getAttribute("aria-labelledby");
-        const visibleLabel = container.querySelector(
-            "label[for='name-input']:not([aria-hidden='true'])"
-        );
-        const sources = [
-            ariaLabel,
-            ariaLabelledBy && (document.getElementById(ariaLabelledBy)?.textContent || "").trim(),
-            visibleLabel?.textContent?.trim()
-        ].filter(Boolean);
-        const duplicates = sources.filter((s) => s === "Name").length;
-        expect(duplicates).toBeLessThanOrEqual(1);
+        expect(countAnnouncedSources(container, "comments-input", "Comments")).toBeLessThanOrEqual(1);
     });
 });

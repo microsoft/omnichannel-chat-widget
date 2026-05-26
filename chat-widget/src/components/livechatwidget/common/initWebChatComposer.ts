@@ -306,24 +306,28 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.HTMLSanitized,
-                        Description: "HTML content would be sanitized by stricter allowlist (monitor-only)",
-                        ElapsedTimeInMilliseconds: executionTimeMs,
-                        CustomProperties: {
-                            OrganizationId: orgId,
-                            ConversationId: conversationId,
-                            RemovedTags: uniqueTags.join(", "),
-                            RemovedAttributes: uniqueAttrs.join(", "),
-                            Phase: "Monitor"
-                        }
+                        Description: JSON.stringify({
+                            message: "HTML content would be sanitized by stricter allowlist (monitor-only)",
+                            removedTags: uniqueTags,
+                            removedAttributes: uniqueAttrs,
+                            phase: "Monitor",
+                            organizationId: orgId,
+                            conversationId: conversationId
+                        }),
+                        ElapsedTimeInMilliseconds: executionTimeMs
                     });
 
                     // Log to console in development for debugging
                     if (process.env.NODE_ENV === "development") {
-                        console.warn("[Monitor] Stricter HTML sanitization would remove:", {
+                        console.warn("[Monitor] Stricter HTML sanitization telemetry:", {
+                            description: JSON.parse(JSON.stringify({
+                                message: "HTML content would be sanitized by stricter allowlist (monitor-only)",
+                                removedTags: uniqueTags,
+                                removedAttributes: uniqueAttrs,
+                                phase: "Monitor"
+                            })),
                             orgId,
                             conversationId,
-                            removedTags: uniqueTags,
-                            removedAttributes: uniqueAttrs,
                             executionTimeMs
                         });
                     }
