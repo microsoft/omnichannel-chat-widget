@@ -35,7 +35,7 @@
     "@azure/identity": "^1.2.3",
     "@azure/keyvault-secrets": "^4.1.0",
     "@azure/service-bus": "^1.1.10",
-    "@microsoft/omnichannel-chat-sdk": "1.11.9-main.47a6498",
+    "@microsoft/omnichannel-chat-sdk": "^0.1.1-main.c05dc32",
     "@types/jest": "^25.2.1",
     "@types/jest-image-snapshot": "^2.12.0",
     "adal-node": "^0.2.2",
