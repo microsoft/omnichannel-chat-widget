@@ -199,14 +199,16 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
          
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         md.render = function(text: string, env?: any): string {
+            const safeEnv = env ?? {};
             const processedText = preprocessText(text);
-            return md.renderer.render(md.parse(processedText, env), md.options, env);
+            return md.renderer.render(md.parse(processedText, safeEnv), md.options, safeEnv);
         };
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         md.renderInline = function(text: string, env?: any): string {
+            const safeEnv = env ?? {};
             const processedText = preprocessText(text);
-            return md.renderer.render(md.parseInline(processedText, env), md.options, env);
+            return md.renderer.render(md.parseInline(processedText, safeEnv), md.options, safeEnv);
         };
     });
 
