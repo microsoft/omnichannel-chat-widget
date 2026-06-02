@@ -33,7 +33,13 @@ const redactQueryIfSas = (url: string): string => {
     if (queryIdx < 0) {
         return url;
     }
-    const query = url.slice(queryIdx + 1);
+    // Separate the fragment (#...) before processing the query — fragments come
+    // after the query string in URL syntax and must not be folded into the last
+    // query parameter's value when we split on `&`.
+    const afterQuestionMark = url.slice(queryIdx + 1);
+    const fragIdx = afterQuestionMark.indexOf("#");
+    const query = fragIdx < 0 ? afterQuestionMark : afterQuestionMark.slice(0, fragIdx);
+    const fragment = fragIdx < 0 ? "" : afterQuestionMark.slice(fragIdx); // includes the leading '#'
     if (!/(^|&)sig=/i.test(query)) {
         // No SAS signature present — leave the URL alone so legitimate non-SAS query
         // strings (e.g. ?utm_source=...) are not mangled.
@@ -48,7 +54,7 @@ const redactQueryIfSas = (url: string): string => {
         const name = pair.slice(0, eqIdx).toLowerCase();
         return SAS_PARAM_NAMES.has(name) ? `${pair.slice(0, eqIdx)}=${REDACTED_VALUE}` : pair;
     }).join("&");
-    return `${base}?${sanitizedQuery}`;
+    return `${base}?${sanitizedQuery}${fragment}`;
 };
 
 const sanitizeString = (s: string): string => s.replace(URL_REGEX, redactQueryIfSas);

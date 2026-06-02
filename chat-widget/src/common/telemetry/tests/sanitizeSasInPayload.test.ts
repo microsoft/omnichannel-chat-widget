@@ -131,6 +131,23 @@ describe("sanitizeSasInPayload", () => {
         expect(sanitizeSasInPayload([])).toEqual([]);
     });
 
+    it("preserves the URL fragment after SAS redaction", () => {
+        // Mirrors a copilot review note on the companion LCW PR: without explicit fragment
+        // handling, '#section' gets folded into the last query value and lost.
+        const url = `https://x.blob.core.windows.net/c/f.png?sv=2026-02-06&sig=${SAMPLE_SIG}#section-2`;
+        const out = sanitizeSasInPayload(url);
+        expect(out).toContain("sig=[REDACTED]");
+        expect(out).toContain("sv=[REDACTED]");
+        expect(out).not.toContain(SAMPLE_SIG);
+        expect(out.endsWith("#section-2")).toBe(true);
+    });
+
+    it("preserves a URL fragment when the SAS sig parameter is the last query param", () => {
+        const url = `https://x.blob.core.windows.net/c/f.png?sv=2026-02-06&sig=${SAMPLE_SIG}#footer`;
+        const out = sanitizeSasInPayload(url);
+        expect(out).toBe("https://x.blob.core.windows.net/c/f.png?sv=[REDACTED]&sig=[REDACTED]#footer");
+    });
+
     it("strips the URL substring out of a longer enclosing string", () => {
         const wrapped = `error fetching <https://x.blob.core.windows.net/c/f.png?sv=2026-02-06&sig=${SAMPLE_SIG}>: 403`;
         const out = sanitizeSasInPayload(wrapped);
