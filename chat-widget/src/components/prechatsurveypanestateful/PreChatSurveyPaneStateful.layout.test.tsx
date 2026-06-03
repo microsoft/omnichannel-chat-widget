@@ -9,15 +9,11 @@ import { PreChatSurveyPaneStateful } from "./PreChatSurveyPaneStateful";
 import React from "react";
 
 /**
- * Regression test for Bug 6423684 — Pre-chat pane rendered collapsed to its
- * intrinsic content size after PR #929 wrapped <PreChatSurveyPane> in a new
- * <div onFocusCapture> to host the polite live region. The inner pane's
- * `height: inherit; width: inherit` resolved against `auto` because the
- * wrapper had no width/height, so the surrounding chat-container sizing
- * chain was broken and the survey shrank.
- *
- * The wrapper must carry `width: 100%; height: 100%` so the inherited
- * sizing chain reaches the inner <PreChatSurveyPane>.
+ * Verifies the focus-capture wrapper around <PreChatSurveyPane> carries
+ * `width: 100%; height: 100%` so the inner pane (which uses
+ * `width: inherit; height: inherit`) receives the surrounding chat
+ * container's dimensions instead of collapsing to its intrinsic
+ * content size.
  */
 
 const mockState: { current: any } = { current: undefined };
@@ -49,7 +45,7 @@ const buildState = () => ({
     }
 });
 
-describe("PreChatSurveyPaneStateful — layout regression (Bug 6423684)", () => {
+describe("PreChatSurveyPaneStateful — focus-capture wrapper sizing", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockState.current = buildState();
@@ -78,8 +74,9 @@ describe("PreChatSurveyPaneStateful — layout regression (Bug 6423684)", () => 
         const wrapper = innerPane.parentElement as HTMLElement;
         expect(wrapper).not.toBeNull();
 
-        // Without these styles the pane collapses to its intrinsic content
-        // size because PreChatSurveyPane uses height: inherit / width: inherit.
+        // PreChatSurveyPane uses width: inherit / height: inherit, so the
+        // wrapper must declare explicit 100% dimensions for the inner pane
+        // to fill the chat container.
         expect(wrapper.style.width).toBe("100%");
         expect(wrapper.style.height).toBe("100%");
     });
