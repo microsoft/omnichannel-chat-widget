@@ -12,6 +12,7 @@ import { appInsightsLogger } from "./loggers/appInsightsLogger";
 import { ariaTelemetryLogger } from "./loggers/ariaTelemetryLogger";
 import { consoleLogger } from "./loggers/consoleLogger";
 import { defaultAriaConfig } from "./defaultConfigs/defaultAriaConfig";
+import { sanitizeSasInPayload } from "./sanitizeSasInPayload";
 
 export class TelemetryTimers {
     public static LcwLoadToChatButtonTimer: ITimer;
@@ -85,10 +86,14 @@ export const RegisterLoggers = () => {
     };
 
     const logTelemetry = (telemetryEvent: ICustomEvent) => {
+        // Redact Azure SAS credentials in any URL embedded in the payload (e.g.
+        // customer-supplied blob asset URLs in widget customization props) before
+        // it fans out to console, Aria, AppInsights, or any custom logger.
+        const sanitizedPayload = sanitizeSasInPayload(telemetryEvent?.payload);
         loggers.map((logger: IChatSDKLogger) => {
             const logLevel = (telemetryEvent as ITelemetryEvent).logLevel ?? LogLevel.INFO;
             const scenarioType = (telemetryEvent as ITelemetryEvent).payload?.scenarioType ?? ScenarioType.UNDEFINED;
-            const telemetryInput = parseInput(telemetryEvent?.payload, scenarioType);
+            const telemetryInput = parseInput(sanitizedPayload, scenarioType);
             telemetryInput.telemetryInfo = { telemetryInfo: TelemetryHelper.buildTelemetryEvent(logLevel, telemetryInput) };
             //Do not log events without an Event Name
             if (telemetryInput?.payload?.Event) {
