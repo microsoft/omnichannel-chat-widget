@@ -72,12 +72,13 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     if (renderedCard) {
         const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
         selectElements.forEach((select) => {
-            // Remove hidden placeholder option that causes blank space on iOS
-            const firstOption = select.options[0];
-            if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
-                select.removeChild(firstOption);
-            }
-            // Override iOS native select rendering
+            // NOTE: Do NOT remove the placeholder <option> (index 0). Adaptive
+            // Cards' compact ChoiceSet value getter returns the value only when
+            // `selectedIndex > 0`, treating index 0 as the placeholder. Deleting
+            // the placeholder shifts the first real choice to index 0, so
+            // selecting it yields an undefined value and isRequired validation
+            // fails for that choice. The iOS blank-space is handled below via the
+            // native-rendering override (and the .ac-choiceSetInput-compact CSS).
             select.style.webkitAppearance = "none";
             select.style.height = "auto";
             select.style.minHeight = "31px";
