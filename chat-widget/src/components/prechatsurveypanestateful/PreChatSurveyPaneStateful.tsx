@@ -235,7 +235,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
     }, []);
     
     return (
-        <div onFocusCapture={announceFocusedElement}>
+        <div onFocusCapture={announceFocusedElement} style={{ width: "100%", height: "100%" }}>
             {/* prechat-stale-live-region: prechat pane owns a managed polite live region
                 so that focus changes inside the survey don't carry the
                 previous focus's announcement (Narrator was reading
