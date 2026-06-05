@@ -34,11 +34,27 @@
             margin-top: 0;
             color: #1976d2;
         }
+        .meta-bar {
+            background-color: #f0f4f8;
+            border: 1px solid #cdd8e3;
+            border-radius: 4px;
+            padding: 8px 15px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #444;
+            display: flex;
+            gap: 24px;
+        }
+        .meta-bar span { font-weight: bold; color: #1976d2; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Omnichannel Chat Widget - TypeScript Sample</h1>
+        <div class="meta-bar">
+            <div>Component version: <span>@microsoft/omnichannel-chat-components@1.1.17-main.5b3f077</span></div>
+            <div>Loaded at: <span id="load-time"></span></div>
+        </div>
         
         <div class="info">
             <h3>Configuration Required</h3>
@@ -54,6 +70,9 @@
         <div id="root"></div>
     </div>
 
+    <script>
+        document.getElementById("load-time").textContent = new Date().toLocaleTimeString();
+    </script>
     <script src="bundle.js"></script>
 </body>
 </html>
