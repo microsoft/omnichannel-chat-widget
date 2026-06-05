@@ -68,6 +68,22 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     const renderedCard = adaptiveCard.render();
     addNoreferrerNoopenerTag(renderedCard);
 
+    // Fix iOS Safari blank space in <select> dropdowns
+    if (renderedCard) {
+        const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
+        selectElements.forEach((select) => {
+            // Remove hidden placeholder option that causes blank space on iOS
+            const firstOption = select.options[0];
+            if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
+                select.removeChild(firstOption);
+            }
+            // Override iOS native select rendering
+            select.style.webkitAppearance = "none";
+            select.style.height = "auto";
+            select.style.minHeight = "31px";
+        });
+    }
+
     return (
         <>
             <style>{`
@@ -104,6 +120,8 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 padding: 3px;
                 padding-top: 7px;
                 padding-bottom: 7px;
+                box-sizing: border-box;
+                -webkit-appearance: none;
             }
             .ac-input.ac-toggleInput {
                 align-items: ${props.styleProps?.customToggleInputStyleProps?.alignItems ?? defaultPreChatSurveyPaneStyles.customToggleInputStyleProps?.alignItems} !important;
