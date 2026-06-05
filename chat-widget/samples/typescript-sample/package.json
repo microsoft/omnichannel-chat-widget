@@ -1,53 +1,52 @@
-{
+    {
       "name": "my-sample-widget",
       "version": "0.0.1",
       "dependencies": {
-            "@fluentui/react": "^8.123.1",
-            "@microsoft/omnichannel-chat-components": "^1.1.17-main.5b3f077",
-            "@microsoft/omnichannel-chat-widget": "^1.8.2-main.d82a79b",
-            "broadcast-channel": "^7.1.0",
-            "crypto-browserify": "^3.12.0",
-            "md5-typescript": "^1.0.5",
-            "react": "^18.3.1",
-            "react-dom": "^18.3.1",
-            "react-native-web": "^0.20.0",
-            "react-scripts": "^5.0.1",
-            "rxjs": "^5.5.12",
-            "stream-browserify": "^3.0.0"
+        "@fluentui/react": "^8.123.1",
+        "@microsoft/omnichannel-chat-widget": "^1.8.2-main.d82a79b",
+        "broadcast-channel": "^7.1.0",
+        "crypto-browserify": "^3.12.0",
+        "md5-typescript": "^1.0.5",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-native-web": "^0.20.0",
+        "react-scripts": "^5.0.1",
+        "rxjs": "^5.5.12",
+        "stream-browserify": "^3.0.0"
       },
       "devDependencies": {
-            "@babel/core": "^7.28.0",
-            "@babel/plugin-transform-runtime": "^7.28.0",
-            "@babel/preset-env": "^7.28.0",
-            "@babel/preset-react": "^7.27.1",
-            "@babel/preset-typescript": "^7.27.1",
-            "@babel/runtime": "^7.27.1",
-            "@types/react": "^18.3.13",
-            "@types/react-dom": "^18.3.6",
-            "@types/webpack": "^5.28.5",
-            "@types/webpack-dev-server": "^4.7.1",
-            "babel-loader": "^10.0.0",
-            "swiper": "^9.0.5",
-            "ts-node": "^10.9.2",
-            "typescript": "^4.9.5",
-            "webpack": "^5.99.9",
-            "webpack-cli": "^6.0.1",
-            "webpack-dev-server": "^5.2.2"
+        "@babel/core": "^7.28.0",
+        "@babel/plugin-transform-runtime": "^7.28.0",
+        "@babel/preset-env": "^7.28.0",
+        "@babel/preset-react": "^7.27.1",
+        "@babel/preset-typescript": "^7.27.1",
+        "@babel/runtime": "^7.27.1",
+        "@types/react": "^18.3.13",
+        "@types/react-dom": "^18.3.6",
+        "@types/webpack": "^5.28.5",
+        "@types/webpack-dev-server": "^4.7.1",
+        "babel-loader": "^10.0.0",
+        "swiper": "^9.0.5",
+        "ts-node": "^10.9.2",
+        "typescript": "^4.9.5",
+        "webpack": "^5.99.9",
+        "webpack-cli": "^6.0.1",
+        "webpack-dev-server": "^5.2.2"
       },
       "scripts": {
-            "start": "webpack serve --open",
-            "build": "webpack --mode development"
+        "start": "webpack serve --open",
+        "build": "webpack --mode development"
       },
       "browserslist": {
-            "production": [
-                  ">0.2%",
-                  "not dead",
-                  "not op_mini all"
-            ],
-            "development": [
-                  "last 1 chrome version",
-                  "last 1 firefox version",
-                  "last 1 safari version"
-            ]
+        "production": [
+          ">0.2%",
+          "not dead",
+          "not op_mini all"
+        ],
+        "development": [
+          "last 1 chrome version",
+          "last 1 firefox version",
+          "last 1 safari version"
+        ]
       }
-}
+    }
