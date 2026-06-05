@@ -11,11 +11,10 @@ import ReactDOM from "react-dom/client";
 import { defaultProps } from "../src/common/defaultProps";
 
 const getOmnichannelChatConfig = () => {
-    const params = new URLSearchParams(window.location.search);
     const omnichannelConfig = {
-        orgId: params.get("orgId") || "<org-id>",
-        orgUrl: params.get("orgUrl") || "<org-url>",
-        widgetId: params.get("widgetId") || "<widget-id>",
+        orgId: "<org-id>",
+        orgUrl: "<org-url>",
+        widgetId: "<widget-id>",
     };
     return omnichannelConfig;
 };
