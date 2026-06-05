@@ -8,6 +8,5 @@ export const defaultGeneralPreChatSurveyPaneStyleProps: IStyle = {
     borderColor: "#F1F1F1",
     overflowY: "auto",
     height: "inherit",
-    width: "inherit",
-    overscrollBehavior: "none"
+    width: "inherit"
 };
