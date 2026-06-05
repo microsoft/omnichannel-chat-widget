@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
+- Bumped `@microsoft/omnichannel-chat-components` to `1.1.17-main.5b3f077`.
 - Bumped `@microsoft/omnichannel-chat-sdk` to `1.11.9-main.47a6498`. This includes diagnostic telemetry fields in ChatConfigRetrievalFailure events and pulls in the upstream fix that pins the ACS WebChat adapter to exact `0.0.1-beta.8` (instead of `^0.0.1-beta.6` which resolved to the rogue `0.0.1-beta-1` per semver §11), restoring the fast-poll path for the first bot reply.
 
 ### Tests
