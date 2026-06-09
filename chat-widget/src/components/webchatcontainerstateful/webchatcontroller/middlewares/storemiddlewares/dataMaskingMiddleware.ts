@@ -43,8 +43,8 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
                         ruleInfiniteException = true;
                         console.warn(`The data masking rule ${item} is ignored because it matches empty strings. Please modify this rule.`);
                         break;
-                    } 
-                    
+                    }
+
                     ruleApplied = true;
                     text = modifiedText;
                 }
@@ -76,6 +76,10 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
             }
         }
     }
+
+    // Escape leading '#' so markdown doesn't render masked content as a heading,
+    // which would hide it from the customer's view (trimmed-at-start bug).
+    text = text.replace(/^(#+)/gm, "\\$1");
 
     action.payload.text = text;
     return action;
