@@ -7,6 +7,10 @@ on:
     paths:
       - 'chat-components/**'
 
+permissions:
+  contents: read       # For checkout
+  actions: write       # For downloading and uploading artifacts
+
 jobs:
   build:
     if: github.repository == 'microsoft/omnichannel-chat-widget'
