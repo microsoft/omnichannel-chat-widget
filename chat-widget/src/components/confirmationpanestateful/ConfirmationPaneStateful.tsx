@@ -69,7 +69,7 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
 
     // Move focus to the first button
     useEffect(() => {
-        preventFocusToMoveOutOfElement(controlProps.id as string);
+        const cleanup = preventFocusToMoveOutOfElement(controlProps.id as string);
         const focusableElements: HTMLElement[] | null = findAllFocusableElement(`#${controlProps.id}`);
         requestAnimationFrame(() => {
             if (focusableElements && focusableElements.length > 0 && focusableElements[0]) {
@@ -84,6 +84,17 @@ export const ConfirmationPaneStateful = (props: IConfirmationPaneStatefulParams)
             Event: TelemetryEvent.UXConfirmationPaneCompleted,
             ElapsedTimeInMilliseconds: uiTimer.milliSecondsElapsed
         });
+        return () => {
+            // internal tracking: when the confirmation pane unmounts (page reload,
+            // parent state change, or any path that bypasses onConfirm /
+            // onCancel) the tab indices that were forced to -1 on sibling
+            // focusable elements must be restored, otherwise Tab order
+            // remains broken and focus can be trapped inside the widget.
+            // setTabIndices is a no-op when initialTabIndexMap is already
+            // empty (onConfirm / onCancel already restored).
+            setTabIndices(elements, initialTabIndexMap, true);
+            cleanup();
+        };
     }, []);
 
     return (

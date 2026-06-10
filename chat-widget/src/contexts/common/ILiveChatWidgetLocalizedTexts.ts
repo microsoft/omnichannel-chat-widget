@@ -163,6 +163,12 @@ export interface ILiveChatWidgetLocalizedTexts {
     MIDDLEWARE_BANNER_FILE_IS_MALICIOUS?: string;
 
     /**
+     * Success message announced by screen readers when a file is successfully sent.
+     * e.g. "File sent successfully."
+     */
+    MIDDLEWARE_BANNER_FILE_SENT?: string;
+
+    /**
      * Success message, indicating the email address introduced has been registered to receive the transcript.
      */
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS?: string;
@@ -172,4 +178,18 @@ export interface ILiveChatWidgetLocalizedTexts {
      * {0} - e-mail address introduced
      */
     MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_ERROR?: string;
+
+    /**
+     * Screen-reader prefix spoken before a success banner message, so SR users hear
+     * the explicit state word (e.g. "Success. Email will be sent after chat ends!").
+     * Include trailing spacing/punctuation as needed for the target locale.
+     */
+    MIDDLEWARE_SR_PREFIX_SUCCESS?: string;
+
+    /**
+     * Screen-reader prefix spoken before an error banner message, so SR users hear
+     * the explicit state word (e.g. "Error. Email foo@bar.com could not be saved...").
+     * Include trailing spacing/punctuation as needed for the target locale.
+     */
+    MIDDLEWARE_SR_PREFIX_ERROR?: string;
 }

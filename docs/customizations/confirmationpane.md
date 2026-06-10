@@ -54,6 +54,7 @@ confirmButtonText | string | No | Sets the text inside the confirm button | "Clo
 confirmButtonAriaLabel | string | No | Sets the `aria-label` attribute on the confirm button | "Close chat"
 cancelButtonText | string | No | Sets the text inside the cancel button | "Cancel"
 cancelButtonAriaLabel | string | No | Sets the `aria-label` attribute on the cancel button | "Cancel. Return to Chat"
+buttonGroupAriaLabel | string | No | Sets the `aria-label` attribute on the button group container (announced by screen readers when focus moves to the group) | "Actions"
 brightnessValueOnDim | string | No | When the confirmation pane is brought to front, the background (chat widget) will be dimmed. This prop sets the background brightness value. Range: 0 (transparent) ~ 1 | "0.2"
 dir | "rtl"\|"ltr"\|"auto" | No | The locale direction under the `ConfirmationPane` component | "ltr"
 onConfirm | () => void | No | Sets the behavior after the confirm button is clicked | [Proceeds to close the chat widget]

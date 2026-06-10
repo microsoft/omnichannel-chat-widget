@@ -254,7 +254,9 @@ function InputValidationPane(props: IInputValidationPaneProps) {
                         className={props.styleProps?.classNames?.buttonGroupClassName}
                         styles={buttonGroupStyles}
                         tabIndex={-1}
-                        id={elementId + "-buttongroup"}>
+                        id={elementId + "-buttongroup"}
+                        role="group"
+                        aria-label={props.controlProps?.buttonGroupAriaLabel || defaultInputValidationPaneControlProps.buttonGroupAriaLabel}>
 
                         {!props.controlProps?.hideSendButton && (decodeComponentString(props.componentOverrides?.sendButton) ||
                             <PrimaryButton

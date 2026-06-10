@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setTabIndices } from "./utils";
-
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setAriaHiddenForSiblings, preventFocusToMoveOutOfElement, setTabIndices } from "./utils";
 import { AriaTelemetryConstants } from "./Constants";
 import { Md5 } from "md5-typescript";
 import { cleanup } from "@testing-library/react";
@@ -68,6 +67,61 @@ describe("utils unit test", () => {
         const result3 = findParentFocusableElementsWithoutChildContainer(elementId3);
         expect(result3?.length).toBe(1);
 
+    });
+
+    it("keeps focus contained when tabbing between the first and last focusable elements", () => {
+        document.body.innerHTML =
+            "<div id=\"widget\">" +
+            "  <button id=\"first\">First</button>" +
+            "  <button id=\"last\">Last</button>" +
+            "</div>";
+
+        const firstFocusableElement = document.getElementById("first") as HTMLElement;
+        const lastFocusableElement = document.getElementById("last") as HTMLElement;
+
+        preventFocusToMoveOutOfElement("widget");
+
+        firstFocusableElement.focus();
+        firstFocusableElement.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true }));
+        expect(document.activeElement).toBe(lastFocusableElement);
+
+        lastFocusableElement.focus();
+        lastFocusableElement.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: false, bubbles: true, cancelable: true }));
+        expect(document.activeElement).toBe(firstFocusableElement);
+    });
+
+    it("keeps focus on a single focusable widget element when tabbing in either direction", () => {
+        document.body.innerHTML =
+            "<div id=\"widget\">" +
+            "  <button id=\"chat-button\">Let's chat</button>" +
+            "</div>";
+
+        const chatButton = document.getElementById("chat-button") as HTMLElement;
+
+        preventFocusToMoveOutOfElement("widget");
+
+        chatButton.focus();
+        chatButton.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: true, bubbles: true, cancelable: true }));
+        expect(document.activeElement).toBe(chatButton);
+
+        chatButton.dispatchEvent(new KeyboardEvent("keydown", { key: "Tab", shiftKey: false, bubbles: true, cancelable: true }));
+        expect(document.activeElement).toBe(chatButton);
+    });
+
+    it("cleans up event listeners when cleanup function is called", () => {
+        document.body.innerHTML =
+            "<div id=\"widget\">" +
+            "  <button id=\"only\">Only</button>" +
+            "</div>";
+
+        const onlyButton = document.getElementById("only") as HTMLElement;
+        const cleanup = preventFocusToMoveOutOfElement("widget");
+        const spy = jest.spyOn(onlyButton, "removeEventListener");
+
+        cleanup();
+
+        expect(spy).toHaveBeenCalledWith("keydown", expect.any(Function));
+        spy.mockRestore();
     });
 
     it("Test getIconText", () => {
@@ -365,5 +419,53 @@ describe("utils unit test", () => {
     it("should parse false boolean value to lower case string", () => {
         const property = false;
         expect(parseLowerCaseString(property)).toEqual("false");
+    });
+
+    it("Test setAriaHiddenForSiblings - should hide siblings and restore them", () => {
+        document.body.innerHTML = `
+            <div id="page-root">
+                <div id="sibling-before">Background content before</div>
+                <div id="oc-lcw"><button>Chat</button></div>
+                <div id="sibling-after">Background content after</div>
+            </div>
+        `;
+        const stateMap: Map<Element, string | null> = new Map();
+
+        setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+        expect(document.getElementById("sibling-before")).toHaveAttribute("aria-hidden", "true");
+        expect(document.getElementById("sibling-after")).toHaveAttribute("aria-hidden", "true");
+        expect(document.getElementById("oc-lcw")).not.toHaveAttribute("aria-hidden");
+
+        setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+        expect(document.getElementById("sibling-before")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("sibling-after")).not.toHaveAttribute("aria-hidden");
+        expect(stateMap.size).toBe(0);
+    });
+
+    it("Test setAriaHiddenForSiblings - should preserve pre-existing aria-hidden on restore", () => {
+        document.body.innerHTML = `
+            <div id="page-root">
+                <div id="intentionally-hidden" aria-hidden="true">Already hidden</div>
+                <div id="oc-lcw"><button>Chat</button></div>
+                <div id="visible-sibling">Visible</div>
+            </div>
+        `;
+        const stateMap: Map<Element, string | null> = new Map();
+
+        setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+        expect(document.getElementById("intentionally-hidden")).toHaveAttribute("aria-hidden", "true");
+        expect(document.getElementById("visible-sibling")).toHaveAttribute("aria-hidden", "true");
+
+        setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+        // pre-existing aria-hidden="true" must be preserved
+        expect(document.getElementById("intentionally-hidden")).toHaveAttribute("aria-hidden", "true");
+        // element with no original aria-hidden must have it removed
+        expect(document.getElementById("visible-sibling")).not.toHaveAttribute("aria-hidden");
+    });
+
+    it("Test setAriaHiddenForSiblings - should do nothing when element not found", () => {
+        document.body.innerHTML = "<div id=\"other\">content</div>";
+        const stateMap: Map<Element, string | null> = new Map();
+        expect(() => setAriaHiddenForSiblings("nonexistent-id", true, stateMap)).not.toThrow();
     });
 });

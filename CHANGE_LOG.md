@@ -9,12 +9,91 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Added style overrides for hover and focus on adaptive cards
+- Bumped `@microsoft/omnichannel-chat-components` to `1.1.17-main.5b3f077`.
+- Bumped `@microsoft/omnichannel-chat-sdk` to `1.11.9-main.47a6498`. This includes diagnostic telemetry fields in ChatConfigRetrievalFailure events and pulls in the upstream fix that pins the ACS WebChat adapter to exact `0.0.1-beta.8` (instead of `^0.0.1-beta.6` which resolved to the rogue `0.0.1-beta-1` per semver §11), restoring the fast-poll path for the first bot reply.
+
+### Tests
+- [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for internal tracking (AdaptiveCard TalkBack non-radio duplicate labels), internal tracking (ChatButton browse-mode duplicate stops), internal tracking (agent profile name not announced), internal tracking (blank announcement live regions), internal tracking (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
+
+### Fixed
+- [Telemetry][Security] Redact Azure SAS query-parameter values (`sig`, `sv`, `se`, `sp`, etc.) in any URL embedded in a telemetry payload before it reaches the Aria, AppInsights, console, or custom logger sinks. Applied at the central dispatch boundary in `TelemetryManager.logTelemetry`, so all current and future emitters into `LCW_ConfigValidationEvents` and other scenarios are covered. Closes a credential-leak class surfaced by ICM 801760615 where customer-supplied blob asset URLs in widget customization props were shipping full SAS tokens to Aria.
+- [Bug] Pre-chat survey pane no longer renders collapsed to its intrinsic content size. The focus-capture wrapper added around `<PreChatSurveyPane>` to host the polite live region now declares `width: 100%; height: 100%`, restoring the inherited sizing chain that the inner pane relies on (`width: inherit; height: inherit`)
+- [Bug] `createMarkdown` no longer crashes with `Cannot read properties of undefined (reading 'references')` when callers invoke `md.render` / `md.renderInline` without an `env` argument. Default to `env ?? {}` so the standard markdown-it inline `link` and block `reference` rules can safely probe `state.env.references`. Without this, any agent message containing markdown reference-style links (`[a][b]`) or definitions (`[id]: url "title"`) — which the ACS adapter `0.0.1-beta.8` now delivers raw — throws inside the activity-rendering middleware pipeline, escapes the React error boundary, and causes the entire widget to unmount.
+- [Telemetry] Fixed HTML sanitization monitoring telemetry to log RemovedTags and RemovedAttributes data in Description field as JSON, working around TelemetryHelper.logActionEvent bypassing CustomProperties serialization (internal tracking)
+- [A11y] AdaptiveCard wrapper now strips redundant `aria-label` / `aria-labelledby` from non-radio inputs (Input.Text including isMultiline=true, Input.Date, Input.Number, Input.Toggle, multi-select ChoiceSet checkbox) when a visible `<label for>` already names the control, eliminating TalkBack duplicate-label announcements (internal tracking)
+- [A11y] Modal pane visibility (`showConfirmationPane`, `showEmailTranscriptPane`) no longer survives a page reload, and Confirmation/Citation/EmailTranscript panes now restore sibling tab indices on unmount — fixes Tab focus being trapped inside the rehydrated widget after a link activation + reload (internal tracking)
+- [A11y] Added end-to-end regression scaffold (designer-mode mock + Playwright spec, currently skipped pending an integration harness that re-resolves WebChat's overrideLocalizedStrings after the first agent activity) to verify NVDA reads the full agent profile name (e.g. "Sara Smith said:") instead of bare avatar initials when navigating agent messages (internal tracking). The middleware contract is already covered by the unit catcher `localizedStringsBotInitialsMiddleware.agentName.a11y.spec.ts`.
+- [A11y] WebChat notification toaster (`role="log"`) now carries an `aria-label` so screen readers don't announce the empty live region as "blank"; removed the dead static `role="alert"` file-sent region that was being announced empty (internal tracking)
+- [VRT] Stabilized post-chat survey pane snapshots by intercepting external survey iframe requests with a deterministic fixture
+- [A11y] Transfer system messages now reset cached agent names so later bot messages do not announce stale agents
+- [A11y] Pre-chat survey pane now owns a managed polite live region so stale focus text is not re-announced
+- [A11y] Post-chat survey iframe now has a default accessible title for meaningful screen-reader frame announcements
+- [A11y] Post-chat loading pane subtitle is now announced through polite status live-region semantics
+- [A11y] Compact Adaptive Card ChoiceSet selects no longer carry redundant labels that screen readers announce twice while preserving composite required/error labels
+- [A11y] Adaptive Card submit and sign-in buttons now announce as plain buttons instead of toggle controls
+- [A11y] Citation cards now expose a single stable accessible link label and avoid duplicate title announcements
+- [A11y] Fixed focus trap for single-focusable-element case — Tab/Shift+Tab no longer escapes the widget when only the chat button is present
+- [A11y] Collapsed chat button remains reachable without trapping keyboard users; Tab and Shift+Tab can move focus back to the host page
+- [A11y] Bot message avatar alt text now uses the full agent name instead of initials for screen readers
+- [A11y] Screen reader now announces "File sent successfully." when an attachment upload completes; uses append-and-remove assertive aria-live pattern for reliable announcement on Android TalkBack/WebView. Announcement text is customizable via `MIDDLEWARE_BANNER_FILE_SENT`.
+- [A11y] Adaptive card radio button groups now include aria-setsize and aria-posinset attributes for correct option count announcement
+- [A11y] Email transcript SR announcement prefixed with localized "Success." / "Error." via new `MIDDLEWARE_SR_PREFIX_SUCCESS` / `MIDDLEWARE_SR_PREFIX_ERROR` keys so screen readers announce the outcome immediately
+- [A11y] Adjacent markdown links with the same target are merged into one focusable link to avoid duplicate tab stops
+- [A11y] Email transcript focus on submit goes directly to the notification banner; skips the chat-widget shell detour
+
+### Added
+- [A11y] Documented accessibility catcher confidence tiers and NVDA setup guidance for foundation follow-ups
+- [A11y] E2E Playwright tests for 5 accessibility defects: focus trap, bot initials alt text, adaptive card radio count, attachment upload announcement, email notification aria-live regions
+- [A11y] Added shared accessibility tooling scaffolding: Storybook mobile/reflow/zoom profiles, package-level a11y Jest harnesses, and public accessibility setup/validation docs
+- [A11y] Phase 1 foundation: axe-core (`@axe-core/playwright`) + Microsoft Accessibility Insights story-by-story scanners, `forced-colors` and `contrast-more` Storybook profiles, opt-in `@axe-core/react` dev hook, non-gating PR workflow uploading reports as artifacts
+- [A11y] Phase 2 utilities (`chat-widget/automation_tests/e2e/utility/`): `liveRegionObserver` (aria-live mutation observer), `keyboardLoop` (Tab/Shift+Tab traversal helpers), `a11yTree` (accessibility-tree shape assertions), `axeOnPage` (live-page axe runs)
+- [A11y] Phase 2 specs (`chat-widget/automation_tests/e2e/areas/accessibility/`): `citationCard` (link `title` attribute + single-link guarantee), `markdownAnchorMerge` (adjacent same-href anchors collapse to one tab stop), `mobileFocusTrap` (Pixel 5 emulation of the focus-trap regression class)
+- [A11y] Phase 3 utilities + scaffolding for screen-reader and keyboard layers: `expectTabOrder` (named tab-order assertion), `srAssert` (Guidepup-backed NVDA assertion + `phraseFor` lookup), `tools/accessibility/nvda-phrases.json` (event→phrase catalog with NVDA version pin), `tools/accessibility/setupNvda.ps1` (silent NVDA install for Windows runners), `focus-ring` and `focus-ring-forced-colors` Storybook screenshot profiles, `.github/workflows/accessibility-sr.yml` (soak-only, concurrency-limited NVDA spec workflow)
+- [A11y] Phase 3 specs: `keyboard/keyboardFlows.spec.ts` (6 critical-flow keyboard tests: open chat, send, attachment cycle, header reachability, Esc/close, re-open), `keyboard/skipLink.spec.ts` (`test.todo` placeholders documenting the skip-link / landmark gap), `sr-nvda/nvdaCriticalFlows.spec.ts` (10 NVDA spec sweep — auto-skips off-Windows / no-NVDA / no-`@guidepup/guidepup`), and `NotDeliveredTimestamp.a11y.test.tsx` RTL unit test asserting the retry control is a native `<button>` (regression catcher for internal tracking)
+- [A11y] Per-package axe rule disable list (`accessibility-disable-rules.json`) covering 7 story-isolation rules (`landmark-one-main`, `page-has-heading-one`, `region`, `html-has-lang`, `html-lang-valid`, `document-title`, `bypass`) so axe results highlight real component issues instead of canvas artifacts. Drives chat-widget Storybook violations from 19 → 1 (the lone real `aria-command-name` finding remains as a tracked work item).
+- [A11y] `axeScan.cjs` extended with `--disable-rules`, `--gate-rules`, and `A11Y_SCAN_DISABLE_RULES` env support; new `yarn scan:a11y:axe:gated` script gates `image-alt` and `button-name` (currently 0 violations across both packages).
+- [Security] Added monitor-only HTML sanitization to gather telemetry before enforcing stricter allowlist rules (Phase 1). Tracks OrganizationId, ConversationId, RemovedTags, RemovedAttributes, and ExecutionTimeMs when content would be blocked by strict allowlist. Runs asynchronously to avoid message latency. Includes 27 unit tests.
+- [iOS] Added `inputFontSize` property to `IAdaptiveCardStyles` (default `16px`) to prevent iOS Safari auto-zoom on input focus. Applies to adaptive card inputs and the send box textarea. Clients can override via `adaptiveCardStyles.inputFontSize` (minimum 16px enforced).
+- [Mid-Auth] Added mid-conversation authentication support: users can start chat unauthenticated and upgrade to authenticated when they sign in
+- [Mid-Auth] Added `FacadeChatSDK` methods: `configureMidAuthState`, `handlePendingUnauthenticatedState`, `handleAuthenticatedState`, `setMidAuthUnauthenticatedState`, `clearAuthState`, `migrateConversationToAuthenticated`
+- [Mid-Auth] Added `isUserAuthenticated` state tracking with `SET_USER_AUTHENTICATED` action for reconnect support
+- [Mid-Auth] Added `isMidAuthEnabled` utility in `authHelper.ts` and `liveChatConfigUtils.ts`
+- [Mid-Auth] Added `wasAuthenticated` flag in `startChat` optional params for auth transition detection
+- [Mid-Auth] Added auth state change broadcast listeners (`MidConversationAuthSucceeded`, `MidConversationAuthReset`) in `LiveChatWidgetStateful`
+- [Mid-Auth] Added telemetry events: `MidConversationAuthSucceeded`, `MidConversationAuthFailed`, `MidConversationAuthReset`
+- [Mid-Auth] Added mid-auth empty token handling in `authHelper.handleAuthentication` (returns `result: true` with null token instead of throwing)
+- [Mid-Auth] Added `isMidAuthEnabled` option passthrough to `getAuthToken` for Power Pages support
+
+### Changed
+- Uptake `@microsoft/omnichannel-chat-components@1.1.17-main.f21df63` so consumers receive the iOS Safari prechat dropdown blank-option fix from #899
+- Updated outdated npm dependencies across packages.
+- Updated OC SDK package that has new ACS adapter for beta.6 w/ botframework
+- Update GitHub Actions (checkout, setup-node) from v2/v3 to v4 and Node.js from 20.x to 22.x across chat-widget workflows to address Node.js 20 deprecation in GitHub Actions
+- Use `npx npm@11.12.1` for publish step to fix OIDC trusted publishing (npm 10.9.7 can't do OIDC, and `npm install -g` crashes during self-upgrade)
+
+### Changed
+
+- Uptake @microsoft/omnichannel-chat-components@1.1.17-main.d4c4cb2
+- Increased typing animation duration from 3500ms to 4500ms in default WebChat styles
 - Add `github.repository` guard to all release workflows to prevent them from running on forks
 - Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.5ad343b (adds en-AU locale support via ocsdk 0.5.22)
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.941a049 (fixes Safari/iOS AMS iframe hang during initialize)
+- Uptake @microsoft/omnichannel-chat-sdk@1.11.9-main.169d422 (amsclient CDN fallback for file attachments)
 
 ### Fixed
 
+- Fixed email transcript dialog persisting across conversations by resetting `showEmailTranscriptPane` state during chat close cleanup
+- [A11Y] Replace `<span role="button">` with native `<button>` for Retry element in failed message timestamp so screen readers announce "Retry, button" (internal tracking)
+- Fix iOS Safari auto-zoom on prechat survey input fields by setting default font-size to 16px for text input, multiline text input, and multichoice input elements
+- Resolved underscores in a system message renders the text weirdly in iOS
+- Fix Safari/iOS word spacing in system messages, chat bubbles, and avatar text by reverting emoji font additions from default styles (IcM 717304411)
+- Fix file attachments broken for npm consumers and Safari/iOS WebView by updating chat-sdk with amsclient CDN fallback
 - Fix npm publish failing for prerelease versions by adding `--tag latest` to publish commands
+
+### Security
+
+- Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
+- Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
 
 ### Changed
 
@@ -28,7 +107,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- [Persistent Chat History] Add fix for the scroll bar jumping during history load
+- [A11Y] Added accessible name and group role to Cancel/Send button group in InputValidationPane and ConfirmationPane to fix TalkBack silent focus.
+- [A11Y] Added `AdaptiveCardAccessibilityWrapper` to patch radio buttons in Adaptive Card `Input.ChoiceSet` (style: expanded) with correct `aria-setsize`, `aria-posinset`, and position-encoded `aria-label` (e.g. "Standard, 1 of 2") so Android TalkBack announces the correct option count
 - [Persistent Chat History] Added fix for raw json adaptive cards in the persistent chat history messages
 - [Persistent Chat History] Added support for adaptive cards in the persistent chat history messages
 - [A11Y] Added focus on citation pane close button when citation pane is opened
@@ -55,6 +135,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [A11Y] Fixed TalkBack focus escaping the chat widget on Android when the widget panel is open
 - Fixed issue with persistent chat history not properly computing flags for history messages.
 - Fixed uncaught exception error in post chat survey when closing the survey
 - Fixed disconnection banner persisting when closing and reopening chat widget
@@ -730,7 +811,12 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [A11y] `ChatButton` no longer produces duplicate NVDA / JAWS browse-mode stops on the title / subtitle Labels — the text container is excluded from the accessibility tree and the button owns a consolidated `aria-label` (internal tracking)
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
+
+### Security
+
+- Upgrade `yaml` 1.10.2 → 1.10.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
 - Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
 - Fixed header text overflow issue where long titles would expand leftward and cover the icon image

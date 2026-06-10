@@ -64,6 +64,7 @@
     "husky": "^9.1.7",
     "jest": "^27.3.1",
     "jest-dom": "^4.0.0",
+    "jest-axe": "^10.0.0",
     "jest-image-snapshot": "^4.5.1",
     "jest-transform-stub": "^2.0.0",
     "json": "^11.0.0",
@@ -71,6 +72,10 @@
     "metro-react-native-babel-preset": "^0.77.0",
     "p-defer": "^4.0.1",
     "playwright": "^1.20.0",
+    "@axe-core/playwright": "^4.10.2",
+    "@axe-core/react": "^4.10.2",
+    "accessibility-insights-scan": "^3.0.0",
+    "@guidepup/guidepup": "^0.24.1",
     "postcss": "^8.3.9",
     "react": "^18.3.1",
     "react-docgen-typescript-plugin": "^1.0.8",
@@ -79,7 +84,7 @@
     "react-test-renderer": "^18.3.1",
     "rimraf": "^6.0.1",
     "storybook-addon-playwright": "^4.9.2",
-    "swiper": "^9.0.5",
+    "swiper": "^12.1.2",
     "terser-webpack-plugin": "^4.2.3",
     "thread-loader": "^2.1.3",
     "ts-loader": "^9.2.6",
@@ -90,8 +95,8 @@
   "dependencies": {
     "@azure/core-tracing": "^1.2.0",
     "@microsoft/applicationinsights-web": "^3.3.6",
-    "@microsoft/omnichannel-chat-components": "1.1.17-main.940d996",
-    "@microsoft/omnichannel-chat-sdk": "1.11.9-main.5ad343b",
+    "@microsoft/omnichannel-chat-components": "1.1.17-main.5b3f077",
+    "@microsoft/omnichannel-chat-sdk": "1.11.9-main.47a6498",
     "@opentelemetry/api": "^1.9.0",
     "abort-controller": "^3",
     "abort-controller-es5": "^2.0.1",
@@ -115,9 +120,22 @@
     "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook",
     "build": "yarn clean && yarn lint && yarn build:esm && yarn build:cjs && tsc",
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
+    "test:a11y": "jest -c jest.config.a11y.cjs --runInBand --force-exit",
     "test:e2e": "cd automation_tests && yarn test",
     "test:e2e:build": "yarn build-sample && cd automation_tests && yarn test",
     "test:visual": "jest -c jest.config.visual.cjs --verbose",
+    "test:visual:mobile:ios": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=mobile-iphone yarn test:visual",
+    "test:visual:mobile:android": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=mobile-android yarn test:visual",
+    "test:visual:reflow": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=reflow-320 yarn test:visual",
+    "test:visual:zoom": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=zoom-200 yarn test:visual",
+    "test:visual:forced-colors": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=forced-colors yarn test:visual",
+    "test:visual:contrast-more": "cross-env STORYBOOK_BROWSERS=chromium STORYBOOK_SCREENSHOT_PROFILE=contrast-more yarn test:visual",
+    "scan:a11y:axe": "node ../tools/accessibility/axeScan.cjs",
+    "scan:a11y:axe:gated": "node ../tools/accessibility/axeScan.cjs --gate-rules image-alt,button-name",
+    "scan:a11y:axe:build": "yarn build-storybook && yarn scan:a11y:axe",
+    "scan:a11y:insights": "node ../tools/accessibility/insightsScan.cjs",
+    "scan:a11y:insights:build": "yarn build-storybook && yarn scan:a11y:insights",
+    "scan:a11y": "yarn build-storybook && yarn scan:a11y:axe && yarn scan:a11y:insights",
     "test:all": "yarn test:unit && yarn test:visual",
     "build:esm": "babel ./src --config-file ./babel.esm.config.json --out-dir lib/esm --extensions .ts,.js,.tsx --ignore **/*.test.ts,**/*.stories.tsx,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx",
     "build:cjs": "babel ./src --config-file ./babel.config.json --out-dir lib/cjs --extensions .ts,.js,.tsx --ignore **/*.test.ts,**/*.stories.tsx,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx",
@@ -133,7 +151,7 @@
     "prepush": "yarn lint && yarn danger:prepush",
     "danger:prepush": "yarn danger local --dangerfile dangerfile.js --base main",
     "pretest:visual": "yarn playwright install",
-    "prepare": "husky",
+    "prepare": "cd .. && husky chat-widget/.husky",
     "clean": "rimraf lib",
     "dev": "concurrently \"yarn build:esm:watch\" \"webpack --config ./webpack.config.cjs --watch\""
   },
@@ -153,13 +171,14 @@
     "**/semver": "7.5.4",
     "**/lodash": "4.17.23",
     "**/@babel/runtime-corejs3": "^7.29.0",
-    "**/brace-expansion": "2.0.2",
-    "**/swiper": "9.4.1"
+    "**/brace-expansion": "2.0.3",
+    "**/swiper": "12.1.2"
   },
   "jest": {
     "verbose": true,
     "reporters": [
       "default"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

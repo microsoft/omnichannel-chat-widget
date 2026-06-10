@@ -6,7 +6,7 @@ export interface IFacadeChatSDKInput {
     chatConfig: ChatConfig, 
     isAuthenticated: boolean, 
     isSDKMocked: boolean,
-    getAuthToken?: (authClientFunction?: string) => Promise<string | null>;
+    getAuthToken?: (authClientFunction?: string, options?: { isMidAuthEnabled: boolean }) => Promise<string | null>;
 }
 
 export interface PingResponse {

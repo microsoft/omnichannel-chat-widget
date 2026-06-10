@@ -9,6 +9,7 @@ import { Constants, MimeTypes, WebChatMiddlewareConstants } from "../../../../..
 import React, { Dispatch } from "react";
 import { getFileAttachmentIconData, isInlineMediaSupported } from "../../../common/utils/FileAttachmentIconManager";
 
+import AdaptiveCardAccessibilityWrapper from "./attachments/AdaptiveCardAccessibilityWrapper";
 import Attachment from "./attachments/Attachment";
 import { BroadcastEvent } from "../../../../../common/telemetry/TelemetryConstants";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -100,11 +101,11 @@ export const createAttachmentMiddleware = (enableInlinePlaying: boolean | undefi
 
         if (type === WebChatMiddlewareConstants.adaptiveCard || Constants.supportedAdaptiveCardContentTypes.indexOf(contentType) >= 0) {
             return (
-                <div id={attachmentId} style={atttachmentAdaptiveCardStyles}>
+                <AdaptiveCardAccessibilityWrapper id={attachmentId} style={atttachmentAdaptiveCardStyles}>
                     {next(...args)}
-                </div>
+                </AdaptiveCardAccessibilityWrapper>
             );
-        } else if (contentType.startsWith(Constants.adaptiveCardContentTypePrefix)) {
+        }else if (contentType.startsWith(Constants.adaptiveCardContentTypePrefix)) {
             console.warn(`${contentType} adaptive card type is currently not supported.`);
         }
 

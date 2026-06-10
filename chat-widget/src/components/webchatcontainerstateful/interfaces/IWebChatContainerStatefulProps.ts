@@ -29,4 +29,11 @@ export interface IWebChatContainerStatefulProps {
     adaptiveCardStyles?: IAdaptiveCardStyles;
     sendBoxTextBox?: ISendBox;
     webChatHistoryMobileAccessibilityLabel?: string;
+    /**
+     * Accessible name applied to WebChats notification toaster region
+     * (`role="log"`). When omitted, defaults to "Chat notifications" so
+     * screen readers don't announce the empty live region as "blank"
+     * (internal tracking).
+     */
+    webChatNotificationRegionAccessibilityLabel?: string;
 }

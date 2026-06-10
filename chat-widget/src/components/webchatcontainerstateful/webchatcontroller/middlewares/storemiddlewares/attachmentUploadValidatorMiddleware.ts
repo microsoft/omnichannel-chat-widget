@@ -16,6 +16,28 @@ import { WebChatActionType } from "../../enums/WebChatActionType";
 
 const MBtoBRatio = 1000000;
 
+const announceFileSent = (message: string) => {
+    // TalkBack on Android WebView reliably announces newly *appended*
+    // role="alert" nodes but often misses text-content updates on existing
+    // nodes. Wait 500ms for the send-box focus shift to settle, then inject
+    // a fresh alert element appended to document.body and remove it after 3s.
+    setTimeout(() => {
+        const el = document.createElement("div");
+        el.setAttribute("role", "alert");
+        el.setAttribute("aria-live", "assertive");
+        el.setAttribute("aria-atomic", "true");
+        el.style.cssText = "position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;";
+        el.textContent = message;
+        document.body.appendChild(el);
+        // Remove after TalkBack has had time to read it
+        setTimeout(() => {
+            if (el.parentNode) {
+                el.parentNode.removeChild(el);
+            }
+        }, 3000);
+    }, 500);
+};
+
 /*
 * If an attachment is invalid, delete this attachment from the attachments list
 * If the result attachment list is empty, return a dummy action
@@ -192,7 +214,14 @@ const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string
 
         if (payload?.activity.attachments && payload.activity.attachments.length > 0 &&
             payload?.activity?.attachments?.length === payload?.activity?.channelData?.attachmentSizes?.length) {
-            return next(validateAttachment(action, allowedFileExtensions, maxFileSizeSupportedByDynamics, localizedTexts));
+            const validatedAction = validateAttachment(action, allowedFileExtensions, maxFileSizeSupportedByDynamics, localizedTexts);
+
+            // Announce to screen readers that the file was sent when validation passes
+            if (validatedAction.payload?.activity?.attachments?.length > 0) {
+                announceFileSent(localizedTexts.MIDDLEWARE_BANNER_FILE_SENT ?? "File sent successfully.");
+            }
+
+            return next(validatedAction);
         }
     }
     return next(action);

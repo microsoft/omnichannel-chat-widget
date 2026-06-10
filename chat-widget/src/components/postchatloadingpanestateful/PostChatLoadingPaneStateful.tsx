@@ -1,5 +1,5 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
-import React, { Dispatch, useEffect } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { createTimer, findAllFocusableElement } from "../../common/utils";
 
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -15,7 +15,16 @@ import { defaultGeneralPostChatLoadingPaneStyleProps } from "./common/defaultgen
 import useChatContextStore from "../../hooks/useChatContextStore";
 
 let uiTimer : ITimer;
+
+type LoadingPaneLiveRegionControlProps = ILoadingPaneControlProps & {
+    "aria-atomic": "true";
+    "aria-live": "polite";
+};
+
 export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
+    const defaultSubtitleText = "Please take a moment to give us feedback about your chat experience. We are loading the survey for you now.";
+    const subtitleText = props.controlProps?.subtitleText ?? defaultSubtitleText;
+    const [announcedSubtitleText, setAnnouncedSubtitleText] = useState("");
 
     useEffect(() => {
         uiTimer = createTimer();
@@ -23,6 +32,14 @@ export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
             Event: TelemetryEvent.UXPostChatLoadingPaneStart
         });
     }, []);
+
+    useEffect(() => {
+        const timeout = window.setTimeout(() => {
+            setAnnouncedSubtitleText(subtitleText);
+        }, 0);
+
+        return () => window.clearTimeout(timeout);
+    }, [subtitleText]);
 
     const [state, ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     
@@ -33,15 +50,18 @@ export const PostChatLoadingPaneStateful = (props: ILoadingPaneProps) => {
         generalStyleProps: generalStyleProps
     };
 
-    const controlProps: ILoadingPaneControlProps = {
+    const controlProps: LoadingPaneLiveRegionControlProps = {
         id: "oc-lcw-postchatloading-pane",
         dir: state.domainStates.globalDir,
         hideIcon: true,
         hideTitle: true,
         hideSpinner: true,
         hideSpinnerText: true,
-        subtitleText: "Please take a moment to give us feedback about your chat experience. We are loading the survey for you now.",
-        ...props.controlProps
+        ...props.controlProps,
+        role: "status",
+        "aria-live": "polite",
+        "aria-atomic": "true",
+        subtitleText: announcedSubtitleText
     };
 
     // Move focus to the first button

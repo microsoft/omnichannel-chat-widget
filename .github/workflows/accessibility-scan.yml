@@ -1,0 +1,136 @@
+name: accessibility-scan
+
+# Foundation accessibility scan workflow.
+#
+# Runs both axe-core (via @axe-core/playwright) and Microsoft Accessibility
+# Insights against the built Storybook for each package. Both engines share
+# axe-core under the hood, but Accessibility Insights adds MS-curated
+# reporting that maps results to MAS rule IDs.
+#
+# This workflow is intentionally NON-GATING and runs off the PR path.
+# A11y is an offline test activity here: scans run on demand or on a
+# nightly schedule and surface their findings as artifacts. They do not
+# add to per-PR gate scope.
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Nightly at 09:00 UTC (~02:00 PT). Soak run; results land as artifacts.
+    - cron: '0 9 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: scan-${{ matrix.package }}
+    # Pinned to windows-2022 deliberately to match the chat-components and
+    # chat-widget PR-check matrix (windows-2022 in *-pr.yml). Bumping the
+    # runner image here without bumping it in the PR matrix would mean the
+    # nightly scan exercises a different OS than the per-PR build, which
+    # has historically masked Windows-specific Storybook build regressions.
+    # Tracked migration to windows-2025 ahead of windows-2022 deprecation
+    # in #920.
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        # Node 22.x for both packages — the chat-components PR check uses 22.x
+        # and we keep the scan job aligned so the storybook build is identical.
+        include:
+          - package: chat-components
+            node: 22.x
+          - package: chat-widget
+            node: 22.x
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install package
+        working-directory: ${{ matrix.package }}
+        run: yarn install --network-timeout 1000000
+
+      - name: Install Playwright Chromium
+        working-directory: ${{ matrix.package }}
+        run: yarn playwright install --with-deps chromium
+
+      - name: Build Storybook
+        working-directory: ${{ matrix.package }}
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+        run: yarn build-storybook
+
+      - name: axe-core scan
+        working-directory: ${{ matrix.package }}
+        # --fail-on=none: foundation pass is informational; this workflow is
+        # already off the PR gate (workflow_dispatch + nightly), so we let
+        # the step fail visibly inside the non-gating workflow rather than
+        # double-suppressing with continue-on-error.
+        run: yarn scan:a11y:axe --fail-on none
+
+      - name: Accessibility Insights scan
+        working-directory: ${{ matrix.package }}
+        run: yarn scan:a11y:insights
+
+      - name: Upload accessibility reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-reports-${{ matrix.package }}
+          path: |
+            ${{ matrix.package }}/accessibility-reports/**/*
+          if-no-files-found: warn
+
+  e2e-a11y:
+    # Phase 2 L2.C.1: a tagged "a11y" job runs only the
+    # automation_tests/e2e/areas/accessibility/ specs. They live in the
+    # broader E2E suite as well, but pulling them out makes a11y regressions
+    # visible without scrolling through the full E2E log.
+    name: chat-widget E2E a11y specs
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install chat-widget
+        working-directory: chat-widget
+        run: yarn install --network-timeout 1000000
+
+      - name: Install automation_tests
+        working-directory: chat-widget/automation_tests
+        run: yarn install --network-timeout 1000000
+
+      - name: Install Playwright (msedge channel)
+        working-directory: chat-widget
+        run: yarn playwright install --with-deps msedge chromium
+
+      - name: Build widget bundle (dist/out.js)
+        working-directory: chat-widget
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+        run: yarn build-sample
+
+      - name: Run a11y E2E specs only
+        working-directory: chat-widget/automation_tests
+        run: yarn jest --detectOpenHandles --runInBand --testPathPattern "e2e/areas/accessibility" --passWithNoTests
+
+      - name: Upload a11y E2E artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-e2e-artifacts
+          path: |
+            chat-widget/automation_tests/test-results/**/*
+            chat-widget/automation_tests/playwright-report/**/*
+          if-no-files-found: warn

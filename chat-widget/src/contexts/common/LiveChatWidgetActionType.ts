@@ -306,4 +306,10 @@ export enum LiveChatWidgetActionType {
         string: Sets/updates current bot avatar initials (used for dynamic refresh of persistent messages)
     */
     SET_BOT_AVATAR_INITIALS,
+
+    /*
+        Parameters:
+        true/false: Tracks if user has authenticated (pre-auth or mid-conversation) for reconnect support
+    */
+    SET_USER_AUTHENTICATED,
 }

@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import { createMarkdown } from "./createMarkdown";
 
 describe("createMarkdown - Numbered List Continuity", () => {
@@ -147,5 +150,125 @@ Check browser details Go to the additional details area of the customer summary 
         // Should properly indent multi-paragraph content
         expect(result).toContain("Check device details You can check");
         expect(result).toContain("Check browser details Go to");
+    });
+});
+
+describe("createMarkdown - Adjacent anchor merging (a11y)", () => {
+    const stripImgs = (html: string) => html.replace(/<img[^>]*>/g, "");
+    const countAnchors = (html: string) => (html.match(/<a\b[^>]*>/g) || []).length;
+
+    it("merges two adjacent anchors sharing the same href into a single focusable link", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1.](https://example.com) [View details](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        const text = stripImgs(result);
+        expect(text).toContain("1.");
+        expect(text).toContain("View details");
+        expect(result).toContain("href=\"https://example.com\"");
+    });
+
+    it("merges three adjacent anchors sharing the same href", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1.](https://example.com) [View](https://example.com) [details](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        const text = stripImgs(result);
+        expect(text).toContain("1.");
+        expect(text).toContain("View");
+        expect(text).toContain("details");
+    });
+
+    it("does not merge adjacent anchors with different hrefs", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[One](https://example.com/a) [Two](https://example.com/b)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(2);
+        expect(result).toContain("href=\"https://example.com/a\"");
+        expect(result).toContain("href=\"https://example.com/b\"");
+    });
+
+    it("does not merge raw HTML anchors because their attributes cannot be safely reconciled", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "<a href='https://example.com' aria-label='First'>1.</a> <a href=\"https://example.com\" aria-label=\"Second\">View details</a>";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(2);
+        expect(result).toContain("aria-label='First'");
+        expect(result).toContain("aria-label=\"Second\"");
+    });
+
+    it("merges same-href anchors inside a numbered list item", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "- [1.](https://example.com) [View details](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        expect(result).toContain("<ul>");
+    });
+
+    it("preserves whitespace between merged anchors so screen readers announce them separately", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1.](https://example.com) [View details](https://example.com)";
+        const result = markdown.render(input);
+
+        // Ensure merged content contains a space separator between "1." and "View details".
+        const merged = stripImgs(result).replace(/<[^>]+>/g, "");
+        expect(merged).toMatch(/1\.\s+View details/);
+    });
+
+    it("does not insert whitespace when adjacent links had no separator", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[A](https://example.com)[B](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        const merged = stripImgs(result).replace(/<[^>]+>/g, "");
+        expect(merged).toContain("AB");
+        expect(merged).not.toContain("A B");
+    });
+
+    it("adds only one open-in-new-window icon after merging same-href links", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1.](https://example.com) [View details](https://example.com)";
+        const result = markdown.render(input);
+
+        const openLinkIcons = result.match(/webchat__render-markdown__external-link-icon/g) || [];
+        expect(openLinkIcons.length).toBe(1);
+    });
+
+    it("leaves a solitary anchor untouched", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[Only](https://example.com)";
+        const result = markdown.render(input);
+
+        expect(countAnchors(result)).toBe(1);
+        expect(result).toContain("href=\"https://example.com\"");
+    });
+});
+
+describe("createMarkdown - reference-link env safety", () => {
+    it("does not throw on reference-style citation definitions when no env is provided", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1]: https://example.com \"doc.html\"\n\nSee [1][1] for details.";
+        expect(() => markdown.render(input)).not.toThrow();
+    });
+
+    it("does not throw on inline reference-style links when no env is provided", () => {
+        const markdown = createMarkdown(false, false);
+        expect(() => markdown.render("Check [a][b] now.")).not.toThrow();
+    });
+
+    it("renderInline does not throw on reference-style links when no env is provided", () => {
+        const markdown = createMarkdown(false, false);
+        expect(() => markdown.renderInline("Check [a][b] now.")).not.toThrow();
+    });
+
+    it("disableMarkdownMessageFormatting variant does not throw on reference-style links", () => {
+        const markdown = createMarkdown(true, false);
+        expect(() => markdown.renderInline("Check [a][b] now.")).not.toThrow();
     });
 });

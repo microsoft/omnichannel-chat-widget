@@ -348,6 +348,10 @@ storybook-build
 # VRT diff
 **/__diff_output__
 
+# E2E test artifacts
+**/screenshots/
+**/junit.xml
+
 # Output
 lib/
 dist/

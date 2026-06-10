@@ -4,7 +4,6 @@ import React, { Dispatch, useCallback, useEffect, useRef } from "react";
 
 import { ILiveChatWidgetAction } from "../../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../../contexts/common/ILiveChatWidgetContext";
-import { KeyCodes } from "../../../../../../common/KeyCodes";
 import { Stack } from "@fluentui/react";
 import { defaultMiddlewareLocalizedTexts } from "../../../../common/defaultProps/defaultMiddlewareLocalizedTexts";
 import { defaultTimestampContentStyles } from "../defaultStyles/defaultTimestampContentStyles";
@@ -54,22 +53,21 @@ export const NotDeliveredTimestamp = ({ args }: any) => {
         focus("sendBox");
     }, [activity, focus, postActivity]);
 
-    const onRetryKeyEnter = (event: any) => {
-        if (event.code === KeyCodes.ENTER) {
-            event.preventDefault();
-            onRetryClick();
-        }
-    };
-
     return (
         <Stack style={contentStyles} dir={dir} horizontal>
             <span> {getTimestampHourMinute(timestamp)}</span>
             <span> &nbsp;-&nbsp; </span>
             <span style={failedTextStyles}> {state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_NOT_DELIVERED ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_NOT_DELIVERED} </span>
             <span> &nbsp;-&nbsp; </span>
-            <span style={retryTextStyles}
-                role="button"
-                onClick={onRetryClick} onKeyDown={onRetryKeyEnter} tabIndex={0}> {state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_RETRY ?? defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_RETRY} </span>
+            <button
+                style={retryTextStyles}
+                onClick={onRetryClick}
+            >
+                {
+                    state.domainStates.middlewareLocalizedTexts?.MIDDLEWARE_MESSAGE_RETRY ??
+                    defaultMiddlewareLocalizedTexts.MIDDLEWARE_MESSAGE_RETRY
+                }
+            </button>
         </Stack>
     );
 };

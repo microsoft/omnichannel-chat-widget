@@ -20,6 +20,7 @@ export interface IInputValidationPaneControlProps {
     invalidInputErrorMessageText?: string;
 
     isButtonGroupHorizontal?: boolean;
+    buttonGroupAriaLabel?: string;
 
     hideSendButton?: boolean;
     enableSendButton?: boolean;

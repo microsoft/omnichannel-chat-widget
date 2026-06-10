@@ -1,2 +1,6 @@
 # storybook output
 storybook-static
+
+
+# A11y scan output
+accessibility-reports/

@@ -8,11 +8,11 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Checking out for ${{ github.ref }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20.X
+          node-version: 22.x
       - name: Update package version
         working-directory: chat-widget
         run: npx version-from-git --no-git-tag-version

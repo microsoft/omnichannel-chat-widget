@@ -32,6 +32,7 @@ import { shouldLoadPersistentChatHistory } from "../livechatwidget/common/liveCh
 import { useChatContextStore } from "../..";
 import useFacadeSDKStore from "../../hooks/useFacadeChatSDKStore";
 import usePersistentChatHistory from "./hooks/usePersistentChatHistory";
+import { patchCitationAnchorsForA11y } from "./common/utils/citationA11y";
 
 let uiTimer: ITimer;
 
@@ -71,6 +72,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
     // Use iOS-optimized emoji font that prioritizes system-ui for proper emoji rendering
     const fontFamilyWithEmojis = createIOSOptimizedEmojiFont(primaryFont);
+
+    // Enforce minimum input font-size to prevent iOS Safari auto-zoom on focus
+    const configuredInputFontSize = props.webChatContainerProps?.adaptiveCardStyles?.inputFontSize ?? defaultAdaptiveCardStyles.inputFontSize;
+    const inputFontSize = parseFloat(configuredInputFontSize ?? String(Constants.minInputFontSizePx)) < Constants.minInputFontSizePx ? Constants.minInputFontSize : configuredInputFontSize;
 
     useEffect(() => {
         uiTimer = createTimer();
@@ -155,6 +160,61 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         return () => document.removeEventListener("click", clickHandler);
     }, [state]);
 
+    // Accessibility: Merge citation card's number badge and link text into a single
+    // focusable element. WebChat's LinkDefinitionItem renders an <a> containing a
+    // badge <div> (the number, e.g. "1") and a text <div> (the title). On iOS
+    // VoiceOver and Android TalkBack, those block-level descendants are otherwise
+    // announced as two separate focusable links. The patch sets a combined
+    // aria-label on the anchor and hides every descendant from the a11y tree so
+    // the whole card is announced as one link.
+    useEffect(() => {
+        const webChatRoot = document.getElementById("ms_lcw_webchat_root");
+        if (!webChatRoot) {
+            return;
+        }
+
+        patchCitationAnchorsForA11y(webChatRoot);
+
+        const observer = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+                if (m.type === "childList") {
+                    m.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            patchCitationAnchorsForA11y(node as ParentNode);
+                            // A child added inside an existing anchor (e.g. React
+                            // mounting OpenInNewWindowIcon after the anchor) means
+                            // the parent anchor needs to re-walk its descendants.
+                            const ancestor = (node as Element).parentElement?.closest?.(
+                                "a.webchat__link-definitions__list-item-box"
+                            );
+                            if (ancestor) {
+                                patchCitationAnchorsForA11y(ancestor);
+                            }
+                        }
+                    });
+                } else if (m.type === "attributes" && m.target.nodeType === Node.ELEMENT_NODE) {
+                    // React may strip our aria-hidden during a re-render; reapply
+                    // by re-patching the closest matching anchor ancestor.
+                    const target = m.target as Element;
+                    const ancestor = target.closest?.(
+                        "a.webchat__link-definitions__list-item-box"
+                    );
+                    if (ancestor) {
+                        patchCitationAnchorsForA11y(ancestor);
+                    }
+                }
+            }
+        });
+
+        observer.observe(webChatRoot, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["aria-hidden", "role", "tabindex", "inert"]
+        });
+        return () => observer.disconnect();
+    }, []);
+
     const minimizedStyles = state.appStates.isMinimized
         ? (shouldLoadPersistentHistoryMessages
             ? { visibility: "hidden", position: "absolute", width: 0, height: 0, overflow: "hidden", pointerEvents: "none" }
@@ -180,6 +240,47 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 chatHistoryElement.setAttribute(HtmlAttributeNames.ariaLabel, webChatContainerProps.webChatHistoryMobileAccessibilityLabel);
             }
         }
+
+        // internal tracking: WebChats BasicToaster renders a `role="log"` container
+        // with no accessible name. When the toaster is empty (typical idle
+        // state) screen readers traversing the page announce it as "blank".
+        // Inject an aria-label so the region has a meaningful name; the
+        // consumer can override via the new
+        // `webChatNotificationRegionAccessibilityLabel` prop. The toaster
+        // may not be rendered yet when this effect first runs, so observe
+        // for it via a MutationObserver scoped to the widget root (or, if
+        // not yet mounted, the widget container's parent) so we never fire
+        // on host-page mutations outside the widget subtree.
+        const toasterLabel =
+            webChatContainerProps?.webChatNotificationRegionAccessibilityLabel
+            ?? defaultWebChatContainerStatefulProps.webChatNotificationRegionAccessibilityLabel
+            ?? "Chat notifications";
+        const labelToaster = (root: ParentNode) => {
+            const toaster = root.querySelector(".webchat__toaster[role='log']");
+            if (toaster && !toaster.getAttribute(HtmlAttributeNames.ariaLabel)) {
+                toaster.setAttribute(HtmlAttributeNames.ariaLabel, toasterLabel);
+                return true;
+            }
+            return false;
+        };
+        // Prefer the widget root; if it is not yet in the DOM, fall back to
+        // `document` for the *initial* lookup only, then observe the most
+        // specific available scope (widget root if present, otherwise the
+        // widget's parent / document.body as a last resort). The observer
+        // re-resolves the widget root on every callback so we tighten scope
+        // as soon as it mounts.
+        let toasterObserver: MutationObserver | undefined;
+        const resolveScope = (): ParentNode => document.getElementById("ms_lcw_webchat_root") ?? document.body;
+        if (!labelToaster(resolveScope())) {
+            toasterObserver = new MutationObserver(() => {
+                const scope = resolveScope();
+                if (labelToaster(scope)) {
+                    toasterObserver?.disconnect();
+                    toasterObserver = undefined;
+                }
+            });
+            toasterObserver.observe(resolveScope(), { childList: true, subtree: true });
+        }
         dispatch({
             type: LiveChatWidgetActionType.SET_RENDERING_MIDDLEWARE_PROPS,
             payload: webChatContainerProps?.renderingMiddlewareProps
@@ -202,6 +303,10 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
                 }
             }
         }
+
+        return () => {
+            toasterObserver?.disconnect();
+        };
     }, []);
 
     useEffect(() => {
@@ -314,6 +419,12 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
         div[class="ac-input-container"] input.ac-multichoiceInput,
         div[class="ac-input-container"] select.ac-multichoiceInput {
             ${webChatContainerProps?.adaptiveCardStyles?.choiceInputPadding ? `padding: ${webChatContainerProps.adaptiveCardStyles.choiceInputPadding} !important;` : ""}
+        }
+
+        div[class="ac-input-container"] input,
+        div[class="ac-input-container"] textarea,
+        div[class="ac-input-container"] select {
+            font-size: ${inputFontSize} !important;
         }
 
         .ms_lcw_webchat_received_message>div.webchat__stacked-layout>div.webchat__stacked-layout__main>div.webchat__stacked-layout__content>div.webchat__stacked-layout__message-row>[class^=webchat]:not(.webchat__bubble--from-user)>.webchat__bubble__content {
@@ -432,6 +543,7 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
         .webchat__auto-resize-textarea__textarea.webchat__send-box-text-box__html-text-area {
             font-family: ${fontFamilyWithEmojis} !important;
+            font-size: ${inputFontSize} !important;
         }
 
         /* Suggested actions carousel previous/next navigation focus */

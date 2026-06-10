@@ -81,33 +81,79 @@ export const findAllFocusableElement = (parent: string | HTMLElement) => {
     return null;
 };
 
-export const preventFocusToMoveOutOfElement = (elementId: string) => {
+export const preventFocusToMoveOutOfElement = (elementId: string): (() => void) => {
     const container: HTMLElement | null = document.getElementById(elementId);
     if (!container) {
-        return;
+        return () => { /* no-op */ };
     }
 
     const focusableElements: HTMLElement[] | null = findAllFocusableElement(container);
     if (!focusableElements) {
-        return;
+        return () => { /* no-op */ };
     }
 
     const firstFocusableElement: HTMLElement = focusableElements[0];
     const lastFocusableElement: HTMLElement = focusableElements[focusableElements.length - 1];
+    const cleanups: (() => void)[] = [];
 
-    firstFocusableElement.onkeydown = (e: KeyboardEvent) => {
-        if (e.shiftKey && e.key === KeyCodes.TAB) {
-            e.preventDefault();
-            lastFocusableElement?.focus();
-        }
-    };
+    if (firstFocusableElement === lastFocusableElement) {
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === KeyCodes.TAB && !e.shiftKey) {
+                e.preventDefault();
+                firstFocusableElement.focus();
+            } else if (e.key === KeyCodes.TAB && e.shiftKey) {
+                e.preventDefault();
+                firstFocusableElement.focus();
+            }
+        };
+        firstFocusableElement.addEventListener("keydown", handler);
+        cleanups.push(() => firstFocusableElement.removeEventListener("keydown", handler));
+    } else {
+        const firstHandler = (e: KeyboardEvent) => {
+            if (e.shiftKey && e.key === KeyCodes.TAB) {
+                e.preventDefault();
+                lastFocusableElement?.focus();
+            }
+        };
+        firstFocusableElement.addEventListener("keydown", firstHandler);
+        cleanups.push(() => firstFocusableElement.removeEventListener("keydown", firstHandler));
 
-    lastFocusableElement.onkeydown = (e: KeyboardEvent) => {
-        if (!e.shiftKey && e.key === KeyCodes.TAB) {
-            e.preventDefault();
-            firstFocusableElement?.focus();
+        const lastHandler = (e: KeyboardEvent) => {
+            if (!e.shiftKey && e.key === KeyCodes.TAB) {
+                e.preventDefault();
+                firstFocusableElement?.focus();
+            }
+        };
+        lastFocusableElement.addEventListener("keydown", lastHandler);
+        cleanups.push(() => lastFocusableElement.removeEventListener("keydown", lastHandler));
+    }
+
+    return () => cleanups.forEach(fn => fn());
+};
+
+export const setAriaHiddenForSiblings = (
+    elementId: string,
+    shouldHide: boolean,
+    stateMap: Map<Element, string | null>
+): void => {
+    const element = document.getElementById(elementId);
+    if (!element?.parentElement) return;
+    Array.from(element.parentElement.children).forEach((sibling) => {
+        if (sibling !== element) {
+            if (shouldHide) {
+                stateMap.set(sibling, sibling.getAttribute("aria-hidden"));
+                (sibling as HTMLElement).setAttribute("aria-hidden", "true");
+            } else if (stateMap.has(sibling)) {
+                const original = stateMap.get(sibling);
+                if (original === null) {
+                    (sibling as HTMLElement).removeAttribute("aria-hidden");
+                } else {
+                    (sibling as HTMLElement).setAttribute("aria-hidden", original as string);
+                }
+                stateMap.delete(sibling);
+            }
         }
-    };
+    });
 };
 
 export const setFocusOnSendBox = () => {
@@ -118,6 +164,43 @@ export const setFocusOnSendBox = () => {
 export const setFocusOnElement = (selector: string | HTMLElement) => {
     const element = getElementBySelector(selector);
     element?.focus();
+};
+
+const IMMEDIATE_ANNOUNCEMENT_REGION_ID = "oc-lcw-immediate-announcement";
+
+// Announces a message to screen readers via an aria-live="assertive" region
+// attached to document.body — outside the chat widget's DOM subtree — so the
+// screen reader does not have to traverse chat content to reach it.
+export const announceMessageImmediately = (message: string) => {
+    if (!message || typeof document === "undefined") {
+        return;
+    }
+
+    let region = document.getElementById(IMMEDIATE_ANNOUNCEMENT_REGION_ID);
+    if (!region) {
+        region = document.createElement("div");
+        region.id = IMMEDIATE_ANNOUNCEMENT_REGION_ID;
+        region.setAttribute("aria-live", "assertive");
+        region.setAttribute("role", "alert");
+        region.setAttribute("aria-atomic", "true");
+        region.style.position = "absolute";
+        region.style.width = "1px";
+        region.style.height = "1px";
+        region.style.overflow = "hidden";
+        region.style.clip = "rect(0 0 0 0)";
+        region.style.clipPath = "inset(50%)";
+        region.style.whiteSpace = "nowrap";
+        document.body.appendChild(region);
+    }
+
+    region.textContent = "";
+    // Re-set on the next tick so screen readers detect the change even when
+    // the same message is announced twice in a row.
+    setTimeout(() => {
+        if (region) {
+            region.textContent = message;
+        }
+    }, 50);
 };
 
 export const escapeHtml = (inputString: string) => {
