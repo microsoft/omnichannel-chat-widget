@@ -468,4 +468,87 @@ describe("utils unit test", () => {
         const stateMap: Map<Element, string | null> = new Map();
         expect(() => setAriaHiddenForSiblings("nonexistent-id", true, stateMap)).not.toThrow();
     });
+
+    it("Test setAriaHiddenForSiblings - sets inert on siblings for Android TalkBack focus containment", () => {
+        document.body.innerHTML = `
+            <div id="page-root">
+                <div id="sibling-before">Background content before</div>
+                <div id="oc-lcw"><button>Chat</button></div>
+                <div id="sibling-after">Background content after</div>
+            </div>
+        `;
+        const stateMap: Map<Element, string | null> = new Map();
+
+        setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+        expect(document.getElementById("sibling-before")).toHaveAttribute("inert");
+        expect(document.getElementById("sibling-after")).toHaveAttribute("inert");
+        expect(document.getElementById("oc-lcw")).not.toHaveAttribute("inert");
+
+        setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+        expect(document.getElementById("sibling-before")).not.toHaveAttribute("inert");
+        expect(document.getElementById("sibling-after")).not.toHaveAttribute("inert");
+    });
+
+    it("Test setAriaHiddenForSiblings - preserves pre-existing inert on restore", () => {
+        document.body.innerHTML = `
+            <div id="page-root">
+                <div id="already-inert" inert>Already inert for other reasons</div>
+                <div id="oc-lcw"><button>Chat</button></div>
+                <div id="normal-sibling">Normal content</div>
+            </div>
+        `;
+        const stateMap: Map<Element, string | null> = new Map();
+
+        setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+        expect(document.getElementById("already-inert")).toHaveAttribute("inert");
+        expect(document.getElementById("normal-sibling")).toHaveAttribute("inert");
+
+        setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+        // Pre-existing inert must be preserved
+        expect(document.getElementById("already-inert")).toHaveAttribute("inert");
+        // inert we added must be removed
+        expect(document.getElementById("normal-sibling")).not.toHaveAttribute("inert");
+    });
+
+    it("Test setAriaHiddenForSiblings - should hide ancestors' siblings at every DOM level (TalkBack fix)", () => {
+        // Widget is nested: body > #app-shell > #page-root > #oc-lcw
+        // Siblings at every ancestor level must be hidden so TalkBack swipe
+        // gestures cannot escape the dialog (MAS 2.4.3 – Focus Order).
+        document.body.innerHTML = `
+            <div id="body-sibling">Body-level background content</div>
+            <div id="app-shell">
+                <div id="page-root">
+                    <div id="page-sibling">Page-level background content</div>
+                    <div id="oc-lcw"><button>Chat</button></div>
+                </div>
+            </div>
+        `;
+        const stateMap: Map<Element, string | null> = new Map();
+
+        setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+
+        // Immediate sibling inside page-root must be hidden
+        expect(document.getElementById("page-sibling")).toHaveAttribute("aria-hidden", "true");
+        // Sibling of the ancestor (app-shell) at body level must also be hidden
+        expect(document.getElementById("body-sibling")).toHaveAttribute("aria-hidden", "true");
+        // The widget itself must NOT be hidden
+        expect(document.getElementById("oc-lcw")).not.toHaveAttribute("aria-hidden");
+        // Intermediate containers must NOT be hidden (they wrap the widget)
+        expect(document.getElementById("page-root")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("app-shell")).not.toHaveAttribute("aria-hidden");
+
+        // inert must also be set at every ancestor level (Android TalkBack fix)
+        expect(document.getElementById("page-sibling")).toHaveAttribute("inert");
+        expect(document.getElementById("body-sibling")).toHaveAttribute("inert");
+        expect(document.getElementById("oc-lcw")).not.toHaveAttribute("inert");
+        expect(document.getElementById("page-root")).not.toHaveAttribute("inert");
+        expect(document.getElementById("app-shell")).not.toHaveAttribute("inert");
+
+        setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+        expect(document.getElementById("page-sibling")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("body-sibling")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("page-sibling")).not.toHaveAttribute("inert");
+        expect(document.getElementById("body-sibling")).not.toHaveAttribute("inert");
+        expect(stateMap.size).toBe(0);
+    });
 });

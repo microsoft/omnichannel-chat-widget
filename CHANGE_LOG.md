@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- [A11y] TalkBack on Android can no longer swipe to background page content while the chat widget is open. `setAriaHiddenForSiblings` now sets the `inert` attribute alongside `aria-hidden` on all out-of-dialog elements. On Android Chrome 102+, `aria-hidden` alone can be bypassed by swipe navigation; `inert` is enforced at the browser level and removes elements from the accessibility tree entirely. Pre-existing `inert` on page elements is preserved on restore.
+- [A11y] Screen readers now announce "File sent" (or "N files sent") after a file upload completes. The announcement is appended as a visually-hidden text node to the webchat transcript (`role="log"`), which TalkBack and VoiceOver announce reliably as a live-region update. The previous `role="alert"` approach was silently ignored by TalkBack when `aria-modal` is active on the dialog. The announcement fires only on server confirmation (`DIRECT_LINE_POST_ACTIVITY_FULFILLED`), not on file selection.
+
 ### Changed
 - Bumped `@microsoft/omnichannel-chat-components` to `1.1.17-main.5b3f077`.
 - Bumped `@microsoft/omnichannel-chat-sdk` to `1.11.9-main.47a6498`. This includes diagnostic telemetry fields in ChatConfigRetrievalFailure events and pulls in the upstream fix that pins the ACS WebChat adapter to exact `0.0.1-beta.8` (instead of `^0.0.1-beta.6` which resolved to the rogue `0.0.1-beta-1` per semver §11), restoring the fast-poll path for the first bot reply.

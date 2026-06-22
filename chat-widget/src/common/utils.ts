@@ -131,6 +131,10 @@ export const preventFocusToMoveOutOfElement = (elementId: string): (() => void) 
     return () => cleanups.forEach(fn => fn());
 };
 
+// Tracks elements whose `inert` was set by this function so we only remove it
+// on restore, leaving any pre-existing `inert` attributes untouched.
+const _inertManagedBySiblingHider = new WeakSet<Element>();
+
 export const setAriaHiddenForSiblings = (
     elementId: string,
     shouldHide: boolean,
@@ -138,22 +142,42 @@ export const setAriaHiddenForSiblings = (
 ): void => {
     const element = document.getElementById(elementId);
     if (!element?.parentElement) return;
-    Array.from(element.parentElement.children).forEach((sibling) => {
-        if (sibling !== element) {
-            if (shouldHide) {
-                stateMap.set(sibling, sibling.getAttribute("aria-hidden"));
-                (sibling as HTMLElement).setAttribute("aria-hidden", "true");
-            } else if (stateMap.has(sibling)) {
-                const original = stateMap.get(sibling);
-                if (original === null) {
-                    (sibling as HTMLElement).removeAttribute("aria-hidden");
-                } else {
-                    (sibling as HTMLElement).setAttribute("aria-hidden", original as string);
+
+    // Walk up to document.body so siblings are hidden at every ancestor level.
+    // TalkBack and VoiceOver navigate via swipe gestures, not keyboard Tab, so
+    // aria-modal alone is not enough — every DOM level must be covered.
+    let current: Element | null = element;
+    while (current && current !== document.body && current !== document.documentElement) {
+        const parent = current.parentElement;
+        if (!parent) break;
+        Array.from(parent.children).forEach((sibling) => {
+            if (sibling !== current) {
+                if (shouldHide) {
+                    stateMap.set(sibling, sibling.getAttribute("aria-hidden"));
+                    (sibling as HTMLElement).setAttribute("aria-hidden", "true");
+                    // `inert` (Chrome 102+) removes elements from the accessibility tree
+                    // at the browser level — stronger than aria-hidden alone on Android.
+                    if (!(sibling as HTMLElement).hasAttribute("inert")) {
+                        (sibling as HTMLElement).setAttribute("inert", "");
+                        _inertManagedBySiblingHider.add(sibling);
+                    }
+                } else if (stateMap.has(sibling)) {
+                    const original = stateMap.get(sibling);
+                    if (original === null) {
+                        (sibling as HTMLElement).removeAttribute("aria-hidden");
+                    } else {
+                        (sibling as HTMLElement).setAttribute("aria-hidden", original as string);
+                    }
+                    if (_inertManagedBySiblingHider.has(sibling)) {
+                        (sibling as HTMLElement).removeAttribute("inert");
+                        _inertManagedBySiblingHider.delete(sibling);
+                    }
+                    stateMap.delete(sibling);
                 }
-                stateMap.delete(sibling);
             }
-        }
-    });
+        });
+        current = parent;
+    }
 };
 
 export const setFocusOnSendBox = () => {
