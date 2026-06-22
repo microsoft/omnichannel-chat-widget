@@ -809,6 +809,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- [Bug][iOS] Pre-chat survey compact `<select>` no longer renders a blank first row in the iOS Safari native picker. The placeholder option AdaptiveCards injects (which iOS cannot hide via CSS) is now removed from the DOM after the card is appended, the first real option is auto-selected, and the `ChoiceSetInput` value getter is patched on iOS so a `selectedIndex === 0` selection is recognised — fixing both the visual gap and the "field is required" validation error that appeared when a ChoiceSet had only one option. Fix is iOS-only; other platforms are unaffected.
 - [A11y] `ChatButton` no longer produces duplicate NVDA / JAWS browse-mode stops on the title / subtitle Labels — the text container is excluded from the accessibility tree and the button owns a consolidated `aria-label` (internal tracking)
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
 
