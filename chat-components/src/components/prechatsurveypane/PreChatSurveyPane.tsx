@@ -86,14 +86,11 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     if (isIOS && renderedCard) {
         const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
         selectElements.forEach((select) => {
-            // Hide the placeholder option that causes blank space on iOS
+            // Remove the placeholder option that causes blank space in iOS native picker.
+            // iOS UIPickerView ignores CSS (display/hidden) on <option>, so DOM removal is required.
             const firstOption = select.options[0];
             if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
-                firstOption.style.display = "none";
-                // Select the next valid option so the dropdown doesn't appear blank
-                if (select.options.length > 1) {
-                    select.selectedIndex = 1;
-                }
+                firstOption.remove();
             }
         });
     }
@@ -151,22 +148,6 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 color: ${props.styleProps?.customButtonStyleProps?.color ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.color};
                 background-color: ${props.styleProps?.customButtonStyleProps?.backgroundColor ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.backgroundColor};
             }`}</style>
-            {isIOS && <style>{`
-            .ac-input.ac-multichoiceInput {
-                box-sizing: border-box;
-            }
-            .ac-input.ac-multichoiceInput.ac-choiceSetInput-compact {
-                height: auto;
-                min-height: 31px;
-                max-height: 45px;
-                -webkit-appearance: none;
-                appearance: none;
-                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-                background-repeat: no-repeat;
-                background-position: right 8px center;
-                background-size: 16px;
-                padding-right: 30px;
-            }`}</style>}
             {!props.controlProps?.hidePreChatSurveyPane &&
                 <Stack
                     id={elementId}

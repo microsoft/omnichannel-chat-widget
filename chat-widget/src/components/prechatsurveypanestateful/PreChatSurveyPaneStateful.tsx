@@ -1,7 +1,7 @@
 import { HtmlAttributeNames, Regex } from "../../common/Constants";
 import { ConversationStage, LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, FocusEvent, useEffect, useRef, useState } from "react";
-import { createTimer, extractPreChatSurveyResponseValues, findAllFocusableElement, getDeviceType, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
+import { createTimer, extractPreChatSurveyResponseValues, findAllFocusableElement, getStateFromCache, getWidgetCacheId, isUndefinedOrEmpty, parseAdaptiveCardPayload } from "../../common/utils";
 
 import { ConversationState } from "../../contexts/common/ConversationState";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -77,10 +77,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
     const { surveyProps, initStartChat } = props;
     const [preChatFocusAnnouncement, setPreChatFocusAnnouncement] = useState("");
     const liveRegionUpdateTimeout = useRef<number | undefined>();
-    // iOS-only: prevent Safari rubber-band overscroll from scrolling the survey out of view.
-    // No-op on other platforms.
-    const iosOnlyStyles: IStyle = getDeviceType() === "ios" ? { overscrollBehavior: "none" } : {};
-    const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPreChatSurveyPaneStyleProps, iosOnlyStyles, surveyProps?.styleProps?.generalStyleProps,
+    const generalStyleProps: IStyle = Object.assign({}, defaultGeneralPreChatSurveyPaneStyleProps, surveyProps?.styleProps?.generalStyleProps,
         { display: state.appStates.isMinimized ? "none" : "" });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
