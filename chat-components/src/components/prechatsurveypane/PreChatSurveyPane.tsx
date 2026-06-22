@@ -26,10 +26,45 @@ const isIOSDevice = (): boolean => {
     return ua.includes("Mac") && typeof document !== "undefined" && "ontouchend" in document;
 };
 
+// iOS-only: AdaptiveCards' ChoiceSetInput value getter treats `selectedIndex > 0` as "user selected"
+// and returns undefined for index 0 (assuming it is always the injected placeholder).
+// On iOS we remove the placeholder to avoid a blank picker row, which shifts the first real
+// option to index 0 — so the original getter wrongly reports undefined and required-field
+// validation fails. Patch the prototype once to accept index >= 0.
+let iosChoiceSetValuePatched = false;
+const patchIOSChoiceSetValueGetter = () => {
+    if (iosChoiceSetValuePatched) {
+        return;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ChoiceSetInput = (AdaptiveCards as any).ChoiceSetInput;
+    if (!ChoiceSetInput || !ChoiceSetInput.prototype) {
+        return;
+    }
+    const descriptor = Object.getOwnPropertyDescriptor(ChoiceSetInput.prototype, "value");
+    if (!descriptor || !descriptor.get) {
+        return;
+    }
+    Object.defineProperty(ChoiceSetInput.prototype, "value", {
+        configurable: true,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        get: function (this: any) {
+            if (!this.isMultiSelect && this._selectElement) {
+                return this._selectElement.selectedIndex >= 0 ? this._selectElement.value : undefined;
+            }
+            return descriptor.get?.call(this);
+        }
+    });
+    iosChoiceSetValuePatched = true;
+};
+
 function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
 
     const elementId = props.controlProps?.id ?? defaultPreChatSurveyPaneControlProps.id as string;
     const isIOS = isIOSDevice();
+    if (isIOS) {
+        patchIOSChoiceSetValueGetter();
+    }
     let adpativeCardPayload;
     let adaptiveCardHostConfig;
 
@@ -83,17 +118,25 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     addNoreferrerNoopenerTag(renderedCard);
 
     // Fix iOS Safari blank space in <select> dropdowns. iOS-only; other platforms render correctly.
-    if (isIOS && renderedCard) {
-        const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
+    // The placeholder option that AdaptiveCards injects renders as a blank row in the iOS
+    // native picker (CSS display/hidden are ignored on <option>). Removing it from the DOM
+    // is the only reliable workaround. After removal, we select the first remaining option
+    // and notify AdaptiveCards so required-field validation reads the visible value.
+    const applyIOSPrechatFix = (container: HTMLElement) => {
+        const selectElements = container.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
         selectElements.forEach((select) => {
-            // Remove the placeholder option that causes blank space in iOS native picker.
-            // iOS UIPickerView ignores CSS (display/hidden) on <option>, so DOM removal is required.
             const firstOption = select.options[0];
             if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
                 firstOption.remove();
+                if (select.options.length > 0) {
+                    select.selectedIndex = 0;
+                    select.value = select.options[0].value;
+                    select.dispatchEvent(new Event("input", { bubbles: true }));
+                    select.dispatchEvent(new Event("change", { bubbles: true }));
+                }
             }
         });
-    }
+    };
 
     return (
         <>
@@ -163,6 +206,9 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                             ref={(n) => { // Returns React element
                                 renderedCard && n && n.appendChild(renderedCard);
                                 n && (n.childElementCount > 1) && n.lastChild && n.removeChild(n.lastChild); // Removes duplicates fix
+                                if (isIOS && n) {
+                                    applyIOSPrechatFix(n);
+                                }
                             }} />
                     </Stack>
 
