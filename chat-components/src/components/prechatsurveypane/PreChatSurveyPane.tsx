@@ -13,9 +13,23 @@ import { defaultPreChatSurveyPaneControlProps } from "./common/defaultProps/defa
 import { defaultPreChatSurveyPaneGeneralStyles } from "./common/defaultProps/defaultStyles/defaultPreChatSurveyPaneGeneralStyles";
 import { defaultPreChatSurveyPaneStyles } from "./common/defaultProps/defaultStyles/defaultPreChatSurveyPaneStyles";
 
+// Detect iOS (iPhone/iPad/iPod) including iPadOS 13+ which reports as Mac with touch support.
+// Used to scope iOS-only Safari workarounds; must not match other platforms.
+const isIOSDevice = (): boolean => {
+    if (typeof navigator === "undefined") {
+        return false;
+    }
+    const ua = navigator.userAgent || "";
+    if (/iPad|iPhone|iPod/.test(ua)) {
+        return true;
+    }
+    return ua.includes("Mac") && typeof document !== "undefined" && "ontouchend" in document;
+};
+
 function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
 
     const elementId = props.controlProps?.id ?? defaultPreChatSurveyPaneControlProps.id as string;
+    const isIOS = isIOSDevice();
     let adpativeCardPayload;
     let adaptiveCardHostConfig;
 
@@ -67,6 +81,19 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     // Render the card
     const renderedCard = adaptiveCard.render();
     addNoreferrerNoopenerTag(renderedCard);
+
+    // Fix iOS Safari blank space in <select> dropdowns. iOS-only; other platforms render correctly.
+    // Only the hidden placeholder option needs to be removed — do NOT override -webkit-appearance,
+    // since that prevents the native iOS picker from opening on some iOS versions.
+    if (isIOS && renderedCard) {
+        const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
+        selectElements.forEach((select) => {
+            const firstOption = select.options[0];
+            if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
+                select.removeChild(firstOption);
+            }
+        });
+    }
 
     return (
         <>
@@ -121,6 +148,22 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
                 color: ${props.styleProps?.customButtonStyleProps?.color ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.color};
                 background-color: ${props.styleProps?.customButtonStyleProps?.backgroundColor ?? defaultPreChatSurveyPaneStyles.customButtonStyleProps?.backgroundColor};
             }`}</style>
+            {isIOS && <style>{`
+            .ac-input.ac-multichoiceInput {
+                box-sizing: border-box;
+            }
+            .ac-input.ac-multichoiceInput.ac-choiceSetInput-compact {
+                height: auto;
+                min-height: 31px;
+                max-height: 45px;
+                -webkit-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 8px center;
+                background-size: 16px;
+                padding-right: 30px;
+            }`}</style>}
             {!props.controlProps?.hidePreChatSurveyPane &&
                 <Stack
                     id={elementId}
