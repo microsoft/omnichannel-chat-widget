@@ -83,14 +83,17 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     addNoreferrerNoopenerTag(renderedCard);
 
     // Fix iOS Safari blank space in <select> dropdowns. iOS-only; other platforms render correctly.
-    // Only the hidden placeholder option needs to be removed — do NOT override -webkit-appearance,
-    // since that prevents the native iOS picker from opening on some iOS versions.
     if (isIOS && renderedCard) {
         const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
         selectElements.forEach((select) => {
+            // Hide the placeholder option that causes blank space on iOS
             const firstOption = select.options[0];
             if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
-                select.removeChild(firstOption);
+                firstOption.style.display = "none";
+                // Select the next valid option so the dropdown doesn't appear blank
+                if (select.options.length > 1) {
+                    select.selectedIndex = 1;
+                }
             }
         });
     }
