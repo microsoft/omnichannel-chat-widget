@@ -72,10 +72,14 @@ function PreChatSurveyPane(props: IPreChatSurveyPaneProps) {
     if (renderedCard) {
         const selectElements = renderedCard.querySelectorAll<HTMLSelectElement>("select.ac-choiceSetInput-compact");
         selectElements.forEach((select) => {
-            // Remove hidden placeholder option that causes blank space on iOS
+            // Hide the placeholder option that causes blank space on iOS
             const firstOption = select.options[0];
             if (firstOption && firstOption.disabled && firstOption.hidden && firstOption.value === "") {
-                select.removeChild(firstOption);
+                firstOption.style.display = "none";
+                // Select the next valid option so the dropdown doesn't appear blank
+                if (select.options.length > 1) {
+                    select.selectedIndex = 1;
+                }
             }
             // Override iOS native select rendering
             select.style.webkitAppearance = "none";
