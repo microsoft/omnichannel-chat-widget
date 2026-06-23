@@ -148,7 +148,7 @@ export const setAriaHiddenForSiblings = (
     // aria-modal alone is not enough — every DOM level must be covered.
     let current: Element | null = element;
     while (current && current !== document.body && current !== document.documentElement) {
-        const parent = current.parentElement;
+        const parent: HTMLElement | null = current.parentElement;
         if (!parent) break;
         Array.from(parent.children).forEach((sibling) => {
             if (sibling !== current) {
