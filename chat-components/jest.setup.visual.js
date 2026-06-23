@@ -21,6 +21,11 @@ const browserNames = getEnabledBrowsers(playwright, process.env.STORYBOOK_BROWSE
 //Making Timeout to 50s
 jest.setTimeout(50000);
 
+// Hooks launch/close up to 3 browsers (chromium, firefox, webkit). On slow CI
+// agents that can exceed the 50s per-test timeout, so give the hooks more room.
+const HOOK_TIMEOUT_MS = 120000;
+const BROWSER_CLOSE_TIMEOUT_MS = 30000;
+
 beforeAll(async () => {
     for (const browserName of browserNames) {
         browser[browserName] = await playwright[browserName].launch();
@@ -83,11 +88,43 @@ beforeAll(async () => {
             }
         }
     });
-});
+}, HOOK_TIMEOUT_MS);
 
 afterAll(async () => {
-    const promises = Object.keys(browser).map((browserType) =>
-        browser[browserType].close(),
-    );
-    await Promise.all(promises);
-});
+    // Diagnostic: log leftover contexts/pages per browser before close. If
+    // `browser.close()` ever hangs again, this tells us which browser still
+    // has live pages pinning it open (likely an unclosed page from
+    // afterScreenshot or a pending route handler).
+    for (const browserType of Object.keys(browser)) {
+        const instance = browser[browserType];
+        if (!instance) continue;
+        try {
+            const contexts = instance.contexts();
+            const pageCount = contexts.reduce((sum, ctx) => sum + ctx.pages().length, 0);
+            console.log(`🧹 Teardown: ${browserType} has ${contexts.length} context(s), ${pageCount} open page(s)`);
+        } catch (err) {
+            console.warn(`Could not inspect "${browserType}" before close:`, err && err.message ? err.message : err);
+        }
+    }
+
+    const closeWithTimeout = (browserType) => {
+        const instance = browser[browserType];
+        if (!instance) {
+            return Promise.resolve();
+        }
+        const startedAt = Date.now();
+        return Promise.race([
+            instance.close().then(() => {
+                console.log(`✅ Closed "${browserType}" in ${Date.now() - startedAt}ms`);
+            }).catch((err) => {
+                console.warn(`Failed to close browser "${browserType}":`, err && err.message ? err.message : err);
+            }),
+            new Promise((resolve) => setTimeout(() => {
+                console.warn(`⏱️ Timed out closing browser "${browserType}" after ${BROWSER_CLOSE_TIMEOUT_MS}ms; continuing teardown.`);
+                resolve();
+            }, BROWSER_CLOSE_TIMEOUT_MS))
+        ]);
+    };
+
+    await Promise.all(Object.keys(browser).map(closeWithTimeout));
+}, HOOK_TIMEOUT_MS);
