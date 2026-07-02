@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Android focus escape harness</title>
+</head>
+<body>
+    <!--
+      Reproduces the embedded Live Chat Widget scenario that bug "focus escape"
+      is about: the widget (#oc-lcw) is nested several levels below <body>, so
+      the real host-page content (header, sidebar, footer) sits on ancestor
+      levels, not as immediate siblings of the widget. The background markers
+      below are what a TalkBack swipe must NOT be able to reach while the widget
+      is open.
+    -->
+    <header id="page-header">
+        <a href="#a" id="bg-header-link">BG-HEADER-LINK</a>
+    </header>
+
+    <main id="page-main">
+        <aside id="content-a">
+            <a href="#b" id="bg-sidebar-link">BG-SIDEBAR-LINK</a>
+        </aside>
+
+        <div id="widget-wrapper">
+            <div id="oc-lcw" role="dialog" aria-modal="true" aria-label="Live chat">
+                <p id="widget-content">WIDGET-DIALOG-CONTENT</p>
+                <button id="widget-close">Close chat</button>
+            </div>
+        </div>
+    </main>
+
+    <footer id="page-footer">
+        <a href="#c" id="bg-footer-link">BG-FOOTER-LINK</a>
+    </footer>
+
+    <div id="controls">
+        <button id="open-btn">Open widget</button>
+        <button id="close-btn">Close widget</button>
+    </div>
+
+    <script src="focusEscapeUtil.bundle.js"></script>
+    <script>
+        (function () {
+            var stateMap = new Map();
+            document.getElementById("open-btn").addEventListener("click", function () {
+                window.LcwA11y.setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+            });
+            document.getElementById("close-btn").addEventListener("click", function () {
+                window.LcwA11y.setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+            });
+        })();
+    </script>
+</body>
+</html>
