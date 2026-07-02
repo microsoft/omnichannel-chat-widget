@@ -235,7 +235,19 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
     }, []);
     
     return (
-        <div onFocusCapture={announceFocusedElement} style={{ width: "100%", height: "100%" }}>
+        // Bug 6525143 / Bug 6423684: the LiveChatWidget container is a centered
+        // flex column (HeaderStateful first, this pane second) with
+        // justifyContent: center and clipped overflow. Sizing this focus-capture
+        // wrapper to height: 100% makes it 100% of the ENTIRE container rather than
+        // the space remaining below the header, so header + pane overflow the
+        // container and the centered column splits the overflow top & bottom -
+        // clipping the header's top edge. Instead, fill only the remaining space
+        // with flex (flex: 1 1 auto + minHeight: 0) and lay out as a column so the
+        // header stays fully visible while the inner pane (a flex child that grows
+        // via flexGrow/flexBasis - see defaultGeneralPreChatSurveyPaneStyleProps)
+        // fills the leftover area and scrolls, instead of collapsing to its
+        // intrinsic content size.
+        <div onFocusCapture={announceFocusedElement} style={{ width: "100%", flex: "1 1 auto", minHeight: 0, display: "flex", flexDirection: "column" }}>
             {/* prechat-stale-live-region: prechat pane owns a managed polite live region
                 so that focus changes inside the survey don't carry the
                 previous focus's announcement (Narrator was reading
