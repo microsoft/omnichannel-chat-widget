@@ -138,10 +138,24 @@ export const setAriaHiddenForSiblings = (
 ): void => {
     const element = document.getElementById(elementId);
     if (!element?.parentElement) return;
-    Array.from(element.parentElement.children).forEach((sibling) => {
-        if (sibling !== element) {
+
+    // Walk up the ancestor chain and hide the siblings at every level up to
+    // <body>. Hiding only the widget's immediate siblings leaves the rest of a
+    // host/embedding page in the accessibility tree, so Android TalkBack (which
+    // does not honor aria-modal) can still swipe the virtual cursor into the
+    // background. Inerting the whole ancestor path keeps the reading order
+    // trapped inside the open widget.
+    const applyToSiblings = (node: Element) => {
+        const parent = node.parentElement;
+        if (!parent) return;
+        Array.from(parent.children).forEach((sibling) => {
+            if (sibling === node) {
+                return;
+            }
             if (shouldHide) {
-                stateMap.set(sibling, sibling.getAttribute("aria-hidden"));
+                if (!stateMap.has(sibling)) {
+                    stateMap.set(sibling, sibling.getAttribute("aria-hidden"));
+                }
                 (sibling as HTMLElement).setAttribute("aria-hidden", "true");
             } else if (stateMap.has(sibling)) {
                 const original = stateMap.get(sibling);
@@ -152,8 +166,17 @@ export const setAriaHiddenForSiblings = (
                 }
                 stateMap.delete(sibling);
             }
+        });
+    };
+
+    let current: Element | null = element;
+    while (current && current.parentElement) {
+        applyToSiblings(current);
+        if (current.parentElement === document.body) {
+            break;
         }
-    });
+        current = current.parentElement;
+    }
 };
 
 export const setFocusOnSendBox = () => {

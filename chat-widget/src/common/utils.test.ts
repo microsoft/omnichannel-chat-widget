@@ -463,6 +463,37 @@ describe("utils unit test", () => {
         expect(document.getElementById("visible-sibling")).not.toHaveAttribute("aria-hidden");
     });
 
+    it("Test setAriaHiddenForSiblings - should hide background across ancestor levels (nested widget)", () => {
+        document.body.innerHTML = `
+            <header id="page-header">Site header</header>
+            <main id="page-main">
+                <div id="content-a">Article</div>
+                <div id="widget-wrapper">
+                    <div id="oc-lcw"><button>Chat</button></div>
+                </div>
+            </main>
+            <footer id="page-footer">Site footer</footer>
+        `;
+        const stateMap: Map<Element, string | null> = new Map();
+
+        setAriaHiddenForSiblings("oc-lcw", true, stateMap);
+        // Direct sibling level (inside #widget-wrapper there are none) and every
+        // ancestor level up to <body> must be hidden so TalkBack cannot escape.
+        expect(document.getElementById("content-a")).toHaveAttribute("aria-hidden", "true");
+        expect(document.getElementById("page-header")).toHaveAttribute("aria-hidden", "true");
+        expect(document.getElementById("page-footer")).toHaveAttribute("aria-hidden", "true");
+        // The widget and its ancestor path must remain exposed.
+        expect(document.getElementById("oc-lcw")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("widget-wrapper")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("page-main")).not.toHaveAttribute("aria-hidden");
+
+        setAriaHiddenForSiblings("oc-lcw", false, stateMap);
+        expect(document.getElementById("content-a")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("page-header")).not.toHaveAttribute("aria-hidden");
+        expect(document.getElementById("page-footer")).not.toHaveAttribute("aria-hidden");
+        expect(stateMap.size).toBe(0);
+    });
+
     it("Test setAriaHiddenForSiblings - should do nothing when element not found", () => {
         document.body.innerHTML = "<div id=\"other\">content</div>";
         const stateMap: Map<Element, string | null> = new Map();
