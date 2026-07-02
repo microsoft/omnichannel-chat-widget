@@ -1,6 +1,6 @@
 import * as CustomEventType from "../contexts/common/CustomEventType";
 
-import { AriaTelemetryConstants, Constants, HtmlAttributeNames, LocaleConstants } from "./Constants";
+import { AriaTelemetryConstants, Constants, HtmlAttributeNames, HtmlIdNames, LocaleConstants } from "./Constants";
 import { BroadcastEvent, LogLevel, TelemetryEvent } from "./telemetry/TelemetryConstants";
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -118,6 +118,30 @@ export const setFocusOnSendBox = () => {
 export const setFocusOnElement = (selector: string | HTMLElement) => {
     const element = getElementBySelector(selector);
     element?.focus();
+};
+
+/**
+ * Announces a message to screen readers via a visually hidden aria-live region.
+ * Uses aria-live="polite" so it does not interrupt the user's current reading flow.
+ */
+export const announceForScreenReader = (message: string): void => {
+    let liveRegion = document.getElementById(HtmlIdNames.screenReaderLiveRegion);
+    if (!liveRegion) {
+        liveRegion = document.createElement("div");
+        liveRegion.id = HtmlIdNames.screenReaderLiveRegion;
+        liveRegion.setAttribute(HtmlAttributeNames.ariaLive, "polite");
+        liveRegion.setAttribute(HtmlAttributeNames.role, "status");
+        liveRegion.style.cssText = "position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;";
+        document.body.appendChild(liveRegion);
+    }
+    // Clear first, then set — ensures re-announcement of the same text if needed
+    liveRegion.textContent = "";
+    // Use setTimeout so the DOM update registers as a separate mutation for screen readers
+    setTimeout(() => {
+        if (liveRegion) {
+            liveRegion.textContent = message;
+        }
+    }, 100);
 };
 
 export const escapeHtml = (inputString: string) => {

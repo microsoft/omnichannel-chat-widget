@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setTabIndices } from "./utils";
+import { announceForScreenReader, changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setTabIndices } from "./utils";
 
 import { AriaTelemetryConstants } from "./Constants";
 import { Md5 } from "md5-typescript";
@@ -365,5 +365,52 @@ describe("utils unit test", () => {
     it("should parse false boolean value to lower case string", () => {
         const property = false;
         expect(parseLowerCaseString(property)).toEqual("false");
+    });
+});
+
+describe("announceForScreenReader unit test", () => {
+    const liveRegionId = "ms_lcw_screen_reader_live_region";
+
+    beforeEach(() => {
+        jest.useFakeTimers();
+        const existing = document.getElementById(liveRegionId);
+        existing?.parentElement?.removeChild(existing);
+    });
+
+    afterEach(() => {
+        jest.runOnlyPendingTimers();
+        jest.useRealTimers();
+    });
+
+    it("creates a visually hidden polite live region and announces the message", () => {
+        announceForScreenReader("Transcript sent");
+        const liveRegion = document.getElementById(liveRegionId);
+        expect(liveRegion).not.toBeNull();
+        expect(liveRegion?.getAttribute("aria-live")).toEqual("polite");
+        expect(liveRegion?.getAttribute("role")).toEqual("status");
+        // Message is set on the next tick so screen readers register a fresh mutation.
+        jest.advanceTimersByTime(100);
+        expect(liveRegion?.textContent).toEqual("Transcript sent");
+    });
+
+    it("reuses a single live region across multiple announcements", () => {
+        announceForScreenReader("First");
+        jest.advanceTimersByTime(100);
+        announceForScreenReader("Second");
+        jest.advanceTimersByTime(100);
+        const regions = document.querySelectorAll(`#${liveRegionId}`);
+        expect(regions.length).toEqual(1);
+        expect(regions[0].textContent).toEqual("Second");
+    });
+
+    it("clears the previous message before announcing so identical text re-announces", () => {
+        announceForScreenReader("Same message");
+        jest.advanceTimersByTime(100);
+        announceForScreenReader("Same message");
+        const liveRegion = document.getElementById(liveRegionId);
+        // Immediately after the second call, before the timer, the region is cleared.
+        expect(liveRegion?.textContent).toEqual("");
+        jest.advanceTimersByTime(100);
+        expect(liveRegion?.textContent).toEqual("Same message");
     });
 });

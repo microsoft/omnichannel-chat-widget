@@ -1,6 +1,6 @@
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useCallback, useEffect, useState } from "react";
-import { createTimer, findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, formatTemplateString, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
+import { announceForScreenReader, createTimer, findAllFocusableElement, findParentFocusableElementsWithoutChildContainer, formatTemplateString, preventFocusToMoveOutOfElement, setFocusOnElement, setFocusOnSendBox, setTabIndices } from "../../common/utils";
 
 import { DimLayer } from "../dimlayer/DimLayer";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
@@ -58,7 +58,11 @@ export const EmailTranscriptPaneStateful = (props: IEmailTranscriptPaneProps) =>
         };
         try {
             await facadeChatSDK?.emailLiveChatTranscript(chatTranscriptBody, {liveChatContext});
-            NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressSaved, state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS ?? defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string);
+            const emailSuccessMessage = state?.domainStates?.middlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS ?? defaultMiddlewareLocalizedTexts?.MIDDLEWARE_BANNER_FILE_EMAIL_ADDRESS_RECORDED_SUCCESS as string;
+            NotificationHandler.notifySuccess(NotificationScenarios.EmailAddressSaved, emailSuccessMessage);
+            // Announce the success on a dedicated polite live region so screen readers convey it
+            // promptly instead of re-reading the whole transcript before the confirmation.
+            announceForScreenReader(emailSuccessMessage);
             TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
                 Event: TelemetryEvent.EmailTranscriptSent,
                 Description: "Transcript sent to email successfully."

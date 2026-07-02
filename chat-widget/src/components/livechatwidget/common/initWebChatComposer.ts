@@ -24,6 +24,7 @@ import { createActivityMiddleware } from "../../webchatcontainerstateful/webchat
 import { createActivityStatusMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware";
 import { createAttachmentMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
 import createAttachmentUploadValidatorMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentUploadValidatorMiddleware";
+import createAttachmentSentNotificationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentSentNotificationMiddleware";
 import { createAvatarMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware";
 import createCallActionMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/callActionMiddleware";
 import { createCardActionMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/cardActionMiddleware";
@@ -123,6 +124,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                 state.domainStates.liveChatConfig?.maxUploadFileSize as string,
                 localizedTexts
             ),
+            createAttachmentSentNotificationMiddleware(localizedTexts),
             createCustomEventMiddleware(BroadcastService),
             createQueueOverflowMiddleware(state, dispatch),
             channelDataMiddleware(addConversationalSurveyTagsCallback),

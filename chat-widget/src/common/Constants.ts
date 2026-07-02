@@ -176,6 +176,7 @@ export const Regex = class {
 
 export class HtmlIdNames {
     public static readonly MSLiveChatWidget = "MSLiveChatWidget";
+    public static readonly screenReaderLiveRegion = "ms_lcw_screen_reader_live_region";
 }
 
 export class HtmlClassNames {
