@@ -42,3 +42,6 @@ jobs:
       - name: Build package
         working-directory: chat-components
         run: yarn build
+      - name: Validate CommonJS package
+        working-directory: chat-components
+        run: yarn test:cjs
