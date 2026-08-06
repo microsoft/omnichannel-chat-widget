@@ -274,9 +274,15 @@ export function ConfirmationPanePreset3(args: IConfirmationPaneProps) {
         });
     };
 
-    args.controlProps.onConfirm = switchToRowLayout;
-    args.controlProps.onCancel = switchToColumnLayout;
-    return <ConfirmationPane {...args} ></ConfirmationPane>;
+    const controlProps = args.controlProps
+        ? {
+            ...args.controlProps,
+            onConfirm: switchToRowLayout,
+            onCancel: switchToColumnLayout
+        }
+        : undefined;
+
+    return <ConfirmationPane {...args} controlProps={controlProps}></ConfirmationPane>;
 }
 
 (ConfirmationPanePreset3 as Story<IConfirmationPaneProps>).args = confirmationPanePreset3Props;
