@@ -18,15 +18,10 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.X
+          node-version-file: .nvmrc
       - name: Install packages
         working-directory: chat-components
         run: yarn install
-      - name: Upload generated lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: public-yarn-lock
-          path: chat-components/yarn.lock
       - name: Unit Tests
         working-directory: chat-components
         run: yarn test:unit
