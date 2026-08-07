@@ -44,13 +44,6 @@ jobs:
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
         run: yarn install --network-timeout 1000000
-      - name: Upload generated lockfiles
-        uses: actions/upload-artifact@v4
-        with:
-          name: public-yarn-locks
-          path: |
-            chat-widget/yarn.lock
-            chat-widget/automation_tests/yarn.lock
       - name: Install Playwright browsers
         working-directory: chat-widget/automation_tests
         run: yarn playwright install --with-deps chromium
