@@ -1,9 +1,37 @@
-import "core-js";
+require("core-js");
 
-import playwright from "playwright";
-import { setConfig } from "storybook-addon-playwright/configs";
-import { toMatchScreenshots } from "storybook-addon-playwright";
-import storybookAccessibilityTooling from "../tools/accessibility/storybookProfiles.cjs";
+const { setConfig } = require("storybook-addon-playwright/configs");
+const { toMatchScreenshots } = require("storybook-addon-playwright");
+const storybookAccessibilityTooling = require("../tools/accessibility/storybookProfiles.cjs");
+
+const { ReadableStream, TransformStream, WritableStream } = require("node:stream/web");
+const { Blob, File } = require("node:buffer");
+const { MessageChannel, MessagePort } = require("node:worker_threads");
+
+// Jest 27 omits some Node 22 web globals from its VM context. Add only missing
+// values so the harness never replaces Node's built-in undici/Web Streams realm.
+const platformGlobals = {
+    Blob,
+    File,
+    MessageChannel,
+    MessagePort,
+    ReadableStream,
+    TransformStream,
+    WritableStream
+};
+for (const [name, value] of Object.entries(platformGlobals)) {
+    if (typeof globalThis[name] === "undefined") {
+        globalThis[name] = value;
+    }
+}
+
+const { fetch, FormData, Headers, Request, Response } = require("undici");
+for (const [name, value] of Object.entries({ fetch, FormData, Headers, Request, Response })) {
+    if (typeof globalThis[name] === "undefined") {
+        globalThis[name] = value;
+    }
+}
+const playwright = require("playwright");
 
 expect.extend({ toMatchScreenshots });
 
@@ -18,11 +46,9 @@ let browser = {};
 const screenshotProfile = resolveStorybookProfile(process.env.STORYBOOK_SCREENSHOT_PROFILE);
 const browserNames = getEnabledBrowsers(playwright, process.env.STORYBOOK_BROWSERS, screenshotProfile.defaultBrowsers);
 
-//Making Timeout to 50s
 jest.setTimeout(50000);
 
-// Hooks launch/close up to 3 browsers (chromium, firefox, webkit). On slow CI
-// agents that can exceed the 50s per-test timeout, so give the hooks more room.
+// Launching and closing three browsers can exceed the per-test timeout on slow CI agents.
 const HOOK_TIMEOUT_MS = 120000;
 const BROWSER_CLOSE_TIMEOUT_MS = 30000;
 
@@ -43,14 +69,9 @@ beforeAll(async () => {
             if (!browser[browserType]) {
                 throw new Error(`Browser "${browserType}" was not launched for profile "${screenshotProfile.name}".`);
             }
-
             const page = await browser[browserType].newPage(mergePageOptions(screenshotProfile, options));
-            await preparePageForProfile(page, screenshotProfile);
-            // Intercept any request to known external survey hosts so VRT does not
-            // depend on real network/iframe-load latency. The story files keep their
-            // live URLs so manual `yarn storybook` still exercises the real survey,
-            // but visual snapshots see a deterministic local fixture.
-            // See: https://github.com/microsoft/omnichannel-chat-widget/issues/921
+            // Keep visual tests independent of external survey hosts. Storybook still
+            // uses the live URLs during manual testing. See issue #921.
             const surveyFixtureHtml = "<!DOCTYPE html>"
                 + "<html lang=\"en\"><head><meta charset=\"utf-8\"><title>Survey fixture</title>"
                 + "<style>body{font-family:Segoe UI,Arial,sans-serif;background:#fff;color:#000;margin:0;padding:24px}"
@@ -78,23 +99,25 @@ beforeAll(async () => {
         afterScreenshot: async (page) => {
             await page.close();
         },
+        beforeScreenshot: async (page) => {
+            await page.waitForLoadState("load", { timeout: 10000 });
+            await page.locator(".sb-preparing-story").waitFor({ state: "hidden", timeout: 10000 });
+            // Apply emulation after Storybook is ready to avoid iframe-load races.
+            await preparePageForProfile(page, screenshotProfile);
+        },
         screenshotOptions: {
-            // Target ONLY the Firefox custom-components screenshot (ID: kF8sVvQpcm8X)
             clip: (screenshotInfo) => {
                 if (screenshotInfo.screenshotId === "kF8sVvQpcm8X") {
                     return { x: 0, y: 0, width: 800, height: 600 };
                 }
-                return undefined; // Default behavior for all other screenshots
+                return undefined;
             }
         }
     });
 }, HOOK_TIMEOUT_MS);
 
 afterAll(async () => {
-    // Diagnostic: log leftover contexts/pages per browser before close. If
-    // `browser.close()` ever hangs again, this tells us which browser still
-    // has live pages pinning it open (likely an unclosed page from
-    // afterScreenshot or a pending route handler).
+    // Log leftover contexts/pages to identify the browser that pins teardown if close hangs.
     for (const browserType of Object.keys(browser)) {
         const instance = browser[browserType];
         if (!instance) continue;
@@ -113,17 +136,20 @@ afterAll(async () => {
             return Promise.resolve();
         }
         const startedAt = Date.now();
+        let timeoutId;
         return Promise.race([
             instance.close().then(() => {
                 console.log(`✅ Closed "${browserType}" in ${Date.now() - startedAt}ms`);
             }).catch((err) => {
                 console.warn(`Failed to close browser "${browserType}":`, err && err.message ? err.message : err);
             }),
-            new Promise((resolve) => setTimeout(() => {
-                console.warn(`⏱️ Timed out closing browser "${browserType}" after ${BROWSER_CLOSE_TIMEOUT_MS}ms; continuing teardown.`);
-                resolve();
-            }, BROWSER_CLOSE_TIMEOUT_MS))
-        ]);
+            new Promise((resolve) => {
+                timeoutId = setTimeout(() => {
+                    console.warn(`⏱️ Timed out closing browser "${browserType}" after ${BROWSER_CLOSE_TIMEOUT_MS}ms; continuing teardown.`);
+                    resolve();
+                }, BROWSER_CLOSE_TIMEOUT_MS);
+            })
+        ]).finally(() => clearTimeout(timeoutId));
     };
 
     await Promise.all(Object.keys(browser).map(closeWithTimeout));

@@ -802,8 +802,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Updated Babel dependencies to latest versions
-- Updated Lodash to v4.17.23 to address security vulnerabilities
+- Standardized chat-components local development and CI on Node.js 22.
+- Updated Babel and Storybook tooling for Node.js 22 and Webpack 5.
+- Upgraded Adaptive Cards from 2.x to 3.0.6 and `broadcast-channel` from 4.x to 7.3.0 without changing public component APIs. Updated pre-chat native form-control rendering and reconnect-pane spacing baselines capture the reviewed cosmetic changes.
+- Kept Adaptive Cards tree-shakeable for ESM consumers while remapping only the CommonJS build to its UMD entry.
+- Added a direct Babel 7.24.7 helper compatibility pin required by Storybook 6.5; remove it when Storybook is upgraded from the EOL 6.x line.
 
 ### Added
 
@@ -813,10 +816,14 @@ All notable changes to this project will be documented in this file.
 
 - [Bug][iOS] Pre-chat survey compact `<select>` no longer renders a blank first row in the iOS Safari native picker. The placeholder option AdaptiveCards injects (which iOS cannot hide via CSS) is now removed from the DOM after the card is appended, the first real option is auto-selected, and the `ChoiceSetInput` value getter is patched on iOS so a `selectedIndex === 0` selection is recognised — fixing both the visual gap and the "field is required" validation error that appeared when a ChoiceSet had only one option. Fix is iOS-only; other platforms are unaffected.
 - [A11y] `ChatButton` no longer produces duplicate NVDA / JAWS browse-mode stops on the title / subtitle Labels — the text container is excluded from the accessibility tree and the button owns a consolidated `aria-label` (internal tracking)
+- Preserved the published CommonJS export by remapping Adaptive Cards only in the CommonJS build and marking `lib/cjs` as CommonJS.
+- Stabilized Storybook visual tests on Node.js 22 and corrected the ConfirmationPane preset story export.
 - Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
 
 ### Security
 
+- Updated Adaptive Cards and `broadcast-channel` to patched dependency lines and removed stale Markdown, sanitizer, Lodash, Nano ID, and brace-expansion resolutions.
+- Retained the `glob-parent` 5.1.2 resolution to prevent the dev-only Storybook watch chain from resolving the vulnerable 3.1.0 release.
 - Upgrade `yaml` 1.10.2 → 1.10.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
 - Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
