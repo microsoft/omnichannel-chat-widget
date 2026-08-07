@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 ### Tests
 - [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for internal tracking (AdaptiveCard TalkBack non-radio duplicate labels), internal tracking (ChatButton browse-mode duplicate stops), internal tracking (agent profile name not announced), internal tracking (blank announcement live regions), internal tracking (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
 - [Bug 6525143] Added a contract test for the pre-chat pane default general style (fills via flex, no fixed/percentage height, keeps own scroll) and updated the focus-capture wrapper layout test to assert the flex-column sizing that prevents the header clip.
+- Removed a redundant designer-mode bot-message E2E assertion; the stronger adjacent test already waits for and validates the same rendered bot activities and accessible names.
 
 ### Fixed
 - [Bug] Edited system messages (e.g. queue-position updates such as `People ahead of you: 2` → `You're next in line.`) now re-render with the latest text. Removed the `originalSystemMessageTexts` cache in `activityMiddleware` that was keyed by `activity.id` alone and froze the first-seen text for the lifetime of the activity. Safe to remove because `card.activity.text` is no longer mutated (renders write to a local `renderedHtml`), so repeated `renderMarkdown` calls remain idempotent (AB#6523665)
