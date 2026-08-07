@@ -167,6 +167,8 @@
     ]
   },
   "resolutions": {
+    "**/@types/glob": "7.2.0",
+    "**/@types/minimatch": "3.0.5",
     "**/@types/trusted-types": "2.0.7",
     "**/join-images": "1.1.5"
   },
