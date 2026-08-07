@@ -22,11 +22,6 @@ jobs:
       - name: Install packages
         working-directory: chat-components
         run: yarn install
-      - name: Upload generated lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: public-yarn-lock
-          path: chat-components/yarn.lock
       - name: Unit Tests
         working-directory: chat-components
         run: yarn test:unit
