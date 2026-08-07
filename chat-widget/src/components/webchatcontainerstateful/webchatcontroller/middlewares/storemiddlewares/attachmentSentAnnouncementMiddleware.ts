@@ -6,7 +6,7 @@
  * users receive immediate feedback.
  ******/
 
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
 const ARIA_LIVE_REGION_ID = "oc-lcw-attachment-announcement";
@@ -54,11 +54,15 @@ const announce = (message: string): void => {
     }, 100);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const attachmentSentAnnouncementMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const attachmentSentAnnouncementMiddleware: WebChatStoreMiddleware = ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     // Intercept successfully posted activities that contain attachments
-    if (action?.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED) {
-        const attachments = action?.payload?.activity?.attachments;
+    if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED) {
+        const attachments = action.payload?.activity?.attachments;
         if (attachments && attachments.length > 0) {
             const count = attachments.length;
             const message = count === 1

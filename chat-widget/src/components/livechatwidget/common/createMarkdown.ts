@@ -1,8 +1,8 @@
 import { Constants } from "../../../common/Constants";
 import MarkdownIt from "markdown-it";
 import MarkdownItForInline from "markdown-it-for-inline";
-import StateCore from "markdown-it/lib/rules_core/state_core";
-import Token from "markdown-it/lib/token";
+import StateCore from "markdown-it/lib/rules_core/state_core.mjs";
+import Token from "markdown-it/lib/token.mjs";
 import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMarkdownLocalizedTexts";
 import { addSlackMarkdownIt } from "./helpers/markdownHelper";
 

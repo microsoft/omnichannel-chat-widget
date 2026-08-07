@@ -20,6 +20,12 @@ import { defaultGeneralPreChatSurveyPaneStyleProps } from "./common/defaultStyle
 import { defaultPreChatSurveyLocalizedTexts } from "./common/defaultProps/defaultPreChatSurveyLocalizedTexts";
 import useChatContextStore from "../../hooks/useChatContextStore";
 
+declare global {
+    interface Window {
+        markdownit: typeof MarkdownIt;
+    }
+}
+
 let uiTimer : ITimer;
 
 const getFocusedElementAnnouncement = (element: HTMLElement): string => {
@@ -71,7 +77,7 @@ export const PreChatSurveyPaneStateful = (props: IPreChatSurveyPaneStatefulParam
     }, []);
     
     // Set MarkDown global variable to be used for prechat adaptive cards
-    window["markdownit"] = MarkdownIt;
+    window.markdownit = MarkdownIt;
 
     const [state, dispatch]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { surveyProps, initStartChat } = props;

@@ -1,9 +1,37 @@
-import "core-js";
+require("core-js");
 
-import playwright from "playwright";
-import { setConfig } from "storybook-addon-playwright/configs";
-import { toMatchScreenshots } from "storybook-addon-playwright";
-import storybookAccessibilityTooling from "../tools/accessibility/storybookProfiles.cjs";
+const { setConfig } = require("storybook-addon-playwright/configs");
+const { toMatchScreenshots } = require("storybook-addon-playwright");
+const storybookAccessibilityTooling = require("../tools/accessibility/storybookProfiles.cjs");
+
+const { ReadableStream, TransformStream, WritableStream } = require("node:stream/web");
+const { Blob, File } = require("node:buffer");
+const { MessageChannel, MessagePort } = require("node:worker_threads");
+
+// Jest 27 omits some Node 22 web globals from its VM context. Add only missing
+// values so the harness never replaces Node's built-in undici/Web Streams realm.
+const platformGlobals = {
+    Blob,
+    File,
+    MessageChannel,
+    MessagePort,
+    ReadableStream,
+    TransformStream,
+    WritableStream
+};
+for (const [name, value] of Object.entries(platformGlobals)) {
+    if (typeof globalThis[name] === "undefined") {
+        globalThis[name] = value;
+    }
+}
+
+const { fetch, FormData, Headers, Request, Response } = require("undici");
+for (const [name, value] of Object.entries({ fetch, FormData, Headers, Request, Response })) {
+    if (typeof globalThis[name] === "undefined") {
+        globalThis[name] = value;
+    }
+}
+const playwright = require("playwright");
 
 expect.extend({ toMatchScreenshots });
 
@@ -14,7 +42,6 @@ const {
     resolveStorybookProfile
 } = storybookAccessibilityTooling;
 
-// Enhanced error reporting for visual tests
 const originalFail = global.fail;
 global.fail = (message) => {
     console.error(`❌ Visual Test Failure: ${message}`);
@@ -29,7 +56,6 @@ let browser = {};
 const screenshotProfile = resolveStorybookProfile(process.env.STORYBOOK_SCREENSHOT_PROFILE);
 const browserNames = getEnabledBrowsers(playwright, process.env.STORYBOOK_BROWSERS, screenshotProfile.defaultBrowsers);
 
-//Making Timeout to 50s
 jest.setTimeout(50000);
 
 beforeAll(async () => {
@@ -48,8 +74,7 @@ beforeAll(async () => {
             }
 
             console.log("Browser for visual test : ,", browserType);
-            const page = await browser[browserType].newPage(mergePageOptions(screenshotProfile, options));
-            return page;
+            return browser[browserType].newPage(mergePageOptions(screenshotProfile, options));
         },
         afterScreenshot: async (page) => {
             console.log(`✅ Completed visual test for: ${page.url()}`);
@@ -66,14 +91,10 @@ beforeAll(async () => {
             console.error(`   Expected screenshot path: ${error.expectedPath || "unknown"}`);
             console.error(`   Received screenshot path: ${error.receivedPath || "unknown"}`);
             console.error(`   Diff screenshot path: ${error.diffPath || "unknown"}`);
-        },
-
+        }
     });
 });
 
 afterAll(async () => {
-    const promises = Object.keys(browser).map((browserType) =>
-        browser[browserType].close(),
-    );
-    await Promise.all(promises);
+    await Promise.all(Object.keys(browser).map((browserType) => browser[browserType].close()));
 });

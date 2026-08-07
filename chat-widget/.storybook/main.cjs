@@ -9,17 +9,26 @@ module.exports = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     '@storybook/addon-a11y',
-    '@storybook/addon-knobs',
-    'storybook-addon-playwright/preset',
-    'storybook-addon-playwright/register'
+    '@storybook/addon-knobs'
   ],
   "core": {
+    "builder": "@storybook/builder-webpack5",
     "disableTelemetry": true
+  },
+  "typescript": {
+    "reactDocgen": "react-docgen"
   },
   "features": {
     "buildStoriesJson": true
   },
   "webpackFinal": async (config, { configType }) => {
+    config.module.rules.push({
+      test: /\.m?js$/,
+      resolve: {
+        fullySpecified: false
+      }
+    });
+
     // Helper to get package directory
     const getPkgDir = (pkgName) => {
       try {
@@ -46,8 +55,6 @@ module.exports = {
       "@react-native-community/masked-view",
       "@react-native-async-storage/async-storage",
       "@react-native-picker/picker",
-      // Internal packages that depend on RN
-      "@microsoft/omnichannel-chat-components",
     ];
     const rnDepDirs = rnDeps.map(getPkgDir).filter(Boolean);
 

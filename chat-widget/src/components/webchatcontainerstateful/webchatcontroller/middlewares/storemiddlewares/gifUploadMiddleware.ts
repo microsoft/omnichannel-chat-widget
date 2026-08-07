@@ -5,11 +5,15 @@
  ******/
 
 import { Constants } from "../../../../../common/Constants";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const gifUploadMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const gifUploadMiddleware: WebChatStoreMiddleware = ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
         const {
             payload: {

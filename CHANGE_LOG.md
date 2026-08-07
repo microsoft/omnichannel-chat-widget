@@ -6,9 +6,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Breaking
+
+- Raised the supported consumer build runtime to Node.js `>=22.12.0`, matching chat SDK 2.0.0 and the remediated dependency chain.
+
 ### Changed
-- Bumped `@microsoft/omnichannel-chat-components` to `1.1.17-main.05edfd3`.
-- Bumped `@microsoft/omnichannel-chat-sdk` to `1.11.9-main.47a6498`. This includes diagnostic telemetry fields in ChatConfigRetrievalFailure events and pulls in the upstream fix that pins the ACS WebChat adapter to exact `0.0.1-beta.8` (instead of `^0.0.1-beta.6` which resolved to the rogue `0.0.1-beta-1` per semver §11), restoring the fast-poll path for the first bot reply.
+- Bumped `@microsoft/omnichannel-chat-widget` from 1.8.4 to 2.0.0.
+- Bumped `@microsoft/omnichannel-chat-components` to `1.2.0-main.5692126`.
+- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.b82e941`.
+- Updated Bot Framework Web Chat, Markdown-It, DOMPurify, `sanitize-html`, Redux, and RxJS to patched compatible releases.
+- Migrated package, sample, UMD, and Storybook builds to Webpack 5 and standardized development and CI on Node.js 22.
+- Preserved and added CI coverage for the published CommonJS package export.
 
 ### Tests
 - [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for internal tracking (AdaptiveCard TalkBack non-radio duplicate labels), internal tracking (ChatButton browse-mode duplicate stops), internal tracking (agent profile name not announced), internal tracking (blank announcement live regions), internal tracking (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
@@ -92,6 +100,8 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+- Removed unused ES5 fork dependencies that shipped stale build toolchains and removed obsolete security resolutions.
+- Bot Framework Web Chat 4.19.1 still declares `sanitize-html` 2.17.4, but its generated allowlist does not permit the advisory's vulnerable `action` or `formaction` attributes; the widget's direct sanitizer uses 2.17.6.
 - Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
 

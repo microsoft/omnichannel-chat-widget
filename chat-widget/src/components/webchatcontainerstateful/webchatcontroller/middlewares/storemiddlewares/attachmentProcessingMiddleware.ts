@@ -4,7 +4,8 @@
  * Handles attachment sending.
  ******/
 
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
+
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,9 +18,12 @@ const createSendFileAction = (files: any[]) => {
     };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const attachmentProcessingMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => async (action: IWebChatAction) => {
-    if (action?.type === WebChatActionType.WEB_CHAT_SEND_MESSAGE && action?.payload?.attachments?.length > 0) {
+const attachmentProcessingMiddleware: WebChatStoreMiddleware = ({ dispatch }) => (next) => async (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
+    if (action.type === WebChatActionType.WEB_CHAT_SEND_MESSAGE && action.payload?.attachments?.length > 0) {
         const files = action.payload.attachments;
 
         if (files.length === 1) {
