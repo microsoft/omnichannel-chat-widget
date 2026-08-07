@@ -1,6 +1,9 @@
 const { JSDOM } = require("jsdom");
 
-const window = new JSDOM("<!doctype html><html><head></head><body></body></html>").window;
+const window = new JSDOM(
+    "<!doctype html><html><head></head><body></body></html>",
+    { pretendToBeVisual: true }
+).window;
 for (const name of [
     "document",
     "HTMLLinkElement",
