@@ -105,6 +105,7 @@ All notable changes to this project will be documented in this file.
 ### Security
 
 - Removed unused ES5 fork dependencies that shipped stale build toolchains and removed obsolete security resolutions.
+- Removed unused DOMPurify type stubs, legacy ESLint plugins/config, file-loader, p-defer, and the unused react-docgen TypeScript plugin.
 - Bot Framework Web Chat 4.19.1 still declares `sanitize-html` 2.17.4, but its generated allowlist does not permit the advisory's vulnerable `action` or `formaction` attributes; the widget's direct sanitizer uses 2.17.6.
 - Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
