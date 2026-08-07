@@ -139,8 +139,8 @@ describeIfBuilt("bot initials accessibility", () => {
             5000
         );
 
-        // Wait for messages to appear
-        await page.Page.waitForTimeout(3000);
+        // Wait for the designer-mode mock activity to finish rendering.
+        await page.Page.waitForSelector(".webchat__bubble__content", { timeout: 15000 });
 
         // Verify that the mock messages are actually rendered
         const messageTexts = await page.Page.evaluate(() => {
