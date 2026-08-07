@@ -92,3 +92,14 @@ jobs:
       - name: Validate CommonJS package
         working-directory: chat-widget
         run: yarn test:cjs
+      - name: Audit packed consumer
+        working-directory: chat-widget
+        shell: pwsh
+        run: |
+          $consumer = Join-Path $env:RUNNER_TEMP "chat-widget-consumer"
+          $tarball = Join-Path $env:RUNNER_TEMP "chat-widget.tgz"
+          New-Item -ItemType Directory -Path $consumer -Force | Out-Null
+          yarn pack --filename $tarball --silent
+          Set-Content -Path (Join-Path $consumer "package.json") -Value '{"name":"chat-widget-consumer","version":"1.0.0","private":true}'
+          npm install $tarball --ignore-scripts --no-fund
+          npm audit --omit=dev
