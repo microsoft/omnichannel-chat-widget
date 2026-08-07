@@ -1,6 +1,6 @@
 import { ElementType, Regex } from "./Constants";
 
-import { AdaptiveCard } from "adaptivecards/dist/adaptivecards.js";
+import { AdaptiveCard } from "adaptivecards";
 import { BroadcastService } from "../services/BroadcastService";
 import { ICustomEvent } from "../interfaces/ICustomEvent";
 import { ReactNode } from "react";

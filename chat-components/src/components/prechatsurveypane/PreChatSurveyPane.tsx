@@ -1,4 +1,4 @@
-import * as AdaptiveCards from "adaptivecards/dist/adaptivecards.js";
+import * as AdaptiveCards from "adaptivecards";
 
 import { ElementType, EventNames } from "../../common/Constants";
 import { IStackStyles, Stack } from "@fluentui/react";

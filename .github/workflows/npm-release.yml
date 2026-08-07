@@ -83,7 +83,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version-file: .nvmrc
           registry-url: https://registry.npmjs.org
 
       - name: Update package version from git

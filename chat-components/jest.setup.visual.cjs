@@ -7,9 +7,30 @@ const storybookAccessibilityTooling = require("../tools/accessibility/storybookP
 const { ReadableStream, TransformStream, WritableStream } = require("node:stream/web");
 const { Blob, File } = require("node:buffer");
 const { MessageChannel, MessagePort } = require("node:worker_threads");
-Object.assign(globalThis, { Blob, File, MessageChannel, MessagePort, ReadableStream, TransformStream, WritableStream });
+
+// Jest 27 omits some Node 22 web globals from its VM context. Add only missing
+// values so the harness never replaces Node's built-in undici/Web Streams realm.
+const platformGlobals = {
+    Blob,
+    File,
+    MessageChannel,
+    MessagePort,
+    ReadableStream,
+    TransformStream,
+    WritableStream
+};
+for (const [name, value] of Object.entries(platformGlobals)) {
+    if (typeof globalThis[name] === "undefined") {
+        globalThis[name] = value;
+    }
+}
+
 const { fetch, FormData, Headers, Request, Response } = require("undici");
-Object.assign(globalThis, { fetch, FormData, Headers, Request, Response });
+for (const [name, value] of Object.entries({ fetch, FormData, Headers, Request, Response })) {
+    if (typeof globalThis[name] === "undefined") {
+        globalThis[name] = value;
+    }
+}
 const playwright = require("playwright");
 
 expect.extend({ toMatchScreenshots });
@@ -27,6 +48,7 @@ const browserNames = getEnabledBrowsers(playwright, process.env.STORYBOOK_BROWSE
 
 jest.setTimeout(50000);
 
+// Launching and closing three browsers can exceed the per-test timeout on slow CI agents.
 const HOOK_TIMEOUT_MS = 120000;
 const BROWSER_CLOSE_TIMEOUT_MS = 30000;
 
@@ -48,6 +70,8 @@ beforeAll(async () => {
                 throw new Error(`Browser "${browserType}" was not launched for profile "${screenshotProfile.name}".`);
             }
             const page = await browser[browserType].newPage(mergePageOptions(screenshotProfile, options));
+            // Keep visual tests independent of external survey hosts. Storybook still
+            // uses the live URLs during manual testing. See issue #921.
             const surveyFixtureHtml = "<!DOCTYPE html>"
                 + "<html lang=\"en\"><head><meta charset=\"utf-8\"><title>Survey fixture</title>"
                 + "<style>body{font-family:Segoe UI,Arial,sans-serif;background:#fff;color:#000;margin:0;padding:24px}"
@@ -78,6 +102,7 @@ beforeAll(async () => {
         beforeScreenshot: async (page) => {
             await page.waitForLoadState("load", { timeout: 10000 });
             await page.locator(".sb-preparing-story").waitFor({ state: "hidden", timeout: 10000 });
+            // Apply emulation after Storybook is ready to avoid iframe-load races.
             await preparePageForProfile(page, screenshotProfile);
         },
         screenshotOptions: {
@@ -92,6 +117,7 @@ beforeAll(async () => {
 }, HOOK_TIMEOUT_MS);
 
 afterAll(async () => {
+    // Log leftover contexts/pages to identify the browser that pins teardown if close hangs.
     for (const browserType of Object.keys(browser)) {
         const instance = browser[browserType];
         if (!instance) continue;
