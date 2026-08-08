@@ -30,11 +30,6 @@ jobs:
       - name: Install packages
         working-directory: chat-widget
         run: yarn install --network-timeout 1000000
-      - name: Upload generated lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: public-yarn-lock
-          path: chat-widget/yarn.lock
       - name: Fetch base branch
         working-directory: chat-widget
         run: git fetch origin main:main
@@ -72,8 +67,13 @@ jobs:
           New-Item -ItemType Directory -Path $consumer -Force | Out-Null
           yarn pack --filename $tarball --silent
           Set-Content -Path (Join-Path $consumer "package.json") -Value '{"name":"chat-widget-consumer","version":"1.0.0","private":true}'
-          npm install $tarball --ignore-scripts --no-fund
-          npm audit --omit=dev
+          Push-Location $consumer
+          try {
+            npm install $tarball --ignore-scripts --no-fund
+            npm audit --omit=dev
+          } finally {
+            Pop-Location
+          }
       - name: E2E Tests
         working-directory: chat-widget/automation_tests
         run: yarn test
