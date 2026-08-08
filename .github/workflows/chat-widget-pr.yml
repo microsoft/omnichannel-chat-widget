@@ -30,6 +30,11 @@ jobs:
       - name: Install packages
         working-directory: chat-widget
         run: yarn install --network-timeout 1000000
+      - name: Upload generated lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-yarn-lock
+          path: chat-widget/yarn.lock
       - name: Fetch base branch
         working-directory: chat-widget
         run: git fetch origin main:main
@@ -70,7 +75,9 @@ jobs:
           Push-Location $consumer
           try {
             npm install $tarball --ignore-scripts --no-fund
-            npm audit --omit=dev
+            $auditPath = Join-Path $consumer "audit.json"
+            npm audit --omit=dev --json | Set-Content -Path $auditPath -Encoding utf8NoBOM
+            node (Join-Path $env:GITHUB_WORKSPACE "chat-widget/scripts/validate-consumer-audit.cjs") $auditPath
           } finally {
             Pop-Location
           }
