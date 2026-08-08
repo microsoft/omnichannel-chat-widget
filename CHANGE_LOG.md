@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.b82e941`.
 - Updated Bot Framework Web Chat, Markdown-It, DOMPurify, `sanitize-html`, Redux, and RxJS to patched compatible releases.
 - Migrated package, sample, UMD, and Storybook builds to Webpack 5 and standardized development and CI on Node.js 22.
-- Preserved and added browser-environment CI coverage for the published CommonJS package export.
+- Preserved and added browser-bundler CI coverage for the published CommonJS package export.
 - Deduplicated Trusted Types definitions across DOMPurify and the widget build.
 - Pinned compatible `@types/glob` and `@types/minimatch` definitions required by the legacy Storybook/Jest toolchain.
 - Added a packed-consumer production audit to the PR validation gate.
