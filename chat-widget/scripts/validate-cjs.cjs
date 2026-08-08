@@ -11,5 +11,16 @@ for (const name of Object.getOwnPropertyNames(window)) {
 }
 globalThis.window = window;
 globalThis.self = window;
+for (const name of [
+    "CustomEvent",
+    "Event",
+    "EventTarget",
+    "FocusEvent",
+    "KeyboardEvent",
+    "MessageEvent",
+    "MouseEvent"
+]) {
+    globalThis[name] = window[name];
+}
 
 require("../lib/cjs/index.js");
