@@ -14,7 +14,8 @@ export const isWebChatAction = (action: unknown): action is IWebChatAction =>
     typeof action === "object" &&
     action !== null &&
     "type" in action &&
-    "payload" in action;
+    typeof action.type === "string" &&
+    Object.prototype.hasOwnProperty.call(action, "payload");
 
 /**
  * Shared middleware type matching the Redux 5 `Middleware` signature expected by

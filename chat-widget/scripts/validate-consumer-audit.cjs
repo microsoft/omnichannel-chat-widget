@@ -1,7 +1,17 @@
 const { readFileSync } = require("node:fs");
 
 const report = JSON.parse(readFileSync(process.argv[2], "utf8"));
-const vulnerabilities = report.vulnerabilities ?? {};
+if (
+    report.error ||
+    typeof report.vulnerabilities !== "object" ||
+    report.vulnerabilities === null ||
+    Array.isArray(report.vulnerabilities)
+) {
+    console.error("Packed-consumer audit did not return a valid vulnerability report.");
+    process.exit(1);
+}
+
+const vulnerabilities = report.vulnerabilities;
 const allowedAdvisories = new Set([
     "https://github.com/advisories/GHSA-5qjj-4xww-7phc",
     "https://github.com/advisories/GHSA-vccv-cmxp-4j9h",
