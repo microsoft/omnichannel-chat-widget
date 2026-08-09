@@ -8,8 +8,12 @@ on:
     paths:
       - 'chat-components/**'
       - '.github/workflows/**'
-      
-jobs: 
+
+permissions:
+  contents: read       # For checkout
+  actions: write       # For downloading and uploading artifacts
+
+jobs:
   build:
     runs-on: windows-2022
     steps:
