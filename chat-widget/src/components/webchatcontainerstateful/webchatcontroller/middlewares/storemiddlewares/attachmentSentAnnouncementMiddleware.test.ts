@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import attachmentSentAnnouncementMiddleware from "./attachmentSentAnnouncementMiddleware";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
@@ -8,25 +11,34 @@ describe("attachmentSentAnnouncementMiddleware", () => {
     let next: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let middleware: any;
-    let container: HTMLDivElement;
+
+    // Simulate the webchat transcript log element (role="log" aria-live="polite")
+    let logEl: HTMLElement;
 
     beforeEach(() => {
         dispatch = jest.fn();
         next = jest.fn((action) => action);
         middleware = attachmentSentAnnouncementMiddleware({ dispatch })(next);
-
-        // Set up the DOM with the widget container
-        container = document.createElement("div");
-        container.id = "oc-lcw-container";
-        document.body.appendChild(container);
-
         jest.useFakeTimers();
+
+        // Create a dialog containing a role="log" element — mirrors the real widget DOM
+        const dialog = document.createElement("div");
+        dialog.setAttribute("role", "dialog");
+        logEl = document.createElement("div");
+        logEl.setAttribute("role", "log");
+        logEl.setAttribute("aria-live", "polite");
+        dialog.appendChild(logEl);
+        document.body.appendChild(dialog);
     });
 
     afterEach(() => {
         document.body.innerHTML = "";
         jest.useRealTimers();
     });
+
+    // Elements are plain divs — no role so TalkBack reads only the text, not a role name
+    const getStatusElements = () =>
+        Array.from(logEl.querySelectorAll("div"));
 
     test("passes non-attachment actions through without announcing", () => {
         const action = {
@@ -35,13 +47,13 @@ describe("attachmentSentAnnouncementMiddleware", () => {
         };
 
         middleware(action);
+        jest.runAllTimers();
 
         expect(next).toHaveBeenCalledWith(action);
-        const region = document.getElementById("oc-lcw-attachment-announcement");
-        expect(region).toBeNull();
+        expect(getStatusElements().length).toBe(0);
     });
 
-    test("announces when a single file attachment is sent", () => {
+    test("appends status item to role=log transcript for single file", () => {
         const action = {
             type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED,
             payload: {
@@ -52,14 +64,12 @@ describe("attachmentSentAnnouncementMiddleware", () => {
         };
 
         middleware(action);
-        jest.advanceTimersByTime(150);
+        jest.advanceTimersByTime(400);
 
         expect(next).toHaveBeenCalledWith(action);
-        const region = document.getElementById("oc-lcw-attachment-announcement");
-        expect(region).not.toBeNull();
-        expect(region?.textContent).toBe("File sent");
-        expect(region?.getAttribute("aria-live")).toBe("polite");
-        expect(region?.getAttribute("role")).toBe("status");
+        const items = getStatusElements();
+        expect(items.length).toBe(1);
+        expect(items[0].textContent).toBe("File sent");
     });
 
     test("announces correct count when multiple files are sent", () => {
@@ -77,30 +87,25 @@ describe("attachmentSentAnnouncementMiddleware", () => {
         };
 
         middleware(action);
-        jest.advanceTimersByTime(150);
+        jest.advanceTimersByTime(400);
 
-        const region = document.getElementById("oc-lcw-attachment-announcement");
-        expect(region?.textContent).toBe("3 files sent");
+        const items = getStatusElements();
+        expect(items[0].textContent).toBe("3 files sent");
     });
 
     test("does not announce for POST_ACTIVITY_FULFILLED without attachments", () => {
         const action = {
             type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED,
-            payload: {
-                activity: {
-                    text: "just a text message"
-                }
-            }
+            payload: { activity: { text: "just a text message" } }
         };
 
         middleware(action);
-        jest.advanceTimersByTime(150);
+        jest.runAllTimers();
 
-        const region = document.getElementById("oc-lcw-attachment-announcement");
-        expect(region).toBeNull();
+        expect(getStatusElements().length).toBe(0);
     });
 
-    test("creates aria-live region inside oc-lcw-container", () => {
+    test("status item is inside the role=log transcript (not document.body)", () => {
         const action = {
             type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED,
             payload: {
@@ -111,38 +116,14 @@ describe("attachmentSentAnnouncementMiddleware", () => {
         };
 
         middleware(action);
+        jest.advanceTimersByTime(400);
 
-        const region = document.getElementById("oc-lcw-attachment-announcement");
-        expect(region).not.toBeNull();
-        expect(container.contains(region)).toBe(true);
+        expect(getStatusElements().length).toBe(1);
+        // Must be inside the log, NOT a direct child of body
+        expect(document.body.children.length).toBe(1); // only the dialog wrapper
     });
 
-    test("announces 'File sent' with correct aria attributes on DIRECT_LINE_POST_ACTIVITY_FULFILLED with attachments", () => {
-        const action = {
-            type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED,
-            payload: {
-                activity: {
-                    attachments: [{ name: "report.xlsx", contentType: "application/vnd.ms-excel" }]
-                }
-            }
-        };
-
-        middleware(action);
-
-        // Before timer fires, region should exist but be cleared
-        const region = document.getElementById("oc-lcw-attachment-announcement");
-        expect(region).not.toBeNull();
-        expect(region?.textContent).toBe("");
-
-        // After delay, announce message should be set
-        jest.advanceTimersByTime(150);
-        expect(region?.textContent).toBe("File sent");
-        expect(region?.getAttribute("aria-live")).toBe("polite");
-        expect(region?.getAttribute("role")).toBe("status");
-        expect(region?.getAttribute("aria-atomic")).toBe("true");
-    });
-
-    test("reuses existing aria-live region on subsequent announcements", () => {
+    test("status item is removed from log after 3 seconds", () => {
         const action = {
             type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED,
             payload: {
@@ -153,11 +134,28 @@ describe("attachmentSentAnnouncementMiddleware", () => {
         };
 
         middleware(action);
-        jest.advanceTimersByTime(150);
-        middleware(action);
-        jest.advanceTimersByTime(150);
+        jest.advanceTimersByTime(400);
+        expect(getStatusElements().length).toBe(1);
 
-        const regions = document.querySelectorAll("#oc-lcw-attachment-announcement");
-        expect(regions.length).toBe(1);
+        jest.advanceTimersByTime(3000);
+        expect(getStatusElements().length).toBe(0);
+    });
+
+    test("falls back gracefully when no role=log element exists", () => {
+        // Remove the log element to test the no-log fallback
+        document.body.innerHTML = "";
+        const action = {
+            type: WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED,
+            payload: {
+                activity: {
+                    attachments: [{ name: "doc.pdf", contentType: "application/pdf" }]
+                }
+            }
+        };
+
+        expect(() => {
+            middleware(action);
+            jest.runAllTimers();
+        }).not.toThrow();
     });
 });
