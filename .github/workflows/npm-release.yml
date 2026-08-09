@@ -60,6 +60,8 @@ jobs:
 
       - name: Install packages
         working-directory: chat-widget
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: yarn install --network-timeout 100000
 
       - name: Build
@@ -99,6 +101,8 @@ jobs:
 
       - name: Install packages
         working-directory: chat-components
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: yarn install --network-timeout 100000
 
       - name: Build
