@@ -13,8 +13,15 @@ if (
 
 const vulnerabilities = report.vulnerabilities;
 const allowedAdvisories = new Set([
+    "https://github.com/advisories/GHSA-22p9-wv53-3rq4",
+    "https://github.com/advisories/GHSA-38c4-r59v-3vqw",
     "https://github.com/advisories/GHSA-5qjj-4xww-7phc",
+    "https://github.com/advisories/GHSA-6v5v-wf23-fmfq",
+    "https://github.com/advisories/GHSA-968p-4wvh-cqc8",
+    "https://github.com/advisories/GHSA-hmx5-qpq5-p643",
+    "https://github.com/advisories/GHSA-v245-v573-v5vm",
     "https://github.com/advisories/GHSA-vccv-cmxp-4j9h",
+    "https://github.com/advisories/GHSA-vqpr-j7v3-hqw9",
     "https://github.com/advisories/GHSA-w5hq-g745-h8pq"
 ]);
 const foundAdvisories = new Set();

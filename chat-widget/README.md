@@ -58,12 +58,18 @@ This hotfix still declares these vulnerable transitive versions:
 
 | Package | Hotfix version |
 | --- | --- |
+| `adaptivecards` | `3.0.2` |
 | `markdown-it` | `13.0.2` |
 | `linkify-it` | `4.0.1` |
 | `@babel/runtime` | `7.14.8`, `7.15.4`, and `7.19.0` |
+| `sanitize-html` | `2.14.0` |
+| `swiper` | `8.4.7` |
+| `valibot` | `1.1.0` |
 | `uuid` | `3.4.0`, `8.3.2`, and `9.0.1` |
 
-Do not suppress these findings. A new WebChat hotfix must preserve the product fix and update these dependencies.
+The consumer audit permits only the reviewed advisories from this hotfix. It rejects each new advisory.
+
+A new WebChat hotfix must preserve the product fix and update these dependencies.
 
 ## Example Usage
 

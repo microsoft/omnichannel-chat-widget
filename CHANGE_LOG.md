@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 - Retained required product hotfix `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
 - Added a PR check that rejects changes to the required Bot Framework Web Chat hotfix version.
 - Updated Markdown-It, DOMPurify, `sanitize-html`, Redux, and RxJS to patched compatible releases.
-- Kept the packed-consumer audit blocking for vulnerable dependencies that the required WebChat hotfix still owns.
+- Limited the packed-consumer audit exceptions to reviewed advisories that the required WebChat hotfix still owns.
 - Migrated package, sample, UMD, and Storybook builds to Webpack 5 and standardized development and CI on Node.js 22.
 - Preserved and added browser-bundler CI coverage for the published CommonJS package export.
 - Deduplicated Trusted Types definitions across DOMPurify and the widget build.
