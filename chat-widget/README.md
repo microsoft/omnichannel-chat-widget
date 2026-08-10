@@ -11,6 +11,7 @@
 
 1. [Introduction](#introduction)
 1. [Installation](#installation)
+1. [WebChat dependency constraint](#webchat-dependency-constraint)
 1. [Example Usage](#example-usage)
 1. [Components](#components)
 1. [See Also](#see-also)
@@ -46,6 +47,12 @@ or
 ```powershell
 yarn add @microsoft/omnichannel-chat-components
 ```
+
+## WebChat dependency constraint
+
+The widget must use `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
+
+Do not upgrade or replace this version. It contains a required product hotfix. The PR workflow rejects a different version.
 
 ## Example Usage
 

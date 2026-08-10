@@ -30,6 +30,14 @@ jobs:
       - name: Install packages
         working-directory: chat-widget
         run: yarn install --network-timeout 1000000
+      - name: Validate WebChat hotfix version
+        working-directory: chat-widget
+        run: yarn test:webchat-version
+      - name: Upload generated widget lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: chat-widget-yarn-lock
+          path: chat-widget/yarn.lock
       - name: Fetch base branch
         working-directory: chat-widget
         run: git fetch origin main:main
