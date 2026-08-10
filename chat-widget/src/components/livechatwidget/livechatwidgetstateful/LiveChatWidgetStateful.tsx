@@ -77,7 +77,6 @@ import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatCont
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
-import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
 import { disposeTelemetryLoggers } from "../common/disposeTelemetryLoggers";
@@ -96,6 +95,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
 import { getPostChatContext, initiatePostChat } from "../common/renderSurveyHelpers";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
+import { resolveBubbleStyleOptions } from "./resolveBubbleStyleOptions";
 
 let uiTimer : ITimer;
 
@@ -122,10 +122,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const [conversationId, setConversationId] = useState<string>("");
     const { Composer } = Components;
     const canStartProactiveChat = useRef(true);
-    const bubbleBackground = props.webChatContainerProps?.webChatStyles?.bubbleBackground ??
-        (props.webChatContainerProps?.adaptiveCardStyles?.background ?? defaultAdaptiveCardStyles.background);
-    const bubbleTextColor = props.webChatContainerProps?.webChatStyles?.bubbleTextColor ??
-        (props.webChatContainerProps?.adaptiveCardStyles?.color ?? defaultAdaptiveCardStyles.color);
+    const { bubbleBackground, bubbleTextColor } = resolveBubbleStyleOptions(props.webChatContainerProps);
 
     // Process general styles
     const generalStyles: IStackStyles = {
