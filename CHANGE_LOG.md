@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Retained required product hotfix `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
 - Added a PR check that rejects changes to the required Bot Framework Web Chat hotfix version.
 - Updated Markdown-It, DOMPurify, `sanitize-html`, Redux, and RxJS to patched compatible releases.
+- Kept the packed-consumer audit blocking for vulnerable dependencies that the required WebChat hotfix still owns.
 - Migrated package, sample, UMD, and Storybook builds to Webpack 5 and standardized development and CI on Node.js 22.
 - Preserved and added browser-bundler CI coverage for the published CommonJS package export.
 - Deduplicated Trusted Types definitions across DOMPurify and the widget build.
@@ -110,6 +111,7 @@ All notable changes to this project will be documented in this file.
 - Removed unused ES5 fork dependencies that shipped stale build toolchains and removed obsolete security resolutions.
 - Removed unused DOMPurify type stubs, legacy ESLint plugins/config, file-loader, p-defer, and the unused react-docgen TypeScript plugin.
 - The required WebChat hotfix declares `sanitize-html` 2.14.0. Its generated allowlist excludes the vulnerable `action` and `formaction` attributes.
+- The required WebChat hotfix still owns the Bug 6562437 findings for `markdown-it`, `linkify-it`, `@babel/runtime`, and `uuid`.
 - Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
 

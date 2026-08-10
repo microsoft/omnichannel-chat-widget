@@ -6,6 +6,9 @@ const packageJson = JSON.parse(readFileSync(resolve(__dirname, "..", "package.js
 const configuredVersion = packageJson.dependencies?.["botframework-webchat"];
 
 if (configuredVersion !== requiredVersion) {
-    console.error(`botframework-webchat must remain at ${requiredVersion}. Found ${configuredVersion ?? "no version"}.`);
+    console.error(
+        `botframework-webchat must remain at ${requiredVersion}. Found ${configuredVersion ?? "no version"}. ` +
+        "Read the WebChat dependency constraint in chat-widget/README.md."
+    );
     process.exit(1);
 }

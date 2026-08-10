@@ -54,6 +54,17 @@ The widget must use `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
 
 Do not upgrade or replace this version. It contains a required product hotfix. The PR workflow rejects a different version.
 
+This hotfix still declares these vulnerable transitive versions:
+
+| Package | Hotfix version |
+| --- | --- |
+| `markdown-it` | `13.0.2` |
+| `linkify-it` | `4.0.1` |
+| `@babel/runtime` | `7.14.8`, `7.15.4`, and `7.19.0` |
+| `uuid` | `3.4.0`, `8.3.2`, and `9.0.1` |
+
+Do not suppress these findings. A new WebChat hotfix must preserve the product fix and update these dependencies.
+
 ## Example Usage
 
 The basic example below takes in the ```<LiveChatWidget/>``` component along with the Chat SDK to create a customized Omnichannel chat widget.

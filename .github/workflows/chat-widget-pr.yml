@@ -33,11 +33,6 @@ jobs:
       - name: Validate WebChat hotfix version
         working-directory: chat-widget
         run: yarn test:webchat-version
-      - name: Upload generated widget lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: chat-widget-yarn-lock
-          path: chat-widget/yarn.lock
       - name: Fetch base branch
         working-directory: chat-widget
         run: git fetch origin main:main
@@ -67,6 +62,8 @@ jobs:
         working-directory: chat-widget
         run: yarn test:cjs
       - name: Audit packed consumer
+        id: packed-consumer-audit
+        continue-on-error: true
         working-directory: chat-widget
         shell: pwsh
         run: |
@@ -118,3 +115,7 @@ jobs:
       - name: Build package
         working-directory: chat-widget
         run: yarn build
+      - name: Enforce packed consumer audit
+        if: always() && steps.packed-consumer-audit.outcome == 'failure'
+        shell: pwsh
+        run: exit 1
