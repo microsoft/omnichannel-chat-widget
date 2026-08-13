@@ -62,6 +62,7 @@ This hotfix still declares these vulnerable transitive versions:
 | `markdown-it` | `13.0.2` |
 | `linkify-it` | `4.0.1` |
 | `@babel/runtime` | `7.14.8`, `7.15.4`, and `7.19.0` |
+| `@babel/runtime-corejs3` | `7.20.13` |
 | `sanitize-html` | `2.14.0` |
 | `swiper` | `8.4.7` |
 | `valibot` | `1.1.0` |

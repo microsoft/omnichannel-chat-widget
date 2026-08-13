@@ -21,7 +21,7 @@ All notable changes to this project will be documented in this file.
 - Updated Markdown-It, DOMPurify, and `sanitize-html` to patched compatible releases.
 - Declared and pinned legacy RxJS `5.5.12` for adapters that still use RxJS 5 deep imports; transcript download continues to load its separate RxJS 7 browser global.
 - Removed the unused direct Redux 5 runtime dependency by making the middleware declaration structural and self-contained.
-- Limited the packed-consumer audit exceptions to reviewed advisories that the required WebChat hotfix still owns.
+- Limited packed-consumer audit exceptions to exact package versions and their reviewed WebChat or chat SDK dependency roots.
 - Migrated package, sample, UMD, and Storybook builds to Webpack 5 and standardized development and CI on Node.js 22.
 - Preserved the Storybook Playwright screenshot-authoring panel in development while excluding its Webpack 5-incompatible preset from static builds.
 - Preserved and added browser-bundler CI coverage for the published CommonJS package export.
