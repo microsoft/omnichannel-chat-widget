@@ -12,19 +12,20 @@ on:
     inputs:
       package:
         type: choice
-        description: Which package to publish
+        description: Which package to republish from this ref
         options:
           - chat-widget
-          - chat-components
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   publish-chat-widget:
     if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && (startsWith(github.ref, 'refs/tags/w-v') || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/hotfix/') || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-widget')) }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Configure git line endings
         run: git config --global core.autocrlf true
@@ -49,6 +50,22 @@ jobs:
           echo "name=$(jq -r '.name' chat-widget/package.json)" >> "$GITHUB_OUTPUT"
           echo "version=$(jq -r '.version' chat-widget/package.json)" >> "$GITHUB_OUTPUT"
 
+      - name: Validate official tag
+        if: ${{ startsWith(github.ref, 'refs/tags/w-v') }}
+        run: |
+          VERSION="${{ steps.read-package-json.outputs.version }}"
+          EXPECTED_TAG="w-v${VERSION}"
+
+          if [[ "$VERSION" == *-* ]]; then
+            echo "::error::Official releases require a stable package version. Found: $VERSION"
+            exit 1
+          fi
+
+          if [[ "$GITHUB_REF_NAME" != "$EXPECTED_TAG" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match chat-widget/package.json version $VERSION. Expected $EXPECTED_TAG."
+            exit 1
+          fi
+
       - name: Determine npm dist-tag
         id: dist-tag
         run: |
@@ -60,19 +77,105 @@ jobs:
 
       - name: Install packages
         working-directory: chat-widget
-        run: yarn install --network-timeout 100000
+        run: yarn install --frozen-lockfile --network-timeout 100000
 
       - name: Build
         working-directory: chat-widget
         run: yarn build
 
+      - name: Unit tests
+        working-directory: chat-widget
+        run: yarn test:unit
+
+      - name: CommonJS package test
+        working-directory: chat-widget
+        run: |
+          if jq -e '.scripts["test:cjs"]' package.json > /dev/null; then
+            yarn test:cjs
+          else
+            echo "::notice::The current package does not define test:cjs."
+          fi
+
+      - name: Pack npm tarball
+        id: pack
+        working-directory: chat-widget
+        run: |
+          PACK_OUTPUT="$(npm pack --json)"
+          TARBALL="$(jq -r '.[0].filename' <<< "$PACK_OUTPUT")"
+
+          if [[ -z "$TARBALL" || "$TARBALL" == "null" || ! -f "$TARBALL" ]]; then
+            echo "::error::npm pack did not create the expected tarball."
+            exit 1
+          fi
+
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+
+      - name: Upload official release tarball
+        if: ${{ startsWith(github.ref, 'refs/tags/w-v') }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: chat-widget-npm-package
+          path: chat-widget/${{ steps.pack.outputs.tarball }}
+          if-no-files-found: error
+
       - name: Publish ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
         working-directory: chat-widget
-        run: npx npm@11.12.1 publish --provenance --tag ${{ steps.dist-tag.outputs.tag }} --access public
+        run: npx npm@11.12.1 publish "./${{ steps.pack.outputs.tarball }}" --provenance --tag ${{ steps.dist-tag.outputs.tag }} --access public
+
+  create-chat-widget-github-release:
+    if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && startsWith(github.ref, 'refs/tags/w-v') }}
+    needs: publish-chat-widget
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checking out for ${{ github.ref }}
+        uses: actions/checkout@v4
+
+      - name: Download official release tarball
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: chat-widget-npm-package
+          path: release-assets
+
+      - name: Extract Chat Widget release notes
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#w-v}"
+          TARGET="## [$VERSION]"
+
+          awk -v target="$TARGET" '
+            /^# Chat-Widget[[:space:]]*$/ { in_widget=1; next }
+            in_widget && ($0 == target || index($0, target " ") == 1) { capture=1; next }
+            capture && /^## \[/ { exit }
+            capture && /^# / { exit }
+            capture { print }
+          ' CHANGE_LOG.md > RELEASE_NOTES.md
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if grep -q '[^[:space:]]' RELEASE_NOTES.md; then
+            echo "fallback=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::No Chat Widget changelog entry found for $VERSION. Using generated notes."
+            echo "fallback=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Chat Widget v${{ steps.changelog.outputs.version }}
+          body_path: ${{ steps.changelog.outputs.fallback == 'false' && 'RELEASE_NOTES.md' || '' }}
+          generate_release_notes: ${{ steps.changelog.outputs.fallback == 'true' }}
+          files: release-assets/*.tgz
+          fail_on_unmatched_files: true
 
   publish-chat-components:
-    if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && (startsWith(github.ref, 'refs/tags/c-v') || github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.package == 'chat-components')) }}
+    if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && (startsWith(github.ref, 'refs/tags/c-v') || github.ref == 'refs/heads/main') }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Configure git line endings
         run: git config --global core.autocrlf true
@@ -97,14 +200,108 @@ jobs:
           echo "name=$(jq -r '.name' chat-components/package.json)" >> "$GITHUB_OUTPUT"
           echo "version=$(jq -r '.version' chat-components/package.json)" >> "$GITHUB_OUTPUT"
 
+      - name: Validate official tag
+        if: ${{ startsWith(github.ref, 'refs/tags/c-v') }}
+        run: |
+          VERSION="${{ steps.read-package-json.outputs.version }}"
+          EXPECTED_TAG="c-v${VERSION}"
+
+          if [[ "$VERSION" == *-* ]]; then
+            echo "::error::Official releases require a stable package version. Found: $VERSION"
+            exit 1
+          fi
+
+          if [[ "$GITHUB_REF_NAME" != "$EXPECTED_TAG" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match chat-components/package.json version $VERSION. Expected $EXPECTED_TAG."
+            exit 1
+          fi
+
       - name: Install packages
         working-directory: chat-components
-        run: yarn install --network-timeout 100000
+        run: yarn install --frozen-lockfile --network-timeout 100000
 
       - name: Build
         working-directory: chat-components
         run: yarn build
 
+      - name: Unit tests
+        working-directory: chat-components
+        run: yarn test:unit
+
+      - name: CommonJS package test
+        working-directory: chat-components
+        run: yarn test:cjs
+
+      - name: Pack npm tarball
+        id: pack
+        working-directory: chat-components
+        run: |
+          PACK_OUTPUT="$(npm pack --json)"
+          TARBALL="$(jq -r '.[0].filename' <<< "$PACK_OUTPUT")"
+
+          if [[ -z "$TARBALL" || "$TARBALL" == "null" || ! -f "$TARBALL" ]]; then
+            echo "::error::npm pack did not create the expected tarball."
+            exit 1
+          fi
+
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+
+      - name: Upload official release tarball
+        if: ${{ startsWith(github.ref, 'refs/tags/c-v') }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: chat-components-npm-package
+          path: chat-components/${{ steps.pack.outputs.tarball }}
+          if-no-files-found: error
+
       - name: Publish ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
         working-directory: chat-components
-        run: npx npm@11.12.1 publish --provenance --tag latest --access public
+        run: npx npm@11.12.1 publish "./${{ steps.pack.outputs.tarball }}" --provenance --tag latest --access public
+
+  create-chat-components-github-release:
+    if: ${{ github.repository == 'microsoft/omnichannel-chat-widget' && startsWith(github.ref, 'refs/tags/c-v') }}
+    needs: publish-chat-components
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checking out for ${{ github.ref }}
+        uses: actions/checkout@v4
+
+      - name: Download official release tarball
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: chat-components-npm-package
+          path: release-assets
+
+      - name: Extract Chat Components release notes
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#c-v}"
+          TARGET="## [$VERSION]"
+
+          awk -v target="$TARGET" '
+            /^# Chat-Components[[:space:]]*$/ { in_components=1; next }
+            in_components && ($0 == target || index($0, target " ") == 1) { capture=1; next }
+            capture && /^## \[/ { exit }
+            capture && /^# / { exit }
+            capture { print }
+          ' CHANGE_LOG.md > RELEASE_NOTES.md
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if grep -q '[^[:space:]]' RELEASE_NOTES.md; then
+            echo "fallback=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::No Chat Components changelog entry found for $VERSION. Using generated notes."
+            echo "fallback=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Chat Components v${{ steps.changelog.outputs.version }}
+          body_path: ${{ steps.changelog.outputs.fallback == 'false' && 'RELEASE_NOTES.md' || '' }}
+          generate_release_notes: ${{ steps.changelog.outputs.fallback == 'true' }}
+          files: release-assets/*.tgz
+          fail_on_unmatched_files: true
