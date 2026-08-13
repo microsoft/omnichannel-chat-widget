@@ -146,9 +146,9 @@ jobs:
 
           awk -v target="$TARGET" '
             /^# Chat-Widget[[:space:]]*$/ { in_widget=1; next }
+            in_widget && /^# / { exit }
             in_widget && ($0 == target || index($0, target " ") == 1) { capture=1; next }
             capture && /^## \[/ { exit }
-            capture && /^# / { exit }
             capture { print }
           ' CHANGE_LOG.md > RELEASE_NOTES.md
 
@@ -282,9 +282,9 @@ jobs:
 
           awk -v target="$TARGET" '
             /^# Chat-Components[[:space:]]*$/ { in_components=1; next }
+            in_components && /^# / { exit }
             in_components && ($0 == target || index($0, target " ") == 1) { capture=1; next }
             capture && /^## \[/ { exit }
-            capture && /^# / { exit }
             capture { print }
           ' CHANGE_LOG.md > RELEASE_NOTES.md
 
