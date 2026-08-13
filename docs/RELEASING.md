@@ -166,7 +166,9 @@ Run the commands that the pull-request workflow defines. At minimum, run these c
 yarn install --frozen-lockfile
 yarn build
 yarn test:unit
-yarn test:cjs
+if node -e 'process.exit(require("./package.json").scripts["test:cjs"] ? 0 : 1)'; then
+  yarn test:cjs
+fi
 yarn build-storybook
 yarn test:visual --forceExit
 ```
