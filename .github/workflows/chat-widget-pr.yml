@@ -69,10 +69,14 @@ jobs:
           $tarball = Join-Path $env:RUNNER_TEMP "chat-widget.tgz"
           New-Item -ItemType Directory -Path $consumer -Force | Out-Null
           yarn pack --filename $tarball --silent
+          if ($LASTEXITCODE -ne 0) { throw "yarn pack failed" }
           Set-Content -Path (Join-Path $consumer "package.json") -Value '{"name":"chat-widget-consumer","version":"1.0.0","private":true}'
           Push-Location $consumer
           try {
             npm install $tarball --ignore-scripts --no-fund
+            if ($LASTEXITCODE -ne 0) { throw "npm install failed" }
+            $installedWidget = Join-Path $consumer "node_modules/@microsoft/omnichannel-chat-widget"
+            if (-not (Test-Path $installedWidget)) { throw "Packed chat widget was not installed" }
             $auditPath = Join-Path $consumer "audit.json"
             npm audit --omit=dev --json | Set-Content -Path $auditPath -Encoding utf8NoBOM
             node (Join-Path $env:GITHUB_WORKSPACE "chat-widget/scripts/validate-consumer-audit.cjs") $auditPath

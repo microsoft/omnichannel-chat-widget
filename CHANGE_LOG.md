@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-08-13
+
 ### Breaking
 
 - Raised the supported consumer build runtime to Node.js `>=22.12.0`, matching chat SDK 2.0.0 and the remediated dependency chain.
@@ -16,9 +18,12 @@ All notable changes to this project will be documented in this file.
 - Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.b82e941`.
 - Retained required product hotfix `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
 - Added a PR check that rejects changes to the required Bot Framework Web Chat hotfix version.
-- Updated Markdown-It, DOMPurify, `sanitize-html`, Redux, and RxJS to patched compatible releases.
+- Updated Markdown-It, DOMPurify, and `sanitize-html` to patched compatible releases.
+- Declared and pinned legacy RxJS `5.5.12` for adapters that still use RxJS 5 deep imports; transcript download continues to load its separate RxJS 7 browser global.
+- Removed the unused direct Redux 5 runtime dependency by making the middleware declaration structural and self-contained.
 - Limited the packed-consumer audit exceptions to reviewed advisories that the required WebChat hotfix still owns.
 - Migrated package, sample, UMD, and Storybook builds to Webpack 5 and standardized development and CI on Node.js 22.
+- Preserved the Storybook Playwright screenshot-authoring panel in development while excluding its Webpack 5-incompatible preset from static builds.
 - Preserved and added browser-bundler CI coverage for the published CommonJS package export.
 - Deduplicated Trusted Types definitions across DOMPurify and the widget build.
 - Pinned compatible `@types/glob` and `@types/minimatch` definitions required by the legacy Storybook/Jest toolchain.

@@ -1,17 +1,24 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const addons = [
+  "@storybook/addon-links",
+  "@storybook/addon-essentials",
+  "@storybook/addon-a11y",
+  "@storybook/addon-knobs"
+];
+
+if (process.env.STORYBOOK_BUILD_MODE !== "true") {
+  addons.push("storybook-addon-playwright/preset");
+  addons.push("storybook-addon-playwright/register");
+}
+
 module.exports = {
   "stories": [
     "../*.stories.tsx",
     "../**/*.stories.tsx"
   ],
-  "addons": [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-a11y",
-    "@storybook/addon-knobs"
-  ],
+  "addons": addons,
   "core": {
     "builder": "@storybook/builder-webpack5",
     "disableTelemetry": true

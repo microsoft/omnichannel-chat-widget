@@ -77,6 +77,7 @@
     "react-dom": "^18.3.1",
     "react-native-web": "^0.21.2",
     "react-test-renderer": "^18.3.1",
+    "redux": "^5.0.1",
     "rimraf": "^6.0.1",
     "storybook-addon-playwright": "4.9.2",
     "swiper": "^12.1.2",
@@ -102,8 +103,7 @@
     "markdown-it-attrs": "^4.1.6",
     "markdown-it-for-inline": "^0.1.1",
     "md5-typescript": "^1.0.5",
-    "redux": "^5.0.1",
-    "rxjs": "^5.5.12",
+    "rxjs": "5.5.12",
     "sanitize-html": "2.17.6",
     "simple-update-in": "2.2.0",
     "slack-markdown-it": "^1.0.5"
@@ -111,8 +111,8 @@
   "scripts": {
     "storybook": "start-storybook -p 6006",
     "compose-storybook": "start-storybook -c stories/.storybook -p 9009",
-    "build-composite-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook -c stories/.storybook -o storybook-build",
-    "build-storybook": "cross-env NODE_OPTIONS=--openssl-legacy-provider build-storybook",
+    "build-composite-storybook": "cross-env STORYBOOK_BUILD_MODE=true NODE_OPTIONS=--openssl-legacy-provider build-storybook -c stories/.storybook -o storybook-build",
+    "build-storybook": "cross-env STORYBOOK_BUILD_MODE=true NODE_OPTIONS=--openssl-legacy-provider build-storybook",
     "build": "yarn clean && yarn lint && yarn build:esm && yarn build:cjs && tsc",
     "test:unit": "jest -c jest.config.unit.cjs --env=jsdom --runInBand --force-exit",
     "test:a11y": "jest -c jest.config.a11y.cjs --runInBand --force-exit",
@@ -148,7 +148,7 @@
     "prepush": "yarn lint && yarn danger:prepush",
     "danger:prepush": "yarn danger local --dangerfile dangerfile.js --base main",
     "pretest:visual": "yarn playwright install",
-    "prepare": "node -e \"const fs=require('node:fs'),cp=require('node:child_process'),path=require('node:path');const repoRoot=path.resolve('..');if(fs.existsSync(path.join(repoRoot,'.git'))){cp.execFileSync(process.execPath,[path.resolve('node_modules','husky','bin.js'),'chat-widget/.husky'],{cwd:repoRoot,stdio:'inherit'});}\"",
+    "prepare": "node ./scripts/prepare.cjs",
     "clean": "rimraf lib",
     "dev": "concurrently \"yarn build:esm:watch\" \"webpack --config ./webpack.config.cjs --watch\""
   },

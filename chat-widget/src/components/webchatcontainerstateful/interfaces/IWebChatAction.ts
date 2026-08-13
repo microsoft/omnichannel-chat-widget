@@ -1,9 +1,7 @@
-import type { Middleware } from "redux";
-
 export interface IWebChatAction {
     type: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    payload: any;
+    payload?: any;
 }
 
 /**
@@ -14,12 +12,15 @@ export const isWebChatAction = (action: unknown): action is IWebChatAction =>
     typeof action === "object" &&
     action !== null &&
     "type" in action &&
-    typeof action.type === "string" &&
-    Object.prototype.hasOwnProperty.call(action, "payload");
+    typeof action.type === "string";
 
 /**
- * Shared middleware type matching the Redux 5 `Middleware` signature expected by
- * botframework-webchat's `createStore`. Use this instead of typing individual
- * middleware `next`/`action` parameters as `any`.
+ * Structural middleware type matching the unknown-action contract expected by
+ * botframework-webchat's `createStore` without exposing Redux as a public dependency.
  */
-export type WebChatStoreMiddleware = Middleware;
+type WebChatDispatch = (action: unknown) => unknown;
+
+export type WebChatStoreMiddleware = (api: {
+    dispatch: WebChatDispatch;
+    getState: () => unknown;
+}) => (next: WebChatDispatch) => WebChatDispatch;
