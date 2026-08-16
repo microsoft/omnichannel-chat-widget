@@ -76,6 +76,12 @@ jobs:
           fi
 
       - name: Install packages
+        if: ${{ !startsWith(github.ref, 'refs/tags/w-v') }}
+        working-directory: chat-widget
+        run: yarn install --network-timeout 100000
+
+      - name: Install locked packages
+        if: ${{ startsWith(github.ref, 'refs/tags/w-v') }}
         working-directory: chat-widget
         run: yarn install --frozen-lockfile --network-timeout 100000
 
@@ -84,10 +90,12 @@ jobs:
         run: yarn build
 
       - name: Unit tests
+        if: ${{ startsWith(github.ref, 'refs/tags/w-v') }}
         working-directory: chat-widget
         run: yarn test:unit
 
       - name: CommonJS package test
+        if: ${{ startsWith(github.ref, 'refs/tags/w-v') }}
         working-directory: chat-widget
         run: |
           if jq -e '.scripts["test:cjs"]' package.json > /dev/null; then
@@ -217,6 +225,12 @@ jobs:
           fi
 
       - name: Install packages
+        if: ${{ !startsWith(github.ref, 'refs/tags/c-v') }}
+        working-directory: chat-components
+        run: yarn install --network-timeout 100000
+
+      - name: Install locked packages
+        if: ${{ startsWith(github.ref, 'refs/tags/c-v') }}
         working-directory: chat-components
         run: yarn install --frozen-lockfile --network-timeout 100000
 
@@ -225,10 +239,12 @@ jobs:
         run: yarn build
 
       - name: Unit tests
+        if: ${{ startsWith(github.ref, 'refs/tags/c-v') }}
         working-directory: chat-components
         run: yarn test:unit
 
       - name: CommonJS package test
+        if: ${{ startsWith(github.ref, 'refs/tags/c-v') }}
         working-directory: chat-components
         run: yarn test:cjs
 

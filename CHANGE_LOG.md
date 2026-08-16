@@ -802,28 +802,14 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.0] - 2026-08-13
 
-GitHub Release automation starts with `1.2.0`. Versions after `1.1.8` were published to npm without matching GitHub Releases.
-
-### Previous npm releases
-
-| Version | Date | Summary |
-| --- | --- | --- |
-| `1.1.9` | 2025-05-14 | Updated Bot Framework Web Chat. |
-| `1.1.10` | 2025-05-20 | Updated React and related development packages to version 18. |
-| `1.1.11` | 2025-05-22 | Rolled back the Bot Framework Web Chat preview package. |
-| `1.1.12` | 2025-05-29 | Updated the Bot Framework Web Chat preview package. |
-| `1.1.13` | 2025-07-22 | Added `EventQueue` as a fallback for unprocessed `BroadcastService` events. |
-| `1.1.14` | 2025-09-09 | Added `CitationPane`. |
-| `1.1.15` | 2025-10-03 | Hid the lower citation close button at high zoom levels. |
-| `1.1.16` | 2025-10-14 | Removed a duplicate TalkBack announcement for email errors. |
-| `1.1.17` | 2026-03-10 | Reapplied URL sanitization, corrected header overflow, and cleaned dependency resolutions. |
-| `1.1.18` | 2026-01-20 | Added URL sanitization and protocol validation for XSS protection. |
-| `1.1.19` | 2026-01-23 | Updated Babel, Storybook, and Lodash dependencies. |
+GitHub Release automation starts with `1.2.0`. Versions `1.1.17`, `1.1.18`, and `1.1.19` were published to npm without matching GitHub Releases. Their notes are listed below.
 
 ### Added
 
 - Added accessibility scans, Storybook profiles, Jest harnesses, and regression tests.
-- Added XSS regression tests for URL sanitization and protocol validation.
+- Added XSS protection tests for URL sanitization and protocol validation.
+- Added a CommonJS package validation command.
+- Added a Babel 7.24.7 helper compatibility pin for Storybook 6.5.
 - Added automated npm and GitHub Releases for official `c-v*` and `w-v*` tags.
 
 ### Changed
@@ -833,30 +819,45 @@ GitHub Release automation starts with `1.2.0`. Versions after `1.1.8` were publi
 - Updated Adaptive Cards to `3.0.6`, `broadcast-channel` to `7.3.0`, Fluent UI to `8.125.7`, and Swiper to `12.1.2`.
 - Kept Adaptive Cards tree-shakeable for ESM consumers.
 - Remapped Adaptive Cards to its UMD entry only in the CommonJS build.
-- Added a Babel helper compatibility pin for Storybook 6.5.
-- Added a CommonJS package validation command.
 - Updated the public package and release documentation.
 
 ### Fixed
 
-- [A11Y] Added an accessible name and group role to the Cancel and Send button groups.
-- [A11Y] Removed duplicate NVDA and JAWS browse-mode stops from `ChatButton`.
-- [iOS] Prevented automatic zoom for pre-chat text, multiline, and choice inputs.
-- [iOS] Removed the blank first row from compact pre-chat choice fields.
-- [iOS] Corrected required-field validation when a compact choice field contains one option.
-- Limited long header titles to two lines and added a tooltip for the full title.
-- Preserved the CommonJS export and marked `lib/cjs` as CommonJS.
-- Stabilized Storybook visual tests on Node.js 22.
-- Corrected the `ConfirmationPane` preset story export.
+- [A11Y] Added an accessible name and group role to the Cancel and Send button groups in InputValidationPane and ConfirmationPane.
+- [A11Y] `ChatButton` no longer produces duplicate NVDA / JAWS browse-mode stops on the title / subtitle Labels.
+- [iOS] Prevented automatic zoom for pre-chat text, multiline, and choice inputs by setting the default font size to 16px.
+- [iOS] Removed the blank first row from compact pre-chat choice fields and corrected required-field validation when a ChoiceSet has one option.
+- Limited long header titles to two lines with ellipsis and added a tooltip for the full title.
+- Preserved the published CommonJS export by remapping Adaptive Cards only in the CommonJS build and marking `lib/cjs` as CommonJS.
+- Stabilized Storybook visual tests on Node.js 22 and corrected the ConfirmationPane preset story export.
 
 ### Security
 
-- Escaped HTML text and link attributes in `replaceURLWithAnchor`.
+- Fixed XSS in `replaceURLWithAnchor` with `escapeHTML()`, `escapeHrefAttribute()`, and `isValidURL()`.
 - Blocked dangerous URL protocols and accepted only HTTP, HTTPS, and `www` links.
 - Updated YAML to `1.10.3` to prevent a stack overflow from deeply nested input.
 - Updated Adaptive Cards and `broadcast-channel` to patched dependency lines.
 - Removed stale Markdown, sanitizer, Lodash, Nano ID, and brace-expansion resolutions.
 - Retained `glob-parent` `5.1.2` to block a vulnerable Storybook watch dependency.
+
+## [1.1.19] - 2026-01-23
+
+### Changed
+
+- Updated Babel dependencies to latest versions.
+- Updated Lodash to v4.17.23 to address security vulnerabilities.
+
+## [1.1.18] - 2026-01-20
+
+### Added
+
+- Added XSS protection tests for URL sanitization (11 new tests).
+
+## [1.1.17] - 2026-01-16
+
+### Security
+
+- Fixed XSS vulnerabilities in text handling and URL processing.
 
 ## [1.1.16] - 2025-10-14
 

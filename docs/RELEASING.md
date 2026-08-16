@@ -20,6 +20,8 @@ The `.github/workflows/npm-release.yml` workflow uses npm trusted publishing. It
 
 The `latest` npm tag can point to a `main` prerelease after a merge. Production applications must pin an exact stable version.
 
+A push to `main` or `hotfix/**` builds and publishes. Official tags also install from the lockfile and run the package tests.
+
 Do not use `workflow_dispatch` or `npm publish` for an official release.
 
 ## Official Chat Components release
