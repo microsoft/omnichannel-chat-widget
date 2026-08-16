@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Breaking
 
 - Raised the supported consumer build runtime to Node.js `>=22.12.0`, matching chat SDK 2.0.0 and the remediated dependency chain.
+- Exported Web Chat middleware factories now use a structural `WebChatStoreMiddleware` type whose `action` is `unknown`. Runtime dispatch is unchanged; TypeScript callers must narrow with `isWebChatAction` instead of assuming `IWebChatAction`.
 
 ### Changed
 - Bumped `@microsoft/omnichannel-chat-widget` from 1.8.4 to 2.0.0.

@@ -48,6 +48,10 @@ or
 yarn add @microsoft/omnichannel-chat-components
 ```
 
+This package requires Node.js `>=22.12.0` for consumer builds. Node 20 is not supported.
+
+TypeScript consumers that imported the exported Web Chat middleware factories now receive Redux 5 `unknown` actions. Narrow with `isWebChatAction` before reading `type` or `payload`. Runtime behavior is unchanged.
+
 ## WebChat dependency constraint
 
 The widget must use `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
