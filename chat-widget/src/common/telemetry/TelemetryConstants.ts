@@ -133,6 +133,7 @@ export enum TelemetryEvent {
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
     StartChatEventReceived = "StartChatEventReceived",
+    ConcurrentStartChatRejected = "ConcurrentStartChatRejected",
     EndChatSDKCall = "EndChatSDKCall",
     PrepareEndChat = "PrepareEndChat",
     EndChatEventReceived = "EndChatEventReceived",
@@ -424,6 +425,7 @@ export class TelemetryConstants {
             case TelemetryEvent.SecureEventBusDispatchError:
             case TelemetryEvent.AgentJoinedConversation:
             case TelemetryEvent.BrowserTabHidden:
+            case TelemetryEvent.ConcurrentStartChatRejected:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:

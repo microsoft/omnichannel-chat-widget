@@ -33,10 +33,61 @@ let widgetInstanceId: any | "";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let popoutWidgetInstanceId: any | "";
 
+interface IStartChatGuard {
+    inFlight: Promise<void> | null;
+}
 
+/**
+ * Module level mutexes for the two chat creation entry points.
+ *
+ * Every guard in the prepareStartChat -> setPreChatAndInitiateChat -> initStartChat chain
+ * checks `conversationState === Closed`, but React state is updated asynchronously. A second
+ * invocation fired within the same render cycle (for example a rapid double click on the chat
+ * button, or a chat button click racing a BroadcastEvent.StartChat) therefore still observes
+ * the stale `Closed` state, reaches `facadeChatSDK.startChat()` and creates a second
+ * conversation on the backend which is then orphaned and never ended.
+ *
+ * The two guards are separate because prepareStartChat calls initStartChat; sharing a single
+ * guard would make the nested call see its own parent as in flight and drop it.
+ */
+const prepareStartChatGuard: IStartChatGuard = { inFlight: null };
+const initStartChatGuard: IStartChatGuard = { inFlight: null };
+
+/**
+ * Runs `operation` only if no other invocation guarded by `guard` is already in flight.
+ * Concurrent invocations are dropped (and reported through telemetry) rather than awaiting the
+ * in-flight promise, so a future re-entrant call can never deadlock on itself. No caller acts
+ * on the resolved value, so dropping is safe.
+ */
+const runExclusively = async (guard: IStartChatGuard, description: string, operation: () => Promise<void>): Promise<void> => {
+    if (guard.inFlight) {
+        TelemetryHelper.logActionEvent(LogLevel.WARN, {
+            Event: TelemetryEvent.ConcurrentStartChatRejected,
+            Description: description
+        });
+        return;
+    }
+
+    const inFlight = operation();
+    guard.inFlight = inFlight;
+
+    try {
+        await inFlight;
+    } finally {
+        guard.inFlight = null;
+    }
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
+const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any): Promise<void> => {
+    return runExclusively(
+        prepareStartChatGuard,
+        "Concurrent prepareStartChat call ignored, a start chat operation is already in progress.",
+        () => prepareStartChatInternal(props, facadeChatSDK, state, dispatch, setAdapter));
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const prepareStartChatInternal = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     optionalParams = {}; //Resetting to ensure no stale values
     widgetInstanceId = getWidgetCacheIdfromProps(props);
 
@@ -139,7 +190,15 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
+const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any): Promise<void> => {
+    return runExclusively(
+        initStartChatGuard,
+        "Concurrent initStartChat call ignored, a start chat operation is already in progress.",
+        () => initStartChatInternal(facadeChatSDK, dispatch, setAdapter, state, props, params, persistedState));
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
     const persistentChatEnabled = isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
