@@ -37,7 +37,8 @@ Use this procedure for `@microsoft/omnichannel-chat-components`.
 5. Change the prior component `Unreleased` section to `## [<version>] - YYYY-MM-DD`.
 6. Use no more than one `Added`, `Changed`, `Fixed`, or `Security` section.
 7. Update `chat-components/README.md` and the release information in the root `README.md`.
-8. Update this document when the release process changes.
+8. Add the official version to the root README support table. Use the tag date as the release date. Set the end of support to 12 months later.
+9. Update this document when the release process changes.
 
 Make sure that the version does not exist on npm:
 
@@ -153,7 +154,8 @@ If a release pull request already exists, do not create a second version or chan
 5. Change the prior widget `Unreleased` section to `## [<version>] - YYYY-MM-DD`.
 6. Use no more than one `Added`, `Changed`, `Fixed`, or `Security` section.
 7. Update `chat-widget/README.md` and the release information in the root `README.md`.
-8. Update migration documentation for every breaking release.
+8. Add the official version to the root README support table. Use the tag date as the release date. Set the end of support to 12 months later.
+9. Update migration documentation for every breaking release.
 
 Make sure that the version does not exist on npm:
 

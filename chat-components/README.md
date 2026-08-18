@@ -128,6 +128,8 @@ yarn test:visual --forceExit
 
 Official Chat Components tags use `c-v<version>`. Starting with `c-v1.2.0`, each tag publishes the same tarball to npm and GitHub.
 
+`1.2.0` was released on 2026-08-18. Official support ends on 2027-08-18. See the [root support table](https://github.com/microsoft/omnichannel-chat-widget#chat-components).
+
 ## Support and security
 
 - Use [GitHub Issues](https://github.com/microsoft/omnichannel-chat-widget/issues) for reproducible product defects.

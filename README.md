@@ -8,7 +8,7 @@
 
 > NEW! Check out our new [Developer Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md), which has detailed explanations of all component interfaces accompanied with sample code.
 
-> NEW! Version 1.2.0 introduces draggable widget, allowing the widget panel to move anywhere in the browser window. Set `draggableChatWidgetProps.disabled` to `true` to disable this behavior. See [interface](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetProps.ts#L68).
+> NEW! Version 2.0.0 requires Node.js `>=22.12.0` and uses `@microsoft/omnichannel-chat-components@1.2.0`. Pin exact stable versions in production.
 
 ## Table of Contents
 
@@ -38,6 +38,27 @@ Read the [release procedure](docs/RELEASING.md) before you prepare or publish a 
 Starting with `c-v1.2.0` and `w-v2.0.0`, each official tag publishes one tarball to npm and a matching GitHub Release.
 
 Pushes to `main` publish prerelease versions with the npm tag `latest`. Production applications must pin an exact stable version.
+
+Official versions receive support for 12 months after the release date.
+
+### Chat Widget
+
+| Version | Docs | Release Date | End of Support |
+| -- | -- | -- | -- |
+| 2.0.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v2.0.0) | 2026-08-18 | 2027-08-18 |
+| 1.8.7 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v1.8.7) | 2026-01-26 | 2027-01-26 |
+| 1.8.6 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v1.8.6) | 2026-01-25 | 2027-01-25 |
+| 1.8.5 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v1.8.5) | 2026-01-22 | 2027-01-22 |
+| 1.8.3 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v1.8.3) | 2025-10-07 | 2026-10-07 |
+
+### Chat Components
+
+| Version | Docs | Release Date | End of Support |
+| -- | -- | -- | -- |
+| 1.2.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.2.0) | 2026-08-18 | 2027-08-18 |
+| 1.1.19 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.19) | 2026-01-23 | 2027-01-23 |
+| 1.1.18 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.18) | 2026-01-20 | 2027-01-20 |
+| 1.1.17 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.17) | 2026-01-16 | 2027-01-16 |
 
 ## Installation
 
