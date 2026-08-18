@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [2.0.0] - 2026-08-13
+## [2.0.0] - 2026-08-18
 
 ### Breaking
 
@@ -15,8 +15,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Bumped `@microsoft/omnichannel-chat-widget` from 1.8.4 to 2.0.0.
-- Bumped `@microsoft/omnichannel-chat-components` to `1.2.0-main.5692126`.
-- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.b82e941`.
+- Bumped `@microsoft/omnichannel-chat-components` to `1.2.0`.
+- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0`, which uses `@microsoft/ocsdk@0.6.0` and `@microsoft/omnichannel-amsclient@0.2.0`.
 - Retained required product hotfix `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
 - Added a PR check that rejects changes to the required Bot Framework Web Chat hotfix version.
 - Updated Markdown-It, DOMPurify, and `sanitize-html` to patched compatible releases.
@@ -828,7 +828,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [1.2.0] - 2026-08-13
+## [1.2.0] - 2026-08-18
 
 GitHub Release automation starts with `1.2.0`. Versions `1.1.17`, `1.1.18`, and `1.1.19` were published to npm without matching GitHub Releases. Their notes are listed below.
 
