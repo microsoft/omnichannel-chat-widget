@@ -26,20 +26,87 @@ import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurv
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let optionalParams: StartChatOptionalParams = {};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let widgetInstanceId: any | "";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let popoutWidgetInstanceId: any | "";
+interface IStartChatGuard {
+    inFlight: Promise<void> | null;
+}
 
+/**
+ * Per widget instance mutexes for the two chat creation entry points.
+ *
+ * Every guard in the prepareStartChat -> setPreChatAndInitiateChat -> initStartChat chain
+ * checks `conversationState === Closed`, but React state is updated asynchronously. A second
+ * invocation fired within the same render cycle (for example a rapid double click on the chat
+ * button, or a chat button click racing a BroadcastEvent.StartChat) therefore still observes
+ * the stale `Closed` state, reaches `facadeChatSDK.startChat()` and creates a second
+ * conversation on the backend which is then orphaned and never ended.
+ *
+ * The locks are keyed by FacadeChatSDK instance rather than being module wide, because a host
+ * page can mount several independent widgets, each with its own widgetInstanceId and its own
+ * FacadeChatSDK (created once per widget in LiveChatWidget.tsx). A module wide lock would make
+ * widget A's start chat silently drop widget B's legitimate simultaneous start chat.
+ *
+ * The two maps are separate because prepareStartChat calls initStartChat; sharing a single lock
+ * would make the nested call see its own parent as in flight and drop it.
+ */
+const prepareStartChatGuards = new WeakMap<object, IStartChatGuard>();
+const initStartChatGuards = new WeakMap<object, IStartChatGuard>();
 
+// Fallback owner used only when no FacadeChatSDK instance is available to key on, so the guard
+// degrades to the module wide behaviour instead of disappearing altogether.
+const unkeyedGuardOwner = {};
+
+const getGuard = (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK?: FacadeChatSDK): IStartChatGuard => {
+    const owner: object = facadeChatSDK ?? unkeyedGuardOwner;
+    let guard = guards.get(owner);
+
+    if (!guard) {
+        guard = { inFlight: null };
+        guards.set(owner, guard);
+    }
+
+    return guard;
+};
+
+/**
+ * Runs `operation` only if no other invocation for the same widget instance is already in
+ * flight. Concurrent invocations are dropped (and reported through telemetry) rather than
+ * awaiting the in-flight promise, so a future re-entrant call can never deadlock on itself.
+ * No caller acts on the resolved value, so dropping is safe.
+ */
+const runExclusively = async (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK: FacadeChatSDK, description: string, operation: () => Promise<void>, props?: ILiveChatWidgetProps): Promise<void> => {
+    const guard = getGuard(guards, facadeChatSDK);
+
+    if (guard.inFlight) {
+        TelemetryHelper.logActionEvent(LogLevel.WARN, {
+            Event: TelemetryEvent.ConcurrentStartChatRejected,
+            Description: description,
+            CustomProperties: { WidgetCacheId: props ? getWidgetCacheIdfromProps(props) : undefined }
+        });
+        return;
+    }
+
+    const inFlight = operation();
+    guard.inFlight = inFlight;
+
+    try {
+        await inFlight;
+    } finally {
+        guard.inFlight = null;
+    }
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
-    optionalParams = {}; //Resetting to ensure no stale values
-    widgetInstanceId = getWidgetCacheIdfromProps(props);
+const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any): Promise<void> => {
+    return runExclusively(
+        prepareStartChatGuards,
+        facadeChatSDK,
+        "Concurrent prepareStartChat call ignored, a start chat operation is already in progress for this widget instance.",
+        () => prepareStartChatInternal(props, facadeChatSDK, state, dispatch, setAdapter),
+        props);
+};
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const prepareStartChatInternal = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
     // reconnect > chat from cache
     if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
         const shouldStartChatNormally = await handleChatReconnect(facadeChatSDK, props, dispatch, setAdapter, initStartChat, state);
@@ -139,7 +206,17 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
+const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any): Promise<void> => {
+    return runExclusively(
+        initStartChatGuards,
+        facadeChatSDK,
+        "Concurrent initStartChat call ignored, a start chat operation is already in progress for this widget instance.",
+        () => initStartChatInternal(facadeChatSDK, dispatch, setAdapter, state, props, params, persistedState),
+        props);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
     let isStartChatSuccessful = false;
     const persistentChatEnabled = isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
@@ -173,14 +250,15 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         }
 
         try {
-            // Set custom context params
-            await setCustomContextParams(state, props);
+            // Set custom context params. Returned (not stored module-side) so that concurrent
+            // widget instances cannot overwrite each other's custom context.
+            const customContextParams = await setCustomContextParams(state, props);
             const defaultOptionalParams: StartChatOptionalParams = {
                 sendDefaultInitContext: true,
                 isProactiveChat: !!params?.isProactiveChat,
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
-            const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+            const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, customContextParams, defaultOptionalParams);
 
             // MID-AUTH: Add wasAuthenticated flag for reconnect scenarios
             // Tells FacadeChatSDK whether the previous session was authenticated
@@ -256,9 +334,6 @@ const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<IL
         await updateTelemetryData(facadeChatSDK, dispatch);
     } catch (ex) {
         handleStartChatError(dispatch, facadeChatSDK, props, ex, isStartChatSuccessful);
-    } finally {
-        optionalParams = {};
-        widgetInstanceId = "";
     }
 };
 
@@ -295,19 +370,22 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, facadeChatS
     return false;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps) => {
+/**
+ * Resolves the custom context to start the chat with.
+ *
+ * Returns the resolved params instead of mutating module-level state: a page can host several
+ * independent widgets, and once per-instance start-chat guards allow them to run concurrently,
+ * shared mutable state would let one widget overwrite another widget's custom context.
+ */
+const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps): Promise<StartChatOptionalParams> => {
 
     if (state?.domainStates?.customContext) {
-        optionalParams = Object.assign({}, optionalParams, {
+        return {
             customContext: JSON.parse(JSON.stringify(state?.domainStates?.customContext))
-        });
-        return;
+        };
     }
 
-    if (isNullOrEmptyString(widgetInstanceId)) {
-        widgetInstanceId = getWidgetCacheIdfromProps(props);
-    }
+    const widgetInstanceId = props ? getWidgetCacheIdfromProps(props) : "";
     // Add custom context only for unauthenticated chat
     const persistedState = getStateFromCache(widgetInstanceId);
     const customContextLocal = persistedState?.domainStates?.customContext ?? props?.initialCustomContext;
@@ -317,17 +395,19 @@ const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined,
             Description: "Setting custom context for unauthenticated chat"
         });
 
-        optionalParams = Object.assign({}, optionalParams, {
+        return {
             customContext: JSON.parse(JSON.stringify(customContextLocal))
-        });
-    } else {
-        const customContextFromParent = await getInitContextParamsForPopout();
-        if (!isUndefinedOrEmpty(customContextFromParent?.contextVariables)) {
-            optionalParams = Object.assign({}, optionalParams, {
-                customContext: JSON.parse(JSON.stringify(customContextFromParent.contextVariables))
-            });
-        }
+        };
     }
+
+    const customContextFromParent = await getInitContextParamsForPopout();
+    if (!isUndefinedOrEmpty(customContextFromParent?.contextVariables)) {
+        return {
+            customContext: JSON.parse(JSON.stringify(customContextFromParent.contextVariables))
+        };
+    }
+
+    return {};
 };
 
 const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
@@ -335,7 +415,7 @@ const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
         return false;
     }
 
-    popoutWidgetInstanceId = getWidgetCacheIdfromProps(props, true);
+    const popoutWidgetInstanceId = getWidgetCacheIdfromProps(props, true);
 
     if (!isNullOrEmptyString(popoutWidgetInstanceId)) {
         const persistedState = getStateFromCache(popoutWidgetInstanceId);

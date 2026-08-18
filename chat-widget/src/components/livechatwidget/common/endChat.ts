@@ -293,12 +293,21 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const chatSDKStateCleanUp = (chatSDK: any) => {
+    if (!chatSDK) {
+        return;
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chatSDK as any).requestId = uuidv4();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chatSDK as any).chatToken = {};
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chatSDK as any).reconnectId = null;
+    // Mirrors the internal reset done by OmnichannelChatSDK.endChat(). Without it the previous
+    // session's conversation object leaks into the next chat whenever a new chat is started
+    // without a full endChat (for example after a failed or orphaned start chat).
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (chatSDK as any).conversation = null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
