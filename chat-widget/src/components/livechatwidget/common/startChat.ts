@@ -38,7 +38,7 @@ interface IStartChatGuard {
 }
 
 /**
- * Module level mutexes for the two chat creation entry points.
+ * Per widget instance mutexes for the two chat creation entry points.
  *
  * Every guard in the prepareStartChat -> setPreChatAndInitiateChat -> initStartChat chain
  * checks `conversationState === Closed`, but React state is updated asynchronously. A second
@@ -47,23 +47,47 @@ interface IStartChatGuard {
  * the stale `Closed` state, reaches `facadeChatSDK.startChat()` and creates a second
  * conversation on the backend which is then orphaned and never ended.
  *
- * The two guards are separate because prepareStartChat calls initStartChat; sharing a single
- * guard would make the nested call see its own parent as in flight and drop it.
+ * The locks are keyed by FacadeChatSDK instance rather than being module wide, because a host
+ * page can mount several independent widgets, each with its own widgetInstanceId and its own
+ * FacadeChatSDK (created once per widget in LiveChatWidget.tsx). A module wide lock would make
+ * widget A's start chat silently drop widget B's legitimate simultaneous start chat.
+ *
+ * The two maps are separate because prepareStartChat calls initStartChat; sharing a single lock
+ * would make the nested call see its own parent as in flight and drop it.
  */
-const prepareStartChatGuard: IStartChatGuard = { inFlight: null };
-const initStartChatGuard: IStartChatGuard = { inFlight: null };
+const prepareStartChatGuards = new WeakMap<object, IStartChatGuard>();
+const initStartChatGuards = new WeakMap<object, IStartChatGuard>();
+
+// Fallback owner used only when no FacadeChatSDK instance is available to key on, so the guard
+// degrades to the module wide behaviour instead of disappearing altogether.
+const unkeyedGuardOwner = {};
+
+const getGuard = (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK?: FacadeChatSDK): IStartChatGuard => {
+    const owner: object = facadeChatSDK ?? unkeyedGuardOwner;
+    let guard = guards.get(owner);
+
+    if (!guard) {
+        guard = { inFlight: null };
+        guards.set(owner, guard);
+    }
+
+    return guard;
+};
 
 /**
- * Runs `operation` only if no other invocation guarded by `guard` is already in flight.
- * Concurrent invocations are dropped (and reported through telemetry) rather than awaiting the
- * in-flight promise, so a future re-entrant call can never deadlock on itself. No caller acts
- * on the resolved value, so dropping is safe.
+ * Runs `operation` only if no other invocation for the same widget instance is already in
+ * flight. Concurrent invocations are dropped (and reported through telemetry) rather than
+ * awaiting the in-flight promise, so a future re-entrant call can never deadlock on itself.
+ * No caller acts on the resolved value, so dropping is safe.
  */
-const runExclusively = async (guard: IStartChatGuard, description: string, operation: () => Promise<void>): Promise<void> => {
+const runExclusively = async (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK: FacadeChatSDK, description: string, operation: () => Promise<void>, props?: ILiveChatWidgetProps): Promise<void> => {
+    const guard = getGuard(guards, facadeChatSDK);
+
     if (guard.inFlight) {
         TelemetryHelper.logActionEvent(LogLevel.WARN, {
             Event: TelemetryEvent.ConcurrentStartChatRejected,
-            Description: description
+            Description: description,
+            CustomProperties: { WidgetCacheId: props ? getWidgetCacheIdfromProps(props) : undefined }
         });
         return;
     }
@@ -81,9 +105,11 @@ const runExclusively = async (guard: IStartChatGuard, description: string, opera
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any): Promise<void> => {
     return runExclusively(
-        prepareStartChatGuard,
-        "Concurrent prepareStartChat call ignored, a start chat operation is already in progress.",
-        () => prepareStartChatInternal(props, facadeChatSDK, state, dispatch, setAdapter));
+        prepareStartChatGuards,
+        facadeChatSDK,
+        "Concurrent prepareStartChat call ignored, a start chat operation is already in progress for this widget instance.",
+        () => prepareStartChatInternal(props, facadeChatSDK, state, dispatch, setAdapter),
+        props);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -192,9 +218,11 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any): Promise<void> => {
     return runExclusively(
-        initStartChatGuard,
-        "Concurrent initStartChat call ignored, a start chat operation is already in progress.",
-        () => initStartChatInternal(facadeChatSDK, dispatch, setAdapter, state, props, params, persistedState));
+        initStartChatGuards,
+        facadeChatSDK,
+        "Concurrent initStartChat call ignored, a start chat operation is already in progress for this widget instance.",
+        () => initStartChatInternal(facadeChatSDK, dispatch, setAdapter, state, props, params, persistedState),
+        props);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

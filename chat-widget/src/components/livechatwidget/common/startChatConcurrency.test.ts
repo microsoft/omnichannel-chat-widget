@@ -55,7 +55,7 @@ jest.mock("./updateSessionDataForTelemetry", () => ({
 // not transitively load @microsoft/omnichannel-chat-sdk.
 jest.mock("../../../common/utils", () => ({
     createTimer: jest.fn(() => ({ milliSecondsElapsed: 0 })),
-    getWidgetCacheIdfromProps: jest.fn(() => "test-widget-id"),
+    getWidgetCacheIdfromProps: jest.fn((props: any) => props?.controlProps?.widgetInstanceId ?? "test-widget-id"),
     getStateFromCache: jest.fn(() => null),
     getConversationDetailsCall: jest.fn(async () => ({})),
     checkContactIdError: jest.fn(),
@@ -116,6 +116,22 @@ const createDeferred = () => {
     return { promise, resolve, reject };
 };
 
+// Each widget instance owns its own FacadeChatSDK (created once per widget in LiveChatWidget),
+// which is what the start chat locks are keyed by.
+const createMockFacadeChatSDK = (): jest.Mocked<FacadeChatSDK> => ({
+    startChat: jest.fn().mockResolvedValue(undefined),
+    getChatToken: jest.fn().mockResolvedValue({ chatId: "chat-id", visitorId: "visitor-id" }),
+    getCurrentLiveChatContext: jest.fn().mockResolvedValue({}),
+    getChatSDK: jest.fn().mockReturnValue({ requestId: "test-request-id" }),
+    getPreChatSurvey: jest.fn().mockResolvedValue("")
+} as any);
+
+const createMockProps = (widgetInstanceId?: string): any => ({
+    allowSdkChatSupport: false,
+    controlProps: widgetInstanceId ? { widgetInstanceId } : {},
+    chatConfig: {}
+});
+
 describe("startChat - concurrent start chat protection", () => {
     let mockFacadeChatSDK: jest.Mocked<FacadeChatSDK>;
     let mockDispatch: jest.Mock;
@@ -126,13 +142,7 @@ describe("startChat - concurrent start chat protection", () => {
     beforeEach(() => {
         jest.clearAllMocks();
 
-        mockFacadeChatSDK = {
-            startChat: jest.fn().mockResolvedValue(undefined),
-            getChatToken: jest.fn().mockResolvedValue({ chatId: "chat-id", visitorId: "visitor-id" }),
-            getCurrentLiveChatContext: jest.fn().mockResolvedValue({}),
-            getChatSDK: jest.fn().mockReturnValue({ requestId: "test-request-id" }),
-            getPreChatSurvey: jest.fn().mockResolvedValue("")
-        } as any;
+        mockFacadeChatSDK = createMockFacadeChatSDK();
 
         mockDispatch = jest.fn();
         mockSetAdapter = jest.fn();
@@ -144,11 +154,7 @@ describe("startChat - concurrent start chat protection", () => {
         mockTelemetryHelper.logLoadingEventToAllTelemetry = jest.fn();
         mockTelemetryHelper.logSDKEvent = jest.fn();
 
-        mockProps = {
-            allowSdkChatSupport: false,
-            controlProps: {},
-            chatConfig: {}
-        };
+        mockProps = createMockProps();
 
         closedState = {
             appStates: {
@@ -226,5 +232,126 @@ describe("startChat - concurrent start chat protection", () => {
         mockFacadeChatSDK.getPreChatSurvey.mockResolvedValue("");
         await prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
         expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+    });
+
+    it("should report the widget cache id of the dropped caller in telemetry", async () => {
+        const deferred = createDeferred();
+        mockFacadeChatSDK.startChat.mockReturnValue(deferred.promise);
+        const props = createMockProps("widget-instance-a");
+
+        const first = prepareStartChat(props, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+        const second = prepareStartChat(props, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+
+        deferred.resolve();
+        await Promise.all([first, second]);
+
+        expect(mockTelemetryHelper.logActionEvent).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+                Event: TelemetryEvent.ConcurrentStartChatRejected,
+                CustomProperties: { WidgetCacheId: "widget-instance-a" }
+            })
+        );
+    });
+
+    describe("multiple widget instances", () => {
+        it("should allow two distinct widget instances to run prepareStartChat concurrently", async () => {
+            const facadeA = createMockFacadeChatSDK();
+            const facadeB = createMockFacadeChatSDK();
+            const propsA = createMockProps("widget-instance-a");
+            const propsB = createMockProps("widget-instance-b");
+
+            const deferredA = createDeferred();
+            const deferredB = createDeferred();
+            facadeA.startChat.mockReturnValue(deferredA.promise);
+            facadeB.startChat.mockReturnValue(deferredB.promise);
+
+            // Both widgets start while the other is still in flight.
+            const first = prepareStartChat(propsA, facadeA, closedState, mockDispatch, mockSetAdapter);
+            const second = prepareStartChat(propsB, facadeB, closedState, mockDispatch, mockSetAdapter);
+
+            deferredA.resolve();
+            deferredB.resolve();
+            await Promise.all([first, second]);
+
+            // Neither instance may be treated as a duplicate of the other.
+            expect(facadeA.startChat).toHaveBeenCalledTimes(1);
+            expect(facadeB.startChat).toHaveBeenCalledTimes(1);
+            expect(mockTelemetryHelper.logActionEvent).not.toHaveBeenCalledWith(
+                expect.anything(),
+                expect.objectContaining({ Event: TelemetryEvent.ConcurrentStartChatRejected })
+            );
+        });
+
+        it("should allow two distinct widget instances to run initStartChat concurrently", async () => {
+            const facadeA = createMockFacadeChatSDK();
+            const facadeB = createMockFacadeChatSDK();
+            const loadingState = { ...closedState, appStates: { ...closedState.appStates, conversationState: ConversationState.Loading } };
+
+            const deferredA = createDeferred();
+            const deferredB = createDeferred();
+            facadeA.startChat.mockReturnValue(deferredA.promise);
+            facadeB.startChat.mockReturnValue(deferredB.promise);
+
+            const first = initStartChat(facadeA, mockDispatch, mockSetAdapter, loadingState, createMockProps("widget-instance-a"));
+            const second = initStartChat(facadeB, mockDispatch, mockSetAdapter, loadingState, createMockProps("widget-instance-b"));
+
+            deferredA.resolve();
+            deferredB.resolve();
+            await Promise.all([first, second]);
+
+            expect(facadeA.startChat).toHaveBeenCalledTimes(1);
+            expect(facadeB.startChat).toHaveBeenCalledTimes(1);
+            expect(mockTelemetryHelper.logActionEvent).not.toHaveBeenCalledWith(
+                expect.anything(),
+                expect.objectContaining({ Event: TelemetryEvent.ConcurrentStartChatRejected })
+            );
+        });
+
+        it("should still drop a duplicate call for one widget instance while a different instance is in flight", async () => {
+            const facadeA = createMockFacadeChatSDK();
+            const facadeB = createMockFacadeChatSDK();
+            const propsA = createMockProps("widget-instance-a");
+            const propsB = createMockProps("widget-instance-b");
+
+            const deferredA = createDeferred();
+            const deferredB = createDeferred();
+            facadeA.startChat.mockReturnValue(deferredA.promise);
+            facadeB.startChat.mockReturnValue(deferredB.promise);
+
+            const firstA = prepareStartChat(propsA, facadeA, closedState, mockDispatch, mockSetAdapter);
+            const duplicateA = prepareStartChat(propsA, facadeA, closedState, mockDispatch, mockSetAdapter);
+            const firstB = prepareStartChat(propsB, facadeB, closedState, mockDispatch, mockSetAdapter);
+
+            deferredA.resolve();
+            deferredB.resolve();
+            await Promise.all([firstA, duplicateA, firstB]);
+
+            expect(facadeA.startChat).toHaveBeenCalledTimes(1);
+            expect(facadeB.startChat).toHaveBeenCalledTimes(1);
+
+            const rejections = mockTelemetryHelper.logActionEvent.mock.calls
+                .filter(([, payload]: any) => payload?.Event === TelemetryEvent.ConcurrentStartChatRejected);
+            expect(rejections).toHaveLength(1);
+            expect(rejections[0][1]).toEqual(
+                expect.objectContaining({ CustomProperties: { WidgetCacheId: "widget-instance-a" } })
+            );
+        });
+
+        it("should release each widget instance guard independently", async () => {
+            const facadeA = createMockFacadeChatSDK();
+            const facadeB = createMockFacadeChatSDK();
+
+            await prepareStartChat(createMockProps("widget-instance-a"), facadeA, closedState, mockDispatch, mockSetAdapter);
+            await prepareStartChat(createMockProps("widget-instance-b"), facadeB, closedState, mockDispatch, mockSetAdapter);
+            await prepareStartChat(createMockProps("widget-instance-a"), facadeA, closedState, mockDispatch, mockSetAdapter);
+
+            expect(facadeA.startChat).toHaveBeenCalledTimes(2);
+            expect(facadeB.startChat).toHaveBeenCalledTimes(1);
+            expect(mockTelemetryHelper.logActionEvent).not.toHaveBeenCalledWith(
+                expect.anything(),
+                expect.objectContaining({ Event: TelemetryEvent.ConcurrentStartChatRejected })
+            );
+        });
     });
 });
