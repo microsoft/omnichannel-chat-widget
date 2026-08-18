@@ -1,13 +1,14 @@
 # Omnichannel Live Chat Widget UI Components
 
-![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-components-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-components)\
-![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-widget-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-widget)
+[![npm Release](https://github.com/microsoft/omnichannel-chat-widget/actions/workflows/npm-release.yml/badge.svg)](https://github.com/microsoft/omnichannel-chat-widget/actions/workflows/npm-release.yml)
+[![Chat Components npm version](https://img.shields.io/npm/v/@microsoft/omnichannel-chat-components)](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components)
+[![Chat Widget npm version](https://img.shields.io/npm/v/@microsoft/omnichannel-chat-widget)](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget)
 
 [@microsoft/omnichannel-chat-widget](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget) is a React-based UI component library which allows you to build your own live chat widget experience using [@microsoft/omnichannel-chat-sdk](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk).
 
 > NEW! Check out our new [Developer Guide](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/customizations/getstarted.md), which has detailed explanations of all component interfaces accompanied with sample code.
 
-> NEW! Veresion 1.2.0 introduces draggable widget, allowing the widget panel to move anywhere in the browser window. Set `draggableChatWidgetProps.disabled` to `true` to disable this behavior. See [interface](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetProps.ts#L68).
+> NEW! Version 1.2.0 introduces draggable widget, allowing the widget panel to move anywhere in the browser window. Set `draggableChatWidgetProps.disabled` to `true` to disable this behavior. See [interface](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/livechatwidget/interfaces/ILiveChatWidgetProps.ts#L68).
 
 ## Table of Contents
 
@@ -25,40 +26,18 @@ For more information about Live Chat Widget, see [here](https://docs.microsoft.c
 
 ## Releases
 
-New releases are published on a regular basis to ensure the product quality.
+The two packages use independent versions and tags.
 
-### Chat Widget
-| Version | Docs | Release Date | End of Support | Deprecated |
-| -- | -- | -- | -- | -- |
-| 1.5.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.5.0) | 2023-11-21 | 2024-11-21 | |
-| 1.4.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.4.0) | 2023-10-25 | 2024-10-25 | |
-| 1.3.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.3.0) | 2023-09-18 | 2024-09-18 | |
-| 1.2.3 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.2.3) | 2023-09-07 | 2024-09-07 | |
-| 1.2.2 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.2.2) | 2023-08-16 | 2024-08-16 | |
-| 1.2.1 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.2.1) | 2023-07-24 | 2024-07-24 | |
-| 1.2.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.2.0) | 2023-07-20 | 2024-07-20 | |
-| 1.1.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-06-08 | 2024-06-08 | |
-| 1.0.5 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.0.5) | 2023-05-26 | 2024-05-26 | |
-| 1.0.4 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.0.4) | 2023-05-08 | 2024-05-08 | |
-| 1.0.3 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.0.3) | 2023-04-24 | 2024-04-24 | |
-| 1.0.2 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.0.2) | 2023-04-06 | 2024-04-06 | |
-| 1.0.1 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.0.1) | 2023-03-23 | 2024-03-23 | |
-| 1.0.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.0.0) | 2023-03-22 | 2024-03-22 | |
+| Package | npm | Changelog | Tag |
+| --- | --- | --- | --- |
+| Chat Components | [npm package](https://www.npmjs.com/package/@microsoft/omnichannel-chat-components) | [Release notes](CHANGE_LOG.md#chat-components) | `c-v<version>` |
+| Chat Widget | [npm package](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget) | [Release notes](CHANGE_LOG.md#chat-widget) | `w-v<version>` |
 
-### Chat Components
-| Version | Docs | Release Date | End of Support | Deprecated |
-| -- | -- | -- | -- | -- |
-| 1.1.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-12-12 | 2024-12-12 | |
-| 1.0.9 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-12-07 | 2024-12-07 | |
-| 1.0.8 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-10-31 | 2024-10-31 | |
-| 1.0.7 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-09-13 | 2024-09-13 | |
-| 1.0.6 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-08-18 | 2024-08-18 | |
-| 1.0.5 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-07-20 | 2024-07-20 | |
-| 1.0.4 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-06-20 | 2024-06-20 | |
-| 1.0.3 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-06-08 | 2024-06-08 | |
-| 1.0.2 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-06-06 | 2024-06-06 | |
-| 1.0.1 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-04-04 | 2024-04-04 | |
-| 1.0.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/c-v1.1.0) | 2023-03-15 | 2024-03-15 | |
+Read the [release procedure](docs/RELEASING.md) before you prepare or publish a release.
+
+Starting with `c-v1.2.0` and `w-v2.0.0`, each official tag publishes one tarball to npm and a matching GitHub Release.
+
+Pushes to `main` publish prerelease versions with the npm tag `latest`. Production applications must pin an exact stable version.
 
 ## Installation
 
