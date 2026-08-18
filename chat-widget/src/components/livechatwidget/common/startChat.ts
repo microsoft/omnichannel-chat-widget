@@ -26,13 +26,6 @@ import { setPostChatContextAndLoadSurvey } from "./setPostChatContextAndLoadSurv
 import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let optionalParams: StartChatOptionalParams = {};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let widgetInstanceId: any | "";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let popoutWidgetInstanceId: any | "";
-
 interface IStartChatGuard {
     inFlight: Promise<void> | null;
 }
@@ -114,9 +107,6 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Faca
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareStartChatInternal = async (props: ILiveChatWidgetProps, facadeChatSDK: FacadeChatSDK, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any) => {
-    optionalParams = {}; //Resetting to ensure no stale values
-    widgetInstanceId = getWidgetCacheIdfromProps(props);
-
     // reconnect > chat from cache
     if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
         const shouldStartChatNormally = await handleChatReconnect(facadeChatSDK, props, dispatch, setAdapter, initStartChat, state);
@@ -260,14 +250,15 @@ const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dis
         }
 
         try {
-            // Set custom context params
-            await setCustomContextParams(state, props);
+            // Set custom context params. Returned (not stored module-side) so that concurrent
+            // widget instances cannot overwrite each other's custom context.
+            const customContextParams = await setCustomContextParams(state, props);
             const defaultOptionalParams: StartChatOptionalParams = {
                 sendDefaultInitContext: true,
                 isProactiveChat: !!params?.isProactiveChat,
                 portalContactId: window.Microsoft?.Dynamic365?.Portal?.User?.contactId
             };
-            const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, optionalParams, defaultOptionalParams);
+            const startChatOptionalParams: StartChatOptionalParams = Object.assign({}, params, customContextParams, defaultOptionalParams);
 
             // MID-AUTH: Add wasAuthenticated flag for reconnect scenarios
             // Tells FacadeChatSDK whether the previous session was authenticated
@@ -343,9 +334,6 @@ const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dis
         await updateTelemetryData(facadeChatSDK, dispatch);
     } catch (ex) {
         handleStartChatError(dispatch, facadeChatSDK, props, ex, isStartChatSuccessful);
-    } finally {
-        optionalParams = {};
-        widgetInstanceId = "";
     }
 };
 
@@ -382,19 +370,22 @@ const canConnectToExistingChat = async (props: ILiveChatWidgetProps, facadeChatS
     return false;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps) => {
+/**
+ * Resolves the custom context to start the chat with.
+ *
+ * Returns the resolved params instead of mutating module-level state: a page can host several
+ * independent widgets, and once per-instance start-chat guards allow them to run concurrently,
+ * shared mutable state would let one widget overwrite another widget's custom context.
+ */
+const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps): Promise<StartChatOptionalParams> => {
 
     if (state?.domainStates?.customContext) {
-        optionalParams = Object.assign({}, optionalParams, {
+        return {
             customContext: JSON.parse(JSON.stringify(state?.domainStates?.customContext))
-        });
-        return;
+        };
     }
 
-    if (isNullOrEmptyString(widgetInstanceId)) {
-        widgetInstanceId = getWidgetCacheIdfromProps(props);
-    }
+    const widgetInstanceId = props ? getWidgetCacheIdfromProps(props) : "";
     // Add custom context only for unauthenticated chat
     const persistedState = getStateFromCache(widgetInstanceId);
     const customContextLocal = persistedState?.domainStates?.customContext ?? props?.initialCustomContext;
@@ -404,17 +395,19 @@ const setCustomContextParams = async (state: ILiveChatWidgetContext | undefined,
             Description: "Setting custom context for unauthenticated chat"
         });
 
-        optionalParams = Object.assign({}, optionalParams, {
+        return {
             customContext: JSON.parse(JSON.stringify(customContextLocal))
-        });
-    } else {
-        const customContextFromParent = await getInitContextParamsForPopout();
-        if (!isUndefinedOrEmpty(customContextFromParent?.contextVariables)) {
-            optionalParams = Object.assign({}, optionalParams, {
-                customContext: JSON.parse(JSON.stringify(customContextFromParent.contextVariables))
-            });
-        }
+        };
     }
+
+    const customContextFromParent = await getInitContextParamsForPopout();
+    if (!isUndefinedOrEmpty(customContextFromParent?.contextVariables)) {
+        return {
+            customContext: JSON.parse(JSON.stringify(customContextFromParent.contextVariables))
+        };
+    }
+
+    return {};
 };
 
 const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
@@ -422,7 +415,7 @@ const canStartPopoutChat = async (props: ILiveChatWidgetProps) => {
         return false;
     }
 
-    popoutWidgetInstanceId = getWidgetCacheIdfromProps(props, true);
+    const popoutWidgetInstanceId = getWidgetCacheIdfromProps(props, true);
 
     if (!isNullOrEmptyString(popoutWidgetInstanceId)) {
         const persistedState = getStateFromCache(popoutWidgetInstanceId);

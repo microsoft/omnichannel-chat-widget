@@ -10,6 +10,7 @@ import { TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import { cleanup } from "@testing-library/react";
 import { createAdapter } from "./createAdapter";
+import { getStateFromCache } from "../../../common/utils";
 
 jest.mock("../../../plugins/newMessageEventHandler", () => ({
     createOnNewAdapterActivityHandler: jest.fn(() => jest.fn())
@@ -103,6 +104,7 @@ jest.mock("../../../common/telemetry/TelemetryManager", () => ({
 
 const mockCreateAdapter = createAdapter as jest.MockedFunction<typeof createAdapter>;
 const mockTelemetryHelper = TelemetryHelper as jest.Mocked<typeof TelemetryHelper>;
+const mockGetStateFromCache = getStateFromCache as jest.MockedFunction<typeof getStateFromCache>;
 
 // Creates a promise whose resolution is controlled by the test, so two invocations can be
 // kept in flight at the same time.
@@ -148,6 +150,7 @@ describe("startChat - concurrent start chat protection", () => {
         mockSetAdapter = jest.fn();
 
         mockCreateAdapter.mockResolvedValue({ activity$: { subscribe: jest.fn() } } as any);
+        mockGetStateFromCache.mockImplementation(() => null);
 
         mockTelemetryHelper.logActionEvent = jest.fn();
         mockTelemetryHelper.logLoadingEvent = jest.fn();
@@ -351,6 +354,71 @@ describe("startChat - concurrent start chat protection", () => {
             expect(mockTelemetryHelper.logActionEvent).not.toHaveBeenCalledWith(
                 expect.anything(),
                 expect.objectContaining({ Event: TelemetryEvent.ConcurrentStartChatRejected })
+            );
+        });
+    });
+
+    // Now that per-instance guards let two widgets run at the same time, any start-chat state kept
+    // at module scope would be overwritten by whichever widget ran last. These tests pin the
+    // custom context to the widget that owns it.
+    describe("custom context isolation across concurrent widget instances", () => {
+        it("should start each widget with the custom context from its own state", async () => {
+            const facadeA = createMockFacadeChatSDK();
+            const facadeB = createMockFacadeChatSDK();
+
+            const stateWithCustomContext = (value: string) => ({
+                ...closedState,
+                appStates: { ...closedState.appStates, conversationState: ConversationState.Loading },
+                domainStates: { ...closedState.domainStates, customContext: { widget: { value } } }
+            });
+
+            const deferredA = createDeferred();
+            const deferredB = createDeferred();
+            facadeA.startChat.mockReturnValue(deferredA.promise);
+            facadeB.startChat.mockReturnValue(deferredB.promise);
+
+            const first = initStartChat(facadeA, mockDispatch, mockSetAdapter, stateWithCustomContext("A"), createMockProps("widget-instance-a"));
+            const second = initStartChat(facadeB, mockDispatch, mockSetAdapter, stateWithCustomContext("B"), createMockProps("widget-instance-b"));
+
+            deferredA.resolve();
+            deferredB.resolve();
+            await Promise.all([first, second]);
+
+            expect(facadeA.startChat).toHaveBeenCalledWith(
+                expect.objectContaining({ customContext: { widget: { value: "A" } } })
+            );
+            expect(facadeB.startChat).toHaveBeenCalledWith(
+                expect.objectContaining({ customContext: { widget: { value: "B" } } })
+            );
+        });
+
+        it("should start each widget with the persisted custom context for its own widget cache id", async () => {
+            const facadeA = createMockFacadeChatSDK();
+            const facadeB = createMockFacadeChatSDK();
+
+            mockGetStateFromCache.mockImplementation((widgetCacheId: string) => ({
+                domainStates: { customContext: { cached: { value: widgetCacheId } } }
+            }));
+
+            const loadingState = { ...closedState, appStates: { ...closedState.appStates, conversationState: ConversationState.Loading } };
+
+            const deferredA = createDeferred();
+            const deferredB = createDeferred();
+            facadeA.startChat.mockReturnValue(deferredA.promise);
+            facadeB.startChat.mockReturnValue(deferredB.promise);
+
+            const first = initStartChat(facadeA, mockDispatch, mockSetAdapter, loadingState, createMockProps("widget-instance-a"));
+            const second = initStartChat(facadeB, mockDispatch, mockSetAdapter, loadingState, createMockProps("widget-instance-b"));
+
+            deferredA.resolve();
+            deferredB.resolve();
+            await Promise.all([first, second]);
+
+            expect(facadeA.startChat).toHaveBeenCalledWith(
+                expect.objectContaining({ customContext: { cached: { value: "widget-instance-a" } } })
+            );
+            expect(facadeB.startChat).toHaveBeenCalledWith(
+                expect.objectContaining({ customContext: { cached: { value: "widget-instance-b" } } })
             );
         });
     });
