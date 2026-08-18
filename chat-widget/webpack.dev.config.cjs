@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
     devtool: "source-map",
@@ -11,7 +12,8 @@ module.exports = {
     resolve: {
         extensions: [".Webpack.js", ".web.js", ".ts", ".js", ".jsx", ".tsx", ".mjs"],
         alias: {
-            "swiper/modules": require.resolve("swiper/modules")
+            "swiper/modules": require.resolve("swiper/modules"),
+            "react-native": false
         }
     },
     devServer: {
@@ -28,6 +30,12 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
+                resolve: {
+                    fullySpecified: false
+                }
+            },
+            {
+                test: /\.m?js$/,
                 type: "javascript/auto",
                 use: {
                     loader: "babel-loader",
@@ -37,5 +45,10 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^react-native$/,
+        })
+    ]
 };

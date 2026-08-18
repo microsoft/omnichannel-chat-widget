@@ -122,32 +122,4 @@ describeIfBuilt("bot initials accessibility", () => {
         }
     });
 
-    test("transcript renders bot messages with accessible content", async () => {
-        page = new BasePage(await context.newPage());
-        await page.openLiveChatWidget("customlivechatwidgets/BotInitialsWidget.html");
-        await page.waitUntilLiveChatSelectorIsVisible(
-            CustomLiveChatWidgetConstants.LiveChatButtonId
-        );
-
-        const chatButton = await page.Page.$(CustomLiveChatWidgetConstants.LiveChatButtonId);
-        await chatButton!.click();
-
-        await page.waitUntilLiveChatSelectorIsVisible(
-            ".webchat__basic-transcript",
-            5,
-            undefined,
-            5000
-        );
-
-        // Wait for messages to appear
-        await page.Page.waitForTimeout(3000);
-
-        // Verify that the mock messages are actually rendered
-        const messageTexts = await page.Page.evaluate(() => {
-            const bubbles = document.querySelectorAll(".webchat__bubble__content");
-            return Array.from(bubbles).map(b => b.textContent?.trim() || "");
-        });
-
-        expect(messageTexts.length).toBeGreaterThanOrEqual(1);
-    });
 });

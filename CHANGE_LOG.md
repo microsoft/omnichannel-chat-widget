@@ -6,13 +6,35 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-08-13
+
+### Breaking
+
+- Raised the supported consumer build runtime to Node.js `>=22.12.0`, matching chat SDK 2.0.0 and the remediated dependency chain.
+- Exported Web Chat middleware factories now use a structural `WebChatStoreMiddleware` type whose `action` is `unknown`. Runtime dispatch is unchanged; TypeScript callers must narrow with `isWebChatAction` instead of assuming `IWebChatAction`.
+
 ### Changed
-- Bumped `@microsoft/omnichannel-chat-components` to `1.1.17-main.05edfd3`.
-- Bumped `@microsoft/omnichannel-chat-sdk` to `1.11.9-main.47a6498`. This includes diagnostic telemetry fields in ChatConfigRetrievalFailure events and pulls in the upstream fix that pins the ACS WebChat adapter to exact `0.0.1-beta.8` (instead of `^0.0.1-beta.6` which resolved to the rogue `0.0.1-beta-1` per semver §11), restoring the fast-poll path for the first bot reply.
+- Bumped `@microsoft/omnichannel-chat-widget` from 1.8.4 to 2.0.0.
+- Bumped `@microsoft/omnichannel-chat-components` to `1.2.0-main.5692126`.
+- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.b82e941`.
+- Retained required product hotfix `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
+- Added a PR check that rejects changes to the required Bot Framework Web Chat hotfix version.
+- Updated Markdown-It, DOMPurify, and `sanitize-html` to patched compatible releases.
+- Declared and pinned legacy RxJS `5.5.12` for adapters that still use RxJS 5 deep imports; transcript download continues to load its separate RxJS 7 browser global.
+- Removed the unused direct Redux 5 runtime dependency by making the middleware declaration structural and self-contained.
+- Limited packed-consumer audit exceptions to exact package versions and their reviewed WebChat or chat SDK dependency roots.
+- Migrated package, sample, UMD, and Storybook builds to Webpack 5 and standardized development and CI on Node.js 22.
+- Preserved the Storybook Playwright screenshot-authoring panel in development while excluding its Webpack 5-incompatible preset from static builds.
+- Preserved and added browser-bundler CI coverage for the published CommonJS package export.
+- Deduplicated Trusted Types definitions across DOMPurify and the widget build.
+- Pinned compatible `@types/glob` and `@types/minimatch` definitions required by the legacy Storybook/Jest toolchain.
+- Added a packed-consumer production audit to the PR validation gate.
+- Pinned Valibot 1.4.2 for first-party builds and documented the remaining upstream WebChat/UUID audit-only advisories.
 
 ### Tests
 - [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for internal tracking (AdaptiveCard TalkBack non-radio duplicate labels), internal tracking (ChatButton browse-mode duplicate stops), internal tracking (agent profile name not announced), internal tracking (blank announcement live regions), internal tracking (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
 - [Bug 6525143] Added a contract test for the pre-chat pane default general style (fills via flex, no fixed/percentage height, keeps own scroll) and updated the focus-capture wrapper layout test to assert the flex-column sizing that prevents the header clip.
+- Removed a redundant designer-mode bot-message E2E assertion; the stronger adjacent test already waits for and validates the same rendered bot activities and accessible names.
 
 ### Fixed
 - [Bug] Rapidly clicking the chat button (within the ~500ms before React re-renders and hides it) no longer creates two conversations on the backend, one of which was orphaned and never ended. `prepareStartChat` and `initStartChat` now run under per-widget-instance mutexes (keyed by the widget's `FacadeChatSDK`, so independent widgets on the same page can still start concurrently) that drop a concurrent invocation instead of letting it race the in-flight start, `ChatButtonStateful` rejects clicks while a start chat is already in progress, and `chatSDKStateCleanUp` additionally clears the SDK's `conversation` object (mirroring `OmnichannelChatSDK.endChat()`) so stale conversation state cannot leak into the next session. Dropped invocations are reported via the new `ConcurrentStartChatRejected` telemetry event.
@@ -93,6 +115,10 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+- Removed unused ES5 fork dependencies that shipped stale build toolchains and removed obsolete security resolutions.
+- Removed unused DOMPurify type stubs, legacy ESLint plugins/config, file-loader, p-defer, and the unused react-docgen TypeScript plugin.
+- The required WebChat hotfix declares `sanitize-html` 2.14.0. Its generated allowlist excludes the vulnerable `action` and `formaction` attributes.
+- The required WebChat hotfix still owns the Bug 6562437 findings for `markdown-it`, `linkify-it`, `@babel/runtime`, and `uuid`.
 - Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
 
@@ -801,36 +827,64 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-### Changed
+## [1.2.0] - 2026-08-13
 
-- Standardized chat-components local development and CI on Node.js 22.
-- Updated Babel and Storybook tooling for Node.js 22 and Webpack 5.
-- Upgraded Adaptive Cards from 2.x to 3.0.6 and `broadcast-channel` from 4.x to 7.3.0 without changing public component APIs. Updated pre-chat native form-control rendering and reconnect-pane spacing baselines capture the reviewed cosmetic changes.
-- Kept Adaptive Cards tree-shakeable for ESM consumers while remapping only the CommonJS build to its UMD entry.
-- Added a direct Babel 7.24.7 helper compatibility pin required by Storybook 6.5; remove it when Storybook is upgraded from the EOL 6.x line.
+GitHub Release automation starts with `1.2.0`. Versions `1.1.17`, `1.1.18`, and `1.1.19` were published to npm without matching GitHub Releases. Their notes are listed below.
 
 ### Added
 
-- Added XSS protection tests for URL sanitization (11 new tests)
+- Added accessibility scans, Storybook profiles, Jest harnesses, and regression tests.
+- Added XSS protection tests for URL sanitization and protocol validation.
+- Added a CommonJS package validation command.
+- Added a Babel 7.24.7 helper compatibility pin for Storybook 6.5.
+- Added automated npm and GitHub Releases for official `c-v*` and `w-v*` tags.
+
+### Changed
+
+- Standardized local development and continuous integration on Node.js 22.
+- Updated Babel and Storybook for Node.js 22 and Webpack 5.
+- Updated Adaptive Cards to `3.0.6`, `broadcast-channel` to `7.3.0`, Fluent UI to `8.125.7`, and Swiper to `12.1.2`.
+- Kept Adaptive Cards tree-shakeable for ESM consumers.
+- Remapped Adaptive Cards to its UMD entry only in the CommonJS build.
+- Updated the public package and release documentation.
 
 ### Fixed
 
-- [Bug][iOS] Pre-chat survey compact `<select>` no longer renders a blank first row in the iOS Safari native picker. The placeholder option AdaptiveCards injects (which iOS cannot hide via CSS) is now removed from the DOM after the card is appended, the first real option is auto-selected, and the `ChoiceSetInput` value getter is patched on iOS so a `selectedIndex === 0` selection is recognised — fixing both the visual gap and the "field is required" validation error that appeared when a ChoiceSet had only one option. Fix is iOS-only; other platforms are unaffected.
-- [A11y] `ChatButton` no longer produces duplicate NVDA / JAWS browse-mode stops on the title / subtitle Labels — the text container is excluded from the accessibility tree and the button owns a consolidated `aria-label` (internal tracking)
+- [A11Y] Added an accessible name and group role to the Cancel and Send button groups in InputValidationPane and ConfirmationPane.
+- [A11Y] `ChatButton` no longer produces duplicate NVDA / JAWS browse-mode stops on the title / subtitle Labels.
+- [iOS] Prevented automatic zoom for pre-chat text, multiline, and choice inputs by setting the default font size to 16px.
+- [iOS] Removed the blank first row from compact pre-chat choice fields and corrected required-field validation when a ChoiceSet has one option.
+- Limited long header titles to two lines with ellipsis and added a tooltip for the full title.
 - Preserved the published CommonJS export by remapping Adaptive Cards only in the CommonJS build and marking `lib/cjs` as CommonJS.
 - Stabilized Storybook visual tests on Node.js 22 and corrected the ConfirmationPane preset story export.
-- Fixed XSS vulnerability in `replaceURLWithAnchor` by adding HTML escaping and URL protocol validation
 
 ### Security
 
-- Updated Adaptive Cards and `broadcast-channel` to patched dependency lines and removed stale Markdown, sanitizer, Lodash, Nano ID, and brace-expansion resolutions.
-- Retained the `glob-parent` 5.1.2 resolution to prevent the dev-only Storybook watch chain from resolving the vulnerable 3.1.0 release.
-- Upgrade `yaml` 1.10.2 → 1.10.3 to fix stack overflow vulnerability on deeply nested YAML input
-- Added `escapeHTML()` and `escapeHrefAttribute()` functions to prevent attribute breakout attacks
-- Added `isValidURL()` to block dangerous protocols and only allow http/https/www URLs
-- Fixed header text overflow issue where long titles would expand leftward and cover the icon image
-- Added 2-line text limit with ellipsis for header title to prevent layout issues
-- Added tooltip on hover to display full header text when truncated
+- Fixed XSS in `replaceURLWithAnchor` with `escapeHTML()`, `escapeHrefAttribute()`, and `isValidURL()`.
+- Blocked dangerous URL protocols and accepted only HTTP, HTTPS, and `www` links.
+- Updated YAML to `1.10.3` to prevent a stack overflow from deeply nested input.
+- Updated Adaptive Cards and `broadcast-channel` to patched dependency lines.
+- Removed stale Markdown, sanitizer, Lodash, Nano ID, and brace-expansion resolutions.
+- Retained `glob-parent` `5.1.2` to block a vulnerable Storybook watch dependency.
+
+## [1.1.19] - 2026-01-23
+
+### Changed
+
+- Updated Babel dependencies to latest versions.
+- Updated Lodash to v4.17.23 to address security vulnerabilities.
+
+## [1.1.18] - 2026-01-20
+
+### Added
+
+- Added XSS protection tests for URL sanitization (11 new tests).
+
+## [1.1.17] - 2026-01-16
+
+### Security
+
+- Fixed XSS vulnerabilities in text handling and URL processing.
 
 ## [1.1.16] - 2025-10-14
 

@@ -2,6 +2,9 @@
   "name": "oc-playwright-service-integration",
   "version": "1.0.0",
   "description": "Playwright automated E2E test cases for LiveChatWidget",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "devDependencies": {
     "@azure/cosmos": "^3.9.5",
     "@types/crypto-js": "^4.0.1",
@@ -35,7 +38,7 @@
     "@azure/identity": "^1.2.3",
     "@azure/keyvault-secrets": "^4.1.0",
     "@azure/service-bus": "^1.1.10",
-    "@microsoft/omnichannel-chat-sdk": "^0.1.1-main.c05dc32",
+    "@microsoft/omnichannel-chat-sdk": "2.0.0-main.b82e941",
     "@types/jest": "^25.2.1",
     "@types/jest-image-snapshot": "^2.12.0",
     "adal-node": "^0.2.2",

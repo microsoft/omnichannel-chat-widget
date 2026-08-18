@@ -5,14 +5,18 @@
  ******/
 
 import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { NotificationHandler } from "../../notification/NotificationHandler";
 import { NotificationScenarios } from "../../enums/NotificationScenarios";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { WebChatMiddlewareConstants } from "../../../../../common/Constants";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createMaxMessageSizeValidator = (localizedTexts: ILiveChatWidgetLocalizedTexts) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const createMaxMessageSizeValidator = (localizedTexts: ILiveChatWidgetLocalizedTexts): WebChatStoreMiddleware => ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (action.type === WebChatActionType.WEB_CHAT_SET_SEND_BOX) {
         const textLength = action.payload?.text?.length as number || 0;
         if (textLength > WebChatMiddlewareConstants.maxTextLength) {

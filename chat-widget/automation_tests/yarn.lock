@@ -10,12 +10,31 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
+"@azure-rest/core-client@^2.3.3":
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/@azure-rest/core-client/-/core-client-2.8.0.tgz#30e736c0f617115b73e154b229baeebcc090351a"
+  integrity sha512-F1ybHeN+++QhyFCF/ehLUEvrOB6fehPdFBFtGdj0C3B2lpQ9zkPiO5JDgsqc6IfjuUe6b3dAbXK0a7+VgSGfhw==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/core-auth" "^1.10.0"
+    "@azure/core-rest-pipeline" "^1.24.0"
+    "@azure/core-tracing" "^1.3.0"
+    "@typespec/ts-http-runtime" "^0.3.0"
+    tslib "^2.6.2"
+
 "@azure/abort-controller@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@azure/abort-controller/-/abort-controller-1.1.0.tgz#788ee78457a55af8a1ad342acb182383d2119249"
   integrity sha512-TrRLIoSQVzfAJX9H1JeFjzAoDGcoK1IYX1UImfceTZpsyYfWr09Ss1aHW1y5TrrR3iq6RZLBwJ3E24uwPhwahw==
   dependencies:
     tslib "^2.2.0"
+
+"@azure/abort-controller@^2.1.2":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@azure/abort-controller/-/abort-controller-2.2.0.tgz#93e0e82b01862e7ea3b5b69958719d3f3fd2c8ac"
+  integrity sha512-fNAjWnA/nZ2jz31kxR/AqRaUT8ewHBw/WuBIosK0moMy1C9e5ValbDfFdIxJzVOOYaYkV/b2F1S4H/aHiqfVQg==
+  dependencies:
+    tslib "^2.6.2"
 
 "@azure/amqp-common@1.0.0-preview.17":
   version "1.0.0-preview.17"
@@ -38,10 +57,116 @@
     url "^0.11.0"
     util "^0.11.1"
 
+"@azure/communication-chat@1.6.0-beta.5":
+  version "1.6.0-beta.5"
+  resolved "https://registry.yarnpkg.com/@azure/communication-chat/-/communication-chat-1.6.0-beta.5.tgz#962db5f0de5b6c60095221520b0b3da10b8c7081"
+  integrity sha512-8R+s998qshBKnbSomlhnofljuwd/DNg8hhQvKQWOHqtCUvoWsyDGjCem5bcqq6wBXnVSBsg+GjOU4m05B/6PuA==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/communication-common" "^2.3.1"
+    "@azure/communication-signaling" "1.0.0-beta.32"
+    "@azure/core-auth" "^1.9.0"
+    "@azure/core-client" "^1.9.2"
+    "@azure/core-paging" "^1.1.1"
+    "@azure/core-rest-pipeline" "^1.18.0"
+    "@azure/core-tracing" "^1.0.0"
+    "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.8.1"
+
+"@azure/communication-chat@1.6.0-beta.7":
+  version "1.6.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@azure/communication-chat/-/communication-chat-1.6.0-beta.7.tgz#02cf3e3ff123eded28337452f2ee00d769388067"
+  integrity sha512-L/v6JbQLKkt2pdkgFBM0BLXl7b0MfaWsg2sfNWLb9kUucu0UUcIz9DuMtCtBx/dc54OXRpYQLhTgcU4rwVQjcg==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/communication-common" "^2.3.2-beta.1"
+    "@azure/communication-signaling" "1.0.0-beta.33"
+    "@azure/core-auth" "^1.9.0"
+    "@azure/core-client" "^1.9.2"
+    "@azure/core-paging" "^1.1.1"
+    "@azure/core-rest-pipeline" "^1.18.0"
+    "@azure/core-tracing" "^1.0.0"
+    "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.8.1"
+
+"@azure/communication-common@2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@azure/communication-common/-/communication-common-2.4.2.tgz#6d3aa627c3cbff5db7fc692ffbd3801a80b960bd"
+  integrity sha512-5ZdPoBPmXG5+tlvCIZ9lnLxunZd8a9NCQunYJHLcaNJGTsg3ZXaHczel2ByP5PnHyLJIJNor9oHJsv6gY65oYg==
+  dependencies:
+    "@azure-rest/core-client" "^2.3.3"
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/core-auth" "^1.9.0"
+    "@azure/core-rest-pipeline" "^1.17.0"
+    "@azure/core-tracing" "^1.2.0"
+    "@azure/core-util" "^1.11.0"
+    events "^3.3.0"
+    jwt-decode "^4.0.0"
+    tslib "^2.8.1"
+
+"@azure/communication-common@^2.3.1", "@azure/communication-common@^2.3.2-beta.1", "@azure/communication-common@^2.4.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@azure/communication-common/-/communication-common-2.5.0.tgz#063b352c1d7f490ddf7d18796b294e216be2a103"
+  integrity sha512-6Z5OSOk8tWlOAZHAxgHGfLt8V755BHOvMks/7xLx2auQLmS+DJObgtq+1yE9gVYLu66tzpX/J779H8D9HDVNAQ==
+  dependencies:
+    "@azure-rest/core-client" "^2.3.3"
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/core-auth" "^1.9.0"
+    "@azure/core-rest-pipeline" "^1.17.0"
+    "@azure/core-tracing" "^1.2.0"
+    "@azure/core-util" "^1.11.0"
+    "@azure/logger" "^1.1.4"
+    events "^3.3.0"
+    jwt-decode "^4.0.0"
+    tslib "^2.8.1"
+
+"@azure/communication-signaling@1.0.0-beta.32":
+  version "1.0.0-beta.32"
+  resolved "https://registry.yarnpkg.com/@azure/communication-signaling/-/communication-signaling-1.0.0-beta.32.tgz#7cb1252600a63b9c09bb649c67886d593a1ea782"
+  integrity sha512-ChhJXblgILpnuZd6cQlf1EDBNSTJ5cGUtvMQkxNjdlMa0qYKOXUN0Ugz6clw6jcrcMorXJlbda6tI7iGmgDPuQ==
+  dependencies:
+    "@azure/abort-controller" "^1.0.0"
+    "@azure/core-auth" "^1.3.0"
+    "@azure/core-client" "^1.9.2"
+    "@azure/core-rest-pipeline" "^1.16.3"
+    "@azure/core-tracing" "^1.0.0"
+    "@azure/core-util" "^1.0.0"
+    "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.2.0"
+    uuid "^8.3.0"
+
+"@azure/communication-signaling@1.0.0-beta.33":
+  version "1.0.0-beta.33"
+  resolved "https://registry.yarnpkg.com/@azure/communication-signaling/-/communication-signaling-1.0.0-beta.33.tgz#8925e4222e035b30466e096d6f8db605ad3063a5"
+  integrity sha512-WdCmwcK3Y2BHV8MVksXg7o6damflHLT1bOKNL14SftFbnuBLgmUM9Uw/HnkPWkpwrhptYC8jeCMv2XKhWmA4YQ==
+  dependencies:
+    "@azure/abort-controller" "^1.0.0"
+    "@azure/core-auth" "^1.3.0"
+    "@azure/core-client" "^1.9.2"
+    "@azure/core-rest-pipeline" "^1.16.3"
+    "@azure/core-tracing" "^1.0.0"
+    "@azure/core-util" "^1.0.0"
+    "@azure/logger" "^1.0.0"
+    events "^3.0.0"
+    tslib "^2.2.0"
+    uuid "^8.3.0"
+
 "@azure/core-asynciterator-polyfill@^1.0.0":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@azure/core-asynciterator-polyfill/-/core-asynciterator-polyfill-1.0.2.tgz#0dd3849fb8d97f062a39db0e5cadc9ffaf861fec"
   integrity sha512-3rkP4LnnlWawl0LZptJOdXNrT/fHp2eQMadoasa6afspXdpGrtPZuAQc2PD0cpgyuoXtUWyC3tv7xfntjGS5Dw==
+
+"@azure/core-auth@^1.10.0", "@azure/core-auth@^1.9.0":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@azure/core-auth/-/core-auth-1.11.0.tgz#1daeffdf62d1a871d22b865f9f3164a63ea1f575"
+  integrity sha512-IUZydyTUkDnYdstOW9pFOOUQlBjAepK5teihDE3x6yxsPJs/hsAaaYpeGxdxrgtOiJbBKSjKW7MDk7AEhb4LRg==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/core-util" "^1.13.0"
+    tslib "^2.6.2"
 
 "@azure/core-auth@^1.3.0":
   version "1.3.2"
@@ -63,6 +188,19 @@
     "@azure/core-util" "^1.0.0"
     "@azure/logger" "^1.0.0"
     tslib "^2.2.0"
+
+"@azure/core-client@^1.9.2":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@azure/core-client/-/core-client-1.11.0.tgz#e73d09ac7977de5d7b415696b7ed45d3fdeb67b0"
+  integrity sha512-JjQWO6akOck45PH/XBrxzsQGAiKrfFl4m5iggJ0ItMIz5omRufOXWpqCPpdjKN3vKDzlSUvFjaMb7Zwf0gvAdA==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/core-auth" "^1.10.0"
+    "@azure/core-rest-pipeline" "^1.22.0"
+    "@azure/core-tracing" "^1.3.0"
+    "@azure/core-util" "^1.13.0"
+    "@azure/logger" "^1.3.0"
+    tslib "^2.6.2"
 
 "@azure/core-http@^1.0.0":
   version "1.2.6"
@@ -138,6 +276,19 @@
     tslib "^2.2.0"
     uuid "^8.3.0"
 
+"@azure/core-rest-pipeline@^1.16.3", "@azure/core-rest-pipeline@^1.17.0", "@azure/core-rest-pipeline@^1.18.0", "@azure/core-rest-pipeline@^1.22.0", "@azure/core-rest-pipeline@^1.24.0":
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/@azure/core-rest-pipeline/-/core-rest-pipeline-1.25.0.tgz#92ea4912edbb1f7395f4829a300631174aa82f08"
+  integrity sha512-bMs8ekJLjX8wPV+9IPBges1SLPyuDtE9g5gLDWOpxzKcoOFQnpLGkbcT1tdw3FaAmDS1gnPmMmJ6y/T5B96kIA==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@azure/core-auth" "^1.10.0"
+    "@azure/core-tracing" "^1.3.0"
+    "@azure/core-util" "^1.13.0"
+    "@azure/logger" "^1.3.0"
+    "@typespec/ts-http-runtime" "^0.3.4"
+    tslib "^2.6.2"
+
 "@azure/core-tracing@1.0.0-preview.11":
   version "1.0.0-preview.11"
   resolved "https://registry.yarnpkg.com/@azure/core-tracing/-/core-tracing-1.0.0-preview.11.tgz#bdfb2ba73cd6c39b7d6c207b9522eb98e08b4ddd"
@@ -170,12 +321,28 @@
   dependencies:
     tslib "^2.2.0"
 
+"@azure/core-tracing@^1.2.0", "@azure/core-tracing@^1.3.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@azure/core-tracing/-/core-tracing-1.4.0.tgz#d657a700e24d256d195e628a795db6a8cc475eab"
+  integrity sha512-eGwxD0AtncrxeBM4tG8R55Pc3rdX1hNW2WibJAgYpCVA6E93mvvVH+LcssoVjOBrSKWS55yEIHsk0X8ctHmfOQ==
+  dependencies:
+    tslib "^2.6.2"
+
 "@azure/core-util@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@azure/core-util/-/core-util-1.0.0.tgz#07c7175670e0abe725ad88f9c3d65d074107a3af"
   integrity sha512-yWshY9cdPthlebnb3Zuz/j0Lv4kjU6u7PR5sW7A9FF7EX+0irMRJAtyTq5TPiDHJfjH8gTSlnIYFj9m7Ed76IQ==
   dependencies:
     tslib "^2.2.0"
+
+"@azure/core-util@^1.11.0", "@azure/core-util@^1.13.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@azure/core-util/-/core-util-1.14.0.tgz#7ce9fe57958f132dd422573856e5a45c7232bb04"
+  integrity sha512-9n2pWK61veAuN0V20t9lOuoV4CFMdyAZ1ygZzvBGk/pBBJRib/PjL9PLXa/aI2CcPpyHfqVsxxqLCYl6uZlfDw==
+  dependencies:
+    "@azure/abort-controller" "^2.1.2"
+    "@typespec/ts-http-runtime" "^0.3.0"
+    tslib "^2.6.2"
 
 "@azure/cosmos@^3.9.5":
   version "3.16.0"
@@ -237,6 +404,14 @@
   integrity sha512-aK4s3Xxjrx3daZr3VylxejK3vG5ExXck5WOHDJ8in/k9AqlfIyFMMT1uG7u8mNjX+QRILTIn0/Xgschfh/dQ9g==
   dependencies:
     tslib "^2.2.0"
+
+"@azure/logger@^1.1.4", "@azure/logger@^1.3.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@azure/logger/-/logger-1.4.0.tgz#3d5a627fe59a276ece7487a79dd92ad5c508c339"
+  integrity sha512-rbAE25KUfjU/s3XHUdJgceoCP5dEOpMx85J04kF+QMdta73XkuG9JGHHinch+XIoKpBdqljin+KqURpJriSzLA==
+  dependencies:
+    "@typespec/ts-http-runtime" "^0.3.0"
+    tslib "^2.6.2"
 
 "@azure/msal-common@^4.0.0":
   version "4.5.1"
@@ -503,12 +678,10 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.14.5"
 
-"@babel/runtime@^7.10.3":
-  version "7.18.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.3.tgz#c7b654b57f6f63cf7f8b418ac9ca04408c4579f4"
-  integrity sha512-38Y8f7YUhce/K7RMwTp7m0uCumpv9hZkitCbBClqQIow1qSbCvGkcegKOXpEWCQLfWmevgRiWokZ1GkpfhbZug==
-  dependencies:
-    regenerator-runtime "^0.13.4"
+"@babel/runtime@^7.15.4", "@babel/runtime@^7.26.10", "@babel/runtime@^7.9.2":
+  version "7.29.7"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.29.7.tgz#12022450c45a4da6d8d8287b18a4ff2ddb23f768"
+  integrity sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==
 
 "@babel/template@^7.16.7", "@babel/template@^7.3.3":
   version "7.16.7"
@@ -926,29 +1099,54 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@microsoft/ocsdk@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.1.1.tgz#e2c1e95f8bcadb9b630f9fa5ee07919e73ad515e"
-  integrity sha512-06owdRQ88g93CNSIalpGsXvV5+y8yCSQVEOnX0OQNF8H++ud9Rve+Q9db5ym+bE64BtDa4W/U8iyByJfLQFAfA==
+"@microsoft/botframework-webchat-adapter-azure-communication-chat@0.0.1-beta.8":
+  version "0.0.1-beta.8"
+  resolved "https://registry.yarnpkg.com/@microsoft/botframework-webchat-adapter-azure-communication-chat/-/botframework-webchat-adapter-azure-communication-chat-0.0.1-beta.8.tgz#22ab9c28642d4d119fd90a378be1d715cb85a972"
+  integrity sha512-0F6ZuNlC5cEn1jGmNQ580IPsMjpr77ehRKvz9x26xwPWHFNhc1li/+nlthamRYUhS3jhxhP250ckaR8XLjbJvQ==
   dependencies:
-    "@babel/runtime" "^7.10.3"
-    "@types/node" "^12.12.7"
-    axios "^0.21.1"
+    "@azure/communication-chat" "1.6.0-beta.5"
+    "@azure/communication-common" "^2.4.0"
+    core-js "^3.43.0"
+    event-target-shim "^6.0.2"
+    http-status-codes "^2.3.0"
+    p-defer "^4.0.1"
+    redux "^4.0.5"
+    regenerator-runtime "^0.14.1"
 
-"@microsoft/omnichannel-chat-sdk@^0.1.1-main.c05dc32":
-  version "0.1.1-main.fadb071"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-0.1.1-main.fadb071.tgz#035c76db302936d81bb2d422a152932d12df53fe"
-  integrity sha512-ZL7S/OoB1CZZCNCcis2UW+GtnFe7KD+oZz2iIbAkPp+mBPwGJiB7jo9zXk1d5N6TE9ce/GBYNUgXL/EwAFb7Wg==
+"@microsoft/ocsdk@0.6.0-main.dcb2d46":
+  version "0.6.0-main.dcb2d46"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.6.0-main.dcb2d46.tgz#4295dbfb42b6792fd71f2a367273418ff4ff1529"
+  integrity sha512-J67spHVLqtY20r67agMPy2cZm/gXImgYb1oie89rf4/DOxJ/XZQFaeuBlWeAycni5AhXcKkQZXRBZEx/bIlG6g==
   dependencies:
-    "@microsoft/ocsdk" "^0.1.0"
-    "@microsoft/omnichannel-ic3core" "^0.1.0"
+    "@babel/runtime" "^7.26.10"
+    "@types/node" "^22.13.10"
+    axios "^1.19.0"
+    axios-retry "^3.9.1"
+    crypto-js "^4.2.0"
 
-"@microsoft/omnichannel-ic3core@^0.1.0":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-ic3core/-/omnichannel-ic3core-0.1.2.tgz#5e97952bd5306ef18654e73cf534ebfee3a0a009"
-  integrity sha512-cDYupP61y2W0kveP6mzYEljkpKE7kK1bPQD8/peCsnETR9GeSlGFt6iRQnfNoxqMHjHC2vsPn2FCCnT7s4m2uw==
+"@microsoft/omnichannel-amsclient@0.2.0-main.3e03701":
+  version "0.2.0-main.3e03701"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.2.0-main.3e03701.tgz#da8b1f91fffc4e4cfe341c1c491c460ce5322ce8"
+  integrity sha512-j8Rg60ru6O3cW/lXqxxjTQY0qFXyS9XqWLRRjFgoqUYDn39+UA34sATO2br8e40jAMlu6cYIPzNKdU6Nyx6LYQ==
+
+"@microsoft/omnichannel-chat-sdk@2.0.0-main.b82e941":
+  version "2.0.0-main.b82e941"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.0-main.b82e941.tgz#ecb4c7992a958ec06a9fb0719623e3c556c675e1"
+  integrity sha512-GC7Qbj2pTI8zvFnxRDSBU3K+iG34nfCEdJ61QBUfeWI6mqQijKzWL1LgWtKx76I+BT0ekl8hcYhZHqdYKslicA==
   dependencies:
-    axios "^0.21.4"
+    "@azure/communication-chat" "1.6.0-beta.7"
+    "@azure/communication-common" "2.4.2"
+    "@microsoft/botframework-webchat-adapter-azure-communication-chat" "0.0.1-beta.8"
+    "@microsoft/ocsdk" "0.6.0-main.dcb2d46"
+    "@microsoft/omnichannel-amsclient" "0.2.0-main.3e03701"
+    "@microsoft/omnichannel-ic3core" "^0.1.5"
+
+"@microsoft/omnichannel-ic3core@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-ic3core/-/omnichannel-ic3core-0.1.5.tgz#0418e1f66be0cc7afce43a94ade2bc1b86f9025d"
+  integrity sha512-m0GlbACnZYaBE6lcDCkd9gYS+6SIdNlmlWrUjoXgO/XEBeLO5+5f2sWHAY63xc3Fm6vNvQwevsqVOZ0w+ai2ug==
+  dependencies:
+    axios "^1.8.2"
     buffer "^6.0.3"
 
 "@opencensus/web-types@0.0.7":
@@ -1120,15 +1318,17 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.35.tgz#635b7586086d51fb40de0a2ec9d1014a5283ba4a"
   integrity sha512-vu1SrqBjbbZ3J6vwY17jBs8Sr/BKA+/a/WtjRG+whKg1iuLFOosq872EXS0eXWILdO36DHQQeku/ZcL6hz2fpg==
 
-"@types/node@^12.12.7":
-  version "12.20.52"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.52.tgz#2fd2dc6bfa185601b15457398d4ba1ef27f81251"
-  integrity sha512-cfkwWw72849SNYp3Zx0IcIs25vABmFh73xicxhCkTcvtZQeIez15PpwQN8fY3RD7gv1Wrxlc9MEtfMORZDEsGw==
-
 "@types/node@^14.14.31":
   version "14.18.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.18.18.tgz#5c9503030df484ccffcbb935ea9a9e1d6fad1a20"
   integrity sha512-B9EoJFjhqcQ9OmQrNorItO+OwEOORNn3S31WuiHvZY/dm9ajkB7AKD/8toessEtHHNL+58jofbq7hMMY9v4yig==
+
+"@types/node@^22.13.10":
+  version "22.20.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.20.1.tgz#84e7cdf63cdaa20c134aa317ccc901aa21e16f0e"
+  integrity sha512-EANqOCF9QFyra+4pfxUcX9STKJpCLjMbObVzljIJomAWSnuSIEAvyzEU53GaajbXJEgdh0iEcPL+DGvpUd4k1Q==
+  dependencies:
+    undici-types "~6.21.0"
 
 "@types/node@^8.0.14":
   version "8.10.66"
@@ -1199,6 +1399,15 @@
   integrity sha512-yEJzHoxf6SyQGhBhIYGXQDSCkJjB6HohDShto7m8vaKg9Yp0Yn8+71J9eakh2bnPg6BfsH9PRMhiRTZnd4eXGQ==
   dependencies:
     "@types/yargs-parser" "*"
+
+"@typespec/ts-http-runtime@^0.3.0", "@typespec/ts-http-runtime@^0.3.4":
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/@typespec/ts-http-runtime/-/ts-http-runtime-0.3.8.tgz#b4dee5a5e7971aedc70953bb7d2dbf5783f42d38"
+  integrity sha512-bLMpVcWZNzq6lYOybwFwOAR1IXKcHnhUNqYeHjl1bET/qE3jFPFH+p8Wrh3rU4xwdnifPxmKNESBYnvnmc75aA==
+  dependencies:
+    http-proxy-agent "^7.0.0"
+    https-proxy-agent "^7.0.0"
+    tslib "^2.6.2"
 
 "@xmldom/xmldom@^0.7.0":
   version "0.7.9"
@@ -1271,6 +1480,11 @@ agent-base@6:
   integrity sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==
   dependencies:
     debug "4"
+
+agent-base@^7.1.0, agent-base@^7.1.2:
+  version "7.1.4"
+  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-7.1.4.tgz#e3cd76d4c548ee895d3c3fd8dc1f6c5b9032e7a8"
+  integrity sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==
 
 ajv@^6.12.3:
   version "6.12.6"
@@ -1448,7 +1662,15 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.11.0.tgz#d61f46d83b2519250e2784daf5b09479a8b41c59"
   integrity sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==
 
-axios@^0.21.1, axios@^0.21.4:
+axios-retry@^3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/axios-retry/-/axios-retry-3.9.1.tgz#c8924a8781c8e0a2c5244abf773deb7566b3830d"
+  integrity sha512-8PJDLJv7qTTMMwdnbMvrLYuvB47M81wRtxQmEdV5w4rgbTXTt+vtPkXwajOfOdSyv/wZICJOC+/UhXH4aQ/R+w==
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    is-retry-allowed "^2.2.0"
+
+axios@^0.21.1:
   version "0.21.4"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
   integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
@@ -1463,6 +1685,16 @@ axios@^1.13.5:
     follow-redirects "^1.15.11"
     form-data "^4.0.5"
     proxy-from-env "^1.1.0"
+
+axios@^1.19.0, axios@^1.8.2:
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.19.0.tgz#ddf864d4c8233c0e6873746ab59361537d05ad39"
+  integrity sha512-ht/iuYZXEjFxLH/Hkezgd7m6JKlHHXEUSneaDz8uZe1Gj5QZtCnpyDsckvAiEnT89OEbCLmnte4R4sn7P0EKFw==
+  dependencies:
+    follow-redirects "^1.16.0"
+    form-data "^4.0.6"
+    https-proxy-agent "^5.0.1"
+    proxy-from-env "^2.1.0"
 
 babel-jest@^25.5.1:
   version "25.5.1"
@@ -1950,6 +2182,11 @@ core-js@^2.6.5:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
+core-js@^3.43.0:
+  version "3.50.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.50.0.tgz#a18646fcb0097650189b4504c803e887bcae4c0a"
+  integrity sha512-BRWgOLKkFeCgRudR6zrs8p9XJZcE14grzKMMssoYrk6krtuEZ7MTKPIY5RzOnqsEKIR9kst7wNzphttraT+Yqw==
+
 core-util-is@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
@@ -1984,6 +2221,11 @@ crypto-js@^4.0.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.1.1.tgz#9e485bcf03521041bd85844786b83fb7619736cf"
   integrity sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==
+
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 cssom@^0.4.1, cssom@^0.4.4:
   version "0.4.4"
@@ -2060,6 +2302,13 @@ debug@^2.2.0, debug@^2.3.3, debug@^2.6.8:
   integrity sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==
   dependencies:
     ms "2.0.0"
+
+debug@^4.3.4:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.4.3.tgz#c6ae432d9bd9662582fce08709b038c58e9e3d6a"
+  integrity sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==
+  dependencies:
+    ms "^2.1.3"
 
 decamelize@^1.2.0:
   version "1.2.0"
@@ -2323,7 +2572,12 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-events@^3.0.0:
+event-target-shim@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-6.0.2.tgz#ea5348c3618ee8b62ff1d344f01908ee2b8a2b71"
+  integrity sha512-8q3LsZjRezbFZ2PN+uP+Q7pnHUMmAOziU2vA2OwoFaKIXxlxl38IylhSSgUorWu/rf4er67w0ikBqjBFk/pomA==
+
+events@^3.0.0, events@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
@@ -2561,6 +2815,11 @@ follow-redirects@^1.14.0, follow-redirects@^1.15.11:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.11.tgz#777d73d72a92f8ec4d2e410eb47352a56b8e8340"
   integrity sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==
 
+follow-redirects@^1.16.0:
+  version "1.16.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.16.0.tgz#28474a159d3b9d11ef62050a14ed60e4df6d61bc"
+  integrity sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==
+
 for-in@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -2590,6 +2849,17 @@ form-data@^4.0.0, form-data@^4.0.5:
     es-set-tostringtag "^2.1.0"
     hasown "^2.0.2"
     mime-types "^2.1.12"
+
+form-data@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.6.tgz#28e864e1b786dbebb68db1f452f9635278665827"
+  integrity sha512-vKatAh4SlVfgbv+YtmhiRjhEMJsYpsG1Y2rMQtR+SVSbytsSD1YGzDIcrAJmdFec88u/+VoGmxnl+80gL1tRCQ==
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.8"
+    es-set-tostringtag "^2.1.0"
+    hasown "^2.0.4"
+    mime-types "^2.1.35"
 
 form-data@~2.3.2:
   version "2.3.3"
@@ -2892,6 +3162,13 @@ hasown@^2.0.2:
   dependencies:
     function-bind "^1.1.2"
 
+hasown@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/hasown/-/hasown-2.0.4.tgz#8c62d8cb90beb2aad5d0a5b67581ad9854c3f003"
+  integrity sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==
+  dependencies:
+    function-bind "^1.1.2"
+
 hmacsha1@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/hmacsha1/-/hmacsha1-1.0.0.tgz#c1b7ae03a4ea116348090af14f8148c12938a917"
@@ -2937,6 +3214,14 @@ http-proxy-agent@^4.0.1:
     agent-base "6"
     debug "4"
 
+http-proxy-agent@^7.0.0:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/http-proxy-agent/-/http-proxy-agent-7.0.2.tgz#9a8b1f246866c028509486585f62b8f2c18c270e"
+  integrity sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==
+  dependencies:
+    agent-base "^7.1.0"
+    debug "^4.3.4"
+
 http-signature@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/http-signature/-/http-signature-1.2.0.tgz#9aecd925114772f3d95b65a60abb8f7c18fbace1"
@@ -2946,12 +3231,25 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-https-proxy-agent@^5.0.0:
+http-status-codes@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/http-status-codes/-/http-status-codes-2.3.0.tgz#987fefb28c69f92a43aecc77feec2866349a8bfc"
+  integrity sha512-RJ8XvFvpPM/Dmc5SV+dC4y5PCeOhT3x1Hq0NU3rjGeg5a/CqlhZ7uudknPwZFz4aeAXDcbAyaeP7GAo9lvngtA==
+
+https-proxy-agent@^5.0.0, https-proxy-agent@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz#c59ef224a04fe8b754f3db0063a25ea30d0005d6"
   integrity sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==
   dependencies:
     agent-base "6"
+    debug "4"
+
+https-proxy-agent@^7.0.0:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz#da8dfeac7da130b05c2ba4b59c9b6cd66611a6b9"
+  integrity sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==
+  dependencies:
+    agent-base "^7.1.2"
     debug "4"
 
 human-signals@^1.1.1:
@@ -3144,6 +3442,11 @@ is-potential-custom-element-name@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-potential-custom-element-name/-/is-potential-custom-element-name-1.0.1.tgz#171ed6f19e3ac554394edf78caa05784a45bebb5"
   integrity sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==
+
+is-retry-allowed@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/is-retry-allowed/-/is-retry-allowed-2.2.0.tgz#88f34cbd236e043e71b6932d09b0c65fb7b4d71d"
+  integrity sha512-XVm7LOeLpTW4jV19QSH38vkswxoLud8sQ57YwJVTPWdiaI9I8keEhGFpBlslyVsgdQy4Opg8QOLb8YRgsyZiQg==
 
 is-stream@^1.1.0:
   version "1.1.0"
@@ -4237,6 +4540,11 @@ jws@^4.0.0:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
+jwt-decode@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-4.0.0.tgz#2270352425fd413785b2faf11f6e755c5151bd4b"
+  integrity sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==
+
 keytar@^7.3.0:
   version "7.9.0"
   resolved "https://registry.yarnpkg.com/keytar/-/keytar-7.9.0.tgz#4c6225708f51b50cbf77c5aae81721964c2918cb"
@@ -4459,7 +4767,7 @@ mime-db@1.52.0:
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
   integrity sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==
 
-mime-types@^2.1.12, mime-types@~2.1.19:
+mime-types@^2.1.12, mime-types@^2.1.35, mime-types@~2.1.19:
   version "2.1.35"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.35.tgz#381a871b62a734450660ae3deee44813f70d959a"
   integrity sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==
@@ -4518,7 +4826,7 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-ms@^2.1.1:
+ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
@@ -4739,6 +5047,11 @@ os-homedir@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-homedir/-/os-homedir-1.0.2.tgz#ffbc4988336e0e833de0c168c7ef152121aa7fb3"
   integrity sha1-/7xJiDNuDoM94MFox+8VISGqf7M=
+
+p-defer@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/p-defer/-/p-defer-4.0.1.tgz#d12c6d41420785ed0d162dbd86b71ba490f7f99e"
+  integrity sha512-Mr5KC5efvAK5VUptYEIopP1bakB85k2IWXaRC0rsh1uwn1L6M0LVml8OIQ4Gudg4oyZakf7FmeRLkMMtZW1i5A==
 
 p-each-series@^2.1.0:
   version "2.2.0"
@@ -5034,6 +5347,11 @@ proxy-from-env@^1.1.0:
   resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
   integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
 
+proxy-from-env@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-2.1.0.tgz#a7487568adad577cfaaa7e88c49cab3ab3081aba"
+  integrity sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==
+
 psl@^1.1.28, psl@^1.1.33:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
@@ -5157,10 +5475,17 @@ realpath-native@^2.0.0:
   resolved "https://registry.yarnpkg.com/realpath-native/-/realpath-native-2.0.0.tgz#7377ac429b6e1fd599dc38d08ed942d0d7beb866"
   integrity sha512-v1SEYUOXXdbBZK8ZuNgO4TBjamPsiSgcFr0aP+tEKpQZK8vooEUqV6nm6Cv502mX4NF2EfsnVqtNAHG+/6Ur1Q==
 
-regenerator-runtime@^0.13.4:
-  version "0.13.9"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
-  integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
+redux@^4.0.5:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.2.1.tgz#c08f4306826c49b5e9dc901dee0452ea8fce6197"
+  integrity sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==
+  dependencies:
+    "@babel/runtime" "^7.9.2"
+
+regenerator-runtime@^0.14.1:
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz#356ade10263f685dda125100cd862c1db895327f"
+  integrity sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==
 
 regex-not@^1.0.0, regex-not@^1.0.2:
   version "1.0.2"
@@ -5942,6 +6267,11 @@ tslib@^2.0.0, tslib@^2.2.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
+tslib@^2.6.2, tslib@^2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
+  integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
+
 tslint-circular-dependencies@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/tslint-circular-dependencies/-/tslint-circular-dependencies-0.1.0.tgz#4ec04fd72b7f8b4b48aa76d56049e48dd2956cd3"
@@ -6065,6 +6395,11 @@ typescript@^3.9.9:
   version "1.13.3"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.3.tgz#54bc95f7648c5557897e5e968d0f76bc062c34ee"
   integrity sha512-QvjkYpiD+dJJraRA8+dGAU4i7aBbb2s0S3jA45TFOvg2VgqvdCDd/3N6CqA8gluk1W91GLoXg5enMUx560QzuA==
+
+undici-types@~6.21.0:
+  version "6.21.0"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.21.0.tgz#691d00af3909be93a7faa13be61b3a5b50ef12cb"
+  integrity sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==
 
 union-value@^1.0.0:
   version "1.0.1"
