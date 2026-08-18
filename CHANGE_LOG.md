@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Bumped `@microsoft/omnichannel-chat-widget` from 1.8.4 to 2.0.0.
 - Bumped `@microsoft/omnichannel-chat-components` to `1.2.0`.
-- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.b82e941`.
+- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0`, which uses `@microsoft/ocsdk@0.6.0` and `@microsoft/omnichannel-amsclient@0.2.0`.
 - Retained required product hotfix `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
 - Added a PR check that rejects changes to the required Bot Framework Web Chat hotfix version.
 - Updated Markdown-It, DOMPurify, and `sanitize-html` to patched compatible releases.

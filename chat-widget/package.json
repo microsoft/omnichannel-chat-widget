@@ -93,7 +93,7 @@
     "@azure/core-tracing": "^1.2.0",
     "@microsoft/applicationinsights-web": "^3.3.6",
     "@microsoft/omnichannel-chat-components": "1.2.0",
-    "@microsoft/omnichannel-chat-sdk": "2.0.0-main.b82e941",
+    "@microsoft/omnichannel-chat-sdk": "2.0.0",
     "@opentelemetry/api": "^1.9.0",
     "abort-controller": "^3",
     "botframework-webchat": "4.18.1-hotfix.20260308.b15b405",

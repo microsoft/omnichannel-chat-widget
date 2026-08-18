@@ -53,7 +53,7 @@ This package requires Node.js `>=22.12.0` for consumer builds. Node 20 is not su
 For a production application, pin the exact stable versions:
 
 ```bash
-npm install --save-exact @microsoft/omnichannel-chat-widget@2.0.0 @microsoft/omnichannel-chat-components@1.2.0
+npm install --save-exact @microsoft/omnichannel-chat-widget@2.0.0 @microsoft/omnichannel-chat-components@1.2.0 @microsoft/omnichannel-chat-sdk@2.0.0
 ```
 
 `2.0.0` release date is 2026-08-18. Official support ends on 2027-08-18. See the [root support table](https://github.com/microsoft/omnichannel-chat-widget#chat-widget).
