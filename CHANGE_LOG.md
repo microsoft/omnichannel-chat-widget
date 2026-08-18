@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Removed leftover Chat Widget tag and manual release workflows. Official `w-v*` tags now start only `npm-release.yml`.
+- Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
+
 ## [2.0.0] - 2026-08-18
 
 ### Breaking
