@@ -1,8 +1,12 @@
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { IWebChatAction, WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { Constants } from "../../../../../common/Constants";
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-export const createMessageSequenceIdOverrideMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const createMessageSequenceIdOverrideMiddleware: WebChatStoreMiddleware = ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (isApplicable(action)) {
         return next(overrideSequenceIdWithOriginalMessageId(action));
     }

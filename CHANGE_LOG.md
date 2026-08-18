@@ -6,13 +6,35 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-08-13
+
+### Breaking
+
+- Raised the supported consumer build runtime to Node.js `>=22.12.0`, matching chat SDK 2.0.0 and the remediated dependency chain.
+- Exported Web Chat middleware factories now use a structural `WebChatStoreMiddleware` type whose `action` is `unknown`. Runtime dispatch is unchanged; TypeScript callers must narrow with `isWebChatAction` instead of assuming `IWebChatAction`.
+
 ### Changed
-- Bumped `@microsoft/omnichannel-chat-components` to `1.1.17-main.05edfd3`.
-- Bumped `@microsoft/omnichannel-chat-sdk` to `1.11.9-main.47a6498`. This includes diagnostic telemetry fields in ChatConfigRetrievalFailure events and pulls in the upstream fix that pins the ACS WebChat adapter to exact `0.0.1-beta.8` (instead of `^0.0.1-beta.6` which resolved to the rogue `0.0.1-beta-1` per semver §11), restoring the fast-poll path for the first bot reply.
+- Bumped `@microsoft/omnichannel-chat-widget` from 1.8.4 to 2.0.0.
+- Bumped `@microsoft/omnichannel-chat-components` to `1.2.0-main.5692126`.
+- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.b82e941`.
+- Retained required product hotfix `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
+- Added a PR check that rejects changes to the required Bot Framework Web Chat hotfix version.
+- Updated Markdown-It, DOMPurify, and `sanitize-html` to patched compatible releases.
+- Declared and pinned legacy RxJS `5.5.12` for adapters that still use RxJS 5 deep imports; transcript download continues to load its separate RxJS 7 browser global.
+- Removed the unused direct Redux 5 runtime dependency by making the middleware declaration structural and self-contained.
+- Limited packed-consumer audit exceptions to exact package versions and their reviewed WebChat or chat SDK dependency roots.
+- Migrated package, sample, UMD, and Storybook builds to Webpack 5 and standardized development and CI on Node.js 22.
+- Preserved the Storybook Playwright screenshot-authoring panel in development while excluding its Webpack 5-incompatible preset from static builds.
+- Preserved and added browser-bundler CI coverage for the published CommonJS package export.
+- Deduplicated Trusted Types definitions across DOMPurify and the widget build.
+- Pinned compatible `@types/glob` and `@types/minimatch` definitions required by the legacy Storybook/Jest toolchain.
+- Added a packed-consumer production audit to the PR validation gate.
+- Pinned Valibot 1.4.2 for first-party builds and documented the remaining upstream WebChat/UUID audit-only advisories.
 
 ### Tests
 - [A11y] Added deterministic repro catchers (skipped by default; un-skip to validate fixes) for internal tracking (AdaptiveCard TalkBack non-radio duplicate labels), internal tracking (ChatButton browse-mode duplicate stops), internal tracking (agent profile name not announced), internal tracking (blank announcement live regions), internal tracking (focus trap leak across page reload), plus a passing regression guard for ConfirmationPane focus-trap install/cleanup symmetry
 - [Bug 6525143] Added a contract test for the pre-chat pane default general style (fills via flex, no fixed/percentage height, keeps own scroll) and updated the focus-capture wrapper layout test to assert the flex-column sizing that prevents the header clip.
+- Removed a redundant designer-mode bot-message E2E assertion; the stronger adjacent test already waits for and validates the same rendered bot activities and accessible names.
 
 ### Fixed
 - [Bug] Edited system messages (e.g. queue-position updates such as `People ahead of you: 2` → `You're next in line.`) now re-render with the latest text. Removed the `originalSystemMessageTexts` cache in `activityMiddleware` that was keyed by `activity.id` alone and froze the first-seen text for the lifetime of the activity. Safe to remove because `card.activity.text` is no longer mutated (renders write to a local `renderedHtml`), so repeated `renderMarkdown` calls remain idempotent (AB#6523665)
@@ -92,6 +114,10 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 
+- Removed unused ES5 fork dependencies that shipped stale build toolchains and removed obsolete security resolutions.
+- Removed unused DOMPurify type stubs, legacy ESLint plugins/config, file-loader, p-defer, and the unused react-docgen TypeScript plugin.
+- The required WebChat hotfix declares `sanitize-html` 2.14.0. Its generated allowlist excludes the vulnerable `action` and `formaction` attributes.
+- The required WebChat hotfix still owns the Bug 6562437 findings for `markdown-it`, `linkify-it`, `@babel/runtime`, and `uuid`.
 - Upgrade `yaml` 1.10.2 → 1.10.3 and 2.8.0 → 2.8.3 to fix stack overflow vulnerability on deeply nested YAML input
 - Upgrade `brace-expansion` 2.0.2 → 2.0.3 to fix infinite loop on zero-step brace patterns (CVE-2026-33750)
 

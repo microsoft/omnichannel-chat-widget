@@ -7,7 +7,7 @@
 
 import { ICustomEvent } from "@microsoft/omnichannel-chat-components/lib/types/interfaces/ICustomEvent";
 import { Constants } from "../../../../../common/Constants";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 
@@ -31,8 +31,12 @@ export const isValidCustomEvent = (activity: {
             && activity?.channelData?.metadata?.customEventValue);
 };
 
-const createCustomEventMiddleware = (broadcastservice: typeof BroadcastService) => () => (next: (action: IWebChatAction) => void) => (action: IWebChatAction) => {
-    if (action?.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
+const createCustomEventMiddleware = (broadcastservice: typeof BroadcastService): WebChatStoreMiddleware => () => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
+    if (action.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
         const activity = action.payload.activity;
         if (isValidCustomEvent(activity)){
             const customEvent: ICustomEvent = {

@@ -8,7 +8,7 @@ import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/Teleme
 
 import { IDataMaskingInfo } from "../../../interfaces/IDataMaskingInfo";
 import { IDataMaskingRule } from "../../../interfaces/IDataMaskingRule";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { IWebChatAction, WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { isMaskingforCustomer } from "../../../common/utils/isMaskingFromCustomer";
@@ -81,8 +81,12 @@ const applyDataMasking = (action: IWebChatAction, regexCollection: IDataMaskingR
     return action;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createDataMaskingMiddleware = (dataMaskingInfo: IDataMaskingInfo) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const createDataMaskingMiddleware = (dataMaskingInfo: IDataMaskingInfo): WebChatStoreMiddleware => ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (isMaskingforCustomer(dataMaskingInfo) && action.payload?.text && action.type === WebChatActionType.WEB_CHAT_SEND_MESSAGE) {
         const regexCollection = dataMaskingInfo?.dataMaskingRules;
         return next(applyDataMasking(action, regexCollection as IDataMaskingRule));
