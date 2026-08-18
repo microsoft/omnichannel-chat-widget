@@ -4,12 +4,14 @@
  * Intercepts custom call actions and handles tel: URL navigation
  ******/
 
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createCallActionMiddleware = () => () => (next: any) => (action: IWebChatAction) => {
-    
+const createCallActionMiddleware = (): WebChatStoreMiddleware => () => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     // Intercept incoming activities to modify suggested actions with call type
     if (action.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY) {
         const activity = action.payload?.activity;

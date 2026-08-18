@@ -7,13 +7,17 @@
 
 import { Constants } from "../../../../../common/Constants";
 import { DirectLineSenderRole } from "../../enums/DirectLineSenderRole";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { MessageTypes } from "../../enums/MessageType";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createConversationEndMiddleware = (conversationEndCallback: any, startConversationalSurveyCallback: any, endConversationalSurveyCallback: any) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
-    if (action?.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
+const createConversationEndMiddleware = (conversationEndCallback: any, startConversationalSurveyCallback: any, endConversationalSurveyCallback: any): WebChatStoreMiddleware => ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
+    if (action.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
 
         const activity = action.payload.activity;
 

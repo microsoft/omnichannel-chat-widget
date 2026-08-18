@@ -11,6 +11,7 @@
 
 1. [Introduction](#introduction)
 1. [Installation](#installation)
+1. [WebChat dependency constraint](#webchat-dependency-constraint)
 1. [Example Usage](#example-usage)
 1. [Components](#components)
 1. [See Also](#see-also)
@@ -46,6 +47,34 @@ or
 ```powershell
 yarn add @microsoft/omnichannel-chat-components
 ```
+
+This package requires Node.js `>=22.12.0` for consumer builds. Node 20 is not supported.
+
+TypeScript consumers that imported the exported Web Chat middleware factories now receive Redux 5 `unknown` actions. Narrow with `isWebChatAction` before reading `type` or `payload`. Runtime behavior is unchanged.
+
+## WebChat dependency constraint
+
+The widget must use `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
+
+Do not upgrade or replace this version. It contains a required product hotfix. The PR workflow rejects a different version.
+
+This hotfix still declares these vulnerable transitive versions:
+
+| Package | Hotfix version |
+| --- | --- |
+| `adaptivecards` | `3.0.2` |
+| `markdown-it` | `13.0.2` |
+| `linkify-it` | `4.0.1` |
+| `@babel/runtime` | `7.14.8`, `7.15.4`, and `7.19.0` |
+| `@babel/runtime-corejs3` | `7.20.13` |
+| `sanitize-html` | `2.14.0` |
+| `swiper` | `8.4.7` |
+| `valibot` | `1.1.0` |
+| `uuid` | `3.4.0`, `8.3.2`, and `9.0.1` |
+
+The consumer audit permits only the reviewed advisories from this hotfix. It rejects each new advisory.
+
+A new WebChat hotfix must preserve the product fix and update these dependencies.
 
 ## Example Usage
 
