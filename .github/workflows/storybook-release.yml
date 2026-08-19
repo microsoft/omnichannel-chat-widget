@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out for ${{ github.ref }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: .nvmrc
       - name: Install Chat Widget packages
@@ -34,7 +34,7 @@ jobs:
           NODE_OPTIONS: --openssl-legacy-provider
         run: yarn build-composite-storybook
       - name: Deploy Storybook
-        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        uses: JamesIves/github-pages-deploy-action@8817a56e5bfec6e2b08345c81f4d422db53a2cdc # v4.3.3
         with:
           branch: gh-pages
           folder: ./chat-widget/storybook-build
