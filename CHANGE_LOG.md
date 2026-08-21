@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Security
+- Pin `dompurify` to `3.4.13` (GHSA-55q2-fjhq-7xh7).
+- Pin `postcss` to `8.5.19` (CVE-2026-69153) and resolve nested `nanoid@3.3.18` (CVE-2026-67213 / CVE-2026-67214).
+
 ### Changed
 - Removed leftover Chat Widget tag and manual release workflows. Official `w-v*` tags now start only `npm-release.yml`.
 - Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
@@ -713,6 +717,9 @@ All notable changes to this project will be documented in this file.
 # Chat-Components
 
 ## [Unreleased]
+
+### Security
+- Pin `postcss` to `8.5.19` (CVE-2026-69153) and resolve nested `nanoid@3.3.18` (CVE-2026-67213 / CVE-2026-67214).
 
 ## [1.2.0] - 2026-08-18
 
