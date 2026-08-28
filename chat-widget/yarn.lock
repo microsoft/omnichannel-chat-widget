@@ -2922,7 +2922,8 @@
 
 "@microsoft/omnichannel-chat-sdk@2.0.0-main.2749962":
   version "2.0.0-main.2749962"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.0-main.2749962.tgz"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.0-main.2749962.tgz#a07af8cbc5765b20ddc8e04707e36b06e3732e8d"
+  integrity sha512-LX96zq2kI/z6FRci4eUfSnKXApVat0EC06Rj8O0p1RHDOlB+ZUMoXV65JKhllMaBAtHSLRvnVqBB5hVCmWidig==
   dependencies:
     "@azure/communication-chat" "1.6.0-beta.7"
     "@azure/communication-common" "2.4.2"
