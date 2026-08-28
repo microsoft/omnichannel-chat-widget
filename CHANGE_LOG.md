@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 - Pin `postcss` to `8.5.19` (CVE-2026-69153) and resolve nested `nanoid@3.3.18` (CVE-2026-67213 / CVE-2026-67214).
 
 ### Changed
+- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.2749962` in Chat Widget and automation tests.
 - Removed leftover Chat Widget tag and manual release workflows. Official `w-v*` tags now start only `npm-release.yml`.
 - Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
 - Consolidated the Chat Widget 2.0.0 notes into one Breaking, Changed, Added, Tests, Fixed, and Security section and removed mid-auth entries.
