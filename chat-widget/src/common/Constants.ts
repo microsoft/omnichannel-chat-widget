@@ -190,6 +190,7 @@ export class HtmlClassNames {
 
 export class HtmlElementSelectors {
     public static readonly sendBoxSelector = "textarea[data-id=\"webchat-sendbox-input\"]"
+    public static readonly sendButtonSelector = ".webchat__send-button"
 }
 
 export class HtmlAttributeNames {

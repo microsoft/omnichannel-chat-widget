@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setAriaHiddenForSiblings, preventFocusToMoveOutOfElement, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, createIOSSendBoxKeyboardFixHandler, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isIPhoneDevice, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setAriaHiddenForSiblings, preventFocusToMoveOutOfElement, setTabIndices } from "./utils";
 import { AriaTelemetryConstants } from "./Constants";
 import { Md5 } from "md5-typescript";
 import { cleanup } from "@testing-library/react";
@@ -467,5 +467,105 @@ describe("utils unit test", () => {
         document.body.innerHTML = "<div id=\"other\">content</div>";
         const stateMap: Map<Element, string | null> = new Map();
         expect(() => setAriaHiddenForSiblings("nonexistent-id", true, stateMap)).not.toThrow();
+    });
+
+    describe("isIPhoneDevice (ICM 845629087 - iOS SendBox keyboard fix)", () => {
+        const iphoneUA = "Mozilla/5.0 (iPhone; CPU iPhone OS 26_5_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Mobile/15E148 Safari/604.1";
+        const ipadUA = "Mozilla/5.0 (iPad; CPU OS 18_7_9 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.7 Mobile/15E148 Safari/604.1";
+        const androidUA = "Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36";
+        const desktopUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+        const bingAppOnIphoneUA = "Mozilla/5.0 (iPhone; CPU iPhone OS 26_5_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 BingWeb/26.5.0";
+
+        it("returns true for an iPhone Safari user agent", () => {
+            expect(isIPhoneDevice(iphoneUA)).toBe(true);
+        });
+
+        it("returns true for an iPhone user agent inside the Bing app WebView", () => {
+            expect(isIPhoneDevice(bingAppOnIphoneUA)).toBe(true);
+        });
+
+        it("returns false for an iPad user agent (iPad is not affected by ICM 845629087)", () => {
+            expect(isIPhoneDevice(ipadUA)).toBe(false);
+        });
+
+        it("returns false for an Android user agent", () => {
+            expect(isIPhoneDevice(androidUA)).toBe(false);
+        });
+
+        it("returns false for a desktop user agent", () => {
+            expect(isIPhoneDevice(desktopUA)).toBe(false);
+        });
+
+        it("is case-insensitive", () => {
+            expect(isIPhoneDevice(iphoneUA.toUpperCase())).toBe(true);
+        });
+
+        it("falls back to navigator.userAgent when no override is provided", () => {
+            const originalUserAgent = navigator.userAgent;
+            Object.defineProperty(navigator, "userAgent", { value: iphoneUA, configurable: true });
+            expect(isIPhoneDevice()).toBe(true);
+            Object.defineProperty(navigator, "userAgent", { value: originalUserAgent, configurable: true });
+        });
+
+        it("returns false when userAgent is an empty string", () => {
+            expect(isIPhoneDevice("")).toBe(false);
+        });
+    });
+
+    describe("createIOSSendBoxKeyboardFixHandler (ICM 845629087 - iOS SendBox keyboard fix)", () => {
+        const sendButtonSelector = ".webchat__send-button";
+
+        const buildClickEvent = (target: HTMLElement): MouseEvent => {
+            const event = new MouseEvent("click", { bubbles: true, cancelable: true });
+            Object.defineProperty(event, "target", { value: target, configurable: true });
+            jest.spyOn(event, "preventDefault");
+            jest.spyOn(event, "stopImmediatePropagation");
+            return event;
+        };
+
+        afterEach(() => {
+            document.body.innerHTML = "";
+        });
+
+        it("intercepts a click on the send button: prevents default, stops propagation, and re-submits via 'sendBox'", () => {
+            document.body.innerHTML = "<button class=\"webchat__send-button\"><svg><path /></svg></button>";
+            const sendButton = document.querySelector(".webchat__send-button") as HTMLElement;
+            const svgPath = sendButton.querySelector("path") as unknown as HTMLElement; // simulate click landing on an inner icon element
+
+            const submitSendBox = jest.fn();
+            const handler = createIOSSendBoxKeyboardFixHandler(submitSendBox, sendButtonSelector);
+
+            const event = buildClickEvent(svgPath);
+            handler(event);
+
+            expect(event.preventDefault).toHaveBeenCalledTimes(1);
+            expect(event.stopImmediatePropagation).toHaveBeenCalledTimes(1);
+            expect(submitSendBox).toHaveBeenCalledTimes(1);
+            expect(submitSendBox).toHaveBeenCalledWith("sendBox");
+        });
+
+        it("does nothing when the click target is not the send button (or a descendant of it)", () => {
+            document.body.innerHTML = "<button class=\"webchat__send-button\"></button><button class=\"webchat__upload-button\"></button>";
+            const uploadButton = document.querySelector(".webchat__upload-button") as HTMLElement;
+
+            const submitSendBox = jest.fn();
+            const handler = createIOSSendBoxKeyboardFixHandler(submitSendBox, sendButtonSelector);
+
+            const event = buildClickEvent(uploadButton);
+            handler(event);
+
+            expect(event.preventDefault).not.toHaveBeenCalled();
+            expect(event.stopImmediatePropagation).not.toHaveBeenCalled();
+            expect(submitSendBox).not.toHaveBeenCalled();
+        });
+
+        it("does nothing when the click target has no closest() (e.g. a detached/text node)", () => {
+            const submitSendBox = jest.fn();
+            const handler = createIOSSendBoxKeyboardFixHandler(submitSendBox, sendButtonSelector);
+
+            const event = buildClickEvent(null as unknown as HTMLElement);
+            expect(() => handler(event)).not.toThrow();
+            expect(submitSendBox).not.toHaveBeenCalled();
+        });
     });
 });
