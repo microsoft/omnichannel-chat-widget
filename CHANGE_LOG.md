@@ -16,6 +16,12 @@ All notable changes to this project will be documented in this file.
 - Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
 - Consolidated the Chat Widget 2.0.0 notes into one Breaking, Changed, Added, Tests, Fixed, and Security section and removed mid-auth entries.
 
+### Fixed
+- [ICM 845629087] iPhone (iOS 26+) users could not type after tapping the SendBox icon (airplane) button following an advocate/bot reply: the on-screen keyboard would disappear and never reopen, showing only "Paste/AutoFill" options on subsequent taps (Enter-key send was unaffected; iPad/Android were unaffected). Root cause: `botframework-webchat`'s Send button issues `submit({ setFocus: 'sendBoxWithoutKeyboard' })`, and a newer WebChat release inserted an `await` (next animation frame) before re-focusing the textarea in that code path, breaking the synchronous "trusted user gesture" chain iOS requires to auto-show the keyboard. `WebChatContainerStateful` now intercepts the Send button's click in the capture phase, iPhone-only, and re-issues the send via WebChat's public `hooks.useSubmitSendBox()` using the `'sendBox'` method — the same method Enter-key send already uses safely — instead of `'sendBoxWithoutKeyboard'`. Android, iPad, and desktop are untouched by this change.
+
+### Tests
+- [ICM 845629087] Added unit tests for the new `isIPhoneDevice()` device check and the extracted, pure `createIOSSendBoxKeyboardFixHandler()` click-interception factory in `src/common/utils.test.ts` (8 device-detection cases + 3 handler-behavior cases: send-button click intercepted and re-submitted via `'sendBox'`, non-send-button clicks ignored, missing/detached target handled without throwing). Full existing `test:unit` suite (59 suites / 718 tests) re-verified to pass unchanged.
+
 ## [2.0.0] - 2026-08-18
 
 ### Breaking

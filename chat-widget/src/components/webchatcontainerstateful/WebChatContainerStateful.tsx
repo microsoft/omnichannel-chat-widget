@@ -1,12 +1,12 @@
-import { Constants, HtmlAttributeNames, HtmlClassNames } from "../../common/Constants";
+import { Constants, HtmlAttributeNames, HtmlClassNames, HtmlElementSelectors } from "../../common/Constants";
 import { IRawStyle, IStackStyles, Stack } from "@fluentui/react";
 import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import React, { Dispatch, useEffect, useRef, useState } from "react";
-import { createTimer, getDeviceType, setFocusOnSendBox } from "../../common/utils";
+import { createIOSSendBoxKeyboardFixHandler, createTimer, getDeviceType, isIPhoneDevice, setFocusOnSendBox } from "../../common/utils";
 
 import { BotMagicCodeStore } from "./webchatcontroller/BotMagicCodeStore";
 import CitationPaneStateful from "../citationpanestateful/CitationPaneStateful";
-import { Components } from "botframework-webchat";
+import { Components, hooks } from "botframework-webchat";
 import { ExtendedChatConfig } from "./interfaces/IExtendedChatConffig";
 import { FacadeChatSDK } from "../../common/facades/FacadeChatSDK";
 import { ILiveChatWidgetAction } from "../../contexts/common/ILiveChatWidgetAction";
@@ -94,6 +94,8 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
 
 
     const { BasicWebChat } = Components;
+    const { useSubmitSendBox } = hooks;
+    const submitSendBox = useSubmitSendBox();
     const [ state, dispatch ]: [ILiveChatWidgetContext, Dispatch<ILiveChatWidgetAction>] = useChatContextStore();
     const { webChatContainerProps, contextDataStore } = props;
 
@@ -374,6 +376,40 @@ export const WebChatContainerStateful = (props: ILiveChatWidgetProps) => {
             setFocusOnSendBox();
         }
     }, [state.appStates.isMinimized]);
+
+    // iPhone SendBox keyboard-stuck fix (ICM 845629087).
+    //
+    // Root cause: WebChat's default Send button issues
+    // `submit({ setFocus: 'sendBoxWithoutKeyboard' })`, which deliberately sets
+    // `inputmode="none"` on the textarea and hides the keyboard after send. The
+    // built-in recovery path (the textarea's own onClick handler resets
+    // `inputmode` back to "text" on the user's next tap, expecting the keyboard
+    // to reopen) can fail on iPhone, leaving the textarea permanently focused
+    // but keyboard-suppressed after the first send - matching the reported
+    // "keyboard disappears, only Paste/AutoFill options shown" symptom.
+    //
+    // Sending via the Enter key already calls `submit('sendBox')` instead
+    // (keeps the keyboard open) and does not exhibit this bug on the same
+    // devices. This effect intercepts the Send button's click on iPhone only,
+    // in the capture phase (before WebChat's own click handler runs), and
+    // re-issues the submit using that same 'sendBox' method already proven
+    // safe for Enter-key send - reusing WebChat's own submit/focus pipeline
+    // rather than re-implementing it. Every other platform/browser (Android,
+    // iPad, desktop) is completely untouched by this effect.
+    useEffect(() => {
+        if (!isIPhoneDevice()) {
+            return;
+        }
+
+        const webChatRoot = document.getElementById("ms_lcw_webchat_root");
+        if (!webChatRoot) {
+            return;
+        }
+
+        const handleSendButtonClickCapture = createIOSSendBoxKeyboardFixHandler(submitSendBox, HtmlElementSelectors.sendButtonSelector);
+        webChatRoot.addEventListener("click", handleSendButtonClickCapture, true);
+        return () => webChatRoot.removeEventListener("click", handleSendButtonClickCapture, true);
+    }, [submitSendBox]);
 
     return (
         <>

@@ -570,6 +570,56 @@ export function getDeviceType(): string {
     }
 }
 
+/**
+ * Detects iPhone specifically (excluding iPad/iPod), to scope platform-specific
+ * workarounds as narrowly as possible. Used by the iOS SendBox keyboard fix
+ * (ICM 845629087) so that iPad, which is not affected, remains untouched.
+ * @param userAgentOverride - optional user agent string, primarily for testing.
+ */
+export function isIPhoneDevice(userAgentOverride?: string): boolean {
+    const userAgent = (userAgentOverride ?? navigator.userAgent ?? "").toLowerCase();
+    return /iphone/.test(userAgent);
+}
+
+// ICM 845629087 - iOS SendBox keyboard-stuck fix.
+//
+// WebChat's default Send button issues `submit({ setFocus: 'sendBoxWithoutKeyboard' })`,
+// which sets `inputmode="none"` on the textarea and hides the keyboard after send. The
+// built-in recovery path (the textarea's own onClick handler resets `inputmode` back to
+// "text" on the user's next tap, expecting the keyboard to reopen) can fail on iPhone
+// (iOS 26+), leaving the textarea focused but keyboard-suppressed after the first send.
+//
+// Sending via the Enter key already calls `submit('sendBox')` instead (keeps the keyboard
+// open) and does not exhibit this bug on the same devices. This factory builds a
+// capture-phase click handler - meant to be attached to a WebChat root ancestor - that
+// intercepts the Send button's click before WebChat's own handler runs, and re-issues the
+// submit using that same already-safe 'sendBox' method, reusing WebChat's own submit/focus
+// pipeline rather than re-implementing it.
+//
+// Extracted as a standalone, pure factory (rather than being inlined in a component
+// useEffect) specifically so it can be unit tested directly with a mock MouseEvent and a
+// mock submitSendBox function, without needing to mount the full WebChatContainerStateful
+// component tree.
+export function createIOSSendBoxKeyboardFixHandler(
+    submitSendBox: (method?: string) => void,
+    sendButtonSelector: string
+): (event: MouseEvent) => void {
+    return (event: MouseEvent) => {
+        const target = event.target as HTMLElement | null;
+        const sendButton = target?.closest?.(sendButtonSelector);
+        if (!sendButton) {
+            return;
+        }
+
+        // Prevent WebChat's default 'sendBoxWithoutKeyboard' handler (and the native form
+        // submit it would otherwise trigger) from running, then re-issue the send using the
+        // already-safe 'sendBox' method.
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        submitSendBox("sendBox");
+    };
+}
+
 //Bots expect a payload containing:
 //1. customEventName: this should be string describe the event name
 //2. customEventValue: given the value is from customer with unknown type, it is required to stringify the payload later
