@@ -561,9 +561,10 @@ export const setOcUserAgent = (chatSDK: any): void => { // eslint-disable-line @
 
 export function getDeviceType(): string {
     const userAgent = navigator.userAgent.toLowerCase();
+    const isIPadOSDesktop = /macintosh/.test(userAgent) && navigator.maxTouchPoints > 1;
     if (/android/.test(userAgent)) {
         return "android";
-    } else if (/iphone|ipad|ipod/.test(userAgent)) {
+    } else if (/iphone|ipad|ipod/.test(userAgent) || isIPadOSDesktop) {
         return "ios";
     } else {
         return "standard";

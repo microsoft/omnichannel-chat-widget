@@ -16,6 +16,9 @@ All notable changes to this project will be documented in this file.
 - Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
 - Consolidated the Chat Widget 2.0.0 notes into one Breaking, Changed, Added, Tests, Fixed, and Security section and removed mid-auth entries.
 
+### Fixed
+- [iOS] Use the native send-box placeholder style to prevent Safari from scrolling chat content off-screen on first focus.
+
 ## [2.0.0] - 2026-08-18
 
 ### Breaking

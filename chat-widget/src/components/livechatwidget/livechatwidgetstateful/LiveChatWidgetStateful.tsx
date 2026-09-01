@@ -11,6 +11,7 @@ import {
     createTimer,
     getBroadcastChannelName,
     getConversationDetailsCall,
+    getDeviceType,
     getLocaleDirection,
     getStateFromCache,
     getWidgetCacheIdfromProps,
@@ -75,6 +76,7 @@ import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/St
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
+import { createIOSCompatibleStyleSet } from "../../webchatcontainerstateful/common/utils/createIOSCompatibleStyleSet";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
@@ -930,6 +932,14 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         bubbleBackground,
         bubbleTextColor
     }), [webChatStyles, bubbleBackground, bubbleTextColor]);
+    const isIOSDevice = getDeviceType() === "ios";
+    // Avoid Safari's native placeholder focus-scroll race while preserving all other WebChat styles.
+    const webChatStyleSet = React.useMemo(
+        () => isIOSDevice
+            ? createIOSCompatibleStyleSet(styleOptions, webChatProps.styleSet)
+            : webChatProps.styleSet,
+        [isIOSDevice, styleOptions, webChatProps.styleSet]
+    );
 
     // React to dynamic bot avatar initials updates from context
     useEffect(() => {
@@ -1072,6 +1082,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
                 <Composer
                     {...webChatProps}
+                    styleSet={webChatStyleSet}
                     userID={userID}
                     styleOptions={styleOptions}
                     directLine={directLine}>
