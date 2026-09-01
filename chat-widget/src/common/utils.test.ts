@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 
-import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setAriaHiddenForSiblings, preventFocusToMoveOutOfElement, setTabIndices } from "./utils";
+import { changeLanguageCodeFormatForWebChat, escapeHtml, extractPreChatSurveyResponseValues, findParentFocusableElementsWithoutChildContainer, formatTemplateString, getBroadcastChannelName, getDeviceType, getDomain, getIconText, getLocaleDirection, getTimestampHourMinute, getWidgetCacheId, getWidgetEndChatEventName, isNullOrEmptyString, isUndefinedOrEmpty, newGuid, parseAdaptiveCardPayload, parseLowerCaseString, setAriaHiddenForSiblings, preventFocusToMoveOutOfElement, setTabIndices } from "./utils";
 import { AriaTelemetryConstants } from "./Constants";
 import { Md5 } from "md5-typescript";
 import { cleanup } from "@testing-library/react";
@@ -148,6 +148,57 @@ describe("utils unit test", () => {
         const string6 = "测试";
         const result6 = getIconText(string6);
         expect(result6).toBe("测试");
+    });
+
+    describe("getDeviceType", () => {
+        const originalUserAgent = navigator.userAgent;
+        const originalMaxTouchPoints = navigator.maxTouchPoints;
+
+        afterEach(() => {
+            Object.defineProperty(navigator, "userAgent", {
+                configurable: true,
+                value: originalUserAgent
+            });
+            Object.defineProperty(navigator, "maxTouchPoints", {
+                configurable: true,
+                value: originalMaxTouchPoints
+            });
+        });
+
+        it("detects iPhone user agents", () => {
+            Object.defineProperty(navigator, "userAgent", {
+                configurable: true,
+                value: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)"
+            });
+
+            expect(getDeviceType()).toBe("ios");
+        });
+
+        it("detects iPadOS desktop-mode user agents", () => {
+            Object.defineProperty(navigator, "userAgent", {
+                configurable: true,
+                value: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15"
+            });
+            Object.defineProperty(navigator, "maxTouchPoints", {
+                configurable: true,
+                value: 5
+            });
+
+            expect(getDeviceType()).toBe("ios");
+        });
+
+        it("does not classify a Mac without touch support as iOS", () => {
+            Object.defineProperty(navigator, "userAgent", {
+                configurable: true,
+                value: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15"
+            });
+            Object.defineProperty(navigator, "maxTouchPoints", {
+                configurable: true,
+                value: 0
+            });
+
+            expect(getDeviceType()).toBe("standard");
+        });
     });
 
     it("Test escapeHtml", () => {
