@@ -9,12 +9,16 @@ All notable changes to this project will be documented in this file.
 ### Security
 - Pin `dompurify` to `3.4.13` (GHSA-55q2-fjhq-7xh7).
 - Pin `postcss` to `8.5.19` (CVE-2026-69153) and resolve nested `nanoid@3.3.18` (CVE-2026-67213 / CVE-2026-67214).
+- Pin direct `sanitize-html` to `2.17.7`; retain reviewed audit-only findings for the required WebChat hotfix's nested `sanitize-html@2.14.0`.
 
 ### Changed
 - Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.2749962` in Chat Widget and automation tests.
 - Removed leftover Chat Widget tag and manual release workflows. Official `w-v*` tags now start only `npm-release.yml`.
 - Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
 - Consolidated the Chat Widget 2.0.0 notes into one Breaking, Changed, Added, Tests, Fixed, and Security section and removed mid-auth entries.
+
+### Fixed
+- [Bug 6667146] Cached chat recovery now validates a persisted `Loading` conversation when a request ID is still available, instead of treating the transient UI state as a new-chat signal. Recovery eligibility emits privacy-safe reason-code telemetry and continues to exclude explicit terminal, post-chat, proactive, out-of-office, and reconnect-choice states.
 
 ## [2.0.0] - 2026-08-18
 

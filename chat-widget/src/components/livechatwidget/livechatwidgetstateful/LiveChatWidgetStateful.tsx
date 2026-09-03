@@ -18,7 +18,6 @@ import {
     isNullOrEmptyString,
     isNullOrUndefined,
     isThisSessionPopout,
-    isUndefinedOrEmpty,
     setAriaHiddenForSiblings,
     setOcUserAgent
 } from "../../../common/utils";
@@ -71,7 +70,6 @@ import ProactiveChatPaneStateful from "../../proactivechatpanestateful/Proactive
 import ReconnectChatPaneStateful from "../../reconnectchatpanestateful/ReconnectChatPaneStateful";
 import StartChatErrorPaneStateful from "../../startchaterrorpanestateful/StartChatErrorPaneStateful";
 import { StartChatFailureType } from "../../../contexts/common/StartChatFailureType";
-import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
 import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatContainerStateful";
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
@@ -96,6 +94,10 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
 import { getPostChatContext, initiatePostChat } from "../common/renderSurveyHelpers";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
+import {
+    evaluateRecoveryEligibility,
+    getRecoveryEligibilityTelemetryProperties
+} from "../common/recoveryEligibility";
 
 let uiTimer : ITimer;
 
@@ -148,21 +150,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     let widgetStateEventId = "";
     const lastLWICheckTimeRef = useRef<number>(0);
     const callInProgress = useRef<boolean>(false);
-    let optionalParams: StartChatOptionalParams;
+    let optionalParams = {};
     let activeCachedChatExist = false;
 
     const setOptionalParams = () => {
-        if (!isUndefinedOrEmpty(state.appStates?.reconnectId)) {
-            activeCachedChatExist = true;
-            optionalParams = { reconnectId: state?.appStates?.reconnectId };
-        } else if (!isUndefinedOrEmpty(state?.domainStates?.liveChatContext) &&
-            state?.appStates?.conversationState === ConversationState.Active) {
-            activeCachedChatExist = true;
-            optionalParams = { liveChatContext: state?.domainStates?.liveChatContext };
-        } else {
-            activeCachedChatExist = false;
-            optionalParams = {};
-        }
+        const decision = evaluateRecoveryEligibility(state);
+        activeCachedChatExist = decision.eligible;
+        optionalParams = decision.optionalParams;
+
+        TelemetryHelper.logActionEvent(LogLevel.INFO, {
+            Event: TelemetryEvent.RecoveryEligibilityEvaluated,
+            CustomProperties: getRecoveryEligibilityTelemetryProperties(decision)
+        });
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
