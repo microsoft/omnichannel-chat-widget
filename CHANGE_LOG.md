@@ -16,6 +16,9 @@ All notable changes to this project will be documented in this file.
 - Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
 - Consolidated the Chat Widget 2.0.0 notes into one Breaking, Changed, Added, Tests, Fixed, and Security section and removed mid-auth entries.
 
+### Fixed
+- [Bug 6667146] Cached chat recovery now validates a persisted `Loading` conversation when a request ID is still available, instead of treating the transient UI state as a new-chat signal. Recovery eligibility emits privacy-safe reason-code telemetry and continues to exclude explicit terminal, post-chat, proactive, out-of-office, and reconnect-choice states.
+
 ## [2.0.0] - 2026-08-18
 
 ### Breaking
