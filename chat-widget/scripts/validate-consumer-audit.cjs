@@ -28,6 +28,8 @@ const allowedAdvisories = new Map([
     ["@babel/runtime@7.19.0 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
     ["@babel/runtime-corejs3@7.20.13 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-vccv-cmxp-4j9h", [WEBCHAT]], // URI scheme validation gap.
+    ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-g8qq-57p8-ggw5", [WEBCHAT]], // SVG SMIL URI-list bypass.
+    ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-jxwj-j7wr-gfrw", [WEBCHAT]], // Solidus-close mutation XSS.
     ["swiper@8.4.7 -> https://github.com/advisories/GHSA-hmx5-qpq5-p643", [WEBCHAT]], // Prototype pollution.
     ["valibot@1.1.0 -> https://github.com/advisories/GHSA-5qjj-4xww-7phc", [WEBCHAT]], // Inherited-key flatten failure.
     ["valibot@1.1.0 -> https://github.com/advisories/GHSA-vqpr-j7v3-hqw9", [WEBCHAT]], // Emoji validation ReDoS.
