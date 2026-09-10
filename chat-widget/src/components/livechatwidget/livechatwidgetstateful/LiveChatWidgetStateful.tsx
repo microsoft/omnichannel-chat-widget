@@ -96,6 +96,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
 import { getPostChatContext, initiatePostChat } from "../common/renderSurveyHelpers";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
+import { logRecoveryEligibilityTelemetry } from "../common/recoveryEligibilityTelemetry";
 
 let uiTimer : ITimer;
 
@@ -163,6 +164,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             activeCachedChatExist = false;
             optionalParams = {};
         }
+
+        logRecoveryEligibilityTelemetry(state, activeCachedChatExist);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
