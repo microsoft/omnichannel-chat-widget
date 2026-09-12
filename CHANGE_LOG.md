@@ -17,6 +17,9 @@ All notable changes to this project will be documented in this file.
 - Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
 - Consolidated the Chat Widget 2.0.0 notes into one Breaking, Changed, Added, Tests, Fixed, and Security section and removed mid-auth entries.
 
+### Added
+- [Bug 6667146] Added privacy-safe recovery-eligibility decision telemetry without changing cached-chat recovery behavior.
+
 ## [2.0.0] - 2026-08-18
 
 ### Breaking
