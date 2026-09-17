@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- [A11Y] Keep Web Chat live regions inside the chat dialog so screen readers can announce incoming messages without moving focus.
+
 ### Security
 - Pin `dompurify` to `3.4.13` (GHSA-55q2-fjhq-7xh7).
 - Pin `postcss` to `8.5.19` (CVE-2026-69153) and resolve nested `nanoid@3.3.18` (CVE-2026-67213 / CVE-2026-67214).

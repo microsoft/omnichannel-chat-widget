@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Incoming message announcements</title>
+</head>
+<body>
+    <button id="host-button">Host page action</button>
+    <script>
+        function lcw() {
+            return {
+                controlProps: { id: new URLSearchParams(location.search).get("widgetId") || "oc-lcw" },
+                mock: { type: "designer", mockMessages: [] },
+                styleProps: { generalStyles: { width: "360px", height: "560px" } },
+                webChatContainerProps: {
+                    webChatProps: { disabled: false },
+                    storeMiddlewares: [
+                        function (store) {
+                            window.receiveMessage = function (id, text, role) {
+                                return store.dispatch({
+                                    type: "DIRECT_LINE/INCOMING_ACTIVITY",
+                                    payload: {
+                                        activity: {
+                                            id: id,
+                                            text: text,
+                                            type: "message",
+                                            timestamp: new Date().toISOString(),
+                                            from: { id: role + "-1", name: "Support", role: role },
+                                            channelData: {}
+                                        }
+                                    }
+                                });
+                            };
+                            return function (next) {
+                                return function (action) { return next(action); };
+                            };
+                        }
+                    ]
+                }
+            };
+        }
+    </script>
+    <div id="oc-lcw-container"></div>
+    <script id="oc-lcw-script" src="../../dist/out.js"
+        data-customization-callback="lcw"
+        data-org-id="00000000-0000-0000-0000-000000000000"
+        data-app-id="00000000-0000-0000-0000-000000000000"
+        data-org-url="https://example.invalid"></script>
+</body>
+</html>
