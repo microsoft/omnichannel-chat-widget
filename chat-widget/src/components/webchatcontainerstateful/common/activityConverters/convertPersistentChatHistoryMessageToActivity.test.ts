@@ -245,6 +245,104 @@ describe("convertPersistentChatHistoryMessageToActivity", () => {
         });
     });
 
+    describe("aspect ratio normalization", () => {
+        it("should normalize '16x9' to '16:9' in attachment aspect ratios", () => {
+            const message = {
+                content: JSON.stringify({
+                    text: "Here is a card",
+                    attachments: [{
+                        contentType: "application/vnd.microsoft.card.hero",
+                        content: { title: "Hero Card", images: [{ url: "https://example.com/img.png" }], aspect: "16x9" }
+                    }]
+                }),
+                from: { user: { displayName: "Bot" } },
+                transcriptOriginalMessageId: "1700000000000"
+            };
+
+            const result = convertPersistentChatHistoryMessageToActivity(message);
+
+            expect(result).not.toBeNull();
+            expect(result.attachments[0].content.aspect).toBe("16:9");
+        });
+
+        it("should normalize '4x3' to '4:3' in attachment aspect ratios", () => {
+            const message = {
+                content: JSON.stringify({
+                    text: "Here is a card",
+                    attachments: [{
+                        contentType: "application/vnd.microsoft.card.thumbnail",
+                        content: { title: "Thumbnail Card", aspect: "4x3" }
+                    }]
+                }),
+                from: { user: { displayName: "Bot" } },
+                transcriptOriginalMessageId: "1700000000000"
+            };
+
+            const result = convertPersistentChatHistoryMessageToActivity(message);
+
+            expect(result).not.toBeNull();
+            expect(result.attachments[0].content.aspect).toBe("4:3");
+        });
+
+        it("should leave valid '16:9' aspect ratio unchanged", () => {
+            const message = {
+                content: JSON.stringify({
+                    text: "Here is a card",
+                    attachments: [{
+                        contentType: "application/vnd.microsoft.card.hero",
+                        content: { title: "Hero Card", aspect: "16:9" }
+                    }]
+                }),
+                from: { user: { displayName: "Bot" } },
+                transcriptOriginalMessageId: "1700000000000"
+            };
+
+            const result = convertPersistentChatHistoryMessageToActivity(message);
+
+            expect(result).not.toBeNull();
+            expect(result.attachments[0].content.aspect).toBe("16:9");
+        });
+
+        it("should handle attachments without aspect ratio", () => {
+            const message = {
+                content: JSON.stringify({
+                    text: "Here is a card",
+                    attachments: [{
+                        contentType: "application/vnd.microsoft.card.hero",
+                        content: { title: "Hero Card" }
+                    }]
+                }),
+                from: { user: { displayName: "Bot" } },
+                transcriptOriginalMessageId: "1700000000000"
+            };
+
+            const result = convertPersistentChatHistoryMessageToActivity(message);
+
+            expect(result).not.toBeNull();
+            expect(result.attachments[0].content.aspect).toBeUndefined();
+        });
+
+        it("should normalize aspect ratios in message-type activities with attachments", () => {
+            const message = {
+                content: JSON.stringify({
+                    type: "message",
+                    text: "Here is a card",
+                    attachments: [{
+                        contentType: "application/vnd.microsoft.card.hero",
+                        content: { title: "Hero Card", aspect: "16x9" }
+                    }]
+                }),
+                from: { user: { displayName: "Bot" } },
+                transcriptOriginalMessageId: "1700000000000"
+            };
+
+            const result = convertPersistentChatHistoryMessageToActivity(message);
+
+            expect(result).not.toBeNull();
+            expect(result.attachments[0].content.aspect).toBe("16:9");
+        });
+    });
+
     describe("attachments (file uploads)", () => {
         it("should create activity text for file attachments", () => {
             const message = {
