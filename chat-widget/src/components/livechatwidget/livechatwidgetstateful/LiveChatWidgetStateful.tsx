@@ -1073,18 +1073,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }`}
             `}</style>
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
-                <Composer
-                    {...webChatProps}
-                    userID={userID}
-                    styleOptions={styleOptions}
-                    directLine={directLine}>
-                    <Stack
-                        id={widgetElementId}
-                        styles={generalStyles}
-                        className={livechatProps.styleProps?.className}
-                        role={isWidgetOpen ? "dialog" : undefined}
-                        aria-modal={isWidgetOpen ? true : undefined}
-                        aria-label={isWidgetOpen ? (props.headerProps?.controlProps?.headerTitleProps?.text ?? "Live Chat") : undefined}>
+                <Stack
+                    id={widgetElementId}
+                    styles={generalStyles}
+                    className={livechatProps.styleProps?.className}
+                    role={isWidgetOpen ? "dialog" : undefined}
+                    aria-modal={isWidgetOpen ? true : undefined}
+                    aria-label={isWidgetOpen ? (props.headerProps?.controlProps?.headerTitleProps?.text ?? "Live Chat") : undefined}>
+                    <Composer
+                        {...webChatProps}
+                        userID={userID}
+                        styleOptions={styleOptions}
+                        directLine={directLine}>
 
                         {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
 
@@ -1115,8 +1115,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {createFooter(livechatProps, state)}
 
                         {shouldShowEmailTranscriptPane(state) && (decodeComponentString(livechatProps.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...livechatProps.emailTranscriptPane} />)}
-                    </Stack>
-                </Composer>
+                    </Composer>
+                </Stack>
             </DraggableChatWidget>
         </>
     );
