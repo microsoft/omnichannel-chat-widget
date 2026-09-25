@@ -39,7 +39,17 @@ describe("incoming message announcements", () => {
         async (widgetId) => {
             const fixture = path.resolve(__dirname, "../../..", "customlivechatwidgets/IncomingMessageAnnouncementWidget.html");
             await page.goto(`${pathToFileURL(fixture).href}?widgetId=${widgetId}`);
+            await page.waitForSelector("#oc-lcw-chat-button");
+            // Host content sharing the widget's mount container must stay hidden while the dialog is open (TalkBack containment, #912).
+            await page.evaluate(() => {
+                const hostSibling = document.createElement("div");
+                hostSibling.id = "host-sibling";
+                hostSibling.textContent = "Host page content";
+                document.getElementById("oc-lcw-container")?.appendChild(hostSibling);
+            });
+            const hostSibling = page.locator("#host-sibling");
             await page.click("#oc-lcw-chat-button");
+            expect(await hostSibling.getAttribute("aria-hidden")).toBe("true");
             const composer = page.locator("textarea[data-id='webchat-sendbox-input']");
             await composer.fill("Hello");
             await composer.focus();
@@ -65,6 +75,7 @@ describe("incoming message announcements", () => {
                 if (scenario === "reopened") {
                     await page.click("#lcw-header-minimize-button");
                     expect(await page.locator(`#${widgetId}`).getAttribute("aria-modal")).toBeNull();
+                    expect(await hostSibling.getAttribute("aria-hidden")).toBeNull();
                     await page.click("#oc-lcw-chat-button");
                     await composer.waitFor();
                     await composer.focus();
@@ -90,7 +101,9 @@ describe("incoming message announcements", () => {
                 expect(await page.locator(`#${widgetId} .webchat__basic-transcript`).textContent()).toContain(message);
             }
 
+            expect(await page.locator(`#${widgetId}`).getAttribute("role")).toBe("dialog");
             expect(await page.locator(`#${widgetId}`).getAttribute("aria-modal")).toBe("true");
+            expect(await hostSibling.getAttribute("aria-hidden")).toBe("true");
             expect(await page.locator(`#${widgetId} #host-button`).count()).toBe(0);
         },
         30000
