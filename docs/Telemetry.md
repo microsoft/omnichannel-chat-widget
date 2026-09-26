@@ -182,7 +182,7 @@ Refer to the below table to understand different critical telemetry events raise
 | `ProactiveChatAccepted` |On Proactive chat Start Chat button click |
 | `ProactiveChatRejected` |On Proactive chat invitation time out |
 | `ProactiveChatClosed`   |On Proactive chat closed |
-| `ReconnectChatContinueConversation` |On clicking Continute Chat button On Reconnect Chat Pane |
+| `ReconnectChatContinueConversation` |On clicking Continue Chat button On Reconnect Chat Pane |
 | `ReconnectChatStartNewConversation` |On clicking Start New button On Reconnect Chat Pane |
 | `ReconnectChatMinimize`   |On clicking Minimize button On Reconnect Chat Pane |
 | `ProcessingHTMLTextMiddlewareFailed`     |On HTML Field adding noopener noreferrer failed |
@@ -309,7 +309,7 @@ At times you might have requirements to listen to system events as well which ar
     "messageType": "system"
 }
 ```
-You can retrive the `tags` property from `Data` attribute and add your custom logic for advance telemetry experience.
+You can retrieve the `tags` property from `Data` attribute and add your custom logic for advance telemetry experience.
 
 ## Bring Your Own Logger
 
