@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added `enterToNewLine` prop to `sendBoxTextBox` in `webChatContainerProps`. When `true`, pressing **Enter** inserts a new line and **Shift+Enter** sends the message (inverts the default WebChat behavior). Requires `sendBoxTextWrap: true` in `webChatStyles`. Opt-in; default behavior unchanged.
+
 ### Fixed
 - [A11Y] Keep Web Chat live regions inside the chat dialog so screen readers can announce incoming messages without moving focus.
 
