@@ -78,6 +78,8 @@ jobs:
       - name: Install packages
         if: ${{ !startsWith(github.ref, 'refs/tags/w-v') }}
         working-directory: chat-widget
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: yarn install --network-timeout 100000
 
       - name: Install locked packages
@@ -227,6 +229,8 @@ jobs:
       - name: Install packages
         if: ${{ !startsWith(github.ref, 'refs/tags/c-v') }}
         working-directory: chat-components
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: yarn install --network-timeout 100000
 
       - name: Install locked packages
