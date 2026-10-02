@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-10-02
+
 ### Fixed
 - [A11Y] Keep Web Chat live regions inside the chat dialog so screen readers can announce incoming messages without moving focus.
 
@@ -15,7 +17,7 @@ All notable changes to this project will be documented in this file.
 - Pin direct `sanitize-html` to `2.17.7`; retain reviewed audit-only findings for the required WebChat hotfix's nested `sanitize-html@2.14.0`.
 
 ### Changed
-- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.2749962` in Chat Widget and automation tests.
+- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.1` in Chat Widget and automation tests.
 - Removed leftover Chat Widget tag and manual release workflows. Official `w-v*` tags now start only `npm-release.yml`.
 - Stopped Storybook deploy from running on `w-v*` tags. Pushes to `main` still deploy Storybook.
 - Consolidated the Chat Widget 2.0.0 notes into one Breaking, Changed, Added, Tests, Fixed, and Security section and removed mid-auth entries.

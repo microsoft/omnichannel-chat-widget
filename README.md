@@ -45,6 +45,7 @@ Official versions receive support for 12 months after the release date.
 
 | Version | Docs | Release Date | End of Support |
 | -- | -- | -- | -- |
+| 2.0.1 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v2.0.1) | 2026-10-02 | 2027-10-02 |
 | 2.0.0 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v2.0.0) | 2026-08-18 | 2027-08-18 |
 | 1.8.7 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v1.8.7) | 2026-01-26 | 2027-01-26 |
 | 1.8.6 | [Release Notes](https://github.com/microsoft/omnichannel-chat-widget/releases/tag/w-v1.8.6) | 2026-01-25 | 2027-01-25 |

@@ -1129,10 +1129,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-amsclient/-/omnichannel-amsclient-0.2.0.tgz#999d7d5c74d08641ab4a6677603c95b75cbcd218"
   integrity sha512-wIubYjfzovWv2+P+AInxhOfB1MwVoR7veljAreHbq0Y+6haPMCxtY2LhIq8UGzGVk/UdcUXe3laV0AZdwBxSCw==
 
-"@microsoft/omnichannel-chat-sdk@2.0.0-main.2749962":
-  version "2.0.0-main.2749962"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.0-main.2749962.tgz#a07af8cbc5765b20ddc8e04707e36b06e3732e8d"
-  integrity sha512-LX96zq2kI/z6FRci4eUfSnKXApVat0EC06Rj8O0p1RHDOlB+ZUMoXV65JKhllMaBAtHSLRvnVqBB5hVCmWidig==
+"@microsoft/omnichannel-chat-sdk@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.1.tgz#94923612dd1b0d9e97671a13249a20b5406eb721"
+  integrity sha512-MZamtF0J/JRH3TCcxpKMpxZIU7S96YBoBRaqpDpy8zd5CGZELG/7DDSPhjA4LY7kUfmyo66CVE2vzZmnJG234w==
   dependencies:
     "@azure/communication-chat" "1.6.0-beta.7"
     "@azure/communication-common" "2.4.2"
