@@ -1,6 +1,6 @@
 # Known issue: duplicate conversations with Chat SDK versions before 1.11.6
 
-> **Fixed in Chat SDK `1.11.6`, released on August 8, 2025.** Chat Widget `1.8.2`, released on August 20, 2025, is the first Chat Widget version that requires the fixed Chat SDK. If your application uses an earlier Chat SDK or Chat Widget version, upgrade now.
+> **Fixed in Chat SDK `1.11.6`, released on August 8, 2025.** Chat Widget `1.8.2`, released on August 20, 2025, is the first Chat Widget version that requires the fixed Chat SDK. If your application uses an earlier Chat SDK or Chat Widget version, upgrade now: **use Chat SDK `1.11.8` or later**. Chat SDK `1.11.6` is past its end-of-support date. Chat SDK `1.11.8` is supported until February 2, 2027.
 
 ## Summary
 
@@ -21,7 +21,7 @@ The Chat SDK version that is installed in your application decides if you have t
 | `1.8.2` and later 1.x | August 20, 2025 and later | `^1.11.6` or later | Not affected. |
 | `2.0.0` | August 18, 2026 | `2.0.0` | Not affected. |
 
-Your application creates the `OmnichannelChatSDK` instance from its own `@microsoft/omnichannel-chat-sdk` dependency. Make sure that this dependency is `1.11.6` or later, independently of the Chat Widget version.
+Your application creates the `OmnichannelChatSDK` instance from its own `@microsoft/omnichannel-chat-sdk` dependency. Make sure that this dependency is `1.11.8` or later, independently of the Chat Widget version.
 
 Chat Widget versions earlier than `1.8.3` are also past their end-of-support date. Official versions receive support for 12 months after the release date. See the [Releases](../README.md#releases) section of the README.
 
@@ -41,7 +41,7 @@ The application sees one of these symptoms:
    npm ls @microsoft/omnichannel-chat-widget @microsoft/omnichannel-chat-sdk
    ```
 
-2. If any installed `@microsoft/omnichannel-chat-sdk` is earlier than `1.11.6`, upgrade the packages.
+2. If any installed `@microsoft/omnichannel-chat-sdk` is earlier than `1.11.8`, upgrade the packages.
 
    For the latest 1.x releases:
 
@@ -56,7 +56,7 @@ The application sees one of these symptoms:
    ```
 
 3. Regenerate the lockfile of the application.
-4. Run `npm ls @microsoft/omnichannel-chat-sdk` again. Make sure that every installed copy is `1.11.6` or later.
+4. Run `npm ls @microsoft/omnichannel-chat-sdk` again. Make sure that every installed copy is `1.11.8` or later.
 5. Build and test the application.
 
 ## Notes

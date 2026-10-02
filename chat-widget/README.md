@@ -58,7 +58,7 @@ npm install --save-exact @microsoft/omnichannel-chat-widget@2.0.0 @microsoft/omn
 
 `2.0.0` release date is 2026-08-18. Official support ends on 2027-08-18. See the [root support table](https://github.com/microsoft/omnichannel-chat-widget#chat-widget).
 
-_**Known issue:**_ Chat SDK versions earlier than `1.11.6` can start duplicate conversations when `startChat()` is called again before the previous call is complete. Chat Widget `1.8.1` and earlier can use these versions. See [Duplicate conversations with Chat SDK versions before 1.11.6](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/KNOWN_ISSUE_CONCURRENT_STARTCHAT.md).
+_**Known issue:**_ Chat SDK versions earlier than `1.11.6` can start duplicate conversations when `startChat()` is called again before the previous call is complete. Chat Widget `1.8.1` and earlier can use these versions. Upgrade the Chat SDK to `1.11.8` or later. See [Duplicate conversations with Chat SDK versions before 1.11.6](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/KNOWN_ISSUE_CONCURRENT_STARTCHAT.md).
 
 TypeScript consumers that imported the exported Web Chat middleware factories now receive Redux 5 `unknown` actions. Narrow with `isWebChatAction` before reading `type` or `payload`. Runtime behavior is unchanged.
 
