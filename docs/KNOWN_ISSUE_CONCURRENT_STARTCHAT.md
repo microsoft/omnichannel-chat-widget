@@ -1,23 +1,25 @@
 # Known issue: duplicate conversations with Chat SDK versions before 1.11.6
 
+> **Fixed in Chat SDK `1.11.6`, released on August 8, 2025.** Chat Widget `1.8.2`, released on August 20, 2025, is the first Chat Widget version that requires the fixed Chat SDK. If your application uses an earlier Chat SDK or Chat Widget version, upgrade now.
+
 ## Summary
 
 The Chat Widget calls `startChat()` on the `OmnichannelChatSDK` instance that your application passes in the `chatSDK` prop. In Chat SDK versions before `1.11.6`, `startChat()` has no lock. If the widget or your application calls `startChat()` again before the previous call is complete, each call can start a separate conversation on the service.
 
 Only one of these conversations goes to the queue and to an agent. The customer can stay on a different conversation. In that case, the customer sends messages, but no agent ever receives them.
 
-Chat SDK `1.11.6` corrects this error. For the Chat SDK details, see the [Chat SDK release notes for 1.11.6](https://github.com/microsoft/omnichannel-chat-sdk/releases/tag/v1.11.6), [Chat SDK pull request #506](https://github.com/microsoft/omnichannel-chat-sdk/pull/506), and the [Chat SDK known-issue document](https://github.com/microsoft/omnichannel-chat-sdk/blob/main/docs/KNOWN_ISSUE_CONCURRENT_STARTCHAT.md).
+Chat SDK `1.11.6`, released on August 8, 2025, corrects this error. The fix ([Chat SDK pull request #506](https://github.com/microsoft/omnichannel-chat-sdk/pull/506)) was merged on August 5, 2025. For the Chat SDK details, see the [Chat SDK release notes for 1.11.6](https://github.com/microsoft/omnichannel-chat-sdk/releases/tag/v1.11.6) and the [Chat SDK known-issue document](https://github.com/microsoft/omnichannel-chat-sdk/blob/main/docs/KNOWN_ISSUE_CONCURRENT_STARTCHAT.md).
 
 ## Which version decides
 
 The Chat SDK version that is installed in your application decides if you have this issue. The Chat Widget version controls which Chat SDK versions npm can install:
 
-| Chat Widget version | Chat SDK dependency | Result |
-| -- | -- | -- |
-| `1.6.2` and earlier | Exact version, `1.4.4` to `1.6.2` | Affected. These Chat SDK versions have no lock. |
-| `1.6.3` to `1.8.1` | Caret range, `^1.7.2` to `^1.11.2` | Affected if your lockfile resolves the Chat SDK to a version earlier than `1.11.6`. |
-| `1.8.2` and later 1.x | `^1.11.6` or later | Not affected. |
-| `2.0.0` | `2.0.0` | Not affected. |
+| Chat Widget version | Release date | Chat SDK dependency | Result |
+| -- | -- | -- | -- |
+| `1.6.2` and earlier | January 10, 2024 and earlier | Exact version, `1.4.4` to `1.6.2` | Affected. These Chat SDK versions have no lock. |
+| `1.6.3` to `1.8.1` | April 2, 2024 to July 8, 2025 | Caret range, `^1.7.2` to `^1.11.2` | Affected if your lockfile resolves the Chat SDK to a version earlier than `1.11.6`. |
+| `1.8.2` and later 1.x | August 20, 2025 and later | `^1.11.6` or later | Not affected. |
+| `2.0.0` | August 18, 2026 | `2.0.0` | Not affected. |
 
 Your application creates the `OmnichannelChatSDK` instance from its own `@microsoft/omnichannel-chat-sdk` dependency. Make sure that this dependency is `1.11.6` or later, independently of the Chat Widget version.
 
