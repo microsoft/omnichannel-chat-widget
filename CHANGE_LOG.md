@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Consolidated the Chat Widget 2.0.0 notes into one Breaking, Changed, Added, Tests, Fixed, and Security section and removed mid-auth entries.
 
 ### Added
+- Added a known-issue document for duplicate conversations with Chat SDK versions earlier than `1.11.6`, with the affected Chat Widget versions and upgrade steps.
 - [Bug 6667146] Added privacy-safe recovery-eligibility decision telemetry without changing cached-chat recovery behavior.
 
 ## [2.0.0] - 2026-08-18
