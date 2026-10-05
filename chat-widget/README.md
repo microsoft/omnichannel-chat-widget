@@ -56,7 +56,7 @@ For a production application, pin the exact stable versions:
 npm install --save-exact @microsoft/omnichannel-chat-widget@2.0.1 @microsoft/omnichannel-chat-components@1.2.0 @microsoft/omnichannel-chat-sdk@2.0.1
 ```
 
-`2.0.1` release date is 2026-10-02. Official support ends on 2027-10-02. See the [root support table](https://github.com/microsoft/omnichannel-chat-widget#chat-widget).
+`2.0.1` release date is 2026-10-05. Official support ends on 2027-10-05. See the [root support table](https://github.com/microsoft/omnichannel-chat-widget#chat-widget).
 
 _**Known issue:**_ Chat SDK versions earlier than `1.11.6` can start duplicate conversations when `startChat()` is called again before the previous call is complete. Chat Widget `1.8.1` and earlier can use these versions. Upgrade the Chat SDK to `1.11.8` or later. See [Duplicate conversations with Chat SDK versions before 1.11.6](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/KNOWN_ISSUE_CONCURRENT_STARTCHAT.md).
 

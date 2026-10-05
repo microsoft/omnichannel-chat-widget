@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-## [2.0.1] - 2026-10-02
+## [2.0.1] - 2026-10-05
 
 ### Fixed
 - [A11Y] Keep Web Chat live regions inside the chat dialog so screen readers can announce incoming messages without moving focus.
