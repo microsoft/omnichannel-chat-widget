@@ -23,6 +23,7 @@ const allowedAdvisories = new Map([
     ["linkify-it@4.0.1 -> https://github.com/advisories/GHSA-v245-v573-v5vm", [WEBCHAT]], // Mailto quadratic scan.
     ["markdown-it@13.0.2 -> https://github.com/advisories/GHSA-38c4-r59v-3vqw", [WEBCHAT]], // ReDoS in markdown parsing.
     ["markdown-it@13.0.2 -> https://github.com/advisories/GHSA-6v5v-wf23-fmfq", [WEBCHAT]], // Smartquotes quadratic scan.
+    ["markdown-it@13.0.2 -> https://github.com/advisories/GHSA-253c-mchw-3w2r", [WEBCHAT]], // Linkify quadratic scan.
     ["@babel/runtime@7.14.8 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
     ["@babel/runtime@7.15.4 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
     ["@babel/runtime@7.19.0 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
