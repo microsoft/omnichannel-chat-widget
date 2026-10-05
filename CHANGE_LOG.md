@@ -10,10 +10,10 @@ All notable changes to this project will be documented in this file.
 - [A11Y] Keep Web Chat live regions inside the chat dialog so screen readers can announce incoming messages without moving focus.
 
 ### Security
-- Pin `dompurify` to `3.4.13` (GHSA-55q2-fjhq-7xh7).
+- Pin `dompurify` to `3.4.16` (GHSA-55q2-fjhq-7xh7, GHSA-p98j-92pf-mc4p); keep strict-allowlist monitor telemetry reporting attributes of removed elements, which 3.4.16 no longer passes to attribute hooks.
 - Pin `postcss` to `8.5.19` (CVE-2026-69153) and resolve nested `nanoid@3.3.18` (CVE-2026-67213 / CVE-2026-67214).
 - Pin direct `sanitize-html` to `2.17.7`; retain reviewed audit-only findings for the required WebChat hotfix's nested `sanitize-html@2.14.0`.
-
+- Retain reviewed audit-only finding GHSA-253c-mchw-3w2r for the required WebChat hotfix's nested `markdown-it@13.0.2`.
 ### Changed
 - Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.0-main.2749962` in Chat Widget and automation tests.
 - Removed leftover Chat Widget tag and manual release workflows. Official `w-v*` tags now start only `npm-release.yml`.
