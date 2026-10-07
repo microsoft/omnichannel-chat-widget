@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- [A11Y] Make the suggested actions carousel Previous/Next focus indicator visible by default (solid 2px ring) and close its CSS rule.
+
 ## [2.0.1] - 2026-10-05
 
 ### Fixed
