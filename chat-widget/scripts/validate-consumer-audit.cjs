@@ -28,6 +28,7 @@ const allowedAdvisories = new Map([
     ["@babel/runtime@7.15.4 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
     ["@babel/runtime@7.19.0 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
     ["@babel/runtime-corejs3@7.20.13 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
+    ["katex@0.16.21 -> https://github.com/advisories/GHSA-238p-pmpm-9mq7", [WEBCHAT]], // Trust bypass requires pre-existing prototype pollution.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-vccv-cmxp-4j9h", [WEBCHAT]], // URI scheme validation gap.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-g8qq-57p8-ggw5", [WEBCHAT]], // SVG SMIL URI-list bypass.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-jxwj-j7wr-gfrw", [WEBCHAT]], // Solidus-close mutation XSS.

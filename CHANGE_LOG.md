@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - [A11Y] Make the suggested actions carousel Previous/Next focus indicator visible by default (solid 2px ring) and close its CSS rule.
 
+### Security
+- Retain reviewed audit-only finding GHSA-238p-pmpm-9mq7 (low) for the required WebChat hotfix's pinned `katex@0.16.21`.
+
 ## [2.0.1] - 2026-10-05
 
 ### Fixed
