@@ -1,5 +1,5 @@
 # Using LiveChatWidget in React + TypeScript + Webpack 5
-This guide is intented to help you getting started with `<LiveChatWidget />` in a react application using Webpack 5, TypeScript. 
+This guide is intended to help you get started with `<LiveChatWidget />` in a react application using Webpack 5, TypeScript. 
 
 > Explaining features/options used below for [react](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [Webpack](https://webpack.js.org/), [Babel](https://babeljs.io/) are out of scope of this document. Please refer to these open sources official documents for getting more details.
 
