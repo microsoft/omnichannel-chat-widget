@@ -8,5 +8,11 @@ export interface ISendBox {
          * Hebrew, etc) will show a scrollbar in the textarea element when placeholder is visible
          */
         minHeight?: string;
-    }
+    };
+    /**
+     * When true, pressing Enter inserts a new line and Shift+Enter sends the message.
+     * Default WebChat behavior is Enter to send and Shift+Enter to insert a new line.
+     * Only effective when sendBoxTextWrap is true in webChatStyles.
+     */
+    enterToNewLine?: boolean;
 }

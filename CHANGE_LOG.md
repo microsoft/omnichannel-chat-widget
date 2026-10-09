@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added `enterToNewLine` prop to `sendBoxTextBox` in `webChatContainerProps`. When `true`, pressing **Enter** inserts a new line and **Shift+Enter** sends the message (inverts the default WebChat behavior). Requires `sendBoxTextWrap: true` in `webChatStyles`. Opt-in; default behavior unchanged.
+
 ### Fixed
 - [A11Y] Make the suggested actions carousel Previous/Next focus indicator visible by default (solid 2px ring) and close its CSS rule.
 
