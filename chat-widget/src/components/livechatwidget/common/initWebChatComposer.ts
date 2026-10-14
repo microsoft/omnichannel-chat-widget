@@ -261,6 +261,12 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             // Track what would be removed
             const removedTags: string[] = [];
             const removedAttributes: string[] = [];
+            const trackAttribute = (name: string) => {
+                const attrName = name.toLowerCase();
+                if (!strictConfig.ALLOWED_ATTR.includes(attrName) && attrName !== "class" && attrName !== "id") {
+                    removedAttributes.push(attrName);
+                }
+            };
 
             // Add hooks to the isolated monitoring instance
             monitorDOMPurify.addHook("uponSanitizeElement", (node, data) => {
@@ -269,6 +275,8 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
                     // Filter out "body" tag which is DOMPurify's internal wrapper
                     if (node.nodeType === 1 && !strictConfig.ALLOWED_TAGS.includes(tagName) && tagName !== "body") {
                         removedTags.push(tagName);
+                        // DOMPurify 3.4.16+ skips uponSanitizeAttribute for removed elements
+                        Array.from((node as Element).attributes ?? []).forEach((attr) => trackAttribute(attr.name));
                     }
                 } catch (hookError) {
                     // Silently ignore hook errors
@@ -277,10 +285,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
             monitorDOMPurify.addHook("uponSanitizeAttribute", (node, data) => {
                 try {
-                    const attrName = data.attrName.toLowerCase();
-                    if (!strictConfig.ALLOWED_ATTR.includes(attrName) && attrName !== "class" && attrName !== "id") {
-                        removedAttributes.push(attrName);
-                    }
+                    trackAttribute(data.attrName);
                 } catch (hookError) {
                     // Silently ignore hook errors
                 }
@@ -306,24 +311,28 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
 
                     TelemetryHelper.logActionEvent(LogLevel.INFO, {
                         Event: TelemetryEvent.HTMLSanitized,
-                        Description: "HTML content would be sanitized by stricter allowlist (monitor-only)",
-                        ElapsedTimeInMilliseconds: executionTimeMs,
-                        CustomProperties: {
-                            OrganizationId: orgId,
-                            ConversationId: conversationId,
-                            RemovedTags: uniqueTags.join(", "),
-                            RemovedAttributes: uniqueAttrs.join(", "),
-                            Phase: "Monitor"
-                        }
+                        Description: JSON.stringify({
+                            message: "HTML content would be sanitized by stricter allowlist (monitor-only)",
+                            removedTags: uniqueTags,
+                            removedAttributes: uniqueAttrs,
+                            phase: "Monitor",
+                            organizationId: orgId,
+                            conversationId: conversationId
+                        }),
+                        ElapsedTimeInMilliseconds: executionTimeMs
                     });
 
                     // Log to console in development for debugging
                     if (process.env.NODE_ENV === "development") {
-                        console.warn("[Monitor] Stricter HTML sanitization would remove:", {
+                        console.warn("[Monitor] Stricter HTML sanitization telemetry:", {
+                            description: JSON.parse(JSON.stringify({
+                                message: "HTML content would be sanitized by stricter allowlist (monitor-only)",
+                                removedTags: uniqueTags,
+                                removedAttributes: uniqueAttrs,
+                                phase: "Monitor"
+                            })),
                             orgId,
                             conversationId,
-                            removedTags: uniqueTags,
-                            removedAttributes: uniqueAttrs,
                             executionTimeMs
                         });
                     }

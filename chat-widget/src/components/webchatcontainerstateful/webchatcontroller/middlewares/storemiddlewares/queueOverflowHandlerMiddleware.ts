@@ -3,7 +3,7 @@ import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/Teleme
 import { Dispatch } from "react";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { LiveChatWidgetActionType } from "../../../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "../../enums/WebChatActionType";
@@ -22,8 +22,12 @@ const queueOverflowHandlingHelper = async (state: ILiveChatWidgetContext, dispat
 };
 
 export const createQueueOverflowMiddleware = (state: ILiveChatWidgetContext,
-    dispatch: Dispatch<ILiveChatWidgetAction>) => () => (next: (action: IWebChatAction) => void) => (action: IWebChatAction) => {
-    if (action?.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
+    dispatch: Dispatch<ILiveChatWidgetAction>): WebChatStoreMiddleware => () => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
+    if (action.type == WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity) {
 
         const activity = action.payload.activity;
         if (isEndConversationDueToOverflowActivity(activity)) {

@@ -1,8 +1,8 @@
 import { Constants } from "../../../common/Constants";
 import MarkdownIt from "markdown-it";
 import MarkdownItForInline from "markdown-it-for-inline";
-import StateCore from "markdown-it/lib/rules_core/state_core";
-import Token from "markdown-it/lib/token";
+import type StateCore from "markdown-it/lib/rules_core/state_core.mjs";
+import type Token from "markdown-it/lib/token.mjs";
 import { defaultMarkdownLocalizedTexts } from "../../webchatcontainerstateful/common/defaultProps/defaultMarkdownLocalizedTexts";
 import { addSlackMarkdownIt } from "./helpers/markdownHelper";
 
@@ -199,14 +199,16 @@ export const createMarkdown = (disableMarkdownMessageFormatting: boolean, disabl
          
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         md.render = function(text: string, env?: any): string {
+            const safeEnv = env ?? {};
             const processedText = preprocessText(text);
-            return md.renderer.render(md.parse(processedText, env), md.options, env);
+            return md.renderer.render(md.parse(processedText, safeEnv), md.options, safeEnv);
         };
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         md.renderInline = function(text: string, env?: any): string {
+            const safeEnv = env ?? {};
             const processedText = preprocessText(text);
-            return md.renderer.render(md.parseInline(processedText, env), md.options, env);
+            return md.renderer.render(md.parseInline(processedText, safeEnv), md.options, safeEnv);
         };
     });
 

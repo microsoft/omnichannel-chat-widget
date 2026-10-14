@@ -5,7 +5,7 @@
  ******/
 
 import { Constants } from "../../../../../common/Constants";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
 const disableHTMLPlayerDownloadButton = (htmlTag: string) => {
@@ -26,8 +26,12 @@ const disableHTMLPlayerDownloadButton = (htmlTag: string) => {
     }, 500);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const htmlPlayerMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const htmlPlayerMiddleware: WebChatStoreMiddleware = ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (action.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY && action.payload?.activity?.attachments?.length > 0) {
         disableHTMLPlayerDownloadButton(Constants.video);
         disableHTMLPlayerDownloadButton(Constants.audio);

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
     entry: "./samples/javascript-sample/SampleWidget.js",
@@ -13,7 +14,8 @@ module.exports = {
     resolve: {
         extensions: [".Webpack.js", ".web.js", ".ts", ".js", ".jsx", ".tsx", ".mjs"],
         alias: {
-            "swiper/modules": require.resolve("swiper/modules")
+            "swiper/modules": require.resolve("swiper/modules"),
+            "react-native": false
         }
     },
     devServer: {
@@ -35,6 +37,12 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
+                resolve: {
+                    fullySpecified: false
+                }
+            },
+            {
+                test: /\.m?js$/,
                 type: "javascript/auto",
                 use: [
                     "thread-loader", // the idea is to use any core possible to divide the build
@@ -47,5 +55,10 @@ module.exports = {
                     }]
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^react-native$/,
+        })
+    ]
 };

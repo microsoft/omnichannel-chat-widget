@@ -238,7 +238,7 @@ const confirmationPanePreset3Props: IConfirmationPaneProps = {
     }
 };
 
-export const ConfirmationPanePreset3: Story<IConfirmationPaneProps> = (args) => {
+export function ConfirmationPanePreset3(args: IConfirmationPaneProps) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, updateArgs] = useArgs();
 
@@ -248,23 +248,23 @@ export const ConfirmationPanePreset3: Story<IConfirmationPaneProps> = (args) => 
     
     const switchToRowLayout = () => {
         updateArgs({
-            ...ConfirmationPanePreset3.args,
+            ...confirmationPanePreset3Props,
             controlProps: {
-                ...ConfirmationPanePreset3.args?.controlProps,
+                ...confirmationPanePreset3Props.controlProps,
                 titleText: "Row Layout"
             },
             styleProps: {
-                ...ConfirmationPanePreset3.args?.styleProps,
-                generalStyleProps: Object.assign({}, ConfirmationPanePreset3.args?.styleProps?.generalStyleProps, {
+                ...confirmationPanePreset3Props.styleProps,
+                generalStyleProps: Object.assign({}, confirmationPanePreset3Props.styleProps?.generalStyleProps, {
                     flexFlow: "row",
                     buttonFlexDirection: "row",
                     height: "100px",
                     width: "500px"
                 }),
-                titleStyleProps: Object.assign({}, ConfirmationPanePreset3.args?.styleProps?.titleStyleProps, {
+                titleStyleProps: Object.assign({}, confirmationPanePreset3Props.styleProps?.titleStyleProps, {
                     width: "80px"
                 }),
-                subtitleStyleProps: Object.assign({}, ConfirmationPanePreset3.args?.styleProps?.subtitleStyleProps, {
+                subtitleStyleProps: Object.assign({}, confirmationPanePreset3Props.styleProps?.subtitleStyleProps, {
                     width: "80px"
                 }),
                 buttonGroupStyleProps: {
@@ -274,12 +274,18 @@ export const ConfirmationPanePreset3: Story<IConfirmationPaneProps> = (args) => 
         });
     };
 
-    args.controlProps.onConfirm = switchToRowLayout;
-    args.controlProps.onCancel = switchToColumnLayout;
-    return <ConfirmationPane {...args} ></ConfirmationPane>;
-};
+    const controlProps = args.controlProps
+        ? {
+            ...args.controlProps,
+            onConfirm: switchToRowLayout,
+            onCancel: switchToColumnLayout
+        }
+        : undefined;
 
-ConfirmationPanePreset3.args = confirmationPanePreset3Props;
+    return <ConfirmationPane {...args} controlProps={controlProps}></ConfirmationPane>;
+}
+
+(ConfirmationPanePreset3 as Story<IConfirmationPaneProps>).args = confirmationPanePreset3Props;
 
 /*
     Confirmation Pane Preset 4

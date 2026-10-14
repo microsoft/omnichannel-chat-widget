@@ -96,6 +96,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
 import { getPostChatContext, initiatePostChat } from "../common/renderSurveyHelpers";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
+import { logRecoveryEligibilityTelemetry } from "../common/recoveryEligibilityTelemetry";
 
 let uiTimer : ITimer;
 
@@ -163,6 +164,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             activeCachedChatExist = false;
             optionalParams = {};
         }
+
+        logRecoveryEligibilityTelemetry(state, activeCachedChatExist);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1070,18 +1073,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }`}
             `}</style>
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
-                <Composer
-                    {...webChatProps}
-                    userID={userID}
-                    styleOptions={styleOptions}
-                    directLine={directLine}>
-                    <Stack
-                        id={widgetElementId}
-                        styles={generalStyles}
-                        className={livechatProps.styleProps?.className}
-                        role={isWidgetOpen ? "dialog" : undefined}
-                        aria-modal={isWidgetOpen ? true : undefined}
-                        aria-label={isWidgetOpen ? (props.headerProps?.controlProps?.headerTitleProps?.text ?? "Live Chat") : undefined}>
+                <Stack
+                    id={widgetElementId}
+                    styles={generalStyles}
+                    className={livechatProps.styleProps?.className}
+                    role={isWidgetOpen ? "dialog" : undefined}
+                    aria-modal={isWidgetOpen ? true : undefined}
+                    aria-label={isWidgetOpen ? (props.headerProps?.controlProps?.headerTitleProps?.text ?? "Live Chat") : undefined}>
+                    <Composer
+                        {...webChatProps}
+                        userID={userID}
+                        styleOptions={styleOptions}
+                        directLine={directLine}>
 
                         {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
 
@@ -1112,8 +1115,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {createFooter(livechatProps, state)}
 
                         {shouldShowEmailTranscriptPane(state) && (decodeComponentString(livechatProps.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...livechatProps.emailTranscriptPane} />)}
-                    </Stack>
-                </Composer>
+                    </Composer>
+                </Stack>
             </DraggableChatWidget>
         </>
     );

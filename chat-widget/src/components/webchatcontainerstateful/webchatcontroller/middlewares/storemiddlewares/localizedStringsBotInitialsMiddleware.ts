@@ -2,7 +2,7 @@
 
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Constants } from "../../../../../common/Constants";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { defaultWebChatStyles } from "../../../common/defaultStyles/defaultWebChatStyles";
 import { getIconText } from "../../../../../common/utils";
@@ -40,7 +40,11 @@ const resetCachedAgentName = (dispatch: any): void => {
     }
 };
 
-export const localizedStringsBotInitialsMiddleware = (onInitialsChange?: (initials: string) => void) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+export const localizedStringsBotInitialsMiddleware = (onInitialsChange?: (initials: string) => void): WebChatStoreMiddleware => ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (onInitialsChange && !externalInitialsUpdater) {
         externalInitialsUpdater = onInitialsChange; // capture once
     }

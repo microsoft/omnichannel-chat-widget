@@ -7,7 +7,7 @@
 import { Constants, HtmlAttributeNames } from "../../../../../common/Constants";
 
 import DOMPurify from "dompurify";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { IWebChatAction, WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
@@ -90,18 +90,24 @@ const processHTMLText = (action: IWebChatAction, text: string, honorsTargetInHTM
     return action;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const htmlTextMiddleware = (honorsTargetInHTMLLinks?: boolean) => ({ dispatch }: { dispatch: any}) => (next: any) => (action: IWebChatAction) => {
-    if (action.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const htmlTextMiddleware = (honorsTargetInHTMLLinks?: boolean): WebChatStoreMiddleware => ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
+    let currentAction: IWebChatAction = action;
+
+    if (currentAction.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY) {
         try {
-            const text = action.payload?.activity?.text;
+            const text = currentAction.payload?.activity?.text;
             if (text) {
-                action = processHTMLText(action, text, honorsTargetInHTMLLinks ?? false);
+                currentAction = processHTMLText(currentAction, text, honorsTargetInHTMLLinks ?? false);
             }
         } catch (e) {
             let errorMessage = "Failed to validate action.";
             try {
-                errorMessage += JSON.stringify(action);
+                errorMessage += JSON.stringify(currentAction);
             } catch (e) {
                 errorMessage += " (unable to stringify action)";
             }
@@ -115,7 +121,7 @@ const htmlTextMiddleware = (honorsTargetInHTMLLinks?: boolean) => ({ dispatch }:
         }
     }
 
-    return next(action);
+    return next(currentAction);
 };
 
 export default htmlTextMiddleware;

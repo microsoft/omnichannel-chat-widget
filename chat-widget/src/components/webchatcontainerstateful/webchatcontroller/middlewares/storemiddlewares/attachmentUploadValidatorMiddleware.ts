@@ -8,7 +8,7 @@ import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/Teleme
 
 import { AMSConstants } from "../../../../../common/Constants";
 import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { IWebChatAction, WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { NotificationHandler } from "../../notification/NotificationHandler";
 import { NotificationScenarios } from "../../enums/NotificationScenarios";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
@@ -205,8 +205,12 @@ const getFileSizeErrorMessage = (fileName: string, maxUploadFileSize: string, ma
     return errorMessage ? (errorMessage.includes("{2}") ? errorMessage.replace("{2}", textEllipsis(fileName)) : errorMessage) : "";
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts): WebChatStoreMiddleware => ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
         const {
             payload

@@ -13,7 +13,10 @@ module.exports = {
     },
     "moduleNameMapper": {
         "^swiper/modules$": "<rootDir>/node_modules/swiper/modules/index.mjs",
-        "^swiper$": "<rootDir>/node_modules/swiper/swiper.mjs"
+        "^swiper$": "<rootDir>/node_modules/swiper/swiper.mjs",
+        "^@typespec/ts-http-runtime/internal/logger$": "<rootDir>/node_modules/@typespec/ts-http-runtime/dist/commonjs/logger/internal.js",
+        "^@typespec/ts-http-runtime/internal/policies$": "<rootDir>/node_modules/@typespec/ts-http-runtime/dist/commonjs/policies/internal.js",
+        "^@typespec/ts-http-runtime/internal/util$": "<rootDir>/node_modules/@typespec/ts-http-runtime/dist/commonjs/util/internal.js"
     },
     setupFiles: ["./jest.setup.js"]
 

@@ -34,15 +34,24 @@ module.exports = {
         reactdom: "ReactDOM",
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js", ".jsx", ".json"],
+        extensions: [".tsx", ".ts", ".js", ".jsx", ".mjs", ".json"],
         alias: {
             crypto: require.resolve("crypto-browserify"),
             stream: require.resolve("stream-browserify"),
             vm: require.resolve("vm-browserify"),
+            "swiper/modules": require.resolve("swiper/modules"),
         },
     },
     module: {
-        rules: [babelLoaderConfiguration]
+        rules: [
+            {
+                test: /\.m?js$/,
+                resolve: {
+                    fullySpecified: false
+                }
+            },
+            babelLoaderConfiguration
+        ]
     },
     output: {
         path: path.resolve(__dirname, "lib", "umd"),
@@ -57,7 +66,9 @@ module.exports = {
         globalObject: "this"
     },
     plugins: [
-        new webpack.IgnorePlugin(/^react-native$/),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /^react-native$/,
+        }),
         new webpack.ProvidePlugin({
             process: "process/browser",
         }),

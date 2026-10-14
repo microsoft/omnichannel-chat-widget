@@ -249,3 +249,51 @@ describe("createMarkdown - Adjacent anchor merging (a11y)", () => {
         expect(result).toContain("href=\"https://example.com\"");
     });
 });
+
+describe("createMarkdown - reference-link env safety", () => {
+    it("does not throw on reference-style citation definitions when no env is provided", () => {
+        const markdown = createMarkdown(false, false);
+        const input = "[1]: https://example.com \"doc.html\"\n\nSee [1][1] for details.";
+        expect(() => markdown.render(input)).not.toThrow();
+    });
+
+    it("does not throw on inline reference-style links when no env is provided", () => {
+        const markdown = createMarkdown(false, false);
+        expect(() => markdown.render("Check [a][b] now.")).not.toThrow();
+    });
+
+    it("renderInline does not throw on reference-style links when no env is provided", () => {
+        const markdown = createMarkdown(false, false);
+        expect(() => markdown.renderInline("Check [a][b] now.")).not.toThrow();
+    });
+
+    it("disableMarkdownMessageFormatting variant does not throw on reference-style links", () => {
+        const markdown = createMarkdown(true, false);
+        expect(() => markdown.renderInline("Check [a][b] now.")).not.toThrow();
+    });
+});
+
+describe("createMarkdown - Markdown-It 14 plugin compatibility", () => {
+    it("renders Slack emphasis and merges adjacent same-href links", () => {
+        const markdown = createMarkdown(false, false);
+        const result = markdown.renderInline(
+            "*Bold* and _italic_: [1.](https://example.com) [View details](https://example.com)"
+        );
+
+        expect(result).toContain("<strong>Bold</strong>");
+        expect(result).toContain("<em>italic</em>");
+        expect((result.match(/<a\b[^>]*>/g) || []).length).toBe(1);
+        expect(result).toContain("1.");
+        expect(result).toContain("View details");
+    });
+
+    it("keeps the minimal formatting rule set valid", () => {
+        const markdown = createMarkdown(true, false);
+        const result = markdown.render("1. &quot;Item&quot;\n\nhttps://example.com\n\n<span>HTML</span>");
+
+        expect(result).toContain("<ol>");
+        expect(result).toContain("&quot;Item&quot;");
+        expect(result).toContain("<a href=\"https://example.com\"");
+        expect(result).toContain("<span>HTML</span>");
+    });
+});
