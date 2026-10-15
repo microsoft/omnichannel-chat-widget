@@ -4,10 +4,13 @@ import "@testing-library/jest-dom";
 
 import { initStartChat, prepareStartChat } from "./startChat";
 
+import { BroadcastEvent, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { ConversationState } from "../../../contexts/common/ConversationState";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
-import { TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
+import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { chatSDKStateCleanUp } from "./endChat";
 import { cleanup } from "@testing-library/react";
 import { createAdapter } from "./createAdapter";
 import { getStateFromCache } from "../../../common/utils";
@@ -105,6 +108,11 @@ jest.mock("../../../common/telemetry/TelemetryManager", () => ({
 const mockCreateAdapter = createAdapter as jest.MockedFunction<typeof createAdapter>;
 const mockTelemetryHelper = TelemetryHelper as jest.Mocked<typeof TelemetryHelper>;
 const mockGetStateFromCache = getStateFromCache as jest.MockedFunction<typeof getStateFromCache>;
+const mockChatSDKStateCleanUp = chatSDKStateCleanUp as jest.MockedFunction<typeof chatSDKStateCleanUp>;
+const mockPostMessage = BroadcastService.postMessage as jest.Mock;
+
+const countRejections = () => mockTelemetryHelper.logActionEvent.mock.calls
+    .filter(([, payload]: any) => payload?.Event === TelemetryEvent.ConcurrentStartChatRejected).length;
 
 // Creates a promise whose resolution is controlled by the test, so two invocations can be
 // kept in flight at the same time.
@@ -420,6 +428,91 @@ describe("startChat - concurrent start chat protection", () => {
             expect(facadeB.startChat).toHaveBeenCalledWith(
                 expect.objectContaining({ customContext: { cached: { value: "widget-instance-b" } } })
             );
+        });
+    });
+
+    // The duplicate conversations are not only caused by a double click: any two start chat entry
+    // points that overlap for the same widget (chat button, BroadcastEvent.StartChat from the host,
+    // proactive chat, pre-chat submit, reconnect) can race.
+    describe("start chat entry points other than a double click", () => {
+        it("should drop a BroadcastEvent.StartChat start that races a chat button start", async () => {
+            const deferred = createDeferred();
+            mockFacadeChatSDK.startChat.mockReturnValue(deferred.promise);
+
+            // The chat button passes the render state; the BroadcastEvent.StartChat subscriber passes
+            // a separate in-memory snapshot. Both still read Closed and share the widget's FacadeChatSDK.
+            const renderState = closedState;
+            const inMemoryState = { ...closedState, appStates: { ...closedState.appStates } };
+
+            const fromButton = prepareStartChat(mockProps, mockFacadeChatSDK, renderState, mockDispatch, mockSetAdapter);
+            const fromBroadcast = prepareStartChat(mockProps, mockFacadeChatSDK, inMemoryState, mockDispatch, mockSetAdapter);
+
+            deferred.resolve();
+            await Promise.all([fromButton, fromBroadcast]);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            expect(countRejections()).toBe(1);
+        });
+
+        it("should allow a sequential retry after a failed start chat", async () => {
+            mockFacadeChatSDK.startChat.mockRejectedValueOnce(new Error("start chat failed"));
+
+            await prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+            await prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(2);
+            expect(countRejections()).toBe(0);
+        });
+
+        it("should drop prepareStartChat while an initStartChat for the same widget is in flight, before any side effects", async () => {
+            const deferred = createDeferred();
+            mockFacadeChatSDK.startChat.mockReturnValue(deferred.promise);
+            const prechatState = { ...closedState, appStates: { ...closedState.appStates, conversationState: ConversationState.Prechat } };
+
+            // Pre-chat submit (or reconnect, or the hideStartChatButton bootstrap) calls initStartChat directly.
+            const fromPrechatSubmit = initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, prechatState, mockProps);
+            mockDispatch.mockClear();
+            mockPostMessage.mockClear();
+
+            const fromButton = prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+            await fromButton;
+
+            // The dropped call must not show Loading or maximize the widget.
+            expect(mockFacadeChatSDK.getPreChatSurvey).not.toHaveBeenCalled();
+            expect(mockDispatch).not.toHaveBeenCalledWith(
+                expect.objectContaining({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading })
+            );
+            expect(mockPostMessage).not.toHaveBeenCalledWith(
+                expect.objectContaining({ eventName: BroadcastEvent.MaximizeChat })
+            );
+            expect(countRejections()).toBe(1);
+
+            deferred.resolve();
+            await fromPrechatSubmit;
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+        });
+
+        it("should still let prepareStartChat run its own nested initStartChat", async () => {
+            await prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            expect(countRejections()).toBe(0);
+        });
+
+        it("should drop a re-entrant call made from the synchronous preamble of an in-flight start", async () => {
+            let reentrant: Promise<void> | undefined;
+            // initStartChat runs chatSDKStateCleanUp synchronously, before its first await, when the
+            // conversation is Closed. Re-enter from there to prove the lock is claimed up front.
+            mockChatSDKStateCleanUp.mockImplementationOnce(() => {
+                reentrant = initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps);
+            });
+
+            await initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps);
+            await reentrant;
+
+            expect(reentrant).toBeDefined();
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            expect(countRejections()).toBe(1);
         });
     });
 });

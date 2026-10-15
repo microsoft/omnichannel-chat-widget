@@ -292,6 +292,37 @@ export const closeChatStateCleanUp = (dispatch: Dispatch<ILiveChatWidgetAction>)
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+const logCleanUpDisconnectFailure = (error: any) => {
+    TelemetryHelper.logActionEvent(LogLevel.WARN, {
+        Event: TelemetryEvent.ChatSDKStateCleanUpDisconnectFailed,
+        Description: "Failed to disconnect the previous conversation during chat SDK state clean up.",
+        ExceptionDetails: { exception: error?.message ?? error }
+    });
+};
+
+// Releases the previous session's conversation. Mirrors the cleanup OmnichannelChatSDK.endChat()
+// runs in its finally block (disconnect, then drop the reference). Without it, a conversation
+// left over from a failed or orphaned start chat, or from a chat ended in another tab (which
+// skips the SDK endChat), keeps its messaging session open and leaks into the next chat.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const disconnectConversation = (chatSDK: any) => {
+    const conversation = chatSDK.conversation;
+    if (!conversation || typeof conversation.disconnect !== "function") {
+        return;
+    }
+
+    try {
+        // ACS conversations disconnect asynchronously; legacy IC3 conversations may not return a promise.
+        const result = conversation.disconnect();
+        if (result && typeof result.catch === "function") {
+            result.catch(logCleanUpDisconnectFailure);
+        }
+    } catch (error) {
+        logCleanUpDisconnectFailure(error);
+    }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const chatSDKStateCleanUp = (chatSDK: any) => {
     if (!chatSDK) {
         return;
@@ -303,9 +334,7 @@ export const chatSDKStateCleanUp = (chatSDK: any) => {
     (chatSDK as any).chatToken = {};
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chatSDK as any).reconnectId = null;
-    // Mirrors the internal reset done by OmnichannelChatSDK.endChat(). Without it the previous
-    // session's conversation object leaks into the next chat whenever a new chat is started
-    // without a full endChat (for example after a failed or orphaned start chat).
+    disconnectConversation(chatSDK);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (chatSDK as any).conversation = null;
 };

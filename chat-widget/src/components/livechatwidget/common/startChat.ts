@@ -27,7 +27,7 @@ import { shouldSetPreChatIfPersistentChat } from "./persistentChatHelper";
 import { updateTelemetryData } from "./updateSessionDataForTelemetry";
 
 interface IStartChatGuard {
-    inFlight: Promise<void> | null;
+    inFlight: boolean;
 }
 
 /**
@@ -46,7 +46,11 @@ interface IStartChatGuard {
  * widget A's start chat silently drop widget B's legitimate simultaneous start chat.
  *
  * The two maps are separate because prepareStartChat calls initStartChat; sharing a single lock
- * would make the nested call see its own parent as in flight and drop it.
+ * would make the nested call see its own parent as in flight and drop it. prepareStartChat is
+ * additionally blocked by an in flight initStartChat (pre-chat submit, reconnect, or the
+ * hideStartChatButton bootstrap call initStartChat directly). Otherwise a later prepareStartChat
+ * would dispatch Loading and maximize the widget, and only then have its nested initStartChat
+ * dropped.
  */
 const prepareStartChatGuards = new WeakMap<object, IStartChatGuard>();
 const initStartChatGuards = new WeakMap<object, IStartChatGuard>();
@@ -60,7 +64,7 @@ const getGuard = (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK?: Faca
     let guard = guards.get(owner);
 
     if (!guard) {
-        guard = { inFlight: null };
+        guard = { inFlight: false };
         guards.set(owner, guard);
     }
 
@@ -72,11 +76,15 @@ const getGuard = (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK?: Faca
  * flight. Concurrent invocations are dropped (and reported through telemetry) rather than
  * awaiting the in-flight promise, so a future re-entrant call can never deadlock on itself.
  * No caller acts on the resolved value, so dropping is safe.
+ *
+ * `blockedBy` lets an operation also yield to a different, already running operation for the
+ * same widget instance without claiming that operation's lock.
  */
-const runExclusively = async (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK: FacadeChatSDK, description: string, operation: () => Promise<void>, props?: ILiveChatWidgetProps): Promise<void> => {
+const runExclusively = async (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK: FacadeChatSDK, description: string, operation: () => Promise<void>, props?: ILiveChatWidgetProps, blockedBy?: WeakMap<object, IStartChatGuard>): Promise<void> => {
     const guard = getGuard(guards, facadeChatSDK);
+    const blockingGuard = blockedBy ? getGuard(blockedBy, facadeChatSDK) : undefined;
 
-    if (guard.inFlight) {
+    if (guard.inFlight || blockingGuard?.inFlight) {
         TelemetryHelper.logActionEvent(LogLevel.WARN, {
             Event: TelemetryEvent.ConcurrentStartChatRejected,
             Description: description,
@@ -85,13 +93,14 @@ const runExclusively = async (guards: WeakMap<object, IStartChatGuard>, facadeCh
         return;
     }
 
-    const inFlight = operation();
-    guard.inFlight = inFlight;
+    // Claim the lock before invoking the operation, so a re-entrant call made from the
+    // operation's synchronous preamble (before its first await) cannot slip past the check above.
+    guard.inFlight = true;
 
     try {
-        await inFlight;
+        await operation();
     } finally {
-        guard.inFlight = null;
+        guard.inFlight = false;
     }
 };
 
@@ -102,7 +111,8 @@ const prepareStartChat = async (props: ILiveChatWidgetProps, facadeChatSDK: Faca
         facadeChatSDK,
         "Concurrent prepareStartChat call ignored, a start chat operation is already in progress for this widget instance.",
         () => prepareStartChatInternal(props, facadeChatSDK, state, dispatch, setAdapter),
-        props);
+        props,
+        initStartChatGuards);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
