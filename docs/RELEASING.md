@@ -22,6 +22,8 @@ The `latest` npm tag can point to a `main` prerelease after a merge. Production 
 
 A push to `main` or `hotfix/**` builds and publishes. Official tags also install from the lockfile and run the package tests.
 
+Official `c-v*` and `w-v*` tags start only `.github/workflows/npm-release.yml`. Do not add a second tag workflow for either package.
+
 Do not use `workflow_dispatch` or `npm publish` for an official release.
 
 ## Official Chat Components release

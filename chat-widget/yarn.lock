@@ -2920,10 +2920,10 @@
     rxjs "^5.0.3"
     swiper "12.1.2"
 
-"@microsoft/omnichannel-chat-sdk@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.0.tgz#7f14ad36b33fa9ce6191f03acf7182bec705dbc0"
-  integrity sha512-HyKvjAUp8YmwyznW6Kyk1PoD4QPaC/N6V0dU7Pup18JNYAgRfi0QS9GSybrWtycwUY0iYw3PG99KonJVWj9KBQ==
+"@microsoft/omnichannel-chat-sdk@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.1.tgz#94923612dd1b0d9e97671a13249a20b5406eb721"
+  integrity sha512-MZamtF0J/JRH3TCcxpKMpxZIU7S96YBoBRaqpDpy8zd5CGZELG/7DDSPhjA4LY7kUfmyo66CVE2vzZmnJG234w==
   dependencies:
     "@azure/communication-chat" "1.6.0-beta.7"
     "@azure/communication-common" "2.4.2"
@@ -9338,10 +9338,10 @@ domhandler@^6.0.0:
   dependencies:
     domelementtype "^3.0.0"
 
-dompurify@^3.4.12:
-  version "3.4.13"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.4.13.tgz#fc28949d59f92d62e28a3a764bcbeee35897a1be"
-  integrity sha512-2vmYIoqjze2d+kakP8S/nS5shfsl587kzwEjcGlTdiksUVgFHnFCsLYDVj/JNqJVOQZGSYBTmuycv0PodwmnMQ==
+dompurify@3.4.16:
+  version "3.4.16"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.4.16.tgz#c51b3709ea15ee9abb07e804f2ef30ea9b953128"
+  integrity sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==
   optionalDependencies:
     "@types/trusted-types" "^2.0.7"
 
@@ -14751,7 +14751,7 @@ nano-css@^5.6.2:
     stacktrace-js "^2.0.2"
     stylis "^4.3.0"
 
-nanoid@^3.1.18, nanoid@^3.3.1, nanoid@^3.3.17, nanoid@^3.3.4:
+nanoid@3.3.18, nanoid@^3.1.18, nanoid@^3.3.1, nanoid@^3.3.17, nanoid@^3.3.4:
   version "3.3.18"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.18.tgz#f66a2de1199ffde0fcf21c8a5f13106b1c081913"
   integrity sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==
@@ -15963,7 +15963,16 @@ postcss@^7.0.14, postcss@^7.0.26, postcss@^7.0.32, postcss@^7.0.36, postcss@^7.0
     picocolors "^0.2.1"
     source-map "^0.6.1"
 
-postcss@^8.2.15, postcss@^8.3.11, postcss@^8.3.9:
+postcss@8.5.19:
+  version "8.5.19"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.19.tgz#45ad5cfde499408e20147348237551381a922037"
+  integrity sha512-Mz8SaolMd8nB+G13WkORcxQKHZ/NE4xXevtkJHVuG+guo9/wYKlIMTKAqGdEmYOXR2ijPjTYNHssizdaVSUNdQ==
+  dependencies:
+    nanoid "^3.3.12"
+    picocolors "^1.1.1"
+    source-map-js "^1.2.1"
+
+postcss@^8.2.15, postcss@^8.3.11:
   version "8.5.26"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.5.26.tgz#6e75135780c7e10df3433bf2266c552d35c8c620"
   integrity sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==
@@ -17475,10 +17484,10 @@ sanitize-html@2.14.0:
     parse-srcset "^1.0.2"
     postcss "^8.3.11"
 
-sanitize-html@2.17.6:
-  version "2.17.6"
-  resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.17.6.tgz#c62a2e2e55d03004f3e0ecd6dbb9126d4b985d82"
-  integrity sha512-M4bo9tfv1yfhQZZKkc6dL07ALrGJtfvNOuhX3hU9AVPR/uPQ+nKOJBqTYc7LfMQblTW04mtSWDJWEyLvygJsLA==
+sanitize-html@2.17.7:
+  version "2.17.7"
+  resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.17.7.tgz#b16417c348ea5f99c2451964b6e6621ca6b1da94"
+  integrity sha512-PGtEkc9cbnedU3s9TmzDbpsZ8w086g/0Q8k8/oIO1NLNU3i5k9yn835CrjJSajp1KMmkisbO1qPXxNKO3welAg==
   dependencies:
     deepmerge "^4.2.2"
     escape-string-regexp "^4.0.0"

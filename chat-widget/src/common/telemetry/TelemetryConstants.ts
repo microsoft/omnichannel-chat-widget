@@ -101,6 +101,7 @@ export enum TelemetryEvent {
     MidConversationAuthSucceeded = "MidConversationAuthSucceeded",
     MidConversationAuthFailed = "MidConversationAuthFailed",
     MidConversationAuthReset = "MidConversationAuthReset",
+    RecoveryEligibilityEvaluated = "RecoveryEligibilityEvaluated",
     GetConversationDetailsCallStarted = "GetConversationDetailsCallStarted",
     GetConversationDetailsCallFailed = "GetConversationDetailsCallFailed",
     EndChatSDKCallFailed = "EndChatSDKCallFailed",
@@ -426,6 +427,7 @@ export class TelemetryConstants {
             case TelemetryEvent.AgentJoinedConversation:
             case TelemetryEvent.BrowserTabHidden:
             case TelemetryEvent.ConcurrentStartChatRejected:
+            case TelemetryEvent.RecoveryEligibilityEvaluated:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:

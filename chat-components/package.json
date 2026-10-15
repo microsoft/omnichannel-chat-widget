@@ -61,7 +61,7 @@
     "@axe-core/playwright": "^4.10.2",
     "@axe-core/react": "^4.10.2",
     "accessibility-insights-scan": "^3.0.0",
-    "postcss": "^8.3.9",
+    "postcss": "8.5.19",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-test-renderer": "^18.3.1",
@@ -106,6 +106,7 @@
     "**/@types/glob": "7.2.0",
     "**/@types/minimatch": "3.0.5",
     "**/glob-parent": "5.1.2",
-    "**/join-images": "1.1.5"
+    "**/join-images": "1.1.5",
+    "**/nanoid": "3.3.18"
   }
 }
