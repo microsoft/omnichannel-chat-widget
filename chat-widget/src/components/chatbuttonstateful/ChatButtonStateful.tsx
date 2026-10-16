@@ -40,31 +40,50 @@ export const ChatButtonStateful = (props: IChatButtonStatefulParams) => {
         return state.appStates.conversationState === ConversationState.Closed && state.appStates.outsideOperatingHours;
     });
     const ref = useRef(() => {return;});
+    // Optimistic guard against rapid double-clicks. `conversationState` only flips to
+    // `Loading` after React re-renders, so the button stays visible and clickable for the
+    // whole duration of the first click's async work. Without this ref two concurrent
+    // startChat() calls can create two conversations on the backend.
+    const startChatInProgressRef = useRef(false);
 
     ref.current = async () => {
 
-        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.LCWChatButtonClicked,
-            Description: "Chat button click action started",
-            CustomProperties: { ConversationStage: ConversationStage.Initialization }
-        });
-        
-        if (state.appStates.isMinimized) {
-            dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
-            dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
-            // If chat is minimized and then unminimized, start a chat if convesation state is closed.
-            if (state.appStates.conversationState === ConversationState.Closed) {
-                await startChat();
-            }
-        } else {
-            await startChat();
+        if (startChatInProgressRef.current) {
+            TelemetryHelper.logActionEvent(LogLevel.WARN, {
+                Event: TelemetryEvent.ConcurrentStartChatRejected,
+                Description: "Chat button click ignored, a start chat operation is already in progress."
+            });
+            return;
         }
 
-        TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
-            Event: TelemetryEvent.LCWChatButtonActionCompleted,
-            Description: "Chat button action completed",
-            CustomProperties: { ConversationStage: ConversationStage.Initialization }
-        });
+        startChatInProgressRef.current = true;
+
+        try {
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.LCWChatButtonClicked,
+                Description: "Chat button click action started",
+                CustomProperties: { ConversationStage: ConversationStage.Initialization }
+            });
+
+            if (state.appStates.isMinimized) {
+                dispatch({ type: LiveChatWidgetActionType.SET_MINIMIZED, payload: false });
+                dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: 0 });
+                // If chat is minimized and then unminimized, start a chat if convesation state is closed.
+                if (state.appStates.conversationState === ConversationState.Closed) {
+                    await startChat();
+                }
+            } else {
+                await startChat();
+            }
+
+            TelemetryHelper.logActionEventToAllTelemetry(LogLevel.INFO, {
+                Event: TelemetryEvent.LCWChatButtonActionCompleted,
+                Description: "Chat button action completed",
+                CustomProperties: { ConversationStage: ConversationStage.Initialization }
+            });
+        } finally {
+            startChatInProgressRef.current = false;
+        }
     };
 
     const outOfOfficeStyleProps: IChatButtonStyleProps = Object.assign({}, defaultOutOfOfficeChatButtonStyleProps, outOfOfficeButtonProps?.styleProps);
