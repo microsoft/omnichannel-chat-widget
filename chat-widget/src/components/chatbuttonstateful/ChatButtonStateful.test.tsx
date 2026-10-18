@@ -580,4 +580,68 @@ describe("ChatButtonStateful Component", () => {
             // The component should have the custom properties and internal onClick takes precedence
         });
     });
+
+    describe("Concurrent click protection", () => {
+        it("should call startChat only once when the button is clicked rapidly twice", async () => {
+            const mockState = createMockState({
+                appStates: {
+                    conversationState: ConversationState.Closed,
+                    outsideOperatingHours: false,
+                    isMinimized: false,
+                    unreadMessageCount: 0,
+                    startChatFailed: false
+                }
+            });
+
+            mockUseChatContextStore.mockReturnValue([mockState, mockDispatch]);
+
+            // startChat stays pending, simulating React not yet having re-rendered the widget
+            // into the Loading state while the first call is still running.
+            let resolveStartChat: () => void = () => undefined;
+            mockStartChat.mockImplementation(() => new Promise<void>((resolve) => {
+                resolveStartChat = resolve;
+            }));
+
+            render(<ChatButtonStateful startChat={mockStartChat} />);
+
+            const button = screen.getByTestId("chat-button");
+
+            await act(async () => {
+                button.click();
+                button.click();
+                resolveStartChat();
+            });
+
+            expect(mockStartChat).toHaveBeenCalledTimes(1);
+        });
+
+        it("should allow a new click after the previous startChat settles", async () => {
+            const mockState = createMockState({
+                appStates: {
+                    conversationState: ConversationState.Closed,
+                    outsideOperatingHours: false,
+                    isMinimized: false,
+                    unreadMessageCount: 0,
+                    startChatFailed: false
+                }
+            });
+
+            mockUseChatContextStore.mockReturnValue([mockState, mockDispatch]);
+            mockStartChat.mockResolvedValue(undefined);
+
+            render(<ChatButtonStateful startChat={mockStartChat} />);
+
+            const button = screen.getByTestId("chat-button");
+
+            await act(async () => {
+                button.click();
+            });
+
+            await act(async () => {
+                button.click();
+            });
+
+            expect(mockStartChat).toHaveBeenCalledTimes(2);
+        });
+    });
 });
