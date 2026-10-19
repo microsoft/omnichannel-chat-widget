@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 - [Bug] Overlapping start chat calls for the same widget (chat button, `BroadcastEvent.StartChat`, proactive chat, pre-chat submit, reconnect) no longer create two conversations. `prepareStartChat` and `initStartChat` now use per-widget locks and drop concurrent calls, the chat button ignores clicks while a start is in progress, and `chatSDKStateCleanUp` disconnects and clears the previous `conversation`. Dropped calls are logged as `ConcurrentStartChatRejected`. (AB#6114594)
 - [Bug] Start-chat custom context is no longer held in module-scoped state. `setCustomContextParams` now returns the resolved params instead of mutating a shared `optionalParams` variable, and the widget cache id it resolves against is computed locally. Previously two widgets on the same page starting at the same time could overwrite each other between the `await` and the read, so one widget could start its conversation with another widget's `customContext`. (AB#6114594)
 - [A11Y] Make the suggested actions carousel Previous/Next focus indicator visible by default (solid 2px ring) and close its CSS rule.
+- [A11Y] Announce sent files to screen readers as "File <name> sent" from a live region inside the chat dialog; the previous regions sat outside the aria-modal dialog and were not read. Adds `MIDDLEWARE_BANNER_FILES_SENT` and changes the `MIDDLEWARE_BANNER_FILE_SENT` default to "File {2} sent". (AB#5905569)
+- [A11Y] Remove the Adaptive Card action button `title` when it repeats the button name, so screen readers read labels such as Submit once. (AB#5929337)
 
 ### Security
 - Retain reviewed audit-only finding GHSA-238p-pmpm-9mq7 (low) for the required WebChat hotfix's pinned `katex@0.16.21`.

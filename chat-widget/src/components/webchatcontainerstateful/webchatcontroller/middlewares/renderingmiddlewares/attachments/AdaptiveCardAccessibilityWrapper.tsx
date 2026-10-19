@@ -101,6 +101,19 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
                 }
             });
 
+            // action-button-double-read: the adaptivecards renderer writes the action
+            // title to the button text, aria-label AND title. The title becomes the
+            // accessible description, so TalkBack reads the label twice ("Submit,
+            // button, Submit"). Drop the title only when it repeats the button name;
+            // a distinct title (an action tooltip) adds information and is kept.
+            container.querySelectorAll<HTMLButtonElement>("button[title]").forEach((btn) => {
+                const title = (btn.getAttribute("title") || "").trim();
+                const name = (btn.getAttribute("aria-label") ?? btn.textContent ?? "").trim();
+                if (title && title === name) {
+                    btn.removeAttribute("title");
+                }
+            });
+
             // Find all radio inputs inside the adaptive card
             const radios = container.querySelectorAll("input[type='radio']");
             if (radios.length === 0) return;
@@ -184,7 +197,8 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
 
         // Use MutationObserver to patch after WebChat finishes rendering the card.
         // Also watch attribute changes on aria-hidden so we can re-apply if React
-        // reconciliation removes it from labels.
+        // reconciliation removes it from labels, and on title so a re-added
+        // duplicate button title is removed again.
         const observer = new MutationObserver(() => {
             patchRadioGroups();
         });
@@ -193,7 +207,7 @@ const AdaptiveCardAccessibilityWrapper: React.FC<{
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ["aria-hidden"]
+            attributeFilter: ["aria-hidden", "title"]
         });
 
         // Also run immediately in case the card is already rendered
