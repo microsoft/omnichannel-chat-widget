@@ -72,12 +72,13 @@ const announce = (message: string, widgetElementId: string): void => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getFileSentMessage = (attachments: any[], localizedTexts?: ILiveChatWidgetLocalizedTexts): string => {
     if (attachments.length > 1) {
+        // Replacer callbacks insert values literally; a string would treat "$&" or "$$" as patterns.
         return (localizedTexts?.MIDDLEWARE_BANNER_FILES_SENT || DEFAULT_FILES_SENT_TEXT)
-            .replace("{0}", String(attachments.length));
+            .replace("{0}", () => String(attachments.length));
     }
     const name = typeof attachments[0]?.name === "string" ? attachments[0].name.trim() : "";
     return (localizedTexts?.MIDDLEWARE_BANNER_FILE_SENT || DEFAULT_FILE_SENT_TEXT)
-        .replace("{2}", name)
+        .replace("{2}", () => name)
         .replace(/\s{2,}/g, " ")
         .trim();
 };

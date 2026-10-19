@@ -137,4 +137,10 @@ describe("getFileSentMessage", () => {
     test("keeps a custom message that has no placeholder", () => {
         expect(getFileSentMessage([{ name: "a.pdf" }], { MIDDLEWARE_BANNER_FILE_SENT: "File sent successfully." })).toBe("File sent successfully.");
     });
+
+    test("inserts file names containing replacement patterns literally", () => {
+        expect(getFileSentMessage([{ name: "budget-$&.pdf" }])).toBe("File budget-$&.pdf sent");
+        expect(getFileSentMessage([{ name: "cost$$.txt" }])).toBe("File cost$$.txt sent");
+        expect(getFileSentMessage([{ name: "q$'1$`.pdf" }])).toBe("File q$'1$`.pdf sent");
+    });
 });
