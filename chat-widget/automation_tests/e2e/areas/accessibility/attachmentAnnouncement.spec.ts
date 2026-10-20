@@ -156,8 +156,8 @@ describeIfBuilt("attachment upload announcement", () => {
         // <div id="ms_lcw_file_sent_announcement" role="alert" aria-live="assertive">
         // intended for file-sent announcements. The element was always empty at
         // idle, and screen readers traversing the page announced it as "blank".
-        // The actual announceFileSent flow appends a fresh role=alert element to
-        // document.body on demand, so the static region was dead code. The fix
+        // The file-sent announcement is appended on demand to a polite live
+        // region inside the chat dialog, so the static region was dead code. The fix
         // removes the static region; this test guards against its reintroduction.
         page = new BasePage(await context.newPage());
         await page.openLiveChatWidget("customlivechatwidgets/AttachmentAnnouncementWidget.html");

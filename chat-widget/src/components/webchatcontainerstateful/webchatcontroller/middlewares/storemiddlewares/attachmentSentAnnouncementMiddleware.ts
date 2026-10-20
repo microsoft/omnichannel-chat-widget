@@ -2,27 +2,39 @@
  * AttachmentSentAnnouncementMiddleware
  *
  * When a file attachment is successfully sent, announces the result to
- * screen readers via an aria-live region so that assistive technology
- * users receive immediate feedback.
+ * screen readers so that assistive technology users receive immediate
+ * feedback ("File report.pdf sent").
+ *
+ * The announcement region lives inside the chat dialog. While the dialog is
+ * open it is aria-modal and its host siblings are aria-hidden, so screen
+ * readers (TalkBack, VoiceOver) ignore live regions outside it.
  ******/
 
+import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
 import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
-const ARIA_LIVE_REGION_ID = "oc-lcw-attachment-announcement";
+export const ATTACHMENT_ANNOUNCEMENT_REGION_ID = "oc-lcw-attachment-announcement";
+
+const DEFAULT_FILE_SENT_TEXT = "File {2} sent";
+const DEFAULT_FILES_SENT_TEXT = "{0} files sent";
+
+// Let the send-box focus shift settle before speaking, then keep the node
+// long enough for the screen reader to read it.
+const ANNOUNCE_DELAY_MS = 100;
+const ANNOUNCEMENT_LIFETIME_MS = 5000;
 
 /**
- * Ensures a visually-hidden aria-live region exists in the DOM for
- * announcing attachment upload results to screen readers.
+ * Ensures a visually-hidden aria-live region exists inside the chat dialog
+ * for announcing attachment upload results to screen readers.
  */
-const ensureAriaLiveRegion = (): HTMLElement => {
-    let region = document.getElementById(ARIA_LIVE_REGION_ID);
+const ensureAriaLiveRegion = (widgetElementId: string): HTMLElement => {
+    const host = document.getElementById(widgetElementId) || document.body;
+    let region = document.getElementById(ATTACHMENT_ANNOUNCEMENT_REGION_ID);
     if (!region) {
         region = document.createElement("div");
-        region.id = ARIA_LIVE_REGION_ID;
+        region.id = ATTACHMENT_ANNOUNCEMENT_REGION_ID;
         region.setAttribute("aria-live", "polite");
-        region.setAttribute("role", "status");
-        region.setAttribute("aria-atomic", "true");
         // Visually hidden but available to screen readers
         Object.assign(region.style, {
             position: "absolute",
@@ -35,43 +47,57 @@ const ensureAriaLiveRegion = (): HTMLElement => {
             whiteSpace: "nowrap",
             border: "0"
         });
-        const container = document.getElementById("oc-lcw-container");
-        (container || document.body).appendChild(region);
+    }
+    if (region.parentElement !== host) {
+        host.appendChild(region);
     }
     return region;
 };
 
 /**
- * Announces a message to screen readers by updating the aria-live region.
- * Clears it briefly first so repeated identical messages are still announced.
+ * Announces a message by appending a fresh node to the live region.
+ * TalkBack reliably speaks newly added nodes but often misses text changes
+ * on an existing node, so each announcement gets its own element.
  */
-const announce = (message: string): void => {
-    const region = ensureAriaLiveRegion();
-    region.textContent = "";
-    // Small delay so the screen reader detects the content change
+const announce = (message: string, widgetElementId: string): void => {
+    const region = ensureAriaLiveRegion(widgetElementId);
     setTimeout(() => {
-        region.textContent = message;
-    }, 100);
+        const node = document.createElement("div");
+        node.textContent = message;
+        region.appendChild(node);
+        setTimeout(() => node.remove(), ANNOUNCEMENT_LIFETIME_MS);
+    }, ANNOUNCE_DELAY_MS);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const attachmentSentAnnouncementMiddleware: WebChatStoreMiddleware = ({ dispatch }) => (next) => (action) => {
-    if (!isWebChatAction(action)) {
-        return next(action);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getFileSentMessage = (attachments: any[], localizedTexts?: ILiveChatWidgetLocalizedTexts): string => {
+    if (attachments.length > 1) {
+        // Replacer callbacks insert values literally; a string would treat "$&" or "$$" as patterns.
+        return (localizedTexts?.MIDDLEWARE_BANNER_FILES_SENT || DEFAULT_FILES_SENT_TEXT)
+            .replace("{0}", () => String(attachments.length));
     }
+    const name = typeof attachments[0]?.name === "string" ? attachments[0].name.trim() : "";
+    return (localizedTexts?.MIDDLEWARE_BANNER_FILE_SENT || DEFAULT_FILE_SENT_TEXT)
+        .replace("{2}", () => name)
+        .replace(/\s{2,}/g, " ")
+        .trim();
+};
 
-    // Intercept successfully posted activities that contain attachments
-    if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED) {
-        const attachments = action.payload?.activity?.attachments;
-        if (attachments && attachments.length > 0) {
-            const count = attachments.length;
-            const message = count === 1
-                ? "File sent"
-                : `${count} files sent`;
-            announce(message);
+export const createAttachmentSentAnnouncementMiddleware = (localizedTexts?: ILiveChatWidgetLocalizedTexts, widgetElementId = "oc-lcw"): WebChatStoreMiddleware =>
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ({ dispatch }) => (next) => (action) => {
+        if (!isWebChatAction(action)) {
+            return next(action);
         }
-    }
-    return next(action);
-};
 
-export default attachmentSentAnnouncementMiddleware;
+        // Intercept successfully posted activities that contain attachments
+        if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY_FULFILLED) {
+            const attachments = action.payload?.activity?.attachments;
+            if (attachments && attachments.length > 0) {
+                announce(getFileSentMessage(attachments, localizedTexts), widgetElementId);
+            }
+        }
+        return next(action);
+    };
+
+export default createAttachmentSentAnnouncementMiddleware;
