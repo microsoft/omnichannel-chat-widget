@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Added `enterToNewLine` prop to `sendBoxTextBox` in `webChatContainerProps`. When `true`, pressing **Enter** inserts a new line and **Shift+Enter** sends the message (inverts the default WebChat behavior). Requires `sendBoxTextWrap: true` in `webChatStyles`. Opt-in; default behavior unchanged.
+
 ### Fixed
 - [Bug] Overlapping start chat calls for the same widget (chat button, `BroadcastEvent.StartChat`, proactive chat, pre-chat submit, reconnect) no longer create two conversations. `prepareStartChat` and `initStartChat` now use per-widget locks and drop concurrent calls, the chat button ignores clicks while a start is in progress, and `chatSDKStateCleanUp` disconnects and clears the previous `conversation`. Dropped calls are logged as `ConcurrentStartChatRejected`. (AB#6114594)
 - [Bug] Start-chat custom context is no longer held in module-scoped state. `setCustomContextParams` now returns the resolved params instead of mutating a shared `optionalParams` variable, and the widget cache id it resolves against is computed locally. Previously two widgets on the same page starting at the same time could overwrite each other between the `await` and the read, so one widget could start its conversation with another widget's `customContext`. (AB#6114594)
