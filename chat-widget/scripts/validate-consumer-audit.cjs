@@ -24,6 +24,8 @@ const allowedAdvisories = new Map([
     ["markdown-it@13.0.2 -> https://github.com/advisories/GHSA-38c4-r59v-3vqw", [WEBCHAT]], // ReDoS in markdown parsing.
     ["markdown-it@13.0.2 -> https://github.com/advisories/GHSA-6v5v-wf23-fmfq", [WEBCHAT]], // Smartquotes quadratic scan.
     ["markdown-it@13.0.2 -> https://github.com/advisories/GHSA-253c-mchw-3w2r", [WEBCHAT]], // Linkify quadratic scan.
+    ["markdown-it@13.0.2 -> https://github.com/advisories/GHSA-r7fv-28h4-cvq7", [WEBCHAT]], // Smartquotes unmatched-close quadratic scan.
+    ["markdown-it@13.0.2 -> https://github.com/advisories/GHSA-vfgh-jcmw-g37q", [WEBCHAT]], // Inline HTML quadratic scan.
     ["@babel/runtime@7.14.8 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
     ["@babel/runtime@7.15.4 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
     ["@babel/runtime@7.19.0 -> https://github.com/advisories/GHSA-968p-4wvh-cqc8", [WEBCHAT]], // Named-capture replacement ReDoS.
@@ -32,6 +34,9 @@ const allowedAdvisories = new Map([
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-vccv-cmxp-4j9h", [WEBCHAT]], // URI scheme validation gap.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-g8qq-57p8-ggw5", [WEBCHAT]], // SVG SMIL URI-list bypass.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-jxwj-j7wr-gfrw", [WEBCHAT]], // Solidus-close mutation XSS.
+    ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-x3q4-9hxx-gx8m", [WEBCHAT]], // nonTextTags implied-close noscript render.
+    ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-374f-7chj-9948", [WEBCHAT]], // SMIL namespace-prefix URI bypass.
+    ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-cv27-6wvh-8x7j", [WEBCHAT]], // meta refresh javascript:/data: URL.
     ["swiper@8.4.7 -> https://github.com/advisories/GHSA-hmx5-qpq5-p643", [WEBCHAT]], // Prototype pollution.
     ["valibot@1.1.0 -> https://github.com/advisories/GHSA-5qjj-4xww-7phc", [WEBCHAT]], // Inherited-key flatten failure.
     ["valibot@1.1.0 -> https://github.com/advisories/GHSA-vqpr-j7v3-hqw9", [WEBCHAT]], // Emoji validation ReDoS.
