@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
-- Add cross-repository local development guidance and run chat-components and chat-widget PR workflows regardless of changed paths.
+- Add cross-repository local development guidance for GitHub Copilot (`.github/instructions/lcw-local-dev.instructions.md`).
 
 ### Fixed
 - [Bug] Overlapping start chat calls for the same widget (chat button, `BroadcastEvent.StartChat`, proactive chat, pre-chat submit, reconnect) no longer create two conversations. `prepareStartChat` and `initStartChat` now use per-widget locks and drop concurrent calls, the chat button ignores clicks while a start is in progress, and `chatSDKStateCleanUp` disconnects and clears the previous `conversation`. Dropped calls are logged as `ConcurrentStartChatRejected`. (AB#6114594)

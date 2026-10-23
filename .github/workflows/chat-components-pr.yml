@@ -5,6 +5,9 @@ on:
     branches:
       - '**'
     types: [ edited, assigned, opened, synchronize, reopened]
+    paths:
+      - 'chat-components/**'
+      - '.github/workflows/**'
       
 jobs: 
   build:

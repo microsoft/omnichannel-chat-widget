@@ -11,6 +11,9 @@ on:
     branches:
       - '**'
     types: [edited, assigned, opened, synchronize, reopened]
+    paths:
+      - 'chat-widget/**'
+      - '.github/workflows/**'
       
 jobs: 
   build:
