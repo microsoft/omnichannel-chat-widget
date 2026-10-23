@@ -100,7 +100,7 @@ describe("AdaptiveCardAccessibilityWrapper", () => {
                     childList: true,
                     subtree: true,
                     attributes: true,
-                    attributeFilter: ["aria-hidden"]
+                    attributeFilter: ["aria-hidden", "title"]
                 })
             );
         });
@@ -169,6 +169,45 @@ describe("AdaptiveCardAccessibilityWrapper", () => {
             const button = container.querySelector("button.ac-pushButton") as HTMLElement;
             expect(button).toHaveAttribute("role", "checkbox");
             expect(button).toHaveAttribute("aria-checked", "false");
+        });
+
+        // AB#5929337: TalkBack read "Submit, button, Submit" because the title
+        // duplicated the accessible name and became the description.
+        it("should remove an action button title that repeats its accessible name", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-actionSet">
+                        <button className="ac-pushButton" aria-label="Submit" title="Submit"><div>Submit</div></button>
+                        <button className="ac-pushButton" title=" Cancel "><div>Cancel</div></button>
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            const [submit, cancel] = Array.from(container.querySelectorAll("button.ac-pushButton"));
+            expect(submit).not.toHaveAttribute("title");
+            expect(submit).toHaveAttribute("aria-label", "Submit");
+            expect(cancel).not.toHaveAttribute("title");
+        });
+
+        it("should keep an action button title that adds information beyond the name", async () => {
+            const { container } = render(
+                <AdaptiveCardAccessibilityWrapper>
+                    <div className="ac-actionSet">
+                        <button className="ac-pushButton" aria-label="Submit" title="Sends your answers to an agent"><div>Submit</div></button>
+                    </div>
+                </AdaptiveCardAccessibilityWrapper>
+            );
+
+            await act(async () => {
+                observerInstance.trigger();
+            });
+
+            const button = container.querySelector("button.ac-pushButton") as HTMLElement;
+            expect(button).toHaveAttribute("title", "Sends your answers to an agent");
         });
 
         it("should set aria-setsize and aria-posinset on each radio in a group", async () => {
