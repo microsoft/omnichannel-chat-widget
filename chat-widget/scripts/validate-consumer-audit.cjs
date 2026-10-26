@@ -35,7 +35,6 @@ const allowedAdvisories = new Map([
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-g8qq-57p8-ggw5", [WEBCHAT]], // SVG SMIL URI-list bypass.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-jxwj-j7wr-gfrw", [WEBCHAT]], // Solidus-close mutation XSS.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-x3q4-9hxx-gx8m", [WEBCHAT]], // nonTextTags implied-close noscript render.
-    ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-374f-7chj-9948", [WEBCHAT]], // SMIL namespace-prefix URI bypass.
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-cv27-6wvh-8x7j", [WEBCHAT]], // meta refresh javascript:/data: URL.
     ["swiper@8.4.7 -> https://github.com/advisories/GHSA-hmx5-qpq5-p643", [WEBCHAT]], // Prototype pollution.
     ["valibot@1.1.0 -> https://github.com/advisories/GHSA-5qjj-4xww-7phc", [WEBCHAT]], // Inherited-key flatten failure.
