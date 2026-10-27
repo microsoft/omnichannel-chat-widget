@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - [A11Y] Remove the Adaptive Card action button `title` when it repeats the button name, so screen readers read labels such as Submit once. (AB#5929337)
 
 ### Security
+- Bumped `@microsoft/omnichannel-chat-sdk` to `2.0.2` in Chat Widget and automation tests. The SDK no longer logs the untranslated `OriginalMessageText` from real-time translation and redacts JWTs and sensitive URL parameter values in ACS adapter telemetry.
 - Retain reviewed audit-only finding GHSA-238p-pmpm-9mq7 (low) for the required WebChat hotfix's pinned `katex@0.16.21`.
 
 ## [2.0.1] - 2026-10-05

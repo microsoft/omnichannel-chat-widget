@@ -2920,10 +2920,10 @@
     rxjs "^5.0.3"
     swiper "12.1.2"
 
-"@microsoft/omnichannel-chat-sdk@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.1.tgz#94923612dd1b0d9e97671a13249a20b5406eb721"
-  integrity sha512-MZamtF0J/JRH3TCcxpKMpxZIU7S96YBoBRaqpDpy8zd5CGZELG/7DDSPhjA4LY7kUfmyo66CVE2vzZmnJG234w==
+"@microsoft/omnichannel-chat-sdk@2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.2.tgz#12ec4c0c1dd8afd08ca1076766ab2fc62fcd474b"
+  integrity sha512-sk+Shwy8O9S6Wp7b2jLJzkKYdlyRq0ocKdDu3bNS9Jyd8+Y2WpU2kmlxBzMhpttObM0VghToa6NZLj3MkpIpZw==
   dependencies:
     "@azure/communication-chat" "1.6.0-beta.7"
     "@azure/communication-common" "2.4.2"
