@@ -72,6 +72,8 @@ When the widget registers a host authentication callback, it reuses the validate
 
 An initially empty token still permits signed-out mid-auth chat. After registering an authenticated provider, an empty renewal token is an authentication error, not a request to downgrade the conversation to unauthenticated chat. Host-provider failures propagate to the SDK; its existing renewal failure policy is unchanged.
 
+ACS chat-token renewal requires a supporting Chat SDK and the existing server configuration `GetConfig.LcwFcbConfiguration.lcwChatTokenRenewalEnabled`. Without that configuration, SDK recovery remains disabled. The SDK kill switch `chatTokenRenewal.disableUnauthorizedRecovery` separately disables recovery from rejected credentials. This uptake does not provide AMS attachment-credential recovery or voice/video calling-credential renewal.
+
 ### Reconnect Chat
 There are 2 types of chat reconnect:
 1. Unauthenticated chat: the customer gets the reconnect id after the chat starts that can be used later to continue the previous conversation, if the customer closes the browser tab. The reconnect id will be valid for the time duration set in the reconnect settings. After the time duration, or if chat has ended, the customer will be redirected to the redirection page set in the reconnect settings, or if redirection page is not set in the reconnect settings, then a new chat will be initiated.
