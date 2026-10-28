@@ -33,13 +33,25 @@ const handleAuthentication = async (chatSDK: OmnichannelChatSDK, chatConfig: Cha
         TelemetryHelper.logActionEvent(LogLevel.INFO, { Event: TelemetryEvent.GetAuthTokenCalled });
 
         // Only pass isMidAuthEnabled option when mid-auth is enabled.
-        const token = midAuthEnabled
-            ? await getAuthToken(authClientFunction, { isMidAuthEnabled: midAuthEnabled })
-            : await getAuthToken(authClientFunction);
+        const requestAuthToken = () => midAuthEnabled
+            ? getAuthToken(authClientFunction, { isMidAuthEnabled: midAuthEnabled })
+            : getAuthToken(authClientFunction);
+        const token = await requestAuthToken();
         if (!isNullOrEmptyString(token)) {
+            let initialTokenPending = true;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (chatSDK as any).setAuthTokenProvider(async () => {
-                return token;
+            await (chatSDK as any).setAuthTokenProvider(async () => {
+                // The SDK invokes the provider immediately during registration.
+                if (initialTokenPending) {
+                    initialTokenPending = false;
+                    return token;
+                }
+                const renewedToken = await requestAuthToken();
+                if (isNullOrEmptyString(renewedToken)) {
+                    TelemetryHelper.logActionEvent(LogLevel.ERROR, { Event: TelemetryEvent.ReceivedNullOrEmptyToken });
+                    throw new Error(WidgetLoadCustomErrorString.AuthenticationFailedErrorString);
+                }
+                return renewedToken;
             });
             return {"result": true, "token": token};
         } else {

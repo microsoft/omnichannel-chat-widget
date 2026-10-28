@@ -68,6 +68,10 @@ After the "StartProactiveChat" event gets released by the customer, the proactiv
 ### Authenticated Chat and Persistent Chat
 The widget itself is agnostic of whether the chat is authenticated or not. The only thing needed to turn on auth feature is to pass the `getAuthToken` callback in `chatSDKConfig` inside Chat SDK's constructor. For more details, see [Chat SDK documentation](https://github.com/microsoft/omnichannel-chat-sdk#:~:text=messages%20to%20UI-,Authenticated%20Chat,-//%20add%20if%20using). Same with Persistent Chat feature.
 
+When the widget registers a host authentication callback, it reuses the validated initial token for SDK initialization without making a second host request. Each subsequent SDK authentication callback invokes the host provider again, preserving the configured authentication function and mid-auth options. The host provider must be able to supply a current JWT; it must not permanently return a captured token.
+
+An initially empty token still permits signed-out mid-auth chat. After registering an authenticated provider, an empty renewal token is an authentication error, not a request to downgrade the conversation to unauthenticated chat. Host-provider failures propagate to the SDK; its existing renewal failure policy is unchanged.
+
 ### Reconnect Chat
 There are 2 types of chat reconnect:
 1. Unauthenticated chat: the customer gets the reconnect id after the chat starts that can be used later to continue the previous conversation, if the customer closes the browser tab. The reconnect id will be valid for the time duration set in the reconnect settings. After the time duration, or if chat has ended, the customer will be redirected to the redirection page set in the reconnect settings, or if redirection page is not set in the reconnect settings, then a new chat will be initiated.
