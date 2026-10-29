@@ -29,6 +29,7 @@
     "clear_jest": "jest --clearCache",
     "lint": "eslint .",
     "test": "jest --detectOpenHandles --runInBand --passWithNoTests",
+    "test:token-recovery": "jest --config jest.token-recovery.config.js --runInBand",
     "test:build": "yarn --cwd ../../chat-widget build-sample && yarn test"
   },
   "keywords": [],

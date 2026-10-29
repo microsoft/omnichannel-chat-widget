@@ -13,7 +13,7 @@ module.exports = {
     },
     testResultsProcessor: "jest-junit",
     testMatch: ["**/e2e/areas/**/*.spec.ts", "**/?(*.)+(spec|test).+(ts)"],
-    testPathIgnorePatterns: ["/dist/", "/node_modules/"],
+    testPathIgnorePatterns: ["/dist/", "/node_modules/", "/e2e/areas/recovery/"],
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
     reporters: [
         "default",
