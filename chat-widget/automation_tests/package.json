@@ -29,6 +29,7 @@
     "clear_jest": "jest --clearCache",
     "lint": "eslint .",
     "test": "jest --detectOpenHandles --runInBand --passWithNoTests",
+    "test:token-recovery": "jest --config jest.token-recovery.config.js --runInBand",
     "test:build": "yarn --cwd ../../chat-widget build-sample && yarn test"
   },
   "keywords": [],
@@ -38,7 +39,7 @@
     "@azure/identity": "^1.2.3",
     "@azure/keyvault-secrets": "^4.1.0",
     "@azure/service-bus": "^1.1.10",
-    "@microsoft/omnichannel-chat-sdk": "2.0.1",
+    "@microsoft/omnichannel-chat-sdk": "2.0.2-main.a1ba517",
     "@types/jest": "^25.2.1",
     "@types/jest-image-snapshot": "^2.12.0",
     "adal-node": "^0.2.2",

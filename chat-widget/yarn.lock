@@ -2893,10 +2893,10 @@
   resolved "https://registry.yarnpkg.com/@microsoft/load-themed-styles/-/load-themed-styles-1.10.295.tgz#d3c8d7ab186f422727ba112d6ebe5fe8e41051d9"
   integrity sha512-W+IzEBw8a6LOOfRJM02dTT7BDZijxm+Z7lhtOAz1+y9vQm1Kdz9jlAO+qCEKsfxtUOmKilW8DIRqFw2aUgKeGg==
 
-"@microsoft/ocsdk@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.6.0.tgz#0ad682a70ecfbf75ee252bd21d47c975f446aa18"
-  integrity sha512-mV6YZz+SKb1ASwYnNtmVLjPQo5DqyIwA6zeMt4ie7F293s4dDUVkhWi8/oTvWJPFjO8EUU7sRuS1mwrWb8p59g==
+"@microsoft/ocsdk@0.6.0-main.316a2fa":
+  version "0.6.0-main.316a2fa"
+  resolved "https://registry.yarnpkg.com/@microsoft/ocsdk/-/ocsdk-0.6.0-main.316a2fa.tgz"
+  integrity sha512-DG3C14ET5zXCau58/KRtJeBN0c+ILjxOSkbJDdkzZNPoVk/F/OYDCcUtPcZhrUyUUW99yx4ACkJiIjfwQkUM3Q==
   dependencies:
     "@babel/runtime" "^7.26.10"
     "@types/node" "^22.13.10"
@@ -2920,15 +2920,15 @@
     rxjs "^5.0.3"
     swiper "12.1.2"
 
-"@microsoft/omnichannel-chat-sdk@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.1.tgz#94923612dd1b0d9e97671a13249a20b5406eb721"
-  integrity sha512-MZamtF0J/JRH3TCcxpKMpxZIU7S96YBoBRaqpDpy8zd5CGZELG/7DDSPhjA4LY7kUfmyo66CVE2vzZmnJG234w==
+"@microsoft/omnichannel-chat-sdk@2.0.2-main.a1ba517":
+  version "2.0.2-main.a1ba517"
+  resolved "https://registry.yarnpkg.com/@microsoft/omnichannel-chat-sdk/-/omnichannel-chat-sdk-2.0.2-main.a1ba517.tgz#3d7622c4791a9d69d9f5985fe335b151e730b4b9"
+  integrity sha512-61nQCJe35Mb8jsN7i+tlyZFsEg2YQiYalI9RED+g3HGQG7SGYfZ6ZJHn481iL5GSI20bxKYsz8TGRBwhAwEkRQ==
   dependencies:
     "@azure/communication-chat" "1.6.0-beta.7"
     "@azure/communication-common" "2.4.2"
     "@microsoft/botframework-webchat-adapter-azure-communication-chat" "0.0.1-beta.8"
-    "@microsoft/ocsdk" "0.6.0"
+    "@microsoft/ocsdk" "0.6.0-main.316a2fa"
     "@microsoft/omnichannel-amsclient" "0.2.0"
     "@microsoft/omnichannel-ic3core" "^0.1.5"
 
