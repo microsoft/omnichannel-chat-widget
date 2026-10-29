@@ -110,7 +110,8 @@ describe("incoming message announcements", () => {
     );
 
     // Copilot Studio bots send answers as Adaptive Cards without `speak`. Web Chat then announces only "A card:".
-    // The announcement must contain the card text, without Markdown syntax, also when the widget shows Markdown unformatted.
+    // The announcement must contain the card text as the visible card shows it: without Markdown syntax (also when the widget shows Markdown unformatted),
+    // without removed script content, with fallback elements, and with formatted dates.
     test.each(["on", "off"])(
         "announces the text of an incoming Adaptive Card without speak (Markdown formatting %s)",
         async (markdown) => {
@@ -141,15 +142,30 @@ describe("incoming message announcements", () => {
                         type: "TextBlock",
                         wrap: true,
                         text: "**How to Reset Your Password**\n\n- Select Forgot password on the sign-in page.\n- Follow the link in the email."
+                    }, {
+                        type: "TextBlock",
+                        text: "Hello <script>alert('xss')</script> world"
+                    }, {
+                        type: "Contoso.Unsupported",
+                        fallback: { type: "TextBlock", text: "Fallback text" }
+                    }, {
+                        type: "TextBlock",
+                        text: "Updated {{DATE(2026-10-20T15:00:00Z, SHORT)}}"
+                    }, {
+                        type: "RichTextBlock",
+                        inlines: [{ type: "TextRun", text: "Thank you, " }, "customer"]
                     }]
                 }
             }]));
 
             await page.waitForFunction(() => (window as AnnouncementWindow).announcements.some(announcement => /card/i.test(announcement.text)));
             const announcements = await page.evaluate(() => (window as AnnouncementWindow).announcements.filter(announcement => /card/i.test(announcement.text)));
-            expect(announcements.map(announcement => announcement.text.replace(/\s+/g, " ")).join(" | "))
-                .toContain("How to Reset Your Password Select Forgot password on the sign-in page. Follow the link in the email.");
-            expect(announcements.every(announcement => !announcement.text.includes("**") && !announcement.hidden)).toBe(true);
+            const announced = announcements.map(announcement => announcement.text.replace(/\s+/g, " ")).join(" | ");
+            expect(announced).toContain("How to Reset Your Password Select Forgot password on the sign-in page. Follow the link in the email.");
+            expect(announced).toContain("Hello world Fallback text Updated ");
+            expect(announced).toMatch(/Updated .*2026 Thank you, customer/);
+            expect(announced).not.toMatch(/\*\*|\{\{|alert/);
+            expect(announcements.every(announcement => !announcement.hidden)).toBe(true);
             expect(await page.locator(".webchat__basic-transcript .ac-adaptiveCard").textContent()).toContain("How to Reset Your Password");
             expect(await composer.evaluate(element => element === document.activeElement)).toBe(true);
         },
