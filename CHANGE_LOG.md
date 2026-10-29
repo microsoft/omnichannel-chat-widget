@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
-- Updated `@microsoft/omnichannel-chat-sdk` to `2.0.2-main.a1ba517` for chat reliability improvements.
+- Updated `@microsoft/omnichannel-chat-sdk` to `2.0.2-main.a1ba517` in the widget and automation tests for chat reliability improvements.
 
 ### Fixed
 - [Bug] Overlapping start chat calls for the same widget (chat button, `BroadcastEvent.StartChat`, proactive chat, pre-chat submit, reconnect) no longer create two conversations. `prepareStartChat` and `initStartChat` now use per-widget locks and drop concurrent calls, the chat button ignores clicks while a start is in progress, and `chatSDKStateCleanUp` disconnects and clears the previous `conversation`. Dropped calls are logged as `ConcurrentStartChatRejected`. (AB#6114594)
