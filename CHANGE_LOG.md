@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Add cross-repository local development guidance for GitHub Copilot (`.github/instructions/lcw-local-dev.instructions.md`).
+- Add a `docs-pr` workflow that reports the required `build` check for PRs that change neither `chat-widget/`, `chat-components/`, nor `.github/workflows/`, so documentation-only PRs no longer wait on a check that never runs.
+
 ### Fixed
 - [Bug] Overlapping start chat calls for the same widget (chat button, `BroadcastEvent.StartChat`, proactive chat, pre-chat submit, reconnect) no longer create two conversations. `prepareStartChat` and `initStartChat` now use per-widget locks and drop concurrent calls, the chat button ignores clicks while a start is in progress, and `chatSDKStateCleanUp` disconnects and clears the previous `conversation`. Dropped calls are logged as `ConcurrentStartChatRejected`. (AB#6114594)
 - [Bug] Start-chat custom context is no longer held in module-scoped state. `setCustomContextParams` now returns the resolved params instead of mutating a shared `optionalParams` variable, and the widget cache id it resolves against is computed locally. Previously two widgets on the same page starting at the same time could overwrite each other between the `await` and the read, so one widget could start its conversation with another widget's `customContext`. (AB#6114594)

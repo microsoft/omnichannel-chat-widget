@@ -1,0 +1,53 @@
+name: docs-pr
+
+# chat-widget-pr and chat-components-pr report the required "build" check, but their
+# path filters skip PRs that change neither package. This workflow reports "build" for
+# those PRs only. Keep PACKAGE_PATHS in sync with the `paths` filters in both workflows.
+
+on:
+  pull_request:
+    branches:
+      - '**'
+    types: [edited, assigned, opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      package_build: ${{ steps.detect.outputs.package_build }}
+    steps:
+      - name: Detect package or workflow changes
+        id: detect
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PACKAGE_PATHS: '^(chat-widget/|chat-components/|\.github/workflows/)'
+        run: |
+          files=$(gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files" --jq '.[] | .filename, (.previous_filename // empty)')
+          if printf '%s\n' "$files" | grep -Eq "$PACKAGE_PATHS"; then
+            echo "package_build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "package_build=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: changes
+    # Report "build" only when the package workflows are skipped, so this job never
+    # shares a name with a real package build.
+    name: ${{ needs.changes.outputs.package_build == 'true' && 'docs-pr (package build runs separately)' || 'build' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report result
+        env:
+          PACKAGE_BUILD: ${{ needs.changes.outputs.package_build }}
+        run: |
+          if [ "$PACKAGE_BUILD" = "true" ]; then
+            echo "Package or workflow files changed; chat-widget-pr / chat-components-pr report the build check."
+          else
+            echo "No package or workflow files changed; no package build is needed."
+          fi
