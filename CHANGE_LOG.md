@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 
 ### Security
 - Retain reviewed audit-only finding GHSA-238p-pmpm-9mq7 (low) for the required WebChat hotfix's pinned `katex@0.16.21`.
+- Pin `dompurify` to `3.4.17` (GHSA-cg2g-xh64-v4q7, GHSA-mrv2-3pqr-j5jr, GHSA-c6gr-qvv4-5v3f) and direct `sanitize-html` to `2.18.1` (GHSA-x3q4-9hxx-gx8m, GHSA-374f-7chj-9948, GHSA-cv27-6wvh-8x7j). Retain reviewed audit-only findings for the required WebChat hotfix's nested `sanitize-html@2.14.0` (GHSA-x3q4-9hxx-gx8m, GHSA-cv27-6wvh-8x7j) and `markdown-it@13.0.2` (GHSA-r7fv-28h4-cvq7, GHSA-vfgh-jcmw-g37q).
+- Raise direct `markdown-it` to `^14.3.3` (GHSA-gfr2-rv44-r23c, GHSA-vfgh-jcmw-g37q, GHSA-r7fv-28h4-cvq7, GHSA-253c-mchw-3w2r).
+- Raise the `nanoid` resolution from `3.3.18` to `^3.3.20` so it satisfies `postcss@8.5.30`'s range while keeping the CVE-2026-67213 / CVE-2026-67214 fix.
 
 ## [2.0.1] - 2026-10-05
 
