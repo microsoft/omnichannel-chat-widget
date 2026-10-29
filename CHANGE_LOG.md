@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - [A11Y] Make the suggested actions carousel Previous/Next focus indicator visible by default (solid 2px ring) and close its CSS rule.
 - [A11Y] Announce sent files to screen readers as "File <name> sent" from a live region inside the chat dialog; the previous regions sat outside the aria-modal dialog and were not read. Adds `MIDDLEWARE_BANNER_FILES_SENT` and changes the `MIDDLEWARE_BANNER_FILE_SENT` default to "File {2} sent". (AB#5905569)
 - [A11Y] Remove the Adaptive Card action button `title` when it repeats the button name, so screen readers read labels such as Submit once. (AB#5929337)
+- [A11Y] Announce the text of incoming Adaptive Cards that have no `speak` property. Screen readers previously announced only "A card". (AB#6685673)
 
 ### Security
 - Retain reviewed audit-only finding GHSA-238p-pmpm-9mq7 (low) for the required WebChat hotfix's pinned `katex@0.16.21`.

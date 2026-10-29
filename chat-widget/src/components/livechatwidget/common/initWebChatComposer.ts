@@ -23,6 +23,7 @@ import createAttachmentSentAnnouncementMiddleware from "../../webchatcontainerst
 import channelDataMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/channelDataMiddleware";
 import { createActivityMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware";
 import { createActivityStatusMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware";
+import { createAttachmentForScreenReaderMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentForScreenReaderMiddleware";
 import { createAttachmentMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
 import createAttachmentUploadValidatorMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentUploadValidatorMiddleware";
 import { createAvatarMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware";
@@ -375,6 +376,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             localizedTexts
         ),
         attachmentMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAttachmentMiddleware ? undefined : createAttachmentMiddleware(state.domainStates.renderingMiddlewareProps?.attachmentProps?.enableInlinePlaying ?? defaultAttachmentProps.enableInlinePlaying),
+        attachmentForScreenReaderMiddleware: createAttachmentForScreenReaderMiddleware(),
         activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : createActivityStatusMiddleware(getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid)),
         toastMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableToastMiddleware ? undefined: createToastMiddleware(props.notificationPaneProps, endChat),
         renderMarkdown,

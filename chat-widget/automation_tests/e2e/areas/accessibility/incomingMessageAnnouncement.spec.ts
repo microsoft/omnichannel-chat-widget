@@ -10,7 +10,7 @@ interface Announcement {
 }
 
 type AnnouncementWindow = typeof window & {
-    receiveMessage(id: string, text: string, role: string): Promise<void>;
+    receiveMessage(id: string, text: string, role: string, attachments?: unknown[]): Promise<void>;
     announcements: Announcement[];
 };
 
@@ -105,6 +105,53 @@ describe("incoming message announcements", () => {
             expect(await page.locator(`#${widgetId}`).getAttribute("aria-modal")).toBe("true");
             expect(await hostSibling.getAttribute("aria-hidden")).toBe("true");
             expect(await page.locator(`#${widgetId} #host-button`).count()).toBe(0);
+        },
+        30000
+    );
+
+    // Copilot Studio bots send answers as Adaptive Cards without `speak`. Web Chat then announces only "A card:".
+    // The announcement must contain the card text, without Markdown syntax, also when the widget shows Markdown unformatted.
+    test.each(["on", "off"])(
+        "announces the text of an incoming Adaptive Card without speak (Markdown formatting %s)",
+        async (markdown) => {
+            const fixture = path.resolve(__dirname, "../../..", "customlivechatwidgets/IncomingMessageAnnouncementWidget.html");
+            await page.goto(`${pathToFileURL(fixture).href}?markdown=${markdown}`);
+            await page.waitForSelector("#oc-lcw-chat-button");
+            await page.click("#oc-lcw-chat-button");
+            const composer = page.locator("textarea[data-id='webchat-sendbox-input']");
+            await composer.waitFor();
+            await composer.focus();
+
+            await page.evaluate(() => {
+                const testWindow = window as AnnouncementWindow;
+                testWindow.announcements = [];
+                new MutationObserver(() => {
+                    document.querySelectorAll(".webchat__live-region .webchat__live-region-activity").forEach(activity => {
+                        testWindow.announcements.push({ text: activity.textContent || "", hidden: !!activity.closest("[aria-hidden='true'],[inert]"), insideDialog: true });
+                    });
+                }).observe(document.body, { subtree: true, childList: true, characterData: true });
+            });
+
+            await page.evaluate(() => (window as AnnouncementWindow).receiveMessage("incoming-card", "", "bot", [{
+                contentType: "application/vnd.microsoft.card.adaptive",
+                content: {
+                    type: "AdaptiveCard",
+                    version: "1.5",
+                    body: [{
+                        type: "TextBlock",
+                        wrap: true,
+                        text: "**How to Reset Your Password**\n\n- Select Forgot password on the sign-in page.\n- Follow the link in the email."
+                    }]
+                }
+            }]));
+
+            await page.waitForFunction(() => (window as AnnouncementWindow).announcements.some(announcement => /card/i.test(announcement.text)));
+            const announcements = await page.evaluate(() => (window as AnnouncementWindow).announcements.filter(announcement => /card/i.test(announcement.text)));
+            expect(announcements.map(announcement => announcement.text.replace(/\s+/g, " ")).join(" | "))
+                .toContain("How to Reset Your Password Select Forgot password on the sign-in page. Follow the link in the email.");
+            expect(announcements.every(announcement => !announcement.text.includes("**") && !announcement.hidden)).toBe(true);
+            expect(await page.locator(".webchat__basic-transcript .ac-adaptiveCard").textContent()).toContain("How to Reset Your Password");
+            expect(await composer.evaluate(element => element === document.activeElement)).toBe(true);
         },
         30000
     );
