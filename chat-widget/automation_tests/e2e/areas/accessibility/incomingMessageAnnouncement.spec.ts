@@ -154,6 +154,9 @@ describe("incoming message announcements", () => {
                     }, {
                         type: "RichTextBlock",
                         inlines: [{ type: "TextRun", text: "Thank you, " }, "customer"]
+                    }, {
+                        type: "TextBlock",
+                        text: "Visit [the help center](https://example.invalid/help) <style>.x{color:red}</style>"
                     }]
                 }
             }]));
@@ -163,8 +166,8 @@ describe("incoming message announcements", () => {
             const announced = announcements.map(announcement => announcement.text.replace(/\s+/g, " ")).join(" | ");
             expect(announced).toContain("How to Reset Your Password Select Forgot password on the sign-in page. Follow the link in the email.");
             expect(announced).toContain("Hello world Fallback text Updated ");
-            expect(announced).toMatch(/Updated .*2026 Thank you, customer/);
-            expect(announced).not.toMatch(/\*\*|\{\{|alert/);
+            expect(announced).toMatch(/Updated .*2026 Thank you, customer Visit the help center/);
+            expect(announced).not.toMatch(/\*\*|\{\{|alert|color:red|Opens in a new window/);
             expect(announcements.every(announcement => !announcement.hidden)).toBe(true);
             expect(await page.locator(".webchat__basic-transcript .ac-adaptiveCard").textContent()).toContain("How to Reset Your Password");
             expect(await composer.evaluate(element => element === document.activeElement)).toBe(true);

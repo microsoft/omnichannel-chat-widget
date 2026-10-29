@@ -3,6 +3,7 @@
 import { createAttachmentForScreenReaderMiddleware, getAdaptiveCardSpeak } from "./attachmentForScreenReaderMiddleware";
 
 import React from "react";
+import { createScreenReaderMarkdownRenderer } from "../../../../livechatwidget/common/initWebChatComposer";
 import { render } from "@testing-library/react";
 
 // Use the Adaptive Cards package that Web Chat renders the visible card with, so parsing, fallbacks and date formatting match.
@@ -63,13 +64,14 @@ const answerCard = {
     }]
 };
 
-const speakOf = (body: any[]) => getAdaptiveCardSpeak({ type: "AdaptiveCard", version: "1.5", body }, adaptiveCardsPackage);
+const speakOf = (body: any[], webChatContainerProps: any = {}) =>
+    getAdaptiveCardSpeak({ type: "AdaptiveCard", version: "1.5", body }, adaptiveCardsPackage, createScreenReaderMarkdownRenderer(webChatContainerProps));
 
 const runMiddleware = (attachment: any) => {
     // eslint-disable-next-line react/display-name
     const next = jest.fn(() => () => <span>rendered by Web Chat</span>);
     const activity = { type: "message", attachments: [attachment] };
-    const renderer = createAttachmentForScreenReaderMiddleware()()(next)({ activity, attachment });
+    const renderer = createAttachmentForScreenReaderMiddleware(createScreenReaderMarkdownRenderer({}))()(next)({ activity, attachment });
     const { container } = render(<>{typeof renderer === "function" ? renderer() : renderer}</>);
 
     return { activity, container, next, renderer };
@@ -141,6 +143,58 @@ describe("attachmentForScreenReaderMiddleware", () => {
         const speak = speakOf([{ type: "TextBlock", text: "Hello <script>alert('xss')</script> world" }]);
 
         expect(speak).toBe("Hello world");
+    });
+
+    it("does not read style content that the visible card does not show", () => {
+        const speak = speakOf([{ type: "TextBlock", text: "Hello <style>.x{color:red}</style> world" }]);
+
+        expect(speak).toBe("Hello world");
+    });
+
+    // The "opens in a new window" icon describes the link target, so repeating it for each link in an announcement is noise.
+    it("reads link text without the external link icon", () => {
+        const speak = speakOf([{ type: "TextBlock", text: "[Sign in](https://example.invalid/login) to continue." }]);
+
+        expect(speak).toBe("Sign in to continue.");
+    });
+
+    it.each([true, false])("removes the Markdown syntax when the widget sets disableMarkdownMessageFormatting to %s", (disableMarkdownMessageFormatting) => {
+        const speak = speakOf([{ type: "TextBlock", text: "**Bold** and [a link](https://example.invalid/)" }], { disableMarkdownMessageFormatting });
+
+        expect(speak).toBe("Bold and a link");
+    });
+
+    // The visible card shows the URL as the link text when hyperlinkTextOverride is set, so the announcement must read the URL too.
+    it("reads link text as the URL when the widget sets hyperlinkTextOverride", () => {
+        const speak = speakOf([{ type: "TextBlock", text: "[Sign in](https://example.invalid/login) to continue." }], { hyperlinkTextOverride: true });
+
+        expect(speak).toBe("https://example.invalid/login to continue.");
+    });
+
+    it("renders Markdown with the host renderMarkdown when the host provides one", () => {
+        const renderMarkdown = jest.fn((text: string) => `<p>Host rendered: ${text.replace(/\*/g, "")}</p>`);
+
+        const speak = speakOf([{ type: "TextBlock", text: "**Answer**" }], { webChatProps: { renderMarkdown } });
+
+        expect(renderMarkdown).toHaveBeenCalledWith("**Answer**");
+        expect(speak).toBe("Host rendered: Answer");
+    });
+
+    // Web Chat's visible renderer shares the static Markdown handler, so it must be put back after the text is computed.
+    it("restores the Adaptive Cards Markdown handler after computing the text", () => {
+        const { AdaptiveCard } = adaptiveCardsPackage;
+        const previousOnProcessMarkdown = AdaptiveCard.onProcessMarkdown;
+        const webChatOnProcessMarkdown = jest.fn();
+        AdaptiveCard.onProcessMarkdown = webChatOnProcessMarkdown;
+
+        try {
+            speakOf([{ type: "TextBlock", text: "**Answer**" }, { type: "FactSet", facts: [{ title: "Due", value: "Today" }] }]);
+
+            expect(AdaptiveCard.onProcessMarkdown).toBe(webChatOnProcessMarkdown);
+            expect(webChatOnProcessMarkdown).not.toHaveBeenCalled();
+        } finally {
+            AdaptiveCard.onProcessMarkdown = previousOnProcessMarkdown;
+        }
     });
 
     it("reads the fallback element that the visible card shows for an unsupported element", () => {

@@ -9,8 +9,7 @@
 
 import React, { useMemo } from "react";
 
-import DOMPurify from "dompurify";
-import { createMarkdown } from "../../../../livechatwidget/common/createMarkdown";
+import { Constants } from "../../../../../common/Constants";
 import { hooks } from "botframework-webchat";
 
 const { useAdaptiveCardsPackage, useStyleOptions } = hooks;
@@ -18,33 +17,24 @@ const { useAdaptiveCardsPackage, useStyleOptions } = hooks;
 const ADAPTIVE_CARD_CONTENT_TYPE = "application/vnd.microsoft.card.adaptive";
 const HTML_BLOCK_END = /<\/(p|li|h[1-6]|div|tr|td|th|blockquote|pre)>|<br\s*\/?>/gi;
 
-let renderMarkdown: ((markdown: string) => string) | undefined;
+type RenderMarkdownAsHTML = (markdown: string) => string;
 
-// Markdown is always rendered, even when the widget shows Markdown unformatted, so that screen readers do not read the syntax characters.
-// The HTML is sanitized, so content that the visible card does not show, such as scripts, is not read.
-const renderMarkdownAsSafeHTML = (markdown: string): string => {
-    if (!renderMarkdown) {
-        const markdownIt = createMarkdown(false, false);
-        renderMarkdown = markdownIt.render.bind(markdownIt);
-    }
-
-    return DOMPurify.sanitize(renderMarkdown(markdown));
-};
-
+// The "opens in a new window" icon of each link is left out: it describes the link target, not the content of the message.
 const htmlToText = (html: string): string => {
     const body = new DOMParser().parseFromString(html.replace(HTML_BLOCK_END, "$& "), "text/html").body;
+    body.querySelectorAll(`script, style, template, img.${Constants.OpenLinkIconCssClass}`).forEach(element => element.remove());
     body.querySelectorAll("img").forEach(image => image.replaceWith(` ${image.getAttribute("alt") ?? ""} `));
     return (body.textContent ?? "").replace(/\s+/g, " ").trim();
 };
 
 // Renders the element as the visible card does: Adaptive Cards formats {{DATE()}} and {{TIME()}}, then the Markdown is rendered.
 // Web Chat sets the static Markdown handler before each visible render, and this restores the previous handler after rendering.
-const getRenderedText = (element: any, AdaptiveCard: any): string => {
+const getRenderedText = (element: any, AdaptiveCard: any, renderMarkdownAsHTML: RenderMarkdownAsHTML): string => {
     const previousOnProcessMarkdown = AdaptiveCard.onProcessMarkdown;
 
     try {
         AdaptiveCard.onProcessMarkdown = (text: string, result: any) => {
-            result.outputHtml = renderMarkdownAsSafeHTML(text);
+            result.outputHtml = renderMarkdownAsHTML(text);
             result.didProcess = true;
         };
 
@@ -60,7 +50,7 @@ const getRenderedText = (element: any, AdaptiveCard: any): string => {
 
 // Collects the visible text of the card in document order, after the parser has applied element fallbacks.
 // Inputs and actions are not collected because Web Chat already lists them after the card text.
-export const getAdaptiveCardSpeak = (content: any, adaptiveCardsPackage: any, adaptiveCardsParserMaxVersion?: string): string => {
+export const getAdaptiveCardSpeak = (content: any, adaptiveCardsPackage: any, renderMarkdownAsHTML: RenderMarkdownAsHTML, adaptiveCardsParserMaxVersion?: string): string => {
     const { AdaptiveCard, FactSet, Image, RichTextBlock, SerializationContext, TextBlock, Version } = adaptiveCardsPackage;
     const maxVersion = adaptiveCardsParserMaxVersion ? Version.parse(adaptiveCardsParserMaxVersion, new SerializationContext()) : undefined;
     const card = new AdaptiveCard();
@@ -71,7 +61,7 @@ export const getAdaptiveCardSpeak = (content: any, adaptiveCardsPackage: any, ad
     const getFactText = (factSet: any, text: string): string => {
         const textBlock = new TextBlock(text);
         textBlock.setParent(factSet);
-        return getRenderedText(textBlock, AdaptiveCard);
+        return getRenderedText(textBlock, AdaptiveCard, renderMarkdownAsHTML);
     };
 
     const walk = (element: any): void => {
@@ -80,7 +70,7 @@ export const getAdaptiveCardSpeak = (content: any, adaptiveCardsPackage: any, ad
         }
 
         if (element instanceof TextBlock || element instanceof RichTextBlock) {
-            texts.push(getRenderedText(element, AdaptiveCard));
+            texts.push(getRenderedText(element, AdaptiveCard, renderMarkdownAsHTML));
         } else if (element instanceof FactSet) {
             element.facts.forEach(({ name, value }: { name?: string; value?: string }) => {
                 texts.push([name, value].map(text => text ? getFactText(element, text) : "").filter(Boolean).join(": "));
@@ -104,14 +94,16 @@ export const getAdaptiveCardSpeak = (content: any, adaptiveCardsPackage: any, ad
 interface AdaptiveCardForScreenReaderProps {
     args: any[];
     next: (...args: any[]) => any;
+    renderMarkdownAsHTML: RenderMarkdownAsHTML;
 }
 
-const AdaptiveCardForScreenReader = ({ args, next }: AdaptiveCardForScreenReaderProps) => {
+const AdaptiveCardForScreenReader = ({ args, next, renderMarkdownAsHTML }: AdaptiveCardForScreenReaderProps) => {
     const [adaptiveCardsPackage] = useAdaptiveCardsPackage();
     const [{ adaptiveCardsParserMaxVersion }] = useStyleOptions();
     const [options] = args;
     const { attachment } = options;
 
+    // The widget creates a new Markdown renderer on each render with the same settings, so the text is computed once for each attachment.
     const contentWithSpeak = useMemo(() => {
         try {
             const content = typeof attachment.content === "string" ? JSON.parse(attachment.content) : attachment.content;
@@ -120,7 +112,7 @@ const AdaptiveCardForScreenReader = ({ args, next }: AdaptiveCardForScreenReader
                 return undefined;
             }
 
-            const speak = getAdaptiveCardSpeak(content, adaptiveCardsPackage, adaptiveCardsParserMaxVersion);
+            const speak = getAdaptiveCardSpeak(content, adaptiveCardsPackage, renderMarkdownAsHTML, adaptiveCardsParserMaxVersion);
 
             return speak ? { ...content, speak } : undefined;
         } catch {
@@ -135,7 +127,7 @@ const AdaptiveCardForScreenReader = ({ args, next }: AdaptiveCardForScreenReader
     return typeof render === "function" ? render() : null;
 };
 
-export const createAttachmentForScreenReaderMiddleware = () => {
+export const createAttachmentForScreenReaderMiddleware = (renderMarkdownAsHTML: RenderMarkdownAsHTML) => {
     const attachmentForScreenReaderMiddleware = () => (next: any) => (...args: any[]) => {
         const attachment = args[0]?.attachment;
 
@@ -145,7 +137,7 @@ export const createAttachmentForScreenReaderMiddleware = () => {
         }
 
         // eslint-disable-next-line react/display-name
-        return () => <AdaptiveCardForScreenReader args={args} next={next} />;
+        return () => <AdaptiveCardForScreenReader args={args} next={next} renderMarkdownAsHTML={renderMarkdownAsHTML} />;
     };
 
     return attachmentForScreenReaderMiddleware;
