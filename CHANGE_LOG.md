@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - [A11Y] Announce the text of incoming Adaptive Cards that have no `speak` property. Screen readers previously announced only "A card". (AB#6685673)
 
 ### Security
+- Run widget PR code with read-only permissions; changelog feedback uses trusted API-only reporting without checking out PR code.
 - Retain reviewed audit-only finding GHSA-238p-pmpm-9mq7 (low) for the required WebChat hotfix's pinned `katex@0.16.21`.
 - Pin `dompurify` to `3.4.17` (GHSA-cg2g-xh64-v4q7, GHSA-mrv2-3pqr-j5jr, GHSA-c6gr-qvv4-5v3f) and direct `sanitize-html` to `2.18.1` (GHSA-x3q4-9hxx-gx8m, GHSA-374f-7chj-9948, GHSA-cv27-6wvh-8x7j). Retain reviewed audit-only findings for the required WebChat hotfix's nested `sanitize-html@2.14.0` (GHSA-x3q4-9hxx-gx8m, GHSA-cv27-6wvh-8x7j) and `markdown-it@13.0.2` (GHSA-r7fv-28h4-cvq7, GHSA-vfgh-jcmw-g37q).
 - Raise direct `markdown-it` to `^14.3.3` (GHSA-gfr2-rv44-r23c, GHSA-vfgh-jcmw-g37q, GHSA-r7fv-28h4-cvq7, GHSA-253c-mchw-3w2r).
