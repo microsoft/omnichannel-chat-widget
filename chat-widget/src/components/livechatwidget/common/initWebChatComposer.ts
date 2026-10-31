@@ -23,6 +23,7 @@ import createAttachmentSentAnnouncementMiddleware from "../../webchatcontainerst
 import channelDataMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/channelDataMiddleware";
 import { createActivityMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityMiddleware";
 import { createActivityStatusMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/activityStatusMiddleware";
+import { createAttachmentForScreenReaderMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentForScreenReaderMiddleware";
 import { createAttachmentMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/attachmentMiddleware";
 import createAttachmentUploadValidatorMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/attachmentUploadValidatorMiddleware";
 import { createAvatarMiddleware } from "../../webchatcontainerstateful/webchatcontroller/middlewares/renderingmiddlewares/avatarMiddleware";
@@ -50,6 +51,34 @@ import htmlPlayerMiddleware from "../../webchatcontainerstateful/webchatcontroll
 import htmlTextMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/htmlTextMiddleware";
 import preProcessingMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/preProcessingMiddleware";
 import sanitizationMiddleware from "../../webchatcontainerstateful/webchatcontroller/middlewares/storemiddlewares/sanitizationMiddleware";
+import { IWebChatContainerStatefulProps } from "../../webchatcontainerstateful/interfaces/IWebChatContainerStatefulProps";
+
+const markdownSanitizeConfig = {
+    FORBID_TAGS: ["form", "button", "script", "div", "input"],
+    FORBID_ATTR: ["action"],
+    ADD_ATTR: ["target"]
+};
+
+/**
+ * Renders Markdown for the screen reader text of Adaptive Cards, from the same pieces as the visible card:
+ * the host renderMarkdown when set, the hyperlink text override, and the same sanitization.
+ * Markdown is always formatted, also when the widget shows Markdown unformatted, so that screen readers do not read the syntax.
+ * Styles are removed with their content because the card does not show them.
+ */
+export const createScreenReaderMarkdownRenderer = (webChatContainerProps?: IWebChatContainerStatefulProps) => {
+    const hostRenderMarkdown = webChatContainerProps?.webChatProps?.renderMarkdown;
+    const markdown = createMarkdown(
+        false,
+        (webChatContainerProps?.disableNewLineMarkdownSupport ?? defaultWebChatContainerStatefulProps.disableNewLineMarkdownSupport) as boolean,
+        webChatContainerProps?.opensMarkdownLinksInSameTab
+    );
+    const hyperlinkTextOverrideRenderer = new HyperlinkTextOverrideRenderer((webChatContainerProps?.hyperlinkTextOverride ?? defaultWebChatContainerStatefulProps.hyperlinkTextOverride) as boolean);
+
+    return (text: string): string => {
+        const html = hostRenderMarkdown ? hostRenderMarkdown(text) : markdown.render(text);
+        return DOMPurify.sanitize(hyperlinkTextOverrideRenderer.render(html), { ...markdownSanitizeConfig, FORBID_TAGS: [...markdownSanitizeConfig.FORBID_TAGS, "style"] });
+    };
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, facadeChatSDK: FacadeChatSDK, endChat: any) => {
@@ -165,12 +194,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
         });
 
         // EXISTING sanitization (continues to work as before)
-        const config = {
-            FORBID_TAGS: ["form", "button", "script", "div", "input"],
-            FORBID_ATTR: ["action"],
-            ADD_ATTR: ["target"]
-        };
-        text = DOMPurify.sanitize(text, config);
+        text = DOMPurify.sanitize(text, markdownSanitizeConfig);
 
         // MONITOR-ONLY: Test what the stricter allowlist would remove (Phase 1)
         // This does NOT modify the text, only logs telemetry
@@ -375,6 +399,7 @@ export const initWebChatComposer = (props: ILiveChatWidgetProps, state: ILiveCha
             localizedTexts
         ),
         attachmentMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableAttachmentMiddleware ? undefined : createAttachmentMiddleware(state.domainStates.renderingMiddlewareProps?.attachmentProps?.enableInlinePlaying ?? defaultAttachmentProps.enableInlinePlaying),
+        attachmentForScreenReaderMiddleware: createAttachmentForScreenReaderMiddleware(createScreenReaderMarkdownRenderer(props.webChatContainerProps)),
         activityStatusMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableActivityStatusMiddleware ? undefined : createActivityStatusMiddleware(getLocaleStringFromId(state.domainStates.liveChatConfig?.ChatWidgetLanguage?.msdyn_localeid)),
         toastMiddleware: props.webChatContainerProps?.renderingMiddlewareProps?.disableToastMiddleware ? undefined: createToastMiddleware(props.notificationPaneProps, endChat),
         renderMarkdown,
