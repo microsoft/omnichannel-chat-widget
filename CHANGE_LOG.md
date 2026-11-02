@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Raise direct `markdown-it` to `^14.3.3` (GHSA-gfr2-rv44-r23c, GHSA-vfgh-jcmw-g37q, GHSA-r7fv-28h4-cvq7, GHSA-253c-mchw-3w2r).
 - Raise the `nanoid` resolution from `3.3.18` to `^3.3.20` so it satisfies `postcss@8.5.30`'s range while keeping the CVE-2026-67213 / CVE-2026-67214 fix.
 - Retain reviewed audit-only finding GHSA-gcqx-w48m-w2h4 (low, no patched release) for `deepmerge@4.3.1`, reached only through the required WebChat hotfix's nested `sanitize-html@2.14.0`.
+- Retain reviewed audit-only finding GHSA-g3hv-75wg-m249 (medium) for `minimatch@3.1.5`, reached only through the required WebChat hotfix's Speech SDK (`microsoft-cognitiveservices-speech-sdk@1.17.0` → `rimraf@3` → `glob@7`). The fix is only in `minimatch` 11.0.1, which `glob@7` cannot use.
 
 ## [2.0.1] - 2026-10-05
 
