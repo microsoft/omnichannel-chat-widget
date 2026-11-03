@@ -38,6 +38,7 @@ const allowedAdvisories = new Map([
     ["sanitize-html@2.14.0 -> https://github.com/advisories/GHSA-cv27-6wvh-8x7j", [WEBCHAT]], // meta refresh javascript:/data: URL.
     ["swiper@8.4.7 -> https://github.com/advisories/GHSA-hmx5-qpq5-p643", [WEBCHAT]], // Prototype pollution.
     ["deepmerge@4.3.1 -> https://github.com/advisories/GHSA-gcqx-w48m-w2h4", [WEBCHAT]], // mergeObject prototype poisoning; no patched release.
+    ["minimatch@3.1.5 -> https://github.com/advisories/GHSA-g3hv-75wg-m249", [WEBCHAT]], // Globparts amplification DoS; fixed only in 11.0.1.
     ["valibot@1.1.0 -> https://github.com/advisories/GHSA-5qjj-4xww-7phc", [WEBCHAT]], // Inherited-key flatten failure.
     ["valibot@1.1.0 -> https://github.com/advisories/GHSA-vqpr-j7v3-hqw9", [WEBCHAT]], // Emoji validation ReDoS.
     ["uuid@3.4.0 -> https://github.com/advisories/GHSA-w5hq-g745-h8pq", [WEBCHAT]], // Out-of-bounds buffer writes.

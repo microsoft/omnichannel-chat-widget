@@ -104,7 +104,6 @@
     "markdown-it-for-inline": "^0.1.1",
     "md5-typescript": "^1.0.5",
     "rxjs": "5.5.12",
-    "sanitize-html": "2.18.1",
     "simple-update-in": "2.2.0",
     "slack-markdown-it": "^1.0.5"
   },
