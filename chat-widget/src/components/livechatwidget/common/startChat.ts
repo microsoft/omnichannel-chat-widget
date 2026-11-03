@@ -340,8 +340,9 @@ const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dis
         logWidgetLoadComplete();
         // Set post chat context in state, load in background to do not block the load
         setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch);
-        // Updating chat session detail for telemetry
-        await updateTelemetryData(facadeChatSDK, dispatch);
+        // Updating chat session detail for telemetry, in background: getConversationDetails retries until the
+        // live work item exists (several seconds), and awaiting it would hold the start chat locks and drop the next start chat
+        updateTelemetryData(facadeChatSDK, dispatch);
     } catch (ex) {
         handleStartChatError(dispatch, facadeChatSDK, props, ex, isStartChatSuccessful);
     }

@@ -1,4 +1,4 @@
-import { BroadcastEvent } from "../../../common/telemetry/TelemetryConstants";
+import { BroadcastEvent, LogLevel, TelemetryEvent } from "../../../common/telemetry/TelemetryConstants";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
 import { Dispatch } from "react";
 import { FacadeChatSDK } from "../../../common/facades/FacadeChatSDK";
@@ -11,8 +11,17 @@ import { getConversationDetailsCall } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateTelemetryData = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>) => {
-    // load it concurrently, this will reduce the load time
-    await Promise.all([updateSessionDataForTelemetry(facadeChatSDK, dispatch), updateConversationDataForTelemetry(facadeChatSDK, dispatch)]);
+    try {
+        // load it concurrently, this will reduce the load time
+        await Promise.all([updateSessionDataForTelemetry(facadeChatSDK, dispatch), updateConversationDataForTelemetry(facadeChatSDK, dispatch)]);
+    } catch (error) {
+        TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
+            Event: TelemetryEvent.UpdateTelemetryDataFailed,
+            ExceptionDetails: {
+                exception: `Update telemetry data failed: ${error}`
+            }
+        });
+    }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

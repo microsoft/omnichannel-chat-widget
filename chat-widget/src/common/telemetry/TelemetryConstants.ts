@@ -104,6 +104,7 @@ export enum TelemetryEvent {
     RecoveryEligibilityEvaluated = "RecoveryEligibilityEvaluated",
     GetConversationDetailsCallStarted = "GetConversationDetailsCallStarted",
     GetConversationDetailsCallFailed = "GetConversationDetailsCallFailed",
+    UpdateTelemetryDataFailed = "UpdateTelemetryDataFailed",
     EndChatSDKCallFailed = "EndChatSDKCallFailed",
     DisconnectEndChatSDKCallFailed = "DisconnectEndChatSDKCallFailed",
     GetChatReconnectContextSDKCallStarted = "GetChatReconnectContextSDKCallStarted",
@@ -441,6 +442,7 @@ export class TelemetryConstants {
             case TelemetryEvent.OnNewMessageFailed:
             case TelemetryEvent.OnNewMessageAudioNotificationFailed:
             case TelemetryEvent.GetConversationDetailsCallFailed:
+            case TelemetryEvent.UpdateTelemetryDataFailed:
             case TelemetryEvent.EndChatSDKCall:
             case TelemetryEvent.EndChatEventReceived:
             case TelemetryEvent.EndChatSDKCallFailed:
