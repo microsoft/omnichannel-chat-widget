@@ -77,6 +77,7 @@ import WebChatContainerStateful from "../../webchatcontainerstateful/WebChatCont
 import createDownloadTranscriptProps from "../common/createDownloadTranscriptProps";
 import { createFooter } from "../common/createFooter";
 import { createInternetConnectionChangeHandler } from "../common/createInternetConnectionChangeHandler";
+import { createNewMessageHandler } from "../common/createNewMessageHandler";
 import { defaultAdaptiveCardStyles } from "../../webchatcontainerstateful/common/defaultStyles/defaultAdaptiveCardStyles";
 import { defaultScrollBarProps } from "../common/defaultProps/defaultScrollBarProps";
 import { defaultWebChatContainerStatefulProps } from "../../webchatcontainerstateful/common/defaultProps/defaultWebChatContainerStatefulProps";
@@ -616,16 +617,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     useEffect(() => {
         // On new message
         if (state.appStates.conversationState === ConversationState.Active) {
-            facadeChatSDK?.onNewMessage(() => {
-                // Track the message count
-                currentMessageCountRef.current++;
-                dispatch({ type: LiveChatWidgetActionType.SET_UNREAD_MESSAGE_COUNT, payload: currentMessageCountRef.current + 1 });
-
-                // New message notification
-                BroadcastService.postMessage({
-                    eventName: BroadcastEvent.NewMessageNotification
-                });
-            }, {disablePolling: true});
+            facadeChatSDK?.onNewMessage(createNewMessageHandler(currentMessageCountRef, dispatch), {disablePolling: true});
 
             facadeChatSDK?.onAgentEndSession((event) => {  
                 const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
