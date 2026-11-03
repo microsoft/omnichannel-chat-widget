@@ -82,6 +82,7 @@ This hotfix still declares these vulnerable transitive versions:
 | `valibot` | `1.1.0` |
 | `uuid` | `3.4.0`, `8.3.2`, and `9.0.1` |
 | `deepmerge` (via `sanitize-html@2.14.0`) | `4.3.1` |
+| `minimatch` (via the Speech SDK's `rimraf@3` → `glob@7`) | `3.1.5` |
 
 The consumer audit permits only the reviewed advisories from this hotfix. It rejects each new advisory.
 
