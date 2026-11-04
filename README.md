@@ -176,6 +176,8 @@ const liveChatWidgetProps = {
 };
 ```
 
+If you use the live chat widget 2.0 script instead of this package, return the same `webChatContainerProps.botAuthConfig` object from the function that the script's `data-customization-callback` attribute references. See [Develop a custom live chat widget](https://learn.microsoft.com/dynamics365/customer-service/develop/develop-live-chat-widget).
+
 What the customer sees:
 
 | Situation | Card |
