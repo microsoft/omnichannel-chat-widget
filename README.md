@@ -15,6 +15,7 @@
 1. [Introduction](#introduction)
 1. [Installation](#installation)
 1. [Example Usage](#example-usage)
+1. [Bot authentication and the sign-in card](#bot-authentication-and-the-sign-in-card)
 1. [Components](#components)
 1. [See Also](#see-also)
 
@@ -142,6 +143,50 @@ render();
 A javascript sample widget can be found in this repo [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/javascript-sample). To build it, do ```yarn build-sample``` or ```yarn build-sample:dev``` from chat-widget project root.
 
 A typescript sample widget can be found [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample). To build it, do ```yarn install``` then ```yarn build``` then ```yarn start``` from typescript sample project root. See [Create LiveChatWidget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md) for additional typescript sample project resources.
+
+## Bot authentication and the sign-in card
+
+A bot that uses single sign-on (SSO) can send a sign-in (OAuth) card. The host page decides whether the widget shows the card. It passes a callback to the Omnichannel SDK method [`setBotAuthTokenProvider`](https://learn.microsoft.com/dynamics365/customer-service/develop/reference/methods/setbotauthtokenprovider), and the callback calls `callback({show: false})` for a customer who is already signed in.
+
+When a sign-in card arrives, the widget asks the host for this result. It tries `fetchBotAuthConfigRetries` times (default `3`), `fetchBotAuthConfigRetryInterval` milliseconds apart (default `1000`), so it waits about 2 seconds by default. If the host doesn't answer in that time, `fallbackShowSignInCard` decides what happens:
+
+| `fallbackShowSignInCard` | Card when the host doesn't answer in time |
+| --- | --- |
+| Not set (default) | Shown. The widget logs `SetBotAuthProviderNotFound`. |
+| `false` | Hidden. |
+| `true` | Shown. |
+
+```js
+const liveChatWidgetProps = {
+    chatSDK: chatSDK, // mandatory
+    chatConfig: chatConfig, // mandatory
+    webChatContainerProps: {
+        botAuthConfig: {
+            fallbackShowSignInCard: false // hide the card if the host doesn't answer in time
+        }
+    }
+};
+```
+
+What the customer sees:
+
+| Situation | Card |
+| --- | --- |
+| The host answers `callback({show: false})` in time | Hidden |
+| The host answers `callback({show: true})` in time | Shown |
+| The host doesn't answer in time (slow request, error, or no `callback(...)` call) | Depends on `fallbackShowSignInCard` (see the previous table) |
+| The card has no sign-in ID or token exchange URL | Shown. The widget doesn't ask the host. |
+
+`fallbackShowSignInCard` changes only what happens when the host doesn't answer in time. It isn't a substitute for a working `setBotAuthTokenProvider` callback. If you set it to `false` and the callback fails for a customer who isn't signed in, that customer doesn't see the card and can't sign in.
+
+**Troubleshooting: a signed-in customer sometimes sees the sign-in card.** The `setBotAuthTokenProvider` callback probably didn't answer in time. Look for `SetBotAuthProviderNotFound` in the widget telemetry. To fix it:
+
+1. Call `callback(...)` on every code path of the callback, including error paths.
+1. Call `callback({show: false})` as early as possible for a customer you already know is signed in, before any slow network request.
+1. If the callback is slow but correct, increase `fetchBotAuthConfigRetries` or `fetchBotAuthConfigRetryInterval`.
+1. If your page signs in every customer before the chat starts, set `fallbackShowSignInCard: false`.
+
+For the host-side callback, see [Pass authentication token to bot during single sign-on in live chat](https://learn.microsoft.com/dynamics365/customer-service/develop/pass-auth-token-sso-live-chat).
 
 ## Components
 
