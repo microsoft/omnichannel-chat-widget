@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Changed
-- Updated `@microsoft/omnichannel-chat-sdk` to `2.0.2-main.a1ba517` in the widget and automation tests for chat reliability improvements.
+- Updated `@microsoft/omnichannel-chat-sdk` to `2.0.2-main.8b19159` in the widget and automation tests. It keeps the ended chat's session key for transcript and email calls after `endChat`, so they no longer get `401` when session key validation is on, and handles a failed voice/video call-ended request.
 - Remove the unused direct `sanitize-html` dependency, previously pinned at `2.17.7` (GHSA-x3q4-9hxx-gx8m, GHSA-374f-7chj-9948, GHSA-cv27-6wvh-8x7j). No widget code imports it, and `botframework-webchat` uses its own pinned `sanitize-html@2.14.0`. Apps that import `sanitize-html` must declare it themselves instead of relying on this package to install it.
 
 ### Fixed
