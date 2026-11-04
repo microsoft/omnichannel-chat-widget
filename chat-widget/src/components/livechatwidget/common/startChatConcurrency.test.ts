@@ -14,6 +14,8 @@ import { chatSDKStateCleanUp } from "./endChat";
 import { cleanup } from "@testing-library/react";
 import { createAdapter } from "./createAdapter";
 import { getStateFromCache } from "../../../common/utils";
+import { handleStartChatError } from "./startChatErrorHandler";
+import { updateTelemetryData } from "./updateSessionDataForTelemetry";
 
 jest.mock("../../../plugins/newMessageEventHandler", () => ({
     createOnNewAdapterActivityHandler: jest.fn(() => jest.fn())
@@ -110,6 +112,8 @@ const mockTelemetryHelper = TelemetryHelper as jest.Mocked<typeof TelemetryHelpe
 const mockGetStateFromCache = getStateFromCache as jest.MockedFunction<typeof getStateFromCache>;
 const mockChatSDKStateCleanUp = chatSDKStateCleanUp as jest.MockedFunction<typeof chatSDKStateCleanUp>;
 const mockPostMessage = BroadcastService.postMessage as jest.Mock;
+const mockUpdateTelemetryData = updateTelemetryData as jest.MockedFunction<typeof updateTelemetryData>;
+const mockHandleStartChatError = handleStartChatError as jest.MockedFunction<typeof handleStartChatError>;
 
 const countRejections = () => mockTelemetryHelper.logActionEvent.mock.calls
     .filter(([, payload]: any) => payload?.Event === TelemetryEvent.ConcurrentStartChatRejected).length;
@@ -513,6 +517,103 @@ describe("startChat - concurrent start chat protection", () => {
             expect(reentrant).toBeDefined();
             expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
             expect(countRejections()).toBe(1);
+        });
+    });
+
+    // updateTelemetryData waits on getConversationDetails, which retries 404s until the live work
+    // item exists (several seconds). A customer whose chat is ended at once (for example by a bot)
+    // and who clicks the chat button again must get a new chat, not a silently dropped click.
+    describe("post-start telemetry", () => {
+        const waitForStartChatToSettle = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+        afterEach(() => {
+            mockUpdateTelemetryData.mockReset();
+        });
+
+        it("should not hold the start chat lock while post-start telemetry is pending", async () => {
+            const telemetry = createDeferred();
+            mockUpdateTelemetryData.mockReturnValue(telemetry.promise);
+
+            const first = prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+            await waitForStartChatToSettle();
+
+            expect(mockDispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active })
+            );
+            expect(mockUpdateTelemetryData).toHaveBeenCalledTimes(1);
+
+            // The chat ends and the customer clicks the chat button again before telemetry settles.
+            await prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(2);
+            expect(countRejections()).toBe(0);
+
+            telemetry.resolve();
+            await first;
+        });
+
+        it("should still drop a concurrent start while startChat is in flight and telemetry is pending", async () => {
+            const telemetry = createDeferred();
+            mockUpdateTelemetryData.mockReturnValue(telemetry.promise);
+            const startChat = createDeferred();
+            mockFacadeChatSDK.startChat.mockReturnValue(startChat.promise);
+
+            const first = prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+            const second = prepareStartChat(mockProps, mockFacadeChatSDK, closedState, mockDispatch, mockSetAdapter);
+
+            startChat.resolve();
+            await second;
+            await waitForStartChatToSettle();
+
+            expect(mockFacadeChatSDK.startChat).toHaveBeenCalledTimes(1);
+            expect(countRejections()).toBe(1);
+
+            telemetry.resolve();
+            await first;
+        });
+
+        it("should resolve initStartChat with the chat Active without waiting for post-start telemetry", async () => {
+            mockUpdateTelemetryData.mockReturnValue(new Promise<void>(() => undefined));
+
+            await initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps);
+
+            expect(mockDispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Active })
+            );
+            expect(mockHandleStartChatError).not.toHaveBeenCalled();
+        });
+    });
+
+    // Callers such as the chat reconnect flow use this result, because the in-memory conversation state
+    // can still read Loading when initStartChat resolves.
+    describe("initStartChat result", () => {
+        it("should resolve to true once the chat is Active", async () => {
+            await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps)).resolves.toBe(true);
+        });
+
+        it("should resolve to true once a chat restored from the persisted state is Active", async () => {
+            const persistedState = { ...closedState, appStates: { ...closedState.appStates, conversationState: ConversationState.Active } };
+
+            await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps, {}, persistedState)).resolves.toBe(true);
+            expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState }));
+        });
+
+        it("should resolve to false when the start chat fails", async () => {
+            mockFacadeChatSDK.startChat.mockRejectedValueOnce(new Error("start chat failed"));
+
+            await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps)).resolves.toBe(false);
+            expect(mockHandleStartChatError).toHaveBeenCalledTimes(1);
+        });
+
+        it("should resolve to false for a dropped concurrent call", async () => {
+            const startChat = createDeferred();
+            mockFacadeChatSDK.startChat.mockReturnValue(startChat.promise);
+
+            const first = initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps);
+            await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps)).resolves.toBe(false);
+
+            startChat.resolve();
+            await expect(first).resolves.toBe(true);
         });
     });
 });
