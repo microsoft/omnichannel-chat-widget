@@ -13,6 +13,7 @@ import { getConversationDetailsCall } from "../../../common/utils";
 export const updateTelemetryData = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>) => {
     // startChat no longer waits for this, so the next chat can start (chatSDKStateCleanUp assigns a new requestId)
     // before these calls resolve. Results for an earlier chat must not overwrite the current chat's data.
+    // endChat also assigns a new requestId, so the chat that just ended still applies its own results.
     const requestId = facadeChatSDK?.getChatSDK()?.requestId;
     try {
         // load it concurrently, this will reduce the load time
@@ -27,7 +28,13 @@ export const updateTelemetryData = async (facadeChatSDK: FacadeChatSDK, dispatch
     }
 };
 
-const isFromEarlierChat = (facadeChatSDK: FacadeChatSDK, requestId: string | undefined) => facadeChatSDK.getChatSDK()?.requestId !== requestId;
+// The requestId alone isn't enough: endChat also replaces it. Only the next chat's startChat gets a new chat token
+// (endChat and chatSDKStateCleanUp clear it), so drop the result only when the SDK holds that next chat.
+const isFromEarlierChat = (facadeChatSDK: FacadeChatSDK, requestId: string | undefined) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const chatSDK = facadeChatSDK.getChatSDK() as any;
+    return chatSDK?.requestId !== requestId && !!chatSDK?.chatToken?.chatId;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const updateSessionDataForTelemetry = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, requestId: string | undefined) => {
