@@ -150,11 +150,19 @@ A bot that uses single sign-on (SSO) can send a sign-in (OAuth) card. The host p
 
 When a sign-in card arrives, the widget asks the host for this result. It tries `fetchBotAuthConfigRetries` times (default `3`), `fetchBotAuthConfigRetryInterval` milliseconds apart (default `1000`), so it waits about 2 seconds by default. If the host doesn't answer in that time, `fallbackShowSignInCard` decides what happens:
 
-| `fallbackShowSignInCard` | Card when the host doesn't answer in time |
+| `fallbackShowSignInCard` | Card when the host doesn't answer in time | Telemetry |
+| --- | --- | --- |
+| Not set (default) | Shown | `SetBotAuthProviderNotFound` (with the error) |
+| `false` | Hidden | `SetBotAuthProviderNotFound` (with the fallback value), then `SetBotAuthProviderHideCard` |
+| `true` | Shown | `SetBotAuthProviderNotFound` (with the fallback value), then `SetBotAuthProviderDisplayCard` |
+
+Which value to use:
+
+| Your setup | `fallbackShowSignInCard` |
 | --- | --- |
-| Not set (default) | Shown. The widget logs `SetBotAuthProviderNotFound`. |
-| `false` | Hidden. |
-| `true` | Shown. |
+| Your page signs the customer in, and your `setBotAuthTokenProvider` callback passes the token to the bot (bot SSO) | `false` |
+| You want the card to show whenever the callback is late, and you want this logged as a decision | `true` |
+| Customers sign in through the sign-in card itself | Leave it unset |
 
 ```js
 const liveChatWidgetProps = {
@@ -172,8 +180,8 @@ What the customer sees:
 
 | Situation | Card |
 | --- | --- |
-| The host answers `callback({show: false})` in time | Hidden |
-| The host answers `callback({show: true})` in time | Shown |
+| The host answers `callback({show: false})` in time | Hidden (`SetBotAuthProviderHideCard`) |
+| The host answers `callback({show: true})` in time | Shown (`SetBotAuthProviderDisplayCard`) |
 | The host doesn't answer in time (slow request, error, or no `callback(...)` call) | Depends on `fallbackShowSignInCard` (see the previous table) |
 | The card has no sign-in ID or token exchange URL | Shown. The widget doesn't ask the host. |
 
