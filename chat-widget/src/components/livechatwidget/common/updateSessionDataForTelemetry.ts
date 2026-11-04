@@ -11,9 +11,12 @@ import { getConversationDetailsCall } from "../../../common/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateTelemetryData = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+    // startChat no longer waits for this, so the next chat can start (chatSDKStateCleanUp assigns a new requestId)
+    // before these calls resolve. Results for an earlier chat must not overwrite the current chat's data.
+    const requestId = facadeChatSDK?.getChatSDK()?.requestId;
     try {
         // load it concurrently, this will reduce the load time
-        await Promise.all([updateSessionDataForTelemetry(facadeChatSDK, dispatch), updateConversationDataForTelemetry(facadeChatSDK, dispatch)]);
+        await Promise.all([updateSessionDataForTelemetry(facadeChatSDK, dispatch, requestId), updateConversationDataForTelemetry(facadeChatSDK, dispatch, requestId)]);
     } catch (error) {
         TelemetryHelper.logSDKEvent(LogLevel.ERROR, {
             Event: TelemetryEvent.UpdateTelemetryDataFailed,
@@ -24,11 +27,16 @@ export const updateTelemetryData = async (facadeChatSDK: FacadeChatSDK, dispatch
     }
 };
 
+const isFromEarlierChat = (facadeChatSDK: FacadeChatSDK, requestId: string | undefined) => facadeChatSDK.getChatSDK()?.requestId !== requestId;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateSessionDataForTelemetry = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const updateSessionDataForTelemetry = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, requestId: string | undefined) => {
     if (facadeChatSDK && facadeChatSDK.getChatSDK()) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const chatSession: any = await facadeChatSDK.getCurrentLiveChatContext();
+        if (isFromEarlierChat(facadeChatSDK, requestId)) {
+            return;
+        }
         const telemetryData = TelemetryHelper.addSessionDataToTelemetry(chatSession as LiveChatContext, TelemetryManager.InternalTelemetryData);
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
         BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateSessionDataForTelemetry, payload: {chatSession}});
@@ -36,10 +44,13 @@ const updateSessionDataForTelemetry = async (facadeChatSDK: FacadeChatSDK, dispa
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const updateConversationDataForTelemetry = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>) => {
+const updateConversationDataForTelemetry = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, requestId: string | undefined) => {
     if (facadeChatSDK && facadeChatSDK.getChatSDK()) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const liveWorkItem: any = await getConversationDetailsCall(facadeChatSDK);
+        if (isFromEarlierChat(facadeChatSDK, requestId)) {
+            return;
+        }
         const telemetryData = TelemetryHelper.addConversationDataToTelemetry(liveWorkItem, TelemetryManager.InternalTelemetryData);
         dispatch({ type: LiveChatWidgetActionType.SET_TELEMETRY_DATA, payload: telemetryData });
         BroadcastService.postMessage({ eventName: BroadcastEvent.UpdateConversationDataForTelemetry, payload: {liveWorkItem}});

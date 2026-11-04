@@ -583,4 +583,30 @@ describe("startChat - concurrent start chat protection", () => {
             expect(mockHandleStartChatError).not.toHaveBeenCalled();
         });
     });
+
+    // Callers such as the chat reconnect flow use this result, because the in-memory conversation state
+    // can still read Loading when initStartChat resolves.
+    describe("initStartChat result", () => {
+        it("should resolve to true once the chat is Active", async () => {
+            await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps)).resolves.toBe(true);
+        });
+
+        it("should resolve to false when the start chat fails", async () => {
+            mockFacadeChatSDK.startChat.mockRejectedValueOnce(new Error("start chat failed"));
+
+            await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps)).resolves.toBe(false);
+            expect(mockHandleStartChatError).toHaveBeenCalledTimes(1);
+        });
+
+        it("should resolve to false for a dropped concurrent call", async () => {
+            const startChat = createDeferred();
+            mockFacadeChatSDK.startChat.mockReturnValue(startChat.promise);
+
+            const first = initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps);
+            await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps)).resolves.toBe(false);
+
+            startChat.resolve();
+            await expect(first).resolves.toBe(true);
+        });
+    });
 });
