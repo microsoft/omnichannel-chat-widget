@@ -185,16 +185,16 @@ What the customer sees:
 | The host answers `callback({show: false})` in time | Hidden (`SetBotAuthProviderHideCard`) |
 | The host answers `callback({show: true})` in time | Shown (`SetBotAuthProviderDisplayCard`) |
 | The host doesn't answer in time (slow request, error, or no `callback(...)` call) | Depends on `fallbackShowSignInCard` (see the previous table) |
-| The card has no sign-in ID or token exchange URL | Shown. The widget doesn't ask the host. |
+| The widget can't extract a sign-in ID from the card, or can't get a token exchange URL (from the card or from the Bot Framework token service) | Shown. The widget doesn't ask the host. |
 
 `fallbackShowSignInCard` changes only what happens when the host doesn't answer in time. It isn't a substitute for a working `setBotAuthTokenProvider` callback. If you set it to `false` and the callback fails for a customer who isn't signed in, that customer doesn't see the card and can't sign in.
 
 **Troubleshooting: a signed-in customer sometimes sees the sign-in card.** The `setBotAuthTokenProvider` callback probably didn't answer in time. Look for `SetBotAuthProviderNotFound` in the widget telemetry. To fix it:
 
-1. Call `callback(...)` on every code path of the callback, including error paths.
-1. Call `callback({show: false})` as early as possible for a customer you already know is signed in, before any slow network request.
-1. If the callback is slow but correct, increase `fetchBotAuthConfigRetries` or `fetchBotAuthConfigRetryInterval`.
-1. If your page signs in every customer before the chat starts, set `fallbackShowSignInCard: false`.
+1. Call `callback(...)` on every code path of the function, including error paths. If the function throws before it calls `callback(...)`, the widget gets no answer.
+1. Make the whole function finish quickly. With the live chat widget 2.0 script, the widget gets the `callback(...)` value only after the function finishes, so slow work after `callback(...)` still delays the answer. For a sign-in card that your page already completed, call `callback({show: false})` and return at once. Otherwise, complete the token exchange, then call `callback(...)` with its result.
+1. If the function is correct but can't finish in about 2 seconds, increase `fetchBotAuthConfigRetries` or `fetchBotAuthConfigRetryInterval`.
+1. If your function passes a token to the bot for every customer before the chat needs it (bot SSO works), set `fallbackShowSignInCard: false`. Signing the customer in to your page, or using authenticated chat, doesn't by itself sign the customer in to the bot.
 
 For the host-side callback, see [Pass authentication token to bot during single sign-on in live chat](https://learn.microsoft.com/dynamics365/customer-service/develop/pass-auth-token-sso-live-chat).
 
