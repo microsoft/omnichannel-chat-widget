@@ -15,6 +15,7 @@
 1. [Introduction](#introduction)
 1. [Installation](#installation)
 1. [Example Usage](#example-usage)
+1. [Bot authentication and the sign-in card](#bot-authentication-and-the-sign-in-card)
 1. [Components](#components)
 1. [See Also](#see-also)
 
@@ -142,6 +143,10 @@ render();
 A javascript sample widget can be found in this repo [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/javascript-sample). To build it, do ```yarn build-sample``` or ```yarn build-sample:dev``` from chat-widget project root.
 
 A typescript sample widget can be found [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample). To build it, do ```yarn install``` then ```yarn build``` then ```yarn start``` from typescript sample project root. See [Create LiveChatWidget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md) for additional typescript sample project resources.
+
+## Bot authentication and the sign-in card
+
+To control the bot sign-in card with `webChatContainerProps.botAuthConfig` (including `fallbackShowSignInCard`), see [Bot authentication and the sign-in card](chat-widget/README.md#bot-authentication-and-the-sign-in-card) in the chat-widget package README.
 
 ## Components
 

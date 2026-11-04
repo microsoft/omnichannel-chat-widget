@@ -186,8 +186,9 @@ This interface was manually aggregated from WebChat's repo, since WebChat doesn'
 
 | Property | Type | Required | Description | Default |
 | - | - | - | - | - |
-| fetchBotAuthConfigRetries | number | No | Number of retries to retrieve the botTokenUrl from the sign in card | 3 |
-| fetchBotAuthConfigRetryInterval | number | No | Interval to wait between retries to retrieve the botTokenUrl from the sign in card | 1000 |
+| fetchBotAuthConfigRetries | number | No | Number of attempts to get the bot authentication configuration (the host's `setBotAuthTokenProvider` result) when a sign-in card arrives | 3 |
+| fetchBotAuthConfigRetryInterval | number | No | Time in milliseconds to wait between attempts to get the bot authentication configuration | 1000 |
+| fallbackShowSignInCard | boolean | No | What to do with the sign-in card when the bot authentication configuration isn't received after all attempts. `true`: show the card. `false`: hide the card. Not set: the widget logs `SetBotAuthProviderNotFound` and shows the card. See [Bot authentication and the sign-in card](../../chat-widget/README.md#bot-authentication-and-the-sign-in-card) | - |
 
 ### [IAdaptiveCardStyles](https://github.com/microsoft/omnichannel-chat-widget/blob/main/chat-widget/src/components/webchatcontainerstateful/interfaces/IAdaptiveCardStyles.ts)
 
