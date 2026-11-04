@@ -40,8 +40,10 @@ describe("updateTelemetryData", () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockDispatch = jest.fn();
+        // A real active chat: it has a requestId and a chat token, and neither changes while the lookups run.
+        const activeChatSDK = { requestId: "chat-1-request-id", chatToken: { chatId: "chat-1-id" } };
         mockFacadeChatSDK = {
-            getChatSDK: jest.fn(() => ({})),
+            getChatSDK: jest.fn(() => activeChatSDK),
             getCurrentLiveChatContext: jest.fn().mockResolvedValue({ requestId: "request-id" })
         };
         mockGetConversationDetailsCall.mockResolvedValue({ conversationId: "conversation-id" });
