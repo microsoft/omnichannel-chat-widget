@@ -591,6 +591,13 @@ describe("startChat - concurrent start chat protection", () => {
             await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps)).resolves.toBe(true);
         });
 
+        it("should resolve to true once a chat restored from the persisted state is Active", async () => {
+            const persistedState = { ...closedState, appStates: { ...closedState.appStates, conversationState: ConversationState.Active } };
+
+            await expect(initStartChat(mockFacadeChatSDK, mockDispatch, mockSetAdapter, closedState, mockProps, {}, persistedState)).resolves.toBe(true);
+            expect(mockDispatch).toHaveBeenCalledWith(expect.objectContaining({ type: LiveChatWidgetActionType.SET_WIDGET_STATE, payload: persistedState }));
+        });
+
         it("should resolve to false when the start chat fails", async () => {
             mockFacadeChatSDK.startChat.mockRejectedValueOnce(new Error("start chat failed"));
 
