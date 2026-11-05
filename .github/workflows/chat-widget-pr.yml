@@ -1,8 +1,6 @@
 permissions:
-  contents: read       # For checkout
-  actions: write       # For downloading and uploading artifacts
-  pull-requests: write # For DangerJS to comment on PRs
-  checks: write        # For writing check results
+  contents: read
+  pull-requests: read
 
 name: chat-widget-pr
 
@@ -23,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -36,14 +35,19 @@ jobs:
       - name: Fetch base branch
         working-directory: chat-widget
         run: git fetch origin main:main
-      - name: Validate using DangerJS
-        working-directory: chat-widget
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          yarn danger ci --dangerfile dangerfile.js --base main
-          if [ $? -ne 0 ]; then exit $?; fi
-        shell: bash
+      - name: Validate changelog
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              ...context.repo,
+              pull_number: context.issue.number
+            });
+            const hasChangelog = files.some(file => file.filename === "CHANGE_LOG.md" && file.status === "modified");
+            const isEngineeringEnhancement = context.payload.pull_request.title.includes("[eng]");
+            if (!hasChangelog && !isEngineeringEnhancement) {
+              core.setFailed("Please add a changelog entry for your changes.");
+            }
       - name: Install playwright jest packages
         working-directory: chat-widget/automation_tests
         run: yarn install --network-timeout 1000000
