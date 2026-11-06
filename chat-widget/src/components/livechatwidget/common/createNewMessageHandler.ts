@@ -5,12 +5,13 @@ import type { Dispatch, MutableRefObject } from "react";
 import type { ILiveChatWidgetAction } from "../../../contexts/common/ILiveChatWidgetAction";
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import type OmnichannelMessage from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OmnichannelMessage";
+import { ResourceType } from "@microsoft/omnichannel-chat-sdk/lib/core/messaging/OmnichannelMessage";
 
 export const createNewMessageHandler = (
     currentMessageCountRef: MutableRefObject<number>,
     dispatch: Dispatch<ILiveChatWidgetAction>
 ): ((message: OmnichannelMessage) => void) => (message: OmnichannelMessage): void => {
-    if (message.role === Constants.userMessageTag) {
+    if (message.resourceType === ResourceType.MessageUpdate || message.role === Constants.userMessageTag) {
         return;
     }
 
