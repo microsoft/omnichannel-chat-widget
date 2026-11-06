@@ -43,6 +43,12 @@ export interface ActionsContract extends BaseContract {
     Description?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     CustomProperties?: any;
+    conversationState?: string;
+    hasReconnectId?: string;
+    hasLiveChatContext?: string;
+    hasRequestId?: string;
+    eligible?: string;
+    reason?: string;
 }
 
 export interface IC3ClientContract extends BaseContract {
