@@ -73,4 +73,51 @@ describe("AriaTelemetryLogger unit tests", () => {
             })
         }));
     });
+
+    it("does not project recovery eligibility fields for other action events", () => {
+        const logEvent = jest.fn();
+        (AWTLogManager.initialize as jest.Mock).mockReturnValue({ logEvent });
+        const customProperties = {
+            conversationState: "Loading",
+            hasReconnectId: false,
+            hasLiveChatContext: true,
+            hasRequestId: true,
+            eligible: false,
+            reason: "CachedContextNonActive"
+        };
+        const telemetryInput: TelemetryInput = {
+            scenarioType: ScenarioType.ACTIONS,
+            payload: {
+                Event: TelemetryEvent.LCWChatButtonClicked,
+                CustomProperties: customProperties,
+                conversationState: customProperties.conversationState,
+                hasReconnectId: String(customProperties.hasReconnectId),
+                hasLiveChatContext: String(customProperties.hasLiveChatContext),
+                hasRequestId: String(customProperties.hasRequestId),
+                eligible: String(customProperties.eligible),
+                reason: customProperties.reason
+            }
+        };
+        telemetryInput.telemetryInfo = {
+            telemetryInfo: TelemetryHelper.buildTelemetryEvent(LogLevel.INFO, telemetryInput)
+        };
+
+        ariaTelemetryLogger("test-key", true, "https://collector.example", "ApplicationName")
+            .log(LogLevel.INFO, telemetryInput);
+
+        expect(logEvent).toHaveBeenCalledWith(expect.objectContaining({
+            properties: expect.objectContaining({
+                CustomProperties: expect.objectContaining({
+                    value: JSON.stringify(customProperties)
+                })
+            })
+        }));
+        const properties = logEvent.mock.calls[0][0].properties;
+        expect(properties).not.toHaveProperty("conversationState");
+        expect(properties).not.toHaveProperty("hasReconnectId");
+        expect(properties).not.toHaveProperty("hasLiveChatContext");
+        expect(properties).not.toHaveProperty("hasRequestId");
+        expect(properties).not.toHaveProperty("eligible");
+        expect(properties).not.toHaveProperty("reason");
+    });
 });
