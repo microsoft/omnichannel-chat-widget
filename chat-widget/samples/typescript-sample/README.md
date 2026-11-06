@@ -4,7 +4,7 @@ This sample demonstrates how to integrate the Microsoft Omnichannel Chat Widget 
 
 ## Prerequisites
 
-- Node.js (v14 or higher recommended)
+- Node.js `>=22.12.0`
 - npm or yarn package manager
 
 ## Getting Started

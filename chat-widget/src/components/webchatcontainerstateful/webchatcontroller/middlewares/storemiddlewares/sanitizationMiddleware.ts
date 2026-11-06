@@ -7,11 +7,15 @@
 import DOMPurify from "dompurify";
 import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/TelemetryConstants";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const sanitizationMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const sanitizationMiddleware: WebChatStoreMiddleware = ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (action.type === WebChatActionType.WEB_CHAT_SEND_MESSAGE) {
         try {
             let text = action.payload?.text;

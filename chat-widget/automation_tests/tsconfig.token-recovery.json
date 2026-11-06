@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "types": ["node", "jest"],
+        "target": "es2017"
+    },
+    "include": [
+        "e2e/areas/recovery/chatTokenRecovery.spec.ts",
+        "e2e/utility/tokenRecovery.ts"
+    ]
+}

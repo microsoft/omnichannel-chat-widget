@@ -101,8 +101,10 @@ export enum TelemetryEvent {
     MidConversationAuthSucceeded = "MidConversationAuthSucceeded",
     MidConversationAuthFailed = "MidConversationAuthFailed",
     MidConversationAuthReset = "MidConversationAuthReset",
+    RecoveryEligibilityEvaluated = "RecoveryEligibilityEvaluated",
     GetConversationDetailsCallStarted = "GetConversationDetailsCallStarted",
     GetConversationDetailsCallFailed = "GetConversationDetailsCallFailed",
+    UpdateTelemetryDataFailed = "UpdateTelemetryDataFailed",
     EndChatSDKCallFailed = "EndChatSDKCallFailed",
     DisconnectEndChatSDKCallFailed = "DisconnectEndChatSDKCallFailed",
     GetChatReconnectContextSDKCallStarted = "GetChatReconnectContextSDKCallStarted",
@@ -133,6 +135,8 @@ export enum TelemetryEvent {
     PrechatSubmitted = "PrechatSubmitted",
     StartChatSDKCall = "StartChatCall",
     StartChatEventReceived = "StartChatEventReceived",
+    ConcurrentStartChatRejected = "ConcurrentStartChatRejected",
+    ChatSDKStateCleanUpDisconnectFailed = "ChatSDKStateCleanUpDisconnectFailed",
     EndChatSDKCall = "EndChatSDKCall",
     PrepareEndChat = "PrepareEndChat",
     EndChatEventReceived = "EndChatEventReceived",
@@ -424,6 +428,9 @@ export class TelemetryConstants {
             case TelemetryEvent.SecureEventBusDispatchError:
             case TelemetryEvent.AgentJoinedConversation:
             case TelemetryEvent.BrowserTabHidden:
+            case TelemetryEvent.ConcurrentStartChatRejected:
+            case TelemetryEvent.ChatSDKStateCleanUpDisconnectFailed:
+            case TelemetryEvent.RecoveryEligibilityEvaluated:
                 return ScenarioType.ACTIONS;
 
             case TelemetryEvent.StartChatSDKCall:
@@ -435,6 +442,7 @@ export class TelemetryConstants {
             case TelemetryEvent.OnNewMessageFailed:
             case TelemetryEvent.OnNewMessageAudioNotificationFailed:
             case TelemetryEvent.GetConversationDetailsCallFailed:
+            case TelemetryEvent.UpdateTelemetryDataFailed:
             case TelemetryEvent.EndChatSDKCall:
             case TelemetryEvent.EndChatEventReceived:
             case TelemetryEvent.EndChatSDKCallFailed:

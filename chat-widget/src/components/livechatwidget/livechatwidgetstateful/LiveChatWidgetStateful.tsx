@@ -24,7 +24,7 @@ import {
 } from "../../../common/utils";
 import { customEventCallback, subscribeToSendCustomEvent } from "../common/customEventHandler";
 import { defaultClientDataStoreProvider, isCookieAllowed } from "../../../common/storage/default/defaultClientDataStoreProvider";
-import { handleChatReconnect, isPersistentEnabled, isReconnectEnabled } from "../common/reconnectChatHelper";
+import { isPersistentEnabled, isReconnectTriggered } from "../common/reconnectChatHelper";
 import {
     shouldShowCallingContainer,
     shouldShowChatButton,
@@ -97,6 +97,7 @@ import useChatContextStore from "../../../hooks/useChatContextStore";
 import useFacadeSDKStore from "../../../hooks/useFacadeChatSDKStore";
 import { getPostChatContext, initiatePostChat } from "../common/renderSurveyHelpers";
 import PostChatContext from "@microsoft/omnichannel-chat-sdk/lib/core/PostChatContext";
+import { logRecoveryEligibilityTelemetry } from "../common/recoveryEligibilityTelemetry";
 
 let uiTimer : ITimer;
 
@@ -164,23 +165,12 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             activeCachedChatExist = false;
             optionalParams = {};
         }
+
+        logRecoveryEligibilityTelemetry(state, activeCachedChatExist);
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const startChat = async (props: ILiveChatWidgetProps, localState?: any) => {
-        const isReconnectTriggered = async (): Promise<boolean> => {
-            if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
-                const noValidReconnectId = await handleChatReconnect(facadeChatSDK, props, dispatch, setAdapter, initStartChat, state);
-                const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
-                // If chat reconnect has kicked in chat state will become Active or Reconnect. So just exit, else go next
-                if (!noValidReconnectId && (inMemoryState.appStates.conversationState === ConversationState.Active
-                    || inMemoryState.appStates.conversationState === ConversationState.ReconnectChat)) {
-                    return true;
-                }
-            }
-            return false;
-        };
-
         let isChatValid = false;
         //Start a chat from cache/reconnectid
         if (activeCachedChatExist === true) {
@@ -189,7 +179,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             //Check if conversation state is not in wrapup or closed state
             isChatValid = await checkIfConversationStillValid(facadeChatSDK, dispatch, state);
             if (isChatValid === true) {
-                const reconnectTriggered = await isReconnectTriggered();
+                const reconnectTriggered = await isReconnectTriggered(facadeChatSDK, props, dispatch, setAdapter, initStartChat, state);
                 if (!reconnectTriggered) {
                     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
                 }
@@ -207,7 +197,7 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
         if (isChatValid === false) {
             if (localState) {
                 // adding the reconnect logic for the case when customer tries to reconnect from a new browser or InPrivate browser
-                const reconnectTriggered = await isReconnectTriggered();
+                const reconnectTriggered = await isReconnectTriggered(facadeChatSDK, props, dispatch, setAdapter, initStartChat, state);
                 if (!reconnectTriggered) {
                     const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
                     await setPreChatAndInitiateChat(facadeChatSDK, dispatch, setAdapter, undefined, undefined, inMemoryState, props);
@@ -879,7 +869,9 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
     const endChatRelay = (adapter: any, skipEndChatSDK: any, skipCloseChat: any, postMessageToOtherTab?: boolean) => endChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter, skipEndChatSDK, skipCloseChat, postMessageToOtherTab);
     const prepareStartChatRelay = () => prepareStartChat(props, facadeChatSDK, state, dispatch, setAdapter);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initStartChatRelay = (optionalParams?: any, persistedState?: any) => initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
+    const initStartChatRelay = async (optionalParams?: any, persistedState?: any): Promise<void> => {
+        await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams, persistedState);
+    };
     const confirmationPaneProps = initConfirmationPropsComposer(props);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prepareEndChatRelay = () => prepareEndChat(props, facadeChatSDK, state, dispatch, setAdapter, setWebChatStyles, adapter);
@@ -1062,18 +1054,18 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
             }`}
             `}</style>
             <DraggableChatWidget {...chatWidgetDraggableConfig}>
-                <Composer
-                    {...webChatProps}
-                    userID={userID}
-                    styleOptions={styleOptions}
-                    directLine={directLine}>
-                    <Stack
-                        id={widgetElementId}
-                        styles={generalStyles}
-                        className={livechatProps.styleProps?.className}
-                        role={isWidgetOpen ? "dialog" : undefined}
-                        aria-modal={isWidgetOpen ? true : undefined}
-                        aria-label={isWidgetOpen ? (props.headerProps?.controlProps?.headerTitleProps?.text ?? "Live Chat") : undefined}>
+                <Stack
+                    id={widgetElementId}
+                    styles={generalStyles}
+                    className={livechatProps.styleProps?.className}
+                    role={isWidgetOpen ? "dialog" : undefined}
+                    aria-modal={isWidgetOpen ? true : undefined}
+                    aria-label={isWidgetOpen ? (props.headerProps?.controlProps?.headerTitleProps?.text ?? "Live Chat") : undefined}>
+                    <Composer
+                        {...webChatProps}
+                        userID={userID}
+                        styleOptions={styleOptions}
+                        directLine={directLine}>
 
                         {!livechatProps.controlProps?.hideChatButton && !livechatProps.controlProps?.hideStartChatButton && shouldShowChatButton(state) && (decodeComponentString(livechatProps.componentOverrides?.chatButton) || <ChatButtonStateful buttonProps={livechatProps.chatButtonProps} outOfOfficeButtonProps={livechatProps.outOfOfficeChatButtonProps} startChat={prepareStartChatRelay} />)}
 
@@ -1104,8 +1096,8 @@ export const LiveChatWidgetStateful = (props: ILiveChatWidgetProps) => {
                         {createFooter(livechatProps, state)}
 
                         {shouldShowEmailTranscriptPane(state) && (decodeComponentString(livechatProps.componentOverrides?.emailTranscriptPane) || <EmailTranscriptPaneStateful {...livechatProps.emailTranscriptPane} />)}
-                    </Stack>
-                </Composer>
+                    </Composer>
+                </Stack>
             </DraggableChatWidget>
         </>
     );

@@ -4,21 +4,27 @@
  * Adds necessary fields for the activity for the other middlewares to function as expected.
  ******/
 
+import { IWebChatAction, WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
+
 import { Constants } from "../../../../../common/Constants";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-const preProcessingMiddleware = ({ dispatch }: { dispatch: any }) => (next: any) => async (action: IWebChatAction) => {
-    if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
-        const { activity } = action.payload;
+const preProcessingMiddleware: WebChatStoreMiddleware = () => (next) => async (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
+    let currentAction: IWebChatAction = action;
+
+    if (currentAction.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
+        const { activity } = currentAction.payload;
         if (!activity.from || activity.from.role === Constants.userMessageTag) {
-            action = {
-                ...action,
+            currentAction = {
+                ...currentAction,
                 payload: {
-                    ...action.payload,
+                    ...currentAction.payload,
                     activity: {
-                        ...action.payload.activity,
+                        ...currentAction.payload.activity,
                         textFormat: Constants.markdown
                     }
                 }
@@ -26,14 +32,14 @@ const preProcessingMiddleware = ({ dispatch }: { dispatch: any }) => (next: any)
         }
     }
 
-    if (action.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY) {
-        const { activity } = action.payload;
+    if (currentAction.type === WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY) {
+        const { activity } = currentAction.payload;
         if (activity) {
-            action.payload.activity[Constants.actionType] = WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY;
+            currentAction.payload.activity[Constants.actionType] = WebChatActionType.DIRECT_LINE_INCOMING_ACTIVITY;
         }
     }
 
-    return next(action);
+    return next(currentAction);
 };
 
 export default preProcessingMiddleware;

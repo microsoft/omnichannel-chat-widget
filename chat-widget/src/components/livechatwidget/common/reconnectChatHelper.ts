@@ -19,6 +19,7 @@ import { IReconnectChatOptionalParams } from "../../reconnectchatpanestateful/in
 import { LiveChatWidgetActionType } from "../../../contexts/common/LiveChatWidgetActionType";
 import StartChatOptionalParams from "@microsoft/omnichannel-chat-sdk/lib/core/StartChatOptionalParams";
 import { TelemetryHelper } from "../../../common/telemetry/TelemetryHelper";
+import { executeReducer } from "../../../contexts/createReducer";
 import { handleStartChatError } from "./startChatErrorHandler";
 
 // Return value: should start normal chat flow when reconnect is enabled
@@ -53,6 +54,30 @@ const handleChatReconnect = async (facadeChatSDK: FacadeChatSDK, props: ILiveCha
     // If we have reached this point, it means there is no valid reconnect id or redirectUrl
     // This is a unauth reconnect refresh scenario - returns true so that we can start normal hydration process
     return true;
+};
+
+/**
+ * Returns true when chat reconnect took over the start: it started the chat itself or showed the reconnect pane.
+ * In that case the caller must not start another chat.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isReconnectTriggered = async (facadeChatSDK: FacadeChatSDK, props: ILiveChatWidgetProps, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, initStartChat: any, state: ILiveChatWidgetContext): Promise<boolean> => {
+    if (isReconnectEnabled(props.chatConfig) === true && !isPersistentEnabled(props.chatConfig)) {
+        let reconnectChatStarted = false;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const initStartChatAndTrack = async (...args: any[]) => {
+            reconnectChatStarted = await initStartChat(...args);
+        };
+        const noValidReconnectId = await handleChatReconnect(facadeChatSDK, props, dispatch, setAdapter, initStartChatAndTrack, state);
+        // initStartChat resolves before React renders Active, so the in-memory state can still read Loading here.
+        // Its result tells whether reconnect started the chat; the in-memory state covers the reconnect pane.
+        const inMemoryState = executeReducer(state, { type: LiveChatWidgetActionType.GET_IN_MEMORY_STATE, payload: null });
+        if (!noValidReconnectId && (reconnectChatStarted || inMemoryState.appStates.conversationState === ConversationState.Active
+            || inMemoryState.appStates.conversationState === ConversationState.ReconnectChat)) {
+            return true;
+        }
+    }
+    return false;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,4 +171,4 @@ const hasReconnectId = (reconnectAvailabilityResponse: IReconnectChatContext) =>
     return reconnectAvailabilityResponse && !isNullOrUndefined(reconnectAvailabilityResponse.reconnectId);
 };
 
-export { handleChatReconnect, isReconnectEnabled, isPersistentEnabled, getChatReconnectContext };
+export { handleChatReconnect, isReconnectTriggered, isReconnectEnabled, isPersistentEnabled, getChatReconnectContext };

@@ -3,7 +3,7 @@ import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/Teleme
 import { ICitation } from "../../../interfaces/ICitation";
 import { ILiveChatWidgetAction } from "../../../../../contexts/common/ILiveChatWidgetAction";
 import { ILiveChatWidgetContext } from "../../../../../contexts/common/ILiveChatWidgetContext";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { IWebChatAction, WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { LiveChatWidgetActionType } from "../../../../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { executeReducer } from "../../../../../contexts/createReducer";
@@ -14,7 +14,10 @@ import { executeReducer } from "../../../../../contexts/createReducer";
 // message-scoped prefix when the producer provides a message id.
 
 export const createCitationsMiddleware = (state: ILiveChatWidgetContext,
-    dispatch: (action: ILiveChatWidgetAction) => void) => () => (next: (action: IWebChatAction) => void) => (action: IWebChatAction) => {
+    dispatch: (action: ILiveChatWidgetAction) => void): WebChatStoreMiddleware => () => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
 
     if (action.payload?.activity) {
         if (isApplicable(action)) {

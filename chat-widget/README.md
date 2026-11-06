@@ -1,7 +1,7 @@
 # Omnichannel Live Chat Widget UI Components
 
-![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-components-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-components.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-components)\
-![Release CI](https://github.com/microsoft/omnichannel-chat-widget/workflows/chat-widget-release/badge.svg) [![npm version](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg)](https://badge.fury.io/js/%40microsoft%2Fomnichannel-chat-widget.svg) ![npm](https://img.shields.io/npm/dm/@microsoft/omnichannel-chat-widget)
+[![npm Release](https://github.com/microsoft/omnichannel-chat-widget/actions/workflows/npm-release.yml/badge.svg)](https://github.com/microsoft/omnichannel-chat-widget/actions/workflows/npm-release.yml)
+[![npm version](https://img.shields.io/npm/v/@microsoft/omnichannel-chat-widget)](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget)
 
 [@microsoft/omnichannel-chat-widget](https://www.npmjs.com/package/@microsoft/omnichannel-chat-widget) is a React-based UI component library which allows you to build your own live chat widget experience using [@microsoft/omnichannel-chat-sdk](https://www.npmjs.com/package/@microsoft/omnichannel-chat-sdk).
 
@@ -11,7 +11,9 @@
 
 1. [Introduction](#introduction)
 1. [Installation](#installation)
+1. [WebChat dependency constraint](#webchat-dependency-constraint)
 1. [Example Usage](#example-usage)
+1. [Bot authentication and the sign-in card](#bot-authentication-and-the-sign-in-card)
 1. [Components](#components)
 1. [See Also](#see-also)
 
@@ -46,6 +48,46 @@ or
 ```powershell
 yarn add @microsoft/omnichannel-chat-components
 ```
+
+This package requires Node.js `>=22.12.0` for consumer builds. Node 20 is not supported.
+
+For a production application, pin the exact stable versions:
+
+```bash
+npm install --save-exact @microsoft/omnichannel-chat-widget@2.0.1 @microsoft/omnichannel-chat-components@1.2.0 @microsoft/omnichannel-chat-sdk@2.0.1
+```
+
+`2.0.1` release date is 2026-10-05. Official support ends on 2027-10-05. See the [root support table](https://github.com/microsoft/omnichannel-chat-widget#chat-widget).
+
+_**Known issue:**_ Chat SDK versions earlier than `1.11.6` can start duplicate conversations when `startChat()` is called again before the previous call is complete. Chat Widget `1.8.1` and earlier can use these versions. Upgrade the Chat SDK to `1.11.8` or later. See [Duplicate conversations with Chat SDK versions before 1.11.6](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/KNOWN_ISSUE_CONCURRENT_STARTCHAT.md).
+
+TypeScript consumers that imported the exported Web Chat middleware factories now receive Redux 5 `unknown` actions. Narrow with `isWebChatAction` before reading `type` or `payload`. Runtime behavior is unchanged.
+
+## WebChat dependency constraint
+
+The widget must use `botframework-webchat@4.18.1-hotfix.20260308.b15b405`.
+
+Do not upgrade or replace this version. It contains a required product hotfix. The PR workflow rejects a different version.
+
+This hotfix still declares these vulnerable transitive versions:
+
+| Package | Hotfix version |
+| --- | --- |
+| `adaptivecards` | `3.0.2` |
+| `markdown-it` | `13.0.2` |
+| `linkify-it` | `4.0.1` |
+| `@babel/runtime` | `7.14.8`, `7.15.4`, and `7.19.0` |
+| `@babel/runtime-corejs3` | `7.20.13` |
+| `sanitize-html` | `2.14.0` |
+| `swiper` | `8.4.7` |
+| `valibot` | `1.1.0` |
+| `uuid` | `3.4.0`, `8.3.2`, and `9.0.1` |
+| `deepmerge` (via `sanitize-html@2.14.0`) | `4.3.1` |
+| `minimatch` (via the Speech SDK's `rimraf@3` → `glob@7`) | `3.1.5` |
+
+The consumer audit permits only the reviewed advisories from this hotfix. It rejects each new advisory.
+
+A new WebChat hotfix must preserve the product fix and update these dependencies.
 
 ## Example Usage
 
@@ -102,6 +144,60 @@ A javascript sample widget can be found in this repo [here](https://github.com/m
 A typescript sample widget can be found [here](https://github.com/microsoft/omnichannel-chat-widget/tree/main/chat-widget/samples/typescript-sample). To build it, do ```yarn install``` then ```yarn build``` then ```yarn start``` from typescript sample project root. See [Create LiveChatWidget with Webpack5 and TypeScript](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingWebpack5.md) for additional typescript sample project resources.
 
 ```react-scripts``` has deprecated to build the sample project, please refer to vite building instructions: [BuildingUsingVite.md](https://github.com/microsoft/omnichannel-chat-widget/blob/main/docs/BuildingUsingVite.md)
+
+## Bot authentication and the sign-in card
+
+A bot that uses single sign-on (SSO) can send a sign-in (OAuth) card. The host page decides whether the widget shows the card. It passes a callback to the Omnichannel SDK method [`setBotAuthTokenProvider`](https://learn.microsoft.com/dynamics365/customer-service/develop/reference/methods/setbotauthtokenprovider), and the callback calls `callback({show: false})` for a customer who is already signed in.
+
+When a sign-in card arrives, the widget asks the host for this result. It tries `fetchBotAuthConfigRetries` times (default `3`), `fetchBotAuthConfigRetryInterval` milliseconds apart (default `1000`), so it waits about 2 seconds by default. If the host doesn't answer in that time, `fallbackShowSignInCard` decides what happens:
+
+| `fallbackShowSignInCard` | Card when the host doesn't answer in time | Telemetry |
+| --- | --- | --- |
+| Not set (default) | Shown | `SetBotAuthProviderNotFound` (with the error) |
+| `false` | Hidden | `SetBotAuthProviderNotFound` (with the fallback value), then `SetBotAuthProviderHideCard` |
+| `true` | Shown | `SetBotAuthProviderNotFound` (with the fallback value), then `SetBotAuthProviderDisplayCard` |
+
+Which value to use:
+
+| Your setup | `fallbackShowSignInCard` |
+| --- | --- |
+| Your page signs the customer in, and your `setBotAuthTokenProvider` callback passes the token to the bot (bot SSO) | `false` |
+| You want the card to show whenever the callback is late, and you want this logged as a decision | `true` |
+| Customers sign in through the sign-in card itself | Leave it unset |
+
+```js
+const liveChatWidgetProps = {
+    chatSDK: chatSDK, // mandatory
+    chatConfig: chatConfig, // mandatory
+    webChatContainerProps: {
+        botAuthConfig: {
+            fallbackShowSignInCard: false // hide the card if the host doesn't answer in time
+        }
+    }
+};
+```
+
+If you use the live chat widget 2.0 script instead of this package, the function that the script's `data-customization-callback` attribute references must return a root props object that contains the setting, for example `{ webChatContainerProps: { botAuthConfig: { fallbackShowSignInCard: false } } }`. See [Develop a custom live chat widget](https://learn.microsoft.com/dynamics365/customer-service/develop/develop-live-chat-widget).
+
+What the customer sees:
+
+| Situation | Card |
+| --- | --- |
+| The host answers `callback({show: false})` in time | Hidden (`SetBotAuthProviderHideCard`) |
+| The host answers `callback({show: true})` in time | Shown (`SetBotAuthProviderDisplayCard`) |
+| The host doesn't answer in time (slow request, error, or no `callback(...)` call) | Depends on `fallbackShowSignInCard` (see the previous table) |
+| The widget can't extract a sign-in ID from the card, or can't get a token exchange URL (from the card or from the Bot Framework token service) | Shown. The widget doesn't ask the host. |
+
+`fallbackShowSignInCard` changes only what happens when the host doesn't answer in time. It isn't a substitute for a working `setBotAuthTokenProvider` callback. If you set it to `false` and the callback fails for a customer who isn't signed in, that customer doesn't see the card and can't sign in.
+
+**Troubleshooting: a signed-in customer sometimes sees the sign-in card.** The `setBotAuthTokenProvider` callback probably didn't answer in time. Look for `SetBotAuthProviderNotFound` in the widget telemetry. To fix it:
+
+1. Call `callback(...)` on every code path of the function, including error paths. If the function throws before it calls `callback(...)`, the widget gets no answer.
+1. Make the whole function finish quickly. With the live chat widget 2.0 script, the widget gets the `callback(...)` value only after the function finishes, so slow work after `callback(...)` still delays the answer. For a sign-in card that your page already completed, call `callback({show: false})` and return at once. Otherwise, complete the token exchange, then call `callback(...)` with its result.
+1. If the function is correct but can't finish in about 2 seconds, increase `fetchBotAuthConfigRetries` or `fetchBotAuthConfigRetryInterval`.
+1. If your function passes a token to the bot for every customer before the chat needs it (bot SSO works), set `fallbackShowSignInCard: false`. Signing the customer in to your page, or using authenticated chat, doesn't by itself sign the customer in to the bot.
+
+For the host-side callback, see [Pass authentication token to bot during single sign-on in live chat](https://learn.microsoft.com/dynamics365/customer-service/develop/pass-auth-token-sso-live-chat).
 
 ## Components
 

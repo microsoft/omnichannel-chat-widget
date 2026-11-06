@@ -1,24 +1,48 @@
 ---
-mode: 'agent'
-description: 'Create a new Release of the Omnichannel Chat Widget'
+mode: agent
+description: Prepare an official npm package release through a pull request
 ---
 
-Your goals is to create a new release of the Omnichannel Chat Widget and ensure that all necessary actions are performed for the successfull release of new omnichannel chat widget version.
-Release is created by the .github/workflows/chat-widget-release.yml file which is setted up as a github action.
+Prepare the requested package release with the procedure in `docs/RELEASING.md`.
 
-The workflow should perform the following steps:
-    Prompt the user to input the new prerelease version (e.g. 1.8.2-0).
-    Create and checkout a new branch named bump-<prerelease version>.
-    In package.json, update the current version by removing the prerelease tag (e.g., 1.11.5-0 → 1.11.5).
-    Update CHANGELOG.md:
-    Replace the [Unreleased] section with the new version and current date.
-    Add a new section at the top for the new version.
-    Commit the changes with the message: Release version - <version from package.json>.
-    Confirm with the user that the changes are correct and ask for permission to proceed.
-    Create a new Git tag with the release version (e.g., w-v1.11.5) and push it to the repository.
-    Update package.json to the new prerelease version (e.g., 1.11.6-0).
-    Add a new [Unreleased] section in CHANGELOG.md for the new prerelease version.
-    Commit the changes with the message: Bump version to <new prerelease version>.
-    Push the new branch to the remote repository.
+Read these files before you make changes:
 
-For reference, you can follow the changes in the commit "910ae7185a9481297fcb4c7986f16cdf5992356f" which contains a detailed steps of the release process.
+- `docs/RELEASING.md`
+- `.github/workflows/npm-release.yml`
+- `<package>/package.json`
+- `CHANGE_LOG.md`
+- `<package>/README.md`
+
+Use the current upstream `main` branch as the release base.
+
+For a Chat Components release:
+
+1. Change only `chat-components` and the shared release files.
+2. Set a stable version in `chat-components/package.json`.
+3. Make sure that the version does not exist on npm.
+4. Finalize the matching section under `# Chat-Components` in `CHANGE_LOG.md`.
+5. Leave a new, empty `## [Unreleased]` section.
+6. Update all public documentation that names the version or release process.
+7. Run every component command in `docs/RELEASING.md`.
+8. Open a pull request against `main`.
+
+Do not use `workflow_dispatch` or `npm publish` for an official release.
+
+For a Chat Widget release:
+
+1. Search for an open pull request for the requested version.
+2. Do not duplicate version, changelog, migration, or package changes from that pull request.
+3. If no release pull request exists, prepare the widget changes in a new pull request.
+4. Run every widget command in `docs/RELEASING.md`.
+5. Use the merged release pull request commit for the official tag.
+
+Do not create the official tag before the pull request merges.
+
+After merge, use the correct annotated tag on the exact merge commit:
+
+- Use `c-v<version>` for Chat Components.
+- Use `w-v<version>` for Chat Widget.
+
+Do not push that tag until the requester explicitly authorizes the release.
+
+After the tag workflow succeeds, make sure that npm and GitHub contain identical tarballs.

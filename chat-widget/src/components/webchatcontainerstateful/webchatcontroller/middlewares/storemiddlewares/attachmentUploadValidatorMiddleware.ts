@@ -8,35 +8,13 @@ import { LogLevel, TelemetryEvent } from "../../../../../common/telemetry/Teleme
 
 import { AMSConstants } from "../../../../../common/Constants";
 import { ILiveChatWidgetLocalizedTexts } from "../../../../../contexts/common/ILiveChatWidgetLocalizedTexts";
-import { IWebChatAction } from "../../../interfaces/IWebChatAction";
+import { IWebChatAction, WebChatStoreMiddleware, isWebChatAction } from "../../../interfaces/IWebChatAction";
 import { NotificationHandler } from "../../notification/NotificationHandler";
 import { NotificationScenarios } from "../../enums/NotificationScenarios";
 import { TelemetryHelper } from "../../../../../common/telemetry/TelemetryHelper";
 import { WebChatActionType } from "../../enums/WebChatActionType";
 
 const MBtoBRatio = 1000000;
-
-const announceFileSent = (message: string) => {
-    // TalkBack on Android WebView reliably announces newly *appended*
-    // role="alert" nodes but often misses text-content updates on existing
-    // nodes. Wait 500ms for the send-box focus shift to settle, then inject
-    // a fresh alert element appended to document.body and remove it after 3s.
-    setTimeout(() => {
-        const el = document.createElement("div");
-        el.setAttribute("role", "alert");
-        el.setAttribute("aria-live", "assertive");
-        el.setAttribute("aria-atomic", "true");
-        el.style.cssText = "position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;";
-        el.textContent = message;
-        document.body.appendChild(el);
-        // Remove after TalkBack has had time to read it
-        setTimeout(() => {
-            if (el.parentNode) {
-                el.parentNode.removeChild(el);
-            }
-        }, 3000);
-    }, 500);
-};
 
 /*
 * If an attachment is invalid, delete this attachment from the attachments list
@@ -205,8 +183,12 @@ const getFileSizeErrorMessage = (fileName: string, maxUploadFileSize: string, ma
     return errorMessage ? (errorMessage.includes("{2}") ? errorMessage.replace("{2}", textEllipsis(fileName)) : errorMessage) : "";
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts) => ({ dispatch }: { dispatch: any }) => (next: any) => (action: IWebChatAction) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string, maxFileSizeSupportedByDynamics: string, localizedTexts: ILiveChatWidgetLocalizedTexts): WebChatStoreMiddleware => ({ dispatch }) => (next) => (action) => {
+    if (!isWebChatAction(action)) {
+        return next(action);
+    }
+
     if (action.type === WebChatActionType.DIRECT_LINE_POST_ACTIVITY) {
         const {
             payload
@@ -215,11 +197,6 @@ const createAttachmentUploadValidatorMiddleware = (allowedFileExtensions: string
         if (payload?.activity.attachments && payload.activity.attachments.length > 0 &&
             payload?.activity?.attachments?.length === payload?.activity?.channelData?.attachmentSizes?.length) {
             const validatedAction = validateAttachment(action, allowedFileExtensions, maxFileSizeSupportedByDynamics, localizedTexts);
-
-            // Announce to screen readers that the file was sent when validation passes
-            if (validatedAction.payload?.activity?.attachments?.length > 0) {
-                announceFileSent(localizedTexts.MIDDLEWARE_BANNER_FILE_SENT ?? "File sent successfully.");
-            }
 
             return next(validatedAction);
         }
