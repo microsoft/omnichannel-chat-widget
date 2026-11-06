@@ -20,6 +20,15 @@ export interface RecoveryEligibilityTelemetryProperties {
     reason: RecoveryEligibilityReason;
 }
 
+interface RecoveryEligibilityScalarTelemetryProperties {
+    conversationState: string;
+    hasReconnectId: string;
+    hasLiveChatContext: string;
+    hasRequestId: string;
+    eligible: string;
+    reason: RecoveryEligibilityReason;
+}
+
 const getConversationStateName = (conversationState: unknown): string => {
     if (typeof conversationState !== "number") {
         return "Unknown";
@@ -58,14 +67,27 @@ export const getRecoveryEligibilityTelemetryProperties = (
     };
 };
 
+const getRecoveryEligibilityScalarTelemetryProperties = (
+    properties: RecoveryEligibilityTelemetryProperties
+): RecoveryEligibilityScalarTelemetryProperties => ({
+    conversationState: properties.conversationState,
+    hasReconnectId: String(properties.hasReconnectId),
+    hasLiveChatContext: String(properties.hasLiveChatContext),
+    hasRequestId: String(properties.hasRequestId),
+    eligible: String(properties.eligible),
+    reason: properties.reason
+});
+
 export const logRecoveryEligibilityTelemetry = (
     state: ILiveChatWidgetContext,
     eligible: boolean
 ): void => {
     try {
+        const properties = getRecoveryEligibilityTelemetryProperties(state, eligible);
         TelemetryHelper.logActionEvent(LogLevel.INFO, {
             Event: TelemetryEvent.RecoveryEligibilityEvaluated,
-            CustomProperties: getRecoveryEligibilityTelemetryProperties(state, eligible)
+            CustomProperties: properties,
+            ...getRecoveryEligibilityScalarTelemetryProperties(properties)
         });
     } catch (error) {
         console.warn(error);
