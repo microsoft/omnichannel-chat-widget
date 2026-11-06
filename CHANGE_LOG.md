@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - [Docs] Document `webChatContainerProps.botAuthConfig.fallbackShowSignInCard` in the README and the `IBotAuthConfig` table: what the widget does with a bot sign-in card when the host's `setBotAuthTokenProvider` callback doesn't answer in time, and how to troubleshoot an unexpected sign-in card. (AB#6761551)
 
 ### Changed
-- Updated `@microsoft/omnichannel-chat-sdk` to `2.0.2-main.8b19159` in the widget and automation tests. It keeps the ended chat's session key for transcript and email calls after `endChat`, so they no longer get `401` when session key validation is on, and handles a failed voice/video call-ended request.
+- Updated `@microsoft/omnichannel-chat-sdk` to `2.0.2-main.07ad838` in the widget and automation tests. It keeps the ended chat's session key for transcript and email calls after `endChat`, and restores the session key when an authenticated persistent chat is restored after a page reload, so these calls no longer get `401` when session key validation is on. It also handles a failed voice/video call-ended request. (AB#6807827)
 - Remove the unused direct `sanitize-html` dependency, previously pinned at `2.17.7` (GHSA-x3q4-9hxx-gx8m, GHSA-374f-7chj-9948, GHSA-cv27-6wvh-8x7j). No widget code imports it, and `botframework-webchat` uses its own pinned `sanitize-html@2.14.0`. Apps that import `sanitize-html` must declare it themselves instead of relying on this package to install it.
 
 ### Fixed
