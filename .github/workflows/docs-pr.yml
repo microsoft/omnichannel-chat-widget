@@ -37,17 +37,33 @@ jobs:
 
   build:
     needs: changes
-    # Report "build" only when the package workflows are skipped, so this job never
-    # shares a name with a real package build.
-    name: ${{ needs.changes.outputs.package_build == 'true' && 'docs-pr (package build runs separately)' || 'build' }}
+    # Run even when detection fails or is cancelled. A skipped job counts as success,
+    # so skipping would report a passing "build" without classifying the PR.
+    if: ${{ always() }}
+    # Use the alternate name only after detection classified the PR as a package PR,
+    # so a passing "build" never shares a name with a real package build. Any other
+    # outcome reports "build", which fails below unless the PR is documentation-only.
+    name: ${{ needs.changes.result == 'success' && needs.changes.outputs.package_build == 'true' && 'docs-pr (package build runs separately)' || 'build' }}
     runs-on: ubuntu-latest
     steps:
       - name: Report result
         env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
           PACKAGE_BUILD: ${{ needs.changes.outputs.package_build }}
         run: |
-          if [ "$PACKAGE_BUILD" = "true" ]; then
-            echo "Package or workflow files changed; chat-widget-pr / chat-components-pr report the build check."
-          else
-            echo "No package or workflow files changed; no package build is needed."
+          if [ "$CHANGES_RESULT" != "success" ]; then
+            echo "::error::Change detection did not succeed (result: '$CHANGES_RESULT'), so the PR can't be treated as documentation-only."
+            exit 1
           fi
+          case "$PACKAGE_BUILD" in
+            true)
+              echo "Package or workflow files changed; chat-widget-pr / chat-components-pr report the build check."
+              ;;
+            false)
+              echo "No package or workflow files changed; no package build is needed."
+              ;;
+            *)
+              echo "::error::Change detection returned an unrecognized package_build value: '$PACKAGE_BUILD'."
+              exit 1
+              ;;
+          esac
