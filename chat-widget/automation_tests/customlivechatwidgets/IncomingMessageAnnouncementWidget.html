@@ -8,21 +8,24 @@
     <button id="host-button">Host page action</button>
     <script>
         function lcw() {
+            var params = new URLSearchParams(location.search);
             return {
-                controlProps: { id: new URLSearchParams(location.search).get("widgetId") || "oc-lcw" },
+                controlProps: { id: params.get("widgetId") || "oc-lcw" },
                 mock: { type: "designer", mockMessages: [] },
                 styleProps: { generalStyles: { width: "360px", height: "560px" } },
                 webChatContainerProps: {
+                    disableMarkdownMessageFormatting: params.get("markdown") === "off",
                     webChatProps: { disabled: false },
                     storeMiddlewares: [
                         function (store) {
-                            window.receiveMessage = function (id, text, role) {
+                            window.receiveMessage = function (id, text, role, attachments) {
                                 return store.dispatch({
                                     type: "DIRECT_LINE/INCOMING_ACTIVITY",
                                     payload: {
                                         activity: {
                                             id: id,
                                             text: text,
+                                            attachments: attachments,
                                             type: "message",
                                             timestamp: new Date().toISOString(),
                                             from: { id: role + "-1", name: "Support", role: role },

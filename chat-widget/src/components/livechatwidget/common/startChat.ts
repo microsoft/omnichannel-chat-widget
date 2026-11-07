@@ -75,12 +75,12 @@ const getGuard = (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK?: Faca
  * Runs `operation` only if no other invocation for the same widget instance is already in
  * flight. Concurrent invocations are dropped (and reported through telemetry) rather than
  * awaiting the in-flight promise, so a future re-entrant call can never deadlock on itself.
- * No caller acts on the resolved value, so dropping is safe.
+ * A dropped invocation resolves to `undefined`.
  *
  * `blockedBy` lets an operation also yield to a different, already running operation for the
  * same widget instance without claiming that operation's lock.
  */
-const runExclusively = async (guards: WeakMap<object, IStartChatGuard>, facadeChatSDK: FacadeChatSDK, description: string, operation: () => Promise<void>, props?: ILiveChatWidgetProps, blockedBy?: WeakMap<object, IStartChatGuard>): Promise<void> => {
+const runExclusively = async <T>(guards: WeakMap<object, IStartChatGuard>, facadeChatSDK: FacadeChatSDK, description: string, operation: () => Promise<T>, props?: ILiveChatWidgetProps, blockedBy?: WeakMap<object, IStartChatGuard>): Promise<T | undefined> => {
     const guard = getGuard(guards, facadeChatSDK);
     const blockingGuard = blockedBy ? getGuard(blockedBy, facadeChatSDK) : undefined;
 
@@ -90,7 +90,7 @@ const runExclusively = async (guards: WeakMap<object, IStartChatGuard>, facadeCh
             Description: description,
             CustomProperties: { WidgetCacheId: props ? getWidgetCacheIdfromProps(props) : undefined }
         });
-        return;
+        return undefined;
     }
 
     // Claim the lock before invoking the operation, so a re-entrant call made from the
@@ -98,7 +98,7 @@ const runExclusively = async (guards: WeakMap<object, IStartChatGuard>, facadeCh
     guard.inFlight = true;
 
     try {
-        await operation();
+        return await operation();
     } finally {
         guard.inFlight = false;
     }
@@ -215,18 +215,23 @@ const setPreChatAndInitiateChat = async (facadeChatSDK: FacadeChatSDK, dispatch:
     await initStartChat(facadeChatSDK, dispatch, setAdapter, state, props, optionalParams);
 };
 
+/**
+ * Resolves to `true` when the chat reached Active, and `false` when it failed or the call was dropped.
+ * It resolves before React renders Active, so callers must use this value rather than reading the conversation state.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any): Promise<void> => {
-    return runExclusively(
+const initStartChat = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any): Promise<boolean> => {
+    const chatStarted = await runExclusively(
         initStartChatGuards,
         facadeChatSDK,
         "Concurrent initStartChat call ignored, a start chat operation is already in progress for this widget instance.",
         () => initStartChatInternal(facadeChatSDK, dispatch, setAdapter, state, props, params, persistedState),
         props);
+    return chatStarted === true;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any) => {
+const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dispatch<ILiveChatWidgetAction>, setAdapter: any, state: ILiveChatWidgetContext | undefined, props?: ILiveChatWidgetProps, params?: StartChatOptionalParams, persistedState?: any): Promise<boolean> => {
     let isStartChatSuccessful = false;
     const persistentChatEnabled = isPersistentChatEnabled(state?.domainStates?.liveChatConfig?.LiveWSAndLiveChatEngJoin?.msdyn_conversationmode);
 
@@ -326,7 +331,7 @@ const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dis
             logWidgetLoadComplete(WidgetLoadTelemetryMessage.PersistedStateRetrievedMessage);
             // Set post chat context in state, load in background to do not block the load
             setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch, true);
-            return;
+            return true;
         }
 
         // Persistent Chat relies on the `reconnectId` retrieved from reconnectablechats API to reconnect upon start chat and not `liveChatContext`
@@ -340,10 +345,13 @@ const initStartChatInternal = async (facadeChatSDK: FacadeChatSDK, dispatch: Dis
         logWidgetLoadComplete();
         // Set post chat context in state, load in background to do not block the load
         setPostChatContextAndLoadSurvey(facadeChatSDK, dispatch);
-        // Updating chat session detail for telemetry
-        await updateTelemetryData(facadeChatSDK, dispatch);
+        // Updating chat session detail for telemetry, in background: getConversationDetails retries until the
+        // live work item exists (several seconds), and awaiting it would hold the start chat locks and drop the next start chat
+        updateTelemetryData(facadeChatSDK, dispatch);
+        return true;
     } catch (ex) {
         handleStartChatError(dispatch, facadeChatSDK, props, ex, isStartChatSuccessful);
+        return false;
     }
 };
 

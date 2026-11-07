@@ -6,19 +6,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- [Docs] Document `webChatContainerProps.botAuthConfig.fallbackShowSignInCard` in the README and the `IBotAuthConfig` table: what the widget does with a bot sign-in card when the host's `setBotAuthTokenProvider` callback doesn't answer in time, and how to troubleshoot an unexpected sign-in card. (AB#6761551)
+
 ### Changed
+- Updated `@microsoft/omnichannel-chat-sdk` to `2.0.2-main.07ad838` in the widget and automation tests. It keeps the ended chat's session key for transcript and email calls after `endChat`, and restores the session key when an authenticated persistent chat is restored after a page reload, so these calls no longer get `401` when session key validation is on. It also handles a failed voice/video call-ended request. (AB#6807827)
+- Remove the unused direct `sanitize-html` dependency, previously pinned at `2.17.7` (GHSA-x3q4-9hxx-gx8m, GHSA-374f-7chj-9948, GHSA-cv27-6wvh-8x7j). No widget code imports it, and `botframework-webchat` uses its own pinned `sanitize-html@2.14.0`. Apps that import `sanitize-html` must declare it themselves instead of relying on this package to install it.
 - Add cross-repository local development guidance for GitHub Copilot (`.github/instructions/lcw-local-dev.instructions.md`).
 - Add a `docs-pr` workflow that reports the required `build` check for PRs that change neither `chat-widget/`, `chat-components/`, nor `.github/workflows/`, so documentation-only PRs no longer wait on a check that never runs.
 
 ### Fixed
 - [Bug] Overlapping start chat calls for the same widget (chat button, `BroadcastEvent.StartChat`, proactive chat, pre-chat submit, reconnect) no longer create two conversations. `prepareStartChat` and `initStartChat` now use per-widget locks and drop concurrent calls, the chat button ignores clicks while a start is in progress, and `chatSDKStateCleanUp` disconnects and clears the previous `conversation`. Dropped calls are logged as `ConcurrentStartChatRejected`. (AB#6114594)
+- [Bug] Chat button clicks are no longer dropped for several seconds after a chat starts. Post-start telemetry (`updateTelemetryData`, which waits on `getConversationDetails`) now runs in the background, so the start chat locks are released once the chat is Active; failures are logged as `UpdateTelemetryDataFailed` instead of ending the chat, results from an earlier chat no longer overwrite the next chat's telemetry data, a chat that ended before its lookup returned still gets its conversation data, and chat reconnect uses the `initStartChat` result instead of the not-yet-rendered conversation state so it does not start a second chat. (AB#6793648)
 - [Bug] Start-chat custom context is no longer held in module-scoped state. `setCustomContextParams` now returns the resolved params instead of mutating a shared `optionalParams` variable, and the widget cache id it resolves against is computed locally. Previously two widgets on the same page starting at the same time could overwrite each other between the `await` and the read, so one widget could start its conversation with another widget's `customContext`. (AB#6114594)
 - [A11Y] Make the suggested actions carousel Previous/Next focus indicator visible by default (solid 2px ring) and close its CSS rule.
 - [A11Y] Announce sent files to screen readers as "File <name> sent" from a live region inside the chat dialog; the previous regions sat outside the aria-modal dialog and were not read. Adds `MIDDLEWARE_BANNER_FILES_SENT` and changes the `MIDDLEWARE_BANNER_FILE_SENT` default to "File {2} sent". (AB#5905569)
 - [A11Y] Remove the Adaptive Card action button `title` when it repeats the button name, so screen readers read labels such as Submit once. (AB#5929337)
+- [A11Y] Announce the text of incoming Adaptive Cards that have no `speak` property. Screen readers previously announced only "A card". (AB#6685673)
 
 ### Security
 - Retain reviewed audit-only finding GHSA-238p-pmpm-9mq7 (low) for the required WebChat hotfix's pinned `katex@0.16.21`.
+- Pin `dompurify` to `3.4.17` (GHSA-cg2g-xh64-v4q7, GHSA-mrv2-3pqr-j5jr, GHSA-c6gr-qvv4-5v3f). Retain reviewed audit-only findings for the required WebChat hotfix's nested `sanitize-html@2.14.0` (GHSA-x3q4-9hxx-gx8m, GHSA-cv27-6wvh-8x7j) and `markdown-it@13.0.2` (GHSA-r7fv-28h4-cvq7, GHSA-vfgh-jcmw-g37q).
+- Raise direct `markdown-it` to `^14.3.3` (GHSA-gfr2-rv44-r23c, GHSA-vfgh-jcmw-g37q, GHSA-r7fv-28h4-cvq7, GHSA-253c-mchw-3w2r).
+- Raise the `nanoid` resolution from `3.3.18` to `^3.3.20` so it satisfies `postcss@8.5.30`'s range while keeping the CVE-2026-67213 / CVE-2026-67214 fix.
+- Retain reviewed audit-only finding GHSA-gcqx-w48m-w2h4 (low, no patched release) for `deepmerge@4.3.1`, reached only through the required WebChat hotfix's nested `sanitize-html@2.14.0`.
+- Retain reviewed audit-only finding GHSA-g3hv-75wg-m249 (medium) for `minimatch@3.1.5`, reached only through the required WebChat hotfix's Speech SDK (`microsoft-cognitiveservices-speech-sdk@1.17.0` → `rimraf@3` → `glob@7`). The fix is only in `minimatch` 11.0.1, which `glob@7` cannot use.
 
 ## [2.0.1] - 2026-10-05
 
