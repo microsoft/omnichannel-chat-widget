@@ -25,7 +25,7 @@ const logSyncInfo = (event: TelemetryEvent, reason: string) => {
     try {
         TelemetryHelper.logSDKEvent(LogLevel.INFO, {
             Event: event,
-            CustomProperties: { Reason: reason }
+            Description: reason
         });
     } catch {
         // Telemetry must not interrupt credential synchronization.
@@ -174,7 +174,7 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
                     }
                     if (latest.chatToken?.token !== chatToken.token) {
                         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
-                        logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSynced, "dispatched");
+                        logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSynced, "republished");
                     }
                 };
                 if (savedContext) {

@@ -274,9 +274,9 @@ Refer to the below table to understand different critical telemetry events raise
 |`GetChatReconnectContextSDKCallFailed`| On get reconnect context SDK call failed|
 |`GetConversationDetailsCallFailed`|On `PropactiveChatPane` load complete|
 |`UpdateTelemetryDataFailed`|On failure to add session or conversation data to telemetry after start chat|
-|`ChatTokenRenewalStateSynced`|INFO: renewed credential/context dispatched to the normal state publisher and cache writer; `Reason=dispatched` is not a storage acknowledgement|
-|`ChatTokenRenewalStateSyncDeferred`|INFO: renewal received during saved-session restore; `Reason=restoringSession`|
-|`ChatTokenRenewalStateSyncSkipped`|INFO: notification dropped with a fixed `Reason`: `endedOrDisposed`, `inactiveSession`, `savedSessionMismatch`, `supersededOrSessionChanged`, `renewedSessionMismatch`, `supersededDeferredRenewal`, `deferredSessionChanged`, or `subscriptionDisposed`|
+|`ChatTokenRenewalStateSynced`|INFO: renewed credential/context sent to the normal state publisher and cache writer; `Description=dispatched` marks the initial dispatch and `Description=republished` marks reconciliation after stale state publication; neither is a storage acknowledgement|
+|`ChatTokenRenewalStateSyncDeferred`|INFO: renewal received during saved-session restore; `Description=restoringSession`|
+|`ChatTokenRenewalStateSyncSkipped`|INFO: notification dropped with a fixed reason in `Description`: `endedOrDisposed`, `inactiveSession`, `savedSessionMismatch`, `supersededOrSessionChanged`, `renewedSessionMismatch`, `supersededDeferredRenewal`, `deferredSessionChanged`, or `subscriptionDisposed`|
 |`ChatTokenRenewalStateSyncFailed`|ERROR: renewal subscription, state synchronization or cleanup threw; only a fixed description is logged|
 |`PrepareEndChat`|On preparing to call ChatSDK end chat, used to identify end-chat scenarios|
 |`EndChatSDKCall`|On initiating ChatSDK end chat call|

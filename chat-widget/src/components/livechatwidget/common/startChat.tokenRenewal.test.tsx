@@ -140,11 +140,11 @@ describe("saved-chat start with a renewal notification", () => {
         expect(persisted.domainStates.liveChatContext).toEqual(context);
         expect(TelemetryHelper.logSDKEvent).toHaveBeenCalledWith(LogLevel.INFO, {
             Event: TelemetryEvent.ChatTokenRenewalStateSyncDeferred,
-            CustomProperties: { Reason: "restoringSession" }
+            Description: "restoringSession"
         });
         expect(TelemetryHelper.logSDKEvent).toHaveBeenCalledWith(LogLevel.INFO, {
             Event: TelemetryEvent.ChatTokenRenewalStateSynced,
-            CustomProperties: { Reason: "dispatched" }
+            Description: "dispatched"
         });
     });
 });
