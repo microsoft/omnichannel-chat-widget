@@ -21,23 +21,35 @@ const logSyncFailure = (description: string) => {
     }
 };
 
+const logSyncInfo = (event: TelemetryEvent, reason: string) => {
+    try {
+        TelemetryHelper.logSDKEvent(LogLevel.INFO, {
+            Event: event,
+            CustomProperties: { Reason: reason }
+        });
+    } catch {
+        // Telemetry must not interrupt credential synchronization.
+    }
+};
+
 export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: ILiveChatWidgetContext, dispatch: Dispatch<ILiveChatWidgetAction>, widgetCacheId: string) => {
-    const current = useRef({ facade, state, generation: 0 });
+    const current = useRef({ facade, state, generation: 0, lifecycle: 0 });
     const pending = useRef<(() => void) | undefined>();
     const reconcile = useRef<((snapshot?: ILiveChatWidgetContext) => void) | undefined>();
     const supersededTokens = useRef(new Set<string>());
     const previous = current.current;
     let generation = previous.generation;
-    if (previous.facade !== facade ||
+    const lifecycleChanged = previous.facade !== facade ||
         previous.state.appStates.conversationState !== state.appStates.conversationState ||
-        previous.state.appStates.conversationEndedBy !== state.appStates.conversationEndedBy ||
+        previous.state.appStates.conversationEndedBy !== state.appStates.conversationEndedBy;
+    if (lifecycleChanged ||
         previous.state.domainStates.liveChatContext?.requestId !== state.domainStates.liveChatContext?.requestId ||
         previous.state.domainStates.liveChatContext?.sessionId !== state.domainStates.liveChatContext?.sessionId ||
         previous.state.domainStates.chatToken?.requestId !== state.domainStates.chatToken?.requestId ||
         previous.state.domainStates.chatToken?.chatId !== state.domainStates.chatToken?.chatId) {
         generation++;
     }
-    current.current = { facade, state, generation };
+    current.current = { facade, state, generation, lifecycle: previous.lifecycle + (lifecycleChanged ? 1 : 0) };
 
     useEffect(() => {
         if (!facade) {
@@ -54,6 +66,7 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
                 const endedBy = owner.state.appStates.conversationEndedBy;
                 if (disposed || owner.facade !== facade ||
                     (endedBy !== undefined && endedBy !== ConversationEndEntity.NotSet)) {
+                    logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "endedOrDisposed");
                     return;
                 }
                 const sdk = facade.getChatSDK();
@@ -62,16 +75,29 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
                 if (owner.state.appStates.conversationState === ConversationState.Loading) {
                     // A saved-state restore can replace post-start state with the old snapshot.
                     // Defer this notification until that same loading session becomes active.
-                    pending.current = () => {
-                        if (!disposed && current.current.facade === facade &&
-                            current.current.generation === owner.generation + 1 &&
-                            facade.getChatSDK() === sdk && sdk.requestId === requestId && sdk.sessionId === sessionId) {
-                            void refresh();
+                    if (pending.current) {
+                        logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "supersededDeferredRenewal");
+                    }
+                    logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncDeferred, "restoringSession");
+                    pending.current = async () => {
+                        // Let Active and the subsequent saved snapshot finish dispatching first.
+                        await Promise.resolve();
+                        try {
+                            if (!disposed && renewal === revision && current.current.facade === facade &&
+                                current.current.lifecycle === owner.lifecycle + 1 &&
+                                facade.getChatSDK() === sdk && sdk.requestId === requestId && sdk.sessionId === sessionId) {
+                                await refresh();
+                            } else {
+                                logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "deferredSessionChanged");
+                            }
+                        } catch {
+                            logSyncFailure("Unable to synchronize deferred renewed chat state");
                         }
                     };
                     return;
                 }
                 if (owner.state.appStates.conversationState !== ConversationState.Active) {
+                    logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "inactiveSession");
                     return;
                 }
                 const savedContext = owner.state.domainStates.liveChatContext;
@@ -83,12 +109,14 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
                     (savedToken.requestId && savedToken.requestId !== requestId) ||
                     (savedContext && (savedContext.requestId !== requestId ||
                         (savedContext.sessionId && savedContext.sessionId !== sessionId)))) {
+                    logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "savedSessionMismatch");
                     return;
                 }
                 const isCurrent = () => !disposed && renewal === revision &&
                     current.current.facade === facade && current.current.generation === owner.generation &&
                     facade.getChatSDK() === sdk && sdk.requestId === requestId && sdk.sessionId === sessionId;
                 if (!isCurrent()) {
+                    logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "supersededOrSessionChanged");
                     return;
                 }
                 const [context, chatToken] = await Promise.all([
@@ -96,6 +124,7 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
                     facade.getChatToken()
                 ]);
                 if (!isCurrent()) {
+                    logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "supersededOrSessionChanged");
                     return;
                 }
                 const liveChatContext = context as LiveChatContext;
@@ -103,6 +132,7 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
                     (liveChatContext.sessionId && liveChatContext.sessionId !== sessionId) ||
                     chatToken?.chatId !== chatId || liveChatContext.chatToken?.chatId !== chatId ||
                     liveChatContext.chatToken?.token !== chatToken.token) {
+                    logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "renewedSessionMismatch");
                     return;
                 }
                 // The normal state publisher/cache writer owns persistence, scope and TTL.
@@ -144,12 +174,14 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
                     }
                     if (latest.chatToken?.token !== chatToken.token) {
                         dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
+                        logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSynced, "dispatched");
                     }
                 };
                 if (savedContext) {
                     dispatch({ type: LiveChatWidgetActionType.SET_LIVE_CHAT_CONTEXT, payload: liveChatContext });
                 }
                 dispatch({ type: LiveChatWidgetActionType.SET_CHAT_TOKEN, payload: chatToken });
+                logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSynced, "dispatched");
             } catch {
                 logSyncFailure("Unable to synchronize renewed chat state");
             }
@@ -170,6 +202,9 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
         return () => {
             disposed = true;
             revision++;
+            if (pending.current) {
+                logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "subscriptionDisposed");
+            }
             pending.current = undefined;
             reconcile.current = undefined;
             supersededTokens.current.clear();
@@ -200,6 +235,9 @@ export const useChatTokenRenewal = (facade: FacadeChatSDK | undefined, state: IL
             reconcile.current = undefined;
             supersededTokens.current.clear();
             if (state.appStates.conversationState !== ConversationState.Loading) {
+                if (pending.current) {
+                    logSyncInfo(TelemetryEvent.ChatTokenRenewalStateSyncSkipped, "inactiveSession");
+                }
                 pending.current = undefined;
             }
         }

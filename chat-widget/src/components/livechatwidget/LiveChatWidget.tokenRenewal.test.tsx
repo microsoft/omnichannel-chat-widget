@@ -9,6 +9,7 @@ import { ILiveChatWidgetContext } from "../../contexts/common/ILiveChatWidgetCon
 import { ILiveChatWidgetProps } from "./interfaces/ILiveChatWidgetProps";
 import { LiveChatWidgetActionType } from "../../contexts/common/LiveChatWidgetActionType";
 import { TelemetryHelper } from "../../common/telemetry/TelemetryHelper";
+import { LogLevel, TelemetryEvent } from "../../common/telemetry/TelemetryConstants";
 import { OmnichannelChatSDK } from "@microsoft/omnichannel-chat-sdk";
 import { expect, it } from "@jest/globals";
 import { BroadcastService } from "@microsoft/omnichannel-chat-components";
@@ -168,6 +169,10 @@ describe("LiveChatWidget renewed chat state", () => {
         expect(owner.readToken).toHaveBeenCalledWith();
         expect(snapshots.widget.domainStates.liveChatContext).toEqual(owner.context);
         expect(snapshots.widget.domainStates.chatToken).toEqual(owner.context.chatToken);
+        expect(TelemetryHelper.logSDKEvent).toHaveBeenCalledWith(LogLevel.INFO, {
+            Event: TelemetryEvent.ChatTokenRenewalStateSynced,
+            CustomProperties: { Reason: "dispatched" }
+        });
         expect(owner.sdk.onChatTokenRenewed).toHaveBeenCalledTimes(1);
         owner.rerender(<LiveChatWidget {...owner.props} />);
         expect(owner.sdk.onChatTokenRenewed).toHaveBeenCalledTimes(1);
@@ -180,6 +185,10 @@ describe("LiveChatWidget renewed chat state", () => {
         expect(owner.readContext).not.toHaveBeenCalled();
         expect(owner.readToken).not.toHaveBeenCalled();
         expect(snapshots.widget.domainStates.chatToken.token).toBe("original");
+        expect(TelemetryHelper.logSDKEvent).toHaveBeenCalledWith(LogLevel.INFO, {
+            Event: TelemetryEvent.ChatTokenRenewalStateSyncSkipped,
+            CustomProperties: { Reason: "endedOrDisposed" }
+        });
     });
 
     it.each([ConversationEndEntity.Customer, ConversationEndEntity.Agent, ConversationEndEntity.Bot])("drops an in-flight renewal when the active chat becomes ended by %s", async (endedBy: ConversationEndEntity) => {
@@ -372,6 +381,30 @@ describe("LiveChatWidget renewed chat state", () => {
         act(() => owners.widget.dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading }));
         await notify(owner);
         expect(owner.readContext).not.toHaveBeenCalled();
+        expect(TelemetryHelper.logSDKEvent).toHaveBeenCalledWith(LogLevel.INFO, {
+            Event: TelemetryEvent.ChatTokenRenewalStateSyncDeferred,
+            CustomProperties: { Reason: "restoringSession" }
+        });
+    });
+
+    it("reports a deferred renewal discarded when the restore ends without an active chat", async () => {
+        const owner = mount();
+        act(() => owners.widget.dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Loading }));
+        await notify(owner);
+        act(() => owners.widget.dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: ConversationState.Closed }));
+        expect(owner.readContext).not.toHaveBeenCalled();
+        expect(TelemetryHelper.logSDKEvent).toHaveBeenCalledWith(LogLevel.INFO, {
+            Event: TelemetryEvent.ChatTokenRenewalStateSyncSkipped,
+            CustomProperties: { Reason: "inactiveSession" }
+        });
+    });
+
+    it("does not include renewed credential values in synchronization telemetry", async () => {
+        const owner = mount();
+        owner.context.chatToken.token = "private-renewal-test-value";
+        await notify(owner);
+        expect(snapshots.widget.domainStates.chatToken.token).toBe("private-renewal-test-value");
+        expect(JSON.stringify((TelemetryHelper.logSDKEvent as jest.Mock).mock.calls)).not.toContain("private-renewal-test-value");
     });
 
     it("captures a renewal during saved-chat restore once that same session becomes active", async () => {
