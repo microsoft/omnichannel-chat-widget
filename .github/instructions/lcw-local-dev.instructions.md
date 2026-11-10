@@ -3,7 +3,7 @@ description: Local development, packaging, and end-to-end test workflow across t
 applyTo: "**"
 ---
 
-> 📌 **Canonical source:** [`microsoft/omnichannel-chat-sdk`](https://github.com/microsoft/omnichannel-chat-sdk/blob/main/.github/instructions/lcw-local-dev.instructions.md). This file is a synced copy — edit the canonical first, then propagate to the copies in `microsoft/omnichannel-sdk` and `microsoft/omnichannel-chat-widget` (the LCW host in the Crm.Omnichannel mono repo does not carry a copy).
+> 📌 **Canonical source:** [`microsoft/omnichannel-chat-sdk`](https://github.com/microsoft/omnichannel-chat-sdk/blob/main/.github/instructions/lcw-local-dev.instructions.md). This file is a synced copy — edit the canonical first, then propagate to the copies in `microsoft/omnichannel-sdk` and `microsoft/omnichannel-chat-widget`. The Crm.Omnichannel mono repo has an outdated pre-migration copy under `Products/CustomerExperiences/LiveChatWidgetV2/.github/instructions/`; Copilot does not load it (only the repo-root `.github/instructions/` is read), so don't rely on it.
 
 # LCW multi-repo local development skill
 
@@ -45,12 +45,13 @@ Local paths:
   - **Git Bash / PowerShell / cmd on Windows** (yarn installed for the Windows user): `C:\Users\<user>\AppData\Local\Yarn\Data\link\@microsoft\omnichannel-chat-sdk\` (Git Bash also surfaces this as `/c/Users/<user>/AppData/Local/Yarn/Data/link/...`; PowerShell: `$env:LOCALAPPDATA\Yarn\Data\link\...`).
   - **WSL** (yarn installed inside the WSL distro): `~/.config/yarn/link/@microsoft/omnichannel-chat-sdk` inside WSL — note this is the WSL user's home, not `%USERPROFILE%`. WSL accessing files under `/mnt/c/...` will see the Windows link store at `/mnt/c/Users/<user>/AppData/Local/Yarn/Data/link/...` instead.
   Mixing a Windows-installed yarn with a WSL-installed yarn is the most common reason `yarn link` appears to silently no-op — each yarn has its own link registry.
-- The LCW host (`LiveChatWidgetV2/src`) uses **npm** (`package-lock.json`, `.npmrc` pointing at the OneCRM feed), not yarn. It depends on `@microsoft/omnichannel-chat-widget` and `@microsoft/omnichannel-chat-components` directly; `omnichannel-chat-sdk` is not a direct dependency and arrives through chat-widget. To test local builds, link the widget packages with npm, and re-link after every `npm install` / `npm ci` (they replace the symlinks):
+- The LCW host (`LiveChatWidgetV2/src`) uses **npm** (`package-lock.json`, `.npmrc` pointing at the OneCRM feed), not yarn. It depends on `@microsoft/omnichannel-chat-widget` and `@microsoft/omnichannel-chat-components` directly; `omnichannel-chat-sdk` is not a direct dependency and arrives through chat-widget. To test local builds, link chat-widget with npm, and re-link after every `npm install` / `npm ci` (they replace the symlinks):
   ```bash
   cd /c/gh/Crm.Omnichannel/Products/CustomerExperiences/LiveChatWidgetV2/src
-  npm link /c/lcw/omnichannel-chat-widget/chat-widget /c/lcw/omnichannel-chat-widget/chat-components
+  npm link /c/lcw/omnichannel-chat-widget/chat-widget
   ls -la node_modules/@microsoft/omnichannel-chat-widget
   ```
+  Don't add `chat-components` to the same `npm link` call: the host's `package.json` pins `@microsoft/omnichannel-chat-components` in `overrides`, so npm fails with `EOVERRIDE` and links neither package. To test a local chat-components build, first remove its `overrides` entry locally, then `npm link` it. Never commit that change.
   The host webpack config keeps the default `resolve.symlinks: true`, so a linked chat-widget resolves `@microsoft/omnichannel-chat-sdk` from its own `c:\lcw\omnichannel-chat-widget\chat-widget\node_modules` (where chat-sdk is yarn-linked). Linking chat-sdk into chat-widget is therefore enough for chat-sdk changes to reach the host bundle.
 - The ACS adapter (`@microsoft/botframework-webchat-adapter-azure-communication-chat`) is a transitive dep installed independently in each of the three downstream node_modules trees. Lockfiles in each downstream repo pin it independently. Do **not** assume changing chat-sdk's `package.json` will alter the version installed in chat-widget or LCW node_modules — those come from their own lockfiles.
 
@@ -74,12 +75,14 @@ cd /c/gh/Crm.Omnichannel/Products/CustomerExperiences/LiveChatWidgetV2/src
 rm -rf node_modules/.cache/webpack
 npm run build:webpack:dev   # runs `npm run lint` first (prebuild:webpack:dev)
 
-# 5. Start (or keep running) the dev server, then hard-reload the browser
-#    (`npm run start:webpack` serves src/public on port 9000)
-#    Test page: http://localhost:9000/test.html
+# 5. Serve src/ statically (keep it running), then hard-reload the browser
+python -m http.server 9000   # or any static server rooted at src/
+#    Test page: http://localhost:9000/public/test.html
 ```
 
-If the LCW dev server is already running with file-watching, you still must wipe `node_modules/.cache/webpack` after editing a linked package, because webpack 5's persistent cache key does not invalidate on symlinked-source mtime changes.
+The test pages in `src/public` (`test.html`, `testCustom.html`, `oauthTest.html`, `testRules.html`) load the bundle from `../dist/v2scripts/`, so they need the on-disk build from step 4 served alongside them. Don't use `npm run start:webpack` for them: its dev server serves only `public/` at the root and the in-memory bundle at `/v2scripts/`, so `/dist/v2scripts/LiveChatBootstrapper.js` returns 404 and the widget never loads.
+
+Wipe `node_modules/.cache/webpack` before every rebuild after editing a linked package, because webpack 5's persistent cache key does not invalidate on symlinked-source mtime changes.
 
 ## Common gotchas
 
@@ -126,7 +129,7 @@ When a change touches multiple repos, ship them bottom-up to avoid consumers pul
 1. Land + publish `omnichannel-sdk` (if changed).
 2. Land + publish `omnichannel-chat-sdk`. Get the new published version number.
 3. Bump `omnichannel-chat-sdk` dependency in `omnichannel-chat-widget`. Land + publish.
-4. Bump `@microsoft/omnichannel-chat-widget` (exact version) in `Crm.Omnichannel/Products/CustomerExperiences/LiveChatWidgetV2/src/package.json`. If the chat-sdk version changes, also update `APPROVED_SDK_VERSION` in `LiveChatWidgetV2/combined/tests/sdkAdoptionCapability.test.ts`, which gates the exact installed chat-sdk version. Land that PR.
+4. Bump `@microsoft/omnichannel-chat-widget` (exact version) in `Crm.Omnichannel/Products/CustomerExperiences/LiveChatWidgetV2/src/package.json`, following the "Updating shared chat packages" section of `LiveChatWidgetV2/README.md`. Tests in other parts of the mono repo gate the exact versions, so the same PR must also update, for example, `APPROVED_SDK_VERSION` in `LiveChatWidgetV2/combined/tests/sdkAdoptionCapability.test.ts` and the VNext pinned-V2 storage contract (`LiveChatWidgetVNext/src/test/pinnedV2StorageContract.ts` and its fixtures). That README section is the full, authoritative checklist. Land that PR.
 
 For local testing only (steps 1–3 not needed), use yarn link / npm link instead of publishing.
 

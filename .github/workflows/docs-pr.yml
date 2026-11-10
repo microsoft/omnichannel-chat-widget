@@ -26,7 +26,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          PACKAGE_PATHS: '^(chat-widget/|chat-components/|\.github/workflows/)'
+          PACKAGE_PATHS: '^(chat-widget/|chat-components/|\.github/workflows/|\.nvmrc$)'
         run: |
           files=$(gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files" --jq '.[] | .filename, (.previous_filename // empty)')
           if printf '%s\n' "$files" | grep -Eq "$PACKAGE_PATHS"; then
