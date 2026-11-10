@@ -187,7 +187,12 @@ describe("LiveChatWidget renewed chat state", () => {
     ] as const)("preserves renewal reasons in SDK telemetry contracts for state %s, event %s, reason %s", async (state, event, reason) => {
         const owner = mount();
         act(() => owners.widget.dispatch({ type: LiveChatWidgetActionType.SET_CONVERSATION_STATE, payload: state }));
+        const cached = snapshots.widget;
         await notify(owner);
+        if (reason === "republished") {
+            (TelemetryHelper.logSDKEvent as jest.Mock).mockClear();
+            await act(async () => BroadcastService.postMessage({ eventName: "widget", payload: cached }));
+        }
         const [level, payload] = (TelemetryHelper.logSDKEvent as jest.Mock).mock.calls.find(([, data]) => data.Event === event && data.Description === reason) ?? [];
         expect(payload).toBeDefined();
         const { TelemetryHelper: actualHelper } = jest.requireActual<typeof import("../../common/telemetry/TelemetryHelper")>("../../common/telemetry/TelemetryHelper");
