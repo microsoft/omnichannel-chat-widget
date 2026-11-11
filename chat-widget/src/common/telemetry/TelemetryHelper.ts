@@ -22,6 +22,12 @@ export interface TelemetryEventWrapper {
     Data?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     CustomProperties?: any;
+    conversationState?: string;
+    hasReconnectId?: string;
+    hasLiveChatContext?: string;
+    hasRequestId?: string;
+    eligible?: string;
+    reason?: string;
 }
 
 export class TelemetryHelper {
@@ -89,6 +95,14 @@ export class TelemetryHelper {
                 event.ExceptionDetails = JSON.stringify(payload.ExceptionDetails);
                 event.Description = payload.Description;
                 event.CustomProperties = JSON.stringify(payload.CustomProperties);
+                if (payload.Event === TelemetryEvent.RecoveryEligibilityEvaluated) {
+                    event.conversationState = payload.conversationState;
+                    event.hasReconnectId = payload.hasReconnectId;
+                    event.hasLiveChatContext = payload.hasLiveChatContext;
+                    event.hasRequestId = payload.hasRequestId;
+                    event.eligible = payload.eligible;
+                    event.reason = payload.reason;
+                }
             });
     }
 

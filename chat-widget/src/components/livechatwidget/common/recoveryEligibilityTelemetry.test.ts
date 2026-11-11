@@ -29,6 +29,7 @@ describe("getRecoveryEligibilityTelemetryProperties", () => {
                 createState(conversationState, { requestId: "request-id" }, "reconnect-id"),
                 true
             )).toMatchObject({
+                conversationState: ConversationState[conversationState as ConversationState],
                 hasReconnectId: true,
                 hasLiveChatContext: true,
                 hasRequestId: true,
@@ -105,6 +106,37 @@ describe("getRecoveryEligibilityTelemetryProperties", () => {
             "reason"
         ]);
         expect(JSON.stringify(properties)).not.toContain("sensitive-request-id");
+    });
+
+    it("dispatches the allowlisted fields as scalar and legacy custom properties", () => {
+        const telemetrySpy = jest.spyOn(TelemetryHelper, "logActionEvent")
+            .mockImplementation();
+
+        logRecoveryEligibilityTelemetry(
+            createState(ConversationState.Loading, { requestId: "sensitive-request-id" }),
+            false
+        );
+
+        const properties = {
+            conversationState: "Loading",
+            hasReconnectId: false,
+            hasLiveChatContext: true,
+            hasRequestId: true,
+            eligible: false,
+            reason: RecoveryEligibilityReason.CachedContextNonActive
+        };
+        expect(telemetrySpy).toHaveBeenCalledWith(expect.anything(), {
+            Event: expect.anything(),
+            CustomProperties: properties,
+            conversationState: properties.conversationState,
+            hasReconnectId: String(properties.hasReconnectId),
+            hasLiveChatContext: String(properties.hasLiveChatContext),
+            hasRequestId: String(properties.hasRequestId),
+            eligible: String(properties.eligible),
+            reason: properties.reason
+        });
+        expect(JSON.stringify(telemetrySpy.mock.calls)).not.toContain("sensitive-request-id");
+        telemetrySpy.mockRestore();
     });
 
     it("does not block initialization when telemetry dispatch fails", () => {
