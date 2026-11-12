@@ -28,7 +28,7 @@ Local paths:
 
 | Repo | Path | Build command | Output |
 |---|---|---|---|
-| omnichannel-sdk | `c:\lcw\omnichannel-sdk` | `yarn build` | `lib/` |
+| omnichannel-sdk | `c:\lcw\omnichannel-sdk` | `npm run build:tsc` | `lib/` |
 | omnichannel-chat-sdk | `c:\lcw\omnichannel-chat-sdk` | `npm run build:tsc` | `lib/` |
 | omnichannel-chat-widget | `c:\lcw\omnichannel-chat-widget\chat-widget` | `yarn build:esm && yarn build:cjs` | `lib/esm`, `lib/cjs` |
 | LCW host (mono repo) | `c:\gh\Crm.Omnichannel\Products\CustomerExperiences\LiveChatWidgetV2\src` | `npm run build:webpack:dev` | `dist/v2scripts/ocw.js` |
@@ -61,7 +61,7 @@ When a change is made anywhere in the stack, rebuild every consumer below it, **
 
 ```bash
 # 1. (if omnichannel-sdk changed)
-cd /c/lcw/omnichannel-sdk && yarn build
+cd /c/lcw/omnichannel-sdk && npm run build:tsc
 
 # 2. (if omnichannel-chat-sdk changed)
 cd /c/lcw/omnichannel-chat-sdk && npm run build:tsc
@@ -73,7 +73,7 @@ cd /c/lcw/omnichannel-chat-widget/chat-widget && yarn build:esm && yarn build:cj
 #    stale modules will be served even after rebuild)
 cd /c/gh/Crm.Omnichannel/Products/CustomerExperiences/LiveChatWidgetV2/src
 rm -rf node_modules/.cache/webpack
-npm run build:webpack:dev   # runs `npm run lint` first (prebuild:webpack:dev)
+npm run build:webpack:dev   # runs `npm run lint` first (prebuild:webpack:dev); the script uses cmd `SET`, so run it on Windows
 
 # 5. Serve src/ statically (keep it running), then hard-reload the browser
 python -m http.server 9000   # or any static server rooted at src/
@@ -99,24 +99,24 @@ Wipe `node_modules/.cache/webpack` before every rebuild after editing a linked p
 2. **Adapter is dual-entry** — `package.json` has `"main": "dist/chat-adapter"` (CommonJS minified) and `"module": "dist-esm/index"` (ESM). Webpack picks the `module` field, so when bundle-grepping for adapter code, search in dist-esm signatures, not the minified `dist/chat-adapter.js`.
 3. **Variable mangling in the LCW bundle** — readable identifiers like `initialPollingOptimizationCount` become single letters (`g`, `d`, etc.) in `ocw.js`. Search for the numeric constants or unique string literals (e.g. `'Polling call issued too soon'`).
 4. **Don't edit files in `node_modules`** for anything you intend to ship. Patches there must be either upstreamed (new published version) or persisted via `patch-package` / `yarn patch`. Always revert node_modules edits before opening a PR.
-5. **yarn.lock vs package-lock.json** — chat-sdk and the LCW host in the mono repo use npm (`package-lock.json`); omnichannel-sdk and omnichannel-chat-widget use yarn (`yarn.lock`). (`LiveChatWidgetV2/CLAUDE.md` in the mono repo still says Yarn; the tracked lockfile is `package-lock.json`.) Regenerate the right one for each repo when bumping deps.
+5. **yarn.lock vs package-lock.json** — omnichannel-sdk, chat-sdk and the LCW host in the mono repo use npm (`package-lock.json`); only omnichannel-chat-widget uses yarn (`yarn.lock`). (`LiveChatWidgetV2/CLAUDE.md` in the mono repo still says Yarn; the tracked lockfile is `package-lock.json`.) Regenerate the right one for each repo when bumping deps.
 
 ## Per-repo PR preparation checklist
 
-When opening a PR in **any** of the four codebases (for the LCW host, run these from `Products/CustomerExperiences/LiveChatWidgetV2`):
+When opening a PR in **any** of the four codebases (for the LCW host, run the git commands from `Products/CustomerExperiences/LiveChatWidgetV2` and the npm commands from `LiveChatWidgetV2/src`, where its `package.json` lives):
 
 1. From the repo root: `git status --short` — confirm only intended files are modified.
 2. Verify no stray node_modules edits: `git diff --stat | grep node_modules` should be empty.
 3. Regenerate the lockfile cleanly:
-   - chat-sdk and LCW host: `npm install --package-lock-only --no-audit --no-fund`
-   - omnichannel-sdk and chat-widget: `yarn install` (let yarn rewrite `yarn.lock`)
+   - omnichannel-sdk, chat-sdk and LCW host: `npm install --package-lock-only --no-audit --no-fund`
+   - chat-widget: `yarn install` (let yarn rewrite `yarn.lock`)
 4. Update the changelog (`CHANGELOG.md` or `CHANGE_LOG.md`) under the `## [Unreleased]` section with a one-line entry.
 5. Run the repo's own build to confirm it compiles:
    - chat-sdk: `npm run build:tsc`
    - chat-widget: `yarn build:esm && yarn build:cjs`
-   - omnichannel-sdk: `yarn build`
+   - omnichannel-sdk: `npm run build:tsc`
    - LCW host: `npm run build:webpack:dev`
-6. Run lint/tests if the repo has a CI script: `npm run lint`, `npm test`, `yarn test`.
+6. Run lint and tests: omnichannel-sdk and chat-sdk `npm run lint && npm test`; chat-widget `yarn lint && yarn test:unit`; LCW host `npm run lint && npm run test:unit`.
 7. Branch naming convention used so far: `<alias>/<short-description>` (e.g. `coryeurom/pin-acs-adapter-beta.8`).
 8. Push and open the PR. If the built-in GitHub PR tool fails with "Enterprise Managed User" errors, use the URL printed by `git push` or `gh pr create --base main --head <branch>`.
 
