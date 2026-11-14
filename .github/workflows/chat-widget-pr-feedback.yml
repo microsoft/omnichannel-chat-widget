@@ -1,0 +1,44 @@
+name: chat-widget-pr-feedback
+
+on:
+  pull_request_target:
+    branches:
+      - '**'
+    types: [edited, assigned, opened, synchronize, reopened]
+    paths:
+      - 'chat-widget/**'
+      - '.github/workflows/**'
+
+permissions:
+  contents: read
+
+jobs:
+  changelog-feedback:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      # This job only reads GitHub API data; it never checks out or executes PR code.
+      - name: Update changelog feedback
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const params = { ...context.repo, pull_number: context.issue.number };
+            const files = await github.paginate(github.rest.pulls.listFiles, params);
+            const hasChangelog = files.some(file => file.filename === "CHANGE_LOG.md" && file.status === "modified");
+            const isEngineeringEnhancement = context.payload.pull_request.title.includes("[eng]");
+            const valid = hasChangelog || isEngineeringEnhancement;
+            const marker = "<!-- chat-widget-changelog-validation -->";
+            const body = `${marker}\n${valid ? "Changelog validation passed." : "Please add a changelog entry for your changes."}`;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              ...context.repo,
+              issue_number: context.issue.number
+            });
+            const existing = comments.find(comment => comment.user?.login === "github-actions[bot]" && comment.body?.startsWith(marker));
+            if (existing) {
+              if (existing.body !== body) {
+                await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body });
+              }
+            } else if (!valid) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body });
+            }
